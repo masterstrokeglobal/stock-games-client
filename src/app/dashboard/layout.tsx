@@ -1,0 +1,82 @@
+"use client";
+import {
+    CircleUser,
+    Menu,
+} from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import Sidebar from "@/components/dashboard/sidebar"
+import { PropsWithChildren, useEffect } from "react"
+import { useAuthStore } from "@/context/auth-context"
+import LoadingScreen from "@/components/common/loading-screen"
+import { useRouter } from "next/navigation";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+const DashboardLayout = ({ children }: PropsWithChildren) => {
+    const { loading, userDetails } = useAuthStore();
+    const router = useRouter();
+    useEffect(() => {
+        if (!loading && !userDetails) {
+            router.push("/auth/login");
+        }
+    }, [userDetails, loading]);
+
+    if (loading || !userDetails) {
+        return <LoadingScreen className="h-screen" />
+    }
+
+    return (
+        <div className="min-h-screen bg-[#f5f7f9] w-full p-4 ">
+            <Sidebar className="h-screen w-64 absolute top-0 left-0" />
+            <ScrollArea className="flex flex-col ml-64 bg-white relative h-[calc(100vh-32px)] border rounded-xl ">
+                <header className="flex h-16 items-center gap-4 border-b bg-muted/40 px-4 lg:h-16 lg:px-6">
+                    <Sheet>
+                        <SheetTrigger asChild>
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                className="shrink-0 md:hidden"
+                            >
+                                <Menu className="h-5 w-5" />
+                                <span className="sr-only">Toggle navigation menu</span>
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent side="left" className="flex flex-col">
+                            <Sidebar />
+                        </SheetContent>
+                    </Sheet>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="secondary" size="icon" className="rounded-full">
+                                <CircleUser className="h-5 w-5" />
+                                <span className="sr-only">Toggle user menu</span>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>Settings</DropdownMenuItem>
+                            <DropdownMenuItem>Support</DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>Logout</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </header>
+                <main className="flex-1 p-4 lg:p-6">
+                    {children}
+                </main>
+            </ScrollArea>
+        </div>
+    )
+}
+
+export default DashboardLayout;

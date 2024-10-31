@@ -1,0 +1,145 @@
+"use client";
+import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Users, Calendar, Image, Award, Home, LucideIcon, TicketIcon, Wallet2Icon } from 'lucide-react';
+import { cn } from "@/lib/utils";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
+import Logo from '../common/logo';
+
+interface SubMenuItem {
+    name: string;
+    link: string;
+}
+
+interface MenuItem {
+    name: string;
+    icon: LucideIcon;
+    link?: string;
+    subItems?: SubMenuItem[];
+}
+
+const menuItems: MenuItem[] = [
+    { name: 'Dashboard', icon: Home, link: '/dashboard' },
+    {
+        name: 'Manage Coaches',
+        icon: Users,
+        subItems: [
+            { name: 'View Coaches', link: '/dashboard/coach' },
+            { name: 'Create Coach', link: '/dashboard/coach/create' },
+        ],
+    },
+    {
+        name: 'Manage Classes',
+        icon: Calendar,
+        subItems: [
+            { name: 'View Classes', link: '/dashboard/class' },
+            { name: 'Features Classes', link: '/dashboard/class/features' },
+            { name: 'Create Class', link: '/dashboard/class/create' },
+        ],
+    },
+    { name: 'Manage Users', icon: Users, link: '/dashboard/users' },
+    { name: "Payments", icon: Wallet2Icon, link: '/dashboard/payments' },
+    {
+        name: 'Promotions',
+        icon: Image,
+        subItems: [
+            { name: 'View Banners', link: '/dashboard/advertisement' },
+            { name: 'Upload Banner', link: '/dashboard/advertisement/create' },
+        ],
+    },
+    {
+        name: 'Coupon',
+        icon: TicketIcon,
+        subItems: [
+            { name: 'View Coupons', link: '/dashboard/coupons' },
+            { name: 'Create Coupon', link: '/dashboard/coupons/create' },
+        ],
+    },
+    {
+        name: 'Certifications',
+        icon: Award,
+        subItems: [
+            { name: 'View Certifications', link: '/dashboard/certifications' },
+            { name: 'Create Certification', link: '/dashboard/certifications/create' },
+        ],
+    },
+];
+
+const Sidebar = ({ className }: PropsWithClassName) => {
+    const pathname = usePathname();
+
+    const renderMenuItem = (item: MenuItem) => {
+        const isActive = pathname === item.link ||
+            (item.subItems && item.subItems.some(subItem => pathname === subItem.link));
+
+        if (item.subItems) {
+            return (
+                <AccordionItem value={item.name} key={item.name}>
+                    <AccordionTrigger className={cn(
+                        "flex items-center py-2 px-4 text-sm font-medium [&[data-state=open]]:text-black [&[data-state=open]]:bg-gray-200 [&[data-state=open]]:rounded-b-none rounded-md hover:bg-accent ",
+                        isActive && "bg-primary text-primary-foreground hover:bg-primary/90"
+                    )}>
+                        <span className="flex items-center">
+                            <item.icon className="mr-2 h-4 w-4" />
+                            {item.name}
+                        </span>
+                    </AccordionTrigger>
+                    <AccordionContent className='bg-gray-200 rounded-b-md pl-4'>
+                        <div className="flex flex-col space-y-1 px-4">
+                            {item.subItems.map((subItem) => (
+                                <Link
+                                    key={subItem.name}
+                                    href={subItem.link}
+                                    className={cn(
+                                        "flex items-center py-2 px-2 text-sm font-medium rounded-md hover:bg-gray-300 hover:text-accent-foreground",
+                                        "transition-colors duration-200",
+                                        pathname === subItem.link && "bg-primary/50 text-accent-foreground"
+                                    )}
+                                >
+                                    {subItem.name}
+                                </Link>
+                            ))}
+                        </div>
+                    </AccordionContent>
+                </AccordionItem>
+            );
+        } else if (item.link) {
+            return (
+                <Link
+                    key={item.name}
+                    href={item.link}
+                    className={cn(
+                        "flex items-center py-2 px-4 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground",
+                        "transition-colors duration-200",
+                        isActive && "bg-primary text-primary-foreground hover:bg-primary/90"
+                    )}
+                >
+                    <item.icon className="mr-2 h-4 w-4" />
+                    {item.name}
+                </Link>
+            );
+        }
+        return null;
+    };
+
+    return (
+        <div className={cn("flex  flex-col ", className)}>
+            <div className="flex h-16 items-center  px-4">
+                <Logo className='h-14' />
+            </div>
+            <nav className="flex-1 overflow-y-auto px-4 pt-8">
+                <Accordion type="multiple" className="w-full space-y-2">
+                    {menuItems.map(renderMenuItem)}
+                </Accordion>
+            </nav>
+        </div>
+    );
+};
+
+export default Sidebar;
