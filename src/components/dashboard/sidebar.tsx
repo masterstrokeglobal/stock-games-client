@@ -2,8 +2,9 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Users, Calendar, Image, Award, Home, LucideIcon, TicketIcon, Wallet2Icon, Building } from 'lucide-react';
+import { Users, Home, LucideIcon, Building } from 'lucide-react';
 import { cn } from "@/lib/utils";
+
 import {
     Accordion,
     AccordionContent,
@@ -41,6 +42,11 @@ const menuItems: MenuItem[] = [
             { name: 'Create Company', link: '/dashboard/company/create' },
         ],
     },
+    {
+        name: 'Users',
+        icon: Users,
+        link: '/dashboard/users',
+    }
 ];
 const Sidebar = ({ className }: PropsWithClassName) => {
     const pathname = usePathname();

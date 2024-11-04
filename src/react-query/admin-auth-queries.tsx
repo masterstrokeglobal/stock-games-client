@@ -6,7 +6,7 @@ import { adminAPI } from "@/lib/axios/admin-API";
 export const useAdminLogin = () => {
     return useMutation({
         mutationFn: adminAuthAPI.adminLogin,
-        onSuccess: (data) => {
+        onSuccess: () => {
             toast.success("Logged in successfully");
         },
         onError: (error: any) => {
@@ -32,6 +32,7 @@ export const useAdminLogout = () => {
 export const useAdminProfile = () => {
     return useQuery({
         queryKey: ["admin-profile", "admin"],
+        retry:1,
         queryFn: adminAPI.getAdminProfile,
     });
 }

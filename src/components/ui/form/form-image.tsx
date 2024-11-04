@@ -16,7 +16,6 @@ const FormImage = <TFieldValues extends FieldValues>({
     name,
     label = "Upload Image",
     className,
-    control,
 }: FormImageProps<TFieldValues>) => {
     const { setValue, getFieldState ,getValues} = useFormContext()
     const [selectedFile, setSelectedFile] = useState<File | null>(null)

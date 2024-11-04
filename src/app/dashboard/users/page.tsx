@@ -2,28 +2,24 @@
 
 import React, { useMemo, useState } from "react";
 import { Search } from "lucide-react";
-import userColumns from "@/columns/user-columns"; // Adjust the import according to your file structure
+import userColumns from "@/columns/user-columns"; // Adjust this import to match your project structure
 import DataTable from "@/components/ui/data-table-server";
 import { Input } from "@/components/ui/input";
-import { useGetAllUsers } from "@/react-query/user-query"; // Import the query hook for users
-import { User } from "@/models/user"; // Assuming you have a User model
+import { useGetAllUsers } from "@/react-query/user-queries"; // Import the hook for fetching users
+import User from "@/models/user"; // Import the User model
 
 const UserTable = () => {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
-    const limit = 10; // Items per page
 
     const { data, isSuccess, isFetching } = useGetAllUsers({
-        pagination: {
-            offset: (page - 1),
-            limit,
-            search,
-        }
+        page: page,
+        search: search,
     });
 
     const users = useMemo(() => {
-        if (isSuccess && data?.data?.data?.users) {
-            return Array.from(data.data.data.users).map(
+        if (isSuccess && data?.data?.users) {
+            return Array.from(data.data.users).map(
                 (user: any) => new User(user)
             );
         }
@@ -31,7 +27,7 @@ const UserTable = () => {
     }, [data, isSuccess]);
 
     const totalPages = useMemo(() => {
-        return 1;
+        return Math.ceil(data?.data?.count / 10) || 1;
     }, [data, isSuccess]);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +58,7 @@ const UserTable = () => {
                 <DataTable
                     page={page}
                     loading={isFetching}
-                    columns={userColumns} // Use the columns defined for users
+                    columns={userColumns}
                     data={users}
                     totalPage={totalPages}
                     changePage={changePage}

@@ -13,7 +13,6 @@ import { Company } from "@/models/company";
 const CompanyTable = () => {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
-    const limit = 10;
 
     const { data, isSuccess, isFetching } = useGetAllCompanies({
         page: page,

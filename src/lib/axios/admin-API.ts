@@ -1,4 +1,3 @@
-import Admin from "@/models/admin";
 import api from "./instance";
 import { AdminFormValues } from "@/components/features/admin/admin-form";
 

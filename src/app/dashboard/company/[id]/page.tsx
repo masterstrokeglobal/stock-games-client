@@ -46,12 +46,13 @@ const EditCompanyPage = () => {
             <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between">
                 <h2 className="text-xl font-semibold">Edit Company</h2>
             </header>
-            <main className="mt-4">
+        <main className="mt-4">
                 <CompanyForm
                     defaultValues={defaultValues as any} // Pass default values to the form
                     onSubmit={onSubmit}
                     isLoading={isPending} // Loading state for the submission
                 />
+
             </main>
         </section>
     );

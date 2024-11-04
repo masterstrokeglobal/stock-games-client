@@ -17,7 +17,6 @@ import {
     AlertDialogAction,
 } from '@/components/ui/alert-dialog';
 import { Button } from "@/components/ui/button";
-import { useAmp } from "next/amp";
 
 const companyColumns: ColumnDef<Company>[] = [
     {

@@ -1,4 +1,3 @@
-import Company from "@/models/company";
 import api from "./instance";
 import { CompanyFormValues } from "@/components/features/company/company-form";
 

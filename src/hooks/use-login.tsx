@@ -4,7 +4,7 @@ import { useAdminProfile } from "@/react-query/admin-auth-queries";
 import { useEffect } from "react";
 
 const useLogin = () => {
-    const { userDetails, setUser, setLoadig } = useAuthStore();
+    const { setUser, setLoadig } = useAuthStore();
     const { data, isSuccess, isError, error } = useAdminProfile();
     useEffect(() => {
 

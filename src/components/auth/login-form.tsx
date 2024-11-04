@@ -5,8 +5,6 @@ import { z } from "zod";
 import FormInput from "../ui/form/form-input";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
-import OTPForm from "./otp-form";
 import FormProvider from "../ui/form/form-provider";
 import FormPassword from "../ui/form/form-password";
 import { useAdminLogin } from "@/react-query/admin-auth-queries";

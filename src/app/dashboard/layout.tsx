@@ -28,9 +28,9 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
     useLogin();
     useEffect(() => {
         if (!loading && !userDetails) {
-            router.push("/auth/login");
+            router.push("/login");
         }
-    }, [userDetails, loading]);
+    }, [userDetails, loading,router]);
 
     if (!userDetails) {
         return <LoadingScreen className="h-screen" />
