@@ -1,16 +1,17 @@
+import Company from "./company";
+
 export enum AdminRole {
     SUPER_ADMIN = "super_admin",
     COMPANY_ADMIN = "company_admin",
 }
 
-
 class Admin {
     id?: number;
     name?: string;
     email?: string;
+    company?: Company;
     password?: string;
     role?: AdminRole; // Assuming AdminRole is an enum you have defined
-    companyId?: number; // Assuming you may want to link to a Company entity
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
@@ -21,7 +22,10 @@ class Admin {
         this.email = params.email;
         this.password = params.password;
         this.role = params.role;
-        this.companyId = params.companyId;
+
+        if (params.company) {
+            this.company = new Company(params.company);
+        }
         this.createdAt = params.createdAt;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;

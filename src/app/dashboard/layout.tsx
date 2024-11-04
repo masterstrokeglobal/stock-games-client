@@ -20,17 +20,19 @@ import { useAuthStore } from "@/context/auth-context"
 import LoadingScreen from "@/components/common/loading-screen"
 import { useRouter } from "next/navigation";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import useLogin from "@/hooks/use-login";
 
 const DashboardLayout = ({ children }: PropsWithChildren) => {
     const { loading, userDetails } = useAuthStore();
     const router = useRouter();
+    useLogin();
     useEffect(() => {
         if (!loading && !userDetails) {
             router.push("/auth/login");
         }
     }, [userDetails, loading]);
 
-    if (loading || !userDetails) {
+    if (!userDetails) {
         return <LoadingScreen className="h-screen" />
     }
 

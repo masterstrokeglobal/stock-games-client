@@ -10,6 +10,8 @@ import OTPForm from "./otp-form";
 import FormProvider from "../ui/form/form-provider";
 import FormPassword from "../ui/form/form-password";
 import { useAdminLogin } from "@/react-query/admin-auth-queries";
+import { useAuthStore } from "@/context/auth-context";
+import Admin from "@/models/admin";
 
 const loginFormSchema = z.object({
     email: z
@@ -27,6 +29,8 @@ const defaultValues: LoginFormValues = {
 };
 
 const LoginForm = () => {
+    const {setUser}  = useAuthStore();
+    const router = useRouter();
     const { mutate, isPending } = useAdminLogin();
     const form = useForm({
         resolver: zodResolver(loginFormSchema),
@@ -35,7 +39,13 @@ const LoginForm = () => {
 
 
     const onSubmit = (formValue: LoginFormValues) => {
-        mutate(formValue);
+        mutate(formValue,{
+            onSuccess:(data)=>{
+                const admin = new Admin(data.data.admin);
+                setUser(admin);
+                router.push("/dashboard");
+            }
+        });
     };
 
     return (

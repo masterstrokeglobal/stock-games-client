@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Users, Calendar, Image, Award, Home, LucideIcon, TicketIcon, Wallet2Icon } from 'lucide-react';
+import { Users, Calendar, Image, Award, Home, LucideIcon, TicketIcon, Wallet2Icon, Building } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import {
     Accordion,
@@ -23,54 +23,25 @@ interface MenuItem {
     link?: string;
     subItems?: SubMenuItem[];
 }
-
 const menuItems: MenuItem[] = [
     { name: 'Dashboard', icon: Home, link: '/dashboard' },
     {
-        name: 'Manage Coaches',
+        name: 'Admins',
         icon: Users,
         subItems: [
-            { name: 'View Coaches', link: '/dashboard/coach' },
-            { name: 'Create Coach', link: '/dashboard/coach/create' },
+            { name: 'View Admins', link: '/dashboard/admins' },
+            { name: 'Create Admin', link: '/dashboard/admins/create' },
         ],
     },
     {
-        name: 'Manage Classes',
-        icon: Calendar,
+        name: 'Company',
+        icon: Building,
         subItems: [
-            { name: 'View Classes', link: '/dashboard/class' },
-            { name: 'Features Classes', link: '/dashboard/class/features' },
-            { name: 'Create Class', link: '/dashboard/class/create' },
-        ],
-    },
-    { name: 'Manage Users', icon: Users, link: '/dashboard/users' },
-    { name: "Payments", icon: Wallet2Icon, link: '/dashboard/payments' },
-    {
-        name: 'Promotions',
-        icon: Image,
-        subItems: [
-            { name: 'View Banners', link: '/dashboard/advertisement' },
-            { name: 'Upload Banner', link: '/dashboard/advertisement/create' },
-        ],
-    },
-    {
-        name: 'Coupon',
-        icon: TicketIcon,
-        subItems: [
-            { name: 'View Coupons', link: '/dashboard/coupons' },
-            { name: 'Create Coupon', link: '/dashboard/coupons/create' },
-        ],
-    },
-    {
-        name: 'Certifications',
-        icon: Award,
-        subItems: [
-            { name: 'View Certifications', link: '/dashboard/certifications' },
-            { name: 'Create Certification', link: '/dashboard/certifications/create' },
+            { name: 'View Companies', link: '/dashboard/company' },
+            { name: 'Create Company', link: '/dashboard/company/create' },
         ],
     },
 ];
-
 const Sidebar = ({ className }: PropsWithClassName) => {
     const pathname = usePathname();
 

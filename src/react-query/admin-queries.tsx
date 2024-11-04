@@ -14,10 +14,10 @@ export const useCreateAdmin = () => {
     });
 };
 
-export const useGetAllAdmins = () => {
+export const useGetAllAdmins = (filter:SearchFilters) => {
     return useQuery({
-        queryKey: ["admins"],
-        queryFn: adminAPI.getAllAdmins,
+        queryKey: ["admins",filter],
+        queryFn:  () => adminAPI.getAllAdmins(filter),
     });
 };
 

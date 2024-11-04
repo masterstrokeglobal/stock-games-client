@@ -14,10 +14,10 @@ export const useCreateCompany = () => {
     });
 };
 
-export const useGetAllCompanies = () => {
+export const useGetAllCompanies = (filter: SearchFilters) => {
     return useQuery({
-        queryKey: ["companies"],
-        queryFn: companyAPI.getAllCompanies,
+        queryKey: ["companies", filter],
+        queryFn: () => companyAPI.getAllCompanies(filter),
     });
 };
 

@@ -1,20 +1,22 @@
 import Company from "@/models/company";
 import api from "./instance";
+import { CompanyFormValues } from "@/components/features/company/company-form";
+
 
 export const companyAPI = {
-    createCompany: async (payload: any) => {
+    createCompany: async (payload: CompanyFormValues) => {
         return api.post("/company", payload);
     },
 
-    getAllCompanies: async () => {
-        return api.get("/company");
+    getAllCompanies: async (filter: SearchFilters) => {
+        return api.get("/company", { params: filter });
     },
 
     getCompanyById: async (companyId: string) => {
         return api.get(`/company/${companyId}`);
     },
 
-    updateCompanyById: async (payload: Company) => {
+    updateCompanyById: async (payload: CompanyFormValues) => {
         return api.patch(`/company/${payload.id}`, payload);
     },
 
