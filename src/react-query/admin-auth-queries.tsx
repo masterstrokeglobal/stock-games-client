@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { adminAuthAPI } from "@/lib/axios/admin-auth-API"; // Adjust the path according to your project structure
 import { adminAPI } from "@/lib/axios/admin-API";
+import { useRouter } from "next/navigation";
 
 export const useAdminLogin = () => {
     return useMutation({
@@ -16,11 +17,15 @@ export const useAdminLogin = () => {
 };
 
 export const useAdminLogout = () => {
+    const router = useRouter();
     return useMutation({
         mutationFn: adminAuthAPI.logout,
         onSuccess: () => {
             localStorage.removeItem("token");
             toast.success("Logged out successfully");
+
+            router.push("/login");
+
         },
         onError: (error: any) => {
             console.log(error);

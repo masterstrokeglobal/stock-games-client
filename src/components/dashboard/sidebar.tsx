@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Users, Home, LucideIcon, Building } from 'lucide-react';
+import { Users, Home, LucideIcon, Building, Clock } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
 import {
@@ -12,6 +12,7 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion";
 import Logo from '../common/logo';
+import { useAuthStore } from '@/context/auth-context';
 
 interface SubMenuItem {
     name: string;
@@ -24,7 +25,7 @@ interface MenuItem {
     link?: string;
     subItems?: SubMenuItem[];
 }
-const menuItems: MenuItem[] = [
+const adminMenuItems: MenuItem[] = [
     { name: 'Dashboard', icon: Home, link: '/dashboard' },
     {
         name: 'Admins',
@@ -46,11 +47,40 @@ const menuItems: MenuItem[] = [
         name: 'Users',
         icon: Users,
         link: '/dashboard/users',
+    },
+    {
+        name: 'Market Items',
+        icon: Users,
+        link: '/dashboard/market-items',
     }
 ];
+
+const companyMenuItems: MenuItem[] = [
+    { name: 'Dashboard', icon: Home, link: '/dashboard' },
+
+
+    {
+        name: 'Users',
+        icon: Users,
+        link: '/dashboard/users',
+    },
+    {
+        name: 'Scheduler',
+        icon: Clock,
+        subItems: [
+            { name: 'View Schedule', link: '/dashboard/scheduler' },
+            { name: 'Create Schedule', link: '/dashboard/scheduler/create' },
+        ]
+    },
+];
+
+
+
 const Sidebar = ({ className }: PropsWithClassName) => {
+    const { userDetails } = useAuthStore();
     const pathname = usePathname();
 
+    const menus = userDetails?.isSuperAdmin ? adminMenuItems : companyMenuItems;
     const renderMenuItem = (item: MenuItem) => {
         const isActive = pathname === item.link ||
             (item.subItems && item.subItems.some(subItem => pathname === subItem.link));
@@ -112,7 +142,7 @@ const Sidebar = ({ className }: PropsWithClassName) => {
             </div>
             <nav className="flex-1 overflow-y-auto px-4 pt-8">
                 <Accordion type="multiple" className="w-full space-y-2">
-                    {menuItems.map(renderMenuItem)}
+                    {menus.map(renderMenuItem)}
                 </Accordion>
             </nav>
         </div>

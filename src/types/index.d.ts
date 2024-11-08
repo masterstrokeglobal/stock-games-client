@@ -16,4 +16,5 @@ type SelectOption = { value: string; label: string }
 type SearchFilters = {
     page: number;
     search: string;
+    limit?:number;
 };
