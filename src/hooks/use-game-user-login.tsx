@@ -1,18 +1,16 @@
 import { useAuthStore } from "@/context/auth-context";
-import Admin from "@/models/admin";
-import { useAdminProfile } from "@/react-query/admin-auth-queries";
+import User from "@/models/user";
+import { useGameUserProfile } from "@/react-query/game-user-queries";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
-const useLogin = () => {
+const useGameUserLogin = () => {
     const { setUser, setLoadig } = useAuthStore();
-    const pathname = usePathname();
-    const { data, isSuccess, isError, error } = useAdminProfile();
-
+    const { data, isSuccess, isError, error } = useGameUserProfile();
     useEffect(() => {
 
         if (isSuccess) {
-            const user = new Admin(data.data);
+            const user = new User(data.data);
             setUser(user);
         }
         if (isError) {
@@ -26,4 +24,4 @@ const useLogin = () => {
 
 }
 
-export default useLogin;
+export default useGameUserLogin;

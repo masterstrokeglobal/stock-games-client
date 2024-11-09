@@ -1,4 +1,5 @@
 import Admin from "@/models/admin";
+import User from "@/models/user";
 import React, {
   PropsWithChildren,
   createContext,
@@ -7,10 +8,10 @@ import React, {
 } from "react";
 
 interface UserContextType {
-  userDetails: Admin | null;
+  userDetails: Admin | User | null;
   setLoadig: (loading: boolean) => void;
   loading: boolean;
-  setUser: (details: Admin | null) => void;
+  setUser: (details: Admin | User | null) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -24,10 +25,10 @@ export const useAuthStore = () => {
 };
 
 export const UserProvider = ({ children }: PropsWithChildren) => {
-  const [userDetails, setUser] = useState<Admin | null>(null);
+  const [userDetails, setUser] = useState<Admin | User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const updateUser = (details: Admin | null) => {
+  const updateUser = (details: Admin | User | null) => {
     setIsLoading(false);
     setUser(details);
   };

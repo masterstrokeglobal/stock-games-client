@@ -1,0 +1,98 @@
+import React from "react";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import FormProvider from "@/components/ui/form/form-provider";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+
+const otpFormSchema = z.object({
+    otp: z.string().length(4, { message: "OTP must be 4 characters" }),
+});
+
+export type OTPFormValues = z.infer<typeof otpFormSchema>;
+
+type Props = {
+    defaultValues?: OTPFormValues;
+    onSubmit: (data: OTPFormValues) => void;
+    isLoading?: boolean;
+    onBack?: () => void;
+};
+
+const OTPForm = ({ defaultValues, onSubmit, isLoading, onBack }: Props) => {
+    const form = useForm<OTPFormValues>({
+        resolver: zodResolver(otpFormSchema),
+        defaultValues,
+    });
+
+    const otp = form.watch("otp");
+
+    return (
+        <div className="w-full max-w-sm">
+            <header className=" mb-10 text-center space-y-2">
+                <h1 className="text-3xl  font-semibold text-white">OTP Verification </h1>
+                <p className="text-[#F9F9F9B2]">Enter the verification code we just sent on your phone number</p>
+            </header>
+
+            <FormProvider
+                methods={form}
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
+            >
+
+                <div className="mt-8 mx-auto">
+                    <InputOTP
+                        maxLength={4}
+                        value={otp}
+                        onChange={(value) => form.setValue("otp", value)}
+                    >
+                        <InputOTPGroup className="flex gap-4 justify-center mx-auto">
+                            <InputOTPSlot
+                                className="md:w-16 md:h-16 w-12 h-12 rounded-lg bg-[#182B5A] border-[#EFF8FF17] text-white text-2xl focus:border-[#55B0FF] focus:ring-[#55B0FF] focus:ring-opacity-50"
+                                index={0}
+                            />
+                            <InputOTPSlot
+                                className="md:w-16 md:h-16 w-12 h-12 rounded-lg bg-[#182B5A] border-[#EFF8FF17] text-white text-2xl  focus:border-[#55B0FF] focus:ring-[#55B0FF] focus:ring-opacity-50"
+                                index={1}
+                            />
+                            <InputOTPSlot
+                                className="md:w-16 md:h-16 w-12 h-12 rounded-lg bg-[#182B5A] border-[#EFF8FF17] text-white text-2xl  focus:border-[#55B0FF] focus:ring-[#55B0FF] focus:ring-opacity-50"
+                                index={2}
+                            />
+                            <InputOTPSlot
+                                className="md:w-16 md:h-16 w-12 h-12 rounded-lg bg-[#182B5A] border-[#EFF8FF17] text-white text-2xl  focus:border-[#55B0FF] focus:ring-[#55B0FF] focus:ring-opacity-50"
+                                index={3}
+                            />
+                        </InputOTPGroup>
+                    </InputOTP>
+                    {form.formState.errors.otp && (
+                        <p className="text-red-500 text-sm text-center mt-2">
+                            {form.formState.errors.otp.message}
+                        </p>
+                    )}
+                </div>
+
+
+
+                <footer className="flex justify-end flex-col gap-8 ">
+
+                    <Button
+                        type="submit"
+                        size="lg"
+                        variant="game"
+                        className="w-full mt-8"
+                        disabled={isLoading}
+                    >
+                        {isLoading ? "Verifying..." : "Verify OTP"}
+                    </Button>
+
+                    <Button variant="ghost" className="w-full text-white hover:bg-white/10 hover:text-white">
+                        Resend OTP
+                    </Button>
+                </footer>
+            </FormProvider>
+        </div>
+    );
+};
+
+export default OTPForm;

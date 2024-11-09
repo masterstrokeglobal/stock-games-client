@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 function FormInput<
   TFieldValues extends FieldValues = FieldValues,
@@ -19,6 +20,7 @@ function FormInput<
   control,
   name,
   description,
+  game,
   inputClassName,
   children,
   label,
@@ -30,6 +32,7 @@ function FormInput<
   className?: string;
   inputClassName?: string;
   children?: React.ReactNode;
+  game?: boolean;
   Icon?: React.ReactNode;
   name: TName;
   description?: string;
@@ -40,10 +43,10 @@ function FormInput<
       name={name}
       render={({ field }) => (
         <FormItem className={className}>
-          {label && <FormLabel>{label}</FormLabel>}
+          {label && <FormLabel className={cn(game ? "text-white" : '')}>{label}</FormLabel>}
           <FormControl>
             <div className={"relative"}>
-              <Input className={inputClassName} {...props} {...field} />
+              <Input className={cn(inputClassName, game ? "h-12 text-white bg-[#122146] border border-[#EFF8FF17] focus:border-[#55B0FF]" : '')} {...props} {...field} />
               {children}
             </div>
           </FormControl>

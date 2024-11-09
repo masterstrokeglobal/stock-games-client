@@ -1,0 +1,117 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { gameUserAPI } from "@/lib/axios/game-user-API"; // Adjust the path as needed
+import { useAuthStore } from "@/context/auth-context";
+import User from "@/models/user";
+
+// Fetch current user's profile
+export const useGameUserProfile = () => {
+    return useQuery({
+        queryKey: ["gameUser", "profile"],
+        queryFn: () => gameUserAPI.myProfile(),
+    });
+};
+
+// Create a new user
+export const useGameUserRegister = () => {
+    const queryClient = useQueryClient();
+    const { userDetails, setUser } = useAuthStore();
+
+    return useMutation({
+        mutationFn: (payload: any) => gameUserAPI.createUser(payload),
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({
+                queryKey: ["gameUser", "allUsers"],
+                predicate: (query) => query.queryKey[0] === "gameUser"
+            });
+            const user = new User(data.data);
+            setUser(user);
+            toast.success("User created successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error creating user");
+        },
+    });
+};
+
+export const useGameUserLogin = () => {
+    const queryClient = useQueryClient();
+    const { setUser } = useAuthStore();
+
+    return useMutation({
+        mutationFn: (payload: any) => gameUserAPI.login(payload),
+        onSuccess: (data) => {
+            const user = new User(data.data);
+            setUser(user);
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "gameUser"
+            });
+            toast.success("User logged in successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.error ?? "Error logging in");
+        },
+    });
+};
+
+// Verify a user
+export const useGameUserVerify = () => {
+    return useMutation({
+        mutationFn: (data: { userId: string; verificationData: { otp: string } }) => gameUserAPI.verifyUser(data),
+        onSuccess: () => {
+            toast.success("User verified successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.error ?? "Error verifying user");
+        },
+    });
+};
+
+// Resend OTP to a user
+export const useGameUserResendOTP = () => {
+    return useMutation({
+        mutationFn: (data: { userId: string }) => gameUserAPI.resendOTP(data),
+        onSuccess: () => {
+            toast.success("OTP resent successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.error ?? "Error resending OTP");
+        },
+    });
+};
+
+// Update a user by ID
+export const useGameUserUpdateById = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: { userId: string; updateData: Record<string, any> }) => gameUserAPI.updateUserById(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["gameUser", "allUsers"] });
+            toast.success("User updated successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.error ?? "Error updating user");
+        },
+    });
+};
+
+// Delete a user by ID
+export const useGameUserDeleteById = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: { userId: string }) => gameUserAPI.deleteUserById(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "gameUser" && query.queryKey[1] === "allUsers",
+            });
+            toast.success("User deleted successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.error ?? "Error deleting user");
+        },
+    });
+};
+
+
