@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
 import User from "@/models/user";
-import { use } from "react";
+import Link from "next/link";
 
 const Navbar = () => {
     const { userDetails } = useAuthStore();
@@ -29,6 +29,7 @@ const Navbar = () => {
                         <img src="/plus-icon.svg" className="size-7" alt="arrow-down" />
                     </Button>
                 </button>
+                <Link href="/game/user-menu">
                 <button className="bg-[#112148] px-4 h-12 space-x-3 flex items-center py-2 rounded-full">
 
                     <Avatar className="size-6">
@@ -41,6 +42,7 @@ const Navbar = () => {
                         {user.firstname}
                     </span>
                 </button>
+                </Link>
             </div>
             <div className="h-0.5 bottom-0 absolute w-full -mx-12" style={{ background: "radial-gradient(51.91% 51.91% at 48.09% 91.82%, #2397FA 0%, rgba(35, 151, 250, 0) 100%)" }} />
         </nav>

@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { userAPI } from "@/lib/axios/user-API"; // Adjust the path as needed
+import { gameUserAPI } from "@/lib/axios/game-user-API";
 
 export const useGetAllUsers = (filter: SearchFilters) => {
     return useQuery({
@@ -35,3 +36,22 @@ export const useDeleteUserById = () => {
         },
     });
 };
+
+export const usePasswordChange = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: gameUserAPI.updateUserById,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "users";
+                },
+            });
+            toast.success("Password changed successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.error ?? "Error changing password");
+        },
+    });
+}
