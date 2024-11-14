@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/accordion";
 import Logo from '../common/logo';
 import { useAuthStore } from '@/context/auth-context';
+import Admin from '@/models/admin';
 
 interface SubMenuItem {
     name: string;
@@ -77,9 +78,11 @@ const companyMenuItems: MenuItem[] = [
 
 
 const Sidebar = ({ className }: PropsWithClassName) => {
-    const { userDetails } = useAuthStore();
+    let { userDetails } = useAuthStore();
     const pathname = usePathname();
 
+
+    userDetails = userDetails as Admin;
     const menus = userDetails?.isSuperAdmin ? adminMenuItems : companyMenuItems;
     const renderMenuItem = (item: MenuItem) => {
         const isActive = pathname === item.link ||

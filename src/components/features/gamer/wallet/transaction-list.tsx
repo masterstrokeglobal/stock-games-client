@@ -1,5 +1,4 @@
 import React from 'react';
-import { Check, X, Clock } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Transaction, TransactionStatus } from '@/models/transaction';
 import dayjs from 'dayjs';

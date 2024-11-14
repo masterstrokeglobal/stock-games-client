@@ -3,7 +3,6 @@ import React from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button'; // Adjust the path based on your setup
 import Container from '@/components/common/container';
-import { LogOutIcon } from 'lucide-react';
 import TopBar from '@/components/common/top-bar';
 import { CardIcons, MoneyIcon, WithdrawIcon } from '../../user-menu/icons';
 

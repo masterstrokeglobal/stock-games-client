@@ -34,7 +34,7 @@ type Props = {
     isLoading?: boolean;
 };
 
-const LoginForm = ({ defaultValues, onSubmit, onForgotPassword, isLoading }: Props) => {
+const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
     const form = useForm<LoginFormValues>({
         resolver: zodResolver(createLoginSchema),
         defaultValues,

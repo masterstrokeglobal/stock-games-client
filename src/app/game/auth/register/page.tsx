@@ -1,5 +1,4 @@
 'use client';
-import LoginForm from "@/components/features/gamer/login-form";
 import OTPForm, { OTPFormValues } from "@/components/features/gamer/otp-form";
 import RegisterForm, { RegisterFormValues } from "@/components/features/gamer/register-form";
 import { useAuthStore } from "@/context/auth-context";
@@ -9,7 +8,7 @@ import { useGameUserRegister, useGameUserVerify } from "@/react-query/game-user-
 import { useRouter } from "next/navigation";
 
 const RegisterPage = () => {
-    const { currentStep, nextStep, prevStep } = useStepper();
+    const { currentStep, nextStep } = useStepper();
     const { userDetails } = useAuthStore();
     const router = useRouter();
 

@@ -2,15 +2,10 @@
 import Container from "@/components/common/container";
 import TopBar from "@/components/common/top-bar";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useState } from "react";
 
 
 const TransictionHistoryPage = () => {
-    const [tab, setTab] = useState("deposit");
 
-    const handleTabChange = (value: string) => {
-        setTab(value);
-    };
 
     return (
         <Container className="bg-primary-game relative flex flex-col pt-24 gap-12 items-center min-h-screen ">

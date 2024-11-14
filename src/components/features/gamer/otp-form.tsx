@@ -19,7 +19,7 @@ type Props = {
     onBack?: () => void;
 };
 
-const OTPForm = ({ defaultValues, onSubmit, isLoading, onBack }: Props) => {
+const OTPForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
     const form = useForm<OTPFormValues>({
         resolver: zodResolver(otpFormSchema),
         defaultValues,

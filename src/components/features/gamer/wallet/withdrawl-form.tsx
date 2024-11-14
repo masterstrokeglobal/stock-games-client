@@ -1,13 +1,10 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import FormInput from "@/components/ui/form/form-input";
-import FormSelect from "@/components/ui/form/form-select";
 import FormProvider from "@/components/ui/form/form-provider";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Card, CardContent } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Banknote, Loader2 } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 // Zod schema for withdrawal form validation
 const withdrawSchema = z.object({
@@ -22,21 +19,17 @@ type Props = {
     accounts: { id: string; name: string; balance: number }[];
 };
 
-const WithdrawForm = ({ onSubmit, accounts }: Props) => {
-    const [success, setSuccess] = React.useState(false);
-
+const WithdrawForm = ({ onSubmit }: Props) => {
     const form = useForm<WithdrawFormValues>({
+        resolver: zodResolver(withdrawSchema),
         defaultValues: {
             account: '',
             amount: 0,
         },
     });
 
-    const { control, handleSubmit, watch } = form;
+    const { control, handleSubmit } = form;
 
-    const selectedAccount = watch("account");
-
-    const selectedAccountDetails = accounts.find(acc => acc.id === selectedAccount);
 
     return (
         <div className="w-full max-w-sm flex flex-col min-h-[calc(100vh-5rem)]">

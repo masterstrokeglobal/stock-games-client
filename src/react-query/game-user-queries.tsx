@@ -15,7 +15,7 @@ export const useGameUserProfile = () => {
 // Create a new user
 export const useGameUserRegister = () => {
     const queryClient = useQueryClient();
-    const { userDetails, setUser } = useAuthStore();
+    const { setUser } = useAuthStore();
 
     return useMutation({
         mutationFn: (payload: any) => gameUserAPI.createUser(payload),

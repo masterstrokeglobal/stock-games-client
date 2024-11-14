@@ -1,17 +1,16 @@
 "use client"
 import React, { useMemo } from 'react';
-import { Card, CardHeader, CardContent } from '@/components/ui/card';
-import { PiggyBank, CreditCard, Trash2Icon, ChevronLeft, Plus } from 'lucide-react';
+import { ChevronLeft, Plus } from 'lucide-react';
 import { useGetAllWithdrawDetails } from '@/react-query/withdrawl-details-queries';
 import Container from '@/components/common/container';
 import TopBar from '@/components/common/top-bar';
 import WithdrawDetailsRecord from '@/models/withdrawl-details';
 import { Button } from '@/components/ui/button';
-import { BankIcon, DeleteIcon, TransactionIcon, UPIIcon } from '../../../user-menu/icons';
+import { BankIcon, DeleteIcon, UPIIcon } from '../../../user-menu/icons';
 import Link from 'next/link';
 
 const PaymentMethodCards = () => {
-    const { data, isLoading, isSuccess } = useGetAllWithdrawDetails({});
+    const { data, isSuccess } = useGetAllWithdrawDetails({});
     const [showAddPaymentMethod, setShowAddPaymentMethod] = React.useState(false);
 
     const withdrawDetails: WithdrawDetailsRecord[] = useMemo(() => {
@@ -32,8 +31,8 @@ const PaymentMethodCards = () => {
             <div className="w-full max-w-sm mt-8 mx-auto space-y-4">
                 {!showAddPaymentMethod &&
                     <>
-                        {withdrawDetails?.map((detail) => (
-                            <Button variant="game-secondary" className="w-full gap-4 h-14">
+                        {withdrawDetails?.map((detail, index) => (
+                            <Button key={index} variant="game-secondary" className="w-full gap-4 h-14">
                                 <div>
                                     {!detail.isUpi ? <BankIcon /> : <UPIIcon />}
                                 </div>
