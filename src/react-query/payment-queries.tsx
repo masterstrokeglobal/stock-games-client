@@ -94,6 +94,9 @@ export const useConfirmWithdrawal = () => {
 };
 
 
-export const useGetWallet = ()=>{
-     return useQuery 
+export const useGetWallet = () => {
+    return useQuery({
+        queryKey: ["user", "wallet"],
+        queryFn: paymentAPI.getUserWallet,
+    })
 }

@@ -1,11 +1,27 @@
-import React from 'react';
+"use client";
+import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button'; // Adjust the path based on your setup
 import Container from '@/components/common/container';
 import { PasswordIcon, ProfileIcon, TransactionIcon, WalletIcon } from './icons';
 import { LogOutIcon } from 'lucide-react';
+import { useAuthStore } from '@/context/auth-context';
+import User from '@/models/user';
+import { useGetWallet } from '@/react-query/payment-queries';
+import Wallet from '@/models/wallet';
+import { useUserLogout } from '@/react-query/admin-auth-queries';
 
 const UserMenu = () => {
+    const { userDetails } = useAuthStore();
+    const { data, isLoading } = useGetWallet();
+
+    const { mutate } = useUserLogout();
+
+    const wallet = useMemo(() => {
+        if (isLoading) return new Wallet();
+        return new Wallet(data?.data?.wallet);
+    }, [data])
+    const user = userDetails as User;
     return (
         <Container className="flex flex-col items-center min-h-screen ">
             <div className="flex-1 w-full mx-auto max-w-sm flex flex-col ">
@@ -14,17 +30,21 @@ const UserMenu = () => {
 
                     </div>
                     <div className='space-y-2'>
-                        <h2 className="text-2xl text-white font-semibold">JohnDoe92</h2>
+                        <h2 className="text-2xl text-white font-semibold">
+                            {user?.name}
+                        </h2>
                         <div className='flex items-center justify-start gap-4'>
                             <div className="shadow-custom-glow h-fit w-fit mr-2 rounded-full" >
                                 <img src="/coin.svg" alt="coin" />
                             </div>
                             <span className="text-white text-xl">
-                                25,000
+                                {isLoading ? "..." : wallet.totalBalance}
                             </span>
-                            <Button size="icon" variant="ghost" className="ml-auto">
-                                <img src="/plus-icon.svg" className="size-7" alt="arrow-down" />
-                            </Button>
+                            <Link href="/game/wallet/menu" passHref>
+                                <Button size="icon" variant="ghost" className="ml-auto">
+                                    <img src="/plus-icon.svg" className="size-7" alt="arrow-down" />
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -58,7 +78,7 @@ const UserMenu = () => {
             </div>
 
             <div className="mt-8  w-full max-w-sm">
-                <Button variant="destructive" className="w-full mx-auto gap-2 h-14">
+                <Button variant="destructive" className="w-full mx-auto gap-2 h-14" onClick={() => mutate()}>
                     <LogOutIcon />
                     Log Out
                 </Button>

@@ -6,12 +6,14 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
-import { PlusCircle, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import WithdrawDetailsRecord from "@/models/withdrawl-details";
 import { useGetAllWithdrawDetails } from "@/react-query/withdrawl-details-queries";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const withdrawSchema = z.object({
-    withdrawDetail: z.string().min(1, "Please select a withdrawal method"),
+    withdrawDetails: z.string().min(1, "Please select a withdrawal method"),
     amount: z.coerce.number({ message: "Amount must be a number" }).min(1, "Amount is required"),
 });
 
@@ -89,15 +91,13 @@ const WithdrawForm = ({
     const form = useForm<WithdrawFormValues>({
         resolver: zodResolver(withdrawSchema),
         defaultValues: {
-            withdrawDetail: '',
+            withdrawDetails: '',
             amount: 0,
         },
     });
 
-    const { control, handleSubmit, watch, formState: { errors } } = form;
+    const { control, handleSubmit} = form;
 
-    // Watch the amount field to display it dynamically
-    const enteredAmount = watch("amount");
 
     if (isLoadingDetails) {
         return (
@@ -127,30 +127,43 @@ const WithdrawForm = ({
 
     return (
         <div className="w-full max-w-sm flex flex-col min-h-[calc(100vh-5rem)]">
-            <header>
-                <h2 className="text-2xl font-semibold text-center mb-2 text-white">
-                    Withdraw Funds
-                </h2>
-                <p className="text-[#6A84C3] text-center text-sm">
-                    Select a withdrawal method and enter the amount.
-                </p>
-            </header>
-
-            {/* Available Balance and Entered Amount */}
-            <div className="text-center mb-4">
-                <p className="text-lg font-semibold text-white">
-                    Available Balance: ₹{totalAmount.toLocaleString()}
-                </p>
-                <p className="text-sm text-[#6A84C3]">
-                    Entered Amount: ₹{enteredAmount || 0}
-                </p>
-            </div>
 
             <FormProvider
                 methods={form}
                 onSubmit={handleSubmit(onSubmit)}
                 className="space-y-4 flex-1 mt-4 flex flex-col"
             >
+                {/* Withdrawal Amount Input */}
+                <div>
+
+                    <Label className="text-sm font-medium text-white">
+                        Total Balance
+                    </Label>
+                    <div className="flex justify-center relative mb-2">
+
+                        <div className="mr-2 absolute left-2 top-3 bottom-2 rounded-full" >
+                            <img src="/coin.svg" className='shadow-custom-glow  rounded-full' alt="coin" />
+                        </div>
+                        <Input
+                            placeholder="Enter bet amount"
+                            value={totalAmount}
+                            disabled
+
+                            className="bg-[#101F44] p-2 text-white  pl-14 h-14 text-xl"
+                        />
+                    </div>
+                </div>
+
+                <FormInput
+                    control={control}
+                    game
+                    name="amount"
+                    label="Withdrawal Amount*"
+                    placeholder="Enter amount to withdraw"
+                    type="number"
+                    required
+                />
+
                 {/* Withdrawal Methods */}
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-white">
@@ -158,7 +171,7 @@ const WithdrawForm = ({
                     </label>
                     <Controller
                         control={control}
-                        name="withdrawDetail"
+                        name="withdrawDetails"
                         render={({ field }) => (
                             <div className="space-y-2">
                                 {activeWithdrawDetails.length === 0 ? (
@@ -180,16 +193,7 @@ const WithdrawForm = ({
                     />
                 </div>
 
-                {/* Withdrawal Amount Input */}
-                <FormInput
-                    control={control}
-                    game
-                    name="amount"
-                    label="Withdrawal Amount*"
-                    placeholder="Enter amount to withdraw"
-                    type="number"
-                    required
-                />
+
 
                 {/* Submit Button */}
                 <footer className="mt-auto pt-4">

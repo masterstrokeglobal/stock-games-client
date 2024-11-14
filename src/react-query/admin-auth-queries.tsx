@@ -33,6 +33,23 @@ export const useAdminLogout = () => {
         },
     });
 };
+export const useUserLogout = () => {
+    const router = useRouter();
+    return useMutation({
+        mutationFn: adminAuthAPI.logout,
+        onSuccess: () => {
+            localStorage.removeItem("token");
+            toast.success("Logged out successfully");
+
+            router.push("/game/auth/login");
+
+        },
+        onError: (error: any) => {
+            console.log(error);
+            toast.error(error.response.data.message ?? "Error logging out");
+        },
+    });
+};
 
 export const useAdminProfile = () => {
     return useQuery({

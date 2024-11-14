@@ -3,10 +3,19 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
 import User from "@/models/user";
+import Wallet from "@/models/wallet";
+import { useGetWallet } from "@/react-query/payment-queries";
 import Link from "next/link";
+import { useMemo } from "react";
 
 const Navbar = () => {
     const { userDetails } = useAuthStore();
+    const { data, isLoading } = useGetWallet();
+
+    const wallet = useMemo(() => {
+        if (isLoading) return new Wallet();
+        return new Wallet(data?.data?.wallet);
+    }, [data])
 
     const user = userDetails as User;
     return (
@@ -22,7 +31,7 @@ const Navbar = () => {
                         <img src="/coin.svg" alt="coin" />
                     </div>
                     <span className="text-white text-xl">
-                        25,000
+                        {isLoading ? "..." : wallet.totalBalance}
                     </span>
 
                     <Button size="icon" variant="ghost" className="ml-6">
@@ -30,18 +39,18 @@ const Navbar = () => {
                     </Button>
                 </button>
                 <Link href="/game/user-menu">
-                <button className="bg-[#112148] px-4 h-12 space-x-3 flex items-center py-2 rounded-full">
+                    <button className="bg-[#112148] px-4 h-12 space-x-3 flex items-center py-2 rounded-full">
 
-                    <Avatar className="size-6">
-                        <AvatarFallback className="bg-primary-game">
-                            J
-                        </AvatarFallback>
-                    </Avatar>
+                        <Avatar className="size-6">
+                            <AvatarFallback className="bg-primary-game">
+                                J
+                            </AvatarFallback>
+                        </Avatar>
 
-                    <span className="text-sm" >
-                        {user.firstname}
-                    </span>
-                </button>
+                        <span className="text-sm" >
+                            {user.firstname}
+                        </span>
+                    </button>
                 </Link>
             </div>
             <div className="h-0.5 bottom-0 absolute w-full -mx-12" style={{ background: "radial-gradient(51.91% 51.91% at 48.09% 91.82%, #2397FA 0%, rgba(35, 151, 250, 0) 100%)" }} />

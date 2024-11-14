@@ -1,17 +1,20 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import Container from '@/components/common/container';
 import TopBar from '@/components/common/top-bar';
 import WithdrawForm, { WithdrawFormValues } from '@/components/features/gamer/wallet/withdrawl-form';
-import { useCreateWithdrawalRequest } from '@/react-query/payment-queries';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { useCreateWithdrawalRequest, useGetWallet } from '@/react-query/payment-queries';
+import Wallet from '@/models/wallet';
 
 const WithdrawalFormPage = () => {
     const { mutate, isPending } = useCreateWithdrawalRequest();
-    const {isLoading,data} = 
-    const router = useRouter();
+    const { data, isLoading } = useGetWallet();
+
+    const wallet = useMemo(() => {
+        if (isLoading) return new Wallet();
+        return new Wallet(data?.data?.wallet);
+    }, [data])
 
     const onSubmit = async (data: WithdrawFormValues) => {
         // Ensure amount is converted to integer
@@ -30,9 +33,14 @@ const WithdrawalFormPage = () => {
             </TopBar>
 
             <div className="w-full max-w-md px-4">
-                <WithdrawForm isLoading={isPending}
-
-                    onSubmit={onSubmit} />
+                {isLoading && <div>Loading...</div>}
+                {!isLoading && (
+                    <WithdrawForm
+                        onSubmit={onSubmit}
+                        totalAmount={wallet.totalBalance}
+                        isLoading={isPending}
+                    />
+                )}
             </div>
         </Container>
     );
