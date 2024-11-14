@@ -23,6 +23,12 @@ export const paymentAPI = {
     });
   },
 
+  getUserTransactions: async (filter: any) => {
+    return api.get("/payment/user-transactions", {
+      params: filter,
+    });
+  },
+
   // Get a specific transaction by ID (only accessible by users with COMPANY_ADMIN role)
   getTransactionById: async (transactionId: string) => {
     return api.get(`/payment/transaction/${transactionId}`);

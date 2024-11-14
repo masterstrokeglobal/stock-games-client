@@ -43,6 +43,13 @@ export const useGetTransactions = (filter: any) => {
     });
 };
 
+export const useGetUserTransactions = (filter: any) => {
+    return useQuery({
+        queryKey: ["transactions", "user", filter],
+        queryFn: () => paymentAPI.getUserTransactions(filter),
+    });
+}
+
 // Get Transaction by ID
 export const useGetTransactionById = (transactionId: string) => {
     return useQuery({
@@ -85,3 +92,8 @@ export const useConfirmWithdrawal = () => {
         },
     });
 };
+
+
+export const useGetWallet = ()=>{
+     return useQuery 
+}

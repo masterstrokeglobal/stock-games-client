@@ -19,7 +19,7 @@ const WalletMenu = () => {
                         Deposit Funds
                     </Button>
                 </Link>
-                <Link href="/game/wallet/withdraw" passHref>
+                <Link href="/game/wallet/withdrawl" passHref>
                     <Button variant="game-secondary" className="w-full   gap-x-2 h-14">
                         <WithdrawIcon />
                         Withdraw Funds
