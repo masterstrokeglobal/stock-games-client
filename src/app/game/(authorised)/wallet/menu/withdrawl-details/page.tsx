@@ -77,7 +77,7 @@ const AddPaymentMethod = ({ onBack }: Props) => {
                     Add UPI
                 </Button>
             </Link>
-            <Link href={{ pathname:  "/game/wallet/menu/withdrawl-details/create", query: { type: 'bank' } }} passHref>
+            <Link href={{ pathname: "/game/wallet/menu/withdrawl-details/create", query: { type: 'bank' } }} passHref>
                 <Button variant="game-secondary" className="w-full gap-x-3 h-14">
                     <BankIcon />
                     Add Bank Details
