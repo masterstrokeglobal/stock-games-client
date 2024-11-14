@@ -10,6 +10,9 @@ const config: Config = {
 	],
 	theme: {
 		extend: {
+			fontFamily:{
+				jersey: ['var(--font-jersey-10)', 'sans-serif'],
+			},
 			boxShadow: {
 				'custom-glow': '0px 0px 26.55px 0px rgba(252, 210, 39, 0.56)',
 			},

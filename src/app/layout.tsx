@@ -1,6 +1,6 @@
 "use client";
 import "./globals.css";
-import { Poppins } from 'next/font/google';
+import {Poppins } from 'next/font/google';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { UserProvider } from "@/context/auth-context";
 import { Toaster } from "sonner";
@@ -10,7 +10,6 @@ const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'], // Include all weights
   subsets: ['latin'],  // Optional, but typically used for basic character sets
 });
-
 
 const queryClient = new QueryClient({
   defaultOptions: {

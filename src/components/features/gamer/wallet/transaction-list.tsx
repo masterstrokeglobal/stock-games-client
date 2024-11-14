@@ -1,5 +1,4 @@
 import React from 'react';
-import { Check, X, Clock } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Transaction, TransactionStatus } from '@/models/transaction';
 import dayjs from 'dayjs';
@@ -9,50 +8,44 @@ type Props = {
 };
 
 const TransactionTable = ({ transactions }: Props) => {
-    const getRowStyles = (status: TransactionStatus) => {
-        const statusStyles = {
-            [TransactionStatus.COMPLETED]: 'bg-green-50',
-            [TransactionStatus.FAILED]: 'bg-red-50',
-            [TransactionStatus.PENDING]: 'bg-yellow-50',
+    const getStatusStyles = (status: TransactionStatus) => {
+        const styles = {
+            [TransactionStatus.COMPLETED]: 'text-green-300',
+            [TransactionStatus.FAILED]: 'text-red-300 ',
+            [TransactionStatus.PENDING]: 'text-yellow-200 ',
         };
-
-        return `${statusStyles[status] || ''}`;
+        
+        return styles[status] || '';
     };
-
-    const getStatusColor = (status: TransactionStatus) => {
-        const statusColor = {
-            [TransactionStatus.COMPLETED]: 'text-green-500',
-            [TransactionStatus.FAILED]: 'text-red-500',
-            [TransactionStatus.PENDING]: 'text-yellow-500',
-        };
-
-        return `${statusColor[status] || ''}`;
-    }
-
+    
     return (
-        <div className="rounded-lg border bg-transparent">
+        <div className="w-full rounded-xl ">
             <Table>
-                <TableHeader>
-                    <TableRow className="hover:bg-transparent border-gray-200">
-                        <TableHead className="font-medium">Date/Time</TableHead>
-                        <TableHead className="font-medium">Amount</TableHead>
-                        <TableHead className="font-medium">Status</TableHead>
+                <TableHeader className='mb-3'>
+                    <TableRow className="hover:bg-transparent border-b-0 border-none pb-4">
+                        <TableHead className="text-gray-300">Date/Time</TableHead>
+                        <TableHead className="text-gray-300">Amount</TableHead>
+                        <TableHead className="text-gray-300">Status</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {transactions.map((transaction, index) => (
                         <TableRow
                             key={index}
-                            className={`${getRowStyles(transaction.status)} hover:bg-gray-50/5 transition-colors`}
+                            className="hover:bg-blue-900/20 py-2 transition-colors odd:bg-[#14244C]  duration-200 border-b-0"
                         >
-                            <TableCell>{dayjs(transaction.createdAt).format('MMM D, YYYY h:mm A')}</TableCell>
-                            <TableCell className="font-medium">{transaction.amount}</TableCell>
-                            <TableCell>
-                                <div className="flex items-center gap-2">
-                                    <span className={getStatusColor(transaction.status)}>
-                                        {transaction.status}
-                                    </span>
-                                </div>
+                            <TableCell className="text-gray-300 rounded">
+                                {dayjs(transaction.createdAt).format('MMM D,')}
+                                <br/>
+                                {dayjs(transaction.createdAt).format('YYYY h:mm A')}
+                            </TableCell>
+                            <TableCell className="font-medium text-white">
+                                {transaction.amount}
+                            </TableCell>
+                            <TableCell className='rounded'>
+                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusStyles(transaction.status)}`}>
+                                    {transaction.status}
+                                </span>
                             </TableCell>
                         </TableRow>
                     ))}

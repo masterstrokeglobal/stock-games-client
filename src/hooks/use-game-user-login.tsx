@@ -1,7 +1,6 @@
 import { useAuthStore } from "@/context/auth-context";
 import User from "@/models/user";
 import { useGameUserProfile } from "@/react-query/game-user-queries";
-import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 const useGameUserLogin = () => {

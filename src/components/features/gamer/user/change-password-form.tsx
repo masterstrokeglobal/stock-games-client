@@ -4,10 +4,10 @@ import FormInput from "@/components/ui/form/form-input";
 import FormProvider from "@/components/ui/form/form-provider";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
 import { usePasswordChange } from "@/react-query/user-queries";
 import { useAuthStore } from "@/context/auth-context";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 // Zod schema for password change
 const passwordChangeSchema = z.object({
@@ -28,11 +28,11 @@ const passwordChangeSchema = z.object({
 type PasswordChangeFormValues = z.infer<typeof passwordChangeSchema>;
 
 const PasswordChangeForm = () => {
-    const [success, setSuccess] = React.useState(false);
     const { userDetails: user } = useAuthStore();
     const { mutate: changePassword, isPending: isChanging } = usePasswordChange();
 
     const form = useForm<PasswordChangeFormValues>({
+        resolver: zodResolver(passwordChangeSchema),
         defaultValues: {
             oldPassword: '',
             newPassword: '',
@@ -55,9 +55,7 @@ const PasswordChangeForm = () => {
             },
             {
                 onSuccess: () => {
-                    setSuccess(true);
                     form.reset();
-                    setTimeout(() => setSuccess(false), 3000);
                 },
                 onError: (error) => {
                     console.error('Password change failed:', error);

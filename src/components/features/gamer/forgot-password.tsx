@@ -32,7 +32,7 @@ type Props = {
     onBack?: () => void;
 };
 
-const ResetPasswordForm = ({ defaultValues, onSubmit, isLoading, onBack }: Props) => {
+const ResetPasswordForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
     const form = useForm<ResetPasswordFormValues>({
         resolver: zodResolver(createResetPasswordSchema),
         defaultValues,

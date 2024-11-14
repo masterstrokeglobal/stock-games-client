@@ -19,7 +19,7 @@ const DepositFormPage = () => {
             onSuccess: () => {
                 router.push('/game/profile');
             },
-            onError: (error: any) => {
+            onError: () => {
                 console.log('Error creating deposit request');
             }
         });

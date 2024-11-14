@@ -4,10 +4,10 @@ import FormInput from "@/components/ui/form/form-input";
 import FormProvider from "@/components/ui/form/form-provider";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2 } from "lucide-react";
 import { useGameUserProfile, useGameUserUpdateById } from "@/react-query/game-user-queries";
 import { useAuthStore } from "@/context/auth-context";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 // Zod schema for profile update
 const updateProfileSchema = z.object({
@@ -26,12 +26,11 @@ const ProfileUpdateForm = () => {
     const {
         data: profileData,
         isLoading: isLoadingProfile,
-        isError,
-        error: profileError
     } = useGameUserProfile();
 
     // Form initialization with react-hook-form
     const form = useForm<ProfileFormValues>({
+        resolver: zodResolver(updateProfileSchema),
         defaultValues: {
             firstname: '',
             lastname: '',

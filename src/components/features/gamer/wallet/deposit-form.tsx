@@ -4,9 +4,7 @@ import FormInput from "@/components/ui/form/form-input";
 import FormProvider from "@/components/ui/form/form-provider";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, QrCode } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 // Zod schema for deposit form
 const depositSchema = z.object({
@@ -29,9 +27,9 @@ type Props = {
 
 
 const DepositForm = ({ onSubmit }: Props) => {
-    const [success, setSuccess] = React.useState(false);
 
     const form = useForm<DepositFormValues>({
+        resolver: zodResolver(depositSchema),
         defaultValues: {
             transactionId: '',
             amount:0,
