@@ -2,7 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react"; // Import necessary icons
+import { Edit, Edit2, Eye } from "lucide-react"; // Import necessary icons
 import Link from "next/link"; // Adjust import path
 import { Transaction, TransactionStatus, TransactionType } from "@/models/transaction";
 
@@ -29,7 +29,7 @@ const transactionColumns: ColumnDef<Transaction>[] = [
     {
         header: "Amount",
         accessorKey: "amount",
-        cell: ({ row }) => <div>${row.original.amount.toFixed(2)}</div>,
+        cell: ({ row }) => <div>Rs. {row.original.amount.toFixed(2)}</div>,
     },
     {
         header: "Status",
@@ -59,7 +59,7 @@ const transactionColumns: ColumnDef<Transaction>[] = [
             <div className="flex justify-end">
                 <Link href={`/dashboard/transactions/${row.original.id}`}>
                     <Button variant="ghost" aria-label="View Transaction">
-                        <Eye className="w-5 h-5" />
+                        <Edit2 size={18} />
                     </Button>
                 </Link>
             </div>

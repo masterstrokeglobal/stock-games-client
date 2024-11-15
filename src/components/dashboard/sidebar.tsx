@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Users, Home, LucideIcon, Building, Clock } from 'lucide-react';
+import { Users, Home, LucideIcon, Building, Clock, DollarSign, Gamepad, Repeat1 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
 import {
@@ -73,6 +73,16 @@ const companyMenuItems: MenuItem[] = [
             { name: 'Create Schedule', link: '/dashboard/scheduler/create' },
         ]
     },
+    {
+        name: 'Transactions',
+        icon:DollarSign,
+        link: '/dashboard/transactions',
+    },
+    {
+        name:'Rounds',
+        icon: Repeat1,
+        link:'/dashboard/round-records',
+    }
 ];
 
 

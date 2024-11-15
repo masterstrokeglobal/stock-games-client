@@ -8,6 +8,7 @@ import { useGetUserById } from "@/react-query/user-queries"; // Custom hook for 
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
 import TransactionTable from "@/components/features/transaction/transaction-table"; // Adjust the import based on your transaction table component
+import UserEarningsCard from "@/components/features/user/user-earning";
 
 const ViewUserPage = () => {
     const params = useParams();
@@ -33,8 +34,10 @@ const ViewUserPage = () => {
                 {userDetails && <UserCard user={userDetails} />} {/* Render UserCard if data exists */}
             </main>
 
+            <UserEarningsCard userId={id.toString()} /> {/* Render UserEarningsCard with user ID */}
+
             <main className="mt-4">
-                <TransactionTable userId={userDetails?.id?.toString()} /> {/* Render TransactionTable with user ID */}
+                <TransactionTable userId={id.toString()} /> {/* Render TransactionTable with user ID */}
             </main>
         </section>
     );
