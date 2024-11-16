@@ -1,13 +1,13 @@
 "use client"
-import React, { useMemo } from 'react';
-import { ChevronLeft, Plus } from 'lucide-react';
-import { useGetAllWithdrawDetails } from '@/react-query/withdrawl-details-queries';
 import Container from '@/components/common/container';
 import TopBar from '@/components/common/top-bar';
-import WithdrawDetailsRecord from '@/models/withdrawl-details';
 import { Button } from '@/components/ui/button';
-import { BankIcon, DeleteIcon, UPIIcon } from '../../../user-menu/icons';
+import WithdrawDetailsRecord from '@/models/withdrawl-details';
+import { useGetAllWithdrawDetails } from '@/react-query/withdrawl-details-queries';
+import { Plus } from 'lucide-react';
 import Link from 'next/link';
+import React, { useMemo } from 'react';
+import { BankIcon, DeleteIcon, UPIIcon } from '../../../user-menu/icons';
 
 const PaymentMethodCards = () => {
     const { data, isSuccess } = useGetAllWithdrawDetails({});
@@ -28,7 +28,7 @@ const PaymentMethodCards = () => {
             <TopBar rightContent={<Button variant="ghost" size="icon" onClick={() => setShowAddPaymentMethod(true)}><Plus /></Button>}>
                 Payment Methods
             </TopBar>
-            <div className="w-full max-w-sm mt-8 mx-auto space-y-4">
+            <div className="w-full max-w-sm mt-8 mx-auto  h-full space-y-4">
                 {!showAddPaymentMethod &&
                     <>
                         {withdrawDetails?.map((detail, index) => (
@@ -54,6 +54,16 @@ const PaymentMethodCards = () => {
                         ))}
                     </>
                 }
+
+                {!showAddPaymentMethod && withdrawDetails.length === 0 && ( // If no payment methods are added
+                    <div className="flex flex-col text-white items-center justify-center space-y-4 min-h-[60vh]">
+                        <p className="text-center mb-5 text-xl text-gray-300">No Payment Methods Added</p>
+                        <Button variant="game" className="w-full gap-x-2" onClick={() => setShowAddPaymentMethod(true)}>
+                            <Plus className='size-5' />
+                            Add Payment Method
+                        </Button>
+                    </div>
+                )}
                 {showAddPaymentMethod && <AddPaymentMethod onBack={() => setShowAddPaymentMethod(false)} />}
             </div>
 
@@ -67,7 +77,7 @@ type Props = {
     onBack: () => void;
 }
 
-const AddPaymentMethod = ({ onBack }: Props) => {
+const AddPaymentMethod = ({ }: Props) => {
     return (
         <>
             <Link href={{ pathname: "/game/wallet/menu/withdrawl-details/create", query: { type: 'upi' } }} passHref>
@@ -82,11 +92,6 @@ const AddPaymentMethod = ({ onBack }: Props) => {
                     Add Bank Details
                 </Button>
             </Link>
-
-            <Button variant="game" className="w-full gap-x-2 mt-auto" onClick={onBack}>
-                <ChevronLeft className='size-5' />
-                Go Back
-            </Button>
         </>
     );
 };

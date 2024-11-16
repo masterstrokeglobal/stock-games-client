@@ -1,10 +1,10 @@
-import { ColumnDef } from "@tanstack/react-table";
-import dayjs from "dayjs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Edit2, Eye } from "lucide-react"; // Import necessary icons
-import Link from "next/link"; // Adjust import path
 import { Transaction, TransactionStatus, TransactionType } from "@/models/transaction";
+import { ColumnDef } from "@tanstack/react-table";
+import dayjs from "dayjs";
+import { Edit2 } from "lucide-react"; // Import necessary icons
+import Link from "next/link"; // Adjust import path
 
 const transactionColumns: ColumnDef<Transaction>[] = [
     {

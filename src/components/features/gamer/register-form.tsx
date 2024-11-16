@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import FormPassword from "@/components/ui/form/form-password";
 
 // Zod schema for validating the registration form fields
 export const createRegisterSchema = z.object({
@@ -18,15 +19,10 @@ export const createRegisterSchema = z.object({
     }),
 
     //international
-    phone: z
-        .string()
-        .nonempty("Phone number is required")
-        .regex(
-            /^\+?[1-9]\d{1,14}$/,
-            "Invalid phone number format. Include country code, e.g., +1234567890"
-        ),
+    email: z.string().email("Please enter a valid email address"),
 
     username: z.string().max(100).nonempty("Username is required"),
+    phone: z.string().max(20).nonempty("Phone number is required"),
     password: z
         .string()
         .min(6, "Password must be at least 6 characters") // Password length validation
@@ -74,12 +70,19 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 <FormInput
                     control={control}
                     game
+                    name="email"
+                    label="Email *"
+                    required
+                />
+                <FormInput
+                    control={control}
+                    game
                     name="phone"
-                    label="Phone Number*"
+                    label="Phone Number *"
                     required
                 />
                 {/* Password Field */}
-                <FormInput
+                <FormPassword
                     control={control}
                     game
                     name="password"
@@ -108,9 +111,9 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
 
                     Continue with Google
                 </Button>
-                <Button variant="ghost" className="text-[#F9F9F9B2] flex  mt-8" fullWidth>
+                <Button variant="ghost" className="text-[#F9F9F9B2] hover:bg-transparent flex  mt-8" fullWidth>
                     Have an account already?
-                    <Link href="/game/auth/register" className="text-white">
+                    <Link href="/game/auth/login" className="text-white">
                         sign in here
                     </Link>
                 </Button>

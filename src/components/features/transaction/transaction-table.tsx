@@ -1,14 +1,8 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-import Link from "next/link";
-import { Plus, Search } from "lucide-react";
 import transactionColumns from "@/columns/transactions-columns"; // You'll need to create this
-import { Button } from "@/components/ui/button";
 import DataTable from "@/components/ui/data-table-server";
 import { Input } from "@/components/ui/input";
-import { useGetAllTransactions } from "@/react-query/transactions-queries"; // You'll need to create this
-import { Transaction, TransactionType, TransactionStatus } from "@/models/transaction";
 import {
     Select,
     SelectContent,
@@ -18,6 +12,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"; // Import ShadCN Select components
+import { Transaction, TransactionStatus, TransactionType } from "@/models/transaction";
+import { useGetAllTransactions } from "@/react-query/transactions-queries"; // You'll need to create this
+import { Search } from "lucide-react";
+import React, { useMemo, useState } from "react";
 
 
 type Props = {

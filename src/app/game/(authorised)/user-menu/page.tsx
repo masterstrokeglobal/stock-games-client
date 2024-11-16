@@ -10,6 +10,7 @@ import User from '@/models/user';
 import { useGetWallet } from '@/react-query/payment-queries';
 import Wallet from '@/models/wallet';
 import { useUserLogout } from '@/react-query/admin-auth-queries';
+import TopBar from '@/components/common/top-bar';
 
 const UserMenu = () => {
     const { userDetails } = useAuthStore();
@@ -23,7 +24,10 @@ const UserMenu = () => {
     }, [data])
     const user = userDetails as User;
     return (
-        <Container className="flex flex-col items-center min-h-screen ">
+        <Container className="flex flex-col items-center min-h-screen pt-24 ">
+            <TopBar>
+                User Menu
+            </TopBar>
             <div className="flex-1 w-full mx-auto max-w-sm flex flex-col ">
                 <div className="mb-8 flex mt-8 gap-4 sm:flex-row flex-col">
                     <div className='w-24 h-24 border-2 rounded-3xl border-[#EEC53C]'>

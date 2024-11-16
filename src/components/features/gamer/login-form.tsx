@@ -8,16 +8,12 @@ import { z } from "zod";
 import { Separator } from "@/components/ui/separator";
 import FormPassword from "@/components/ui/form/form-password";
 import Link from "next/link";
+import { useGoogleLogin } from "@/react-query/game-user-queries";
 
 // Zod schema for validating the login form fields
 export const createLoginSchema = z.object({
-    phone: z
-        .string()
-        .nonempty("Phone number is required")
-        .regex(
-            /^\+?[1-9]\d{1,14}$/,
-            "Invalid phone number format. Include country code, e.g., +1234567890"
-        ),
+    username: z
+        .string(),
     password: z
         .string()
         .min(6, "Password must be at least 6 characters")
@@ -40,6 +36,9 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
         defaultValues,
     });
 
+    const {mutate} = useGoogleLogin();
+
+
     const { control, handleSubmit } = form;
 
     return (
@@ -55,8 +54,8 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 <FormInput
                     control={control}
                     game
-                    name="phone"
-                    label="Phone Number*"
+                    name="username"
+                    label="Username or Email*"
                     required
                 />
 
@@ -94,6 +93,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
 
                 <Button
                     size="lg"
+                    onClick={() => mutate()}
                     variant="secondary"
                     className="w-full bg-[#182B5A] border-[#EFF8FF17] text-white"
                 >

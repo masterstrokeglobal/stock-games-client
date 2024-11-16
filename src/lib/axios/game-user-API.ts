@@ -17,6 +17,10 @@ export const gameUserAPI = {
         return api.patch(`/user/${userId}`, updateData);
     },
 
+    changePassword: async (payload: { oldPassword: string; newPassword: string }) => {
+        return api.post(`/user/change-password`, payload);
+    }
+    ,
     deleteUserById: async ({ userId }: { userId: string }) => {
         return api.delete(`/user/${userId}`);
     },
@@ -24,8 +28,15 @@ export const gameUserAPI = {
     login: async (payload: any) => {
         return api.post("/auth/user-login", payload);
     },
-    
+
     myProfile: async () => {
         return api.get("/user/profile");
+    },
+
+    googleLogin: async () => {
+        return api.get("/auth/google");
+    },
+    googleLoginCallback: async () => {
+        return api.get("/auth/google/callback");
     },
 };

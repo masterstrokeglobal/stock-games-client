@@ -112,7 +112,7 @@ const ProfileUpdateForm = () => {
                     game
                     name="phone"
                     label="Phone Number"
-                    disabled
+
                 />
 
                 <FormInput
@@ -121,7 +121,7 @@ const ProfileUpdateForm = () => {
                     name="email"
                     label="Email*"
                     type="email"
-                    required
+                    disabled
                 />
 
                 <footer className="flex justify-end mt-8">

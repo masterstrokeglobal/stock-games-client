@@ -1,23 +1,21 @@
 "use client";
 
-import React, { useMemo } from "react";
 import {
     Card,
+    CardContent,
     CardHeader,
     CardTitle,
-    CardContent,
 } from "@/components/ui/card";
 import { useGetUserProfitLoss } from "@/react-query/payment-queries"; // Adjust this hook to fetch user-specific data
 import {
-    DollarSign,
-    TrendingUp,
+    ArrowDownCircle,
+    ArrowUpCircle,
+    Banknote,
     Briefcase,
     Coins,
-    Banknote,
-    PiggyBank,
-    ArrowUpCircle,
-    ArrowDownCircle,
+    DollarSign
 } from "lucide-react";
+import React, { useMemo } from "react";
 
 type Props = {
     userId: string;

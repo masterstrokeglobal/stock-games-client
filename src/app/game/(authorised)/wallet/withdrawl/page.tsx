@@ -6,10 +6,12 @@ import TopBar from '@/components/common/top-bar';
 import WithdrawForm, { WithdrawFormValues } from '@/components/features/gamer/wallet/withdrawl-form';
 import { useCreateWithdrawalRequest, useGetWallet } from '@/react-query/payment-queries';
 import Wallet from '@/models/wallet';
+import { useRouter } from 'next/router';
 
 const WithdrawalFormPage = () => {
     const { mutate, isPending } = useCreateWithdrawalRequest();
     const { data, isLoading } = useGetWallet();
+    const router  = useRouter();
 
     const wallet = useMemo(() => {
         if (isLoading) return new Wallet();
@@ -22,8 +24,11 @@ const WithdrawalFormPage = () => {
             ...data,
             amount: parseInt(data.amount.toString()),
         };
-
-        mutate(withdrawalData);
+        mutate(withdrawalData,{
+            onSuccess: () => {
+               router.push('/game/user-menu');
+            }
+        });
     };
 
     return (

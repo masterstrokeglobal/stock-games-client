@@ -1,24 +1,20 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
-import FormInput from "@/components/ui/form/form-input";
+import FormPassword from "@/components/ui/form/form-password";
 import FormProvider from "@/components/ui/form/form-provider";
+import { useAuthStore } from "@/context/auth-context";
+import { usePasswordChange } from "@/react-query/user-queries";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Loader2 } from "lucide-react";
-import { usePasswordChange } from "@/react-query/user-queries";
-import { useAuthStore } from "@/context/auth-context";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 // Zod schema for password change
 const passwordChangeSchema = z.object({
     oldPassword: z.string().min(8, "Password must be at least 8 characters"),
     newPassword: z
         .string()
-        .min(8, "Password must be at least 8 characters")
-        .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-        .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-        .regex(/\d/, "Password must contain at least one number")
-        .regex(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character"),
+        .min(8, "Password must be at least 8 characters"),
     confirmNewPassword: z.string().min(8, "Password must be at least 8 characters"),
 }).refine((data) => data.newPassword === data.confirmNewPassword, {
     message: "New password and confirm new password must match",
@@ -30,6 +26,7 @@ type PasswordChangeFormValues = z.infer<typeof passwordChangeSchema>;
 const PasswordChangeForm = () => {
     const { userDetails: user } = useAuthStore();
     const { mutate: changePassword, isPending: isChanging } = usePasswordChange();
+    const router = useRouter();
 
     const form = useForm<PasswordChangeFormValues>({
         resolver: zodResolver(passwordChangeSchema),
@@ -47,18 +44,14 @@ const PasswordChangeForm = () => {
 
         changePassword(
             {
-                userId: user.id.toString(),
-                updateData: {
-                    oldPassword: data.oldPassword,
-                    newPassword: data.newPassword,
-                }
-            },
+                oldPassword: data.oldPassword,
+                newPassword: data.newPassword,
+            }
+            ,
             {
                 onSuccess: () => {
                     form.reset();
-                },
-                onError: (error) => {
-                    console.error('Password change failed:', error);
+                    router.push('/game/user-menu');
                 }
             }
         );
@@ -69,7 +62,7 @@ const PasswordChangeForm = () => {
 
             <FormProvider methods={form} onSubmit={handleSubmit(onSubmit)} className="space-y-4 flex-1 pb-4 flex justify-between flex-col w-full">
                 <div className="space-y-4 ">
-                    <FormInput
+                    <FormPassword
                         control={control}
                         game
                         name="oldPassword"
@@ -78,7 +71,7 @@ const PasswordChangeForm = () => {
                         required
                     />
 
-                    <FormInput
+                    <FormPassword
                         control={control}
                         game
                         name="newPassword"
@@ -87,7 +80,7 @@ const PasswordChangeForm = () => {
                         required
                     />
 
-                    <FormInput
+                    <FormPassword
                         control={control}
                         game
                         name="confirmNewPassword"

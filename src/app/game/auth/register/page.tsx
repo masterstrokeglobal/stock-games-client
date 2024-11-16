@@ -25,9 +25,10 @@ const RegisterPage = () => {
             firstname,
             lastname,
             username: data.username,
-            email: null,
-            password: data.password,
             phone: data.phone,
+            email: data.email,
+            password: data.password,
+            companyId:4,
         }, {
             onSuccess: (data) => {
                 const user = new User(data.data);
@@ -45,7 +46,7 @@ const RegisterPage = () => {
             }
         }, {
             onSuccess: () => {
-                router.push("/game");
+                router.push("/game/auth/login");
             }
         });
     }

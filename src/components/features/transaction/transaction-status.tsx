@@ -1,6 +1,6 @@
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { TransactionStatus } from "@/models/transaction";
-import { Info, CheckCircle, XCircle } from "lucide-react";
+import { CheckCircle, XCircle } from "lucide-react";
 
 const TransactionStatusAlert = ({ currentStatus }: { currentStatus: TransactionStatus }) => {
     if (currentStatus === TransactionStatus.PENDING) return null;

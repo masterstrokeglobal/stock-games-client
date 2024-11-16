@@ -1,11 +1,8 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-import { Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import roundRecordColumns from "@/columns/round-records-columns";
 import DataTable from "@/components/ui/data-table-server";
 import { Input } from "@/components/ui/input";
-import { RoundRecord } from "@/models/round-record";
 import {
     Select,
     SelectContent,
@@ -15,13 +12,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { useGetAllRoundRecords } from "@/react-query/round-record-queries";
 import { SchedulerType } from "@/models/market-item";
-import roundRecordColumns from "@/columns/round-records-columns";
-
-type Props = {
-    companyId?: string;
-};
+import { RoundRecord } from "@/models/round-record";
+import { useGetAllRoundRecords } from "@/react-query/round-record-queries";
+import { Search } from "lucide-react";
+import React, { useMemo, useState } from "react";
 
 const RoundRecordTable = () => {
     const [page, setPage] = useState(1);

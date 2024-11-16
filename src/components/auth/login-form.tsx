@@ -27,7 +27,7 @@ const defaultValues: LoginFormValues = {
 };
 
 const LoginForm = () => {
-    const {setUser}  = useAuthStore();
+    const { setUser } = useAuthStore();
     const router = useRouter();
     const { mutate, isPending } = useAdminLogin();
     const form = useForm({
@@ -37,8 +37,8 @@ const LoginForm = () => {
 
 
     const onSubmit = (formValue: LoginFormValues) => {
-        mutate(formValue,{
-            onSuccess:(data)=>{
+        mutate(formValue, {
+            onSuccess: (data) => {
                 const admin = new Admin(data.data.admin);
                 setUser(admin);
                 router.push("/dashboard");
@@ -61,10 +61,7 @@ const LoginForm = () => {
             />
 
             <div className="space-y-2 pt-2">
-                <Button
-                    disabled={isPending}
-                    className="block w-full"
-                >
+                <Button disabled={isPending} className="block w-full"  >
                     Login
                 </Button>
             </div>

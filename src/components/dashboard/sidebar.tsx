@@ -1,9 +1,8 @@
 "use client";
-import React from 'react';
+import { cn } from "@/lib/utils";
+import { Building, Clock, DollarSign, Home, LucideIcon, Repeat1, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Users, Home, LucideIcon, Building, Clock, DollarSign, Gamepad, Repeat1 } from 'lucide-react';
-import { cn } from "@/lib/utils";
 
 import {
     Accordion,
@@ -11,9 +10,9 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
-import Logo from '../common/logo';
 import { useAuthStore } from '@/context/auth-context';
 import Admin from '@/models/admin';
+import Logo from '../common/logo';
 
 interface SubMenuItem {
     name: string;

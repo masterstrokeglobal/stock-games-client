@@ -41,7 +41,7 @@ export const usePasswordChange = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: gameUserAPI.updateUserById,
+        mutationFn: gameUserAPI.changePassword,
         onSuccess: () => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
@@ -51,7 +51,7 @@ export const usePasswordChange = () => {
             toast.success("Password changed successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error changing password");
+            toast.error(error.response?.data.message ?? "Error changing password");
         },
     });
 }

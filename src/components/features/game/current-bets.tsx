@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
-const CurrentBets = () => {
+const CurrentBets = ({ className }: PropsWithClassName) => {
     const currentBetsData = [
         { crypto: "ETH", userId: 24586, amount: "$2,000.00" },
         { crypto: "ETH", userId: 24586, amount: "$1,000.00" },
@@ -27,7 +28,7 @@ const CurrentBets = () => {
     return (
         <section
             ref={sectionRef}
-            className="p-4 rounded-2xl h-full w-full  bg-[#122146]"
+            className={cn("p-4 rounded-2xl h-full w-full  bg-[#122146]", className)}
         >
             <h2 className="text-xl font-semibold mb-4 text-gray-200">
                 Current Bets
