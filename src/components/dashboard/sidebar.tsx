@@ -1,9 +1,8 @@
 "use client";
-import React from 'react';
+import { cn } from "@/lib/utils";
+import { Building, Clock, DollarSign, Home, LucideIcon, Repeat1, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Users, Home, LucideIcon, Building, Clock } from 'lucide-react';
-import { cn } from "@/lib/utils";
 
 import {
     Accordion,
@@ -11,9 +10,9 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
-import Logo from '../common/logo';
 import { useAuthStore } from '@/context/auth-context';
 import Admin from '@/models/admin';
+import Logo from '../common/logo';
 
 interface SubMenuItem {
     name: string;
@@ -73,6 +72,16 @@ const companyMenuItems: MenuItem[] = [
             { name: 'Create Schedule', link: '/dashboard/scheduler/create' },
         ]
     },
+    {
+        name: 'Transactions',
+        icon:DollarSign,
+        link: '/dashboard/transactions',
+    },
+    {
+        name:'Rounds',
+        icon: Repeat1,
+        link:'/dashboard/round-records',
+    }
 ];
 
 

@@ -49,7 +49,7 @@ export const useGameUserLogin = () => {
             toast.success("User logged in successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error logging in");
+            toast.error(error.response?.data.message ?? "Error logging in");
         },
     });
 };
@@ -115,3 +115,26 @@ export const useGameUserDeleteById = () => {
 };
 
 
+export const useGoogleLogin = () => {
+    return useMutation({
+        mutationFn: gameUserAPI.googleLogin,
+        onSuccess: () => {
+            toast.success("Google login initiated");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error initiating Google login");
+        },
+    });
+};
+
+export const useGoogleLoginCallback = () => {
+    return useMutation({
+        mutationFn: gameUserAPI.googleLoginCallback,
+        onSuccess: () => {
+            toast.success("Google login successful");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error logging in with Google");
+        },
+    });
+};

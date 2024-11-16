@@ -1,8 +1,6 @@
 import api from "./instance";
 
 export const userAPI = {
-
-
     getAllUsers: async (filter: SearchFilters) => {
         return api.get("/user", {
             params: filter

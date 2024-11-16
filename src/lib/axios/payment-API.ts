@@ -23,6 +23,14 @@ export const paymentAPI = {
     });
   },
 
+  getProfitLoss: async (companyId: string) => {
+    return api.get(`/payment/company-profit-loss?companyId=${companyId || ""}`);
+  },
+
+  getUserProfitLoss: async (userId: string) => {
+    return api.get(`/payment/individual-profit-loss?userId=${userId || ""}`);
+  },
+
   getUserTransactions: async (filter: any) => {
     return api.get("/payment/user-transactions", {
       params: filter,
@@ -35,12 +43,12 @@ export const paymentAPI = {
   },
 
   // Update a transaction by ID (only accessible by users with COMPANY_ADMIN role)
-  updateTransactionById:  ({data,transactionId}:{transactionId: string, data: any}) => {
+  updateTransactionById: ({ data, transactionId }: { transactionId: string, data: any }) => {
     return api.patch(`/payment/${transactionId}`, data);
   },
 
   // Confirm a withdrawal by transaction ID (only accessible by users with COMPANY_ADMIN role)
-  confirmWithdrawal:  (transactionId: string) => {
+  confirmWithdrawal: (transactionId: string) => {
     return api.patch(`/payment/confirm-withdrawal/${transactionId}`);
   },
 };

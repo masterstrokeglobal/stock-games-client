@@ -21,13 +21,32 @@ export const useGetAllTransactions = (filter?: Record<string, any>) => {
     });
 };
 
-export const useGetTransactionById = (transactionId: number) => {
+export const useGetTransactionById = (transactionId: string) => {
     return useQuery({
         queryKey: ["transaction", transactionId],
         queryFn: () => transactionAPI.getTransactionById(transactionId),
     });
 };
 
+
+export const useUpdateTransactionById = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: transactionAPI.updateTransactionById,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "transactions";
+                },
+            });
+            toast.success("Transaction updated successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.error ?? "Error updating transaction");
+        },
+    });
+};
 
 
 export const useDeleteTransactionById = () => {

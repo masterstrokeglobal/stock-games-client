@@ -19,9 +19,7 @@ const UserTable = () => {
 
     const users = useMemo(() => {
         if (isSuccess && data?.data?.users) {
-            return Array.from(data.data.users).map(
-                (user: any) => new User(user)
-            );
+            return Array.from(data.data.users).map((user: any) => new User(user));
         }
         return [];
     }, [data, isSuccess]);

@@ -93,10 +93,23 @@ export const useConfirmWithdrawal = () => {
     });
 };
 
-
 export const useGetWallet = () => {
     return useQuery({
         queryKey: ["user", "wallet"],
         queryFn: paymentAPI.getUserWallet,
     })
+}
+
+export const useGetCompanyProfitLoss = (companyId: string) => {
+    return useQuery({
+        queryKey: ["company", "profit-loss", companyId],
+        queryFn: () => paymentAPI.getProfitLoss(companyId),
+    });
+};
+
+export const useGetUserProfitLoss = (userId: string) => {
+    return useQuery({
+        queryKey: ["user", "profit-loss", userId],
+        queryFn: () => paymentAPI.getUserProfitLoss(userId),
+    });
 }

@@ -186,10 +186,10 @@ const RouletteGame: React.FC = () => {
 
 
     return (
-        <div className="max-w-4xl mx-auto p-4 space-y-8">
-            <div className="relative  rounded-xl  flex  gap-8  border-brown-800">
-                <div className='w-6/12'>
-                    <h1 className='text-xl mb-2 text-white font-semibold'>Place Your Bets</h1>
+        <div className="max-w-4xl mx-auto xl:p-4 p-2 space-y-8">
+            <div className="relative  rounded-xl xl:flex-row flex-col  flex  gap-8  border-brown-800">
+                <div className='xl:w-6/12'>
+                    <h1 className='text-xl xl:mb-2 mb-4 xl:text-left text-center  text-white font-semibold'>Place Your Bets</h1>
 
                     {/* Roulette Board */}
                     <div
@@ -284,12 +284,12 @@ const RouletteGame: React.FC = () => {
                         )}
                     </div>
                 </div>
-                <div className='w-6/12 flex justify-between flex-col h-full'>
+                <div className='xl:w-6/12 flex justify-between flex-col h-full'>
                     <Tabs
                         defaultValue="nse"
                         className="w-full relative z-10"
                     >
-                        <TabsList className="w-full h-10 p-1 bg-[#0F214F]">
+                        <TabsList className="w-full hidden xl:flex h-10 p-1 bg-[#0F214F]">
                             <TabsTrigger className="flex-1 h-8" value="nse">
                                 NSE
                             </TabsTrigger>
@@ -298,9 +298,9 @@ const RouletteGame: React.FC = () => {
                             </TabsTrigger>
                         </TabsList>
 
-                        <header className='text-center my-2 text-white'>
+                        <header className='text-center hidden xl:block my-2 text-white'>
                             <h2>Round Starts in</h2>
-                            <p className='text-7xl font-jersey '>1:00</p>
+                            <p className='text-7xl jersey leading-[5rem]'>1:00</p>
                         </header>
                         <main>
                             <div className="max-w-4xl mx-auto bg-[#1A2D58] p-4 rounded-2xl ">
@@ -319,7 +319,7 @@ const RouletteGame: React.FC = () => {
 
                                 <div className="flex justify-between items-center mb-2">
                                     {/* Bet Amount Buttons */}
-                                    <div className="flex justify-between gap-1">
+                                    <div className="flex justify-between gap-1 w-full xl:flex-nowrap flex-wrap">
                                         {[100, 500, 1000, 2000, 3000].map((amount) => (
                                             <Button
                                                 className='flex-1'

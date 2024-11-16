@@ -2,7 +2,7 @@
 import Container from "@/components/common/container";
 import TopBar from "@/components/common/top-bar";
 import TransactionTable from "@/components/features/gamer/wallet/transaction-list";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Transaction, TransactionType } from "@/models/transaction";
 import { useGetUserTransactions } from "@/react-query/payment-queries";
 import { Loader2 } from "lucide-react";
@@ -53,38 +53,22 @@ const TransactionHistoryPage = () => {
                     <TabsTrigger className="flex-1" value="deposit">
                         Deposits
                     </TabsTrigger>
-                    <TabsTrigger className="flex-1" value="withdrawl">
+                    <TabsTrigger className="flex-1" value="withdrawal">
                         Withdrawals
                     </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="deposit" className="mt-4">
-                    {isLoading ? (
-                        <div className="flex justify-center py-8">
-                            <Loader2 className="h-6 w-6 animate-spin" />
-                        </div>
-                    ) : error ? (
-                        <div className="text-center py-8 text-red-500">
-                            Failed to load transactions. Please try again later.
-                        </div>
-                    ) : (
-                        <TransactionTable transactions={transactions} />
-                    )}
-                </TabsContent>
-
-                <TabsContent value="withdraw" className="mt-4">
-                    {isLoading ? (
-                        <div className="flex justify-center py-8">
-                            <Loader2 className="h-6 w-6 animate-spin" />
-                        </div>
-                    ) : error ? (
-                        <div className="text-center py-8 text-red-500">
-                            Failed to load transactions. Please try again later.
-                        </div>
-                    ) : (
-                        <TransactionTable transactions={transactions} />
-                    )}
-                </TabsContent>
+                {isLoading ? (
+                    <div className="flex justify-center py-8">
+                        <Loader2 className="h-6 w-6 animate-spin" />
+                    </div>
+                ) : error ? (
+                    <div className="text-center py-8 text-red-500">
+                        Failed to load transactions. Please try again later.
+                    </div>
+                ) : (
+                    <TransactionTable transactions={transactions} />
+                )}
             </Tabs>
         </Container>
     );

@@ -3,15 +3,15 @@
 import LoadingScreen from "@/components/common/loading-screen";
 import CompanyCard from "@/components/features/company/company-card";
 import CompanyEarningsCard from "@/components/features/company/company-earning";
-import Company from "@/models/company"; 
-import { useGetCompanyById } from "@/react-query/company-queries"; 
+import Company from "@/models/company";
+import { useGetCompanyById } from "@/react-query/company-queries";
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
 
 const ViewCompanyPage = () => {
     const params = useParams();
     const { id } = params;
-    const { data, isLoading, isSuccess } = useGetCompanyById(id.toString()); 
+    const { data, isLoading, isSuccess } = useGetCompanyById(id.toString());
 
     const companyDetails = useMemo(() => {
         if (isSuccess) {
@@ -20,13 +20,13 @@ const ViewCompanyPage = () => {
         return null;
     }, [data, isSuccess]);
 
-    if (isLoading) return <LoadingScreen className="h-[60vh]">Loading company...</LoadingScreen>; 
+    if (isLoading) return <LoadingScreen className="h-[60vh]">Loading company...</LoadingScreen>;
 
     return (
         <section className="container-main min-h-[60vh]">
             <main className="mt-4 space-y-8">
                 {companyDetails && <CompanyCard company={companyDetails} />}
-                <CompanyEarningsCard />
+                <CompanyEarningsCard companyId={id.toString()} />
             </main>
         </section>
     );

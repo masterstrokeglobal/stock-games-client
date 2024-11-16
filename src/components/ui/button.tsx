@@ -17,7 +17,7 @@ const buttonVariants = cva(
           "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
         secondary:
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+        ghost: "hover:bg-accent hover:bg-transparent",
         link: "text-primary underline-offset-4 hover:underline",
         "game-secondary":"bg-[#182B5A] text-white justify-start border border-[#EFF8FF17]",
         game: "bg-gradient-to-b from-[#0D7FE1] h-14! via-[#4DAAFF] to-[#279BFF] border text-white border-[#55B0FF]"
