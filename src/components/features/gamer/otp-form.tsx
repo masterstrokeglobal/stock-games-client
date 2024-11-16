@@ -16,10 +16,11 @@ type Props = {
     defaultValues?: OTPFormValues;
     onSubmit: (data: OTPFormValues) => void;
     isLoading?: boolean;
+    resendOTP: () => void;
     onBack?: () => void;
 };
 
-const OTPForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
+const OTPForm = ({ defaultValues, onSubmit, isLoading, resendOTP }: Props) => {
     const form = useForm<OTPFormValues>({
         resolver: zodResolver(otpFormSchema),
         defaultValues,
@@ -86,11 +87,11 @@ const OTPForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         {isLoading ? "Verifying..." : "Verify OTP"}
                     </Button>
 
-                    <Button variant="ghost" className="w-full text-white hover:bg-white/10 hover:text-white">
-                        Resend OTP
-                    </Button>
                 </footer>
             </FormProvider>
+            <Button variant="ghost" onClick={resendOTP} className="w-full mt-8 text-white hover:bg-white/10 hover:text-white">
+                Resend OTP
+            </Button>
         </div>
     );
 };

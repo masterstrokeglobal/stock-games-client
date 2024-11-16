@@ -7,6 +7,7 @@ import User from "@/models/user";
 // Fetch current user's profile
 export const useGameUserProfile = () => {
     return useQuery({
+        retry: 1,
         queryKey: ["gameUser", "profile"],
         queryFn: () => gameUserAPI.myProfile(),
     });
