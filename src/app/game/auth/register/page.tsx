@@ -4,17 +4,20 @@ import RegisterForm, { RegisterFormValues } from "@/components/features/gamer/re
 import { useAuthStore } from "@/context/auth-context";
 import { StepperProvider, useStepper } from "@/context/stepper-context";
 import User from "@/models/user";
-import { useGameUserRegister, useGameUserVerify } from "@/react-query/game-user-queries";
+import { useGameUserRegister, useGameUserResendOTP, useGameUserVerify } from "@/react-query/game-user-queries";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const RegisterPage = () => {
     const { currentStep, nextStep } = useStepper();
+    const [userId, setUserId] = useState<string | null>(null);
     const { userDetails } = useAuthStore();
     const router = useRouter();
 
-    const { mutate } = useGameUserRegister();
+    const { mutate, isPending } = useGameUserRegister();
+    const { mutate: resendOTP } = useGameUserResendOTP();
 
-    const { mutate: verifyUser } = useGameUserVerify();
+    const { mutate: verifyUser, isPending: isLoading } = useGameUserVerify();
 
     const registerUser = (data: RegisterFormValues) => {
 
@@ -28,10 +31,11 @@ const RegisterPage = () => {
             phone: data.phone,
             email: data.email,
             password: data.password,
-            companyId:4,
+            companyId: 4,
         }, {
             onSuccess: (data) => {
                 const user = new User(data.data);
+                setUserId(user.id?.toString() ?? null);
                 if (!user.isVerified)
                     nextStep();
             }
@@ -50,12 +54,21 @@ const RegisterPage = () => {
             }
         });
     }
+
+    const resend = () => {
+        resendOTP({
+            userId: userId ?? ""
+        }
+        );
+    };
+
+
     if (currentStep === 1) {
-        return <RegisterForm onSubmit={registerUser} />
+        return <RegisterForm isLoading={isPending} onSubmit={registerUser} />
     }
 
     if (currentStep === 2) {
-        return <OTPForm onSubmit={verifyOTP} />
+        return <OTPForm resendOTP={resend} isLoading={isLoading} onSubmit={verifyOTP} />
     }
 
 };

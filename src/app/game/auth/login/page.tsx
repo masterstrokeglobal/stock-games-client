@@ -19,6 +19,9 @@ const RegisterPage = () => {
         });
     }
 
+    const resendOTP = () => {
+        console.log('resendOTP');
+    }
     const onForgotPassword = () => {
         nextStep();
     }
@@ -37,7 +40,7 @@ const RegisterPage = () => {
     }
 
     if (currentStep === 3) {
-        return <OTPForm onSubmit={function (): void {
+        return <OTPForm resendOTP={resendOTP} onSubmit={function (): void {
             throw new Error("Function not implemented.");
         }} />
     }
