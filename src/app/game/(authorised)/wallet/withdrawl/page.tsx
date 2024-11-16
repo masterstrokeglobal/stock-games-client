@@ -6,7 +6,7 @@ import TopBar from '@/components/common/top-bar';
 import WithdrawForm, { WithdrawFormValues } from '@/components/features/gamer/wallet/withdrawl-form';
 import { useCreateWithdrawalRequest, useGetWallet } from '@/react-query/payment-queries';
 import Wallet from '@/models/wallet';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 const WithdrawalFormPage = () => {
     const { mutate, isPending } = useCreateWithdrawalRequest();

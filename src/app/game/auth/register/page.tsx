@@ -31,7 +31,7 @@ const RegisterPage = () => {
             phone: data.phone,
             email: data.email,
             password: data.password,
-            companyId: 4,
+            company: 4,
         }, {
             onSuccess: (data) => {
                 const user = new User(data.data);
