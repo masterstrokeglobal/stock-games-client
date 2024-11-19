@@ -36,7 +36,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
         defaultValues,
     });
 
-    const {mutate} = useGoogleLogin();
+    const { mutate } = useGoogleLogin();
 
 
     const { control, handleSubmit } = form;
@@ -92,6 +92,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 </div>
 
                 <Button
+                    type="button"
                     size="lg"
                     onClick={() => mutate()}
                     variant="secondary"

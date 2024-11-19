@@ -1,17 +1,28 @@
 import { roundRecordsAPI } from "@/lib/axios/round-record-API";
+import { SchedulerType } from "@/models/market-item";
 import { useQuery } from "@tanstack/react-query";
 
 /**
  * Hook to get all round records with optional filters.
  */
-export const useGetAllRoundRecords = (filter:any) => {
+export const useGetAllRoundRecords = (filter: any) => {
     return useQuery({
-        queryKey: ["round-records" , filter],
+        queryKey: ["round-records", filter],
         queryFn: () => roundRecordsAPI.getAllRoundRecords(filter),
 
     });
 };
 
+export const useGetCurrentRoundRecord = (type: SchedulerType) => {
+    return useQuery({
+        queryKey: ["current-round-record", type],
+        queryFn: () => roundRecordsAPI.getAllRoundRecords({
+            type,
+            limit: 1,
+            page: 1,
+        }),
+    });
+}
 /**
  * Hook to get a specific round record by ID.
  * @param roundRecordId - ID of the round record to fetch
