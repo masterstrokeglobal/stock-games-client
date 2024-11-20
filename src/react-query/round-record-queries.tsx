@@ -13,16 +13,21 @@ export const useGetAllRoundRecords = (filter: any) => {
     });
 };
 
-export const useGetCurrentRoundRecord = (type: SchedulerType) => {
+export const useGetCurrentRoundRecord = (
+    type: SchedulerType
+) => {
     return useQuery({
         queryKey: ["current-round-record", type],
-        queryFn: () => roundRecordsAPI.getAllRoundRecords({
-            type,
+        queryFn: () =>{ 
+            console.log("useGetCurrentRoundRecord", type);
+           return roundRecordsAPI.getAllRoundRecords({
+            type: type,
             limit: 1,
             page: 1,
-        }),
+        })},
+        staleTime: 100 * 1000,
     });
-}
+};
 /**
  * Hook to get a specific round record by ID.
  * @param roundRecordId - ID of the round record to fetch

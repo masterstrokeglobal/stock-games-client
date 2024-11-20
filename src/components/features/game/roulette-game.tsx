@@ -8,13 +8,20 @@ import { Tabs } from "@radix-ui/react-tabs";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { GameHeader } from "./roulette-header";
 import { BettingControls } from "./roulette-chips";
-import { useCurrentGame } from "@/hooks/use-current-game";
+import { useCurrentGame, useGameState } from "@/hooks/use-current-game";
+import { useGameType } from "@/hooks/use-game-type";
+import { RoundRecord } from "@/models/round-record";
 
-const RouletteGame: React.FC = () => {
+type Props = {
+    roundRecord: RoundRecord;
+};
+
+const RouletteGame = ({roundRecord}:Props) => {
     const [betAmount, setBetAmount] = useState<number>(10);
     const boardRef = useRef<HTMLDivElement>(null);
-    const [tab, setTab] = useState<SchedulerType>(SchedulerType.NSE);
-    const { gameState } = useCurrentGame(tab);
+    const [tab, setTab] = useGameType();
+
+    const gameState = useGameState(roundRecord);
     const {
         chips,
         setChips,

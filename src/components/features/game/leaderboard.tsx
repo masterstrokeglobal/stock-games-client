@@ -1,74 +1,121 @@
 "use client";
+
 import { useEffect, useRef, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useCurrentGame } from "@/hooks/use-current-game";
+import { useGameType } from "@/hooks/use-game-type";
+import { useLeaderboard } from "@/hooks/use-leadboard";
+import { RoundRecord } from "@/models/round-record";
+import { cn } from "@/lib/utils";
 
-const LeaderBoard = () => {
-    const leaderboardData = [
-        { rank: 1, name: "Bitcoin", price: "$27,000.00" },
-        { rank: 2, name: "Ethereum", price: "$1,800.00" },
-        { rank: 3, name: "Binance Coin", price: "$240.00" },
-        { rank: 4, name: "Litecoin", price: "$68.00" },
-        { rank: 5, name: "Avalanche", price: "$10.00" },
-        { rank: 6, name: "Polkadot", price: "$4.10" },
-        { rank: 7, name: "Chainlink", price: "$6.70" },
-        { rank: 8, name: "Solana", price: "$20.00" },
-    ];
+// Enhanced interface for ranked market items
+interface RankedMarketItem {
+    name: string;
+    price: number;
+    rank: number;
+    change_percent: string;
+    bitcode: string;
+    initialPrice?: number;
+}
 
+type Props = {
+    roundRecord: RoundRecord;
+}
+
+const LeaderBoard = ({ roundRecord }: Props) => {
+    const { stocks: leaderboardData } = useLeaderboard(roundRecord);
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
 
     useEffect(() => {
         if (sectionRef.current) {
             const sectionHeight = sectionRef.current.offsetHeight;
-            setScrollAreaHeight(sectionHeight - 40); // Subtract 40px from section height
+            setScrollAreaHeight(sectionHeight - 40);
         }
     }, []);
+
+    const formatPrice = (price: number) => {
+        return new Intl.NumberFormat('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(price);
+    };
+
+    const getChangeColor = (changePercent: string) => {
+        const change = parseFloat(changePercent);
+        if (change > 0) return "text-green-500";
+        if (change < 0) return "text-red-500";
+        return "text-gray-300";
+    };
 
     return (
         <section
             ref={sectionRef}
-            className="p-4  rounded-2xl  h-full w-full  bg-[#122146]"
+            className="p-4 rounded-2xl h-full w-full bg-[#122146]"
         >
-            <h2 className="text-xl font-semibold mb-4  text-gray-200">
+            <h2 className="text-xl font-semibold mb-4 text-gray-200">
                 Leader Board
             </h2>
-            <ScrollArea className="max-h-96 w-full" style={{ height: `${scrollAreaHeight - 20}px` }}>
+            <div 
+                className="max-h-96 h-full overflow-y-scroll" 
+                style={{ height: `${scrollAreaHeight - 20}px` }}
+            >
                 <table className="min-w-full">
-
+                    <thead>
+                        <tr className="text-[#8990A2] text-sm">
+                            <th className="p-2 text-left w-12">Rank</th>
+                            <th className="p-2 text-left">Name</th>
+                            <th className="p-2 text-right">Price</th>
+                            <th className="p-2 text-right">Change</th>
+                        </tr>
+                    </thead>
                     <tbody>
-                        {leaderboardData.map((crypto) => (
-                            <tr key={crypto.rank} className="border-b last:border-none  rounded-lg border-[#DADCE00D]  overflow-hidden  ">
-                                <td className="p-2 w-12 justify-center  text-gray-300 flex items-center">
-                                    {/* Conditionally render rank image for 1, 2, and 3 */}
-                                    {crypto.rank === 1 ? (
+                        {leaderboardData.map((crypto, index) => (
+                            <tr 
+                                key={crypto.bitcode} 
+                                className="border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden"
+                            >
+                                <td className="p-2 w-12 text-gray-300">
+                                    {index === 0 ? (
                                         <img
                                             src="/rank-1.svg"
                                             alt="Rank 1"
-                                            className=" mr-2"
+                                            className="w-6 h-6"
                                         />
-                                    ) : crypto.rank === 2 ? (
+                                    ) : index === 1 ? (
                                         <img
                                             src="/rank-2.svg"
                                             alt="Rank 2"
-                                            className=" mr-2"
+                                            className="w-6 h-6"
                                         />
-                                    ) : crypto.rank === 3 ? (
+                                    ) : index === 2 ? (
                                         <img
                                             src="/rank-3.svg"
                                             alt="Rank 3"
-                                            className=" mr-2"
+                                            className="w-6 h-6"
                                         />
                                     ) : (
-                                        <span className="mr-2 text-[#8990A2]">{crypto.rank}</span> // For default ranks, just display the rank number
+                                        <span className="text-[#8990A2]">{index + 1}</span>
                                     )}
                                 </td>
-                                <td className="p-2 text-sm text-gray-300 rounded-lg">{crypto.name}</td>
-                                <td className="p-2 text-sm text-right text-gray-300 rounded-lg">{crypto.price}</td>
+                                <td className="p-2 text-sm text-gray-300">
+                                    {crypto.name}
+                                </td>
+                                <td className="p-2 text-sm text-right text-gray-300">
+                                    ${formatPrice(crypto.price)}
+                                </td>
+                                <td className={cn(
+                                    "p-2 text-sm text-right",
+                                    getChangeColor(crypto.change_percent)
+                                )}>
+                                    {parseFloat(crypto.change_percent) > 0 ? '+' : ''}
+                                    {crypto.change_percent}%
+                                </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-            </ScrollArea>
+            </div>
         </section>
     );
 };

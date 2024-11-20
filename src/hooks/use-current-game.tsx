@@ -1,8 +1,8 @@
-import { useMemo, useEffect, useState } from 'react';
+import {  useEffect, useState,useMemo } from 'react';
 import { UseQueryResult } from '@tanstack/react-query';
 import { RoundRecord } from '@/models/round-record';
 import { useGetCurrentRoundRecord } from '@/react-query/round-record-queries';
-import { SchedulerType } from '@/models/market-item';
+import { useGameType } from './use-game-type';
 
 interface FormattedTime {
     minutes: number;
@@ -50,36 +50,41 @@ const formatTime = (ms: number): FormattedTime => {
     };
 };
 
-export const useCurrentGame = (type: SchedulerType): UseCurrentGameReturn => {
+export const useCurrentGame = (): {
+    roundRecord: RoundRecord | null;
+    isLoading: boolean;
+} => {
+
+    const [type, setType] = useGameType();
     const {
         data,
-        error,
         isLoading,
         isSuccess,
     }: UseQueryResult<RoundRecordResponse, unknown> = useGetCurrentRoundRecord(type);
 
-    const [gameState, setGameState] = useState<CurrentGameState>({
+    const roundRecord = useMemo(() => {
+        // Only compute when data is successfully loaded
+        if (!isSuccess || !data?.data.roundRecords?.[0]) {
+            return null;
+        }
+
+        // Create RoundRecord only when necessary
+        return new RoundRecord(data.data.roundRecords[0]);
+    }, [data?.data.roundRecords?.[0], isSuccess]); // More precise dependency
+
+    return {
+        roundRecord,
+        isLoading,
+    };
+};
+
+export const useGameState = (roundRecord: RoundRecord | null) => {
+    const [gameState, setGameState] = useState({
         placeTimeLeft: formatTime(0),
         gameTimeLeft: formatTime(0),
         isPlaceOver: false,
         isGameOver: false,
     });
-
-    const [derivedError, setDerivedError] = useState<unknown>(null);
-
-    const roundRecord = useMemo(() => {
-        if (!isSuccess) {
-            return null;
-        }
-
-        if (data?.data.roundRecords?.[0]) {
-            return new RoundRecord(data.data.roundRecords[0]);
-        }
-
-        // If no round records are found, set derivedError to indicate an issue.
-        setDerivedError(new Error('No round records found.'));
-        return null;
-    }, [data, isSuccess]);
 
     useEffect(() => {
         if (!roundRecord) return;
@@ -99,13 +104,11 @@ export const useCurrentGame = (type: SchedulerType): UseCurrentGameReturn => {
 
         updateTimes();
         const intervalId = setInterval(updateTimes, REFRESH_INTERVAL);
-        return () => clearInterval(intervalId);
-    }, [roundRecord]);
 
-    return {
-        isLoading,
-        roundRecord,
-        error: error || derivedError, // Combine API error and derived error.
-        gameState,
-    };
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [roundRecord]); // Only re-run when `roundRecord` changes
+
+    return gameState;
 };

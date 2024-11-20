@@ -28,7 +28,6 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
     const { mutate } = useAdminLogout();
     const router = useRouter();
     useLogin();
-    console.log(userDetails);
     useEffect(() => {
         if (!loading && !userDetails) {
             router.push("/login");
