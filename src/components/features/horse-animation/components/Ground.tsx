@@ -1,0 +1,119 @@
+import * as THREE from "three";
+import { useTexture } from "@react-three/drei";
+import { CuboidCollider, RigidBody, RigidBodyProps } from "@react-three/rapier";
+import { useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+
+interface GroundProps extends RigidBodyProps {}
+
+export function Ground(props: GroundProps) {
+  const [grassTexture, dirtTexture, patchTexture] = useTexture(["/grass.jpg", "/dirt.jpg", "/patch.jpg"]);
+  const materialRef = useRef<THREE.ShaderMaterial | any>(null);
+  const timeRef = useRef(0);
+
+  // Ensure both textures repeat
+  grassTexture.wrapS = grassTexture.wrapT = THREE.RepeatWrapping;
+  dirtTexture.wrapS = dirtTexture.wrapT = THREE.RepeatWrapping;
+  patchTexture.wrapS = patchTexture.wrapT = THREE.RepeatWrapping; // Ensure patch texture repeats
+
+  // Animate texture movement
+  useFrame((state, delta) => {
+    if (materialRef.current) {
+      timeRef.current += delta;
+      materialRef.current.uniforms.time.value = timeRef.current;
+    }
+  });
+
+  return (
+    <RigidBody {...props} type="fixed" colliders={false}>
+      <mesh receiveShadow position={[25, 0, 0]} rotation-x={-Math.PI / 2}>
+        <planeGeometry args={[1000, 1000]} />
+        <shaderMaterial
+          ref={materialRef}
+          attach="material"
+          uniforms={{
+            grassTexture: { value: grassTexture },
+            dirtTexture: { value: dirtTexture },
+            patchTexture: { value: patchTexture }, // Pass the patch texture
+            repeat: { value: [240, 240] },
+            time: { value: 0 },
+            rowCount: { value: 10.0 },
+            centerWidth: { value: 0.12 },
+            grassPatchSize: { value: 0.08 },
+            grassThreshold: { value: 0.85 },
+          }}
+          vertexShader={vertexShader}
+          fragmentShader={fragmentShader}
+        />
+      </mesh>
+      <CuboidCollider args={[1000, 2, 1000]} position={[0, -2, 0]} />
+    </RigidBody>
+  );
+}
+
+const vertexShader = `
+  varying vec2 vUv;
+  
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+const fragmentShader = `
+  uniform sampler2D grassTexture;
+  uniform sampler2D dirtTexture;
+  uniform sampler2D patchTexture; // New texture for patches
+  uniform vec2 repeat;
+  uniform float time;
+  uniform float rowCount;
+  uniform float centerWidth;
+  uniform float grassPatchSize;
+  uniform float grassThreshold;
+  varying vec2 vUv;
+
+  float random(vec2 st) {
+    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+  }
+
+  float noise(vec2 st) {
+    vec2 i = floor(st);
+    vec2 f = fract(st);
+    float a = random(i);
+    float b = random(i + vec2(1.0, 0.0));
+    float c = random(i + vec2(0.0, 1.0));
+    float d = random(i + vec2(1.0, 1.0));
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+  }
+
+  void main() {
+    vec2 uv = vUv * repeat;
+    uv.y -= time * 8.0; // Slow movement speed
+
+    float centerStart = 0.5 - (centerWidth / 2.0);
+    float centerEnd = 0.5 + (centerWidth / 2.0);
+    
+    vec4 grassColor = texture2D(grassTexture, uv);
+    vec4 dirtColor = texture2D(dirtTexture, uv);
+    vec4 patchColor = texture2D(patchTexture, uv); // Get patch color
+    
+    // Determine the noise for patches
+    float n = noise(uv * (1.0 / grassPatchSize));
+
+    // Control the appearance of patches using a threshold
+    float patchFactor = smoothstep(grassThreshold - 0.1, grassThreshold + 0.1, n);
+    
+    if (vUv.x > centerStart && vUv.x < centerEnd) {
+      float rowPosition = fract(vUv.y * rowCount);
+      float mixFactor = smoothstep(grassThreshold - 0.05, grassThreshold + 0.05, n);
+
+      // Mix grass and dirt colors based on the noise
+      gl_FragColor = mix(dirtColor, grassColor, mixFactor);
+      // Blend in patches
+      gl_FragColor = mix(gl_FragColor, patchColor, patchFactor);
+    } else {
+      gl_FragColor = grassColor;
+    }
+  }
+`;

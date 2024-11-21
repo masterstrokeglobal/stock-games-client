@@ -112,3 +112,33 @@ export const useGameState = (roundRecord: RoundRecord | null) => {
 
     return gameState;
 };
+
+export const useIsPlaceOver = (roundRecord: RoundRecord | null) => {
+    const [isPlaceOver, setIsPlaceOver] = useState(false);
+
+    useEffect(() => {
+        if (!roundRecord) {
+            setIsPlaceOver(false);
+            return;
+        }
+
+        const checkPlaceOver = () => {
+            const now = new Date().getTime();
+            const placeEnd = new Date(roundRecord.placementEndTime).getTime();
+            
+            setIsPlaceOver(now >= placeEnd);
+        };
+
+        // Initial check
+        checkPlaceOver();
+
+        // Set up an interval to check periodically, but less frequently
+        const intervalId = setInterval(checkPlaceOver, 1000); // Check every second
+
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [roundRecord]); // Only re-run when roundRecord changes
+
+    return isPlaceOver;
+};

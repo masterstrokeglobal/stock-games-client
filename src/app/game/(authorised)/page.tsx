@@ -3,6 +3,7 @@ import CurrentBets from "@/components/features/game/current-bets";
 import LeaderBoard from "@/components/features/game/leaderboard";
 import Navbar from "@/components/features/game/navbar";
 import RouletteGame from "@/components/features/game/roulette-game";
+import HorseRace from "@/components/features/horse-animation/horse";
 import { useCurrentGame } from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
 import Image from "next/image";
@@ -21,8 +22,8 @@ const GamePage = () => {
             {!isMobile && <main className="grid grid-cols-12 grid-rows-5 gap-4 h-full p-4">
                 <div
                     style={borderStyle}
-                    className="col-span-7 row-span-2 rounded-2xl ">
-                    <Image src="/horse-game.png" width={800} height={800} className="w-full h-full" alt="Stock Derby" />
+                    className="col-span-7 row-span-2 rounded-2xl  overflow-hidden">
+                    {roundRecord && <HorseRace roundRecord={roundRecord} />}
                 </div>
                 <div
                     style={borderStyle}
