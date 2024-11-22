@@ -1,8 +1,6 @@
 import { PlacementType } from '@/models/game-record';
 import { useCallback, useState } from 'react';
 
-
-
 interface Bet {
     type: PlacementType;
     numbers: number[];
@@ -27,7 +25,6 @@ const CELL_WIDTH = 80;
 const CELL_HEIGHT = 40;
 const GAP = 8;
 const BORDER_THRESHOLD = 6;
-
 
 export const getBetPosition = (bet: Bet): ChipPosition => {
     const getNumberPosition = (number: number): Position => {
@@ -81,50 +78,41 @@ export const getBetPosition = (bet: Bet): ChipPosition => {
             };
         }
 
-
         default:
             return { x: 0, y: 0 };
     }
 };
+
 export const useRouletteBetting = () => {
     const [hoveredCell, setHoveredCell] = useState<Bet | null>(null);
     const [chips, setChips] = useState<Chip[]>([]);
 
 
-    const getBetTypeFromClick = useCallback((
-        event: React.MouseEvent,
-        boardRef: React.RefObject<HTMLElement>
-    ): Bet | null => {
+
+    const getBetTypeFromClick = useCallback((event: React.MouseEvent,boardRef: React.RefObject<HTMLElement>  ): Bet | null => {
         if (!boardRef.current) return null;
 
-        const position = {
-            x: event.clientX,
-            y: event.clientY
-        };
-
+        const position = { x: event.clientX, y: event.clientY };
         const rect = boardRef.current.getBoundingClientRect();
         const gridWidth = rect.width;
         const relativeX = position.x - rect.left;
         const relativeY = position.y - rect.top;
 
-
-        const CELL_WIDTH = (gridWidth - GAP * 3) / 4;
-
-        const colIndex = Math.floor(relativeX / (CELL_WIDTH + GAP));
+        const cellWidth = (gridWidth - GAP * 3) / 4;
+        const colIndex = Math.floor(relativeX / (cellWidth + GAP));
         const rowIndex = Math.floor(relativeY / (CELL_HEIGHT + GAP));
 
         if (colIndex < 0 || colIndex >= 4 || rowIndex < 0 || rowIndex >= 4) {
             return null;
         }
 
-        const cellX = relativeX - colIndex * (CELL_WIDTH + GAP);
+        const cellX = relativeX - colIndex * (cellWidth + GAP);
         const cellY = relativeY - rowIndex * (CELL_HEIGHT + GAP);
-
         const currentNumber = rowIndex * 4 + colIndex + 1;
 
         // Single bet
         if (cellX >= BORDER_THRESHOLD &&
-            cellX <= CELL_WIDTH - BORDER_THRESHOLD &&
+            cellX <= cellWidth - BORDER_THRESHOLD &&
             cellY >= BORDER_THRESHOLD &&
             cellY <= CELL_HEIGHT - BORDER_THRESHOLD) {
             return {
@@ -133,52 +121,45 @@ export const useRouletteBetting = () => {
             };
         }
 
-        console.log( cellX,BORDER_THRESHOLD);
-        // Split bet (horizontal)
-        if (cellX <= BORDER_THRESHOLD && colIndex > 0) {
+        if (rowIndex === 3) {
             return {
-                type: PlacementType.SPLIT,
-                numbers: [currentNumber - 1, currentNumber]
+                type: PlacementType.STREET,
+                numbers: [currentNumber, currentNumber + 1, currentNumber + 2]
             };
         }
 
-        // Split bet (vertical)
-        if (cellY <= BORDER_THRESHOLD && rowIndex > 0) {
+        // Vertical split
+        if (rowIndex < 3 &&
+            Math.abs(currentNumber - (currentNumber + 4)) === 4 &&
+            cellX >= BORDER_THRESHOLD &&
+            cellX <= cellWidth - BORDER_THRESHOLD) {
             return {
                 type: PlacementType.SPLIT,
-                numbers: [currentNumber - 4, currentNumber]
+                numbers: [currentNumber, currentNumber + 4]
+            };
+        }
+
+        // Horizontal split
+        if (colIndex < 3 && Math.abs(currentNumber - (currentNumber + 1)) === 1) {
+            return {
+                type: PlacementType.SPLIT,
+                numbers: [currentNumber, currentNumber + 1]
             };
         }
 
         // Street bet
-        if (cellX >= CELL_WIDTH - BORDER_THRESHOLD &&
-            cellX <= CELL_WIDTH + GAP &&
-            colIndex === 3) {
-            const rowStart = Math.floor((currentNumber - 1) / 4) * 4 + 1;
-            return {
-                type: PlacementType.STREET,
-                numbers: [rowStart, rowStart + 1, rowStart + 2, rowStart + 3]
-            };
-        }
-
-        // Double street bet
-        if (cellY <= BORDER_THRESHOLD &&
-            cellX >= CELL_WIDTH - BORDER_THRESHOLD &&
-            cellX <= CELL_WIDTH + GAP &&
-            colIndex === 3 &&
-            rowIndex > 0) {
-            const upperRowStart = Math.floor((currentNumber - 5) / 4) * 4 + 1;
-            const lowerRowStart = Math.floor((currentNumber - 1) / 4) * 4 + 1;
-            return {
-                type: PlacementType.DOUBLE_STREET,
-                numbers: [
-                    upperRowStart, upperRowStart + 1, upperRowStart + 2, upperRowStart + 3,
-                    lowerRowStart, lowerRowStart + 1, lowerRowStart + 2, lowerRowStart + 3
-                ]
-            };
-        }
 
         return null;
+    }, []);
+    const placeBet = useCallback((bet: Bet, amount: number) => {
+        const chipPosition = getBetPosition(bet);
+        const newChip: Chip = {
+            ...bet,
+            amount,
+            position: chipPosition
+        };
+
+        setChips(prevChips => [...prevChips, newChip]);
     }, []);
 
     return {
@@ -187,6 +168,7 @@ export const useRouletteBetting = () => {
         chips,
         setChips,
         getBetTypeFromClick,
+        placeBet,
         getBetPosition
     };
 };

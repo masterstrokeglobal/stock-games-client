@@ -58,6 +58,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
         chips,
         setChips,
         hoveredCell,
+
         setHoveredCell,
         getBetTypeFromClick
     } = useRouletteBetting();
@@ -180,6 +181,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                 ref={boardRef}
                                 onClick={!gameState.isPlaceOver ? handleBoardClick : undefined}
                                 onMouseLeave={() => setHoveredCell(null)}
+                                
                                 className={`relative flex-1 mx-auto`}
                             >
                                 <RouletteBettingGrid
