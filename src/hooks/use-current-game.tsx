@@ -72,7 +72,7 @@ export const useCurrentGame = (): {
         const roundRecord = new RoundRecord(data.data.roundRecords[0]);
 
         return roundRecord;
-    }, [data?.data.roundRecords?.[0], isSuccess]); // More precise dependency
+    }, [data?.data.roundRecords?.[0], isSuccess]); 
 
     useEffect(() => {
 

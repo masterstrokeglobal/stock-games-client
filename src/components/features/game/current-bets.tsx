@@ -1,19 +1,24 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { useGetTopPlacements } from "@/react-query/game-record-queries";
 
-const CurrentBets = ({ className }: PropsWithClassName) => {
-    const currentBetsData = [
-        { crypto: "ETH", userId: 24586, amount: "$2,000.00" },
-        { crypto: "ETH", userId: 24586, amount: "$1,000.00" },
-        { crypto: "ETH", userId: 24586, amount: "$3,000.00" },
-        { crypto: "ETH", userId: 24586, amount: "$6,000.00" },
-        { crypto: "ETH", userId: 24586, amount: "$3,000.00" },
-        { crypto: "ETH", userId: 24586, amount: "$6,000.00" },
-        { crypto: "ETH", userId: 24586, amount: "$3,000.00" },
-        { crypto: "ETH", userId: 24586, amount: "$6,000.00" },
-    ];
+type Props = {
+    className?: string;
+    roundId: string;
+}
+
+const CurrentBets = ({ className,roundId }: Props) => {
+   const  {data,isSuccess} = useGetTopPlacements(roundId);
+
+   const currentBetsData = useMemo(() => {
+         if(isSuccess){
+            console.log(data.data,"data");
+              return data.data;
+         }
+         return [];
+    },[isSuccess,data]);
 
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
@@ -49,17 +54,17 @@ const CurrentBets = ({ className }: PropsWithClassName) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentBetsData.map((bet, index) => (
+                        {currentBetsData.map((bet:any, index:number) => (
                             <tr
                                 key={index}
                                 className="flex border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden"
                                 style={{ display: 'flex', flexDirection: 'row' }}
                             >
                                 <td className="p-2 text-sm text-gray-300 rounded-l-lg flex-1">
-                                    {bet.crypto}
+                                    {bet.placementType.toUpperCase()}
                                 </td>
                                 <td className="p-2 text-sm text-gray-300 flex-1">
-                                    {bet.userId}
+                                    {bet.user.username}
                                 </td>
                                 <td className="p-2 text-sm text-right text-gray-300 rounded-r-lg flex-1">
                                     {bet.amount}

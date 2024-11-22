@@ -32,19 +32,18 @@ export const useGetWinningGameRecord = () => {
 };
 
 // Get Top Placements Hook
-export const useGetTopPlacements = () => {
+export const useGetTopPlacements = (roundId:string) => {
     return useQuery({
-        queryKey: ["topPlacements"],
-        queryFn: gameRecordAPI.getTopPlacements,
+        queryKey: ["topPlacements",roundId],
+        queryFn:  () => gameRecordAPI.getTopPlacements(roundId),
         staleTime: 1000 * 3, // 3 seconds
-
     });
 };
 
 // Get My Placements Hook
-export const useGetMyPlacements = () => {
+export const useGetMyPlacements = (filter: any) => {
     return useQuery({
-        queryKey: ["myPlacements"],
-        queryFn: gameRecordAPI.getMyPlacements,
+        queryKey: ["myPlacements",filter],
+        queryFn: () => gameRecordAPI.getMyPlacements(filter),
     });
 };

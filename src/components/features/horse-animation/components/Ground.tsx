@@ -11,12 +11,11 @@ export function Ground(props: GroundProps) {
   const materialRef = useRef<THREE.ShaderMaterial | any>(null);
   const timeRef = useRef(0);
 
-  // Ensure both textures repeat
   grassTexture.wrapS = grassTexture.wrapT = THREE.RepeatWrapping;
   dirtTexture.wrapS = dirtTexture.wrapT = THREE.RepeatWrapping;
-  patchTexture.wrapS = patchTexture.wrapT = THREE.RepeatWrapping; // Ensure patch texture repeats
+  patchTexture.wrapS = patchTexture.wrapT = THREE.RepeatWrapping;
 
-  // Animate texture movement
+  // Changed direction of texture movement
   useFrame((state, delta) => {
     if (materialRef.current) {
       timeRef.current += delta;
@@ -34,13 +33,14 @@ export function Ground(props: GroundProps) {
           uniforms={{
             grassTexture: { value: grassTexture },
             dirtTexture: { value: dirtTexture },
-            patchTexture: { value: patchTexture }, // Pass the patch texture
+            patchTexture: { value: patchTexture },
             repeat: { value: [240, 240] },
             time: { value: 0 },
             rowCount: { value: 10.0 },
             centerWidth: { value: 0.12 },
             grassPatchSize: { value: 0.08 },
             grassThreshold: { value: 0.85 },
+            movementSpeed: { value:120.0 }, // Added movement speed control
           }}
           vertexShader={vertexShader}
           fragmentShader={fragmentShader}
@@ -53,9 +53,11 @@ export function Ground(props: GroundProps) {
 
 const vertexShader = `
   varying vec2 vUv;
+  varying vec3 vPosition;
   
   void main() {
     vUv = uv;
+    vPosition = position;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   }
 `;
@@ -63,14 +65,16 @@ const vertexShader = `
 const fragmentShader = `
   uniform sampler2D grassTexture;
   uniform sampler2D dirtTexture;
-  uniform sampler2D patchTexture; // New texture for patches
+  uniform sampler2D patchTexture;
   uniform vec2 repeat;
   uniform float time;
   uniform float rowCount;
   uniform float centerWidth;
   uniform float grassPatchSize;
   uniform float grassThreshold;
+  uniform float movementSpeed;
   varying vec2 vUv;
+  varying vec3 vPosition;
 
   float random(vec2 st) {
     return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
@@ -88,32 +92,30 @@ const fragmentShader = `
   }
 
   void main() {
+    // Modified UV calculation for backward movement
     vec2 uv = vUv * repeat;
-    uv.y -= time * 8.0; // Slow movement speed
-
+    
+    // Changed direction: positive time for backward movement
+    vec2 movingUV = uv + vec2(0.0, time * movementSpeed);
+    
     float centerStart = 0.5 - (centerWidth / 2.0);
     float centerEnd = 0.5 + (centerWidth / 2.0);
     
-    vec4 grassColor = texture2D(grassTexture, uv);
-    vec4 dirtColor = texture2D(dirtTexture, uv);
-    vec4 patchColor = texture2D(patchTexture, uv); // Get patch color
+    vec4 grassColor = texture2D(grassTexture, movingUV);
+    vec4 dirtColor = texture2D(dirtTexture, movingUV);
+    vec4 patchColor = texture2D(patchTexture, movingUV);
     
-    // Determine the noise for patches
-    float n = noise(uv * (1.0 / grassPatchSize));
-
-    // Control the appearance of patches using a threshold
+    float n = noise(movingUV * (1.0 / grassPatchSize));
     float patchFactor = smoothstep(grassThreshold - 0.1, grassThreshold + 0.1, n);
     
     if (vUv.x > centerStart && vUv.x < centerEnd) {
       float rowPosition = fract(vUv.y * rowCount);
       float mixFactor = smoothstep(grassThreshold - 0.05, grassThreshold + 0.05, n);
-
-      // Mix grass and dirt colors based on the noise
-      gl_FragColor = mix(dirtColor, grassColor, mixFactor);
-      // Blend in patches
-      gl_FragColor = mix(gl_FragColor, patchColor, patchFactor);
+      
+      vec4 baseColor = mix(dirtColor, grassColor, mixFactor);
+      gl_FragColor = mix(baseColor, patchColor, patchFactor * 0.5);
     } else {
-      gl_FragColor = grassColor;
+      gl_FragColor = mix(grassColor, patchColor, patchFactor * 0.3);
     }
   }
 `;

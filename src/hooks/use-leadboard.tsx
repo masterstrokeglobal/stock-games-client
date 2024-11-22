@@ -55,7 +55,8 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                 ...item,
                 rank: index + 1,
                 stream: item.stream,
-                bitcode: item.bitcode
+                bitcode: item.bitcode,
+                codeName: item.codeName
             }));
     };
 
@@ -135,7 +136,8 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                                         initialPrice: initialPrice,
                                         rank: stock.rank,
                                         stream: stock.stream,
-                                        bitcode: stock.bitcode
+                                        bitcode: stock.bitcode,
+                                        codeName: stock.codeName // Ensure codeName is included
                                     };
                                 }
                                 return stock;

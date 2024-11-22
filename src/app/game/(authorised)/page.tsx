@@ -4,8 +4,9 @@ import LeaderBoard from "@/components/features/game/leaderboard";
 import Navbar from "@/components/features/game/navbar";
 import RouletteGame from "@/components/features/game/roulette-game";
 import HorseRace from "@/components/features/horse-animation/horse";
-import { useCurrentGame } from "@/hooks/use-current-game";
+import { useCurrentGame, useGameState } from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
+import { RoundRecord } from "@/models/round-record";
 import Image from "next/image";
 
 const borderStyle = {
@@ -23,8 +24,8 @@ const GamePage = () => {
                 <div
                     style={borderStyle}
                     className="col-span-7 row-span-2 rounded-2xl  overflow-hidden">
-{/*                     {roundRecord && <HorseRace roundRecord={roundRecord} />}
- */}                </div>
+                    {roundRecord && <HorseRace roundRecord={roundRecord} />}
+                </div>
                 <div
                     style={borderStyle}
 
@@ -40,19 +41,21 @@ const GamePage = () => {
                     style={borderStyle}
                     className="col-span-5 row-span-3 rounded-2xl ">
 
-                    <CurrentBets />
+                    <CurrentBets roundId={roundRecord?.id.toString()!} />
                 </div>
             </main>}
 
             {isMobile && <section className="text-white">
                 <header className="bg-[#1E2E57] mx-auto flex justify-center flex-col text-center min-h-[20vh]" >
                     <h1>Round Starts in</h1>
-                    <p className="jersey text-8xl leading-[5rem]">1:00</p>
+                    <p className="jersey text-8xl leading-[5rem]">
+                        <TimeLeft roundRecord={roundRecord!} />
+                    </p>
                 </header>
                 <main className="bg-[#0A1634]">
                     {roundRecord && <RouletteGame roundRecord={roundRecord} />}
                     <div className="px-2">
-                        <CurrentBets />
+                        <CurrentBets roundId={roundRecord?.id.toString()!} />
                     </div>
                 </main>
             </section>}
@@ -61,4 +64,9 @@ const GamePage = () => {
 };
 
 export default GamePage;
+
+const TimeLeft = ({ roundRecord }: { roundRecord: RoundRecord }) => {
+    const gameState = useGameState(roundRecord);
+    return gameState.placeTimeLeft.formatted;
+}
 

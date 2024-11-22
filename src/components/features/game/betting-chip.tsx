@@ -3,6 +3,7 @@ import { Chip } from "./contants";
 
 
 const BettingChips: React.FC<{ chips: Chip[] }> = ({ chips }) => {
+  console.log(chips);
   return (
     <div className="absolute inset-0 pointer-events-none">
       {chips.map((chip, index) => {

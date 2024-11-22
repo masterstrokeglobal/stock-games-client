@@ -29,6 +29,11 @@ export class MarketItem {
         this.horse = params.horse;
     }
 
+    get codeName() {
+        //remove usdt only from end of code
+        return this.code?.replace("usdt", "").toLocaleUpperCase();
+    }
+
     get stream() {
         return `${this.code?.toLowerCase()}@trade`;
     }
