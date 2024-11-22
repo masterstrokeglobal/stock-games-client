@@ -6,13 +6,15 @@ import { Button } from '@/components/ui/button';
 interface BettingControlsProps {
     betAmount: number;
     setBetAmount: (amount: number) => void;
+    onPlaceBet: () => void;
     isPlaceOver: boolean;
 }
 
 export const BettingControls: React.FC<BettingControlsProps> = ({
     betAmount,
     setBetAmount,
-    isPlaceOver
+    isPlaceOver,
+    onPlaceBet
 }) => {
     return (
         <div className="max-w-4xl mx-auto bg-[#1A2D58] p-4 rounded-2xl">
@@ -36,6 +38,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                             className='flex-1'
                             variant="game-secondary"
                             key={amount}
+
                             onClick={() => setBetAmount(amount)}
                             disabled={isPlaceOver}
                         >
@@ -47,6 +50,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
             <button
                 className={`bet-button w-full ${isPlaceOver ? 'opacity-50 cursor-not-allowed' : ''}`}
                 disabled={isPlaceOver}
+                onClick={onPlaceBet}
             >
                 {isPlaceOver ? "BETTING CLOSED" : "BET"}
             </button>

@@ -1,31 +1,28 @@
-import { Chip, CHIP_COLORS } from "./contants";
+import { getBetPosition } from "@/hooks/use-roulette-betting";
+import { Chip } from "./contants";
 
-interface BettingChipsProps {
-    chips: Chip[];
-}
 
-export const BettingChips: React.FC<BettingChipsProps> = ({ chips }) => {
-    return (
-        <>
-            {chips.map((chip, index) => (
-                <div
-                    key={index}
-                    className={`
-                        absolute w-12 h-12 -mt-6 -ml-6 rounded-full border-4
-                        flex items-center justify-center text-white font-bold text-sm
-                        transform hover:scale-110 transition-all shadow-lg
-                        ${CHIP_COLORS[chip.amount.toString()] || 'bg-blue-500 border-blue-600'}
-                    `}
-                    style={{
-                        left: chip.x,
-                        top: chip.y,
-                        zIndex: 10 + index,
-                    }}
-                >
-                    ${chip.amount}
-                    {chip.display && <span className="text-xs">{chip.display}</span>}
-                </div>
-            ))}
-        </>
-    );
+const BettingChips: React.FC<{ chips: Chip[] }> = ({ chips }) => {
+  return (
+    <div className="absolute inset-0 pointer-events-none">
+      {chips.map((chip, index) => {
+        const position = getBetPosition(chip as any);
+        return (
+          <div
+            key={index}
+            className="absolute flex items-center justify-center w-6 h-6 rounded-full bg-yellow-500 text-black text-xs font-bold transform -translate-x-1/2 -translate-y-1/2"
+            style={{
+              left: position.x,
+              top: position.y,
+              zIndex: 10
+            }}
+          >
+            {chip.amount}
+          </div>
+        );
+      })}
+    </div>
+  );
 };
+
+export default BettingChips;

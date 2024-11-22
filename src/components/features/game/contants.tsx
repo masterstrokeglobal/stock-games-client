@@ -1,3 +1,5 @@
+import { PlacementType } from "@/models/game-record";
+
 // types.ts
 export interface RouletteNumber {
     number: number;
@@ -10,16 +12,13 @@ export interface Position {
 }
 
 export interface Bet {
-    type: 'single' | 'split' | 'street' | 'corner' | 'column' | 'color' | 'even_odd' | 'high_low' | 'row' | 'full_column';
+    type: PlacementType;
     numbers: number[];
-    position: Position;
     display?: string;
 }
 
 export interface Chip extends Bet {
     amount: number;
-    x: number;
-    y: number;
 }
 
 export interface FormattedTime {
