@@ -19,8 +19,9 @@ const borderStyle = {
 const GamePage = () => {
     const { roundRecord } = useCurrentGame();
 
-    const {previousRoundId,showResults} = useShowResults(roundRecord);
+    const {previousRoundId,showResults,currentRoundId} = useShowResults(roundRecord);
     const { isMobile } = useWindowSize();
+    console.log(previousRoundId,currentRoundId);
     return (
         <section className="bg-primary-game pt-20 h-screen">
             <Navbar />

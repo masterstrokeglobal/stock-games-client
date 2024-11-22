@@ -81,15 +81,6 @@ export const getBetPosition = (bet: Bet): ChipPosition => {
             };
         }
 
-        case PlacementType.DOUBLE_STREET: {
-            const upperRowStart = Math.min(...bet.numbers);
-            const pos = getNumberPosition(upperRowStart);
-            return {
-                x: pos.x + CELL_WIDTH * 4 + GAP * 3,
-                y: pos.y + CELL_HEIGHT,
-                transform: 'translate(-50%, -50%)'
-            };
-        }
 
         default:
             return { x: 0, y: 0 };

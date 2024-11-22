@@ -14,7 +14,8 @@ export const useCreateGameRecord = () => {
                     // Invalidate queries related to game records
                     query.queryKey[0] === "winningGameRecord" ||
                     query.queryKey[0] === "topPlacements" ||
-                    query.queryKey[0] === "myPlacements",
+                    query.queryKey[0] === "myPlacements" ||
+                    query.queryKey[0] === "user" && query.queryKey[1] == 'wallet',
             });
             toast.success("Game record created successfully");
         },

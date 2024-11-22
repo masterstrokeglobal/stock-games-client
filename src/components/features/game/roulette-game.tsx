@@ -83,12 +83,12 @@ const RouletteGame = ({ roundRecord }: Props) => {
         if (gameState.isPlaceOver) return;
 
         const position = getBetPosition({
-            type: PlacementType.QUARTER,
+            type: PlacementType.DOUBLE_STREET,
             numbers,
         });
 
         setChips([{
-            type: PlacementType.QUARTER,
+            type: PlacementType.DOUBLE_STREET,
             numbers,
             amount: betAmount,
             position,
@@ -199,8 +199,8 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                     >
                                         <span className="rotate-text">1st 8</span>
                                     </Button>
-                                    {getBetForPosition(PlacementType.QUARTER, first8Numbers) && (
-                                        <ButtonChip amount={getBetForPosition(PlacementType.QUARTER, first8Numbers)!.amount} />
+                                    {getBetForPosition(PlacementType.DOUBLE_STREET, first8Numbers) && (
+                                        <ButtonChip amount={getBetForPosition(PlacementType.DOUBLE_STREET, first8Numbers)!.amount} />
                                     )}
                                 </div>
                                 <div className="relative">
@@ -211,8 +211,8 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                     >
                                         <span className="rotate-text">2nd 8</span>
                                     </Button>
-                                    {getBetForPosition(PlacementType.QUARTER, second8Numbers) && (
-                                        <ButtonChip amount={getBetForPosition(PlacementType.QUARTER, second8Numbers)!.amount} />
+                                    {getBetForPosition(PlacementType.DOUBLE_STREET, second8Numbers) && (
+                                        <ButtonChip amount={getBetForPosition(PlacementType.DOUBLE_STREET, second8Numbers)!.amount} />
                                     )}
                                 </div>
                             </div>

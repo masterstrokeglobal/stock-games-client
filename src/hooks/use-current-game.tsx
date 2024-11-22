@@ -72,7 +72,7 @@ export const useCurrentGame = (): {
         const roundRecord = new RoundRecord(data.data.roundRecords[0]);
 
         return roundRecord;
-    }, [data?.data.roundRecords?.[0], isSuccess]); 
+    }, [data?.data.roundRecords?.[0], isSuccess]);
 
     useEffect(() => {
 
@@ -184,10 +184,21 @@ export const useIsPlaceOver = (roundRecord: RoundRecord | null) => {
 
 
 
+
+const TWO_SECONDS = 2000; // 2 seconds in milliseconds
+
 export const useShowResults = (roundRecord: RoundRecord | null) => {
     const [showResults, setShowResults] = useState(false);
     const [currentRoundId, setCurrentRoundId] = useState<number | null>(null);
     const [previousRoundId, setPreviousRoundId] = useState<number | null>(null);
+
+    useEffect(() => {
+        // Retrieve previous round ID from localStorage when the component mounts
+        const storedPreviousRoundId = localStorage.getItem('previousRoundId');
+        if (storedPreviousRoundId) {
+            setPreviousRoundId(parseInt(storedPreviousRoundId, 10));
+        }
+    }, []); // Run only on mount
 
     useEffect(() => {
         if (!roundRecord) return;
@@ -196,20 +207,24 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
         if (roundRecord.id !== currentRoundId) {
             // Update the previous round ID
             if (currentRoundId) {
+                localStorage.setItem('previousRoundId', currentRoundId.toString());
                 setPreviousRoundId(currentRoundId);
             }
 
-            // Reset the state for the new round
+            if(!previousRoundId){
             setShowResults(false);
+            }
+
             setCurrentRoundId(roundRecord.id);
         }
 
         const updateShowResults = () => {
             const now = new Date().getTime();
             const gameEnd = new Date(roundRecord.endTime).getTime();
+            const adjustedEndTime = gameEnd - TWO_SECONDS; // Adjusted time: 2 seconds before game ends
 
-            // Show results only after the game ends
-            if (now >= gameEnd) {
+            // Show results only 2 seconds before the game ends
+            if (now >= adjustedEndTime) {
                 setShowResults(true);
             }
         };
@@ -224,4 +239,5 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
 
     return { showResults, currentRoundId, previousRoundId };
 };
+
 

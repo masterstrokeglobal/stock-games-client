@@ -46,10 +46,10 @@ export const useGetRoundRecordById = (roundRecordId: number) => {
  * @param roundRecordId - ID of the round record to fetch
  */
 
-export const useGetMyRoundResult = (roundRecordId: number) => {
+export const useGetMyRoundResult = (roundRecordId: number,show:boolean) => {
     return useQuery({
         queryKey: ["my-round-result", roundRecordId],
         queryFn: () => roundRecordsAPI.getMyResult(roundRecordId),
-        enabled: !!roundRecordId,
+        enabled: show,
     });
 }

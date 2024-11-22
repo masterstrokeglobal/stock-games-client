@@ -15,11 +15,11 @@ interface GameResultDialogProps {
 }
 
 const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
-  const { data, isLoading, isError } = useGetMyRoundResult(roundRecordId);
+  const { data, isLoading, isError } = useGetMyRoundResult(roundRecordId,open);
 
   return (
     <Dialog key={String(open)} defaultOpen={open}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md bg-primary-game text-white">
         <DialogHeader>
           <DialogTitle>Round Results</DialogTitle>
         </DialogHeader>
