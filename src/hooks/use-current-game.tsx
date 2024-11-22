@@ -1,5 +1,5 @@
-import {  useEffect, useState,useMemo } from 'react';
-import { UseQueryResult } from '@tanstack/react-query';
+import { useEffect, useState, useMemo } from 'react';
+import { useQueryClient, UseQueryResult } from '@tanstack/react-query';
 import { RoundRecord } from '@/models/round-record';
 import { useGetCurrentRoundRecord } from '@/react-query/round-record-queries';
 import { useGameType } from './use-game-type';
@@ -54,7 +54,7 @@ export const useCurrentGame = (): {
     roundRecord: RoundRecord | null;
     isLoading: boolean;
 } => {
-
+    const queryClient = useQueryClient();
     const [type, setType] = useGameType();
     const {
         data,
@@ -69,8 +69,47 @@ export const useCurrentGame = (): {
         }
 
         // Create RoundRecord only when necessary
-        return new RoundRecord(data.data.roundRecords[0]);
+        const roundRecord = new RoundRecord(data.data.roundRecords[0]);
+
+        return roundRecord;
     }, [data?.data.roundRecords?.[0], isSuccess]); // More precise dependency
+
+    useEffect(() => {
+
+        if (!roundRecord) return;
+
+        // adding 2 seconds to the time to fetch intial price values
+        const timeToPlace = new Date(roundRecord.placementEndTime).getTime() - new Date().getTime() + 2000;
+
+        const timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime();
+
+
+
+        const gameEnd = setTimeout(() => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === 'current-round-record';
+                },
+            });
+        }, timeToGameEnd);
+
+        const placeEnd = setTimeout(() => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === 'current-round-record';
+                },
+            });
+        }, timeToPlace);
+
+        return () => {
+            clearTimeout(gameEnd);
+            clearTimeout(placeEnd);
+        };
+
+
+    }
+        , [roundRecord]);
+
 
     return {
         roundRecord,
@@ -125,7 +164,7 @@ export const useIsPlaceOver = (roundRecord: RoundRecord | null) => {
         const checkPlaceOver = () => {
             const now = new Date().getTime();
             const placeEnd = new Date(roundRecord.placementEndTime).getTime();
-            
+
             setIsPlaceOver(now >= placeEnd);
         };
 

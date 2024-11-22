@@ -14,6 +14,7 @@ export class RoundRecord {
     createdAt: Date;
     updatedAt: Date;
     deletedAt?: Date;
+    initialValues: any | null;
 
     constructor(data: Partial<RoundRecord>) {
         this.id = data.id || 0;
@@ -22,12 +23,13 @@ export class RoundRecord {
         this.endTime = data.endTime ? new Date(data.endTime) : new Date();
         this.placementStartTime = data.placementStartTime ? new Date(data.placementStartTime) : new Date();
         this.placementEndTime = data.placementEndTime ? new Date(data.placementEndTime) : new Date();
-        this.market = data.market?.map((item: any) => new MarketItem(item)) || [];
+        this.market = data.market?.map((item: any, index) => new MarketItem({ ...item, horse: index + 1 })) || [];
         this.type = data.type || SchedulerType.NSE;
         this.winningId = data.winningId;
         this.createdAt = data.createdAt ? new Date(data.createdAt) : new Date();
         this.updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
         this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : undefined;
+        this.initialValues = data.initialValues || null;
     }
 
     // Helper method to serialize the instance to a plain object

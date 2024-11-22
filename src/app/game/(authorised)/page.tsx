@@ -23,8 +23,8 @@ const GamePage = () => {
                 <div
                     style={borderStyle}
                     className="col-span-7 row-span-2 rounded-2xl  overflow-hidden">
-                    {roundRecord && <HorseRace roundRecord={roundRecord} />}
-                </div>
+{/*                     {roundRecord && <HorseRace roundRecord={roundRecord} />}
+ */}                </div>
                 <div
                     style={borderStyle}
 

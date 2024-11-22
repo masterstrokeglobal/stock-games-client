@@ -3,8 +3,7 @@ import React, { useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import HorseAnimation from "./components/horse";
 import { RoundRecord } from "@/models/round-record";
-import { useGameState, useIsPlaceOver } from "@/hooks/use-current-game";
-import { useLeaderboard } from "@/hooks/use-leadboard";
+import {useIsPlaceOver } from "@/hooks/use-current-game";
 
 type Props = {
   roundRecord: RoundRecord;
@@ -19,7 +18,7 @@ export default function HorseRace({ roundRecord }: Props) {
 
   const isPlaceOver = useIsPlaceOver(roundRecord);
 
-  const randomSounds = ["/horseNeigh1.mp3", "/horseNeigh2.mp3"];
+/*   const randomSounds = ["/horseNeigh1.mp3", "/horseNeigh2.mp3"];
 
   const playRandomSound = () => {
     const randomSound = randomSounds[Math.floor(Math.random() * randomSounds.length)];
@@ -46,7 +45,7 @@ export default function HorseRace({ roundRecord }: Props) {
       if (footstepsInterval) clearInterval(footstepsInterval);
       if (randomSoundInterval) clearInterval(randomSoundInterval);
     };
-  }, [roundRecord]);
+  }, [roundRecord]); */
 
   return isPlaceOver ? (
     <Canvas>

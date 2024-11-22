@@ -5,6 +5,7 @@ import { RoundRecord } from '@/models/round-record';
 interface RankedMarketItem extends MarketItem {
     change_percent: string;
     rank: number;
+    price: number;
     initialPrice?: number;
 }
 
@@ -60,17 +61,17 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
 
     const processPrice = (bitcode: string, currentPrice: number) => {
         const roundStatus = getRoundStatus();
-        
+
         // Set initial price exactly at placementEndTime
         if (roundStatus === 'tracking' && !initialPricesRef.current.has(bitcode)) {
-            console.log(`Round ${roundRecord.id}: Starting to track ${bitcode} at price: ${currentPrice}`);
             initialPricesRef.current.set(bitcode, currentPrice);
             return { initialPrice: currentPrice, changePercent: '0' };
         }
 
         // Calculate changes during tracking period
         if (roundStatus === 'tracking' && initialPricesRef.current.has(bitcode)) {
-            const initialPrice = initialPricesRef.current.get(bitcode)!;
+            const initialPrice = roundRecord.initialValues ? roundRecord.initialValues[bitcode.toLocaleLowerCase()] : console.log('No initial values found');
+
             const changePercent = ((currentPrice - initialPrice) / initialPrice * 100).toFixed(5);
             return { initialPrice, changePercent };
         }
@@ -78,7 +79,7 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
         // After round ends, maintain final values but stop updating
         if (roundStatus === 'completed') {
             const initialPrice = initialPricesRef.current.get(bitcode);
-            return { 
+            return {
                 initialPrice: initialPrice || currentPrice,
                 changePercent: latestDataRef.current.find(s => s.bitcode === bitcode)?.change_percent || '0'
             };
@@ -151,7 +152,7 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
 
                 socketRef.current.onclose = () => {
                     setConnectionStatus('disconnected');
-                    
+
                     if (reconnectTimeoutRef.current) {
                         clearTimeout(reconnectTimeoutRef.current);
                     }
@@ -218,8 +219,8 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
         };
     }, [roundRecord]);
 
-    return { 
-        stocks, 
+    return {
+        stocks,
         connectionStatus,
         roundStatus: getRoundStatus()
     };

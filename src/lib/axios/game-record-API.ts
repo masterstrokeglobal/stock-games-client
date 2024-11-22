@@ -1,11 +1,19 @@
 import api from "./instance";
 
 export const gameRecordAPI = {
-    getAllGameRecords: async (filter: SearchFilters) => {
-        return api.get("/game-record", { params: filter });
-    },
+  createGameRecord: async (data: any) => {
+    return api.post("/game-record", data);
+  },
 
-    getGameRecordById: async (gameRecordId: string) => {
-        return api.get(`/game-record/${gameRecordId}`);
-    },
+  getWinningGameRecord: async () => {
+    return api.get("/game-record/winning");
+  },
+
+  getTopPlacements: async () => {
+    return api.get("/game-record/top-placements");
+  },
+
+  getMyPlacements: async () => {
+    return api.get("/game-record/my-placements");
+  }
 };

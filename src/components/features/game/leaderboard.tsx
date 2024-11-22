@@ -27,6 +27,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
 
+
     useEffect(() => {
         if (sectionRef.current) {
             const sectionHeight = sectionRef.current.offsetHeight;
@@ -56,14 +57,15 @@ const LeaderBoard = ({ roundRecord }: Props) => {
             <h2 className="text-xl font-semibold mb-4 text-gray-200">
                 Leader Board
             </h2>
-            <div 
-                className="max-h-96 h-full overflow-y-scroll" 
+            <ScrollArea
+                className="max-h-96 h-full"
                 style={{ height: `${scrollAreaHeight - 20}px` }}
             >
                 <table className="min-w-full">
                     <thead>
                         <tr className="text-[#8990A2] text-sm">
                             <th className="p-2 text-left w-12">Rank</th>
+                            <th className="p-2 text-left">Horse</th>
                             <th className="p-2 text-left">Name</th>
                             <th className="p-2 text-right">Price</th>
                             <th className="p-2 text-right">Change</th>
@@ -71,8 +73,8 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                     </thead>
                     <tbody>
                         {leaderboardData.map((crypto, index) => (
-                            <tr 
-                                key={crypto.bitcode} 
+                            <tr
+                                key={index}
                                 className="border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden"
                             >
                                 <td className="p-2 w-12 text-gray-300">
@@ -99,6 +101,9 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                                     )}
                                 </td>
                                 <td className="p-2 text-sm text-gray-300">
+                                    {crypto.horse}
+                                </td>
+                                <td className="p-2 text-sm text-gray-300">
                                     {crypto.name}
                                 </td>
                                 <td className="p-2 text-sm text-right text-gray-300">
@@ -115,7 +120,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                         ))}
                     </tbody>
                 </table>
-            </div>
+            </ScrollArea>
         </section>
     );
 };

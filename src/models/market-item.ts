@@ -14,7 +14,7 @@ export class MarketItem {
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
-    price: number;
+    horse?: number;
 
     constructor(params: Partial<MarketItem> = {}) {
         this.id = params.id;
@@ -26,6 +26,7 @@ export class MarketItem {
         this.createdAt = params.createdAt;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;
+        this.horse = params.horse;
     }
 
     get stream() {

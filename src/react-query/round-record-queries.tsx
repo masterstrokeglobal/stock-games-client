@@ -23,6 +23,7 @@ export const useGetCurrentRoundRecord = (
            return roundRecordsAPI.getAllRoundRecords({
             type: type,
             limit: 1,
+            startTime: new Date(),
             page: 1,
         })},
         staleTime: 100 * 1000,
