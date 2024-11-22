@@ -40,3 +40,16 @@ export const useGetRoundRecordById = (roundRecordId: number) => {
         enabled: !!roundRecordId, // Prevents the query from running if the ID is falsy
     });
 };
+
+/**
+ * Hook to get the current user's round result for a specific round.
+ * @param roundRecordId - ID of the round record to fetch
+ */
+
+export const useGetMyRoundResult = (roundRecordId: number) => {
+    return useQuery({
+        queryKey: ["my-round-result", roundRecordId],
+        queryFn: () => roundRecordsAPI.getMyResult(roundRecordId),
+        enabled: !!roundRecordId,
+    });
+}

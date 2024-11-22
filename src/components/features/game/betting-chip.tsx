@@ -8,6 +8,9 @@ const BettingChips: React.FC<{ chips: Chip[] }> = ({ chips }) => {
     <div className="absolute inset-0 pointer-events-none">
       {chips.map((chip, index) => {
         const position = getBetPosition(chip as any);
+        if (position.x ==0 && position.y == 0) {
+          return null;
+        }
         return (
           <div
             key={index}

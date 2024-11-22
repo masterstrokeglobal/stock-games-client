@@ -1,11 +1,7 @@
+import { PlacementType } from '@/models/game-record';
 import { useCallback, useState } from 'react';
 
-export enum PlacementType {
-    SINGLE = "single",
-    SPLIT = "split",
-    STREET = "street",
-    DOUBLE_STREET = "double_street"
-}
+
 
 interface Bet {
     type: PlacementType;

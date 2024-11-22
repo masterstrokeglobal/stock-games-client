@@ -13,8 +13,21 @@ import { RoundRecord } from "@/models/round-record";
 import BettingChips from "./betting-chip";
 import { Button } from "@/components/ui/button";
 import { useCreateGameRecord, useGetMyPlacements } from "@/react-query/game-record-queries";
-import { set } from "react-hook-form";
 import GameRecord from "@/models/game-record";
+import { cn } from "@/lib/utils";
+
+enum PlacementType {
+    SINGLE = "single",
+    SPLIT = "split",
+    QUARTER = "quarter",
+    STREET = "street",
+    DOUBLE_STREET = "double_street",
+    CORNER = "corner",
+    COLUMN = "column",
+    COLOR = "color",
+    EVEN_ODD = "even_odd",
+    HIGH_LOW = "high_low"
+}
 
 type Props = {
     roundRecord: RoundRecord;
@@ -32,14 +45,12 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     const bettedChips = useMemo(() => {
         if (!isSuccess) return [];
-        console.log('data', data.data);
         const gameRecords: GameRecord[] = data.data.map((record: Partial<GameRecord>) => new GameRecord(record));
         const chips = gameRecords.map((record) => ({
             type: record.placementType,
             amount: record.amount,
             numbers: record.market.map((market) => roundRecord.market.findIndex((m) => m.id === market))
         }));
-
         return chips;
     }, [data]);
 
@@ -51,17 +62,82 @@ const RouletteGame = ({ roundRecord }: Props) => {
         getBetTypeFromClick
     } = useRouletteBetting();
 
+    // Function to check if there's a bet on a specific type and numbers
+    const getBetForPosition = (type: PlacementType, numbers: number[]) => {
+        const allChips = [...bettedChips, ...chips];
+        return allChips.find(chip =>
+            chip.type === type &&
+            chip.numbers.length === numbers.length &&
+            chip.numbers.every(num => numbers.includes(num))
+        );
+    };
+
+    const ButtonChip = ({ amount }: { amount: number }) => (
+        <div className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 bg-yellow-500 text-black text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">
+            {amount}
+        </div>
+    );
+
+    // Handler for side bets using DOUBLE_STREET type
+    const handleSideBet = (numbers: number[]) => {
+        if (gameState.isPlaceOver) return;
+
+        const position = getBetPosition({
+            type: PlacementType.QUARTER,
+            numbers,
+        });
+
+        setChips([{
+            type: PlacementType.QUARTER,
+            numbers,
+            amount: betAmount,
+            position,
+        }]);
+    };
+
+    // Handler for bottom bets using COLUMN type
+    const handleBottomBet = (numbers: number[]) => {
+        if (gameState.isPlaceOver) return;
+
+        const position = getBetPosition({
+            type: PlacementType.COLUMN,
+            numbers,
+        });
+
+        setChips([{
+            type: PlacementType.COLUMN,
+            numbers,
+            amount: betAmount,
+            position,
+        }]);
+    };
+
+    const handleSpecialBet = (betType: PlacementType, numbers: number[]) => {
+        if (gameState.isPlaceOver) return;
+
+        const position = getBetPosition({
+            type: betType,
+            numbers,
+        });
+
+        setChips([{
+            type: betType,
+            numbers,
+            amount: betAmount,
+            position,
+        }]);
+    };
 
     const handlePlaceBet = () => {
-
         const chip = chips[0];
+        if (!chip) return;
 
         const markets = chip.numbers.map((number) => roundRecord.market[number]?.id).filter((id) => id !== undefined);
 
         mutate({
-            amount: chips[0].amount,
+            amount: chip.amount,
             round: roundRecord.id,
-            placementType: chips[0].type,
+            placementType: chip.type,
             market: markets
         }, {
             onSuccess: () => {
@@ -70,33 +146,25 @@ const RouletteGame = ({ roundRecord }: Props) => {
         });
     };
 
+    // Get all numbers for specific sections and other bets
+    const first8Numbers = Array.from({ length: 8 }, (_, i) => i);
+    const second8Numbers = Array.from({ length: 8 }, (_, i) => i + 8);
+    const redNumbers = [1, 3, 5, 7, 9, 11, 13, 15];
+    const blackNumbers = [2, 4, 6, 8, 10, 12, 14, 16];
+    const evenNumbers = Array.from({ length: 8 }, (_, i) => (i + 1) * 2);
+    const oddNumbers = Array.from({ length: 8 }, (_, i) => (i * 2) + 1);
+
     const handleBoardClick = (e: React.MouseEvent) => {
         const bet = getBetTypeFromClick(e, boardRef);
         if (!bet) return;
 
-        const posistion = getBetPosition(bet);
+        const position = getBetPosition(bet);
         setChips([{
             ...bet,
             amount: betAmount,
-            position: posistion
+            position,
         }]);
     };
-
-    const handleBoardHover = (e: React.MouseEvent) => {
-        const bet = getBetTypeFromClick(e, boardRef);
-        setHoveredCell(bet);
-    };
-
-    const handleBetChipClick = () => {
-        if (gameState.isPlaceOver) return;
-
-        const newChips = [...chips];
-        console.log('newChips', newChips);
-    };
-
-    console.log('bettedChips', bettedChips);
-    console.log('chips', chips);
-
 
     return (
         <div className="max-w-4xl mx-auto xl:p-4 p-2 space-y-8">
@@ -106,16 +174,13 @@ const RouletteGame = ({ roundRecord }: Props) => {
                         {gameState.isPlaceOver ? "Betting Closed" : "Place Your Bets"}
                     </h1>
 
-                    <div className="relative w-full max-w-4xl mx-auto">
-                        {/* Main betting board and side buttons */}
+                    <div className={cn("relative w-full max-w-4xl mx-auto", gameState.isPlaceOver ? 'cursor-not-allowed opacity-50' : 'cursor-crosshair')}>
                         <div className="flex w-full">
-                            {/* Main betting grid */}
                             <div
                                 ref={boardRef}
                                 onClick={!gameState.isPlaceOver ? handleBoardClick : undefined}
-                                onMouseMove={!gameState.isPlaceOver ? handleBoardHover : undefined}
                                 onMouseLeave={() => setHoveredCell(null)}
-                                className={`relative flex-1 mx-auto ${false ? 'cursor-not-allowed opacity-50' : 'cursor-crosshair'}`}
+                                className={`relative flex-1 mx-auto`}
                             >
                                 <RouletteBettingGrid
                                     roundRecord={roundRecord}
@@ -125,63 +190,107 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                 <BettingChips chips={[...bettedChips, ...chips]} />
                             </div>
 
-                            {/* Side buttons */}
                             <div className="grid grid-rows-2 gap-2 ml-2">
-                                <Button
-                                    variant="game-secondary"
-                                    className="h-full w-10 flex items-center justify-center"
-                                >
-                                    <span className="rotate-text">1st 8</span>
-                                </Button>
-                                <Button
-                                    variant="game-secondary"
-                                    className="h-full w-10 flex items-center justify-center"
-                                >
-                                    <span className="rotate-text">2nd 8</span>
-                                </Button>
+                                <div className="relative">
+                                    <Button
+                                        variant="game-secondary"
+                                        className="h-full w-10 flex items-center justify-center relative"
+                                        onClick={() => handleSideBet(first8Numbers)}
+                                    >
+                                        <span className="rotate-text">1st 8</span>
+                                    </Button>
+                                    {getBetForPosition(PlacementType.QUARTER, first8Numbers) && (
+                                        <ButtonChip amount={getBetForPosition(PlacementType.QUARTER, first8Numbers)!.amount} />
+                                    )}
+                                </div>
+                                <div className="relative">
+                                    <Button
+                                        variant="game-secondary"
+                                        className="h-full w-10 flex items-center justify-center relative"
+                                        onClick={() => handleSideBet(second8Numbers)}
+                                    >
+                                        <span className="rotate-text">2nd 8</span>
+                                    </Button>
+                                    {getBetForPosition(PlacementType.QUARTER, second8Numbers) && (
+                                        <ButtonChip amount={getBetForPosition(PlacementType.QUARTER, second8Numbers)!.amount} />
+                                    )}
+                                </div>
                             </div>
                         </div>
 
-                        {/* Bottom section buttons */}
                         <div className="grid grid-cols-2 gap-2 mt-4">
-                            <Button
-                                variant="game-secondary"
-                                className="col-span-1 justify-center"
-                            >
-                                1st 8
-                            </Button>
-                            <Button
-                                variant="game-secondary"
-                                className="col-span-1 justify-center"
-                            >
-                                2nd 8
-                            </Button>
+                            <div className="relative">
+                                <Button
+                                    variant="game-secondary"
+                                    className="col-span-1 justify-center w-full"
+                                    onClick={() => handleBottomBet(first8Numbers)}
+                                >
+                                    1st 8
+                                </Button>
+                                {getBetForPosition(PlacementType.COLUMN, first8Numbers) && (
+                                    <ButtonChip amount={getBetForPosition(PlacementType.COLUMN, first8Numbers)!.amount} />
+                                )}
+                            </div>
+                            <div className="relative">
+                                <Button
+                                    variant="game-secondary"
+                                    className="col-span-1 justify-center w-full"
+                                    onClick={() => handleBottomBet(second8Numbers)}
+                                >
+                                    2nd 8
+                                </Button>
+                                {getBetForPosition(PlacementType.COLUMN, second8Numbers) && (
+                                    <ButtonChip amount={getBetForPosition(PlacementType.COLUMN, second8Numbers)!.amount} />
+                                )}
+                            </div>
                         </div>
 
-                        {/* Bottom row buttons */}
                         <div className="grid grid-cols-4 gap-2 mt-4">
-                            <Button
-                                variant="game-secondary"
-                                className="h-10"
-                            >
-                                EVEN
-                            </Button>
-                            <Button
-                                variant="game-secondary"
-                                className="roulette-piece-black-select h-10"
-                            />
-                            <Button
-                                variant="game-secondary"
-                                className="roulette-piece-red-select h-10"
-                            />
-                            <Button
-                                variant="game-secondary"
-                                className="h-10"
-                            >
-                                ODD
-                            </Button>
+                            <div className="relative">
+                                <Button
+                                    variant="game-secondary"
+                                    className="h-10 w-full"
+                                    onClick={() => handleSpecialBet(PlacementType.EVEN_ODD, evenNumbers)}
+                                >
+                                    EVEN
+                                </Button>
+                                {getBetForPosition(PlacementType.EVEN_ODD, evenNumbers) && (
+                                    <ButtonChip amount={getBetForPosition(PlacementType.EVEN_ODD, evenNumbers)!.amount} />
+                                )}
+                            </div>
+                            <div className="relative">
+                                <Button
+                                    variant="game-secondary"
+                                    className="roulette-piece-black-select h-10 w-full"
+                                    onClick={() => handleSpecialBet(PlacementType.COLOR, blackNumbers)}
+                                />
+                                {getBetForPosition(PlacementType.COLOR, blackNumbers) && (
+                                    <ButtonChip amount={getBetForPosition(PlacementType.COLOR, blackNumbers)!.amount} />
+                                )}
+                            </div>
+                            <div className="relative">
+                                <Button
+                                    variant="game-secondary"
+                                    className="roulette-piece-red-select h-10 w-full"
+                                    onClick={() => handleSpecialBet(PlacementType.COLOR, redNumbers)}
+                                />
+                                {getBetForPosition(PlacementType.COLOR, redNumbers) && (
+                                    <ButtonChip amount={getBetForPosition(PlacementType.COLOR, redNumbers)!.amount} />
+                                )}
+                            </div>
+                            <div className="relative">
+                                <Button
+                                    variant="game-secondary"
+                                    className="h-10 w-full"
+                                    onClick={() => handleSpecialBet(PlacementType.EVEN_ODD, oddNumbers)}
+                                >
+                                    ODD
+                                </Button>
+                                {getBetForPosition(PlacementType.EVEN_ODD, oddNumbers) && (
+                                    <ButtonChip amount={getBetForPosition(PlacementType.EVEN_ODD, oddNumbers)!.amount} />
+                                )}
+                            </div>
                         </div>
-
                     </div>
                 </div>
 
@@ -199,6 +308,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                         <GameHeader gameState={gameState} />
 
                         <BettingControls
+                            isLoading={isPlacingBet}
                             betAmount={betAmount}
                             onPlaceBet={handlePlaceBet}
                             setBetAmount={setBetAmount}

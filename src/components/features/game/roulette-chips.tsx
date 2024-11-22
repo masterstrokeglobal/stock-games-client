@@ -7,6 +7,7 @@ interface BettingControlsProps {
     betAmount: number;
     setBetAmount: (amount: number) => void;
     onPlaceBet: () => void;
+    isLoading: boolean;
     isPlaceOver: boolean;
 }
 
@@ -14,6 +15,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
     betAmount,
     setBetAmount,
     isPlaceOver,
+    isLoading,
     onPlaceBet
 }) => {
     return (
@@ -48,8 +50,9 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                 </div>
             </div>
             <button
+
                 className={`bet-button w-full ${isPlaceOver ? 'opacity-50 cursor-not-allowed' : ''}`}
-                disabled={isPlaceOver}
+                disabled={isPlaceOver || isLoading}
                 onClick={onPlaceBet}
             >
                 {isPlaceOver ? "BETTING CLOSED" : "BET"}

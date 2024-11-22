@@ -2,12 +2,14 @@
 import CurrentBets from "@/components/features/game/current-bets";
 import LeaderBoard from "@/components/features/game/leaderboard";
 import Navbar from "@/components/features/game/navbar";
+import GameResultDialog from "@/components/features/game/result-dialog";
 import RouletteGame from "@/components/features/game/roulette-game";
 import HorseRace from "@/components/features/horse-animation/horse";
-import { useCurrentGame, useGameState } from "@/hooks/use-current-game";
+import { useCurrentGame, useGameState, useShowResults } from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
 import { RoundRecord } from "@/models/round-record";
 import Image from "next/image";
+import { useState } from "react";
 
 const borderStyle = {
     borderColor: "#3799ED",
@@ -16,6 +18,8 @@ const borderStyle = {
 };
 const GamePage = () => {
     const { roundRecord } = useCurrentGame();
+
+    const {previousRoundId,showResults} = useShowResults(roundRecord);
     const { isMobile } = useWindowSize();
     return (
         <section className="bg-primary-game pt-20 h-screen">
@@ -59,6 +63,8 @@ const GamePage = () => {
                     </div>
                 </main>
             </section>}
+
+            <GameResultDialog open={showResults} roundRecordId={previousRoundId!} />
         </section>
     );
 };

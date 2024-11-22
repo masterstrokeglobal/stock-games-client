@@ -181,3 +181,47 @@ export const useIsPlaceOver = (roundRecord: RoundRecord | null) => {
 
     return isPlaceOver;
 };
+
+
+
+export const useShowResults = (roundRecord: RoundRecord | null) => {
+    const [showResults, setShowResults] = useState(false);
+    const [currentRoundId, setCurrentRoundId] = useState<number | null>(null);
+    const [previousRoundId, setPreviousRoundId] = useState<number | null>(null);
+
+    useEffect(() => {
+        if (!roundRecord) return;
+
+        // Check if the round has changed
+        if (roundRecord.id !== currentRoundId) {
+            // Update the previous round ID
+            if (currentRoundId) {
+                setPreviousRoundId(currentRoundId);
+            }
+
+            // Reset the state for the new round
+            setShowResults(false);
+            setCurrentRoundId(roundRecord.id);
+        }
+
+        const updateShowResults = () => {
+            const now = new Date().getTime();
+            const gameEnd = new Date(roundRecord.endTime).getTime();
+
+            // Show results only after the game ends
+            if (now >= gameEnd) {
+                setShowResults(true);
+            }
+        };
+
+        updateShowResults();
+        const intervalId = setInterval(updateShowResults, REFRESH_INTERVAL);
+
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [roundRecord, currentRoundId]); // Re-run when `roundRecord` or `currentRoundId` changes
+
+    return { showResults, currentRoundId, previousRoundId };
+};
+
