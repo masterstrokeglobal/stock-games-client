@@ -30,8 +30,9 @@ export class MarketItem {
     }
 
     get codeName() {
-        //remove usdt only from end of code
-        return this.code?.replace("usdt", "").toLocaleUpperCase();
+        return this.code?.startsWith("usdt") 
+        ? "USDT" 
+        : this.code?.replace(/usdt$/, "").toLocaleUpperCase();
     }
 
     get stream() {

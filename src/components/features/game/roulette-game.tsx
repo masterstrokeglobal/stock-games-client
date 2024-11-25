@@ -63,6 +63,8 @@ const RouletteGame = ({ roundRecord }: Props) => {
         getBetTypeFromClick
     } = useRouletteBetting();
 
+    console.log(chips);
+
     // Function to check if there's a bet on a specific type and numbers
     const getBetForPosition = (type: PlacementType, numbers: number[]) => {
         const allChips = [...bettedChips, ...chips];
@@ -181,7 +183,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                 ref={boardRef}
                                 onClick={!gameState.isPlaceOver ? handleBoardClick : undefined}
                                 onMouseLeave={() => setHoveredCell(null)}
-                                
+
                                 className={`relative flex-1 mx-auto`}
                             >
                                 <RouletteBettingGrid
@@ -191,6 +193,8 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                 />
                                 <BettingChips chips={[...bettedChips, ...chips]} />
                             </div>
+                     
+
 
                             <div className="grid grid-rows-2 gap-2 ml-2">
                                 <div className="relative">
@@ -220,7 +224,18 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-2 mt-4">
+                        <Button
+                                variant="game-secondary"
+                                className="col-span-1 justify-center gap-4 w-full mt-2"
+                            >
+                                <span>
+                                    17
+                                </span>
+                                {roundRecord.market[16]?.codeName}
+                            </Button>
+
+
+                        <div className="grid grid-cols-2 gap-2 mt-2">
                             <div className="relative">
                                 <Button
                                     variant="game-secondary"

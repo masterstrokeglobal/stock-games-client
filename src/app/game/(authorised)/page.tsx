@@ -5,7 +5,7 @@ import Navbar from "@/components/features/game/navbar";
 import GameResultDialog from "@/components/features/game/result-dialog";
 import RouletteGame from "@/components/features/game/roulette-game";
 import HorseRace from "@/components/features/horse-animation/horse";
-import { useCurrentGame, useGameState, useShowResults } from "@/hooks/use-current-game";
+import { useCurrentGame, useGameState, useIsPlaceOver, useShowResults } from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
 import { RoundRecord } from "@/models/round-record";
 import Image from "next/image";
@@ -19,9 +19,9 @@ const borderStyle = {
 const GamePage = () => {
     const { roundRecord } = useCurrentGame();
 
-    const {previousRoundId,showResults,currentRoundId} = useShowResults(roundRecord);
+    const { previousRoundId, showResults, currentRoundId } = useShowResults(roundRecord);
     const { isMobile } = useWindowSize();
-    console.log(previousRoundId,currentRoundId);
+    console.log(previousRoundId, currentRoundId);
     return (
         <section className="bg-primary-game pt-20 h-screen">
             <Navbar />
@@ -50,21 +50,7 @@ const GamePage = () => {
                 </div>
             </main>}
 
-            {isMobile && <section className="text-white">
-                <header className="bg-[#1E2E57] mx-auto flex justify-center flex-col text-center min-h-[20vh]" >
-                    <h1>Round Starts in</h1>
-                    <p className="jersey text-8xl leading-[5rem]">
-                        <TimeLeft roundRecord={roundRecord!} />
-                    </p>
-                </header>
-                <main className="bg-[#0A1634]">
-                    {roundRecord && <RouletteGame roundRecord={roundRecord} />}
-                    <div className="px-2">
-                        <CurrentBets roundId={roundRecord?.id.toString()!} />
-                    </div>
-                </main>
-            </section>}
-
+            {isMobile && <MobileGame roundRecord={roundRecord!} />}
             <GameResultDialog open={showResults} roundRecordId={previousRoundId!} />
         </section>
     );
@@ -77,3 +63,33 @@ const TimeLeft = ({ roundRecord }: { roundRecord: RoundRecord }) => {
     return gameState.placeTimeLeft.formatted;
 }
 
+
+const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
+    const isPlaceOver = useIsPlaceOver(roundRecord);
+
+    return <section className="text-white">
+        <MobileHeader roundRecord={roundRecord} />
+        {!isPlaceOver && <main className="bg-[#0A1634]">
+            {roundRecord && <RouletteGame roundRecord={roundRecord} />}
+            <div className="px-2">
+                <CurrentBets roundId={roundRecord?.id.toString()!} />
+            </div>
+        </main>}
+        {isPlaceOver && <LeaderBoard roundRecord={roundRecord} />}
+    </section>
+}
+
+
+const MobileHeader = ({ roundRecord }: { roundRecord: RoundRecord }) => {
+    const isPlaceOver = useIsPlaceOver(roundRecord);
+    if (isPlaceOver)
+        return <HorseRace roundRecord={roundRecord} />
+
+
+    return <header className="bg-[#1E2E57] mx-auto flex justify-center flex-col text-center min-h-[20vh]" >
+        <h1>Round Starts in</h1>
+        <p className="jersey text-8xl leading-[5rem]">
+            <TimeLeft roundRecord={roundRecord!} />
+        </p>
+    </header>
+}

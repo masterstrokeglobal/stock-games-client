@@ -96,7 +96,7 @@ const fragmentShader = `
     vec2 uv = vUv * repeat;
     
     // Changed direction: positive time for backward movement
-    vec2 movingUV = uv + vec2(0.0, time * movementSpeed);
+vec2 movingUV = uv - vec2(0.0, time * movementSpeed);
     
     float centerStart = 0.5 - (centerWidth / 2.0);
     float centerEnd = 0.5 + (centerWidth / 2.0);

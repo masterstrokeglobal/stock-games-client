@@ -20,7 +20,7 @@ export const useCreateGameRecord = () => {
             toast.success("Game record created successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error creating game record");
+            toast.error(error.response?.data.message ?? "Error creating game record");
         },
     });
 };

@@ -67,16 +67,26 @@ export const getBetPosition = (bet: Bet): ChipPosition => {
                 };
             }
         }
-
         case PlacementType.STREET: {
-            const rowStart = Math.min(...bet.numbers);
-            const pos = getNumberPosition(rowStart);
-            return {
-                x: pos.x + CELL_WIDTH * 4 + GAP * 3,
-                y: pos.y + CELL_HEIGHT / 2,
-                transform: 'translate(-50%, -50%)'
-            };
+            // Determine if it's a horizontal or vertical street
+            const isHorizontalStreet = bet.numbers[1] - bet.numbers[0] === 1;
+            const firstNumberPos = getNumberPosition(bet.numbers[0]);
+
+            if (isHorizontalStreet) {
+                return {
+                    x: firstNumberPos.x,  // Positioned at the full left side
+                    y: firstNumberPos.y + CELL_HEIGHT / 2,
+                    transform: 'translate(-50%, -50%)'
+                };
+            } else {
+                return {
+                    x: firstNumberPos.x + CELL_WIDTH / 2,
+                    y: firstNumberPos.y + CELL_HEIGHT,  // Move to align with the line
+                    transform: 'translate(-50%, -50%)'
+                };
+            }
         }
+
 
         default:
             return { x: 0, y: 0 };
@@ -89,7 +99,7 @@ export const useRouletteBetting = () => {
 
 
 
-    const getBetTypeFromClick = useCallback((event: React.MouseEvent,boardRef: React.RefObject<HTMLElement>  ): Bet | null => {
+    const getBetTypeFromClick = useCallback((event: React.MouseEvent, boardRef: React.RefObject<HTMLElement>): Bet | null => {
         if (!boardRef.current) return null;
 
         const position = { x: event.clientX, y: event.clientY };
@@ -121,15 +131,8 @@ export const useRouletteBetting = () => {
             };
         }
 
-        if (rowIndex === 3) {
-            return {
-                type: PlacementType.STREET,
-                numbers: [currentNumber, currentNumber + 1, currentNumber + 2]
-            };
-        }
-
-        // Vertical split
-        if (rowIndex < 3 &&
+          // Vertical split
+          if (rowIndex < 3 &&
             Math.abs(currentNumber - (currentNumber + 4)) === 4 &&
             cellX >= BORDER_THRESHOLD &&
             cellX <= cellWidth - BORDER_THRESHOLD) {
@@ -138,7 +141,24 @@ export const useRouletteBetting = () => {
                 numbers: [currentNumber, currentNumber + 4]
             };
         }
+        // Vertical Street bet (bottom edge)
+        if (cellY > CELL_HEIGHT - BORDER_THRESHOLD) {
+            const streetStartNumber = 13 + colIndex;
+            return {
+                type: PlacementType.STREET,
+                numbers: [streetStartNumber, streetStartNumber - 4, streetStartNumber - 8, streetStartNumber - 12]
+            };
+        }
+      
 
+        // Horizontal Street bet (left edge)
+        if (cellX < BORDER_THRESHOLD) {
+            const streetStartNumber = (rowIndex * 4) + 1;
+            return {
+                type: PlacementType.STREET,
+                numbers: [streetStartNumber, streetStartNumber + 1, streetStartNumber + 2, streetStartNumber + 3]
+            };
+        }
         // Horizontal split
         if (colIndex < 3 && Math.abs(currentNumber - (currentNumber + 1)) === 1) {
             return {
@@ -151,6 +171,8 @@ export const useRouletteBetting = () => {
 
         return null;
     }, []);
+
+
     const placeBet = useCallback((bet: Bet, amount: number) => {
         const chipPosition = getBetPosition(bet);
         const newChip: Chip = {
