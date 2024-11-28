@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, forwardRef } from "react";
+import React, { useRef, useEffect, forwardRef, useMemo } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { GLTFLoader } from "./GLTFLoader";
@@ -14,17 +14,13 @@ type HorseModelProps = {
 
 const HorseModel = forwardRef<THREE.Group, HorseModelProps>(
   ({ position, scale, speed, color, number }, ref) => {
-    const group = useRef<THREE.Group | any>(null);
+    const group = useRef<THREE.Group | null>(null);
     const { scene, animations } = useLoader(GLTFLoader, "./horse.glb");
     const mixer = useRef<THREE.AnimationMixer | null>(null);
-    const horseNumberRef = useRef<any>(null); // Reference for HorseNumber
+    const horseNumberRef = useRef<any>(null);
 
-    useEffect(() => {
-      if (group.current) {
-        group.current.position.set(...position);
-        group.current.scale.set(...scale);
-      }
-
+    // Memoize the cloned and colored scene
+    const coloredScene = useMemo(() => {
       const model = scene.clone();
       model.traverse(
         (object: {
@@ -38,14 +34,29 @@ const HorseModel = forwardRef<THREE.Group, HorseModelProps>(
 
             // Apply color to the mesh
             if (object.material instanceof THREE.MeshStandardMaterial) {
-              object.material = object.material.clone();
-              object.material.color.set(new THREE.Color(color));
+              const clonedMaterial = object.material.clone();
+              clonedMaterial.color.set(new THREE.Color(color));
+              object.material = clonedMaterial;
             }
           }
         }
       );
+      return model;
+    }, [scene, color]);
 
-      mixer.current = new THREE.AnimationMixer(model);
+    useEffect(() => {
+      if (!group.current) return;
+
+      // Clear any existing children
+      while (group.current.children.length > 0) {
+        group.current.remove(group.current.children[0]);
+      }
+
+      // Add the colored scene to the group
+      group.current.add(coloredScene);
+
+      // Setup animation mixer
+      mixer.current = new THREE.AnimationMixer(coloredScene);
 
       if (animations.length) {
         const action = mixer.current.clipAction(animations[0]);
@@ -53,16 +64,16 @@ const HorseModel = forwardRef<THREE.Group, HorseModelProps>(
         action.play();
       }
 
-      if (group.current) {
-        group.current.add(model);
-      }
+      // Set initial position and scale
+      group.current.position.set(...position);
+      group.current.scale.set(...scale);
 
       return () => {
         if (mixer.current) {
           mixer.current.stopAllAction();
         }
       };
-    }, [scene, animations, position, scale, speed, color]);
+    }, [coloredScene, animations, position, scale, speed]);
 
     useFrame((_, delta) => {
       if (mixer.current) {
@@ -77,7 +88,7 @@ const HorseModel = forwardRef<THREE.Group, HorseModelProps>(
         if (horseNumberRef.current) {
           horseNumberRef.current.position.set(
             group.current.position.x,
-            group.current.position.y + 3, // Adjust Y-offset if necessary
+            group.current.position.y + 3,
             group.current.position.z
           );
         }
@@ -94,7 +105,7 @@ const HorseModel = forwardRef<THREE.Group, HorseModelProps>(
           }}
         />
         <HorseNumber
-          ref={horseNumberRef} // Pass the ref to HorseNumber
+          ref={horseNumberRef}
           position={position}
           color={color}
           number={number}

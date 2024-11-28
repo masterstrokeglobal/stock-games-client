@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useCallback } from "react";
+import React, { useMemo, useRef, useState, useCallback, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import {
     PerspectiveCamera,
@@ -12,6 +12,7 @@ import { Physics } from "@react-three/rapier";
 import * as THREE from "three";
 import FenceRow from "./fence-row";
 import { RoundRecord } from "@/models/round-record";
+import { useLeaderboard } from "@/hooks/use-leadboard";
 
 
 const horseColors = [
@@ -64,77 +65,98 @@ CameraController.displayName = "CameraController";
 type Props = {
     roundRecord: RoundRecord;
 };
-
-const HorseAnimation = ({roundRecord}:Props) => {
-    const numberOfHorses =  roundRecord.market.length;
+const HorseAnimation = ({ roundRecord }: Props) => {
+    const numberOfHorses = roundRecord.market.length;
     const animationProgressRef = useRef(0);
     const [leadingHorseIndex] = useState(() => Math.floor(16));
     const focusedHorseRef = useRef<THREE.Object3D | any>(null);
     const horsesRef = useRef<(THREE.Object3D | null)[]>([]);
-    const animationDuration = 10; // Increase the animation duration for slower spread
-    // Initial positions: Horses start more closely packed in the X direction
+
+    // New state for tracking position changes
+    const [currentPositions, setCurrentPositions] = useState<{ x: number, z: number }[]>([]);
+    const [targetPositions, setTargetPositions] = useState<{ x: number, z: number }[]>([]);
+    const [isTransitioning, setIsTransitioning] = useState(false);
+
+    const { stocks } = useLeaderboard(roundRecord);
+
+    // Initial positions setup
     const initialPositions = useMemo(() => {
         return [...Array(numberOfHorses)].map((_, index) => {
-            // The base position for the first horse
             const baseX = -15;
-
-            // Create a random gap that increases with each horse
-            const gap = 4 + index * (Math.random() * 0.1); // Randomized increasing gap
-
+            const gap = 4 + index * (Math.random() * 0.1);
             return {
-                x: baseX + gap * index, // Increasing gap for each horse
+                x: baseX + gap * index,
                 z: 0,
             };
         });
     }, [numberOfHorses]);
 
-
-    // Final positions: Wide spread in the X direction but smaller in the Z direction (closer in front-back distance)
-    const finalPositions = useMemo(() => {
-        return [...Array(numberOfHorses)].map((_, index) => ({
-            x: (Math.random() - 0.5) * 60, // Increase side-to-side spread
-            z: index * 5 + (Math.random() - 0.5) * 5, // Decrease front-back spread to keep them closer
+    // Function to generate new random positions
+    const generateNewPositions = useCallback(() => {
+        return [...Array(numberOfHorses)].map(() => ({
+            x: (Math.random() - 0.5) * 60,
+            z: (Math.random() - 0.5) * 20,
         }));
     }, [numberOfHorses]);
 
+    // Periodic position change effect
+    useEffect(() => {
+        const positionChangeInterval = setInterval(() => {
+            const newPositions = generateNewPositions();
+            setCurrentPositions(prev => prev.length ? prev : initialPositions);
+            setTargetPositions(newPositions);
+            setIsTransitioning(true);
+            animationProgressRef.current = 0;
+        }, 5000); // Change positions every 5 seconds
+
+        return () => clearInterval(positionChangeInterval);
+    }, [generateNewPositions, initialPositions]);
+
+    // Smooth position interpolation
     const updateHorsePositions = useCallback(
         (progress: number) => {
             horsesRef.current.forEach((horse, index) => {
-                if (horse) {
-                    const initialPos = initialPositions[index];
-                    const finalPos = finalPositions[index];
-                    horse.position.x =
-                        initialPos.x + (finalPos.x - initialPos.x) * progress;
-                    horse.position.z =
-                        initialPos.z + (finalPos.z - initialPos.z) * progress;
+                if (horse && currentPositions[index] && targetPositions[index]) {
+                    const currentPos = currentPositions[index];
+                    const targetPos = targetPositions[index];
+                    horse.position.x = currentPos.x + (targetPos.x - currentPos.x) * progress;
+                    horse.position.z = currentPos.z + (targetPos.z - currentPos.z) * progress;
                 }
             });
         },
-        [initialPositions, finalPositions]
+        [currentPositions, targetPositions]
     );
 
     useFrame((_, delta) => {
-        if (animationProgressRef.current < 1) {
+        if (isTransitioning && animationProgressRef.current < 1) {
             animationProgressRef.current = Math.min(
-                animationProgressRef.current + delta / animationDuration,
+                animationProgressRef.current + delta / 2, // Slower transition (2 seconds)
                 1
             );
             updateHorsePositions(animationProgressRef.current);
+
+            // End transition when progress reaches 1
+            if (animationProgressRef.current >= 1) {
+                setCurrentPositions(targetPositions);
+                setIsTransitioning(false);
+            }
         }
     });
 
     const horses = useMemo(() => {
         return [...Array(numberOfHorses)].map((_, index) => {
             const isLeading = index === leadingHorseIndex;
+            const initialPos = currentPositions[index] || initialPositions[index];
             return {
-                position: [initialPositions[index].x, 0, initialPositions[index].z],
+                position: [initialPos.x, 0, initialPos.z],
                 scale: [0.05, 0.05, 0.05],
                 speed: isLeading ? 1.2 : 1 + Math.random() * 0.2,
                 isLeading,
             };
         });
-    }, [numberOfHorses, leadingHorseIndex, initialPositions]);
+    }, [numberOfHorses, leadingHorseIndex, currentPositions, initialPositions]);
 
+    // Rest of the component remains the same as in the original code
     return (
         <>
             <PerspectiveCamera makeDefault fov={75} position={[0, 10, 60]} />
