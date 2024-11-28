@@ -28,8 +28,8 @@ const RegisterPage = () => {
             firstname,
             lastname,
             username: data.username,
-            phone: data.phone,
             email: data.email,
+            referenceCode: data.referenceCode,
             password: data.password,
             company: 4,
         }, {

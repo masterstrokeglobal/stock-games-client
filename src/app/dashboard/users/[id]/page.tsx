@@ -6,14 +6,17 @@ import { Separator } from "@/components/ui/separator";
 import User from "@/models/user"; // Assuming you have a User model
 import { useGetUserById } from "@/react-query/user-queries"; // Custom hook for fetching user details
 import { useParams } from "next/navigation";
-import { useMemo } from "react";
+import { use, useMemo } from "react";
 import TransactionTable from "@/components/features/transaction/transaction-table"; // Adjust the import based on your transaction table component
 import UserEarningsCard from "@/components/features/user/user-earning";
+import { useAuthStore } from "@/context/auth-context";
+import Admin, { AdminRole } from "@/models/admin";
 
 const ViewUserPage = () => {
     const params = useParams();
     const { id } = params;
-    const { data, isLoading, isSuccess } = useGetUserById(id.toString()); // Fetch user data by ID
+    const { data, isLoading, isSuccess } = useGetUserById(id.toString());
+    const { userDetails: currentUser } = useAuthStore();
 
     const userDetails = useMemo(() => {
         if (isSuccess) {
@@ -21,6 +24,8 @@ const ViewUserPage = () => {
         }
         return null;
     }, [data, isSuccess]);
+
+    const user = currentUser as Admin;
 
     if (isLoading) return <LoadingScreen className="h-[60vh]">Loading user...</LoadingScreen>; // Show loading screen if loading
 
@@ -36,9 +41,9 @@ const ViewUserPage = () => {
 
             <UserEarningsCard userId={id.toString()} /> {/* Render UserEarningsCard with user ID */}
 
-            <main className="mt-4">
+            {user?.role != AdminRole.AGENT && <main className="mt-4">
                 <TransactionTable userId={id.toString()} /> {/* Render TransactionTable with user ID */}
-            </main>
+            </main>}
         </section>
     );
 };

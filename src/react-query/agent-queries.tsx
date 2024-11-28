@@ -1,0 +1,77 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { agentAPI } from "@/lib/axios/agent-API"; // Adjust the path as needed
+
+// Get all agents with filters
+export const useGetAllAgents = (filter: SearchFilters) => {
+    return useQuery({
+        queryKey: ["agents", filter],
+        queryFn: () => agentAPI.getAllAgents(filter),
+    });
+};
+
+// Get agent by ID
+export const useGetAgentById = (agentId: string) => {
+    return useQuery({
+        queryKey: ["agents", agentId],
+        queryFn: () => agentAPI.getAgentById(agentId),
+    });
+};
+
+// Get agent's referrals
+export const useGetAgentReferrals = (filter: any) => {
+    return useQuery({
+        queryKey: ["agents", filter, "referrals"],
+        queryFn: () => agentAPI.getMyReferrals(filter),
+    });
+};
+
+// Create new agent
+export const useCreateAgent = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: agentAPI.createAgent,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "agents";
+                },
+            });
+            toast.success("Agent created successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.error ?? "Error creating agent");
+        },
+    });
+};
+
+// Update agent
+export const useUpdateAgent = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ({ agentId, updateData }: { agentId: string; updateData: any }) =>
+            agentAPI.updateAgent(agentId, updateData),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "agents";
+                },
+            });
+            toast.success("Agent updated successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.error ?? "Error updating agent");
+        },
+    });
+};
+
+// Get agent profit and loss
+export const useGetAgentProfitLoss = (agentId?: string) => {
+    return useQuery({
+        queryKey: ["agents", agentId, "profit-loss"],
+        queryFn: () => agentAPI.profitLoss(agentId!),
+        enabled: !!agentId,
+    });
+};

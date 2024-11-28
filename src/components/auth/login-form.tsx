@@ -9,13 +9,15 @@ import FormProvider from "../ui/form/form-provider";
 import FormPassword from "../ui/form/form-password";
 import { useAdminLogin } from "@/react-query/admin-auth-queries";
 import { useAuthStore } from "@/context/auth-context";
-import Admin from "@/models/admin";
+import Admin, { AdminRole } from "@/models/admin";
+import FormGroupSelect from "../ui/form/form-select";
 
 const loginFormSchema = z.object({
     email: z
         .string()
         .email({ message: "Invalid email format" })
         .max(255, { message: "Email must be less than 255 characters" }),
+        loginAs: z.nativeEnum(AdminRole),
     password: z.string().min(8, { message: "Password must be at least 8 characters" }),
 });
 
@@ -24,6 +26,7 @@ type LoginFormValues = z.infer<typeof loginFormSchema>;
 const defaultValues: LoginFormValues = {
     email: "",
     password: "",
+    loginAs: AdminRole.SUPER_ADMIN,
 };
 
 const LoginForm = () => {
@@ -59,7 +62,15 @@ const LoginForm = () => {
                 label="Password"
                 name="password"
             />
-
+<FormGroupSelect
+                control={form.control}
+                label="Login As"
+                name="loginAs"
+                options={[
+                    { label: "Super Admin", value: AdminRole.SUPER_ADMIN },
+                    { label: "Agent", value: AdminRole.AGENT },
+                ]}
+            />
             <div className="space-y-2 pt-2">
                 <Button disabled={isPending} className="block w-full"  >
                     Login

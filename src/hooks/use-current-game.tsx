@@ -62,6 +62,7 @@ export const useCurrentGame = (): {
         isSuccess,
     }: UseQueryResult<RoundRecordResponse, unknown> = useGetCurrentRoundRecord(type);
 
+
     const roundRecord = useMemo(() => {
         // Only compute when data is successfully loaded
         if (!isSuccess || !data?.data.roundRecords?.[0]) {
@@ -110,6 +111,7 @@ export const useCurrentGame = (): {
     }
         , [roundRecord]);
 
+    console.log(roundRecord?.market);
 
     return {
         roundRecord,
@@ -211,8 +213,8 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
                 setPreviousRoundId(currentRoundId);
             }
 
-            if(!previousRoundId){
-            setShowResults(false);
+            if (!previousRoundId) {
+                setShowResults(false);
             }
 
             setCurrentRoundId(roundRecord.id);
