@@ -82,7 +82,8 @@ export const useCurrentGame = (): {
         // adding 2 seconds to the time to fetch intial price values
         const timeToPlace = new Date(roundRecord.placementEndTime).getTime() - new Date().getTime() + 2000;
 
-        const timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime();
+        // adding 2 seconds delay for round creation
+        const timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 2000;
 
 
 
@@ -108,10 +109,8 @@ export const useCurrentGame = (): {
         };
 
 
-    }
-        , [roundRecord]);
+    }, [roundRecord]);
 
-    console.log(roundRecord?.market);
 
     return {
         roundRecord,
@@ -196,7 +195,7 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
 
     useEffect(() => {
         // Retrieve previous round ID from localStorage when the component mounts
-        const storedPreviousRoundId = localStorage.getItem('previousRoundId');
+        const storedPreviousRoundId = sessionStorage.getItem('previousRoundId');
         if (storedPreviousRoundId) {
             setPreviousRoundId(parseInt(storedPreviousRoundId, 10));
         }
@@ -209,7 +208,7 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
         if (roundRecord.id !== currentRoundId) {
             // Update the previous round ID
             if (currentRoundId) {
-                localStorage.setItem('previousRoundId', currentRoundId.toString());
+                sessionStorage.setItem('previousRoundId', currentRoundId.toString());
                 setPreviousRoundId(currentRoundId);
             }
 
@@ -225,7 +224,6 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
             const gameEnd = new Date(roundRecord.endTime).getTime();
             const adjustedEndTime = gameEnd - TWO_SECONDS; // Adjusted time: 2 seconds before game ends
 
-            // Show results only 2 seconds before the game ends
             if (now >= adjustedEndTime) {
                 setShowResults(true);
             }

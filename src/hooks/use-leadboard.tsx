@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import MarketItem from '@/models/market-item';
+import MarketItem, { SchedulerType } from '@/models/market-item';
 import { RoundRecord } from '@/models/round-record';
 
 interface RankedMarketItem extends MarketItem {
@@ -9,7 +9,7 @@ interface RankedMarketItem extends MarketItem {
     initialPrice?: number;
 }
 
-export const useLeaderboard = (roundRecord: RoundRecord) => {
+export const useLeaderboard = (roundRecord: RoundRecord,type:SchedulerType) => {
     const [stocks, setStocks] = useState<RankedMarketItem[]>(roundRecord.market as RankedMarketItem[]);
     const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected'>('disconnected');
     const socketRef = useRef<WebSocket | null>(null);
@@ -145,6 +145,7 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
 
                             if (getRoundStatus() === 'tracking') {
                                 latestDataRef.current = calculateRanks(latestDataRef.current);
+                                console.log(latestDataRef.current);
                             }
                         }
                     } catch (error) {

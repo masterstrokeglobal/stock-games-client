@@ -93,10 +93,19 @@ const HorseAnimation = ({ roundRecord }: Props) => {
 
     // Function to generate new random positions
     const generateNewPositions = useCallback(() => {
-        return [...Array(numberOfHorses)].map(() => ({
-            x: (Math.random() - 0.5) * 60,
-            z: (Math.random() - 0.5) * 20,
-        }));
+        return horses.map((horse) => {
+            const currentHorse = stocks.find((stock) => {
+                return stock.horse === horse.horseNumber;
+            });
+
+            const horseRank = currentHorse ? currentHorse.rank : 0;
+
+            const zBasedOnRank = horseRank ? -horseRank * 5 : 0;
+            return {
+                x: Math.random() * 50 - 0,
+                z: zBasedOnRank || 0,
+            };
+        });
     }, [numberOfHorses]);
 
     // Periodic position change effect
@@ -107,7 +116,7 @@ const HorseAnimation = ({ roundRecord }: Props) => {
             setTargetPositions(newPositions);
             setIsTransitioning(true);
             animationProgressRef.current = 0;
-        }, 5000); // Change positions every 5 seconds
+        }, 2000);
 
         return () => clearInterval(positionChangeInterval);
     }, [generateNewPositions, initialPositions]);
@@ -144,13 +153,14 @@ const HorseAnimation = ({ roundRecord }: Props) => {
     });
 
     const horses = useMemo(() => {
-        return [...Array(numberOfHorses)].map((_, index) => {
+        return stocks.map((stock, index) => {
             const isLeading = index === leadingHorseIndex;
             const initialPos = currentPositions[index] || initialPositions[index];
             return {
                 position: [initialPos.x, 0, initialPos.z],
                 scale: [0.05, 0.05, 0.05],
                 speed: isLeading ? 1.2 : 1 + Math.random() * 0.2,
+                horseNumber: stock.horse,
                 isLeading,
             };
         });
@@ -175,7 +185,7 @@ const HorseAnimation = ({ roundRecord }: Props) => {
                             horsesRef.current[index] = el as unknown as THREE.Object3D | null;
                             if (horse.isLeading) focusedHorseRef.current = el;
                         }}
-                        number={index + 1}
+                        number={horse.horseNumber!}
                         color={horseColors[index]}
                         position={horse.position as any}
                         scale={horse.scale as any}
