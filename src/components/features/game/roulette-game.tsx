@@ -63,8 +63,6 @@ const RouletteGame = ({ roundRecord }: Props) => {
         getBetTypeFromClick
     } = useRouletteBetting();
 
-    console.log(chips);
-
     // Function to check if there's a bet on a specific type and numbers
     const getBetForPosition = (type: PlacementType, numbers: number[]) => {
         const allChips = [...bettedChips, ...chips];

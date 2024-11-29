@@ -56,6 +56,7 @@ export const useCurrentGame = (): {
 } => {
     const queryClient = useQueryClient();
     const [type, setType] = useGameType();
+    console.log('type', type);
     const {
         data,
         isLoading,
@@ -84,8 +85,6 @@ export const useCurrentGame = (): {
 
         // adding 2 seconds delay for round creation
         const timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 2000;
-
-
 
         const gameEnd = setTimeout(() => {
             queryClient.invalidateQueries({

@@ -40,7 +40,7 @@ export function Ground(props: GroundProps) {
             centerWidth: { value: 0.12 },
             grassPatchSize: { value: 0.08 },
             grassThreshold: { value: 0.85 },
-            movementSpeed: { value:8.0 }, // Added movement speed control
+            movementSpeed: { value:-8.0 }, 
           }}
           vertexShader={vertexShader}
           fragmentShader={fragmentShader}

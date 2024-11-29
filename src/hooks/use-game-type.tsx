@@ -4,15 +4,16 @@ import { SchedulerType } from "@/models/market-item";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 
-
 export function useGameType() {
     const searchParams = useSearchParams();
     const router = useRouter();
 
-    const initialGameType = searchParams.get("gameType") as SchedulerType | null;
-    const [gameType, setGameType] = useState<SchedulerType>(
-        initialGameType ?? SchedulerType.NSE
-    );
+    const getCurrentGameType = useCallback((): SchedulerType => {
+        const gameTypeFromParams = searchParams.get("gameType") as SchedulerType | null;
+        return gameTypeFromParams ?? SchedulerType.NSE; // Default to NSE if not present
+    }, [searchParams]);
+
+    const [gameType, setGameType] = useState<SchedulerType>(getCurrentGameType);
 
     // Update the URL whenever gameType changes
     const updateUrl = useCallback(
@@ -24,12 +25,11 @@ export function useGameType() {
         [searchParams, router]
     );
 
-    // Set the URL with "NSE" if no gameType is present
+    // Update state when searchParams change
     useEffect(() => {
-        if (!initialGameType) {
-            updateUrl(SchedulerType.NSE);
-        }
-    }, [initialGameType, updateUrl]);
+        const newGameType = getCurrentGameType();
+        setGameType(newGameType);
+    }, [getCurrentGameType]);
 
     // Synchronize state and update URL when gameType changes
     const setGameTypeAndSync = useCallback(

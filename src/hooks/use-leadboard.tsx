@@ -30,7 +30,6 @@ export const useLeaderboard = (roundRecord: RoundRecord,type:SchedulerType) => {
     };
 
     const logFinalPrices = () => {
-        console.log(`Round ${roundRecord.id} Final Results:`);
         latestDataRef.current
             .sort((a, b) => parseFloat(b.change_percent) - parseFloat(a.change_percent))
             .forEach((stock, index) => {
@@ -145,7 +144,6 @@ export const useLeaderboard = (roundRecord: RoundRecord,type:SchedulerType) => {
 
                             if (getRoundStatus() === 'tracking') {
                                 latestDataRef.current = calculateRanks(latestDataRef.current);
-                                console.log(latestDataRef.current);
                             }
                         }
                     } catch (error) {
