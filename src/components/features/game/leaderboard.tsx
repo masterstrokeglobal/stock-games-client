@@ -107,14 +107,14 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                                     {crypto.name}
                                 </td>
                                 <td className="p-2 text-sm text-right text-gray-300">
-                                    ${formatPrice(crypto.price)}
+                                    Rs. {crypto.price ? formatPrice(crypto.price):"-"}
                                 </td>
                                 <td className={cn(
                                     "p-2 text-sm text-right",
                                     getChangeColor(crypto.change_percent)
                                 )}>
                                     {parseFloat(crypto.change_percent) > 0 ? '+' : ''}
-                                    {crypto.change_percent}%
+                                    {crypto.change_percent??0}%
                                 </td>
                             </tr>
                         ))}

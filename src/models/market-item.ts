@@ -30,18 +30,29 @@ export class MarketItem {
     }
 
     get codeName() {
-        return this.code?.startsWith("usdt") 
-        ? "USDT" 
-        : this.code?.replace(/usdt$/, "").toLocaleUpperCase();
+        return this.code?.startsWith("usdt")
+            ? "USDT"
+            : this.code?.replace(/usdt$/, "").toLocaleUpperCase();
     }
 
     get stream() {
         return `${this.code?.toLowerCase()}@trade`;
     }
 
-    get bitcode () {
+    get bitcode() {
         return this.code?.toUpperCase()
     }
 }
 
 export default MarketItem;
+
+
+export class NSEMarketItem {
+    code: string;
+    price: number;
+    constructor(params: any[]) {
+        const id = params[0].toString();
+        this.code = id.split(" ")[0];
+        this.price = params[3];
+    }
+}

@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import MarketItem, { SchedulerType } from '@/models/market-item';
+import MarketItem, { NSEMarketItem, SchedulerType } from '@/models/market-item';
 import { RoundRecord } from '@/models/round-record';
+import Scheduler from '@/models/schedular';
+import { init } from 'next/dist/compiled/webpack/webpack';
 
 interface RankedMarketItem extends MarketItem {
     change_percent: string;
@@ -9,7 +11,7 @@ interface RankedMarketItem extends MarketItem {
     initialPrice?: number;
 }
 
-export const useLeaderboard = (roundRecord: RoundRecord,type:SchedulerType) => {
+export const useLeaderboard = (roundRecord: RoundRecord) => {
     const [stocks, setStocks] = useState<RankedMarketItem[]>(roundRecord.market as RankedMarketItem[]);
     const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected'>('disconnected');
     const socketRef = useRef<WebSocket | null>(null);
@@ -44,7 +46,7 @@ export const useLeaderboard = (roundRecord: RoundRecord,type:SchedulerType) => {
     };
 
     const calculateRanks = (items: RankedMarketItem[]) => {
-        return [...items]
+        const rankedMarketItem = [...items]
             .sort((a, b) => {
                 const changeA = parseFloat(a.change_percent || '0');
                 const changeB = parseFloat(b.change_percent || '0');
@@ -57,20 +59,27 @@ export const useLeaderboard = (roundRecord: RoundRecord,type:SchedulerType) => {
                 bitcode: item.bitcode,
                 codeName: item.codeName
             }));
+
+        return rankedMarketItem;
+
     };
 
     const processPrice = (bitcode: string, currentPrice: number) => {
         const roundStatus = getRoundStatus();
+        const key = roundRecord.type === SchedulerType.CRYPTO ? bitcode.toLocaleLowerCase() : bitcode.toUpperCase();
 
         // Set initial price exactly at placementEndTime
-        if (roundStatus === 'tracking' && !initialPricesRef.current.has(bitcode)) {
+        if (roundStatus === 'tracking' && roundRecord.initialValues[key] === undefined) {
             initialPricesRef.current.set(bitcode, currentPrice);
             return { initialPrice: currentPrice, changePercent: '0' };
         }
 
         // Calculate changes during tracking period
-        if (roundStatus === 'tracking' && initialPricesRef.current.has(bitcode)) {
-            const initialPrice = roundRecord.initialValues ? roundRecord.initialValues[bitcode.toLocaleLowerCase()] : console.log('No initial values found');
+        if (roundStatus === 'tracking' && roundRecord.initialValues[key]) {
+            const initialPrice = roundRecord.initialValues ? roundRecord.initialValues[key] : console.log('No initial values found');
+            if (initialPrice === undefined) {
+                console.log('No initial price found for', key);
+            }
 
             const changePercent = ((currentPrice - initialPrice) / initialPrice * 100).toFixed(5);
             return { initialPrice, changePercent };
@@ -99,81 +108,139 @@ export const useLeaderboard = (roundRecord: RoundRecord,type:SchedulerType) => {
 
             try {
                 setConnectionStatus('connecting');
-                socketRef.current = new WebSocket('wss://stream.binance.com:9443/stream');
+                if (roundRecord.type === SchedulerType.CRYPTO) {
+                    console.log('Connecting to Crypto WebSocket');
+                    socketRef.current = new WebSocket('wss://stream.binance.com:9443/stream');
+                    socketRef.current.onopen = () => {
+                        setConnectionStatus('connected');
+                        const streams = roundRecord.market.map(stock => stock.stream);
 
-                socketRef.current.onopen = () => {
-                    setConnectionStatus('connected');
-                    const streams = roundRecord.market.map(stock => stock.stream);
+                        if (socketRef.current?.readyState === WebSocket.OPEN) {
+                            socketRef.current.send(JSON.stringify({
+                                method: "SUBSCRIBE",
+                                params: streams,
+                                id: 1
+                            }));
+                        }
+                    };
 
-                    if (socketRef.current?.readyState === WebSocket.OPEN) {
-                        socketRef.current.send(JSON.stringify({
-                            method: "SUBSCRIBE",
-                            params: streams,
-                            id: 1
-                        }));
-                    }
-                };
+                    socketRef.current.onmessage = (event) => {
+                        try {
+                            const obj = JSON.parse(event.data);
+                            const streamData = obj.data;
 
-                socketRef.current.onmessage = (event) => {
-                    try {
-                        const obj = JSON.parse(event.data);
-                        const streamData = obj.data;
+                            if (streamData && streamData.s) {
+                                const currentPrice = parseFloat(streamData.p);
+                                const { initialPrice, changePercent } = processPrice(
+                                    streamData.s,
+                                    currentPrice
+                                );
 
-                        if (streamData && streamData.s) {
-                            const currentPrice = parseFloat(streamData.p);
-                            const { initialPrice, changePercent } = processPrice(
-                                streamData.s,
-                                currentPrice
-                            );
+                                latestDataRef.current = latestDataRef.current.map(stock => {
+                                    if (stock.bitcode === streamData.s) {
+                                        return {
+                                            ...stock,
+                                            price: currentPrice,
+                                            change_percent: changePercent,
+                                            initialPrice: initialPrice,
+                                            rank: stock.rank,
+                                            stream: stock.stream,
+                                            bitcode: stock.bitcode,
+                                            codeName: stock.codeName // Ensure codeName is included
+                                        };
+                                    }
+                                    return stock;
+                                });
 
-                            latestDataRef.current = latestDataRef.current.map(stock => {
-                                if (stock.bitcode === streamData.s) {
-                                    return {
-                                        ...stock,
-                                        price: currentPrice,
-                                        change_percent: changePercent,
-                                        initialPrice: initialPrice,
-                                        rank: stock.rank,
-                                        stream: stock.stream,
-                                        bitcode: stock.bitcode,
-                                        codeName: stock.codeName // Ensure codeName is included
-                                    };
+                                if (getRoundStatus() === 'tracking') {
+                                    latestDataRef.current = calculateRanks(latestDataRef.current);
                                 }
-                                return stock;
+                            }
+                        } catch (error) {
+                            console.error('Error processing WebSocket message:', error);
+                        }
+                    };
+                }
+
+                if (roundRecord.type === SchedulerType.NSE) {
+                    console.log('Connecting to NSE WebSocket');
+                    socketRef.current = new WebSocket(process.env.NEXT_PUBLIC_NSE_WEBSOCKET_URL as string);
+                    socketRef.current.onopen = () => {
+                        setConnectionStatus('connected');
+                        // Connection established - subscription messages can be sent here if needed
+                    };
+
+                    socketRef.current.onmessage = (message) => {
+                        try {
+                            const changes = JSON.parse(message.data as string) as any[];
+                            if (Array.isArray(changes) && changes.length === 0) return;
+
+                            const changedStocks = changes.map(change => new NSEMarketItem(change));
+
+                            changedStocks.map(changeStock => {
+                                // Skip stocks that are not in the initial list
+                                if (!latestDataRef.current.some(stock => stock.bitcode === changeStock.code)) {
+                                    return;
+                                }
+                                const currentPrice = parseFloat(changeStock.price.toString());
+                                const { initialPrice, changePercent } = processPrice(
+                                    changeStock.code,
+                                    currentPrice
+                                );
+
+                                latestDataRef.current = latestDataRef.current.map(stock => {
+                                    if (stock.bitcode === changeStock.code) {
+                                        return {
+                                            ...stock,
+                                            price: currentPrice,
+                                            change_percent: changePercent,
+                                            initialPrice: initialPrice,
+                                            rank: stock.rank,
+                                            stream: stock.stream,
+                                            bitcode: stock.bitcode,
+                                            codeName: stock.codeName // Ensure codeName is included
+                                        };
+                                    }
+                                    return stock;
+                                });
+
+                                if (getRoundStatus() === 'tracking') {
+                                    latestDataRef.current = calculateRanks(latestDataRef.current);
+                                }
                             });
 
-                            if (getRoundStatus() === 'tracking') {
-                                latestDataRef.current = calculateRanks(latestDataRef.current);
-                            }
+                        } catch (error) {
+                            console.error('Error processing WebSocket message:', error);
                         }
-                    } catch (error) {
-                        console.error('Error processing WebSocket message:', error);
-                    }
-                };
-
-                socketRef.current.onclose = () => {
-                    setConnectionStatus('disconnected');
-
-                    if (reconnectTimeoutRef.current) {
-                        clearTimeout(reconnectTimeoutRef.current);
-                    }
-
-                    reconnectTimeoutRef.current = setTimeout(() => {
-                        if (socketRef.current?.readyState === WebSocket.CLOSED) {
-                            connectSocket();
-                        }
-                    }, 3000);
-                };
-
-                socketRef.current.onerror = (error) => {
-                    console.error('WebSocket error:', error);
-                    setConnectionStatus('disconnected');
-                };
-
+                    };
+                }
             } catch (error) {
                 console.error('Error creating WebSocket connection:', error);
                 setConnectionStatus('disconnected');
             }
+
+            if (socketRef.current == null)
+                return;
+
+            socketRef.current.onclose = () => {
+                setConnectionStatus('disconnected');
+
+                if (reconnectTimeoutRef.current) {
+                    clearTimeout(reconnectTimeoutRef.current);
+                }
+
+                reconnectTimeoutRef.current = setTimeout(() => {
+                    if (socketRef.current?.readyState === WebSocket.CLOSED) {
+                        connectSocket();
+                    }
+                }, 3000);
+            };
+
+            socketRef.current.onerror = (error) => {
+                console.error('WebSocket error:', error);
+                setConnectionStatus('disconnected');
+            };
+
         };
 
         // Initial connection
@@ -181,6 +248,7 @@ export const useLeaderboard = (roundRecord: RoundRecord,type:SchedulerType) => {
 
         // Set up interval to update stocks state
         const intervalId = setInterval(() => {
+            console.log('Updating stocks state',latestDataRef.current[0].name);
             setStocks(latestDataRef.current);
         }, 2000);
 
@@ -226,3 +294,5 @@ export const useLeaderboard = (roundRecord: RoundRecord,type:SchedulerType) => {
         roundStatus: getRoundStatus()
     };
 };
+
+

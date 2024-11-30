@@ -56,7 +56,6 @@ export const useCurrentGame = (): {
 } => {
     const queryClient = useQueryClient();
     const [type, setType] = useGameType();
-    console.log('type', type);
     const {
         data,
         isLoading,

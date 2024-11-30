@@ -1,9 +1,8 @@
 "use client";
-import React, { useEffect } from "react";
-import { Canvas } from "@react-three/fiber";
+import { useIsPlaceOver } from "@/hooks/use-current-game";
 import { RoundRecord } from "@/models/round-record";
-import {useIsPlaceOver } from "@/hooks/use-current-game";
-import HorseAnimation from "./components/horse-animation";
+import { Canvas } from "@react-three/fiber";
+import HorseRaceEnvironment from "./components/race-enviroment";
 
 type Props = {
   roundRecord: RoundRecord;
@@ -15,7 +14,7 @@ export default function HorseRace({ roundRecord }: Props) {
 
   return isPlaceOver ? (
     <Canvas>
-      <HorseAnimation roundRecord={roundRecord} />
+      <HorseRaceEnvironment roundRecord={roundRecord} />
     </Canvas>
   ) : (
     <RacePreparation />

@@ -35,41 +35,12 @@ const horseColors = [
     "#E59866",
 ];
 
-interface CameraControllerProps {
-    target: React.MutableRefObject<THREE.Object3D | null>;
-    enabled?: boolean;
-}
-
-const CameraController = React.memo(({ target }: CameraControllerProps) => {
-    const { camera } = useThree();
-    const targetRef = useRef(new THREE.Vector3());
-
-    useFrame(() => {
-        if (target.current) {
-            const targetPosition = target.current.position;
-            targetRef.current.set(
-                targetPosition.x, // Keep the camera aligned horizontally
-                targetPosition.y + 15, // Camera height closer to horse
-                targetPosition.z + 40 // Keep closer to leading horse
-            );
-            camera.position.lerp(targetRef.current, 0.1); // Smoothly follow the leading horse
-            camera.lookAt(targetPosition as any);
-        }
-    });
-
-    return null;
-});
-
-CameraController.displayName = "CameraController";
-
 type Props = {
     roundRecord: RoundRecord;
 };
 const HorseAnimation = ({ roundRecord }: Props) => {
     const numberOfHorses = roundRecord.market.length;
     const animationProgressRef = useRef(0);
-    const [leadingHorseIndex] = useState(() => Math.floor(16));
-    const focusedHorseRef = useRef<THREE.Object3D | any>(null);
     const horsesRef = useRef<(THREE.Object3D | null)[]>([]);
 
     // New state for tracking position changes
@@ -91,6 +62,7 @@ const HorseAnimation = ({ roundRecord }: Props) => {
         });
     }, [numberOfHorses]);
 
+
     // Function to generate new random positions
     const generateNewPositions = useCallback(() => {
         return horses.map((horse) => {
@@ -98,25 +70,28 @@ const HorseAnimation = ({ roundRecord }: Props) => {
                 return stock.horse === horse.horseNumber;
             });
 
-            const horseRank = currentHorse ? currentHorse.rank : 0;
+            const horseRank = currentHorse?.rank ? currentHorse.rank : 0;
+            console.log(currentHorse?.rank, currentHorse?.horse);
 
-            const zBasedOnRank = horseRank ? -horseRank * 5 : 0;
+            const zBasedOnRank = horseRank ? -horseRank * 12 : 0;
+
             return {
-                x: Math.random() * 50 - 0,
+                x: Math.random() * 50,
                 z: zBasedOnRank || 0,
             };
-        });
-    }, [numberOfHorses]);
+        })
+    }, [numberOfHorses, stocks]);
 
     // Periodic position change effect
     useEffect(() => {
         const positionChangeInterval = setInterval(() => {
             const newPositions = generateNewPositions();
+            console.log(currentPositions.length);
             setCurrentPositions(prev => prev.length ? prev : initialPositions);
             setTargetPositions(newPositions);
             setIsTransitioning(true);
             animationProgressRef.current = 0;
-        }, 2000);
+        }, 4000);
 
         return () => clearInterval(positionChangeInterval);
     }, [generateNewPositions, initialPositions]);
@@ -146,6 +121,7 @@ const HorseAnimation = ({ roundRecord }: Props) => {
 
             // End transition when progress reaches 1
             if (animationProgressRef.current >= 1) {
+                console.log("Transition ended");
                 setCurrentPositions(targetPositions);
                 setIsTransitioning(false);
             }
@@ -153,54 +129,40 @@ const HorseAnimation = ({ roundRecord }: Props) => {
     });
 
     const horses = useMemo(() => {
-        return stocks.map((stock, index) => {
-            const isLeading = index === leadingHorseIndex;
+        return roundRecord.market.map((stock, index) => {
             const initialPos = currentPositions[index] || initialPositions[index];
             return {
                 position: [initialPos.x, 0, initialPos.z],
                 scale: [0.05, 0.05, 0.05],
-                speed: isLeading ? 1.2 : 1 + Math.random() * 0.2,
+                speed: 1 + Math.random() * 0.2,
                 horseNumber: stock.horse,
-                isLeading,
             };
         });
-    }, [numberOfHorses, leadingHorseIndex, currentPositions, initialPositions]);
+    }, [numberOfHorses, currentPositions, initialPositions]);
 
     // Rest of the component remains the same as in the original code
     return (
         <>
-            <PerspectiveCamera makeDefault fov={75} position={[0, 10, 60]} />
-            <CameraController target={focusedHorseRef} />
-            <color attach="background" args={[0xf0f0f0]} />
-            <Sky sunPosition={[100, 20, 100]} />
-            <ambientLight intensity={0.3} />
-            <OrbitControls />
-            <pointLight castShadow intensity={0.8} position={[100, 100, 100]} />
-            <directionalLight color={0xffffff} intensity={0.8} position={[0, 5, 5]} />
-            <Physics gravity={[0, -30, 0]}>
-                {horses.map((horse, index) => (
-                    <HorseModel
-                        key={index}
-                        ref={(el) => {
-                            horsesRef.current[index] = el as unknown as THREE.Object3D | null;
-                            if (horse.isLeading) focusedHorseRef.current = el;
-                        }}
-                        number={horse.horseNumber!}
-                        color={horseColors[index]}
-                        position={horse.position as any}
-                        scale={horse.scale as any}
-                        speed={horse.speed}
-                    />
-                ))}
 
-                <Ground />
-                <FenceRow x={-35} count={1000} spacing={16} />
-                <FenceRow x={85} count={1000} spacing={16} />
-            </Physics>
-            <Stats />
+            {horses.map((horse, index) => (
+                <HorseModel
+                    key={index}
+                    ref={(el) => {
+                        horsesRef.current[index] = el as unknown as THREE.Object3D | null;
+                    }}
+                    number={horse.horseNumber!}
+                    color={horseColors[index]}
+                    position={horse.position as any}
+                    scale={horse.scale as any}
+                    speed={horse.speed}
+                />
+            ))}
+
         </>
     );
 };
+
+
 
 HorseAnimation.displayName = "HorseAnimation";
 export default HorseAnimation;
