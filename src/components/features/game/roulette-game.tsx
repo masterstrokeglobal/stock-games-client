@@ -179,6 +179,17 @@ const RouletteGame = ({ roundRecord }: Props) => {
                     </h1>
 
                     <div className={cn("relative w-full max-w-4xl mx-auto", gameState.isPlaceOver ? 'cursor-not-allowed opacity-50' : 'cursor-crosshair')}>
+                        <Tabs
+                            defaultValue={tab}
+                            onValueChange={(value) => setTab(value as SchedulerType)}
+                            className="w-full relative z-10 mb-6"
+                        >
+                            <TabsList className="w-full flex lg:hidden h-10 p-1 bg-[#0F214F]">
+                                <TabsTrigger className="flex-1 h-8" value="nse">NSE</TabsTrigger>
+                                <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
+                            </TabsList>
+                        </Tabs>
+
                         <div className="flex w-full">
                             <div
                                 ref={boardRef}
