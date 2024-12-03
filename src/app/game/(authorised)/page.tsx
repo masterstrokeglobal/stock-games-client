@@ -16,10 +16,11 @@ const borderStyle = {
     borderStyle: "solid",
 };
 const GamePage = () => {
-    const { roundRecord } = useCurrentGame();
+    const { roundRecord,isLoading } = useCurrentGame();
 
     const { previousRoundId, showResults } = useShowResults(roundRecord);
     const { isMobile } = useWindowSize();
+
     return (
         <section className="bg-primary-game pt-20 h-screen ">
             <Navbar />
@@ -44,7 +45,7 @@ const GamePage = () => {
                     style={borderStyle}
                     className="xl:col-span-5 col-span-4 row-span-3 rounded-2xl ">
 
-                    <CurrentBets roundId={roundRecord!.id.toString()} />
+                    {roundRecord && <CurrentBets roundId={roundRecord.id.toString()} />}
                 </div>
             </main>}
 
