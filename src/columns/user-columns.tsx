@@ -6,6 +6,8 @@ import { Trash2, Loader2, Eye } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from '@/components/ui/alert-dialog';
 import { useDeleteUserById } from "@/react-query/user-queries"; // Ensure you have this hook implemented
+import { useAuthStore } from "@/context/auth-context";
+import Admin, { AdminRole } from "@/models/admin";
 
 const userColumns: ColumnDef<User>[] = [
     {
@@ -46,12 +48,20 @@ const userColumns: ColumnDef<User>[] = [
 
 const ActionColumn = ({ user }: { user: User }) => {
     const { mutate: deleteUser, isPending: deleting } = useDeleteUserById();
+    const {userDetails} = useAuthStore();
+    const currentUser = userDetails as Admin;   
 
     const handleDeleting = () => {
         if (user.id) {
             deleteUser(user.id.toString(), {}); // Call the delete function with the user's ID
         }
     };
+
+    let showDelete = true;
+
+    if(currentUser.role == AdminRole.AGENT  ){
+        showDelete = false;
+    }
 
     return (
         <AlertDialog>
@@ -61,7 +71,7 @@ const ActionColumn = ({ user }: { user: User }) => {
                         <Eye className="w-5 h-5" />
                     </Button>
                 </Link>
-                <AlertDialogTrigger asChild>
+               {showDelete && <AlertDialogTrigger asChild>
                     <Button
                         variant="destructive"
                         size="icon"
@@ -70,7 +80,7 @@ const ActionColumn = ({ user }: { user: User }) => {
                     >
                         {deleting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Trash2 className="w-5 h-5" />}
                     </Button>
-                </AlertDialogTrigger>
+                </AlertDialogTrigger>}
             </div>
 
             <AlertDialogContent className="bg-white rounded-lg shadow-lg p-6">

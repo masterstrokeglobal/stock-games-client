@@ -8,6 +8,7 @@ import { Loader2 } from "lucide-react";
 import { useGameUserProfile, useGameUserUpdateById } from "@/react-query/game-user-queries";
 import { useAuthStore } from "@/context/auth-context";
 import { zodResolver } from "@hookform/resolvers/zod";
+import FormImage from "@/components/ui/form/form-image";
 
 // Zod schema for profile update
 const updateProfileSchema = z.object({
@@ -16,6 +17,7 @@ const updateProfileSchema = z.object({
     username: z.string().max(100),
     phone: z.string(),
     email: z.string().email(),
+    profileImage: z.string().url().optional(),
 });
 
 type ProfileFormValues = z.infer<typeof updateProfileSchema>;
@@ -49,6 +51,7 @@ const ProfileUpdateForm = () => {
                 lastname: profile.lastname,
                 username: profile.username,
                 phone: profile.phone,
+                profileImage: profile.profileImage,
                 email: profile.email,
             });
         }
@@ -58,6 +61,7 @@ const ProfileUpdateForm = () => {
 
     const onSubmit = async (data: ProfileFormValues) => {
         if (!user?.id) return;
+        console.log(data);
 
         updateProfile(
             {
@@ -65,7 +69,9 @@ const ProfileUpdateForm = () => {
                 updateData: {
                     firstname: data.firstname,
                     lastname: data.lastname,
-                    email: data.email,
+                    phone: data.phone,
+                    username: data.username,
+                    profileImage: data.profileImage,
                 },
             }
         );
@@ -83,6 +89,9 @@ const ProfileUpdateForm = () => {
         <div className="w-full max-w-sm">
 
             <FormProvider methods={form} onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <div className="grid sm:grid-cols-2 gap-4">
+                    <FormImage control={control} name="profileImage" label="Profile Image" />
+                </div>
                 <div className="grid sm:grid-cols-2 gap-4">
                     <FormInput
                         control={control}

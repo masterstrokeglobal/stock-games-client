@@ -96,7 +96,7 @@ const WithdrawForm = ({
         },
     });
 
-    const { control, handleSubmit} = form;
+    const { control, handleSubmit } = form;
 
 
     if (isLoadingDetails) {

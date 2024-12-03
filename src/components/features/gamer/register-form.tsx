@@ -20,9 +20,8 @@ export const createRegisterSchema = z.object({
 
     //international
     email: z.string().email("Please enter a valid email address"),
-
+    referenceCode: z.string().optional(),
     username: z.string().max(100).nonempty("Username is required"),
-    phone: z.string().max(20).nonempty("Phone number is required"),
     password: z
         .string()
         .min(6, "Password must be at least 6 characters") // Password length validation
@@ -74,12 +73,12 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                     label="Email *"
                     required
                 />
+
                 <FormInput
                     control={control}
                     game
-                    name="phone"
-                    label="Phone Number *"
-                    required
+                    name="referenceCode"
+                    label="Reference Code"
                 />
                 {/* Password Field */}
                 <FormPassword

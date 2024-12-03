@@ -1,14 +1,12 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
 import FormInput from "@/components/ui/form/form-input";
-import FormProvider from "@/components/ui/form/form-provider";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Separator } from "@/components/ui/separator";
 import FormPassword from "@/components/ui/form/form-password";
+import FormProvider from "@/components/ui/form/form-provider";
+import { Separator } from "@/components/ui/separator";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useGoogleLogin } from "@/react-query/game-user-queries";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 // Zod schema for validating the login form fields
 export const createLoginSchema = z.object({
@@ -36,10 +34,11 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
         defaultValues,
     });
 
-    const {mutate} = useGoogleLogin();
-
-
     const { control, handleSubmit } = form;
+
+    const googleAuth = () => {
+        window.open(`${process.env.NEXT_PUBLIC_API_URL}auth/google`, "_self");
+    };
 
     return (
         <div className="w-full max-w-sm">
@@ -92,8 +91,9 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 </div>
 
                 <Button
+                    type="button"
                     size="lg"
-                    onClick={() => mutate()}
+                    onClick={() => googleAuth()}
                     variant="secondary"
                     className="w-full bg-[#182B5A] border-[#EFF8FF17] text-white"
                 >

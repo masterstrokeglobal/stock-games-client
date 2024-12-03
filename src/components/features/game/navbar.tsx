@@ -26,7 +26,7 @@ const Navbar = () => {
                 </span>
             </div>
             <div className="flex items-center space-x-4 ml-auto">
-                <button className="bg-[#112148] px-4 md:h-12 flex items-center md:py-2 py-2  rounded-full">
+                <div className="bg-[#112148] px-4 md:h-12 flex items-center md:py-2 py-2  rounded-full">
                     <div className="shadow-custom-glow mr-2 rounded-full" >
                         <img src="/coin.svg" alt="coin" className="md:w-auto w-5" />
                     </div>
@@ -37,7 +37,7 @@ const Navbar = () => {
                     <Button size="icon" variant="ghost" className="ml-6 md:block hidden">
                         <img src="/plus-icon.svg" className="size-7" alt="arrow-down" />
                     </Button>
-                </button>
+                </div>
                 <Link href="/game/user-menu">
                     <button className="bg-[#112148] md:px-4 md:h-12 h-10 justify-center  md:aspect-auto aspect-square space-x-3 flex items-center md:py-2 p-1 rounded-full">
 

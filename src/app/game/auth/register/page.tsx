@@ -28,10 +28,10 @@ const RegisterPage = () => {
             firstname,
             lastname,
             username: data.username,
-            phone: data.phone,
             email: data.email,
+            referenceCode: data.referenceCode,
             password: data.password,
-            companyId: 4,
+            company: 4,
         }, {
             onSuccess: (data) => {
                 const user = new User(data.data);

@@ -2,7 +2,7 @@
 
 import LoadingScreen from "@/components/common/loading-screen";
 import RoundRecordCard from "@/components/features/round-record/round-record-card";
-import RoundRecord from "@/models/round-record"; // Adjust the import path
+import {RoundRecord} from "@/models/round-record"; // Adjust the import path
 import { useGetRoundRecordById } from "@/react-query/round-record-queries"; // Custom hook for fetching round record details
 import { useParams } from "next/navigation";
 import { useMemo } from "react";

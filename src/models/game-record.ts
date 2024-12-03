@@ -27,10 +27,10 @@ class GameRecord {
 export enum PlacementType {
     SINGLE = "single",
     SPLIT = "split",
-    STREET = "street",
-    CORNER = "corner",
-    DOUBLE_STREET = "double_street",
     QUARTER = "quarter",
+    STREET = "street",
+    DOUBLE_STREET = "double_street",
+    CORNER = "corner",
     COLUMN = "column",
     COLOR = "color",
     EVEN_ODD = "even_odd",

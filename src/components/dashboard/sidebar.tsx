@@ -11,7 +11,7 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useAuthStore } from '@/context/auth-context';
-import Admin from '@/models/admin';
+import Admin, { AdminRole } from '@/models/admin';
 import Logo from '../common/logo';
 
 interface SubMenuItem {
@@ -64,6 +64,15 @@ const companyMenuItems: MenuItem[] = [
         icon: Users,
         link: '/dashboard/users',
     },
+    //agents
+    {
+        name: 'Agents',
+        icon: Users,
+        subItems: [
+            { name: 'View Agents', link: '/dashboard/agents' },
+            { name: 'Create Agent', link: '/dashboard/agents/create' },
+        ],
+    },
     {
         name: 'Scheduler',
         icon: Clock,
@@ -74,13 +83,29 @@ const companyMenuItems: MenuItem[] = [
     },
     {
         name: 'Transactions',
-        icon:DollarSign,
+        icon: DollarSign,
         link: '/dashboard/transactions',
     },
     {
-        name:'Rounds',
+        name: 'Rounds',
         icon: Repeat1,
-        link:'/dashboard/round-records',
+        link: '/dashboard/round-records',
+    }
+];
+
+const agentMenuItems: MenuItem[] = [
+    { name: 'Dashboard', icon: Home, link: '/dashboard/agent' },
+    //users
+    {
+        name: 'Users',
+        icon: Users,
+        link: '/dashboard/agent-users',
+    },
+
+    {
+        name:"Profit/Loss",
+        icon: DollarSign,
+        link:'/dashboard/agent-profit-loss'
     }
 ];
 
@@ -90,9 +115,11 @@ const Sidebar = ({ className }: PropsWithClassName) => {
     let { userDetails } = useAuthStore();
     const pathname = usePathname();
 
-
     userDetails = userDetails as Admin;
-    const menus = userDetails?.isSuperAdmin ? adminMenuItems : companyMenuItems;
+    let menus = userDetails?.isSuperAdmin ? adminMenuItems : companyMenuItems;
+    if (userDetails.role === AdminRole.AGENT) {
+        menus = agentMenuItems;
+    }
     const renderMenuItem = (item: MenuItem) => {
         const isActive = pathname === item.link ||
             (item.subItems && item.subItems.some(subItem => pathname === subItem.link));

@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 
 const RegisterPage = () => {
     const { currentStep, nextStep } = useStepper();
-    const { mutate } = useGameUserLogin();
+    const { mutate, isPending } = useGameUserLogin();
     const router = useRouter();
 
     const loginUser = (data: LoginFormValues) => {
@@ -28,6 +28,7 @@ const RegisterPage = () => {
 
     if (currentStep === 1) {
         return <LoginForm
+            isLoading={isPending}
             onSubmit={loginUser}
             onForgotPassword={onForgotPassword}
         />

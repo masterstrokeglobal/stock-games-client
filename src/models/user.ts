@@ -10,6 +10,7 @@ class User {
     phone?: string;
     password?: string;
     googleId?: string;
+    profileImage?: string;
     otpSecret?: string;
     isVerified?: boolean;
     company?: Company;
@@ -28,6 +29,7 @@ class User {
         this.googleId = params.googleId;
         this.otpSecret = params.otpSecret;
         this.isVerified = params.isVerified;
+        this.profileImage = params.profileImage;
 
         if (params.company) {
             this.company = new Company(params.company);
