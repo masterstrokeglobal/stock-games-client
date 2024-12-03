@@ -55,3 +55,16 @@ export const usePasswordChange = () => {
         },
     });
 }
+
+
+export const useUploadImage = () => {
+    return useMutation({
+        mutationFn: userAPI.uploadImage,
+        onSuccess: () => {
+            toast.success("Image uploaded successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error uploading image");
+        },
+    });
+}

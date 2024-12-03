@@ -1,6 +1,5 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Copy, Users } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -17,13 +16,14 @@ const ReferralCard = ({ agentCode }: Props) => {
         try {
             await navigator.clipboard.writeText(gameLink);
             toast.success("Link copied to clipboard");
-        } catch (err) {
+        } catch (_) {
+            console.log(_);
             toast.error("Failed to copy link");
         }
     };
 
     if (!agentCode) {
-        return null; // Or a fallback UI if you prefer
+        return null; 
     }
 
     return (

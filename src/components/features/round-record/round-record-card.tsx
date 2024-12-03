@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import { Badge } from "@/components/ui/badge";
 import dayjs from "dayjs";
 import { FC } from "react";
-import RoundRecord from "@/models/round-record";
+import {RoundRecord} from "@/models/round-record";
 
 interface RoundRecordCardProps {
     roundRecord: RoundRecord;

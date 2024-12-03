@@ -1,22 +1,23 @@
 "use client";
-import React, { useMemo } from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button'; // Adjust the path based on your setup
 import Container from '@/components/common/container';
-import { PasswordIcon, ProfileIcon, TransactionIcon, WalletIcon } from './icons';
-import { LogOutIcon } from 'lucide-react';
+import TopBar from '@/components/common/top-bar';
+import { Button } from '@/components/ui/button'; // Adjust the path based on your setup
 import { useAuthStore } from '@/context/auth-context';
 import User from '@/models/user';
-import { useGetWallet } from '@/react-query/payment-queries';
 import Wallet from '@/models/wallet';
 import { useUserLogout } from '@/react-query/admin-auth-queries';
-import TopBar from '@/components/common/top-bar';
+import { useGetWallet } from '@/react-query/payment-queries';
+import { LogOutIcon } from 'lucide-react';
+import Link from 'next/link';
+import { useMemo } from 'react';
+import { PasswordIcon, ProfileIcon, TransactionIcon, WalletIcon } from './icons';
 
 const UserMenu = () => {
     const { userDetails } = useAuthStore();
     const { data, isLoading } = useGetWallet();
 
     const { mutate } = useUserLogout();
+    console.log(userDetails);
 
     const wallet = useMemo(() => {
         if (isLoading) return new Wallet();
@@ -31,7 +32,7 @@ const UserMenu = () => {
             <div className="flex-1 w-full mx-auto max-w-sm flex flex-col ">
                 <div className="mb-8 flex mt-8 gap-4 sm:flex-row flex-col">
                     <div className='w-24 h-24 border-2 rounded-3xl border-[#EEC53C]'>
-
+                        <img src={user?.profileImage} alt="avatar" className="rounded-3xl h-full w-full object-cover" />
                     </div>
                     <div className='space-y-2'>
                         <h2 className="text-2xl text-white font-semibold">

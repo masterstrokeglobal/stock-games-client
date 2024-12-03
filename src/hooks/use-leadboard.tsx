@@ -1,8 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
 import MarketItem, { NSEMarketItem, SchedulerType } from '@/models/market-item';
 import { RoundRecord } from '@/models/round-record';
-import Scheduler from '@/models/schedular';
-import { init } from 'next/dist/compiled/webpack/webpack';
+import { useEffect, useRef, useState } from 'react';
 
 interface RankedMarketItem extends MarketItem {
     change_percent: string;

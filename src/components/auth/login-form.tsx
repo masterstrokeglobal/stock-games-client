@@ -17,7 +17,7 @@ const loginFormSchema = z.object({
         .string()
         .email({ message: "Invalid email format" })
         .max(255, { message: "Email must be less than 255 characters" }),
-        loginAs: z.nativeEnum(AdminRole),
+    loginAs: z.nativeEnum(AdminRole),
     password: z.string().min(8, { message: "Password must be at least 8 characters" }),
 });
 
@@ -62,7 +62,7 @@ const LoginForm = () => {
                 label="Password"
                 name="password"
             />
-<FormGroupSelect
+            <FormGroupSelect
                 control={form.control}
                 label="Login As"
                 name="loginAs"

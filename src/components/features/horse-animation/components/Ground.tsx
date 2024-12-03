@@ -4,9 +4,8 @@ import { CuboidCollider, RigidBody, RigidBodyProps } from "@react-three/rapier";
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 
-interface GroundProps extends RigidBodyProps {}
 
-export function Ground(props: GroundProps) {
+export function Ground(props: RigidBodyProps) {
   const [grassTexture, dirtTexture, patchTexture] = useTexture(["/grass.jpg", "/dirt.jpg", "/patch.jpg"]);
   const materialRef = useRef<THREE.ShaderMaterial | any>(null);
   const timeRef = useRef(0);

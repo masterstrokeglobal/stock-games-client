@@ -1,11 +1,10 @@
 import { Button } from "@/components/ui/button";
 import FormInput from "@/components/ui/form/form-input";
+import FormPassword from "@/components/ui/form/form-password";
 import FormProvider from "@/components/ui/form/form-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { AdminRole } from "@/models/admin";
-import FormPassword from "@/components/ui/form/form-password";
 
 export const createAgentInputSchema = z.object({
     firstname: z.string().min(2, "First name is required").max(50),

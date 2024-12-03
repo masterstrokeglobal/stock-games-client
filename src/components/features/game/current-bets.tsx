@@ -38,7 +38,7 @@ const CurrentBets = ({ className, roundId }: Props) => {
             <h2 className="text-xl font-semibold mb-4 text-gray-200">
                 Current Bets
             </h2>
-            <ScrollArea className="max-h-96 w-full" style={{ height: `${scrollAreaHeight - 20}px` }}>
+            <ScrollArea className="max-h-96 w-full" style={{ height: `${scrollAreaHeight - 20}px` }} type="auto">
                 {currentBetsData.length > 0 ? (
                     <table className="min-w-full">
                         <thead>

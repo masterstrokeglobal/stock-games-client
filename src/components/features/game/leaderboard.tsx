@@ -1,23 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useCurrentGame } from "@/hooks/use-current-game";
-import { useGameType } from "@/hooks/use-game-type";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useLeaderboard } from "@/hooks/use-leadboard";
-import { RoundRecord } from "@/models/round-record";
 import { cn } from "@/lib/utils";
+import { SchedulerType } from "@/models/market-item";
+import { RoundRecord } from "@/models/round-record";
+import { useEffect, useRef, useState } from "react";
 
 // Enhanced interface for ranked market items
-interface RankedMarketItem {
-    name: string;
-    price: number;
-    rank: number;
-    change_percent: string;
-    bitcode: string;
-    initialPrice?: number;
-}
-
 type Props = {
     roundRecord: RoundRecord;
 }
@@ -52,7 +42,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
     return (
         <section
             ref={sectionRef}
-            className="p-4 rounded-2xl h-full w-full bg-[#122146]"
+            className="p-4 md:rounded-2xl h-full w-full bg-[#122146]"
         >
             <h2 className="text-xl font-semibold mb-4 text-gray-200">
                 Leader Board
@@ -60,6 +50,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
             <ScrollArea
                 className="max-h-96 h-full"
                 style={{ height: `${scrollAreaHeight - 20}px` }}
+                type="auto"
             >
                 <table className="min-w-full">
                     <thead>
@@ -107,19 +98,21 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                                     {crypto.name}
                                 </td>
                                 <td className="p-2 text-sm text-right text-gray-300">
-                                    Rs. {crypto.price ? formatPrice(crypto.price):"-"}
+                                    {roundRecord.type===SchedulerType.CRYPTO?"USDC ":"Rs."}
+                                     {crypto.price ? formatPrice(crypto.price) : "-"}
                                 </td>
                                 <td className={cn(
                                     "p-2 text-sm text-right",
                                     getChangeColor(crypto.change_percent)
                                 )}>
                                     {parseFloat(crypto.change_percent) > 0 ? '+' : ''}
-                                    {crypto.change_percent??0}%
+                                    {crypto.change_percent ?? 0}%   
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+                <ScrollBar orientation="horizontal" />
             </ScrollArea>
         </section>
     );

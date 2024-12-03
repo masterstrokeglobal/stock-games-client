@@ -1,9 +1,8 @@
 
 
 
-import { Button } from '@/components/ui/button';
-import { Bet, Chip } from './contants';
 import { RoundRecord } from '@/models/round-record';
+import { Bet, Chip } from './contants';
 
 interface RouletteBettingGridProps {
     hoveredCell: Bet | null;
@@ -17,7 +16,7 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord }: Roulett
     }));
 
     const getCodeByIndex = (index: number) => {
-        return roundRecord.market[index-1]?.codeName;
+        return `${roundRecord.market[index - 1]?.codeName}`;
     }
 
     return (
@@ -33,10 +32,10 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord }: Roulett
                   transition-all duration-150
                 `}
                 >
-                    <span  className="absolute inset-0 flex items-end text-xs m-1 justify-start text-white ">
+                    <span className="absolute inset-0 flex items-end ml-1 text-xs justify-start text-white ">
                         {getCodeByIndex(number)}
                     </span>
-                    <span className="absolute inset-0 mx-4 flex items-center justify-end text-white text-2xl font-bold">
+                    <span className="absolute inset-0 mx-1 flex items-start justify-end text-white text-2xl font-bold">
                         {number}
                     </span>
                 </div>

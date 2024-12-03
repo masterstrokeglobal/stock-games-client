@@ -1,9 +1,9 @@
-import React, { useMemo, useRef, useState, useCallback, useEffect } from "react";
+import { useLeaderboard } from "@/hooks/use-leadboard";
+import { RoundRecord } from "@/models/round-record";
 import { useFrame } from "@react-three/fiber";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import HorseModel from "./horse-model";
-import { RoundRecord } from "@/models/round-record";
-import { useLeaderboard } from "@/hooks/use-leadboard";
 
 // Memoize color array to prevent recreation
 const HORSE_COLORS = [
@@ -40,10 +40,10 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
     const generateNewPositions = useMemo(() => {
         return roundRecord.market.map((horse, index) => {
             const currentHorse = stocks.find(stock => stock.horse === horse.horse);
-            const zBasedOnRank = currentHorse?.rank ? -currentHorse.rank * 12 : 0;
+            const zBasedOnRank = currentHorse?.rank ? -(currentHorse.rank * 12)+30 : 0;
 
             return {
-                x: -15 + (index) * 4 + (Math.random() * 10),
+                x: -15 + (index) * 4 + (Math.random() * 20),
                 z: zBasedOnRank,
             };
         });
@@ -76,7 +76,7 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
     );
 
     // Optimize frame updates
-    useFrame((_, delta) => {
+    useFrame(() => {
         if (isTransitioning && animationProgressRef.current < 1) {
             // Use a constant transition time instead of delta-based
             animationProgressRef.current = Math.min(

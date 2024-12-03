@@ -1,7 +1,7 @@
-import { useEffect, useState, useMemo } from 'react';
-import { useQueryClient, UseQueryResult } from '@tanstack/react-query';
 import { RoundRecord } from '@/models/round-record';
 import { useGetCurrentRoundRecord } from '@/react-query/round-record-queries';
+import { useQueryClient, UseQueryResult } from '@tanstack/react-query';
+import { useEffect, useMemo, useState } from 'react';
 import { useGameType } from './use-game-type';
 
 interface FormattedTime {
@@ -13,24 +13,10 @@ interface FormattedTime {
     raw: number;           // milliseconds
 }
 
-interface CurrentGameState {
-    placeTimeLeft: FormattedTime;
-    gameTimeLeft: FormattedTime;
-    isPlaceOver: boolean;
-    isGameOver: boolean;
-}
-
 interface RoundRecordResponse {
     data: {
         roundRecords: RoundRecord[];
     };
-}
-
-interface UseCurrentGameReturn {
-    isLoading: boolean;
-    roundRecord: RoundRecord | null;
-    error: unknown;
-    gameState: CurrentGameState;
 }
 
 const REFRESH_INTERVAL = 1000;
@@ -55,7 +41,7 @@ export const useCurrentGame = (): {
     isLoading: boolean;
 } => {
     const queryClient = useQueryClient();
-    const [type, setType] = useGameType();
+    const [type] = useGameType();
     const {
         data,
         isLoading,

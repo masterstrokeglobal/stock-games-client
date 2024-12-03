@@ -1,16 +1,16 @@
 "use client";
 
 import LoadingScreen from "@/components/common/loading-screen";
+import TransactionTable from "@/components/features/transaction/transaction-table"; // Adjust the import based on your transaction table component
 import UserCard from "@/components/features/user/user-card"; // Assuming you have a UserCard component
+import UserEarningsCard from "@/components/features/user/user-earning";
 import { Separator } from "@/components/ui/separator";
+import { useAuthStore } from "@/context/auth-context";
+import Admin, { AdminRole } from "@/models/admin";
 import User from "@/models/user"; // Assuming you have a User model
 import { useGetUserById } from "@/react-query/user-queries"; // Custom hook for fetching user details
 import { useParams } from "next/navigation";
-import { use, useMemo } from "react";
-import TransactionTable from "@/components/features/transaction/transaction-table"; // Adjust the import based on your transaction table component
-import UserEarningsCard from "@/components/features/user/user-earning";
-import { useAuthStore } from "@/context/auth-context";
-import Admin, { AdminRole } from "@/models/admin";
+import { useMemo } from "react";
 
 const ViewUserPage = () => {
     const params = useParams();

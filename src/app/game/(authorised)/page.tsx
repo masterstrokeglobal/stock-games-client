@@ -4,12 +4,11 @@ import LeaderBoard from "@/components/features/game/leaderboard";
 import Navbar from "@/components/features/game/navbar";
 import GameResultDialog from "@/components/features/game/result-dialog";
 import RouletteGame from "@/components/features/game/roulette-game";
+import { MobileGameHeader } from "@/components/features/game/roulette-header";
 import HorseRace from "@/components/features/horse-animation/horse";
 import { useCurrentGame, useGameState, useIsPlaceOver, useShowResults } from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
 import { RoundRecord } from "@/models/round-record";
-import Image from "next/image";
-import { useState } from "react";
 
 const borderStyle = {
     borderColor: "#3799ED",
@@ -19,33 +18,33 @@ const borderStyle = {
 const GamePage = () => {
     const { roundRecord } = useCurrentGame();
 
-    const { previousRoundId, showResults, currentRoundId } = useShowResults(roundRecord);
+    const { previousRoundId, showResults } = useShowResults(roundRecord);
     const { isMobile } = useWindowSize();
     return (
-        <section className="bg-primary-game pt-20 h-screen">
+        <section className="bg-primary-game pt-20 h-screen ">
             <Navbar />
             {!isMobile && <main className="grid grid-cols-12 grid-rows-5 gap-4 h-full p-4">
                 <div
                     style={borderStyle}
-                    className="col-span-7 row-span-2 rounded-2xl  overflow-hidden">
+                    className="xl:col-span-7 col-span-8 row-span-2 rounded-2xl  overflow-hidden">
                     {roundRecord && <HorseRace roundRecord={roundRecord} />}
                 </div>
                 <div
                     style={borderStyle}
 
-                    className="col-span-5 row-span-2 rounded-2xl ">
+                    className="xl:col-span-5 col-span-4 row-span-2 rounded-2xl ">
                     {roundRecord && <LeaderBoard roundRecord={roundRecord} />}
                 </div>
                 <div
                     style={borderStyle}
-                    className="col-span-7 row-span-3 rounded-2xl ">
+                    className="xl:col-span-7 col-span-8  row-span-3 rounded-2xl ">
                     {roundRecord && <RouletteGame roundRecord={roundRecord} />}
                 </div>
                 <div
                     style={borderStyle}
-                    className="col-span-5 row-span-3 rounded-2xl ">
+                    className="xl:col-span-5 col-span-4 row-span-3 rounded-2xl ">
 
-                    <CurrentBets roundId={roundRecord?.id.toString()!} />
+                    <CurrentBets roundId={roundRecord!.id.toString()} />
                 </div>
             </main>}
 
@@ -71,7 +70,7 @@ const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
         {!isPlaceOver && <main className="bg-[#0A1634]">
             {roundRecord && <RouletteGame roundRecord={roundRecord} />}
             <div className="px-2">
-                <CurrentBets roundId={roundRecord?.id.toString()!} />
+                <CurrentBets roundId={roundRecord?.id.toString()} />
             </div>
         </main>}
         {isPlaceOver && <LeaderBoard roundRecord={roundRecord} />}
@@ -81,8 +80,12 @@ const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
 
 const MobileHeader = ({ roundRecord }: { roundRecord: RoundRecord }) => {
     const isPlaceOver = useIsPlaceOver(roundRecord);
-    if (isPlaceOver)
-        return <HorseRace roundRecord={roundRecord} />
+    if (isPlaceOver) return <>
+        <MobileGameHeader roundRecord={roundRecord} />
+        <div className="m-2 rounded-xl overflow-hidden">
+            <HorseRace roundRecord={roundRecord} />
+        </div>
+    </>
 
 
     return <header className="bg-[#1E2E57] mx-auto flex justify-center flex-col text-center min-h-[20vh]" >

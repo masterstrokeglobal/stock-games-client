@@ -24,7 +24,6 @@ const HorseRaceEnvironment = ({
             <Sky sunPosition={[100, 20, 100]} />
             <ambientLight intensity={0.3} />
             <OrbitControls />
-            <pointLight castShadow intensity={0.8} position={[100, 100, 100]} />
             <directionalLight color={0xffffff} intensity={0.8} position={[0, 5, 5]} />
             <Physics gravity={[0, -30, 0]}>
                 <HorseAnimation roundRecord={roundRecord} />
