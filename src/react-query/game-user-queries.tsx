@@ -55,6 +55,41 @@ export const useGameUserLogin = () => {
     });
 };
 
+export const useForgotPasswordEmail = () => {
+    return useMutation({
+        mutationFn: gameUserAPI.forgotPassword,
+        onSuccess: () => {
+            toast.success("Email sent successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.error ?? "Error sending email");
+        },
+    });
+}
+
+export const useVerifyForgotPassword = () => {
+    return useMutation({
+        mutationFn: gameUserAPI.verifyForgotPassword,
+        onSuccess: () => {
+            toast.success("Password reset successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.error ?? "Error resetting password");
+        },
+    });
+}
+
+export const useForgotChangePassword = () => {
+    return useMutation({
+        mutationFn: gameUserAPI.changeForgotPassword,
+        onSuccess: () => {
+            toast.success("Password changed successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.error ?? "Error changing password");
+        },
+    });
+}
 // Verify a user
 export const useGameUserVerify = () => {
     return useMutation({

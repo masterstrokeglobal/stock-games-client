@@ -69,6 +69,10 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         required
                     />
 
+                    <Link href="/game/auth/forgot-password" className="text-white text-sm ml-auto text-end mt-1 block">
+                        Forgot Password?
+                    </Link>
+
                 </div>
 
                 <footer className="flex justify-end flex-col gap-2 mt-12">

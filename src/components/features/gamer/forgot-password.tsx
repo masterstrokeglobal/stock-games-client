@@ -5,6 +5,7 @@ import FormProvider from "@/components/ui/form/form-provider";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import FormPassword from "@/components/ui/form/form-password";
 
 // Zod schema for validating the reset password form fields
 export const createResetPasswordSchema = z.object({
@@ -54,7 +55,7 @@ const ResetPasswordForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 className="space-y-4"
             >
                 {/* Password Fields */}
-                <FormInput
+                <FormPassword
                     control={control}
                     game
                     name="password"
@@ -63,7 +64,7 @@ const ResetPasswordForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                     required
                 />
 
-                <FormInput
+                <FormPassword
                     control={control}
                     game
                     name="confirmPassword"
