@@ -12,12 +12,9 @@ import ForgotPasswordEmailForm, { ForgotPasswordFormValues } from '@/components/
 import OTPForm from "@/components/features/gamer/otp-form";
 import { toast } from "sonner";
 
-interface ForgotPasswordStepperProps {
-    initialStep?: number;
-}
-
 const RegisterPage: React.FC = () => {
     const [user, setUser] = React.useState<number | null>(null);
+    const [email, setEmail] = React.useState<string | null>(null);
     const { currentStep, nextStep } = useStepper();
     const { mutate: loginUser, isPending } = useForgotPasswordEmail();
     const {
@@ -32,6 +29,7 @@ const RegisterPage: React.FC = () => {
     const router = useRouter();
 
     const handleForgotPassword = (data: ForgotPasswordFormValues) => {
+        setEmail(data.email);
         loginUser(data, {
             onSuccess: (response) => {
                 const user = response.data?.user;
@@ -44,7 +42,18 @@ const RegisterPage: React.FC = () => {
     };
 
     const handleResendOTP = () => {
-        console.log('Resending OTP');
+
+        if (email == null) return toast.error("Email not found");
+        loginUser({
+            email: email
+        }, {
+            onSuccess: (response) => {
+                const user = response.data?.user;
+                if (user) {
+                    setUser(user);
+                }
+            }
+        });
     };
 
 
@@ -57,7 +66,7 @@ const RegisterPage: React.FC = () => {
             password: passwordData.password,
             userId: user.toString()
         }, {
-            onSuccess: (response) => {
+            onSuccess: () => {
                 router.push("/game");
             }
         });
@@ -70,12 +79,11 @@ const RegisterPage: React.FC = () => {
             otp: otpData.otp,
             userId: user.toString()
         }, {
-            onSuccess: (response) => {
+            onSuccess: () => {
                 nextStep();
             }
         });
     };
-
 
 
     switch (currentStep) {
@@ -109,11 +117,9 @@ const RegisterPage: React.FC = () => {
     }
 };
 
-const ForgotPasswordStepper: React.FC<ForgotPasswordStepperProps> = ({
-    initialStep = 1
-}) => {
+const ForgotPasswordStepper = () => {
     return (
-        <StepperProvider initialStep={initialStep}>
+        <StepperProvider initialStep={1}>
             <RegisterPage />
         </StepperProvider>
     );

@@ -18,6 +18,7 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
     const initialPricesRef = useRef<Map<string, number>>(new Map());
     const roundEndCheckRef = useRef<NodeJS.Timeout>();
 
+
     const getRoundStatus = () => {
         const now = new Date();
         if (now < roundRecord.placementEndTime) {
@@ -29,19 +30,6 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
         }
     };
 
-    const logFinalPrices = () => {
-        latestDataRef.current
-            .sort((a, b) => parseFloat(b.change_percent) - parseFloat(a.change_percent))
-            .forEach((stock, index) => {
-                const initialPrice = stock.bitcode ? initialPricesRef.current.get(stock.bitcode) : undefined;
-                console.log(
-                    `${index + 1}. ${stock.bitcode}: ` +
-                    `Initial: ${initialPrice?.toFixed(5)}, ` +
-                    `Final: ${stock.price?.toFixed(5)}, ` +
-                    `Change: ${stock.change_percent}%`
-                );
-            });
-    };
 
     const calculateRanks = (items: RankedMarketItem[]) => {
         const rankedMarketItem = [...items]
@@ -106,8 +94,9 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
 
             try {
                 setConnectionStatus('connecting');
+                console.log('Connecting to WebSocket', roundRecord.type);
+
                 if (roundRecord.type === SchedulerType.CRYPTO) {
-                    console.log('Connecting to Crypto WebSocket');
                     socketRef.current = new WebSocket('wss://stream.binance.com:9443/stream');
                     socketRef.current.onopen = () => {
                         setConnectionStatus('connected');
@@ -161,7 +150,6 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                 }
 
                 if (roundRecord.type === SchedulerType.NSE) {
-                    console.log('Connecting to NSE WebSocket');
                     socketRef.current = new WebSocket(process.env.NEXT_PUBLIC_NSE_WEBSOCKET_URL as string);
                     socketRef.current.onopen = () => {
                         setConnectionStatus('connected');
@@ -246,7 +234,6 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
 
         // Set up interval to update stocks state
         const intervalId = setInterval(() => {
-            console.log('Updating stocks state',latestDataRef.current[0].name);
             setStocks(latestDataRef.current);
         }, 2000);
 
@@ -254,7 +241,6 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
         const checkRoundEnd = () => {
             const now = new Date();
             if (now >= roundRecord.endTime) {
-                logFinalPrices();
                 // Clean up after logging final prices
                 if (socketRef.current) {
                     socketRef.current.close();
@@ -284,6 +270,12 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
             clearInterval(intervalId);
             initialPricesRef.current.clear();
         };
+    }, [roundRecord]);
+
+    //update stocks on roundRecord change
+    useEffect(() => {
+        setStocks(roundRecord.market as RankedMarketItem[]);
+        latestDataRef.current = roundRecord.market as RankedMarketItem[];
     }, [roundRecord]);
 
     return {

@@ -23,7 +23,6 @@ const AgentProfitLoss = () => {
         return null;
     }, [data, isSuccess]);
 
-    console.log(profitLoss);
     return (
         <section className="container-main min-h-[60vh]">
             <main className="mt-4 space-y-8">

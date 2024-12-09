@@ -17,7 +17,6 @@ const UserMenu = () => {
     const { data, isLoading } = useGetWallet();
 
     const { mutate } = useUserLogout();
-    console.log(userDetails);
 
     const wallet = useMemo(() => {
         if (isLoading) return new Wallet();
