@@ -10,7 +10,7 @@ export function useGameType() {
 
     const getCurrentGameType = useCallback((): SchedulerType => {
         const gameTypeFromParams = searchParams.get("gameType") as SchedulerType | null;
-        return gameTypeFromParams ?? SchedulerType.NSE; // Default to NSE if not present
+        return gameTypeFromParams ?? SchedulerType.CRYPTO; // Default to NSE if not present
     }, [searchParams]);
 
     const [gameType, setGameType] = useState<SchedulerType>(getCurrentGameType);

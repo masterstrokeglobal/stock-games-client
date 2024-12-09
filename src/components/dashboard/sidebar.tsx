@@ -52,7 +52,11 @@ const adminMenuItems: MenuItem[] = [
         name: 'Market Items',
         icon: Users,
         link: '/dashboard/market-items',
-    }
+    }/* {
+        name:"Holidays",
+        icon: Clock,
+        link:'/dashboard/holiday'
+    } */
 ];
 
 const companyMenuItems: MenuItem[] = [

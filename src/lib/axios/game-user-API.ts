@@ -24,7 +24,17 @@ export const gameUserAPI = {
     deleteUserById: async ({ userId }: { userId: string }) => {
         return api.delete(`/user/${userId}`);
     },
+    forgotPassword: async ({email}: {email:string}) => {
+        return api.post(`/user/forget-password`, {email});
+    },
 
+    verifyForgotPassword: async (verificationData: {otp: string,userId: string, }) => {
+        return api.post(`/user/verify-forget-password/${verificationData.userId}`, verificationData);
+    },
+
+    changeForgotPassword: async (payload: {password: string,userId: string}) => {
+        return api.post(`/user/forget-password/change`, payload);
+    },
     login: async (payload: any) => {
         return api.post("/auth/user-login", payload);
     },

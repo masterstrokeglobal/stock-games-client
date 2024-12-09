@@ -15,6 +15,7 @@ import { Bet, Chip } from "./contants";
 import { BettingControls } from "./roulette-chips";
 import { RouletteBettingGrid } from "./roulette-grid";
 import { GameHeader } from "./roulette-header";
+import useNSEAvailable from "@/hooks/use-nse-available";
 
 enum PlacementType {
     SINGLE = "single",
@@ -36,6 +37,7 @@ type Props = {
 const RouletteGame = ({ roundRecord }: Props) => {
     const [betAmount, setBetAmount] = useState<number>(10);
     const gameState = useGameState(roundRecord);
+    const isNSEAvailable = useNSEAvailable();
     const [tab, setTab] = useGameType();
     const { mutate, isPending: isPlacingBet } = useCreateGameRecord();
 
@@ -185,7 +187,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             className="w-full relative z-10 mb-6"
                         >
                             <TabsList className="w-full flex lg:hidden h-10 p-1 bg-[#0F214F]">
-                                <TabsTrigger className="flex-1 h-8" value="nse">NSE</TabsTrigger>
+                                <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && 'cursor-not-allowed')} value="nse">NSE</TabsTrigger>
                                 <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
                             </TabsList>
                         </Tabs>
@@ -328,7 +330,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                         className="w-full relative z-10"
                     >
                         <TabsList className="w-full hidden lg:flex h-10 p-1 bg-[#0F214F]">
-                            <TabsTrigger className="flex-1 h-8" value="nse">NSE</TabsTrigger>
+                            <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && '!cursor-not-allowed')} value="nse">NSE</TabsTrigger>
                             <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
                         </TabsList>
 

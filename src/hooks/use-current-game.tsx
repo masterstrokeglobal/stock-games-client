@@ -48,7 +48,6 @@ export const useCurrentGame = (): {
         isSuccess,
     }: UseQueryResult<RoundRecordResponse, unknown> = useGetCurrentRoundRecord(type);
 
-
     const roundRecord = useMemo(() => {
         // Only compute when data is successfully loaded
         if (!isSuccess || !data?.data.roundRecords?.[0]) {

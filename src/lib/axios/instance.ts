@@ -6,6 +6,10 @@ const api: AxiosInstance = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
+    params: {
+        companyId: 4,
+    },
+
     withCredentials: true,
 });
 

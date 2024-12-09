@@ -1,4 +1,3 @@
-import Link from "next/link"
 import LoginForm from "@/components/auth/login-form";
 
 const LoginPage = () => {
@@ -14,12 +13,6 @@ const LoginPage = () => {
                     </div>
                     <div className="grid gap-4">
                         <LoginForm />
-                    </div>
-                    <div className="mt-4 text-center text-sm">
-                        Don&apos;t have an account?{" "}
-                        <Link href="#" className="underline">
-                            Sign up
-                        </Link>
                     </div>
                 </div>
             </div>
