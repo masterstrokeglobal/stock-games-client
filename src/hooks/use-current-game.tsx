@@ -195,20 +195,25 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
                 setPreviousRoundId(currentRoundId);
             }
 
-            if (!previousRoundId) {
-                setShowResults(false);
-            }
-
             setCurrentRoundId(roundRecord.id);
         }
 
         const updateShowResults = () => {
             const now = new Date().getTime();
             const gameEnd = new Date(roundRecord.endTime).getTime();
-            const adjustedEndTime = gameEnd - TWO_SECONDS; // Adjusted time: 2 seconds before game ends
+            const adjustedEndTime = gameEnd - TWO_SECONDS;
+
+            const THIRTY_SECONDS = 30000;
+
+            if (now >= adjustedEndTime - THIRTY_SECONDS) {
+                setShowResults(false);
+            }
+
 
             if (now >= adjustedEndTime) {
+                console.log('showing results');
                 setShowResults(true);
+                setPreviousRoundId(roundRecord.id);
             }
         };
 

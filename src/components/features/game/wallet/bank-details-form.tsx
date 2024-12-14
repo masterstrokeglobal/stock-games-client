@@ -41,7 +41,6 @@ const BankAccountForm = ({ defaultValues, onSubmit, isLoading, isUPI }: Props) =
 
     const { control, handleSubmit } = form;
 
-    console.log(form.formState.errors);
 
     return (
         <div className="w-full max-w-xl flex flex-col space-y-4 h-full">

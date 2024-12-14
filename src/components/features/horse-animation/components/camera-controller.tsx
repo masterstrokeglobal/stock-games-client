@@ -13,7 +13,6 @@ const CameraController: React.FC<CameraControllerProps> = ({ target }) => {
   useFrame(() => {
     if (target.current) {
       const targetPosition = target.current.position;
-      console.log(target.current);
       targetRef.current.set(
         targetPosition.x,
         targetPosition.y + 15,

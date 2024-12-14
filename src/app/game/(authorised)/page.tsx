@@ -21,6 +21,7 @@ const GamePage = () => {
     const { previousRoundId, showResults } = useShowResults(roundRecord);
     const { isMobile } = useWindowSize();
 
+    console.log("show Resulers", showResults);
     return (
         <section className="bg-primary-game pt-20 h-screen ">
             <Navbar />
@@ -50,7 +51,7 @@ const GamePage = () => {
             </main>}
 
             {isMobile && roundRecord && <MobileGame roundRecord={roundRecord} />}
-            <GameResultDialog open={showResults} roundRecordId={previousRoundId!} />
+            <GameResultDialog key={String(showResults)} open={showResults} roundRecordId={previousRoundId!} />
         </section>
     );
 };

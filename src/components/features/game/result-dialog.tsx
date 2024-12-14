@@ -1,6 +1,4 @@
-import React, { useMemo } from 'react';
-import { Loader2, AlertCircle } from 'lucide-react';
-import Image from 'next/image';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Dialog,
   DialogClose,
@@ -8,9 +6,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useGetMyRoundResult } from '@/react-query/round-record-queries';
 import { cn } from '@/lib/utils';
+import { useGetMyRoundResult } from '@/react-query/round-record-queries';
+import { AlertCircle, Loader2 } from 'lucide-react';
+import Image from 'next/image';
+import { useEffect, useMemo, useState } from 'react';
 
 interface GameResultDialogProps {
   open: boolean;
@@ -18,6 +18,7 @@ interface GameResultDialogProps {
 }
 
 const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
+  const [showDialog, setShowDialog] = useState(open);
   const { data, isLoading, isError } = useGetMyRoundResult(roundRecordId, open);
 
   const resultData = useMemo(() => {
@@ -31,12 +32,22 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
     return null;
   }, [data]);
 
+  useEffect (() => {
+    console.log('open', open);
+    if(open) {
+      console.log('open', open);
+      setShowDialog(open);
+    }
+  }, [open]);
+
+  console.log('showDialog', showDialog);
+
   // Check if the result is a win or loss
   const isWin = resultData && Number(resultData.profit) >= 0;
 
   return (
-    <Dialog key={String(open)} defaultOpen={open}>
-      <DialogContent className="sm:max-w-md bg-primary-game text-white">
+    <Dialog open={showDialog}>
+      <DialogContent className="sm:max-w-md bg-primary-game text-white [&>.close-button]:hidden" data-hide-children="true">
         <DialogHeader>
           <DialogTitle>Round Results</DialogTitle>
         </DialogHeader>
@@ -90,9 +101,8 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
                 </div>
               </div>
 
-              <DialogClose asChild>
-
-                <button className="bet-button w-full"   >
+              <DialogClose asChild> 
+                <button className="bet-button w-full"   onClick={() => setShowDialog(false)}>
                   Play Again
                 </button>
               </DialogClose>

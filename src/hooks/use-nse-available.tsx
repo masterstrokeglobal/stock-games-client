@@ -23,7 +23,7 @@ const useNSEAvailable = () => {
             if (isNSEOpen !== newMarketStatus) {
                 setIsNSEOpen(newMarketStatus);
             }
-        };
+        };  
 
         checkNSEAvailability();
 

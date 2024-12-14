@@ -78,7 +78,6 @@ export const useRouletteBetting = ({ container }: Props) => {
             }
 
             case PlacementType.STREET: {
-                console.log(bet.numbers);
                 // Determine if it's a horizontal or vertical street
                 const isHorizontalStreet = bet.numbers[1] - bet.numbers[0] === 1;
                 const firstNumberPos = getNumberPosition(bet.numbers[0]);
@@ -152,7 +151,6 @@ export const useRouletteBetting = ({ container }: Props) => {
         // Vertical Street bet (bottom edge)
         if (cellY > CELL_HEIGHT - BORDER_THRESHOLD) {
             const streetStartNumber = 13 + colIndex;
-            console.log(streetStartNumber);
             return {
                 type: PlacementType.STREET,
                 numbers: [streetStartNumber, streetStartNumber - 4, streetStartNumber - 8, streetStartNumber - 12]

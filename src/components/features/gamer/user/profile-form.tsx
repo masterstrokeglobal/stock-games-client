@@ -61,7 +61,6 @@ const ProfileUpdateForm = () => {
 
     const onSubmit = async (data: ProfileFormValues) => {
         if (!user?.id) return;
-        console.log(data);
 
         updateProfile(
             {
