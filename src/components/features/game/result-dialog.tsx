@@ -1,10 +1,9 @@
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { useGetMyRoundResult } from '@/react-query/round-record-queries';
@@ -33,14 +32,11 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
   }, [data]);
 
   useEffect (() => {
-    console.log('open', open);
     if(open) {
-      console.log('open', open);
       setShowDialog(open);
     }
   }, [open]);
 
-  console.log('showDialog', showDialog);
 
   // Check if the result is a win or loss
   const isWin = resultData && Number(resultData.profit) >= 0;
@@ -59,12 +55,17 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
               <p className="text-gray-600">Loading results...</p>
             </div>
           ) : isError ? (
+            <>
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
                 Failed to load round results. Please try again.
               </AlertDescription>
             </Alert>
+              <button className="bet-button w-full"   onClick={() => setShowDialog(false)}>
+               Checkout Game
+            </button>
+            </>
           ) : resultData ? (
             <div className="space-y-4">
               {/* Display the image and message */}
@@ -101,11 +102,9 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
                 </div>
               </div>
 
-              <DialogClose asChild> 
                 <button className="bet-button w-full"   onClick={() => setShowDialog(false)}>
                   Play Again
                 </button>
-              </DialogClose>
             </div>
           ) : (
             <p className="text-gray-600 text-center">No results available.</p>

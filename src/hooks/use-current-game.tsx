@@ -211,7 +211,6 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
 
 
             if (now >= adjustedEndTime) {
-                console.log('showing results');
                 setShowResults(true);
                 setPreviousRoundId(roundRecord.id);
             }
