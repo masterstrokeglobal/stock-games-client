@@ -19,14 +19,12 @@ export const useGetCurrentRoundRecord = (
     return useQuery({
         queryKey: ["current-round-record", type],
         queryFn: () =>{ 
-            console.log("useGetCurrentRoundRecord", type);
            return roundRecordsAPI.getAllRoundRecords({
             type: type,
             limit: 1,
             startTime: new Date(),
             page: 1,
         })},
-        staleTime: 100 * 1000,
     });
 };
 /**

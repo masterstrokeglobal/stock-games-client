@@ -26,10 +26,10 @@ const HorseRaceEnvironment = ({
             <OrbitControls />
             <directionalLight color={0xffffff} intensity={0.8} position={[0, 5, 5]} />
             <Physics gravity={[0, -30, 0]}>
-                <HorseAnimation roundRecord={roundRecord} />
                 <Ground />
                 <FenceRow x={-35} count={1000} spacing={16} />
                 <FenceRow x={85} count={1000} spacing={16} />
+                <HorseAnimation roundRecord={roundRecord} />
             </Physics>
             <Stats />
         </>

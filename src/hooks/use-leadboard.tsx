@@ -97,24 +97,15 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                 console.log('Connecting to WebSocket', roundRecord.type);
 
                 if (roundRecord.type === SchedulerType.CRYPTO) {
-                    socketRef.current = new WebSocket('wss://stream.binance.com:9443/stream');
+                    socketRef.current = new WebSocket(process.env.NEXT_PUBLIC_CRYPTO_WEBSOCKET_URL as string);
                     socketRef.current.onopen = () => {
                         setConnectionStatus('connected');
-                        const streams = roundRecord.market.map(stock => stock.stream);
-
-                        if (socketRef.current?.readyState === WebSocket.OPEN) {
-                            socketRef.current.send(JSON.stringify({
-                                method: "SUBSCRIBE",
-                                params: streams,
-                                id: 1
-                            }));
-                        }
                     };
 
                     socketRef.current.onmessage = (event) => {
                         try {
                             const obj = JSON.parse(event.data);
-                            const streamData = obj.data;
+                            const streamData = obj;
 
                             if (streamData && streamData.s) {
                                 const currentPrice = parseFloat(streamData.p);

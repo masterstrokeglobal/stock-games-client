@@ -1,16 +1,15 @@
-import React, { useMemo } from 'react';
-import { Loader2, AlertCircle } from 'lucide-react';
-import Image from 'next/image';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from '@/components/ui/dialog';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useGetMyRoundResult } from '@/react-query/round-record-queries';
 import { cn } from '@/lib/utils';
+import { useGetMyRoundResult } from '@/react-query/round-record-queries';
+import { AlertCircle, Loader2 } from 'lucide-react';
+import Image from 'next/image';
+import { useEffect, useMemo, useState } from 'react';
 
 interface GameResultDialogProps {
   open: boolean;
@@ -18,6 +17,7 @@ interface GameResultDialogProps {
 }
 
 const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
+  const [showDialog, setShowDialog] = useState(open);
   const { data, isLoading, isError } = useGetMyRoundResult(roundRecordId, open);
 
   const resultData = useMemo(() => {
@@ -31,12 +31,19 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
     return null;
   }, [data]);
 
+  useEffect (() => {
+    if(open) {
+      setShowDialog(open);
+    }
+  }, [open]);
+
+
   // Check if the result is a win or loss
   const isWin = resultData && Number(resultData.profit) >= 0;
 
   return (
-    <Dialog key={String(open)} defaultOpen={open}>
-      <DialogContent className="sm:max-w-md bg-primary-game text-white">
+    <Dialog open={showDialog}>
+      <DialogContent className="sm:max-w-md bg-primary-game text-white [&>.close-button]:hidden" data-hide-children="true">
         <DialogHeader>
           <DialogTitle>Round Results</DialogTitle>
         </DialogHeader>
@@ -48,12 +55,17 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
               <p className="text-gray-600">Loading results...</p>
             </div>
           ) : isError ? (
+            <>
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
                 Failed to load round results. Please try again.
               </AlertDescription>
             </Alert>
+              <button className="bet-button w-full"   onClick={() => setShowDialog(false)}>
+               Checkout Game
+            </button>
+            </>
           ) : resultData ? (
             <div className="space-y-4">
               {/* Display the image and message */}
@@ -90,12 +102,9 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
                 </div>
               </div>
 
-              <DialogClose asChild>
-
-                <button className="bet-button w-full"   >
+                <button className="bet-button w-full"   onClick={() => setShowDialog(false)}>
                   Play Again
                 </button>
-              </DialogClose>
             </div>
           ) : (
             <p className="text-gray-600 text-center">No results available.</p>

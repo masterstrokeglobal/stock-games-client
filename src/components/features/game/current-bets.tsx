@@ -14,7 +14,6 @@ const CurrentBets = ({ className, roundId }: Props) => {
 
     const currentBetsData = useMemo(() => {
         if (isSuccess) {
-            console.log(data.data, "data");
             return data.data;
         }
         return [];

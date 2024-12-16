@@ -1,20 +1,26 @@
 import * as THREE from "three";
 import { useTexture } from "@react-three/drei";
 import { CuboidCollider, RigidBody, RigidBodyProps } from "@react-three/rapier";
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 
-
 export function Ground(props: RigidBodyProps) {
-  const [grassTexture, dirtTexture, patchTexture] = useTexture(["/grass.jpg", "/dirt.jpg", "/patch.jpg"]);
-  const materialRef = useRef<THREE.ShaderMaterial | any>(null);
+  const [grassTexture, dirtTexture, patchTexture] = useTexture([
+    "/grass.jpg", 
+    "/dirt.jpg", 
+    "/patch.jpg"
+  ]);
+
+  useMemo(() => {
+    [grassTexture, dirtTexture, patchTexture].forEach(texture => {
+      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+      texture.needsUpdate = true;
+    });
+  }, [grassTexture, dirtTexture, patchTexture]);
+
+  const materialRef = useRef<THREE.ShaderMaterial | null>(null);
   const timeRef = useRef(0);
 
-  grassTexture.wrapS = grassTexture.wrapT = THREE.RepeatWrapping;
-  dirtTexture.wrapS = dirtTexture.wrapT = THREE.RepeatWrapping;
-  patchTexture.wrapS = patchTexture.wrapT = THREE.RepeatWrapping;
-
-  // Changed direction of texture movement
   useFrame((state, delta) => {
     if (materialRef.current) {
       timeRef.current += delta;
@@ -22,35 +28,44 @@ export function Ground(props: RigidBodyProps) {
     }
   });
 
+  const uniforms = useMemo(() => ({
+    grassTexture: { value: grassTexture },
+    dirtTexture: { value: dirtTexture },
+    patchTexture: { value: patchTexture },
+    repeat: { value: new THREE.Vector2(240, 240) },
+    time: { value: 0 },
+    scrollSpeed: { value: 16.0 }, // Added scroll speed uniform
+    rowCount: { value: 10.0 },
+    centerWidth: { value: 0.12 },
+    grassPatchSize: { value: 0.08 },
+    grassThreshold: { value: 0.85 },
+  }), [grassTexture, dirtTexture, patchTexture]);
+
   return (
     <RigidBody {...props} type="fixed" colliders={false}>
-      <mesh receiveShadow position={[25, 0, 0]} rotation-x={-Math.PI / 2}>
+      <mesh 
+        receiveShadow 
+        position={[25, 0, 0]} 
+        rotation-x={-Math.PI / 2}
+      >
         <planeGeometry args={[1000, 1000]} />
         <shaderMaterial
           ref={materialRef}
           attach="material"
-          uniforms={{
-            grassTexture: { value: grassTexture },
-            dirtTexture: { value: dirtTexture },
-            patchTexture: { value: patchTexture },
-            repeat: { value: [240, 240] },
-            time: { value: 2 },
-            rowCount: { value: 10.0 },
-            centerWidth: { value: 0.12 },
-            grassPatchSize: { value: 0.08 },
-            grassThreshold: { value: 0.85 },
-          }}
+          uniforms={uniforms}
           vertexShader={vertexShader}
           fragmentShader={fragmentShader}
         />
       </mesh>
-      <CuboidCollider args={[1000, 2, 1000]} position={[0, -2, 0]} />
+      <CuboidCollider 
+        args={[1000, 2, 1000]} 
+        position={[0, -2, 0]} 
+      />
     </RigidBody>
   );
-}const
+}
 
-
-vertexShader = `
+const vertexShader = `
 varying vec2 vUv;
 
 void main() {
@@ -65,10 +80,12 @@ uniform sampler2D dirtTexture;
 uniform sampler2D patchTexture;
 uniform vec2 repeat;
 uniform float time;
+uniform float scrollSpeed;
 uniform float rowCount;
 uniform float centerWidth;
 uniform float grassPatchSize;
 uniform float grassThreshold;
+
 varying vec2 vUv;
 
 float random(vec2 st) {
@@ -87,19 +104,20 @@ float noise(vec2 st) {
 }
 
 void main() {
+  // Use modulo to create infinite scrolling
   vec2 uv = vUv * repeat;
-  uv.y -= time * 16.0;
+  uv.y -= mod(time * scrollSpeed, repeat.y);
 
   float centerStart = 0.5 - (centerWidth / 2.0);
   float centerEnd = 0.5 + (centerWidth / 2.0);
-  
+
   vec4 grassColor = texture2D(grassTexture, uv);
   vec4 dirtColor = texture2D(dirtTexture, uv);
   vec4 patchColor = texture2D(patchTexture, uv);
-  
+
   float n = noise(uv * (1.0 / grassPatchSize));
   float patchFactor = smoothstep(grassThreshold - 0.1, grassThreshold + 0.1, n);
-  
+
   if (vUv.x > centerStart && vUv.x < centerEnd) {
     float rowPosition = fract(vUv.y * rowCount);
     float mixFactor = smoothstep(grassThreshold - 0.05, grassThreshold + 0.05, n);
