@@ -3,6 +3,8 @@ import { useGetCurrentRoundRecord } from '@/react-query/round-record-queries';
 import { useQueryClient, UseQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { useGameType } from './use-game-type';
+import { useGetMyPlacements } from '@/react-query/game-record-queries';
+import GameRecord from '@/models/game-record';
 
 interface FormattedTime {
     minutes: number;
@@ -65,12 +67,13 @@ export const useCurrentGame = (): {
         if (!roundRecord) return;
 
         // adding 2 seconds to the time to fetch intial price values
-        const timeToPlace = new Date(roundRecord.placementEndTime).getTime() - new Date().getTime() + 2000;
+        const timeToPlace = new Date(roundRecord.placementEndTime).getTime() - new Date().getTime() + 4000;
 
         // adding 2 seconds delay for round creation
-        const timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 2000;
+        const timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 13000;
 
         const gameEnd = setTimeout(() => {
+            console.log('game end');
             queryClient.invalidateQueries({
                 predicate: (query) => {
                     return query.queryKey[0] === 'current-round-record';
@@ -174,6 +177,18 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
     const [showResults, setShowResults] = useState(false);
     const [currentRoundId, setCurrentRoundId] = useState<number | null>(null);
     const [previousRoundId, setPreviousRoundId] = useState<number | null>(null);
+    const { data: placementData, isSuccess } = useGetMyPlacements({ roundId: previousRoundId });
+
+    const bettedChips = useMemo(() => {
+        if (!isSuccess) return [];
+        const gameRecords: GameRecord[] = placementData.data.map((record: Partial<GameRecord>) => new GameRecord(record));
+        const chips = gameRecords.map((record) => ({
+            type: record.placementType,
+            amount: record.amount,
+            numbers: record.market,
+        }));
+        return chips;
+    }, [placementData]);
 
     useEffect(() => {
         // Retrieve previous round ID from localStorage when the component mounts
@@ -200,16 +215,17 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
         const updateShowResults = () => {
             const now = new Date().getTime();
             const gameEnd = new Date(roundRecord.endTime).getTime();
-            const adjustedEndTime = gameEnd;
+            const adjustedEndTime = gameEnd + 3000; 
             const THIRTY_SECONDS = 30000;
-            setPreviousRoundId(roundRecord.id);
-
+            
             if (now >= adjustedEndTime - THIRTY_SECONDS) {
                 setShowResults(false);
+                setPreviousRoundId(roundRecord.id);
             }
 
 
-            if (now >= adjustedEndTime) {
+            console.log('showing results',now>=adjustedEndTime,bettedChips);
+            if (now >= adjustedEndTime && bettedChips.length > 0) {
                 setShowResults(true);
             }
         };

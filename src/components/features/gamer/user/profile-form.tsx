@@ -17,12 +17,17 @@ const updateProfileSchema = z.object({
     username: z.string().max(100),
     phone: z.string(),
     email: z.string().email(),
+    referenceCode: z.string().optional(),
     profileImage: z.string().url().optional(),
 });
 
 type ProfileFormValues = z.infer<typeof updateProfileSchema>;
 
-const ProfileUpdateForm = () => {
+type Props = {
+    showReferenceCode: boolean
+}
+
+const ProfileUpdateForm = ({ showReferenceCode }: Props) => {
     const { userDetails: user } = useAuthStore();
     const { mutate: updateProfile, isPending: isUpdating } = useGameUserUpdateById();
     const {
@@ -131,6 +136,8 @@ const ProfileUpdateForm = () => {
                     type="email"
                     disabled
                 />
+
+                {showReferenceCode && <FormInput control={control} game name="referenceCode" label="Reference Code" type="text" disabled />}
 
                 <footer className="flex justify-end mt-8">
                     <Button

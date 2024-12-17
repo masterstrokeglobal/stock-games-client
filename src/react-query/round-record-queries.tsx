@@ -19,6 +19,7 @@ export const useGetCurrentRoundRecord = (
     return useQuery({
         queryKey: ["current-round-record", type],
         queryFn: () =>{ 
+            console.log("fetching round record");
            return roundRecordsAPI.getAllRoundRecords({
             type: type,
             limit: 1,
