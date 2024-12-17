@@ -3,11 +3,14 @@
 
 import { RoundRecord } from '@/models/round-record';
 import { Bet, Chip } from './contants';
+import { useGetRoundRecordById } from '@/react-query/round-record-queries';
+import { useEffect, useMemo } from 'react';
 
 interface RouletteBettingGridProps {
     hoveredCell: Bet | null;
     chips: Chip[];
     roundRecord: RoundRecord;
+    previousRoundId?: string;
 }
 export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord }: RouletteBettingGridProps) => {
     const ROULETTE_NUMBERS = Array.from({ length: 16 }, (_, i) => ({
@@ -15,9 +18,36 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord }: Roulett
         color: (i + 1) % 2 === 0 ? 'black' : 'red'
     }));
 
+    const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord.id);
+
+    useEffect(() => {
+        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 4000;
+
+        console.log(resultFetchTime, 'resultFetchTime');
+        const timer = setTimeout(() => {
+            console.log('refetching');
+            refetch();
+        }, resultFetchTime);
+
+        return () => clearTimeout(timer);
+    }, [roundRecord, refetch]);
+
+    const winnerNumber = useMemo(() => {
+        if (!isSuccess) return null;
+        const winningId = data.data?.winningId;
+
+        console.log(winningId,"winningId");
+        if (!winningId) return null;
+
+        const winningNumber = roundRecord.market.find((item) => item.id === winningId);
+        if (!winningNumber) return null;
+        return winningNumber.horse;
+    }, [data, isSuccess]);
+
     const getCodeByIndex = (index: number) => {
         return `${roundRecord.market[index - 1]?.codeName}`;
     }
+
 
     return (
         <div className="grid grid-cols-4 flex-1 gap-2 p-px">
@@ -29,6 +59,7 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord }: Roulett
                   ${color === 'red' ? 'routelette-piece-red' : 'routelette-piece-black'}
                   ${hoveredCell?.numbers.includes(number) ? 'ring-4 ring-yellow-400 ring-opacity-75' : ''}
                   ${chips.some(chip => chip.numbers.includes(number)) ? 'ring-2 ring-yellow-500' : ''}
+                  ${winnerNumber === number ? '!border-2 border-yellow-500 ' : ''}
                   transition-all duration-150
                 `}
                 >
@@ -38,6 +69,7 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord }: Roulett
                     <span className="absolute inset-0 mx-1 flex items-start justify-end text-white text-2xl font-bold">
                         {number}
                     </span>
+                    {winnerNumber === number && <img src='/crown.png' />}
                 </div>
             ))}
         </div>

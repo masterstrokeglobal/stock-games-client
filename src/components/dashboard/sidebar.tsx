@@ -124,6 +124,8 @@ const Sidebar = ({ className }: PropsWithClassName) => {
     if (userDetails.role === AdminRole.AGENT) {
         menus = agentMenuItems;
     }
+
+    console.log(userDetails);
     const renderMenuItem = (item: MenuItem) => {
         const isActive = pathname === item.link ||
             (item.subItems && item.subItems.some(subItem => pathname === subItem.link));

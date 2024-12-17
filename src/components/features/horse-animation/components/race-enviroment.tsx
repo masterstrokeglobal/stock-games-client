@@ -1,15 +1,13 @@
-import React from "react";
+import { RoundRecord } from "@/models/round-record";
 import {
+    OrbitControls,
     PerspectiveCamera,
-    Stats,
-    Sky,
-    OrbitControls
+    Sky
 } from "@react-three/drei";
+import { Physics } from "@react-three/rapier";
 import { Ground } from "./Ground";
 import FenceRow from "./fence-row";
-import { Physics } from "@react-three/rapier";
 import HorseAnimation from "./horse-animation";
-import { RoundRecord } from "@/models/round-record";
 
 type Props = {
     roundRecord: RoundRecord;
@@ -19,7 +17,7 @@ const HorseRaceEnvironment = ({
 }: Props) => {
     return (
         <>
-            <PerspectiveCamera makeDefault fov={75} position={[0, 10, 60]} />
+            <PerspectiveCamera onUpdate={(self)=>{console.log(self.position)}} makeDefault fov={75} zoom={9} position={[-300, 50, 250]} />
             <color attach="background" args={[0xf0f0f0]} />
             <Sky sunPosition={[100, 20, 100]} />
             <ambientLight intensity={0.3} />
@@ -31,8 +29,7 @@ const HorseRaceEnvironment = ({
                 <FenceRow x={85} count={1000} spacing={16} />
                 <HorseAnimation roundRecord={roundRecord} />
             </Physics>
-            <Stats />
-        </>
+       </>
     );
 };
 

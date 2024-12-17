@@ -8,10 +8,7 @@ import { MobileGameHeader } from "@/components/features/game/roulette-header";
 import HorseRace from "@/components/features/horse-animation/horse";
 import { useCurrentGame, useGameState, useIsPlaceOver, useShowResults } from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
-import GameRecord from "@/models/game-record";
 import { RoundRecord } from "@/models/round-record";
-import { useGetMyPlacements } from "@/react-query/game-record-queries";
-import { useMemo } from "react";
 
 const borderStyle = {
     borderColor: "#3799ED",
@@ -23,23 +20,9 @@ const GamePage = () => {
 
     const { previousRoundId, showResults } = useShowResults(roundRecord);
     const { isMobile } = useWindowSize();
-    const { data: placementData, isSuccess } = useGetMyPlacements({ roundId: previousRoundId });
-
-    const bettedChips = useMemo(() => {
-        if (!isSuccess) return [];
-        const gameRecords: GameRecord[] = placementData.data.map((record: Partial<GameRecord>) => new GameRecord(record));
-        const chips = gameRecords.map((record) => ({
-            type: record.placementType,
-            amount: record.amount,
-            numbers: record.market,
-        }));
-        return chips;
-    }, [placementData]);
-
-    console.log("bettedChips", bettedChips);
-    console.log("bettedChips", showResults);
 
 
+    console.log(showResults, 'roundRecord');
     return (
         <section className="bg-primary-game pt-20 h-screen ">
             <Navbar />
@@ -53,7 +36,8 @@ const GamePage = () => {
                     style={borderStyle}
 
                     className="xl:col-span-5 col-span-4 row-span-2 rounded-2xl ">
-                    {roundRecord && <LeaderBoard roundRecord={roundRecord} />}
+                                            {roundRecord?.id && <CurrentBets roundId={roundRecord.id.toString()} />}
+
                 </div>
                 <div
                     style={borderStyle}
@@ -63,15 +47,13 @@ const GamePage = () => {
                 <div
                     style={borderStyle}
                     className="xl:col-span-5 col-span-4 row-span-3 rounded-2xl ">
+                    {roundRecord && <LeaderBoard roundRecord={roundRecord} />}
 
-                    {roundRecord?.id && <CurrentBets roundId={roundRecord.id.toString()} />}
                 </div>
             </main>}
 
             {isMobile && roundRecord && <MobileGame roundRecord={roundRecord} />}
-            <GameResultDialog key={String(showResults)} open={
-                bettedChips.length > 0 ? showResults : false
-            } roundRecordId={previousRoundId!} />
+            <GameResultDialog open={showResults} roundRecordId={previousRoundId!} />
         </section>
     );
 };

@@ -32,9 +32,10 @@ enum PlacementType {
 
 type Props = {
     roundRecord: RoundRecord;
+    previousRoundId?: string;
 };
 
-const RouletteGame = ({ roundRecord }: Props) => {
+const RouletteGame = ({ roundRecord ,previousRoundId}: Props) => {
     const [betAmount, setBetAmount] = useState<number>(10);
     const gameState = useGameState(roundRecord);
     const isNSEAvailable = useNSEAvailable();
@@ -204,6 +205,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                     roundRecord={roundRecord}
                                     hoveredCell={hoveredCell as unknown as Bet}
                                     chips={chips as unknown as Chip[]}
+                                    previousRoundId={previousRoundId}
                                 />
                                 <BettingChips chips={boardChips} getBetPosition={getBetPosition} />
                             </div>
