@@ -31,11 +31,13 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
     return null;
   }, [data]);
 
-  useEffect (() => {
-    if(open) {
+  useEffect(() => {
+    if (open) {
       setShowDialog(open);
     }
   }, [open]);
+
+
 
 
   // Check if the result is a win or loss
@@ -53,18 +55,21 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
             <div className="flex flex-col items-center justify-center p-8 space-y-4">
               <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
               <p className="text-gray-600">Loading results...</p>
+              <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
+                Checkout Game
+              </button>
             </div>
           ) : isError ? (
             <>
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                Failed to load round results. Please try again.
-              </AlertDescription>
-            </Alert>
-              <button className="bet-button w-full"   onClick={() => setShowDialog(false)}>
-               Checkout Game
-            </button>
+              <Alert variant="destructive">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>
+                  Failed to load round results. Please try again.
+                </AlertDescription>
+              </Alert>
+              <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
+                Checkout Game
+              </button>
             </>
           ) : resultData ? (
             <div className="space-y-4">
@@ -75,7 +80,7 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
                   alt={isWin ? 'You Won!' : 'Better Luck Next Time'}
                   width={100}
                   height={100}
-                  className="rounded-full w-32 mx-auto" // Add this to remove any white background
+                  className="rounded-full w-32 mx-auto" // Add this to remove any white 
                 />
                 <p className={cn("text-2xl  font-bold text-center",
                   isWin ? 'text-yellow-600' : 'text-gray-100'
@@ -102,12 +107,17 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
                 </div>
               </div>
 
-                <button className="bet-button w-full"   onClick={() => setShowDialog(false)}>
-                  Play Again
-                </button>
+              <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
+                Play Again
+              </button>
             </div>
           ) : (
-            <p className="text-gray-600 text-center">No results available.</p>
+            <>
+              <p className="text-gray-600 text-center">No results available.</p>
+              <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
+                Play Again
+              </button>
+            </>
           )}
         </div>
       </DialogContent>

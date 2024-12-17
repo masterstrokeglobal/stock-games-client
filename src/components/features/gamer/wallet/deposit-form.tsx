@@ -5,6 +5,7 @@ import FormProvider from "@/components/ui/form/form-provider";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuthStore } from "@/context/auth-context";
 
 // Zod schema for deposit form
 const depositSchema = z.object({
@@ -28,6 +29,7 @@ type Props = {
 
 const DepositForm = ({ onSubmit }: Props) => {
 
+    const {userDetails} = useAuthStore();
     const form = useForm<DepositFormValues>({
         resolver: zodResolver(depositSchema),
         defaultValues: {
@@ -38,6 +40,7 @@ const DepositForm = ({ onSubmit }: Props) => {
 
     const { control, handleSubmit } = form;
 
+    const paymentImage = userDetails?.company?.paymentImage;
 
     return (
         <div className="w-full max-w-sm flex flex-col min-h-[calc(100vh-5rem)]">
@@ -50,7 +53,7 @@ const DepositForm = ({ onSubmit }: Props) => {
                     Scan the QR code with your banking app to initiate the deposit process.
                 </p>
                 <div className="bg-white p-4 rounded-lg w-fit mx-auto mt-4">
-                    <img src="/qr.png" alt="" />
+                    <img src={paymentImage} alt="" />
                 </div>
             </header>
 

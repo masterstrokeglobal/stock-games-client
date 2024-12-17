@@ -7,6 +7,7 @@ export class Company {
     logo?: string;
     primaryColor?: string;
     secondaryColor?: string;
+    paymentImage?:string;
     domain?: string;
     createdAt?: Date;
     updatedAt?: Date;
@@ -25,6 +26,7 @@ export class Company {
         this.createdAt = params.createdAt;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;
+        this.paymentImage = params.paymentImage;
     }
 }
 

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import FormImage from "@/components/ui/form/form-image-compact";
 import FormInput from "@/components/ui/form/form-input";
 import FormProvider from "@/components/ui/form/form-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +16,7 @@ export const createCompanyInputSchema = z.object({
     primaryColor: z.string().optional(),
     secondaryColor: z.string().optional(),
     domain: z.string().optional(),
+    paymentImage:z.string().url().optional()
 }).superRefine((data, ctx) => {
     if (!data.id && !data.logo) {
         ctx.addIssue({
@@ -86,6 +88,11 @@ const CompanyForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 name="domain"
                 label="Domain"
             />
+            <FormImage
+                control={control}
+                name="paymentImage"
+                label="Payment Method" />
+
             <footer className="flex justify-end gap-4 mt-8">
                 <Button type="button" variant="outline" onClick={() => { }}>Reset</Button>
                 <Button type="submit" disabled={isLoading}>

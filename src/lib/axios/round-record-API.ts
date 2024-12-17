@@ -11,6 +11,7 @@ export const roundRecordsAPI = {
         return api.get(`/round-records/${id}`);
     },
     getMyResult: async (id: number) => {
+        
         return api.get(`/round-records/my-result/${id}`);
     },
 };
