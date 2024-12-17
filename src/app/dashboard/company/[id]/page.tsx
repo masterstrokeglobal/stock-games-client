@@ -27,7 +27,8 @@ const EditCompanyPage = () => {
             logo: company.logo,
             primaryColor: company.primaryColor,
             secondaryColor: company.secondaryColor,
-            domain: company.domain
+            domain: company.domain,
+            paymentImage:company.paymentImage,
         };
     }, [data, isSuccess]);
 

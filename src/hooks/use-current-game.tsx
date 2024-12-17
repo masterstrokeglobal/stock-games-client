@@ -169,7 +169,6 @@ export const useIsPlaceOver = (roundRecord: RoundRecord | null) => {
 
 
 
-const TWO_SECONDS = 2000; // 2 seconds in milliseconds
 
 export const useShowResults = (roundRecord: RoundRecord | null) => {
     const [showResults, setShowResults] = useState(false);
@@ -201,9 +200,9 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
         const updateShowResults = () => {
             const now = new Date().getTime();
             const gameEnd = new Date(roundRecord.endTime).getTime();
-            const adjustedEndTime = gameEnd - TWO_SECONDS;
-
+            const adjustedEndTime = gameEnd;
             const THIRTY_SECONDS = 30000;
+            setPreviousRoundId(roundRecord.id);
 
             if (now >= adjustedEndTime - THIRTY_SECONDS) {
                 setShowResults(false);
@@ -212,7 +211,6 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
 
             if (now >= adjustedEndTime) {
                 setShowResults(true);
-                setPreviousRoundId(roundRecord.id);
             }
         };
 

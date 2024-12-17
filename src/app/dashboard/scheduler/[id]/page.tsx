@@ -26,9 +26,10 @@ const EditSchedulerPage = () => {
             startTime: scheduler.startTime,
             endTime: scheduler.endTime,
             type: scheduler.type ?? "",
-            companyId: scheduler.companyId ?? null,
+            companyId: scheduler.companyId.toString() ?? null,
         };
     }, [data, isSuccess]);
+
 
     const onSubmit = (data: SchedulerFormValues) => {
         mutate(data, {

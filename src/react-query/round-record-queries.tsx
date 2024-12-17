@@ -43,11 +43,18 @@ export const useGetRoundRecordById = (roundRecordId: number) => {
  * Hook to get the current user's round result for a specific round.
  * @param roundRecordId - ID of the round record to fetch
  */
-
-export const useGetMyRoundResult = (roundRecordId: number,show:boolean) => {
+export const useGetMyRoundResult = (roundRecordId: number, show: boolean) => {
     return useQuery({
-        queryKey: ["my-round-result", roundRecordId],
-        queryFn: () => roundRecordsAPI.getMyResult(roundRecordId),
-        enabled: show,
+      queryKey: ["my-round-result", roundRecordId],
+      queryFn: () => roundRecordsAPI.getMyResult(roundRecordId),
+      enabled: show,
+      retry: (failureCount) => {
+        // Retry 5 times with an interval of 1 second
+        return failureCount < 5;
+      },
+      retryDelay: () => {
+        // 1000 ms (1 second) delay between retries
+        return 1000;
+      }
     });
-}
+  };
