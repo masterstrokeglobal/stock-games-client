@@ -10,7 +10,7 @@ type Props = {
 const ReferralCard = ({ agentCode }: Props) => {
 
     // Generate game link from the agent code
-    const gameLink = `https://yourgame.com/join/${agentCode}`;
+    const gameLink = `${window.location.origin}/game/auth/register?refferal=${agentCode}`;
 
     const handleCopy = async () => {
         try {
@@ -23,7 +23,7 @@ const ReferralCard = ({ agentCode }: Props) => {
     };
 
     if (!agentCode) {
-        return null; 
+        return null;
     }
 
     return (

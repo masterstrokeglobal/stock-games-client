@@ -35,11 +35,11 @@ const UserEarningsCard = ({ userId }: Props) => {
     } = useMemo(() => {
         const result = data?.data?.result || {};
         return {
-            totalDeposits: result.totalDeposits ?? 0,
-            totalBonus: result.totalBonus ?? 0,
-            totalBets: result.totalBets ?? 0,
-            totalWinnings: result.totalWinnings ?? 0,
-            totalWithdrawals: result.totalWithdrawals ?? 0,
+            totalDeposits: result.totaldeposits ?? 0,
+            totalBonus: result.totalbonus ?? 0,
+            totalBets: result.totalbets ?? 0,
+            totalWinnings: result.totalwinnings ?? 0,
+            totalWithdrawals: result.totalwithdrawals ?? 0,
             netProfitOrLoss: result.netProfitOrLoss ?? 0,
         };
     }, [data]);
