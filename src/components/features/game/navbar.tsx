@@ -1,4 +1,5 @@
 "use client";
+import Logo from "@/components/common/logo";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
@@ -19,10 +20,10 @@ const Navbar = () => {
 
     const user = userDetails as User;
     return (
-        <nav className="items-center md:px-12 px-4 z-50  flex fixed top-0 justify-between text-white font-semibold w-full h-20 bg-primary-game ">
+        <nav className="items-center md:px-6 px-4 z-50  flex fixed top-0 justify-between text-white font-semibold w-full h-20 bg-primary-game ">
             <div className="">
                 <span className="md:text-xl text-sm font-semibold">
-                    STOCK DERBY
+                   <Logo />
                 </span>
             </div>
             <div className="flex items-center space-x-4 ml-auto">

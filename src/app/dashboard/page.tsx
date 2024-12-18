@@ -13,7 +13,6 @@ function HomePage() {
 
     useEffect(() => {
 
-        console.log(userDetails);
         if (!loading && userDetails) {
             const currentUser = userDetails as any;
             if (currentUser.role === AdminRole.AGENT) {
