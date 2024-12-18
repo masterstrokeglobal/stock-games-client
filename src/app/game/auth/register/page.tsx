@@ -5,11 +5,13 @@ import { useAuthStore } from "@/context/auth-context";
 import { StepperProvider, useStepper } from "@/context/stepper-context";
 import User from "@/models/user";
 import { useGameUserRegister, useGameUserResendOTP, useGameUserVerify } from "@/react-query/game-user-queries";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 const RegisterPage = () => {
     const { currentStep, nextStep } = useStepper();
+    const params = useSearchParams();
+    const referenceCode = params.get("refferal") ?? null;
     const [userId, setUserId] = useState<string | null>(null);
     const { userDetails } = useAuthStore();
     const router = useRouter();
@@ -64,7 +66,13 @@ const RegisterPage = () => {
 
 
     if (currentStep === 1) {
-        return <RegisterForm isLoading={isPending} onSubmit={registerUser} />
+        return <RegisterForm isLoading={isPending} onSubmit={registerUser} defaultValues={{
+            email: "",
+            name: "",
+            password: "",
+            referenceCode: referenceCode ?? "",
+            username: ""
+        }} />
     }
 
     if (currentStep === 2) {
