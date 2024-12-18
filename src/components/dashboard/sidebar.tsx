@@ -26,7 +26,6 @@ interface MenuItem {
     subItems?: SubMenuItem[];
 }
 const adminMenuItems: MenuItem[] = [
-    { name: 'Dashboard', icon: Home, link: '/dashboard' },
     {
         name: 'Admins',
         icon: Users,
@@ -60,7 +59,6 @@ const adminMenuItems: MenuItem[] = [
 ];
 
 const companyMenuItems: MenuItem[] = [
-    { name: 'Dashboard', icon: Home, link: '/dashboard' },
 
 
     {

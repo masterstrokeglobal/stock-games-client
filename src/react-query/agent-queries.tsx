@@ -68,10 +68,14 @@ export const useUpdateAgent = () => {
 };
 
 // Get agent profit and loss
-export const useGetAgentProfitLoss = (agentId?: string) => {
+export const useGetAgentProfitLoss = (filter: {
+    agentId?: string,
+    startDate?: Date,
+    endDate?: Date,
+}) => {
     return useQuery({
-        queryKey: ["agents", agentId, "profit-loss"],
-        queryFn: () => agentAPI.profitLoss(agentId!),
-        enabled: !!agentId,
+        queryKey: ["agents", "profit-loss", filter],
+        queryFn: () => agentAPI.profitLoss(filter),
+        enabled: !!filter.agentId,
     });
 };

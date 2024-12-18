@@ -1,8 +1,9 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { adminAuthAPI } from "@/lib/axios/admin-auth-API"; // Adjust the path according to your project structure
 import { adminAPI } from "@/lib/axios/admin-API";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/context/auth-context";
 
 export const useAdminLogin = () => {
     return useMutation({
@@ -18,12 +19,18 @@ export const useAdminLogin = () => {
 
 export const useAdminLogout = () => {
     const router = useRouter();
+    const queryClient = useQueryClient();
+    const { setUser } = useAuthStore();
     return useMutation({
-        mutationFn: adminAuthAPI.logout,
+        mutationFn: async () => {
+
+            await adminAuthAPI.logout();
+            setUser(null);
+            queryClient.clear();
+        },
         onSuccess: () => {
             localStorage.removeItem("token");
             toast.success("Logged out successfully");
-
             router.push("/login");
 
         },
@@ -54,7 +61,7 @@ export const useUserLogout = () => {
 export const useAdminProfile = () => {
     return useQuery({
         queryKey: ["admin-profile", "admin"],
-        retry:1,
+        retry: 1,
         queryFn: adminAPI.getAdminProfile,
     });
 }
