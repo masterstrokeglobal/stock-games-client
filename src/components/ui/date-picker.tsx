@@ -22,13 +22,13 @@ function DatePicker({
   label}: DatePickerProps) {
   return (
     <div className="flex flex-col">
-      {label && <label className="mb-2">{label}</label>}
+      {label && <label className="mb-1 text-sm font-semibold">{label}</label>}
       <Popover>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             className={cn(
-              "pl-3  text-left font-normal",
+              "pl-3 gap-2 text-left font-normal",
               !value && "text-muted-foreground",
               className
             )}

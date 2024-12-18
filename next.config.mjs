@@ -13,6 +13,11 @@ const nextConfig = {
         destination: '/game',
         permanent: true,
       },
+      {
+        source: '/admin',
+        destination: '/dashboard',
+        permanent: true,
+      },
     ];
   }
 };

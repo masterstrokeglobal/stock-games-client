@@ -29,8 +29,14 @@ export const agentAPI = {
     updateAgent: async (agentId: string, updateData: any) => {
         return api.patch(`/agent/${agentId}`, updateData);
     },
-    profitLoss: async (agentId: string) => {
-        return api.get(`/agent/profit-loss/${agentId}`);
+    profitLoss: async (filter :{
+        agentId?: string,
+        startDate?: Date;
+        endDate?: Date;
+    }) => {
+        return api.get(`/agent/profit-loss/${filter.agentId}`, {
+            params: filter
+        });
     }
 
 };
