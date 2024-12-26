@@ -9,11 +9,11 @@ type HorseNumberProps = {
 };
 
 const HorseNumber = forwardRef<THREE.Group, HorseNumberProps>(
-  ({  number, color = "blue" }, ref) => {
+  ({ number, color = "blue" }, ref) => {
     const radius = 2; // Radius of the circle
 
     return (
-      <group ref={ref as any}>
+      <group ref={ref as any} rotation={[0, -Math.PI / 4, 0]}> {/* -Math.PI/4 is 45 degrees left */}
         {/* Circular Background */}
         <mesh position={[0, 11, 3.5]}>
           <circleGeometry args={[radius, 24]} />
