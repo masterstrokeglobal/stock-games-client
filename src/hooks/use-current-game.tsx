@@ -152,7 +152,14 @@ export const useIsPlaceOver = (roundRecord: RoundRecord | null) => {
             const now = new Date().getTime();
             const placeEnd = new Date(roundRecord.placementEndTime).getTime();
 
-            setIsPlaceOver(now >= placeEnd);
+            const gameEnd = new Date(roundRecord.endTime).getTime();
+
+            if (now >= placeEnd != isPlaceOver)
+                setIsPlaceOver(now >= placeEnd);
+
+
+            if (now >= gameEnd)
+                setIsPlaceOver(false);
         };
 
         // Initial check
@@ -215,17 +222,19 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
         const updateShowResults = () => {
             const now = new Date().getTime();
             const gameEnd = new Date(roundRecord.endTime).getTime();
-            const adjustedEndTime = gameEnd + 3000; 
+            const adjustedEndTime = gameEnd + 3000;
             const THIRTY_SECONDS = 30000;
-            
+
             if (now >= adjustedEndTime - THIRTY_SECONDS) {
                 setShowResults(false);
                 setPreviousRoundId(roundRecord.id);
             }
 
 
-            console.log('showing results',now>=adjustedEndTime,bettedChips);
+            console.log('showing results', now >= adjustedEndTime);
+
             if (now >= adjustedEndTime && bettedChips.length > 0) {
+                console.log('showing results', now >= adjustedEndTime, bettedChips);
                 setShowResults(true);
             }
         };

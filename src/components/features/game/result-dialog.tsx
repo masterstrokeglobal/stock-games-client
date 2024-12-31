@@ -39,8 +39,6 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
   }, [open]);
 
 
-
-
   // Check if the result is a win or loss
   const isWin = resultData && Number(resultData.profit) >= 0;
 
