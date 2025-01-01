@@ -68,7 +68,7 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord }: Roulett
                     <span className="absolute inset-0 mx-1 flex items-start justify-end text-white text-2xl font-bold">
                         {number}
                     </span>
-                    {winnerNumber === number && <img src='/crown.png' />}
+                    {winnerNumber === number && <img className='z-40 relative' src='/crown.png' />}
                 </div>
             ))}
         </div>

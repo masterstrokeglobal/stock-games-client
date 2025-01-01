@@ -76,7 +76,7 @@ export const useCurrentGame = (): {
             console.log('game end');
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === 'current-round-record';
+                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements';
                 },
             });
         }, timeToGameEnd);
@@ -84,7 +84,7 @@ export const useCurrentGame = (): {
         const placeEnd = setTimeout(() => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === 'current-round-record';
+                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements';
                 },
             });
         }, timeToPlace);
@@ -184,7 +184,7 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
     const [showResults, setShowResults] = useState(false);
     const [currentRoundId, setCurrentRoundId] = useState<number | null>(null);
     const [previousRoundId, setPreviousRoundId] = useState<number | null>(null);
-    const { data: placementData, isSuccess } = useGetMyPlacements({ roundId: previousRoundId });
+    const { data: placementData, isSuccess, refetch } = useGetMyPlacements({ roundId: roundRecord?.id });
 
     const bettedChips = useMemo(() => {
         if (!isSuccess) return [];
@@ -195,7 +195,7 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
             numbers: record.market,
         }));
         return chips;
-    }, [placementData]);
+    }, [placementData, isSuccess]);
 
     useEffect(() => {
         // Retrieve previous round ID from localStorage when the component mounts
@@ -227,11 +227,11 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
 
             if (now >= adjustedEndTime - THIRTY_SECONDS) {
                 setShowResults(false);
-                setPreviousRoundId(roundRecord.id);
+                if (roundRecord.id !== previousRoundId){
+                    setPreviousRoundId(roundRecord.id);
+                    refetch();
+                }
             }
-
-
-            console.log('showing results', now >= adjustedEndTime);
 
             if (now >= adjustedEndTime && bettedChips.length > 0) {
                 console.log('showing results', now >= adjustedEndTime, bettedChips);
@@ -239,7 +239,6 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
             }
         };
 
-        updateShowResults();
         const intervalId = setInterval(updateShowResults, REFRESH_INTERVAL);
 
         return () => {
