@@ -23,7 +23,7 @@ const Navbar = () => {
         <nav className="items-center md:px-6 px-4 z-50  flex fixed top-0 justify-between text-white font-semibold w-full h-20 bg-primary-game ">
             <div className="">
                 <span className="md:text-xl text-sm font-semibold">
-                   <Logo />
+                    <Logo />
                 </span>
             </div>
             <div className="flex items-center space-x-4 ml-auto">
@@ -35,9 +35,11 @@ const Navbar = () => {
                         {isLoading ? "..." : wallet.totalBalance}
                     </span>
 
-                    <Button size="icon" variant="ghost" className="ml-6 md:block hidden">
-                        <img src="/plus-icon.svg" className="size-7" alt="arrow-down" />
-                    </Button>
+                    <Link href="/game/wallet/deposit">
+                        <Button size="icon" variant="ghost" className="ml-6 md:block hidden">
+                            <img src="/plus-icon.svg" className="size-7" alt="arrow-down" />
+                        </Button>
+                    </Link>
                 </div>
                 <Link href="/game/user-menu">
                     <button className="bg-[#112148] md:px-4 md:h-12 h-10 justify-center  md:aspect-auto aspect-square space-x-3 flex items-center md:py-2 p-1 rounded-full">

@@ -9,7 +9,7 @@ import { useAuthStore } from "@/context/auth-context";
 
 // Zod schema for deposit form
 const depositSchema = z.object({
-    transactionId: z
+    pgId: z
         .string()
         .min(1, "Transaction ID is required")
         .max(50, "Transaction ID is too long"),
@@ -33,7 +33,7 @@ const DepositForm = ({ onSubmit }: Props) => {
     const form = useForm<DepositFormValues>({
         resolver: zodResolver(depositSchema),
         defaultValues: {
-            transactionId: '',
+            pgId: '',
             amount:0,
         }
     });
@@ -68,7 +68,7 @@ const DepositForm = ({ onSubmit }: Props) => {
                     <FormInput
                         control={control}
                         game
-                        name="transactionId"
+                        name="pgId"
                         label="Transaction ID*"
                         placeholder="Enter transaction ID from your bank app"
                         required

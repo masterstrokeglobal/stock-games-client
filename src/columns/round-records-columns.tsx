@@ -84,7 +84,7 @@ const roundRecordColumns: ColumnDef<RoundRecord>[] = [
 const ActionColumn = ({ roundRecord }: { roundRecord: RoundRecord }) => {
     return (
         <div className="flex space-x-4 w-36 justify-end">
-            <Link href={`/dashboard/round-record/${roundRecord.id}/view`}>
+            <Link href={`/dashboard/round-records/${roundRecord.id}`}>
                 <Button variant="ghost" size="icon" aria-label="View Round Record">
                     <Eye className="w-5 h-5" />
                 </Button>

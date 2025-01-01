@@ -86,7 +86,6 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
             updateHorsePositions(animationProgressRef.current);
 
             if (animationProgressRef.current >= .9) {
-                console.log('animationProgressRef.current >= 1',Date.now());
                 setCurrentPositions(targetPositions);
                 setIsTransitioning(false);
             }

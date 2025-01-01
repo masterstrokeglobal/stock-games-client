@@ -1,10 +1,9 @@
+import { PlacementType } from '@/models/game-record';
 import { RoundRecord } from '@/models/round-record';
 import { useGetCurrentRoundRecord } from '@/react-query/round-record-queries';
 import { useQueryClient, UseQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { useGameType } from './use-game-type';
-import { useGetMyPlacements } from '@/react-query/game-record-queries';
-import GameRecord from '@/models/game-record';
 
 interface FormattedTime {
     minutes: number;
@@ -180,22 +179,15 @@ export const useIsPlaceOver = (roundRecord: RoundRecord | null) => {
 
 
 
-export const useShowResults = (roundRecord: RoundRecord | null) => {
+export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: {
+    type: PlacementType;
+    amount: number;
+    numbers: number[];
+}[]) => {
     const [showResults, setShowResults] = useState(false);
     const [currentRoundId, setCurrentRoundId] = useState<number | null>(null);
     const [previousRoundId, setPreviousRoundId] = useState<number | null>(null);
-    const { data: placementData, isSuccess, refetch } = useGetMyPlacements({ roundId: roundRecord?.id });
 
-    const bettedChips = useMemo(() => {
-        if (!isSuccess) return [];
-        const gameRecords: GameRecord[] = placementData.data.map((record: Partial<GameRecord>) => new GameRecord(record));
-        const chips = gameRecords.map((record) => ({
-            type: record.placementType,
-            amount: record.amount,
-            numbers: record.market,
-        }));
-        return chips;
-    }, [placementData, isSuccess]);
 
     useEffect(() => {
         // Retrieve previous round ID from localStorage when the component mounts
@@ -227,9 +219,9 @@ export const useShowResults = (roundRecord: RoundRecord | null) => {
 
             if (now >= adjustedEndTime - THIRTY_SECONDS) {
                 setShowResults(false);
-                if (roundRecord.id !== previousRoundId){
+                if (roundRecord.id !== previousRoundId) {
                     setPreviousRoundId(roundRecord.id);
-                    refetch();
+                    console.log('refetching');
                 }
             }
 

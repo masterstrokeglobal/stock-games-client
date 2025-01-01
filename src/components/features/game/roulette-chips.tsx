@@ -44,7 +44,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                             onClick={() => setBetAmount(amount)}
                             disabled={isPlaceOver}
                         >
-                            ${amount}
+                            ₹{amount}
                         </Button>
                     ))}
                 </div>

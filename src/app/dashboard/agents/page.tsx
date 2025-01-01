@@ -54,7 +54,7 @@ const AgentTable = () => {
                             className="pl-10"
                         />
                     </div>
-                    <Link href="/dashboard/agent/create">
+                    <Link href="/dashboard/agents/create">
                         <Button>
                             <Plus
                                 size={18}
