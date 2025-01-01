@@ -11,8 +11,7 @@ export const useCreateGameRecord = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({
                 predicate: (query) =>
-                    // Invalidate queries related to game records
-                    query.queryKey[0] === "winningGameRecord" ||
+                 query.queryKey[0] === "winningGameRecord" ||
                     query.queryKey[0] === "topPlacements" ||
                     query.queryKey[0] === "myPlacements" ||
                     query.queryKey[0] === "user" && query.queryKey[1] == 'wallet',

@@ -53,7 +53,7 @@ const GamePage = () => {
             </main>}
 
             {isMobile && roundRecord && <MobileGame roundRecord={roundRecord} />}
-            <GameResultDialog open={showResults} roundRecordId={previousRoundId!} />
+            <GameResultDialog key={String(showResults)} open={showResults} roundRecordId={previousRoundId!} />
         </section>
     );
 };
