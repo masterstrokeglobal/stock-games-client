@@ -21,10 +21,10 @@ const GamePage = () => {
     const { previousRoundId, showResults } = useShowResults(roundRecord);
     const { isMobile } = useWindowSize();
 
+    console.log("showResults", showResults);
 
-    console.log(showResults, 'roundRecord');
     return (
-        <section className="bg-primary-game pt-20 h-screen ">
+        <section className="bg-primary-game pt-20 md:h-screen ">
             <Navbar />
             {!isMobile && <main className="grid grid-cols-12 grid-rows-5 gap-4 h-full p-4">
                 <div
@@ -36,7 +36,7 @@ const GamePage = () => {
                     style={borderStyle}
 
                     className="xl:col-span-5 col-span-4 row-span-2 rounded-2xl ">
-                                            {roundRecord?.id && <CurrentBets roundId={roundRecord.id.toString()} />}
+                    {roundRecord?.id && <CurrentBets roundId={roundRecord.id.toString()} />}
 
                 </div>
                 <div
@@ -72,11 +72,12 @@ const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
     return <section className="text-white">
         <MobileHeader roundRecord={roundRecord} />
         {!isPlaceOver && <main className="bg-[#0A1634]">
-            {roundRecord && <RouletteGame roundRecord={roundRecord} />}
             <div className="px-2">
+                {roundRecord && <RouletteGame roundRecord={roundRecord} />}
                 <CurrentBets roundId={roundRecord?.id.toString()} />
             </div>
         </main>}
+        {isPlaceOver && <RouletteGame roundRecord={roundRecord} />}
         {isPlaceOver && <LeaderBoard roundRecord={roundRecord} />}
     </section>
 }

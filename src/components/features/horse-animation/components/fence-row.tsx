@@ -10,7 +10,7 @@ interface FenceRowProps {
 
 const FenceRow: React.FC<FenceRowProps> = ({ count, spacing, x }) => {
   const fenceRowRef = useRef<any>();
-  const speed = 0.40; // Speed of the animation
+  const speed = 0.90; // Speed of the animation
   const initialZPosition = -300;
 
   useFrame(() => {

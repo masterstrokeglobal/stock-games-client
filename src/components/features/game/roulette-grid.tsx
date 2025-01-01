@@ -36,7 +36,6 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord }: Roulett
         if (!isSuccess) return null;
         const winningId = data.data?.winningId;
 
-        console.log(winningId,"winningId");
         if (!winningId) return null;
 
         const winningNumber = roundRecord.market.find((item) => item.id === winningId);

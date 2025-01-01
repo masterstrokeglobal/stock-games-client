@@ -29,18 +29,18 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
     const { stocks } = useLeaderboard(roundRecord);
 
     // Memoize initial positions to prevent unnecessary recalculations
-    const initialPositions = useMemo(() => 
+    const initialPositions = useMemo(() =>
         [...Array(numberOfHorses)].map((_, index) => ({
             x: -15 + index * 4 + (Math.random() * 2 - 1),
             z: 0,
         })),
-    [numberOfHorses]);
+        [numberOfHorses]);
 
     // Optimize position generation with memoization
     const generateNewPositions = useMemo(() => {
         return roundRecord.market.map((horse, index) => {
             const currentHorse = stocks.find(stock => stock.horse === horse.horse);
-            const zBasedOnRank = currentHorse?.rank ? -(currentHorse.rank * 12)+30 : 0;
+            const zBasedOnRank = currentHorse?.rank ? -(currentHorse.rank * 12) + 30 : 0;
 
             return {
                 x: -15 + (index) * 4 + (Math.random() * 20),
@@ -65,7 +65,7 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
                 if (horse && currentPositions[index] && targetPositions[index]) {
                     const currentPos = currentPositions[index];
                     const targetPos = targetPositions[index];
-                    
+
                     // Use lerp for smoother interpolation
                     horse.position.x = THREE.MathUtils.lerp(currentPos.x, targetPos.x, progress);
                     horse.position.z = THREE.MathUtils.lerp(currentPos.z, targetPos.z, progress);
@@ -85,7 +85,8 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
             );
             updateHorsePositions(animationProgressRef.current);
 
-            if (animationProgressRef.current >= 1) {
+            if (animationProgressRef.current >= .9) {
+                console.log('animationProgressRef.current >= 1',Date.now());
                 setCurrentPositions(targetPositions);
                 setIsTransitioning(false);
             }
@@ -93,7 +94,7 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
     });
 
     // Memoize horses rendering data
-    const horses = useMemo(() => 
+    const horses = useMemo(() =>
         roundRecord.market.map((stock, index) => {
             const initialPos = currentPositions[index] || initialPositions[index];
             return {
@@ -103,7 +104,7 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
                 horseNumber: stock.horse,
             };
         }),
-    [numberOfHorses, currentPositions, initialPositions]);
+        [numberOfHorses, currentPositions, initialPositions]);
 
     return (
         <>

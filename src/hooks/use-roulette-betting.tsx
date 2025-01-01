@@ -82,9 +82,11 @@ export const useRouletteBetting = ({ container }: Props) => {
                 const isHorizontalStreet = bet.numbers[1] - bet.numbers[0] === 1;
                 const firstNumberPos = getNumberPosition(bet.numbers[0]);
 
+
+
                 if (isHorizontalStreet) {
                     return {
-                        x: firstNumberPos.x,  // Positioned at the full left side
+                        x: firstNumberPos.x,
                         y: firstNumberPos.y + CELL_HEIGHT / 2,
                         transform: 'translate(-50%, -50%)'
                     };
@@ -137,19 +139,42 @@ export const useRouletteBetting = ({ container }: Props) => {
             };
         }
 
-        // Vertical split
-        if (rowIndex < 3 &&
-            Math.abs(currentNumber - (currentNumber + 4)) === 4 &&
-            cellX >= BORDER_THRESHOLD &&
-            cellX <= cellWidth - BORDER_THRESHOLD) {
+        // Left border split
+        if (cellX <= BORDER_THRESHOLD && colIndex > 0) {
+            return {
+                type: PlacementType.SPLIT,
+                numbers: [currentNumber - 1, currentNumber]
+            };
+        }
+
+        // Right border split
+        if (cellX >= cellWidth - BORDER_THRESHOLD && colIndex < 3) {
+            return {
+                type: PlacementType.SPLIT,
+                numbers: [currentNumber, currentNumber + 1]
+            };
+        }
+
+        // Top border split
+        if (cellY <= BORDER_THRESHOLD && rowIndex > 0) {
+            return {
+                type: PlacementType.SPLIT,
+                numbers: [currentNumber - 4, currentNumber]
+            };
+        }
+
+        // Bottom border split
+        if (cellY >= CELL_HEIGHT - BORDER_THRESHOLD && rowIndex < 3) {
             return {
                 type: PlacementType.SPLIT,
                 numbers: [currentNumber, currentNumber + 4]
             };
         }
 
+
+
         // Vertical Street bet (bottom edge)
-        if (cellY > CELL_HEIGHT - BORDER_THRESHOLD) {
+        if (cellY > CELL_HEIGHT - BORDER_THRESHOLD && rowIndex === 3) {
             const streetStartNumber = 13 + colIndex;
             return {
                 type: PlacementType.STREET,
@@ -157,24 +182,15 @@ export const useRouletteBetting = ({ container }: Props) => {
             };
         }
 
-
         // Horizontal Street bet (left edge)
-        if (cellX < BORDER_THRESHOLD) {
+        if (cellX < BORDER_THRESHOLD && colIndex === 0) {
             const streetStartNumber = (rowIndex * 4) + 1;
             return {
                 type: PlacementType.STREET,
                 numbers: [streetStartNumber, streetStartNumber + 1, streetStartNumber + 2, streetStartNumber + 3]
             };
         }
-        // Horizontal split
-        if (colIndex < 3 && Math.abs(currentNumber - (currentNumber + 1)) === 1) {
-            return {
-                type: PlacementType.SPLIT,
-                numbers: [currentNumber, currentNumber + 1]
-            };
-        }
 
-        // Street bet
 
         return null;
     }, []);
