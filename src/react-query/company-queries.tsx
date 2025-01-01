@@ -9,7 +9,7 @@ export const useCreateCompany = () => {
             toast.success("Company created successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error creating company");
+            toast.error(error.response?.data?.message ?? "Error creating company");
         },
     });
 };
@@ -42,7 +42,7 @@ export const useUpdateCompanyById = () => {
             toast.success("Company updated successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error updating company");
+            toast.error(error.response?.data?.message ?? "Error updating company");
         },
     });
 };
@@ -61,7 +61,7 @@ export const useDeleteCompanyById = () => {
             toast.success("Company deleted successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error deleting company");
+            toast.error(error.response?.data?.message ?? "Error deleting company");
         },
     });
 };

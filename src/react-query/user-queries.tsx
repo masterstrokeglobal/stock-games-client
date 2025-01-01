@@ -32,7 +32,7 @@ export const useDeleteUserById = () => {
             toast.success("User deleted successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error deleting user");
+            toast.error(error.response?.data?.message ?? "Error deleting user");
         },
     });
 };

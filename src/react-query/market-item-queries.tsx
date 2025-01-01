@@ -9,7 +9,7 @@ export const useCreateMarketItem = () => {
             toast.success("Market item created successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error creating market item");
+            toast.error(error.response?.data?.message ?? "Error creating market item");
         },
     });
 };
@@ -35,7 +35,7 @@ export const useUpdateMarketItemById = () => {
             toast.success("Market item updated successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error updating market item");
+            toast.error(error.response?.data?.message ?? "Error updating market item");
         },
     });
 };

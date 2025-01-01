@@ -3,7 +3,7 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import dayjs from "dayjs";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import {RoundRecord} from "@/models/round-record";
 
 interface RoundRecordCardProps {
@@ -13,6 +13,11 @@ interface RoundRecordCardProps {
 const formatDateTime = (date?: Date) => (date ? dayjs(date).format("MMM DD, YYYY [at] hh:mm A") : "N/A");
 
 const RoundRecordCard: FC<RoundRecordCardProps> = ({ roundRecord }) => {
+
+    const winnerName = useMemo(() => {
+        const market  = roundRecord.market.find(m => m.id === roundRecord.winningId)?.name;
+        return market ?? "N/A";
+    }, [roundRecord.market, roundRecord.winningId]);
     return (
         <Card className="shadow-md">
             <CardHeader>
@@ -51,7 +56,7 @@ const RoundRecordCard: FC<RoundRecordCardProps> = ({ roundRecord }) => {
                     </div>
                     <div>
                         <span className="block font-medium">Winning ID</span>
-                        <p>{roundRecord.winningId ?? "N/A"}</p>
+                        <p>{winnerName ?? "N/A"}</p>
                     </div>
                     <div>
                         <span className="block font-medium">Created At</span>

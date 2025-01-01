@@ -9,7 +9,7 @@ export const useCreateTransaction = () => {
             toast.success("Transaction created successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error creating transaction");
+            toast.error(error.response?.data?.message ?? "Error creating transaction");
         },
     });
 };
@@ -43,11 +43,10 @@ export const useUpdateTransactionById = () => {
             toast.success("Transaction updated successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error updating transaction");
+            toast.error(error.response?.data?.message ?? "Error updating transaction");
         },
     });
 };
-
 
 export const useDeleteTransactionById = () => {
     const queryClient = useQueryClient();
@@ -63,7 +62,26 @@ export const useDeleteTransactionById = () => {
             toast.success("Transaction deleted successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error deleting transaction");
+            toast.error(error.response?.data?.message ?? "Error deleting transaction");
+        },
+    });
+};
+
+export const useConfirmWithdrawal = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: transactionAPI.confirmWithdrawal,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "transactions";
+                },
+            });
+            toast.success("Withdrawal confirmed successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error confirming withdrawal");
         },
     });
 };

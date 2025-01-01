@@ -37,7 +37,6 @@ const TransactionTable = ({ userId }: Props) => {
         status: status === "all" ? "" : status,
     });
 
-    // Map the fetched data into Transaction model instances
     const transactions = useMemo(() => {
         if (isSuccess && data?.data?.transactions) {
             return Array.from(data.data.transactions).map(
@@ -77,7 +76,10 @@ const TransactionTable = ({ userId }: Props) => {
                         />
                     </div>
                     {/* ShadCN Select for Type Filter */}
-                    <Select value={type} onValueChange={(val) => setType(val as TransactionType)} >
+                    <Select value={type} onValueChange={(val) =>{
+                        setType(val as TransactionType)
+                        setPage(1);
+                    }} >
                         <SelectTrigger>
                             <SelectValue placeholder="All Types" />
                         </SelectTrigger>
@@ -92,7 +94,10 @@ const TransactionTable = ({ userId }: Props) => {
                     </Select>
 
                     {/* ShadCN Select for Status Filter */}
-                    <Select value={status} onValueChange={(val) => setStatus(val as TransactionStatus)} >
+                    <Select value={status} onValueChange={(val) => {
+                        setStatus(val as TransactionStatus)
+                        setPage(1);
+                    }} >
                         <SelectTrigger>
                             <SelectValue placeholder="All Statuses" />
                         </SelectTrigger>

@@ -14,7 +14,7 @@ const ViewRoundRecordPage = () => {
 
     const roundRecordDetails = useMemo(() => {
         if (isSuccess) {
-            return new RoundRecord(data?.data); // Assuming data?.data is the correct path
+            return new RoundRecord(data?.data); 
         }
         return null;
     }, [data, isSuccess]);

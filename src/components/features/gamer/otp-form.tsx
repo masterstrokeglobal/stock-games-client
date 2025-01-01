@@ -32,7 +32,7 @@ const OTPForm = ({ defaultValues, onSubmit, isLoading, resendOTP }: Props) => {
         <div className="w-full max-w-sm">
             <header className=" mb-10 text-center space-y-2">
                 <h1 className="text-3xl  font-semibold text-white">OTP Verification </h1>
-                <p className="text-[#F9F9F9B2]">Enter the verification code we just sent on your phone number</p>
+                <p className="text-[#F9F9F9B2]">Enter the verification code we just sent on your email</p>
             </header>
 
             <FormProvider
