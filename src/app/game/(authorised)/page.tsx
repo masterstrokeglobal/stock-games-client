@@ -2,11 +2,10 @@
 import CurrentBets from "@/components/features/game/current-bets";
 import LeaderBoard from "@/components/features/game/leaderboard";
 import Navbar from "@/components/features/game/navbar";
-import GameResultDialog from "@/components/features/game/result-dialog";
 import RouletteGame from "@/components/features/game/roulette-game";
 import { MobileGameHeader } from "@/components/features/game/roulette-header";
 import HorseRace from "@/components/features/horse-animation/horse";
-import { useCurrentGame, useGameState, useIsPlaceOver, useShowResults } from "@/hooks/use-current-game";
+import { useCurrentGame, useGameState, useIsPlaceOver } from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
 import { RoundRecord } from "@/models/round-record";
 
@@ -18,10 +17,8 @@ const borderStyle = {
 const GamePage = () => {
     const { roundRecord } = useCurrentGame();
 
-    const { previousRoundId, showResults } = useShowResults(roundRecord);
     const { isMobile } = useWindowSize();
 
-    console.log("showResults", showResults);
 
     return (
         <section className="bg-primary-game pt-20 md:h-screen ">
@@ -36,7 +33,7 @@ const GamePage = () => {
                     style={borderStyle}
 
                     className="xl:col-span-5 col-span-4 row-span-2 rounded-2xl ">
-                    {roundRecord?.id && <CurrentBets roundId={roundRecord.id.toString()} />}
+                    {roundRecord && <CurrentBets round={roundRecord} />}
 
                 </div>
                 <div
@@ -53,7 +50,6 @@ const GamePage = () => {
             </main>}
 
             {isMobile && roundRecord && <MobileGame roundRecord={roundRecord} />}
-            <GameResultDialog key={String(showResults)} open={showResults} roundRecordId={previousRoundId!} />
         </section>
     );
 };
@@ -74,7 +70,7 @@ const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
         {!isPlaceOver && <main className="bg-[#0A1634]">
             <div className="px-2">
                 {roundRecord && <RouletteGame roundRecord={roundRecord} />}
-                <CurrentBets roundId={roundRecord?.id.toString()} />
+                {roundRecord && <CurrentBets round={roundRecord} />}
             </div>
         </main>}
         {isPlaceOver && <RouletteGame roundRecord={roundRecord} />}

@@ -36,6 +36,7 @@ export const useRouletteBetting = ({ container }: Props) => {
     const getBetPosition = (bet: Bet): ChipPosition => {
         const gridWidth = container.current?.getBoundingClientRect().width || 0;
         const CELL_WIDTH = (gridWidth - GAP * 3) / 4;
+
         const getNumberPosition = (number: number): Position => {
             const row = Math.floor((number - 1) / 4);
             const col = (number - 1) % 4;

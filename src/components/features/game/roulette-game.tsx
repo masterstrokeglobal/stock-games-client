@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useGameState } from "@/hooks/use-current-game";
+import { useGameState, useShowResults } from "@/hooks/use-current-game";
 import { useGameType } from "@/hooks/use-game-type";
 import { useRouletteBetting } from "@/hooks/use-roulette-betting";
 import { cn } from "@/lib/utils";
@@ -16,6 +16,7 @@ import { BettingControls } from "./roulette-chips";
 import { RouletteBettingGrid } from "./roulette-grid";
 import { GameHeader } from "./roulette-header";
 import useNSEAvailable from "@/hooks/use-nse-available";
+import GameResultDialog from "./result-dialog";
 
 enum PlacementType {
     SINGLE = "single",
@@ -35,7 +36,8 @@ type Props = {
     previousRoundId?: string;
 };
 
-const RouletteGame = ({ roundRecord ,previousRoundId}: Props) => {
+const RouletteGame = ({ roundRecord }: Props) => {
+
     const [betAmount, setBetAmount] = useState<number>(10);
     const gameState = useGameState(roundRecord);
     const isNSEAvailable = useNSEAvailable();
@@ -52,10 +54,12 @@ const RouletteGame = ({ roundRecord ,previousRoundId}: Props) => {
         const chips = gameRecords.map((record) => ({
             type: record.placementType,
             amount: record.amount,
-            numbers: record.market.map((market) => roundRecord.market.findIndex((m) => m.id === market))
+            numbers: record.market.map((market) => roundRecord.market.findIndex((m) => m.id === market) + 1)
         }));
         return chips;
     }, [data]);
+
+    const { previousRoundId, showResults } = useShowResults(roundRecord, bettedChips);
 
 
     const {
@@ -70,11 +74,12 @@ const RouletteGame = ({ roundRecord ,previousRoundId}: Props) => {
     // Function to check if there's a bet on a specific type and numbers
     const getBetForPosition = (type: PlacementType, numbers: number[]) => {
         const allChips = [...bettedChips, ...chips];
-        return allChips.find(chip =>
+        const chip = allChips.find(chip =>
             chip.type === type &&
             chip.numbers.length === numbers.length &&
             chip.numbers.every(num => numbers.includes(num))
         );
+        return chip;
     };
 
     const ButtonChip = ({ amount }: { amount: number }) => (
@@ -137,7 +142,7 @@ const RouletteGame = ({ roundRecord ,previousRoundId}: Props) => {
         const chip = chips[0];
         if (!chip) return;
 
-        const markets = chip.numbers.map((number) => roundRecord.market[number]?.id).filter((id) => id !== undefined);
+        const markets = chip.numbers.map((number) => roundRecord.market[number - 1]?.id).filter((id) => id !== undefined);
 
         mutate({
             amount: chip.amount,
@@ -152,8 +157,10 @@ const RouletteGame = ({ roundRecord ,previousRoundId}: Props) => {
     };
 
     // Get all numbers for specific sections and other bets
-    const first8Numbers = Array.from({ length: 8 }, (_, i) => i);
-    const second8Numbers = Array.from({ length: 8 }, (_, i) => i + 8);
+    const first8Numbers = Array.from({ length: 8 }, (_, i) => i + 1);
+    const second8Numbers = Array.from({ length: 8 }, (_, i) => i + 1 + 8);
+    const firstHigh = [1, 2, 5, 6, 9, 10, 13, 14];
+    const secondHigh = [3, 4, 7, 8, 11, 12, 15, 16]
     const redNumbers = [1, 3, 5, 7, 9, 11, 13, 15];
     const blackNumbers = [2, 4, 6, 8, 10, 12, 14, 16];
     const evenNumbers = Array.from({ length: 8 }, (_, i) => (i + 1) * 2);
@@ -174,181 +181,192 @@ const RouletteGame = ({ roundRecord ,previousRoundId}: Props) => {
     const boardChips = gameState.isPlaceOver ? bettedChips : [...bettedChips, ...chips];
 
     return (
-        <div className="max-w-4xl mx-auto lg:p-4 p-2 space-y-8">
-            <div className="relative rounded-xl lg:flex-row flex-col flex gap-8 border-brown-800">
-                <div className='lg:w-6/12'>
-                    <h1 className='text-xl lg:mb-2 mb-4 lg:text-left text-center text-white font-semibold'>
-                        {gameState.isPlaceOver ? "Betting Closed" : "Place Your Bets"}
-                    </h1>
+        <>
+            <div className="max-w-4xl mx-auto lg:p-4 p-2 space-y-8">
+                <div className="relative rounded-xl lg:flex-row flex-col flex gap-8 border-brown-800">
+                    <div className='lg:w-6/12'>
+                        <h1 className='text-xl lg:mb-2 mb-4 lg:text-left text-center text-white font-semibold'>
+                            {gameState.isPlaceOver ? "Betting Closed" : "Place Your Bets"}
+                        </h1>
 
-                    <div className={cn("relative w-full max-w-4xl mx-auto", gameState.isPlaceOver ? 'cursor-not-allowed opacity-50' : 'cursor-crosshair')}>
-                        <Tabs
-                            defaultValue={tab}
-                            onValueChange={(value) => setTab(value as SchedulerType)}
-                            className="w-full relative z-10 mb-6"
-                        >
-                            <TabsList className="w-full flex lg:hidden h-10 p-1 bg-[#0F214F]">
-                                <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && 'cursor-not-allowed')} value="nse">NSE</TabsTrigger>
-                                <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
-                            </TabsList>
-                        </Tabs>
-
-                        <div className="flex w-full">
-                            <div
-                                ref={boardRef}
-                                onClick={!gameState.isPlaceOver ? handleBoardClick : undefined}
-                                onMouseLeave={() => setHoveredCell(null)}
-
-                                className={`relative flex-1 mx-auto`}
+                        <div className={cn("relative w-full max-w-4xl mx-auto", gameState.isPlaceOver ? 'cursor-not-allowed opacity-50' : 'cursor-crosshair')}>
+                            <Tabs
+                                defaultValue={tab}
+                                onValueChange={(value) => setTab(value as SchedulerType)}
+                                className="w-full relative z-10 mb-6"
                             >
-                                <RouletteBettingGrid
-                                    roundRecord={roundRecord}
-                                    hoveredCell={hoveredCell as unknown as Bet}
-                                    chips={chips as unknown as Chip[]}
-                                    previousRoundId={previousRoundId}
-                                />
-                                <BettingChips chips={boardChips} getBetPosition={getBetPosition} />
+                                <TabsList className="w-full flex lg:hidden h-10 p-1 bg-[#0F214F]">
+                                    <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && 'cursor-not-allowed')} value="nse">NSE</TabsTrigger>
+                                    <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
+                                </TabsList>
+                            </Tabs>
+
+                            <div className="flex w-full">
+                                <div
+                                    ref={boardRef}
+                                    onClick={!gameState.isPlaceOver ? handleBoardClick : undefined}
+                                    onMouseLeave={() => setHoveredCell(null)}
+
+                                    className={`relative flex-1 mx-auto`}
+                                >
+                                    <RouletteBettingGrid
+                                        roundRecord={roundRecord}
+                                        hoveredCell={hoveredCell as unknown as Bet}
+                                        chips={chips as unknown as Chip[]}
+                                        previousRoundId={previousRoundId?.toString()}
+                                    />
+                                    <BettingChips chips={boardChips} getBetPosition={getBetPosition} />
+                                </div>
+
+                                <div className="grid grid-rows-2 gap-2 ml-2">
+                                    <div className="relative">
+                                        <Button
+                                            variant="game-secondary"
+                                            className="h-full w-10 flex items-center justify-center relative"
+                                            onClick={() => handleSideBet(first8Numbers)}
+                                        >
+                                            <span className="rotate-text">1st 8</span>
+                                        </Button>
+                                        {getBetForPosition(PlacementType.DOUBLE_STREET, first8Numbers) && (
+                                            <ButtonChip amount={getBetForPosition(PlacementType.DOUBLE_STREET, first8Numbers)!.amount} />
+                                        )}
+                                    </div>
+                                    <div className="relative">
+                                        <Button
+                                            variant="game-secondary"
+                                            className="h-full w-10 flex items-center justify-center relative"
+                                            onClick={() => handleSideBet(second8Numbers)}
+                                        >
+                                            <span className="rotate-text">2nd 8</span>
+                                        </Button>
+                                        {getBetForPosition(PlacementType.DOUBLE_STREET, second8Numbers) && (
+                                            <ButtonChip amount={getBetForPosition(PlacementType.DOUBLE_STREET, second8Numbers)!.amount} />
+                                        )}
+                                    </div>
+                                </div>
                             </div>
 
-                            <div className="grid grid-rows-2 gap-2 ml-2">
+                            <Button
+                                variant="game-secondary"
+                                className="col-span-1 justify-center gap-4 w-full mt-2"
+                            >
+                                <span>
+                                    17
+                                </span>
+                                {roundRecord.market[16]?.codeName}
+                            </Button>
+
+
+                            <div className="grid grid-cols-2 gap-2 mt-2">
                                 <div className="relative">
                                     <Button
                                         variant="game-secondary"
-                                        className="h-full w-10 flex items-center justify-center relative"
-                                        onClick={() => handleSideBet(first8Numbers)}
+                                        className="col-span-1 justify-center w-full"
+                                        onClick={() => handleBottomBet(firstHigh)}
                                     >
-                                        <span className="rotate-text">1st 8</span>
+                                        1st 8
                                     </Button>
-                                    {getBetForPosition(PlacementType.DOUBLE_STREET, first8Numbers) && (
-                                        <ButtonChip amount={getBetForPosition(PlacementType.DOUBLE_STREET, first8Numbers)!.amount} />
+                                    {getBetForPosition(PlacementType.HIGH_LOW, firstHigh) && (
+                                        <ButtonChip amount={getBetForPosition(PlacementType.HIGH_LOW, firstHigh)!.amount} />
                                     )}
                                 </div>
                                 <div className="relative">
                                     <Button
                                         variant="game-secondary"
-                                        className="h-full w-10 flex items-center justify-center relative"
-                                        onClick={() => handleSideBet(second8Numbers)}
+                                        className="col-span-1 justify-center w-full"
+                                        onClick={() => handleBottomBet(secondHigh)}
                                     >
-                                        <span className="rotate-text">2nd 8</span>
+                                        2nd 8
                                     </Button>
-                                    {getBetForPosition(PlacementType.DOUBLE_STREET, second8Numbers) && (
-                                        <ButtonChip amount={getBetForPosition(PlacementType.DOUBLE_STREET, second8Numbers)!.amount} />
+                                    {getBetForPosition(PlacementType.HIGH_LOW, secondHigh) && (
+                                        <ButtonChip amount={getBetForPosition(PlacementType.HIGH_LOW, secondHigh)!.amount} />
                                     )}
                                 </div>
                             </div>
-                        </div>
 
-                        <Button
-                            variant="game-secondary"
-                            className="col-span-1 justify-center gap-4 w-full mt-2"
-                        >
-                            <span>
-                                17
-                            </span>
-                            {roundRecord.market[16]?.codeName}
-                        </Button>
+                            <div className="grid grid-cols-4 gap-2 mt-4">
+                                <div className="relative">
+                                    <Button
+                                        variant="game-secondary"
+                                        className="h-10 w-full"
+                                        onClick={() => handleSpecialBet(PlacementType.EVEN_ODD, evenNumbers)}
+                                    >
+                                        EVEN
+                                    </Button>
+                                    {getBetForPosition(PlacementType.EVEN_ODD, evenNumbers) && (
+                                        <ButtonChip amount={getBetForPosition(PlacementType.EVEN_ODD, evenNumbers)!.amount} />
+                                    )}
+                                </div>
+                                <div className="relative">
+                                    <Button
+                                        variant="game-secondary"
+                                        className="roulette-piece-black-select h-10 w-full"
+                                        onClick={() => handleSpecialBet(PlacementType.COLOR, blackNumbers)}
+                                    >
+                                        Black
+                                    </Button>
 
+                                    {getBetForPosition(PlacementType.COLOR, blackNumbers) && (
+                                        <ButtonChip amount={getBetForPosition(PlacementType.COLOR, blackNumbers)!.amount} />
+                                    )}
+                                </div>
+                                <div className="relative">
+                                    <Button
+                                        variant="game-secondary"
+                                        className="roulette-piece-red-select h-10 w-full"
+                                        onClick={() => handleSpecialBet(PlacementType.COLOR, redNumbers)}
+                                    >
+                                        Red
+                                    </  Button>
 
-                        <div className="grid grid-cols-2 gap-2 mt-2">
-                            <div className="relative">
-                                <Button
-                                    variant="game-secondary"
-                                    className="col-span-1 justify-center w-full"
-                                    onClick={() => handleBottomBet(first8Numbers)}
-                                >
-                                    1st 8
-                                </Button>
-                                {getBetForPosition(PlacementType.HIGH_LOW, first8Numbers) && (
-                                    <ButtonChip amount={getBetForPosition(PlacementType.HIGH_LOW, first8Numbers)!.amount} />
-                                )}
-                            </div>
-                            <div className="relative">
-                                <Button
-                                    variant="game-secondary"
-                                    className="col-span-1 justify-center w-full"
-                                    onClick={() => handleBottomBet(second8Numbers)}
-                                >
-                                    2nd 8
-                                </Button>
-                                {getBetForPosition(PlacementType.HIGH_LOW, second8Numbers) && (
-                                    <ButtonChip amount={getBetForPosition(PlacementType.HIGH_LOW, second8Numbers)!.amount} />
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-4 gap-2 mt-4">
-                            <div className="relative">
-                                <Button
-                                    variant="game-secondary"
-                                    className="h-10 w-full"
-                                    onClick={() => handleSpecialBet(PlacementType.EVEN_ODD, evenNumbers)}
-                                >
-                                    EVEN
-                                </Button>
-                                {getBetForPosition(PlacementType.EVEN_ODD, evenNumbers) && (
-                                    <ButtonChip amount={getBetForPosition(PlacementType.EVEN_ODD, evenNumbers)!.amount} />
-                                )}
-                            </div>
-                            <div className="relative">
-                                <Button
-                                    variant="game-secondary"
-                                    className="roulette-piece-black-select h-10 w-full"
-                                    onClick={() => handleSpecialBet(PlacementType.COLOR, blackNumbers)}
-                                />
-                                {getBetForPosition(PlacementType.COLOR, blackNumbers) && (
-                                    <ButtonChip amount={getBetForPosition(PlacementType.COLOR, blackNumbers)!.amount} />
-                                )}
-                            </div>
-                            <div className="relative">
-                                <Button
-                                    variant="game-secondary"
-                                    className="roulette-piece-red-select h-10 w-full"
-                                    onClick={() => handleSpecialBet(PlacementType.COLOR, redNumbers)}
-                                />
-                                {getBetForPosition(PlacementType.COLOR, redNumbers) && (
-                                    <ButtonChip amount={getBetForPosition(PlacementType.COLOR, redNumbers)!.amount} />
-                                )}
-                            </div>
-                            <div className="relative">
-                                <Button
-                                    variant="game-secondary"
-                                    className="h-10 w-full"
-                                    onClick={() => handleSpecialBet(PlacementType.EVEN_ODD, oddNumbers)}
-                                >
-                                    ODD
-                                </Button>
-                                {getBetForPosition(PlacementType.EVEN_ODD, oddNumbers) && (
-                                    <ButtonChip amount={getBetForPosition(PlacementType.EVEN_ODD, oddNumbers)!.amount} />
-                                )}
+                                    {getBetForPosition(PlacementType.COLOR, redNumbers) && (
+                                        <ButtonChip amount={getBetForPosition(PlacementType.COLOR, redNumbers)!.amount} />
+                                    )}
+                                </div>
+                                <div className="relative">
+                                    <Button
+                                        variant="game-secondary"
+                                        className="h-10 w-full"
+                                        onClick={() => handleSpecialBet(PlacementType.EVEN_ODD, oddNumbers)}
+                                    >
+                                        ODD
+                                    </Button>
+                                    {getBetForPosition(PlacementType.EVEN_ODD, oddNumbers) && (
+                                        <ButtonChip amount={getBetForPosition(PlacementType.EVEN_ODD, oddNumbers)!.amount} />
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div className='lg:w-6/12 flex justify-between flex-col '>
-                    <Tabs
-                        defaultValue={tab}
-                        onValueChange={(value) => setTab(value as SchedulerType)}
-                        className="w-full relative z-10"
-                    >
-                        <TabsList className="w-full hidden lg:flex h-10 p-1 bg-[#0F214F]">
-                            <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && '!cursor-not-allowed')} value="nse">NSE</TabsTrigger>
-                            <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
-                        </TabsList>
+                    <div className='lg:w-6/12 flex justify-between flex-col '>
+                        <Tabs
+                            defaultValue={tab}
+                            onValueChange={(value) => setTab(value as SchedulerType)}
+                            className="w-full relative z-10"
+                        >
+                            <TabsList className="w-full hidden lg:flex h-10 p-1 bg-[#0F214F]">
+                                <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && '!cursor-not-allowed')} value="nse">NSE</TabsTrigger>
+                                <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
+                            </TabsList>
 
-                        <GameHeader gameState={gameState} />
+                            <GameHeader gameState={gameState} />
 
-                        <BettingControls
-                            isLoading={isPlacingBet}
-                            betAmount={betAmount}
-                            onPlaceBet={handlePlaceBet}
-                            setBetAmount={setBetAmount}
-                            isPlaceOver={gameState.isPlaceOver}
-                        />
-                    </Tabs>
+                            <BettingControls
+                                isLoading={isPlacingBet}
+                                betAmount={betAmount}
+                                onPlaceBet={handlePlaceBet}
+                                setBetAmount={setBetAmount}
+                                isPlaceOver={gameState.isPlaceOver}
+                            />
+                        </Tabs>
+                    </div>
                 </div>
             </div>
-        </div>
+            <GameResultDialog key={String(showResults)} open={showResults} roundRecordId={previousRoundId!} />
+        </>
+
+
     );
 };
 

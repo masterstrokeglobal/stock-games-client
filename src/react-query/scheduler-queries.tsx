@@ -11,7 +11,7 @@ export const useCreateScheduler = () => {
             toast.success("Scheduler created successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error creating scheduler");
+            toast.error(error.response?.data.message ?? "Error creating scheduler");
         },
     });
 };

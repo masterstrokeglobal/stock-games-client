@@ -17,14 +17,11 @@ const HorseRaceEnvironment = ({
 }: Props) => {
     return (
         <>
-            <PerspectiveCamera onUpdate={(self)=>{console.log(self.position),
-                        self.position.y = 50;
-            }} makeDefault fov={75} zoom={9} position={[-300, 50, 250]}
-             />
+            <PerspectiveCamera makeDefault fov={75} zoom={9} position={[-300, 50, 250]} />
             <color attach="background" args={[0xf0f0f0]} />
             <Sky sunPosition={[100, 20, 100]} />
             <ambientLight intensity={0.3} />
-            <OrbitControls />
+            <OrbitControls   />
             <directionalLight color={0xffffff} intensity={0.8} position={[0, 5, 5]} />
             <Physics gravity={[0, -30, 0]}>
                 <Ground />
@@ -32,7 +29,7 @@ const HorseRaceEnvironment = ({
                 <FenceRow x={85} count={1000} spacing={16} />
                 <HorseAnimation roundRecord={roundRecord} />
             </Physics>
-       </>
+        </>
     );
 };
 

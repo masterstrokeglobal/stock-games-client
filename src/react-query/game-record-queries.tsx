@@ -36,7 +36,8 @@ export const useGetTopPlacements = (roundId:string) => {
     return useQuery({
         queryKey: ["topPlacements",roundId],
         queryFn:  () => gameRecordAPI.getTopPlacements(roundId),
-        staleTime: 1000 * 3, // 3 seconds
+        staleTime: 1000 * 3, // 
+        
     });
 };
 
