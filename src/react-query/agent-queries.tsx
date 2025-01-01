@@ -41,7 +41,7 @@ export const useCreateAgent = () => {
             toast.success("Agent created successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error creating agent");
+            toast.error(error.response?.data?.message ?? "Error creating agent");
         },
     });
 };
@@ -62,7 +62,7 @@ export const useUpdateAgent = () => {
             toast.success("Agent updated successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error updating agent");
+            toast.error(error.response?.data?.message ?? "Error updating agent");
         },
     });
 };

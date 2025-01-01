@@ -13,7 +13,7 @@ export const useCreateDepositRequest = () => {
             toast.success("Deposit request created successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error creating deposit request");
+            toast.error(error.response?.data?.message ?? "Error creating deposit request");
         },
     });
 };
@@ -29,7 +29,7 @@ export const useCreateWithdrawalRequest = () => {
             toast.success("Withdrawal request created successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error creating withdrawal request");
+            toast.error(error.response?.data?.message ?? "Error creating withdrawal request");
         },
     });
 };
@@ -72,7 +72,7 @@ export const useUpdateTransactionById = () => {
             toast.success("Transaction updated successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error updating transaction");
+            toast.error(error.response?.data?.message ?? "Error updating transaction");
         },
     });
 };
@@ -88,7 +88,7 @@ export const useConfirmWithdrawal = () => {
             toast.success("Withdrawal confirmed successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error confirming withdrawal");
+            toast.error(error.response?.data?.message ?? "Error confirming withdrawal");
         },
     });
 };

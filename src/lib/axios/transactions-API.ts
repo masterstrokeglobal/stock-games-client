@@ -24,6 +24,10 @@ export const transactionAPI = {
         return api.patch(`/payment/transaction/${transaction.id}`, transaction);
     },
 
+    // confirm a withdrawal by ID
+    confirmWithdrawal: async (transaction:Partial<Transaction>) => {
+        return api.patch(`/payment/confirm-withdrawal/${transaction.id}`, transaction);
+    },
     // Delete a transaction by ID
     deleteTransactionById: async (transactionId: number) => {
         return api.delete(`/transaction/${transactionId}`);

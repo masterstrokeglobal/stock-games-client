@@ -21,7 +21,11 @@ const HorseRaceEnvironment = ({
             <color attach="background" args={[0xf0f0f0]} />
             <Sky sunPosition={[100, 20, 100]} />
             <ambientLight intensity={0.3} />
-            <OrbitControls   />
+            <OrbitControls enableRotate={true}
+                maxPolarAngle={Math.PI / 2 - 0.1}
+                minPolarAngle={Math.PI / 2 - 0.1}
+                maxDistance={1000}
+            />
             <directionalLight color={0xffffff} intensity={0.8} position={[0, 5, 5]} />
             <Physics gravity={[0, -30, 0]}>
                 <Ground />

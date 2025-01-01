@@ -1,40 +1,72 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import LoadingScreen from "@/components/common/loading-screen";
 import TransactionEditForm from "@/components/features/transaction/transaction-form";
-import { useGetTransactionById, useUpdateTransactionById, } from "@/react-query/transactions-queries";
+import { useConfirmWithdrawal, useGetTransactionById, useUpdateTransactionById, } from "@/react-query/transactions-queries";
 import { useParams, useRouter } from "next/navigation";
+import { Transaction, TransactionType } from "@/models/transaction";
+import WithdrawalDetails from "@/components/features/transaction/withdrawl-details";
+import WithdrawDetailsRecord from "@/models/withdrawl-details";
 
 const EditTransactionPage = () => {
     const params = useParams();
     const { id } = params;
     const { data, isLoading, isSuccess } = useGetTransactionById(id.toString());
     const { mutate, isPending } = useUpdateTransactionById();
+    const { mutate: withdrawl, isPending: confirmPending } = useConfirmWithdrawal();
     const router = useRouter();
 
+    const transaction  = useMemo(() => {
+        return new Transaction(data?.data?.transaction);
+    }, [data]);
+
     const onSubmit = (updatedData: any) => {
-        mutate({
-            id,
-            ...updatedData,
-        }, {
-            onSuccess: () => {
-                router.push("/dashboard/transactions");
-            },
-        });
+
+        if (transaction.type == TransactionType.DEPOSIT){
+            mutate({
+                id,
+                ...updatedData,
+            }, {
+                onSuccess: () => {
+                    router.push("/dashboard/transactions");
+                },
+            });
+        };
+
+        if (transaction.type == TransactionType.WITHDRAWAL){
+            withdrawl({
+                id,
+                ...updatedData,
+            }, {
+                onSuccess: () => {
+                    router.push("/dashboard/transactions");
+                },
+            });
+        };
     };
+
+    const withdrawldetails = useMemo(() => {
+        return new WithdrawDetailsRecord(data?.data?.transaction.withdrawDetails);
+    }, [data]);
+
 
     if (isLoading) return <LoadingScreen>Loading transaction...</LoadingScreen>;
 
+    console.log("transaction", withdrawldetails);
+
     return (
-        isSuccess && data && (
-            <TransactionEditForm
-                transaction={data.data.transaction}
-                onSubmit={onSubmit}
-                isLoading={isPending}
-            />
-        )
+        <>
+            {withdrawldetails && <WithdrawalDetails withdrawDetails={withdrawldetails} />}
+            {isSuccess && data && (
+                <TransactionEditForm
+                    transaction={data.data.transaction}
+                    onSubmit={onSubmit}
+                    isLoading={isPending || confirmPending}
+                />)}
+        </>
     );
+
 };
 
 export default EditTransactionPage;

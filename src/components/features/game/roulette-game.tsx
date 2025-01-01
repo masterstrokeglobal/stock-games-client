@@ -182,14 +182,14 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     return (
         <>
-            <div className="max-w-4xl mx-auto lg:p-4 p-2 space-y-8">
+            <div className="max-w-4xl mx-auto lg:px-4 px-2 py-2  ">
                 <div className="relative rounded-xl lg:flex-row flex-col flex gap-8 border-brown-800">
                     <div className='lg:w-6/12'>
-                        <h1 className='text-xl lg:mb-2 mb-4 lg:text-left text-center text-white font-semibold'>
+                        <h1 className='text-xl lg:text-left text-center leading-none text-white font-semibold'>
                             {gameState.isPlaceOver ? "Betting Closed" : "Place Your Bets"}
                         </h1>
 
-                        <div className={cn("relative w-full max-w-4xl mx-auto", gameState.isPlaceOver ? 'cursor-not-allowed opacity-50' : 'cursor-crosshair')}>
+                        <div className={cn("relative w-full max-w-4xl mx-auto -mt-2", gameState.isPlaceOver ? 'cursor-not-allowed opacity-50' : 'cursor-crosshair')}>
                             <Tabs
                                 defaultValue={tab}
                                 onValueChange={(value) => setTab(value as SchedulerType)}

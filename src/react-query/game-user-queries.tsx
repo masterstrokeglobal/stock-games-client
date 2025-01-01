@@ -62,7 +62,7 @@ export const useForgotPasswordEmail = () => {
             toast.success("Email sent successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error sending email");
+            toast.error(error.response?.data?.message ?? "Error sending email");
         },
     });
 }
@@ -74,7 +74,7 @@ export const useVerifyForgotPassword = () => {
             toast.success("Password reset successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error resetting password");
+            toast.error(error.response?.data?.message ?? "Error resetting password");
         },
     });
 }
@@ -86,7 +86,7 @@ export const useForgotChangePassword = () => {
             toast.success("Password changed successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error changing password");
+            toast.error(error.response?.data?.message ?? "Error changing password");
         },
     });
 }
@@ -98,7 +98,7 @@ export const useGameUserVerify = () => {
             toast.success("User verified successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error verifying user");
+            toast.error(error.response?.data?.message ?? "Error verifying user");
         },
     });
 };
@@ -111,7 +111,7 @@ export const useGameUserResendOTP = () => {
             toast.success("OTP resent successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error resending OTP");
+            toast.error(error.response?.data?.message ?? "Error resending OTP");
         },
     });
 };
@@ -127,7 +127,7 @@ export const useGameUserUpdateById = () => {
             toast.success("User updated successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error updating user");
+            toast.error(error.response?.data?.message ?? "Error updating user");
         },
     });
 };
@@ -145,7 +145,7 @@ export const useGameUserDeleteById = () => {
             toast.success("User deleted successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error deleting user");
+            toast.error(error.response?.data?.message ?? "Error deleting user");
         },
     });
 };

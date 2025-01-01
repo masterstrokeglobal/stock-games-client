@@ -9,7 +9,7 @@ export const useCreateWithdrawDetail = () => {
             toast.success("Withdrawal detail created successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error creating withdrawal detail");
+            toast.error(error.response?.data?.message ?? "Error creating withdrawal detail");
         },
     });
 };
@@ -42,7 +42,7 @@ export const useUpdateWithdrawDetailById = () => {
             toast.success("Withdrawal detail updated successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error updating withdrawal detail");
+            toast.error(error.response?.data?.message ?? "Error updating withdrawal detail");
         },
     });
 };
@@ -61,7 +61,7 @@ export const useDeleteWithdrawDetailById = () => {
             toast.success("Withdrawal detail deleted successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error deleting withdrawal detail");
+            toast.error(error.response?.data?.message ?? "Error deleting withdrawal detail");
         },
     });
 };

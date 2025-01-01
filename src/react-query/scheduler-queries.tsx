@@ -37,7 +37,7 @@ export const useUpdateSchedulerById = () => {
             toast.success("Scheduler updated successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error updating scheduler");
+            toast.error(error.response?.data?.message ?? "Error updating scheduler");
         },
     });
 };

@@ -9,7 +9,7 @@ export const useCreateAdmin = () => {
             toast.success("Admin created successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error creating admin");
+            toast.error(error.response?.data?.message ?? "Error creating admin");
         },
     });
 };
@@ -42,7 +42,7 @@ export const useUpdateAdminById = () => {
             toast.success("Admin updated successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error updating admin");
+            toast.error(error.response?.data?.message ?? "Error updating admin");
         },
     });
 };
@@ -61,7 +61,7 @@ export const useDeleteAdminById = () => {
             toast.success("Admin deleted successfully");
         },
         onError: (error: any) => {
-            toast.error(error.response?.data.error ?? "Error deleting admin");
+            toast.error(error.response?.data?.message ?? "Error deleting admin");
         },
     });
 };
