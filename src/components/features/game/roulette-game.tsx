@@ -225,7 +225,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                             className="h-full w-10 flex items-center justify-center relative"
                                             onClick={() => handleSideBet(first8Numbers)}
                                         >
-                                            <span className="rotate-text">1st 8</span>
+                                            <span className="rotate-text">1 to 8</span>
                                         </Button>
                                         {getBetForPosition(PlacementType.DOUBLE_STREET, first8Numbers) && (
                                             <ButtonChip amount={getBetForPosition(PlacementType.DOUBLE_STREET, first8Numbers)!.amount} />
@@ -237,7 +237,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                             className="h-full w-10 flex items-center justify-center relative"
                                             onClick={() => handleSideBet(second8Numbers)}
                                         >
-                                            <span className="rotate-text">2nd 8</span>
+                                            <span className="rotate-text">9 to 16</span>
                                         </Button>
                                         {getBetForPosition(PlacementType.DOUBLE_STREET, second8Numbers) && (
                                             <ButtonChip amount={getBetForPosition(PlacementType.DOUBLE_STREET, second8Numbers)!.amount} />
@@ -264,7 +264,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                         className="col-span-1 justify-center w-full"
                                         onClick={() => handleBottomBet(firstHigh)}
                                     >
-                                        1st 8
+                                        Column (1-14)
                                     </Button>
                                     {getBetForPosition(PlacementType.HIGH_LOW, firstHigh) && (
                                         <ButtonChip amount={getBetForPosition(PlacementType.HIGH_LOW, firstHigh)!.amount} />
@@ -276,7 +276,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                         className="col-span-1 justify-center w-full"
                                         onClick={() => handleBottomBet(secondHigh)}
                                     >
-                                        2nd 8
+                                        Column (3-16)
                                     </Button>
                                     {getBetForPosition(PlacementType.HIGH_LOW, secondHigh) && (
                                         <ButtonChip amount={getBetForPosition(PlacementType.HIGH_LOW, secondHigh)!.amount} />
