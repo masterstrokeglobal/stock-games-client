@@ -17,7 +17,7 @@ const DepositFormPage = () => {
         data.amount = parseInt(data.amount.toString());
         mutate(data, {
             onSuccess: () => {
-                router.push('/game/profile');
+                router.push('/game/user-menu');
             },
             onError: () => {
                 console.log('Error creating deposit request');
