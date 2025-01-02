@@ -92,16 +92,16 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
               <div className="space-y-4">
                 <div className="text-center  flex justify-between  rounded-lg">
                   <p className="">Total Bet Amount</p>
-                  <p className="text-xl ">${resultData.totalBetAmount}</p>
+                  <p className="text-xl ">₹{resultData.totalBetAmount}</p>
                 </div>
                 <div className="text-center  flex justify-between rounded-lg">
                   <p className="">Total Winnings</p>
-                  <p className="text-xl ">${resultData.totalWinnings}</p>
+                  <p className="text-xl ">₹{resultData.totalWinnings}</p>
                 </div>
                 <div className="text-center flex justify-between  rounded-lg">
                   <p className="">Profit/Loss</p>
                   <p className={`text-xl  ${isWin ? 'text-green-600' : 'text-red-600'}`}>
-                    ${resultData.profit}
+                  ₹{resultData.profit}
                   </p>
                 </div>
               </div>
