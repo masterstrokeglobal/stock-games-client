@@ -66,7 +66,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                         {leaderboardData.map((crypto, index) => (
                             <tr
                                 key={index}
-                                className="border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden"
+                                className={cn("border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden",index === 0 ? "bg-[#ffb71a]/30" : "")}
                             >
                                 <td className="p-2 w-12 text-gray-300">
                                     {index === 0 ? (
@@ -92,7 +92,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                                     )}
                                 </td>
                                 <td className="p-2 text-sm text-gray-300">
-                                    {crypto.horse}
+                                    {crypto.horse ==17 ?0:crypto.horse}
                                 </td>
                                 <td className="p-2 text-sm text-gray-300">
                                     {crypto.name}

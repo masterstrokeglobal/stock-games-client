@@ -113,7 +113,7 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
                     ref={(el) => {
                         horsesRef.current[index] = el as unknown as THREE.Object3D | null;
                     }}
-                    number={horse.horseNumber!}
+                    number={horse.horseNumber==17?0:horse.horseNumber!}
                     color={HORSE_COLORS[index % HORSE_COLORS.length]}
                     position={horse.position as any}
                     scale={horse.scale as any}

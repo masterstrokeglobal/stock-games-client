@@ -88,7 +88,7 @@ const CurrentBets = ({ className, round }: Props) => {
                         <thead>
                             <tr className="flex">
                                 <th className="p-2 text-sm text-left text-gray-300 rounded-tl-lg flex-1">
-                                    Crypto
+                                    Bets
                                 </th>
                                 <th className="p-2 text-sm text-left text-gray-300 flex-1">
                                     User ID

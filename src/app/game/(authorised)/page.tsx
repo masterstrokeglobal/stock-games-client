@@ -73,8 +73,8 @@ const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
                 {roundRecord && <CurrentBets round={roundRecord} />}
             </div>
         </main>}
-        {isPlaceOver && <RouletteGame roundRecord={roundRecord} />}
         {isPlaceOver && <LeaderBoard roundRecord={roundRecord} />}
+        {isPlaceOver && <RouletteGame roundRecord={roundRecord} />}
     </section>
 }
 

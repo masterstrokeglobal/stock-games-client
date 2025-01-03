@@ -17,13 +17,13 @@ const EditTransactionPage = () => {
     const { mutate: withdrawl, isPending: confirmPending } = useConfirmWithdrawal();
     const router = useRouter();
 
-    const transaction  = useMemo(() => {
+    const transaction = useMemo(() => {
         return new Transaction(data?.data?.transaction);
     }, [data]);
 
     const onSubmit = (updatedData: any) => {
 
-        if (transaction.type == TransactionType.DEPOSIT){
+        if (transaction.type == TransactionType.DEPOSIT) {
             mutate({
                 id,
                 ...updatedData,
@@ -34,7 +34,7 @@ const EditTransactionPage = () => {
             });
         };
 
-        if (transaction.type == TransactionType.WITHDRAWAL){
+        if (transaction.type == TransactionType.WITHDRAWAL) {
             withdrawl({
                 id,
                 ...updatedData,
@@ -47,6 +47,7 @@ const EditTransactionPage = () => {
     };
 
     const withdrawldetails = useMemo(() => {
+        if (transaction.type != TransactionType.WITHDRAWAL) return null;
         return new WithdrawDetailsRecord(data?.data?.transaction.withdrawDetails);
     }, [data]);
 
