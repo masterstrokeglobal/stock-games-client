@@ -22,8 +22,9 @@ const Navbar = () => {
     return (
         <nav className="items-center md:px-6 px-4 z-50  flex fixed top-0 justify-between text-white font-semibold w-full h-16 bg-primary-game ">
             <div className="">
-                <span className="md:text-xl text-sm font-semibold">
+                <span className="md:text-xl text-sm font-semibold flex items-end">
                     <Logo />
+                 
                 </span>
             </div>
             <div className="flex items-center space-x-4 ml-auto">
