@@ -105,7 +105,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
         }]);
     };
 
-    // Handler for bottom bets using COLUMN type
+/*     // Handler for bottom bets using COLUMN type
     const handleBottomBet = (numbers: number[]) => {
         if (gameState.isPlaceOver) return;
 
@@ -121,7 +121,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
             position,
         }]);
     };
-
+ */
     const handleSpecialBet = (betType: PlacementType, numbers: number[]) => {
         if (gameState.isPlaceOver) return;
 
@@ -137,7 +137,6 @@ const RouletteGame = ({ roundRecord }: Props) => {
             position,
         }]);
     };
-
     const handlePlaceBet = () => {
         const chip = chips[0];
         if (!chip) return;
@@ -159,10 +158,10 @@ const RouletteGame = ({ roundRecord }: Props) => {
     // Get all numbers for specific sections and other bets
     const first8Numbers = Array.from({ length: 8 }, (_, i) => i + 1);
     const second8Numbers = Array.from({ length: 8 }, (_, i) => i + 1 + 8);
-    const firstHigh = [1, 2, 5, 6, 9, 10, 13, 14];
+/*     const firstHigh = [1, 2, 5, 6, 9, 10, 13, 14];
     const secondHigh = [3, 4, 7, 8, 11, 12, 15, 16]
     const redNumbers = [1, 3, 5, 7, 9, 11, 13, 15];
-    const blackNumbers = [2, 4, 6, 8, 10, 12, 14, 16];
+    const blackNumbers = [2, 4, 6, 8, 10, 12, 14, 16]; */
     const evenNumbers = Array.from({ length: 8 }, (_, i) => (i + 1) * 2);
     const oddNumbers = Array.from({ length: 8 }, (_, i) => (i * 2) + 1);
 
@@ -185,11 +184,11 @@ const RouletteGame = ({ roundRecord }: Props) => {
             <div className="max-w-4xl mx-auto lg:px-4 px-2 py-2  ">
                 <div className="relative rounded-xl lg:flex-row flex-col flex gap-8 border-brown-800">
                     <div className='lg:w-6/12'>
-                        <h1 className='text-xl lg:text-left text-center leading-none text-white font-semibold'>
+                        <h1 className='text-xl lg:text-left text-center mt-2 mb-4 leading-none text-white font-semibold'>
                             {gameState.isPlaceOver ? "Betting Closed" : "Place Your Bets"}
                         </h1>
 
-                        <div className={cn("relative w-full max-w-4xl mx-auto -mt-2", gameState.isPlaceOver ? 'cursor-not-allowed opacity-50' : 'cursor-crosshair')}>
+                        <div className={cn("relative w-full max-w-4xl mx-auto ", gameState.isPlaceOver ? 'cursor-not-allowed opacity-50' : 'cursor-crosshair')}>
                             <Tabs
                                 defaultValue={tab}
                                 onValueChange={(value) => setTab(value as SchedulerType)}
@@ -251,13 +250,13 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                 className="col-span-1 justify-center gap-4 w-full mt-2"
                             >
                                 <span>
-                                    17
+                                    0
                                 </span>
                                 {roundRecord.market[16]?.codeName}
                             </Button>
 
 
-                            <div className="grid grid-cols-2 gap-2 mt-2">
+                    {/*         <div className="grid grid-cols-2 gap-2 mt-2">
                                 <div className="relative">
                                     <Button
                                         variant="game-secondary"
@@ -283,8 +282,8 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                     )}
                                 </div>
                             </div>
-
-                            <div className="grid grid-cols-4 gap-2 mt-4">
+ */}
+                            <div className="grid grid-cols-2 gap-2 mt-4">
                                 <div className="relative">
                                     <Button
                                         variant="game-secondary"
@@ -297,7 +296,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                         <ButtonChip amount={getBetForPosition(PlacementType.EVEN_ODD, evenNumbers)!.amount} />
                                     )}
                                 </div>
-                                <div className="relative">
+{/*                                 <div className="relative">
                                     <Button
                                         variant="game-secondary"
                                         className="roulette-piece-black-select h-10 w-full"
@@ -322,7 +321,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                     {getBetForPosition(PlacementType.COLOR, redNumbers) && (
                                         <ButtonChip amount={getBetForPosition(PlacementType.COLOR, redNumbers)!.amount} />
                                     )}
-                                </div>
+                                </div> */}
                                 <div className="relative">
                                     <Button
                                         variant="game-secondary"
