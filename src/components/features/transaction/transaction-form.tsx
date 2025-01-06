@@ -55,6 +55,7 @@ const TransactionEditForm = ({ transaction, onSubmit, isLoading }: TransactionEd
                             <FormSelect
                                 control={control}
                                 name="status"
+                                defaultValue={TransactionStatus.COMPLETED.toString()}
                                 label="Change Status"
                                 options={[
                                     { label: "Completed", value: TransactionStatus.COMPLETED.toString() },
