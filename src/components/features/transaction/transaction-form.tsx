@@ -26,7 +26,7 @@ type TransactionEditProps = {
 const TransactionEditForm = ({ transaction, onSubmit, isLoading }: TransactionEditProps) => {
     const form = useForm<TransactionFormValues>({
         resolver: zodResolver(transactionEditSchema),
-        defaultValues: { status: transaction.status },
+        defaultValues: { status: TransactionStatus.FAILED},
     });
 
 
