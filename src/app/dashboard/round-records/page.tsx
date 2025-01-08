@@ -16,33 +16,38 @@ import {
 import { timeOptions } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
-import { useGetAllRoundRecords } from "@/react-query/round-record-queries";
+import { useGetWinningReport } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 type Filter = {
     startDate?: Date;
     endDate?: Date;
     timeFrom?: string;
+    timeTo?: string;
 }
 
 const RoundRecordTable = () => {
     const [page, setPage] = useState(1);
-    const [type, setType] = useState<string | "">("");
-    const [filter, setFilter] = useState<Filter>({});
+    const [type, setType] = useState<string>(SchedulerType.NSE);
+    const [filter, setFilter] = useState<Filter>({
+        startDate: dayjs().subtract(1, "week").toDate(),
+        endDate: new Date(),
+        timeFrom: "all",
+        timeTo: "all",
+    });
 
     // Fetch all round records with pagination, search query, and filters
-    const { data, isSuccess, isFetching } = useGetAllRoundRecords({
+    const { data, isSuccess, isFetching } = useGetWinningReport({
         page: page,
-        type: type === "all" ? "" : type,
+        type: type === "all" ? undefined : type,
         startTime: filter.startDate,
         endTime: filter.endDate,
     });
 
-    // Map the fetched data into RoundRecord model instances
     const roundRecords = useMemo(() => {
-        if (isSuccess && data?.data?.roundRecords) {
-            return Array.from(data.data.roundRecords).map(
+        if (isSuccess && data?.data?.rounds) {
+            return Array.from(data.data.rounds).map(
                 (record: any) => new RoundRecord(record)
             );
         }
@@ -60,18 +65,6 @@ const RoundRecordTable = () => {
         setPage(newPage);
     };
 
-    const handleDateChange = (date: Date | undefined) => {
-        if (date) {
-            const startDate = dayjs(date).startOf("day").toDate();
-            const endDate = dayjs(date).endOf("day").toDate();
-            setFilter({
-                startDate: startDate,
-                endDate: endDate,
-            });
-        } else {
-            setFilter({});
-        }
-    }
 
     return (
         <section className="container-main min-h-[60vh] my-12">
@@ -84,7 +77,7 @@ const RoundRecordTable = () => {
                     )} />
 
                     {/* ShadCN Select for Scheduler Type Filter */}
-                    <Select value={type} onValueChange={(val) => setType(val)}>
+                    <Select value={type} onValueChange={(val) => setType(val as SchedulerType)}>
                         <SelectTrigger>
                             <SelectValue placeholder="All Types" />
                         </SelectTrigger>
