@@ -64,7 +64,9 @@ const LeaderBoard = ({ roundRecord }: Props) => {
         return "text-gray-300";
     };
 
+    const winnerMarketItem = leaderboardData.find((item) => item.horse === winnerNumber);
 
+    console.log('winnerNumber', winnerNumber);
 
     return (
         <section
@@ -90,28 +92,54 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {leaderboardData.map((marketItem, index) => (
+                        {winnerMarketItem && (
+                            <tr className="border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden">
+                                <td className="p-2  text-gray-300">
+                                    <img src="/rank-1.svg" alt="Rank 1" className="w-8 h-8" />
+                                </td>
+                                <td className="p-2  text-gray-300">
+                                    {winnerMarketItem.horse}
+                                </td>
+                                <td className="p-2  text-gray-300">
+                                    {winnerMarketItem.name}
+                                </td>
+                                <td className="p-2  text-right text-gray-300">
+                                    {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : "Rs."}
+                                    {winnerMarketItem.price ? formatPrice(winnerMarketItem.price) : "-"}
+                                </td>
+                                <td className={cn(
+                                    "p-2  text-right",
+                                    getChangeColor(winnerMarketItem.change_percent)
+                                )}>
+                                    {parseFloat(winnerMarketItem.change_percent) > 0 ? '+' : ''}
+                                    {winnerMarketItem.change_percent ?? 0}%</td>
+                            </tr>
+                        )}
+                       
+                        {leaderboardData.filter((item) => item.horse !== winnerNumber).map((marketItem, index) => (
                             <tr
                                 key={index}
                                 className={cn("border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden", index === 0 ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm")}
                             >
                                 <td className="p-2  text-gray-300">
-                                
-                                {(index === 0 && winnerNumber == 0) ? (
-                                    <img
-                                        src="/rank-1.svg"
-                                        alt="Rank 1"
-                                        className="w-8 h-8"
-                                    />
-                                ) : winnerNumber == marketItem.horse ? (
-                                    <img
-                                        src="/rank-1.svg"
-                                        alt="Rank 1"
-                                        className="size-8"
-                                    />
-                                ) : (
-                                    <span className="text-[#8990A2]">{index + 1}</span>
-                                )}
+
+                                    {(index === 0 && winnerNumber == 0) ? (
+                                        <img
+                                            src="/rank-1.svg"
+                                            alt="Rank 1"
+                                            className="w-8 h-8"
+                                        />
+                                    ) : winnerNumber == marketItem.horse ? (
+                                        <img
+                                            src="/rank-1.svg"
+                                            alt="Rank 1"
+                                            className="size-8"
+                                        />
+                                    ) : (
+                                        <span className="text-[#8990A2]">
+                                            {winnerNumber == 0 ? (index + 1) : "-"}
+                                        </span>
+                                    )}
                                 </td>
                                 <td className="p-2  text-gray-300">
                                     {marketItem.horse == 17 ? 0 : marketItem.horse}

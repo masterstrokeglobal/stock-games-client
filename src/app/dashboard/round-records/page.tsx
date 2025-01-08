@@ -29,7 +29,6 @@ type Filter = {
 const RoundRecordTable = () => {
     const [page, setPage] = useState(1);
     const [type, setType] = useState<string | "">("");
-
     const [filter, setFilter] = useState<Filter>({});
 
     // Fetch all round records with pagination, search query, and filters
@@ -37,7 +36,7 @@ const RoundRecordTable = () => {
         page: page,
         type: type === "all" ? "" : type,
         startTime: filter.startDate,
-        endDate: filter.endDate,
+        endTime: filter.endDate,
     });
 
     // Map the fetched data into RoundRecord model instances
@@ -79,10 +78,13 @@ const RoundRecordTable = () => {
             <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between">
                 <h2 className="text-xl font-semibold">Round Records</h2>
                 <div className="flex gap-5">
-                    <DatePicker value={filter.startDate} onSelect={(date) => handleDateChange(date)} />
+                    <DatePicker value={filter.startDate} onSelect={(date) => setFilter({ ...filter, startDate: date })} />
+                    <DatePicker value={filter.endDate} onSelect={(date) => setFilter(
+                        { ...filter, endDate: date }
+                    )} />
 
                     {/* ShadCN Select for Scheduler Type Filter */}
-                    <Select value={type} onValueChange={(val) => setType(val as SchedulerType)}>
+                    <Select value={type} onValueChange={(val) => setType(val)}>
                         <SelectTrigger>
                             <SelectValue placeholder="All Types" />
                         </SelectTrigger>
