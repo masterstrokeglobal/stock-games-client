@@ -8,17 +8,33 @@ import { Button } from "@/components/ui/button";
 import DataTable from "@/components/ui/data-table-server";
 import { Input } from "@/components/ui/input";
 import { useGetMarketItems } from "@/react-query/market-item-queries"; // You'll need to create this
-import { MarketItem } from "@/models/market-item";
+import { MarketItem, SchedulerType } from "@/models/market-item";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 
 const MarketItemTable = () => {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
+    const [type, setType] = useState<string | "">("all");
+    const [active, setActive] = useState<string | "">("all");
+    const [placementAllowed, setPlacementAllowed] = useState<string | "">("all");
+
 
     const { data, isSuccess, isFetching } = useGetMarketItems({
         page: page,
+        type: type === "all" ? undefined : type,
+        active: active === "all" ? undefined : active,
+        placementAllowed: placementAllowed === "all" ? undefined : placementAllowed,
         search: search,
-        limit:10
+        limit: 10
     });
 
     const marketItems = useMemo(() => {
@@ -56,15 +72,62 @@ const MarketItemTable = () => {
                             className="pl-10"
                         />
                     </div>
-                    <Link href="/dashboard/market-items/create">
-                        <Button>
-                            <Plus
-                                size={18}
-                                className="mr-2 bg-white text-primary p-px rounded-full"
-                            />
-                            Create Market Item
-                        </Button>
-                    </Link>
+                    <div className="flex gap-4">
+
+                        {/* ShadCN Select for Scheduler Type Filter */}
+                        <Select value={type} defaultValue="all"  onValueChange={(val) => {
+                            setType(val as SchedulerType)
+                            setPage(1)
+                        }}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="All Types" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectLabel>Types</SelectLabel>
+                                    <SelectItem value="all">All Types</SelectItem>
+                                    <SelectItem value={SchedulerType.NSE}>NSE</SelectItem>
+                                    <SelectItem value={SchedulerType.CRYPTO}>Crypto</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+
+                        <Select value={active} defaultValue="all"  onValueChange={(val) => setActive(val)}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="All Types" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem value="all">All </SelectItem>
+                                    <SelectItem value={"true"}>Active</SelectItem>
+                                    <SelectItem value={"false"}>Inactive</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+
+                        <Select value={placementAllowed} defaultValue="all" onValueChange={(val) => setPlacementAllowed(val)}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem value="all">All Horses</SelectItem>
+                                    <SelectItem value={"false"}>Zero Position</SelectItem>
+                                    <SelectItem value={"true"}> Non-Zero Positions</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+
+                        <Link href="/dashboard/market-items/create">
+                            <Button>
+                                <Plus
+                                    size={18}
+                                    className="mr-2 bg-white text-primary p-px rounded-full"
+                                />
+                                Create Market Item
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
             </header>
             <main className="mt-4">

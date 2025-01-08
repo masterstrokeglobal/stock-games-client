@@ -19,5 +19,10 @@ export const gameRecordAPI = {
     return api.get("/game-records/my-placements",{
       params: filter
     });
+  },
+  getGameRecordHistory: async (filter:any) => {
+    return api.get("/game-records/history",{
+      params: filter
+    });
   }
 };

@@ -12,6 +12,7 @@ export class MarketItem {
     oddsMultiplier?: number;
     code?: string;
     createdAt?: Date;
+    placementAllowed?: boolean;
     updatedAt?: Date;
     deletedAt?: Date;
     horse?: number;
@@ -24,6 +25,7 @@ export class MarketItem {
         this.oddsMultiplier = params.oddsMultiplier;
         this.code = params.code;
         this.createdAt = params.createdAt;
+        this.placementAllowed = params.placementAllowed;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;
         this.horse = params.horse;

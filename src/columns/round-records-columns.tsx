@@ -65,6 +65,15 @@ const roundRecordColumns: ColumnDef<RoundRecord>[] = [
         ),
     },
     {
+        header: "WINNER",
+        accessorKey: "winnerName",
+        cell: ({ row }) => (
+            <span className="text-[#6B7280]">
+                {row.original.winnerName}
+            </span>
+        ),
+    },
+    {
         header: "CREATED ON",
         accessorKey: "createdAt",
         cell: ({ row }) => (

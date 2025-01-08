@@ -7,7 +7,14 @@ export const marketItemAPI = {
     },
 
     getMarketItems: async (filter?: SearchFilters) => {
-        return api.get("/market-items", { params: filter });
+        const sanitizedFilter: any = {};
+
+        Object.entries(filter ?? {}).forEach(([key, value]) => {
+            if (value) {
+                sanitizedFilter[key] = value;
+            }
+        });
+        return api.get("/market-items", { params: sanitizedFilter });
     },
     getMarketItemById: async (id: string) => {
         return api.get(`/market-items/${id}`);

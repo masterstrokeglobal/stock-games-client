@@ -23,13 +23,21 @@ export class RoundRecord {
         this.endTime = data.endTime ? new Date(data.endTime) : new Date();
         this.placementStartTime = data.placementStartTime ? new Date(data.placementStartTime) : new Date();
         this.placementEndTime = data.placementEndTime ? new Date(data.placementEndTime) : new Date();
-        this.market = data.market?.sort((a, b) => b.id! - a.id!).map((item: any, index) => new MarketItem({ ...item, horse: index + 1 })) || [];
+        this.market = data.market?.map((item: any, index) => new MarketItem({ ...item, horse: index + 1 })) || [];
         this.type = data.type || SchedulerType.NSE;
         this.winningId = data.winningId;
         this.createdAt = data.createdAt ? new Date(data.createdAt) : new Date();
         this.updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
         this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : undefined;
         this.initialValues = data.initialValues || null;
+    }
+
+    get winnerName(): string {
+        return this.market.find(item => item.id === this.winningId)?.name || "-";
+    }
+
+    get winnerHorse(): number {
+        return this.market.find(item => item.id === this.winningId)?.horse || 0;
     }
 
     // Helper method to serialize the instance to a plain object

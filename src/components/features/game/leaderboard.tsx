@@ -5,7 +5,8 @@ import { useLeaderboard } from "@/hooks/use-leadboard";
 import { cn } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
-import { useEffect, useRef, useState } from "react";
+import { useGetRoundRecordById } from "@/react-query/round-record-queries";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 // Enhanced interface for ranked market items
 type Props = {
@@ -17,6 +18,30 @@ const LeaderBoard = ({ roundRecord }: Props) => {
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
 
+
+    const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord.id);
+
+    useEffect(() => {
+        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 4000;
+
+        const timer = setTimeout(() => {
+            console.log('refetching');
+            refetch();
+        }, resultFetchTime);
+
+        return () => clearTimeout(timer);
+    }, [roundRecord, refetch]);
+
+    const winnerNumber = useMemo(() => {
+        if (!isSuccess) return null;
+        const winningId = data.data?.winningId;
+
+        if (!winningId) return 0;
+
+        const winningNumber = roundRecord.market.find((item) => item.id === winningId);
+        if (!winningNumber) return null;
+        return winningNumber.horse;
+    }, [data, isSuccess]);
 
     useEffect(() => {
         if (sectionRef.current) {
@@ -38,6 +63,8 @@ const LeaderBoard = ({ roundRecord }: Props) => {
         if (change < 0) return "text-red-500";
         return "text-gray-300";
     };
+
+
 
     return (
         <section
@@ -63,50 +90,45 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {leaderboardData.map((crypto, index) => (
+                        {leaderboardData.map((marketItem, index) => (
                             <tr
                                 key={index}
-                                className={cn("border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden",index === 0 ? "bg-[#ffb71a]/30" : "")}
+                                className={cn("border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden", index === 0 ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm")}
                             >
-                                <td className="p-2 w-12 text-gray-300">
-                                    {index === 0 ? (
-                                        <img
-                                            src="/rank-1.svg"
-                                            alt="Rank 1"
-                                            className="w-6 h-6"
-                                        />
-                                    ) : index === 1 ? (
-                                        <img
-                                            src="/rank-2.svg"
-                                            alt="Rank 2"
-                                            className="w-6 h-6"
-                                        />
-                                    ) : index === 2 ? (
-                                        <img
-                                            src="/rank-3.svg"
-                                            alt="Rank 3"
-                                            className="w-6 h-6"
-                                        />
-                                    ) : (
-                                        <span className="text-[#8990A2]">{index + 1}</span>
-                                    )}
+                                <td className="p-2  text-gray-300">
+                                
+                                {(index === 0 && winnerNumber == 0) ? (
+                                    <img
+                                        src="/rank-1.svg"
+                                        alt="Rank 1"
+                                        className="w-8 h-8"
+                                    />
+                                ) : winnerNumber == marketItem.horse ? (
+                                    <img
+                                        src="/rank-1.svg"
+                                        alt="Rank 1"
+                                        className="size-8"
+                                    />
+                                ) : (
+                                    <span className="text-[#8990A2]">{index + 1}</span>
+                                )}
                                 </td>
-                                <td className="p-2 text-sm text-gray-300">
-                                    {crypto.horse ==17 ?0:crypto.horse}
+                                <td className="p-2  text-gray-300">
+                                    {marketItem.horse == 17 ? 0 : marketItem.horse}
                                 </td>
-                                <td className="p-2 text-sm text-gray-300">
-                                    {crypto.name}
+                                <td className="p-2  text-gray-300">
+                                    {marketItem.name}
                                 </td>
-                                <td className="p-2 text-sm text-right text-gray-300">
+                                <td className="p-2  text-right text-gray-300">
                                     {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : "Rs."}
-                                    {crypto.price ? formatPrice(crypto.price) : "-"}
+                                    {marketItem.price ? formatPrice(marketItem.price) : "-"}
                                 </td>
                                 <td className={cn(
-                                    "p-2 text-sm text-right",
-                                    getChangeColor(crypto.change_percent)
+                                    "p-2  text-right",
+                                    getChangeColor(marketItem.change_percent)
                                 )}>
-                                    {parseFloat(crypto.change_percent) > 0 ? '+' : ''}
-                                    {crypto.change_percent ?? 0}%
+                                    {parseFloat(marketItem.change_percent) > 0 ? '+' : ''}
+                                    {marketItem.change_percent ?? 0}%
                                 </td>
                             </tr>
                         ))}

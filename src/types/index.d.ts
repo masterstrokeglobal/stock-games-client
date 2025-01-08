@@ -15,6 +15,9 @@ type SelectOption = { value: string; label: string }
 
 type SearchFilters = {
     page: number;
+    active?: string;
+    placementAllowed?: string;
     search: string;
-    limit?:number;
+    type?: string;
+    limit?: number;
 };
