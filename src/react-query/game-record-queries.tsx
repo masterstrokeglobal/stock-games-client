@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { gameRecordAPI } from "@/lib/axios/game-record-API"; // Adjust the path as needed
 
@@ -11,12 +11,12 @@ export const useCreateGameRecord = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({
                 predicate: (query) =>
-                 query.queryKey[0] === "winningGameRecord" ||
+                    query.queryKey[0] === "winningGameRecord" ||
                     query.queryKey[0] === "topPlacements" ||
                     query.queryKey[0] === "myPlacements" ||
                     query.queryKey[0] === "user" && query.queryKey[1] == 'wallet',
             });
-            toast.success("Game record created successfully");
+            toast.success("Bet placed successfully");
         },
         onError: (error: any) => {
             toast.error(error.response?.data.message ?? "Error creating game record");
@@ -32,19 +32,38 @@ export const useGetWinningGameRecord = () => {
 };
 
 // Get Top Placements Hook
-export const useGetTopPlacements = (roundId:string) => {
+export const useGetTopPlacements = (roundId: string) => {
     return useQuery({
-        queryKey: ["topPlacements",roundId],
-        queryFn:  () => gameRecordAPI.getTopPlacements(roundId),
+        queryKey: ["topPlacements", roundId],
+        queryFn: () => gameRecordAPI.getTopPlacements(roundId),
         staleTime: 1000 * 3, // 
-        
+
     });
 };
 
 // Get My Placements Hook
 export const useGetMyPlacements = (filter: any) => {
     return useQuery({
-        queryKey: ["myPlacements",filter],
+        queryKey: ["myPlacements", filter],
         queryFn: () => gameRecordAPI.getMyPlacements(filter),
+    });
+};
+
+// Get Game Record History Hook infinite query page and limit 
+export const useGameRecordHistory = (params: any) => {
+    return useInfiniteQuery({
+        queryKey: ["gameRecordHistory", params],
+        queryFn: ({ pageParam = params.page }) => {
+
+            return gameRecordAPI.getGameRecordHistory({
+                ...params,
+                page: pageParam,
+            });
+        },
+        getNextPageParam: (lastPage: any, _, allPageParams) => {
+            if (!lastPage.data?.count) return undefined;
+            return lastPage.data.count > params.limit * params.page ? allPageParams + 1 : undefined;
+        },
+        initialPageParam: params.page,
     });
 };

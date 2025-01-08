@@ -72,10 +72,9 @@ export const useCurrentGame = (): {
         const timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 13000;
 
         const gameEnd = setTimeout(() => {
-            console.log('game end');
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements';
+                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' ||  query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
                 },
             });
         }, timeToGameEnd);
@@ -83,7 +82,7 @@ export const useCurrentGame = (): {
         const placeEnd = setTimeout(() => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements';
+                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' ||  query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
                 },
             });
         }, timeToPlace);
@@ -221,12 +220,10 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: {
                 setShowResults(false);
                 if (roundRecord.id !== previousRoundId) {
                     setPreviousRoundId(roundRecord.id);
-                    console.log('refetching');
                 }
             }
 
             if (now >= adjustedEndTime && bettedChips.length > 0) {
-                console.log('showing results', now >= adjustedEndTime, bettedChips);
                 setShowResults(true);
             }
         };

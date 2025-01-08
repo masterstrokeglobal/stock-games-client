@@ -1,3 +1,5 @@
+import { RoundRecord } from "./round-record";
+
 class GameRecord {
     id?: number;
     roundId: number;
@@ -7,6 +9,7 @@ class GameRecord {
     placementType: PlacementType;
     market: number[];
     createdAt: Date;
+    round?: RoundRecord;
     updatedAt: Date;
     deletedAt?: Date;
 
@@ -19,6 +22,7 @@ class GameRecord {
         this.placementType = params.placementType!;
         this.market = params.market!;
         this.createdAt = params.createdAt!;
+        this.round = params.round;
         this.updatedAt = params.updatedAt!;
         this.deletedAt = params.deletedAt;
     }

@@ -66,10 +66,6 @@ const RoundRecordCard: FC<RoundRecordCardProps> = ({ roundRecord }) => {
                         <span className="block font-medium">Updated At</span>
                         <p>{formatDateTime(roundRecord.updatedAt)}</p>
                     </div>
-                    <div>
-                        <span className="block font-medium">Deleted At</span>
-                        <p>{formatDateTime(roundRecord.deletedAt)}</p>
-                    </div>
                 </div>
             </CardContent>
         </Card>

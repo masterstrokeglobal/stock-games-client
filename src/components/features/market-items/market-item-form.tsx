@@ -13,6 +13,7 @@ export const createMarketItemInputSchema = z.object({
     name: z.string().max(100).min(3, "Name should be at least 3 characters"),
     code: z.string().max(50).min(1, "Code is required"),
     active: z.boolean().default(false).optional(),
+    placementAllowed: z.boolean().default(true).optional(),
     oddsMultiplier: z.coerce
         .number().min(1).max(100),
 });

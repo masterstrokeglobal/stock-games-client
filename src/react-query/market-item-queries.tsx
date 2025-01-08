@@ -15,6 +15,7 @@ export const useCreateMarketItem = () => {
 };
 
 export const useGetMarketItems = (filter?: SearchFilters) => {
+
     return useQuery({
         queryKey: ["marketItems", filter],
         queryFn: () => marketItemAPI.getMarketItems(filter),

@@ -30,6 +30,11 @@ const marketItemColumns: ColumnDef<MarketItem>[] = [
         cell: ({ row }) => <div className="text-[#6B7280]">{row.original.oddsMultiplier}</div>,
     },
     {
+    header: "ZERO POSITION",
+        accessorKey: "placementAllowed",
+        cell: ({ row }) => <TogglePlacementSwitch marketItem={row.original} />,
+    },
+    {
         header: "ACTIVE",
         accessorKey: "active",
         cell: ({ row }) => <ToggleActiveSwitch marketItem={row.original} />,
@@ -67,6 +72,23 @@ const ToggleActiveSwitch = ({ marketItem }: { marketItem: MarketItem }) => {
     );
 };
 
+const TogglePlacementSwitch = ({ marketItem }: { marketItem: MarketItem }) => {
+
+    const { mutate: updateMarketItem } = useUpdateMarketItemById();
+
+    const handleToggle = () => {
+        if (marketItem.id) {
+            updateMarketItem({
+                id: marketItem.id.toString(),
+                placementAllowed: !marketItem.placementAllowed,
+            });
+        }
+    };
+
+    return (
+        <Switch checked={!marketItem.placementAllowed} onCheckedChange={handleToggle} />
+    );
+};
 const ActionColumn = ({ marketItem }: { marketItem: MarketItem }) => {
     return (
         <Dialog>

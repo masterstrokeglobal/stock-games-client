@@ -22,7 +22,7 @@ const TopBar = ({ children, rightContent }: TopBarProps) => {
                 <div>
                     {children}
                 </div>
-                <div className="w-10 flex items-center justify-end">
+                <div className="min-w-10 flex items-center justify-end">
                     {rightContent}
                 </div>
             </nav>
