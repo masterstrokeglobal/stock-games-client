@@ -59,3 +59,18 @@ export const useGetMyRoundResult = (roundRecordId: number, show: boolean) => {
       }
     });
   };
+
+
+export const useGetWinningReport = (filter: any) => {
+    return useQuery({
+        queryKey: ["winning-report", filter],
+        queryFn: () => roundRecordsAPI.getWinningReport(filter),
+    });
+};
+
+export const useGetWinningReportExcel = (filter: any) => {
+    return useQuery({
+        queryKey: ["winning-report-excel", filter],
+        queryFn: () => roundRecordsAPI.getWinningReportExcel(filter),
+    });
+};

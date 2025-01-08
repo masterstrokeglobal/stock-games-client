@@ -7,11 +7,28 @@ export const roundRecordsAPI = {
         });
     },
 
+    getWinningReport: async (filter: any) => {
+        const sanitizeFilter: any = {};
+
+        for (const key in filter) {
+            if (filter[key]) {
+                sanitizeFilter[key] = filter[key];
+            }
+        }
+        return api.get("/round-records/winning-report", {
+            params: sanitizeFilter
+        });
+    },
+    getWinningReportExcel: async (filter: any) => {
+        return api.get("/round-records/winning-report/excel", {
+            params: filter
+        });
+    },
     getRoundRecordById: async (id: number) => {
         return api.get(`/round-records/${id}`);
     },
     getMyResult: async (id: number) => {
-        
+
         return api.get(`/round-records/my-result/${id}`);
     },
 };
