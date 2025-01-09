@@ -1,64 +1,94 @@
-// src/pages/betting-history.tsx
 'use client';
 
+import bettingHistoryColumns from "@/columns/betting-history-column";
 import Container from "@/components/common/container";
 import TopBar from "@/components/common/top-bar";
-import BettingCard from "@/components/features/game/betting-card";
-import BettingHistoryFilter from "@/components/features/game/betting-history";
+import DataTable from "@/components/ui/data-table-server-game";
+import { Input } from "@/components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import GameRecord from "@/models/game-record";
 import { useGameRecordHistory } from "@/react-query/game-record-queries";
 import dayjs from "dayjs";
 import { Loader2 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { useInView } from "react-intersection-observer";
-
-
+import { useMemo, useState } from "react";
 
 const BettingHistoryPage = () => {
-    const now = dayjs();
-
-    const PAGE_SIZE = 10;
-    const { ref, inView } = useInView();
+    const [pageSize, setPageSize] = useState(10);
+    const [page, setPage] = useState(1);
     const [filter, setFilter] = useState({
-        startDate: now.startOf('day').toDate(),
-        endDate: now.endOf('day').toDate()
+        startDate: dayjs().startOf('week').format("YYYY-MM-DD"),
+        endDate: dayjs().endOf('week').format("YYYY-MM-DD"),
     });
 
     const {
         data,
         isLoading,
         isError,
-        hasNextPage,
-        fetchNextPage,
-        isFetchingNextPage
     } = useGameRecordHistory({
-        page: 1,
-        limit: PAGE_SIZE,
-        ...filter,
+        page,
+        limit: pageSize,
+        startDate: dayjs(filter.startDate).startOf('day').toDate(),
+        endDate: dayjs(filter.endDate).endOf('day').toDate(),
     });
 
-    useEffect(() => {
-        if (inView && hasNextPage) {
-            fetchNextPage();
-        }
-    }, [inView, hasNextPage, fetchNextPage]);
-
     const records = useMemo(() => {
-        if (!data) return [];
-        return data.pages.map(page => page.data.gameRecordHistory).flatMap(page => page).map(record => new GameRecord(record));
+        if (!data?.data) return [];
+        return data.data.gameRecordHistory;
     }, [data]);
 
-    return (
-        <Container className="bg-primary-game relative flex flex-col pt-24 gap-6 items-center min-h-screen overflow-hidden">
+    const totalPages = useMemo(() => {
+        if (!data?.data?.total) return 1;
+        return Math.ceil(data.data.total / pageSize);
+    }, [data, pageSize]);
 
-            <TopBar rightContent={<BettingHistoryFilter onFilterChange={(startDate, endDate) => {
-                console.log(startDate, endDate);
-                setFilter({ startDate, endDate })
-            }} />}>
+    const changePage = (newPage: number) => {
+        setPage(newPage);
+    };
+
+    return (
+        <Container className="bg-primary-game relative flex flex-col pt-24 gap-6 items-center min-h-screen">
+            <TopBar>
                 <h1 className="text-xl font-semibold">Betting History</h1>
             </TopBar>
 
-            <div className="mt-6 space-y-4 px-4 w-full max-w-md">
+            <section className="container-main w-full max-w-6xl">
+                <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between mb-6">
+                    <div className="flex gap-5 items-center">
+                        <Input
+                            type="date"
+                            value={filter.startDate}
+                            onChange={(e) => setFilter({ ...filter, startDate: e.target.value })}
+                            className="h-12 text-white bg-[#122146] border border-[#EFF8FF17] focus:border-[#55B0FF]"
+                        />
+                        <span>to</span>
+                        <Input
+                            type="date"
+                            value={filter.endDate}
+                            onChange={(e) => setFilter({ ...filter, endDate: e.target.value })}
+                            className="h-12 text-white bg-[#122146] border border-[#EFF8FF17] focus:border-[#55B0FF]"
+                        />
+                        <Select value={pageSize.toString()} onValueChange={(val) => setPageSize(Number(val))}>
+                            <SelectTrigger className="h-12 text-white bg-[#122146] border border-[#EFF8FF17] focus:border-[#55B0FF] w-[100px]">
+                                <SelectValue placeholder="Page Size" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem value="10">10</SelectItem>
+                                    <SelectItem value="25">25</SelectItem>
+                                    <SelectItem value="100">100</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </header>
+
                 {isLoading ? (
                     <div className="flex justify-center py-8">
                         <Loader2 className="h-6 w-6 animate-spin" />
@@ -68,23 +98,18 @@ const BettingHistoryPage = () => {
                         Failed to load betting history. Please try again later.
                     </div>
                 ) : (
-                    <>
-                        <div className="space-y-4">
-                            {records.map((record) => (
-                                <BettingCard key={record.id} record={record} />
-                            ))}
-                        </div>
-
-                        <div ref={ref} className="py-4">
-                            {isFetchingNextPage && (
-                                <div className="flex justify-center">
-                                    <Loader2 className="h-6 w-6 animate-spin" />
-                                </div>
-                            )}
-                        </div>
-                    </>
+                    <div>
+                        <DataTable
+                            page={page}
+                            loading={isLoading}
+                            columns={bettingHistoryColumns}
+                            data={records}
+                            totalPage={totalPages}
+                            changePage={changePage}
+                        />
+                    </div>
                 )}
-            </div>
+            </section>
         </Container>
     );
 };

@@ -7,6 +7,7 @@ class GameRecord {
     amount: number;
     isWinner: boolean;
     placementType: PlacementType;
+    placeValue?: string;
     market: number[];
     createdAt: Date;
     round?: RoundRecord;
@@ -21,6 +22,7 @@ class GameRecord {
         this.isWinner = params.isWinner ?? false;
         this.placementType = params.placementType!;
         this.market = params.market!;
+        this.placeValue = params.placeValue ?? this.placementType;
         this.createdAt = params.createdAt!;
         this.round = params.round;
         this.updatedAt = params.updatedAt!;

@@ -10,7 +10,7 @@ type HorseNumberProps = {
 
 const HorseNumber = forwardRef<THREE.Group, HorseNumberProps>(
   ({ number, color = "blue" }, ref) => {
-    const radius = 2; // Radius of the circle
+    const radius = 2.2; // Radius of the circle
 
     return (
       <group ref={ref as any} rotation={[0, -Math.PI / 4, 0]}> {/* -Math.PI/4 is 45 degrees left */}
@@ -23,12 +23,12 @@ const HorseNumber = forwardRef<THREE.Group, HorseNumberProps>(
         {/* Number Text */}
         <Text
           position={[0, 11, 4]} // Adjust position relative to the group
-          fontSize={1.5} // Adjust the size of the text
+          fontSize={2.2} // Adjust the size of the text
           color="white" // Text color
           anchorX="center" // Horizontal anchor
           anchorY="middle" // Vertical anchor
           outlineColor="black" // Black outline for better visibility
-          outlineWidth={0.1} // Outline width
+          outlineWidth={.2} // Outline width
         >
           {number.toString()}
         </Text>

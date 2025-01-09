@@ -3,7 +3,7 @@ import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGameState, useShowResults } from "@/hooks/use-current-game";
 import { useGameType } from "@/hooks/use-game-type";
 import { useRouletteBetting } from "@/hooks/use-roulette-betting";
-import { cn } from "@/lib/utils";
+import { cn, getPlacementString } from "@/lib/utils";
 import GameRecord from "@/models/game-record";
 import { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
@@ -147,7 +147,11 @@ const RouletteGame = ({ roundRecord }: Props) => {
             amount: chip.amount,
             round: roundRecord.id,
             placementType: chip.type,
-            market: markets
+            market: markets,
+            placedValues: getPlacementString({
+                market: markets as number[],
+                placementType: chip.type,
+            }, roundRecord),
         }, {
             onSuccess: () => {
                 setChips([]);

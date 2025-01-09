@@ -50,7 +50,7 @@ export const useGetMyPlacements = (filter: any) => {
 };
 
 // Get Game Record History Hook infinite query page and limit 
-export const useGameRecordHistory = (params: any) => {
+export const useGameRecordHistoryInfinite = (params: any) => {
     return useInfiniteQuery({
         queryKey: ["gameRecordHistory", params],
         queryFn: ({ pageParam = params.page }) => {
@@ -65,5 +65,14 @@ export const useGameRecordHistory = (params: any) => {
             return lastPage.data.count > params.limit * params.page ? allPageParams + 1 : undefined;
         },
         initialPageParam: params.page,
+    });
+};
+
+// Get Game Record History Hook with page and limit
+
+export const useGameRecordHistory = (params: any) => {
+    return useQuery({
+        queryKey: ["gameRecordHistory", params],
+        queryFn: () => gameRecordAPI.getGameRecordHistory(params),
     });
 };
