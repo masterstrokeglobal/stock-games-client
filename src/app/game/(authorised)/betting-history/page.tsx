@@ -5,6 +5,7 @@ import Container from "@/components/common/container";
 import TopBar from "@/components/common/top-bar";
 import DataTable from "@/components/ui/data-table-server-game";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
     Select,
     SelectContent,
@@ -13,7 +14,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import GameRecord from "@/models/game-record";
 import { useGameRecordHistory } from "@/react-query/game-record-queries";
 import dayjs from "dayjs";
 import { Loader2 } from "lucide-react";
@@ -44,8 +44,8 @@ const BettingHistoryPage = () => {
     }, [data]);
 
     const totalPages = useMemo(() => {
-        if (!data?.data?.total) return 1;
-        return Math.ceil(data.data.total / pageSize);
+        if (!data?.data?.count) return 1;
+        return Math.ceil(data.data.count / pageSize);
     }, [data, pageSize]);
 
     const changePage = (newPage: number) => {
@@ -60,32 +60,38 @@ const BettingHistoryPage = () => {
 
             <section className="container-main w-full max-w-6xl">
                 <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between mb-6">
-                    <div className="flex gap-5 items-center">
+                    <div className="flex sm:gap-5 gap-2 items-center flex-wrap text-white w-full">
                         <Input
                             type="date"
                             value={filter.startDate}
                             onChange={(e) => setFilter({ ...filter, startDate: e.target.value })}
-                            className="h-12 text-white bg-[#122146] border border-[#EFF8FF17] focus:border-[#55B0FF]"
+                            className="h-12 text-white bg-[#122146] border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF]"
                         />
                         <span>to</span>
                         <Input
                             type="date"
                             value={filter.endDate}
                             onChange={(e) => setFilter({ ...filter, endDate: e.target.value })}
-                            className="h-12 text-white bg-[#122146] border border-[#EFF8FF17] focus:border-[#55B0FF]"
+                            className="h-12 text-white bg-[#122146] border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF]"
                         />
-                        <Select value={pageSize.toString()} onValueChange={(val) => setPageSize(Number(val))}>
-                            <SelectTrigger className="h-12 text-white bg-[#122146] border border-[#EFF8FF17] focus:border-[#55B0FF] w-[100px]">
-                                <SelectValue placeholder="Page Size" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectItem value="10">10</SelectItem>
-                                    <SelectItem value="25">25</SelectItem>
-                                    <SelectItem value="100">100</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
+                        <div className="sm:ml-auto sm:w-fit w-full  flex sm:flex-row flex-col gap-2 sm:items-center">
+                            <Label>
+                                <span className="text-white">Page Size</span>
+                            </Label>
+
+                            <Select value={pageSize.toString()} onValueChange={(val) => setPageSize(Number(val))}>
+                                <SelectTrigger className="h-12 text-white bg-[#122146] border border-[#EFF8FF17] focus:border-[#55B0FF] sm:w-[100px] w-full ">
+                                    <SelectValue placeholder="Page Size" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="10">10</SelectItem>
+                                        <SelectItem value="25">25</SelectItem>
+                                        <SelectItem value="100">100</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
                     </div>
                 </header>
 

@@ -19,6 +19,20 @@ body {
   font-family: 'Jersey', sans-serif;
 } 
 
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  border-radius: 4px;
+  margin-right: 2px;
+  opacity: 0.6;
+  color-scheme: dark;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1
+}
 @layer base {
   :root {
     --background: 0 0% 100%;

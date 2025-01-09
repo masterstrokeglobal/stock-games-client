@@ -1,7 +1,7 @@
-import GameRecord, { PlacementType } from "@/models/game-record";
+import { PlacementType } from "@/models/game-record";
 import { RoundRecord } from "@/models/round-record";
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

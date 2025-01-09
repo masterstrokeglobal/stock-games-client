@@ -92,6 +92,11 @@ const companyMenuItems: MenuItem[] = [
         name: 'Rounds',
         icon: Repeat1,
         link: '/dashboard/round-records',
+    },
+    {
+        name: 'Market Items',
+        icon: Users,
+        link: '/dashboard/market-items',
     }
 ];
 
@@ -105,9 +110,9 @@ const agentMenuItems: MenuItem[] = [
     },
 
     {
-        name:"Profit/Loss",
+        name: "Profit/Loss",
         icon: DollarSign,
-        link:'/dashboard/agent-profit-loss'
+        link: '/dashboard/agent-profit-loss'
     }
 ];
 

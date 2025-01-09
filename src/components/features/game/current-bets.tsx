@@ -1,10 +1,10 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn, getPlacementString } from "@/lib/utils";
-import { useGetTopPlacements } from "@/react-query/game-record-queries";
+import GameRecord from "@/models/game-record";
 import { RoundRecord } from "@/models/round-record";
-import GameRecord, { PlacementType } from "@/models/game-record";
+import { useGetTopPlacements } from "@/react-query/game-record-queries";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type Props = {
     className?: string;
