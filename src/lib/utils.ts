@@ -1,5 +1,7 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { PlacementType } from "@/models/game-record";
+import { RoundRecord } from "@/models/round-record";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -30,3 +32,45 @@ export const timeOptions = [
   { label: "10PM - 11PM", value: "22:00:00" },
   { label: "11PM - 12AM", value: "23:00:00" }
 ];
+
+export const getPlacementString = (bet: { market: number[], placementType: PlacementType }, round: RoundRecord) => {
+
+  const HorseNumbers = bet.market.map((number) => {
+    const horseNumber = round.market.find((market) => market.id === number)?.horse;
+    return horseNumber || 0;
+  }).sort((a, b) => a - b);
+
+  switch (bet.placementType) {
+
+    case PlacementType.SINGLE:
+      return `Single ${HorseNumbers[0]}`;
+    case PlacementType.SPLIT:
+      return `Split ${HorseNumbers[0]}-${HorseNumbers[1]}`;
+    case PlacementType.QUARTER:
+      return `Quarter ${HorseNumbers[0]} ${HorseNumbers[1]} ${HorseNumbers[2]} ${HorseNumbers[3]}`;
+    case PlacementType.STREET:
+      // first and last number of the street
+      return `Street ${HorseNumbers[0]}-${HorseNumbers[HorseNumbers.length - 1]}`;
+    case PlacementType.DOUBLE_STREET:
+      // first and last number of the street
+      return `DOUBLE STREET ${HorseNumbers[0]} - ${HorseNumbers[HorseNumbers.length - 1]}`;
+    case PlacementType.CORNER:
+      return `Corner ${HorseNumbers[0]} ${HorseNumbers[1]} ${HorseNumbers[2]} ${HorseNumbers[3]}`;
+    case PlacementType.COLUMN:
+      return `Column ${HorseNumbers[0]} ${HorseNumbers[HorseNumbers.length - 1]}`;
+    case PlacementType.COLOR:
+      // show color
+      return `${HorseNumbers[0] == 1 ? 'Red' : 'Black'}`;
+
+    case PlacementType.EVEN_ODD:
+      // calculate if even or odd
+      return `${HorseNumbers[0] % 2 === 0 ? 'Even' : 'Odd'}`;
+    case PlacementType.HIGH_LOW:
+      // first and last number of the high low
+      return `DOUBLE STREET ${HorseNumbers[0]} - ${HorseNumbers[HorseNumbers.length - 1]}`;
+
+    default:
+      return '-';
+
+  }
+}

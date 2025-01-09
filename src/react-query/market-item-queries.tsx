@@ -47,3 +47,22 @@ export const useGetMarketItemById = (id: string) => {
         queryFn: () => marketItemAPI.getMarketItemById(id),
     });
 }
+
+export const useUpdatePlacementAllowed = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: marketItemAPI.updatePlacementAllowed,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "marketItems";
+                }
+            });
+            toast.success("Placement allowed updated successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error updating placement allowed");
+        },
+    });
+}

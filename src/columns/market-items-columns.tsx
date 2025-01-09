@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { MarketItem } from "@/models/market-item";
-import { useUpdateMarketItemById } from "@/react-query/market-item-queries";
+import { useUpdateMarketItemById, useUpdatePlacementAllowed } from "@/react-query/market-item-queries";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { Edit2, Eye } from 'lucide-react';
@@ -74,14 +74,11 @@ const ToggleActiveSwitch = ({ marketItem }: { marketItem: MarketItem }) => {
 
 const TogglePlacementSwitch = ({ marketItem }: { marketItem: MarketItem }) => {
 
-    const { mutate: updateMarketItem } = useUpdateMarketItemById();
+    const { mutate: updateMarketItem } = useUpdatePlacementAllowed();
 
     const handleToggle = () => {
         if (marketItem.id) {
-            updateMarketItem({
-                id: marketItem.id.toString(),
-                placementAllowed: !marketItem.placementAllowed,
-            });
+            updateMarketItem(marketItem.id.toString());
         }
     };
 
