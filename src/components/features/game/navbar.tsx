@@ -1,4 +1,5 @@
 "use client";
+import LocaleSwitcher from "@/components/common/LocaleSwitcher";
 import Logo from "@/components/common/logo";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -6,6 +7,7 @@ import { useAuthStore } from "@/context/auth-context";
 import User from "@/models/user";
 import Wallet from "@/models/wallet";
 import { useGetWallet } from "@/react-query/payment-queries";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useMemo } from "react";
 
@@ -24,10 +26,11 @@ const Navbar = () => {
             <div className="">
                 <span className="md:text-xl text-sm font-semibold flex items-end">
                     <Logo />
-                 
+
                 </span>
             </div>
             <div className="flex items-center space-x-4 ml-auto">
+                <LocaleSwitcher />
                 <div className="bg-[#112148] px-4 md:h-12 flex items-center md:py-2 py-2  rounded-full">
                     <div className="shadow-custom-glow mr-2 rounded-full" >
                         <img src="/coin.svg" alt="coin" className="md:w-auto w-5" />

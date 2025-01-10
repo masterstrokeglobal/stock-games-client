@@ -4,6 +4,7 @@ import { cn, getPlacementString } from "@/lib/utils";
 import GameRecord from "@/models/game-record";
 import { RoundRecord } from "@/models/round-record";
 import { useGetTopPlacements } from "@/react-query/game-record-queries";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 type Props = {
@@ -12,6 +13,7 @@ type Props = {
 };
 
 const CurrentBets = ({ className, round }: Props) => {
+    const t = useTranslations("game");
     const { data, isSuccess } = useGetTopPlacements(round.id.toString());
 
     const currentBetsData: GameRecord[] = useMemo(() => {
@@ -32,7 +34,7 @@ const CurrentBets = ({ className, round }: Props) => {
     }, []);
 
 
-    
+
 
     return (
         <section
@@ -40,7 +42,7 @@ const CurrentBets = ({ className, round }: Props) => {
             className={cn("p-4 rounded-2xl h-full w-full bg-[#122146]", className)}
         >
             <h2 className="text-xl font-semibold mb-4 text-gray-200">
-                Current Bets
+                {t("current-bets")}
             </h2>
             <ScrollArea className="max-h-96 w-full" style={{ height: `${scrollAreaHeight - 20}px` }} type="auto">
                 {currentBetsData.length > 0 ? (
@@ -48,13 +50,13 @@ const CurrentBets = ({ className, round }: Props) => {
                         <thead>
                             <tr className="flex">
                                 <th className="p-2 text-sm text-left text-gray-300 rounded-tl-lg flex-1">
-                                    Bets
+                                    {t("placement")}
                                 </th>
                                 <th className="p-2 text-sm text-left text-gray-300 flex-1">
-                                    User ID
+                                    {t("username")}
                                 </th>
                                 <th className="p-2 text-sm text-right text-gray-300 rounded-tr-lg flex-1">
-                                    Amount
+                                    {t("amount")}
                                 </th>
                             </tr>
                         </thead>
@@ -66,7 +68,7 @@ const CurrentBets = ({ className, round }: Props) => {
                                     style={{ display: 'flex', flexDirection: 'row' }}
                                 >
                                     <td className="p-2 text-sm text-gray-300 rounded-l-lg flex-1">
-                                        {getPlacementString(bet,round)}
+                                        {getPlacementString(bet, round)}
                                     </td>
                                     <td className="p-2 text-sm text-gray-300 flex-1">
                                         {bet.user.username}
@@ -80,7 +82,7 @@ const CurrentBets = ({ className, round }: Props) => {
                     </table>
                 ) : (
                     <div className="text-center text-gray-300 py-4">
-                        No bets found
+                        {t("no-bets")}
                     </div>
                 )}
             </ScrollArea>

@@ -1,0 +1,25 @@
+{
+    "common": {
+        "app-name": "Stock Derby"
+    },
+    "game": {
+        "title": "Stock Derby",
+        "game-over": "Game Over",
+        "game-ends-in": "Game ends in",
+        "current-bets": "Current Bets",
+        "leaderboard": "Leaderboard",
+        "rank": "Rank",
+        "horse": "Horse",
+        "price": "Price",
+        "name": "Name",
+        "change": "Change",
+        "race-begin": "Race is about to begin",
+        "no-bets": "No bets placed yet",
+        "betting-closed": "Betting Closed",
+        "place-your-bets": "Place your bets",
+        "round-ends-in": "Round ends in",
+        "round-starts-in": "Round starts in",
+        "place-starts-in": "Place starts in",
+        "place-ends-in": "Place ends in"
+    }
+}

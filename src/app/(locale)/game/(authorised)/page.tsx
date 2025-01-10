@@ -8,6 +8,7 @@ import HorseRace from "@/components/features/horse-animation/horse";
 import { useCurrentGame, useGameState, useIsPlaceOver } from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
 import { RoundRecord } from "@/models/round-record";
+import { useTranslations } from "next-intl";
 
 const borderStyle = {
     borderColor: "#3799ED",
@@ -81,6 +82,7 @@ const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
 
 const MobileHeader = ({ roundRecord }: { roundRecord: RoundRecord }) => {
     const isPlaceOver = useIsPlaceOver(roundRecord);
+    const t = useTranslations("game");
     if (isPlaceOver) return <>
         <MobileGameHeader roundRecord={roundRecord} />
         <div className="m-2 rounded-xl overflow-hidden">
@@ -90,7 +92,9 @@ const MobileHeader = ({ roundRecord }: { roundRecord: RoundRecord }) => {
 
 
     return <header className="bg-[#1E2E57] mx-auto flex justify-center flex-col text-center min-h-[20vh]" >
-        <h1>Round Starts in</h1>
+        <h1>
+            {t("round-starts-in")}
+        </h1>
         <p className="jersey text-8xl leading-[5rem]">
             <TimeLeft roundRecord={roundRecord!} />
         </p>

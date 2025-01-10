@@ -1,10 +1,9 @@
-"use client";
-import "./globals.css";
+import { QueryClient } from "@tanstack/react-query";
+import { NextIntlClientProvider } from 'next-intl';
 import { Poppins } from 'next/font/google';
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { UserProvider } from "@/context/auth-context";
-import { Toaster } from "sonner";
-import { Suspense } from "react";
+import "./globals.css";
+
+import { getLocale, getMessages } from "next-intl/server";
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'], // Include all weights
@@ -19,13 +18,17 @@ const queryClient = new QueryClient({
   },
 });
 
-export default function RootLayout({
+
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
   return (
-    <html lang="en">
+    <html lang={locale}>
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -36,14 +39,10 @@ export default function RootLayout({
       <body
         className={`${poppins.className} antialiased`}
       >
-        <Suspense>
-          <UserProvider >
-            <QueryClientProvider client={queryClient}>
-              <Toaster toastOptions={{ duration: 1500 }} position="top-right" richColors />
-              {children}
-            </QueryClientProvider>
-          </UserProvider>
-        </Suspense>
+        <NextIntlClientProvider messages={messages}>
+          {children}
+        </NextIntlClientProvider>
+
       </body>
     </html>
   );
