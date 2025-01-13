@@ -22,7 +22,7 @@ const HorseRaceEnvironment = ({
             <Sky sunPosition={[100, 20, 100]} />
             <ambientLight intensity={0.3} />
             <OrbitControls enableRotate={true}
-                maxPolarAngle={Math.PI / 2 - 0.1}
+                maxPolarAngle={Math.PI / 2 - 0.1 -.02}
                 minPolarAngle={Math.PI / 2 - 0.1}
                 maxDistance={1000}
             />
