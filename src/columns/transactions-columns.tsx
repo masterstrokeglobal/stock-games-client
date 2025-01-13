@@ -18,6 +18,11 @@ const transactionColumns: ColumnDef<Transaction>[] = [
         cell: ({ row }) => <div className="w-48 truncate">{row.original.pgId || 'N/A'}</div>,
     },
     {
+        header: "User",
+        accessorKey: "user",
+        cell: ({ row }) => <div>{row.original.user?.username || 'N/A'}</div>,
+    },
+    {
         header: "Type",
         accessorKey: "type",
         cell: ({ row }) => (

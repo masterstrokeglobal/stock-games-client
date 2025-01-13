@@ -18,8 +18,10 @@ import { useGameRecordHistory } from "@/react-query/game-record-queries";
 import dayjs from "dayjs";
 import { Loader2 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { useTranslations } from 'next-intl';
 
 const BettingHistoryPage = () => {
+    const t = useTranslations('betting-history');
     const [pageSize, setPageSize] = useState(10);
     const [page, setPage] = useState(1);
     const [filter, setFilter] = useState({
@@ -55,7 +57,7 @@ const BettingHistoryPage = () => {
     return (
         <Container className="bg-primary-game relative flex flex-col pt-24 gap-6 items-center min-h-screen">
             <TopBar>
-                <h1 className="text-xl font-semibold">Betting History</h1>
+                <h1 className="text-xl font-semibold">{t('page-title')}</h1>
             </TopBar>
 
             <section className="container-main w-full max-w-6xl">
@@ -67,21 +69,21 @@ const BettingHistoryPage = () => {
                             onChange={(e) => setFilter({ ...filter, startDate: e.target.value })}
                             className="h-12 text-white bg-[#122146] border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF]"
                         />
-                        <span>to</span>
+                        <span>{t('date-range.to')}</span>
                         <Input
                             type="date"
                             value={filter.endDate}
                             onChange={(e) => setFilter({ ...filter, endDate: e.target.value })}
                             className="h-12 text-white bg-[#122146] border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF]"
                         />
-                        <div className="sm:ml-auto sm:w-fit w-full  flex sm:flex-row flex-col gap-2 sm:items-center">
+                        <div className="sm:ml-auto sm:w-fit w-full flex sm:flex-row flex-col gap-2 sm:items-center">
                             <Label>
-                                <span className="text-white">Page Size</span>
+                                <span className="text-white">{t('date-range.page-size')}</span>
                             </Label>
 
                             <Select value={pageSize.toString()} onValueChange={(val) => setPageSize(Number(val))}>
-                                <SelectTrigger className="h-12 text-white bg-[#122146] border border-[#EFF8FF17] focus:border-[#55B0FF] sm:w-[100px] w-full ">
-                                    <SelectValue placeholder="Page Size" />
+                                <SelectTrigger className="h-12 text-white bg-[#122146] border border-[#EFF8FF17] focus:border-[#55B0FF] sm:w-[100px] w-full">
+                                    <SelectValue placeholder={t('date-range.page-size')} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
@@ -101,7 +103,7 @@ const BettingHistoryPage = () => {
                     </div>
                 ) : isError ? (
                     <div className="text-center py-8 text-red-500">
-                        Failed to load betting history. Please try again later.
+                        {t('errors.load-failed')}
                     </div>
                 ) : (
                     <div>

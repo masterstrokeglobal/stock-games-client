@@ -1,30 +1,55 @@
-// AudioProvider.tsx
-import  { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Howl, Howler } from 'howler';
+import { RoundRecord } from "@/models/round-record";
+import { Howl, Howler } from "howler";
+import { usePathname } from "next/navigation";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 const AudioContext = createContext<AudioContextType | null>(null);
+
+export interface HorseRaceSounds {
+  gallop: Howl;
+  crowd: Howl;
+  announcer: Howl;
+}
+
+export type SoundType = keyof HorseRaceSounds;
+
+export interface AudioContextType {
+  isMuted: boolean;
+  isHorseRacePlaying: boolean;
+  toggleMute: () => void;
+  playSoundEffect: (soundUrl: string) => void;
+  startHorseRace: () => void;
+  stopHorseRace: () => void;
+  setHorseRaceVolume: (soundType: SoundType, volume: number) => void;
+}
 
 interface AudioProviderProps {
   children: ReactNode;
 }
 
 export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
-  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [isMuted, setIsMuted] = useState<boolean>(true);
   const [bgMusic, setBgMusic] = useState<Howl | null>(null);
   const [horseRaceSounds, setHorseRaceSounds] = useState<HorseRaceSounds | null>(null);
   const [isHorseRacePlaying, setIsHorseRacePlaying] = useState<boolean>(false);
+  const pathname = usePathname();
 
   useEffect(() => {
+    Howler.mute(isMuted);
+  }, [isMuted]);
+  useEffect(() => {
+    if (pathname !== "/game") return;
+
     const backgroundMusic = new Howl({
-      src: ['/path/to/your/background-music.mp3'],
+      src: ["/background-sound.mp3"],
       loop: true,
-      volume: 0.5,
+      volume: 0.2,
       autoplay: true,
     });
 
     const horseRace: HorseRaceSounds = {
-      gallop: new Howl({ src: ['/path/to/horse-gallop.mp3'], loop: true, volume: 0.5, autoplay: false }),
-      crowd: new Howl({ src: ['/path/to/crowd-cheering.mp3'], loop: true, volume: 0.3, autoplay: false }),
-      announcer: new Howl({ src: ['/path/to/race-announcer.mp3'], loop: false, volume: 0.4, autoplay: false }),
+      gallop: new Howl({ src: ["/horseNeigh1.mp3"], loop: true, volume: 0.5, autoplay: false }),
+      crowd: new Howl({ src: ["/horseNeigh2.mp3"], loop: true, volume: 0.3, autoplay: false }),
+      announcer: new Howl({ src: ["/horseSteps.mp3"], loop: true, volume: 0.4, autoplay: false }),
     };
 
     setBgMusic(backgroundMusic);
@@ -34,36 +59,39 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       backgroundMusic.unload();
       Object.values(horseRace).forEach((sound) => sound.unload());
     };
-  }, []);
+  }, [pathname]);
 
   const toggleMute = (): void => {
-    Howler.mute(!isMuted);
     setIsMuted(!isMuted);
   };
 
   const startHorseRace = (): void => {
-    if (bgMusic && horseRaceSounds) {
-      bgMusic.pause();
-      horseRaceSounds.gallop.play();
-      horseRaceSounds.crowd.play();
-      horseRaceSounds.announcer.play();
-      setIsHorseRacePlaying(true);
-    }
+    if (pathname !== "/game" || !horseRaceSounds) return;
+
+    bgMusic?.pause();
+    horseRaceSounds.gallop.play();
+    horseRaceSounds.crowd.play();
+    horseRaceSounds.announcer.play();
+    setIsHorseRacePlaying(true);
   };
 
   const stopHorseRace = (): void => {
-    if (horseRaceSounds) {
-      Object.values(horseRaceSounds).forEach((sound) => sound.stop());
-      bgMusic?.play();
-      setIsHorseRacePlaying(false);
-    }
+    if (pathname !== "/game" || !horseRaceSounds) return;
+
+    Object.values(horseRaceSounds).forEach((sound) => sound.stop());
+    bgMusic?.play();
+    setIsHorseRacePlaying(false);
   };
 
   const setHorseRaceVolume = (soundType: SoundType, volume: number): void => {
+    if (pathname !== "/game") return;
+
     horseRaceSounds?.[soundType]?.volume(volume);
   };
 
   const playSoundEffect = (soundUrl: string): void => {
+    if (pathname !== "/game") return;
+
     const sound = new Howl({ src: [soundUrl], volume: 0.5 });
     sound.play();
   };
@@ -81,22 +109,60 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   return <AudioContext.Provider value={contextValue}>{children}</AudioContext.Provider>;
 };
 
+
 export const useAudio = (): AudioContextType => {
   const context = useContext(AudioContext);
   if (!context) throw new Error('useAudio must be used within an AudioProvider');
   return context;
 };
 
-// MuteButton.tsx
-import React from 'react';
-import { useAudio } from './AudioProvider';
 
-export const MuteButton: React.FC = () => {
-  const { isMuted, toggleMute } = useAudio();
+export const useHorseRaceSound = (roundRecord: RoundRecord | null): void => {
+  const { startHorseRace, stopHorseRace } = useAudio();
 
-  return (
-    <button onClick={toggleMute} className="px-4 py-2 bg-gray-500 text-white rounded">
-      {isMuted ? 'Unmute' : 'Mute'}
-    </button>
-  );
+  useEffect(() => {
+    if (!roundRecord) {
+      stopHorseRace();
+      return;
+    }
+
+    const now = Date.now();
+    const placementEndTimestamp = new Date(roundRecord.placementEndTime).getTime();
+    const raceEndTimestamp = new Date(roundRecord.endTime).getTime();
+
+    // Stop immediately if we're past the end time
+    if (now >= raceEndTimestamp) {
+      stopHorseRace();
+      return;
+    }
+
+    // If we're already in the race phase (after placement end)
+    if (now >= placementEndTimestamp) {
+      startHorseRace();
+
+      const stopTimeout = setTimeout(() => {
+        stopHorseRace();
+      }, raceEndTimestamp - now);
+
+      return () => {
+        clearTimeout(stopTimeout);
+        stopHorseRace();
+      };
+    }
+
+    // If we're before placement end, set up both timeouts
+    const startTimeout = setTimeout(() => {
+      startHorseRace();
+    }, placementEndTimestamp - now);
+
+    const stopTimeout = setTimeout(() => {
+      stopHorseRace();
+    }, raceEndTimestamp - now);
+
+    return () => {
+      clearTimeout(startTimeout);
+      clearTimeout(stopTimeout);
+      stopHorseRace();
+    };
+  }, [roundRecord, startHorseRace, stopHorseRace]); // Removed isHorseRacePlaying from dependencies
 };

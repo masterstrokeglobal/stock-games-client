@@ -5,6 +5,7 @@ import Navbar from "@/components/features/game/navbar";
 import RouletteGame from "@/components/features/game/roulette-game";
 import { MobileGameHeader } from "@/components/features/game/roulette-header";
 import HorseRace from "@/components/features/horse-animation/horse";
+import { useHorseRaceSound } from "@/context/audio-context";
 import { useCurrentGame, useGameState, useIsPlaceOver } from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
 import { RoundRecord } from "@/models/round-record";
@@ -19,6 +20,7 @@ const GamePage = () => {
     const { roundRecord } = useCurrentGame();
 
     const { isMobile } = useWindowSize();
+    useHorseRaceSound(roundRecord);
 
 
     return (

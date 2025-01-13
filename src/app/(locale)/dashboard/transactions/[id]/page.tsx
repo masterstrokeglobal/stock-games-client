@@ -8,6 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Transaction, TransactionType } from "@/models/transaction";
 import WithdrawalDetails from "@/components/features/transaction/withdrawl-details";
 import WithdrawDetailsRecord from "@/models/withdrawl-details";
+import UserCard from "@/components/features/user/user-card";
 
 const EditTransactionPage = () => {
     const params = useParams();
@@ -52,12 +53,14 @@ const EditTransactionPage = () => {
     }, [data]);
 
 
+
     if (isLoading) return <LoadingScreen>Loading transaction...</LoadingScreen>;
 
-    console.log("transaction", withdrawldetails);
 
     return (
         <>
+    
+        {transaction.user && <UserCard user={transaction.user} />}
             {withdrawldetails && <WithdrawalDetails withdrawDetails={withdrawldetails} />}
             {isSuccess && data && (
                 <TransactionEditForm

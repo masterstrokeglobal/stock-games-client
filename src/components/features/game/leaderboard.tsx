@@ -68,8 +68,6 @@ const LeaderBoard = ({ roundRecord }: Props) => {
 
     const winnerMarketItem = leaderboardData.find((item) => item.horse === winnerNumber);
 
-    console.log('winnerNumber', winnerNumber);
-
     return (
         <section
             ref={sectionRef}
@@ -131,7 +129,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                         {leaderboardData.filter((item) => item.horse !== winnerNumber).map((marketItem, index) => (
                             <tr
                                 key={index}
-                                className={cn("border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden", index === 0 ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm")}
+                                className={cn("border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden", index === 0 && winnerNumber==0 ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm")}
                             >
                                 <td className="p-2  text-gray-300">
 

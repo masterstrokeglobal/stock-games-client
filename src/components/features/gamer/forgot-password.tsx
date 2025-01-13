@@ -1,28 +1,29 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import FormPassword from "@/components/ui/form/form-password";
 import FormProvider from "@/components/ui/form/form-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useTranslations } from "next-intl";
 
-// Zod schema for validating the reset password form fields
-export const createResetPasswordSchema = z.object({
+export const createResetPasswordSchema = (t: any) => z.object({
     password: z
         .string()
-        .min(6, "Password must be at least 6 characters")
-        .max(20, "Password must be less than 20 characters")
-        .nonempty("Password is required"),
+        .min(6, t('validation.password-min'))
+        .max(20, t('validation.password-max'))
+        .nonempty(t('validation.password-required')),
     confirmPassword: z
         .string()
-        .min(6, "Password must be at least 6 characters")
-        .max(20, "Password must be less than 20 characters")
-        .nonempty("Please confirm your password"),
+        .min(6, t('validation.password-min'))
+        .max(20, t('validation.password-max'))
+        .nonempty(t('validation.confirm-password-required')),
 }).refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
+    message: t('validation.passwords-mismatch'),
     path: ["confirmPassword"],
 });
 
-export type ResetPasswordFormValues = z.infer<typeof createResetPasswordSchema>;
+export type ResetPasswordFormValues = z.infer<ReturnType<typeof createResetPasswordSchema>>;
 
 type Props = {
     defaultValues?: ResetPasswordFormValues;
@@ -32,8 +33,10 @@ type Props = {
 };
 
 const ResetPasswordForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
+    const t = useTranslations('reset-password');
+
     const form = useForm<ResetPasswordFormValues>({
-        resolver: zodResolver(createResetPasswordSchema),
+        resolver: zodResolver(createResetPasswordSchema(t)),
         defaultValues,
     });
 
@@ -42,9 +45,12 @@ const ResetPasswordForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
     return (
         <div className="w-full max-w-sm">
             <div className="space-y-2 md:text-center mb-10">
-                <h1 className="text-3xl font-semibold text-white">Forgot Password</h1>
+                <h1 className="text-3xl font-semibold text-white">
+                    {t('title')}
+                </h1>
                 <p className="text-sm text-[#F9F9F9B2]">
-                    Enter your new password twice below to reset a new password.                </p>
+                    {t('description')}
+                </p>
             </div>
 
             <FormProvider
@@ -52,13 +58,12 @@ const ResetPasswordForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 onSubmit={handleSubmit(onSubmit)}
                 className="space-y-4"
             >
-                {/* Password Fields */}
                 <FormPassword
                     control={control}
                     game
                     name="password"
                     type="password"
-                    label="Enter new password*"
+                    label={t('labels.new-password')}
                     required
                 />
 
@@ -67,7 +72,7 @@ const ResetPasswordForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                     game
                     name="confirmPassword"
                     type="password"
-                    label="Re-enter new password*"
+                    label={t('labels.confirm-password')}
                     required
                 />
 
@@ -79,7 +84,7 @@ const ResetPasswordForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         className="w-full mt-4"
                         disabled={isLoading}
                     >
-                        {isLoading ? "Resetting..." : "Reset Password"}
+                        {isLoading ? t('buttons.resetting') : t('buttons.reset-password')}
                     </Button>
                 </footer>
             </FormProvider>

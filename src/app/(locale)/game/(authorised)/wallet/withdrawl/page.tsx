@@ -7,8 +7,10 @@ import WithdrawForm, { WithdrawFormValues } from '@/components/features/gamer/wa
 import { useCreateWithdrawalRequest, useGetWallet } from '@/react-query/payment-queries';
 import Wallet from '@/models/wallet';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 const WithdrawalFormPage = () => {
+    const t = useTranslations('withdraw');
     const { mutate, isPending } = useCreateWithdrawalRequest();
     const { data, isLoading } = useGetWallet();
     const router = useRouter();
@@ -16,7 +18,7 @@ const WithdrawalFormPage = () => {
     const wallet = useMemo(() => {
         if (isLoading) return new Wallet();
         return new Wallet(data?.data?.wallet);
-    }, [data])
+    }, [data]);
 
     const onSubmit = async (data: WithdrawFormValues) => {
         // Ensure amount is converted to integer
@@ -34,11 +36,11 @@ const WithdrawalFormPage = () => {
     return (
         <Container className="flex flex-col space-y-8 items-center min-h-screen pt-24">
             <TopBar>
-                <h1 className="text-xl font-semibold">Withdraw Funds</h1>
+                <h1 className="text-xl font-semibold">{t('page-title')}</h1>
             </TopBar>
 
             <div className="w-full max-w-md px-4">
-                {isLoading && <div>Loading...</div>}
+                {isLoading && <div>{t('loading')}</div>}
                 {!isLoading && (
                     <WithdrawForm
                         onSubmit={onSubmit}
@@ -51,4 +53,4 @@ const WithdrawalFormPage = () => {
     );
 };
 
-export default WithdrawalFormPage; 
+export default WithdrawalFormPage;

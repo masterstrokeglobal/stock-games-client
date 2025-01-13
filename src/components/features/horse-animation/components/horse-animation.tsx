@@ -7,11 +7,12 @@ import HorseModel from "./horse-model";
 
 // Memoize color array to prevent recreation
 const HORSE_COLORS = [
-    "#FF6B6B", "#4ECDC4", "#45B7D1", "#FFA07A", "#98D8C8",
-    "#F7DC6F", "#B19CD9", "#FF9FF3", "#7FB3D5", "#F1948A",
-    "#82E0AA", "#FAD7A0", "#D7BDE2", "#85C1E9", "#F8C471",
-    "#73C6B6", "#E59866"
+    "#D94D4D", "#3F8B83", "#3B91A5", "#D86F56", "#6F9F96",
+    "#C89A3F", "#7F74B3", "#D066C6", "#59829E", "#C97A73",
+    "#66B78F", "#E0B870", "#9E83B4", "#699EC7", "#D68A4A",
+    "#4D8C7D", "#B7784D"
 ] as const;
+
 
 type Props = {
     roundRecord: RoundRecord;

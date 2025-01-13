@@ -1,5 +1,5 @@
+import PageNotFound from "@/app/not-found";
 import DashboardLayout from "./layout";
-import PageNotFound from "../not-found";
 
 const NotFound = () => {
     return (

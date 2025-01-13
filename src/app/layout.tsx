@@ -1,4 +1,3 @@
-import { QueryClient } from "@tanstack/react-query";
 import { NextIntlClientProvider } from 'next-intl';
 import { Poppins } from 'next/font/google';
 import "./globals.css";
@@ -8,14 +7,6 @@ import { getLocale, getMessages } from "next-intl/server";
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'], // Include all weights
   subsets: ['latin'],  // Optional, but typically used for basic character sets
-});
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-    },
-  },
 });
 
 

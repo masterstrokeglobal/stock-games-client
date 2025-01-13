@@ -6,28 +6,34 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from "@/components/ui/button";
 import FormInput from "@/components/ui/form/form-input";
 import FormProvider from "@/components/ui/form/form-provider";
+import { useTranslations } from 'next-intl'; // Import for translations
+
 
 // Zod schema for validating the email input
-export const forgotPasswordSchema = z.object({
+export const forgotPasswordSchema = (t: any) => z.object({
     email: z
         .string()
-        .email("Please enter a valid email address")
-        .nonempty("Email is required")
+        .email(t('email.validation.invalid')) // Dynamic error message for invalid email
+        .nonempty(t('email.validation.required')) // Dynamic error message for required email
 });
 
-export type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
+
+
+export type ForgotPasswordFormValues = z.infer<ReturnType<typeof forgotPasswordSchema>>;
 
 type Props = {
     onSubmit: (data: ForgotPasswordFormValues) => void;
     isLoading?: boolean;
 };
 
-const ForgotPasswordEmailForm: React.FC<Props> = ({ 
-    onSubmit, 
-    isLoading 
+const ForgotPasswordEmailForm: React.FC<Props> = ({
+    onSubmit,
+    isLoading
 }) => {
+    const t = useTranslations('forgotPassword');  // Use translation hook
+
     const form = useForm<ForgotPasswordFormValues>({
-        resolver: zodResolver(forgotPasswordSchema),
+        resolver: zodResolver(forgotPasswordSchema(t)),
         defaultValues: {
             email: ''
         }
@@ -38,11 +44,11 @@ const ForgotPasswordEmailForm: React.FC<Props> = ({
     return (
         <div className="w-full max-w-sm">
             <h1 className="text-3xl text-center mb-10 font-semibold text-white">
-                Forgot Password
+                {t('title')}
             </h1>
 
             <p className="text-center text-white/70 mb-6">
-                Enter the email address associated with your account
+                {t('description')}
             </p>
 
             <FormProvider
@@ -54,7 +60,7 @@ const ForgotPasswordEmailForm: React.FC<Props> = ({
                     control={control}
                     game
                     name="email"
-                    label="Email Address*"
+                    label={t('email.label')}
                     type="email"
                     required
                 />
@@ -66,7 +72,7 @@ const ForgotPasswordEmailForm: React.FC<Props> = ({
                     className="w-full mt-6"
                     disabled={isLoading}
                 >
-                    {isLoading ? "Sending..." : "Send Verification Code"}
+                    {isLoading ? t('button.sending') : t('button.sendCode')}
                 </Button>
             </FormProvider>
         </div>

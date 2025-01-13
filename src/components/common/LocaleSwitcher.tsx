@@ -1,8 +1,7 @@
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 import LocaleSwitcherSelect from './LocaleSwitcherSelect';
 
 export default function LocaleSwitcher() {
-  const t = useTranslations('LocaleSwitcher');
   const locale = useLocale();
 
   return (
@@ -16,6 +15,18 @@ export default function LocaleSwitcher() {
         {
           value: 'ru',
           label: "Русский"
+        },
+        {
+          value: 'tur',
+          label: "Türkçe"
+        },
+        {
+          value: 'sr',
+          label: "Serbian"
+        },
+        {
+          value: 'ar',
+          label: "Arabic"
         }
       ]}
     />

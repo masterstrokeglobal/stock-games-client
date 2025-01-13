@@ -5,6 +5,7 @@
     "game": {
         "title": "Stock Derby",
         "game-over": "Game Over",
+        "bet": "Bet",
         "game-ends-in": "Game ends in",
         "current-bets": "Current Bets",
         "leaderboard": "Leaderboard",
@@ -109,20 +110,240 @@
     "wallet": {
         "title": "Your Wallet",
         "balance": {
-          "title": "Wallet Balance",
-          "main": {
-            "label": "Main",
-            "alt": "coin"
-          },
-          "bonus": {
-            "label": "Bonus",
-            "alt": "bonus coin"
-          }
+            "title": "Wallet Balance",
+            "main": {
+                "label": "Main",
+                "alt": "coin"
+            },
+            "bonus": {
+                "label": "Bonus",
+                "alt": "bonus coin"
+            }
         },
         "menu": {
-          "deposit": "Deposit Funds",
-          "withdraw": "Withdraw Funds",
-          "paymentMethod": "Payment Method"
+            "deposit": "Deposit Funds",
+            "withdraw": "Withdraw Funds",
+            "paymentMethod": "Payment Method"
+        }
+    },
+    "deposit-form": {
+        "transaction-id": "ID de transaction*",
+        "amount": "Montant à déposer*",
+        "enter-transaction-id": "Entrez l'ID de transaction de votre application bancaire",
+        "enter-amount": "Entrez le montant à déposer",
+        "confirm-deposit": "Confirmer le dépôt",
+        "scan-qr-code": "Scanner le code QR",
+        "qr-code-description": "Scannez le code QR avec votre application bancaire pour initier le processus de dépôt",
+        "errors": {
+            "transaction-id-required": "L'ID de transaction est requis",
+            "transaction-id-max-length": "L'ID de transaction est trop long",
+            "amount-required": "Le montant est requis",
+            "amount-number": "Le montant doit être un nombre",
+            "amount-min": "Le montant doit être supérieur à zéro"
+        }
+    },
+    "withdraw": {
+        "total-balance": "Total Balance",
+        "enter-bet-amount": "Enter bet amount",
+        "withdrawal-amount-label": "Withdrawal Amount*",
+        "withdrawal-amount-placeholder": "Enter amount to withdraw",
+        "select-method-label": "Select Withdrawal Method*",
+        "no-methods-found": "No withdrawal methods found. Please add a payment method.",
+        "processing": "Processing...",
+        "withdraw-funds": "Withdraw Funds",
+        "loading-methods": "Loading withdrawal methods...",
+        "error-loading": "Failed to load withdrawal methods",
+        "try-again": "Try Again",
+        "upi-id": "UPI ID",
+        "upi": "UPI",
+        "bank": "Bank",
+        "page-title": "Withdraw Funds",
+        "loading": "Loading...",
+        "validation": {
+            "withdrawal-method-required": "Please select a withdrawal method",
+            "amount-invalid": "Amount must be a number",
+            "amount-required": "Amount is required"
+        }
+    },
+    "payment-methods": {
+        "page-title": "Payment Methods",
+        "upi-id": "UPI ID",
+        "no-methods": "No Payment Methods Added",
+        "add-method": "Add Payment Method",
+        "add-upi": "Add UPI",
+        "add-bank": "Add Bank Details"
+    },
+    "bank-form": {
+        "page-title": "Withdraw Funds",
+        "upi-id-label": "UPI ID*",
+        "upi-id-placeholder": "example@bank",
+        "account-name-label": "Account Holder Name*",
+        "account-number-label": "Account Number*",
+        "ifsc-code-label": "IFSC Code*",
+        "ifsc-code-placeholder": "SBIN0012345",
+        "saving": "Saving...",
+        "save-method": "Save Payment Method",
+        "validation": {
+            "account-name-required": "Account name is required",
+            "account-number-length": "Account number must be 16 digits",
+            "account-number-digits": "Account number must contain only digits",
+            "ifsc-length": "IFSC code must be 11 characters",
+            "ifsc-format": "Invalid IFSC code format. Example: SBIN0012345",
+            "upi-format": "Invalid UPI ID format. Example: example@bank",
+            "provide-one-method": "Provide either bank details or a UPI ID, not both"
+        }
+    },
+    "transaction-history": {
+        "page-title": "Transaction History",
+        "tabs": {
+            "deposits": "Deposits",
+            "withdrawals": "Withdrawals"
+        },
+        "table": {
+            "headers": {
+                "date-time": "Date/Time",
+                "amount": "Amount",
+                "status": "Status"
+            },
+            "status": {
+                "completed": "Completed",
+                "failed": "Failed",
+                "pending": "Pending"
+            }
+        },
+        "errors": {
+            "load-failed": "Failed to load transactions. Please try again later."
+        }
+    },
+    "betting-history": {
+        "page-title": "Betting History",
+        "date-range": {
+            "to": "to",
+            "page-size": "Page Size"
+        },
+        "errors": {
+            "load-failed": "Failed to load betting history. Please try again later."
+        },
+        "table": {
+            "headers": {
+                "round": "Round",
+                "date-time": "Date & Time",
+                "bet-type": "Bet Type",
+                "amount": "Amount",
+                "winner": "Winner",
+                "status": "Status"
+            },
+            "status": {
+                "won": "Won",
+                "lost": "Lost",
+                "pending": "Pending"
+            },
+            "round-prefix": "Round #"
+        }
+    },
+    "pagination": {
+        "previous": "Previous",
+        "next": "Next"
+    },
+    "auth": {
+        "titles": {
+            "welcome-back": "Welcome Back"
+        },
+        "labels": {
+            "username-email": "Username or Email*",
+            "password": "Password*"
+        },
+        "validation": {
+            "password-min": "Password must be at least 6 characters",
+            "password-max": "Password must be less than 20 characters",
+            "password-required": "Password is required"
+        },
+        "links": {
+            "forgot-password": "Forgot Password?"
+        },
+        "buttons": {
+            "signing-in": "Signing in...",
+            "sign-in": "Sign In",
+            "continue-with-google": "Continue with Google",
+            "create-account": "Create an Account"
+        },
+        "common": {
+            "or": "Or"
+        },
+        "alt": {
+            "google-logo": "Google logo"
+        }
+    },
+    "reset-password": {
+        "title": "Forgot Password",
+        "description": "Enter your new password twice below to reset a new password.",
+        "labels": {
+            "new-password": "Enter new password*",
+            "confirm-password": "Re-enter new password*"
+        },
+        "validation": {
+            "password-min": "Password must be at least 6 characters",
+            "password-max": "Password must be less than 20 characters",
+            "password-required": "Password is required",
+            "confirm-password-required": "Please confirm your password",
+            "passwords-mismatch": "Passwords don't match"
+        },
+        "buttons": {
+            "resetting": "Resetting...",
+            "reset-password": "Reset Password"
+        }
+    },
+    "register": {
+        "form-title": "Create an Account",
+        "label-full-name": "Full Name",
+        "label-username": "Username",
+        "label-email": "Email",
+        "label-reference-code": "Reference Code",
+        "label-password": "Password",
+        "terms-message": "By continuing you agree with our terms of service",
+        "button-register": "Register",
+        "button-registering": "Registering...",
+        "or": "Or",
+        "button-google": "Continue with Google",
+        "have-account": "Have an account already?",
+        "sign-in": "sign in here",
+        "validation": {
+            "name-length": "Name must be at least 3 characters long",
+            "name-max": "Name cannot exceed 100 characters",
+            "name-full": "Please enter your full name",
+            "email-invalid": "Please enter a valid email address",
+            "username-max": "Username cannot exceed 100 characters",
+            "username-required": "Username is required",
+            "password-min": "Password must be at least 6 characters",
+            "password-max": "Password cannot exceed 20 characters",
+            "password-required": "Password is required"
+        }
+    },
+    "otpVerification": {
+        "title": "Enter OTP",
+        "description": "Please enter the code sent to your phone or email.",
+        "validation": {
+            "otp-length": "OTP must be exactly 4 characters long"
+        },
+        "buttons": {
+            "verifying": "Verifying...",
+            "verify": "Verify",
+            "resend": "Resend"
+        }
+    },
+    "forgotPassword": {
+        "title": "Forgot Password",
+        "description": "Enter the email address associated with your account",
+        "email": {
+          "label": "Email Address*",
+          "validation": {
+            "required": "Email is required",
+            "invalid": "Please enter a valid email address"
+          }
+        },
+        "button": {
+          "sendCode": "Send Verification Code",
+          "sending": "Sending..."
         }
       }
 }

@@ -1,4 +1,5 @@
-'use client';
+"use client";
+
 import Container from "@/components/common/container";
 import TopBar from "@/components/common/top-bar";
 import TransactionTable from "@/components/features/gamer/wallet/transaction-list";
@@ -7,9 +8,10 @@ import { Transaction, TransactionType } from "@/models/transaction";
 import { useGetUserTransactions } from "@/react-query/payment-queries";
 import { Loader2 } from "lucide-react";
 import { useMemo, useState } from "react";
-
+import { useTranslations } from 'next-intl';
 
 const TransactionHistoryPage = () => {
+    const t = useTranslations('transaction-history');
     const [transactionType, setTransactionType] = useState<TransactionType>(
         TransactionType.DEPOSIT
     );
@@ -23,13 +25,9 @@ const TransactionHistoryPage = () => {
     };
 
     const transactions = useMemo(() => {
-
         if (!isSuccess) return [];
-
         return data.data.transactions.map((transaction: any) => new Transaction(transaction));
-
-    }, [data, isSuccess])
-
+    }, [data, isSuccess]);
 
     return (
         <Container className="bg-primary-game relative flex flex-col pt-24 gap-12 items-center min-h-screen overflow-hidden">
@@ -41,7 +39,7 @@ const TransactionHistoryPage = () => {
             />
 
             <TopBar>
-                <h1 className="text-xl font-semibold">Transaction History</h1>
+                <h1 className="text-xl font-semibold">{t('page-title')}</h1>
             </TopBar>
 
             <Tabs
@@ -51,10 +49,10 @@ const TransactionHistoryPage = () => {
             >
                 <TabsList className="w-full h-13 p-2">
                     <TabsTrigger className="flex-1" value="deposit">
-                        Deposits
+                        {t('tabs.deposits')}
                     </TabsTrigger>
                     <TabsTrigger className="flex-1" value="withdrawal">
-                        Withdrawals
+                        {t('tabs.withdrawals')}
                     </TabsTrigger>
                 </TabsList>
 
@@ -64,7 +62,7 @@ const TransactionHistoryPage = () => {
                     </div>
                 ) : error ? (
                     <div className="text-center py-8 text-red-500">
-                        Failed to load transactions. Please try again later.
+                        {t('errors.load-failed')}
                     </div>
                 ) : (
                     <TransactionTable transactions={transactions} />

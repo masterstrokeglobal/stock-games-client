@@ -18,57 +18,62 @@ import { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { useGetWinningReport } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-
+// Filter Type Definition
 type Filter = {
     startDate?: Date;
     endDate?: Date;
     timeFrom: string;
     timeTo: string;
-}
+};
 
 const RoundRecordTable = () => {
     const [page, setPage] = useState(1);
     const [type, setType] = useState<string>("all");
     const [isDownload, setIsDownload] = useState(false);
     const [filter, setFilter] = useState<Filter>({
-        timeFrom: dayjs().startOf('year').format("YYYY-MM-DDTHH:mm:ss"),
-        timeTo: dayjs().endOf('year').format("YYYY-MM-DDTHH:mm:ss"),
+        timeFrom: dayjs().startOf("day").toISOString(),
+        timeTo: dayjs().endOf("day").toISOString(),
     });
 
-    const params = {
+    // Define params with type
+    const params: {
+        page: number;
+        type?: string;
+        startTime: string;
+        endTime: string;
+    } = {
         page: page,
         type: type === "all" ? undefined : type,
         startTime: filter.timeFrom,
         endTime: filter.timeTo,
     };
 
-    // Fetch all round records with pagination, search query, and filters
+    // Fetch round records
     const { data, isSuccess, isFetching } = useGetWinningReport(params);
 
+    // Handle Excel Download
     const downloadExcel = async () => {
-        // will get a buffer response
         setIsDownload(true);
         try {
-
             const response = await roundRecordsAPI.getWinningReportExcel(params);
 
-            // Create a blob from the response data
             const blob = new Blob([response.data], {
-                type: response.headers['content-type'] || 'application/octet-stream',
+                type: response.headers["content-type"] || "application/octet-stream",
             });
 
-            // Create a link element to trigger download
-            const link = document.createElement('a');
+            const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = `winning-report-${type}-${dayjs.utc(filter.startDate).format("YYYY-MM-DD")}.xlsx`;
+            link.download = `winning-report-${type}-${dayjs
+                .utc(filter.startDate)
+                .format("YYYY-MM-DD")}.xlsx`;
             document.body.appendChild(link);
             link.click();
 
@@ -76,33 +81,28 @@ const RoundRecordTable = () => {
             document.body.removeChild(link);
             URL.revokeObjectURL(link.href);
             toast.success("Downloaded Successfully");
-        }
-        catch (error) {
-            console.log(error);
+        } catch (error) {
+            console.error(error);
             toast.error("Failed to download");
-        }
-        finally {
+        } finally {
             setIsDownload(false);
         }
-        
-    }
+    };
 
+    // Memoize round records
     const roundRecords = useMemo(() => {
         if (isSuccess && data?.data?.rounds) {
-            return Array.from(data.data.rounds).map(
-                (record: any) => new RoundRecord(record)
-            );
+            return data.data.rounds.map((record: any) => new RoundRecord(record));
         }
         return [];
     }, [data, isSuccess]);
 
-    // Calculate total pages based on data count
+    // Calculate total pages
     const totalPages = useMemo(() => {
-        return Math.ceil(data?.data?.count / 10) || 1;
-    }, [data, isSuccess]);
+        return Math.ceil((data?.data?.count || 0) / 10) || 1;
+    }, [data]);
 
-
-    // Change page when pagination controls are used
+    // Page change handler
     const changePage = (newPage: number) => {
         setPage(newPage);
     };
@@ -112,21 +112,34 @@ const RoundRecordTable = () => {
             <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between">
                 <h2 className="text-xl font-semibold">Round Records</h2>
                 <div className="flex gap-5 items-center">
-                    {/*              <DatePicker value={filter.startDate} onSelect={(date) => setFilter({ ...filter, startDate: date })} />
-                    <DatePicker value={filter.endDate} onSelect={(date) => setFilter(
-                        { ...filter, endDate: date }
-                    )} /> */}
+                    {/* Time Filters */}
+                    <Input
+                        type="datetime-local"
+                        value={dayjs(filter.timeFrom).format("YYYY-MM-DDTHH:mm")}
+                        onChange={(e) => {
+                            setPage(1);
+                            setFilter({
+                                ...filter,
+                                timeFrom: dayjs(e.target.value).toISOString(), // Convert local time to UTC
+                            });
+                        }}
+                    />
+                    <span>to</span>
+                    <Input
+                        type="datetime-local"
+                        value={dayjs(filter.timeTo).format("YYYY-MM-DDTHH:mm")}
+                        onChange={(e) => {
+                            setPage(1);
+                            setFilter({
+                                ...filter,
+                                timeTo: dayjs(e.target.value).toISOString(), // Convert local time to UTC
+                            });
+                        }}
+                    />
 
-                    <Input type="datetime-local" value={filter.timeFrom}
-                        onChange={(e) =>{ setPage(1); setFilter({ ...filter, timeFrom: e.target.value })}} />
-                    <span>
-                        to
-                    </span>
-                    <Input type="datetime-local" value={filter.timeTo}
-                        onChange={(e) =>{ setPage(1); setFilter({ ...filter, timeTo: e.target.value })}} />
 
-                    {/* ShadCN Select for Scheduler Type Filter */}
-                    <Select value={type} onValueChange={(val) =>{setPage(1); setType(val as SchedulerType)}}>
+                    {/* Type Filter */}
+                    <Select value={type} onValueChange={(val) => setType(val)}>
                         <SelectTrigger>
                             <SelectValue placeholder="All Types" />
                         </SelectTrigger>
@@ -139,8 +152,11 @@ const RoundRecordTable = () => {
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-                    <Button onClick={downloadExcel} disabled={isDownload}
-                    > {isDownload ? "Downloading..." : "Download Excel"}</Button>
+
+                    {/* Download Button */}
+                    <Button onClick={downloadExcel} disabled={isDownload}>
+                        {isDownload ? "Downloading..." : "Download Excel"}
+                    </Button>
                 </div>
             </header>
             <main className="mt-4">

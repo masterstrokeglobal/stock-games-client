@@ -1,0 +1,350 @@
+{
+    "common": {
+      "app-name": "Stock Derby"
+    },
+    "game": {
+      "title": "Stock Derby",
+      "game-over": "Oyun Bitti",
+      "bet": "Bahis",
+      "game-ends-in": "Oyun bitiyor",
+      "current-bets": "Mevcut Bahisler",
+      "leaderboard": "Liderlik Tablosu",
+      "rank": "Sıra",
+      "horse": "At",
+      "price": "Fiyat",
+      "name": "İsim",
+      "change": "Değişim",
+      "race-begin": "Yarış başlamak üzere",
+      "no-bets": "Henüz bahis yapılmadı",
+      "betting-closed": "Bahis Kapalı",
+      "place-your-bets": "Bahislerinizi yapın",
+      "round-ends-in": "Tur bitiyor",
+      "round-starts-in": "Tur başlıyor",
+      "place-starts-in": "Yer başlıyor",
+      "place-ends-in": "Yer bitiyor"
+    },
+    "user-menu": {
+      "title": "Kullanıcı Menüsü",
+      "profile-image-alt": "Profil Resmi",
+      "coin-image-alt": "Jeton İkonu",
+      "add-funds-alt": "Para Yatır",
+      "loading": "...",
+      "your-info": "Bilgileriniz",
+      "change-password": "Şifreyi Değiştir",
+      "your-wallet": "Cüzdanınız",
+      "transaction-history": "İşlem Geçmişi",
+      "betting-history": "Bahis Geçmişi",
+      "logout": "Çıkış Yap"
+    },
+    "profile": {
+      "page-title": "Bilgileriniz",
+      "labels": {
+        "profile-image": "Profil Resmi",
+        "firstname": "Ad*",
+        "lastname": "Soyad*",
+        "username": "Kullanıcı Adı",
+        "phone": "Telefon Numarası",
+        "email": "E-posta*",
+        "reference-code": "Referans Kodu"
+      },
+      "validation": {
+        "firstname-required": "Ad gereklidir",
+        "firstname-max": "Ad 50 karakterden kısa olmalıdır",
+        "lastname-required": "Soyad gereklidir",
+        "lastname-max": "Soyad 50 karakterden kısa olmalıdır",
+        "username-max": "Kullanıcı adı 100 karakterden kısa olmalıdır",
+        "email-invalid": "Geçersiz e-posta adresi"
+      },
+      "buttons": {
+        "updating": "Güncelleniyor...",
+        "update-profile": "Profil Güncelle"
+      }
+    },
+    "form-image": {
+      "default-label": "Görüntü Yükle",
+      "image": {
+        "preview-alt": "Yüklenen Görüntü Önizlemesi"
+      },
+      "upload": {
+        "click-to-upload": "Yüklemek için tıklayın",
+        "select-image": "Görüntü Seç"
+      },
+      "status": {
+        "uploading": "Görüntü Yükleniyor..."
+      },
+      "toast": {
+        "upload-success": "Görüntü başarıyla yüklendi",
+        "upload-error": "Görüntü yüklenemedi",
+        "invalid-file": "Lütfen geçerli bir görüntü dosyası yükleyin",
+        "image-removed": "Görüntü kaldırıldı"
+      }
+    },
+    "password": {
+      "title": "Şifre Değiştir",
+      "oldPassword": {
+        "label": "Eski Şifre*",
+        "validation": {
+          "required": "Eski şifre gereklidir",
+          "minLength": "Şifre en az 8 karakter olmalıdır"
+        }
+      },
+      "newPassword": {
+        "label": "Yeni Şifre*",
+        "validation": {
+          "required": "Yeni şifre gereklidir",
+          "minLength": "Şifre en az 8 karakter olmalıdır"
+        }
+      },
+      "confirmPassword": {
+        "label": "Yeni Şifreyi Tekrar Girin*",
+        "validation": {
+          "required": "Şifre onayı gereklidir",
+          "match": "Yeni şifre ve onay şifresi eşleşmelidir"
+        }
+      },
+      "button": {
+        "submit": "Şifreyi Değiştir",
+        "loading": "Değiştiriliyor..."
+      }
+    },
+    "wallet": {
+      "title": "Cüzdanınız",
+      "balance": {
+        "title": "Cüzdan Bakiyesi",
+        "main": {
+          "label": "Ana",
+          "alt": "jeton"
+        },
+        "bonus": {
+          "label": "Bonus",
+          "alt": "bonus jeton"
+        }
+      },
+      "menu": {
+        "deposit": "Para Yatır",
+        "withdraw": "Para Çek",
+        "paymentMethod": "Ödeme Yöntemi"
+      }
+    },
+    "deposit-form": {
+      "transaction-id": "İşlem ID*",
+      "amount": "Yatırılacak Tutar*",
+      "enter-transaction-id": "Banka uygulamanızın işlem ID'sini girin",
+      "enter-amount": "Yatırılacak tutarı girin",
+      "confirm-deposit": "Yatırımı Onayla",
+      "scan-qr-code": "QR kodunu tarayın",
+      "qr-code-description": "Yatırım sürecini başlatmak için banka uygulamanızla QR kodunu tarayın",
+      "errors": {
+        "transaction-id-required": "İşlem ID'si gereklidir",
+        "transaction-id-max-length": "İşlem ID'si çok uzun",
+        "amount-required": "Tutar gereklidir",
+        "amount-number": "Tutar bir sayı olmalıdır",
+        "amount-min": "Tutar sıfırdan büyük olmalıdır"
+      }
+    },
+    "withdraw": {
+      "total-balance": "Toplam Bakiye",
+      "enter-bet-amount": "Bahis tutarını girin",
+      "withdrawal-amount-label": "Çekilecek Tutar*",
+      "withdrawal-amount-placeholder": "Çekilecek tutarı girin",
+      "select-method-label": "Çekim Yöntemi Seçin*",
+      "no-methods-found": "Çekim yöntemi bulunamadı. Lütfen bir ödeme yöntemi ekleyin.",
+      "processing": "İşleniyor...",
+      "withdraw-funds": "Para Çek",
+      "loading-methods": "Çekim yöntemleri yükleniyor...",
+      "error-loading": "Çekim yöntemleri yüklenemedi",
+      "try-again": "Yeniden Deneyin",
+      "upi-id": "UPI ID",
+      "upi": "UPI",
+      "bank": "Banka",
+      "page-title": "Para Çek",
+      "loading": "Yükleniyor...",
+      "validation": {
+        "withdrawal-method-required": "Lütfen bir çekim yöntemi seçin",
+        "amount-invalid": "Tutar bir sayı olmalıdır",
+        "amount-required": "Tutar gereklidir"
+      }
+    },
+    "payment-methods": {
+      "page-title": "Ödeme Yöntemleri",
+      "upi-id": "UPI ID",
+      "no-methods": "Ödeme Yöntemi Eklenmedi",
+      "add-method": "Ödeme Yöntemi Ekle",
+      "add-upi": "UPI Ekle",
+      "add-bank": "Banka Bilgileri Ekle"
+    },
+    "bank-form": {
+      "page-title": "Para Çek",
+      "upi-id-label": "UPI ID*",
+      "upi-id-placeholder": "example@bank",
+      "account-name-label": "Hesap Sahibinin Adı*",
+      "account-number-label": "Hesap Numarası*",
+      "ifsc-code-label": "IFSC Kodu*",
+      "ifsc-code-placeholder": "SBIN0012345",
+      "saving": "Kaydediliyor...",
+      "save-method": "Ödeme Yöntemini Kaydet",
+      "validation": {
+        "account-name-required": "Hesap sahibi adı gereklidir",
+        "account-number-length": "Hesap numarası 16 haneli olmalıdır",
+        "account-number-digits": "Hesap numarası sadece rakamlardan oluşmalıdır",
+        "ifsc-length": "IFSC kodu 11 karakter olmalıdır",
+        "ifsc-format": "Geçersiz IFSC kodu formatı. Örnek: SBIN0012345",
+        "upi-format": "Geçersiz UPI ID formatı. Örnek: example@bank",
+        "provide-one-method": "Lütfen ya banka bilgisi ya da bir UPI ID'si sağlayın, her ikisi değil"
+      }
+    },
+    "transaction-history": {
+      "page-title": "İşlem Geçmişi",
+      "tabs": {
+        "deposits": "Yatırımlar",
+        "withdrawals": "Çekimler"
+      },
+      "table": {
+        "headers": {
+          "date-time": "Tarih/Saat",
+          "amount": "Tutar",
+          "status": "Durum"
+        },
+        "status": {
+          "completed": "Tamamlandı",
+          "failed": "Başarısız",
+          "pending": "Beklemede"
+        }
+      },
+      "errors": {
+        "load-failed": "İşlemler yüklenemedi. Lütfen tekrar deneyin."
+      }
+    },
+    "betting-history": {
+      "page-title": "Bahis Geçmişi",
+      "date-range": {
+        "to": "a",
+        "page-size": "Sayfa Boyutu"
+      },
+      "errors": {
+        "load-failed": "Bahis geçmişi yüklenemedi. Lütfen tekrar deneyin."
+      },
+      "table": {
+        "headers": {
+          "round": "Tur",
+          "date-time": "Tarih & Saat",
+          "bet-type": "Bahis Türü",
+          "amount": "Tutar",
+          "winner": "Kazanan",
+          "status": "Durum"
+        },
+        "status": {
+          "won": "Kazandı",
+          "lost": "Kaybetti",
+          "pending": "Beklemede"
+        },
+        "round-prefix": "Tur #"
+      }
+    },
+    "pagination": {
+      "previous": "Önceki",
+      "next": "Sonraki"
+    },
+    "auth": {
+      "titles": {
+        "welcome-back": "Hoş Geldiniz"
+      },
+      "labels": {
+        "username-email": "Kullanıcı Adı veya E-posta*",
+        "password": "Şifre*"
+      },
+      "validation": {
+        "password-min": "Şifre en az 6 karakter olmalıdır",
+        "password-max": "Şifre 20 karakterden kısa olmalıdır",
+        "password-required": "Şifre gereklidir"
+      },
+      "links": {
+        "forgot-password": "Şifremi Unuttum?"
+      },
+      "buttons": {
+        "signing-in": "Giriş Yapılıyor...",
+        "sign-in": "Giriş Yap",
+        "continue-with-google": "Google ile Devam Et",
+        "create-account": "Hesap Oluştur"
+      },
+      "common": {
+        "or": "Veya"
+      },
+      "alt": {
+        "google-logo": "Google logosu"
+      }
+    },
+    "reset-password": {
+      "title": "Şifremi Unuttum",
+      "description": "Yeni şifrenizi sıfırlamak için aşağıya iki kez girin.",
+      "labels": {
+        "new-password": "Yeni şifreyi girin*",
+        "confirm-password": "Yeni şifreyi tekrar girin*"
+      },
+      "validation": {
+        "password-min": "Şifre en az 6 karakter olmalıdır",
+        "password-max": "Şifre 20 karakterden kısa olmalıdır",
+        "password-required": "Şifre gereklidir",
+        "confirm-password-required": "Lütfen şifrenizi doğrulayın",
+        "passwords-mismatch": "Şifreler uyuşmuyor"
+      },
+      "buttons": {
+        "resetting": "Sıfırlanıyor...",
+        "reset-password": "Şifreyi Sıfırla"
+      }
+    },
+    "register": {
+      "form-title": "Hesap Oluştur",
+      "label-full-name": "Tam Ad",
+      "label-username": "Kullanıcı Adı",
+      "label-email": "E-posta",
+      "label-reference-code": "Referans Kodu",
+      "label-password": "Şifre",
+      "terms-message": "Devam ederek hizmet şartlarımızı kabul ediyorsunuz",
+      "button-register": "Kaydol",
+      "button-registering": "Kaydolunuyor...",
+      "or": "Veya",
+      "button-google": "Google ile Devam Et",
+      "have-account": "Zaten hesabınız var mı?",
+      "sign-in": "buradan giriş yapın",
+      "validation": {
+        "name-length": "Ad en az 3 karakter uzunluğunda olmalıdır",
+        "name-max": "Ad 100 karakteri geçmemelidir",
+        "name-full": "Lütfen tam adınızı girin",
+        "email-invalid": "Geçerli bir e-posta adresi girin",
+        "username-max": "Kullanıcı adı 100 karakteri geçmemelidir",
+        "username-required": "Kullanıcı adı gereklidir",
+        "password-min": "Şifre en az 6 karakter olmalıdır",
+        "password-max": "Şifre 20 karakteri geçmemelidir",
+        "password-required": "Şifre gereklidir"
+      }
+    },
+    "otpVerification": {
+      "title": "OTP Girin",
+      "description": "Telefonunuza veya e-postanıza gönderilen kodu girin.",
+      "validation": {
+        "otp-length": "OTP tam olarak 4 karakter uzunluğunda olmalıdır"
+      },
+      "buttons": {
+        "verifying": "Doğrulama yapılıyor...",
+        "verify": "Doğrula",
+        "resend": "Yeniden Gönder"
+      }
+    },
+    "forgotPassword": {
+      "title": "Şifremi Unuttum",
+      "description": "Hesabınızla ilişkili e-posta adresini girin",
+      "email": {
+        "label": "E-posta Adresi*",
+        "validation": {
+          "required": "E-posta gereklidir",
+          "invalid": "Geçerli bir e-posta adresi girin"
+        }
+      },
+      "button": {
+        "sendCode": "Doğrulama Kodu Gönder",
+        "sending": "Gönderiliyor..."
+      }
+    }
+  }
+  

@@ -1,4 +1,5 @@
 "use client";
+import { AudioProvider } from "@/context/audio-context";
 import { UserProvider } from "@/context/auth-context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense } from "react";
@@ -20,12 +21,14 @@ export default function RootLayout({
 
     return (
         <Suspense>
-            <UserProvider >
-                <QueryClientProvider client={queryClient}>
-                    <Toaster toastOptions={{ duration: 1500 }} position="top-right" richColors />
-                    {children}
-                </QueryClientProvider>
-            </UserProvider>
+            <AudioProvider>
+                <UserProvider >
+                    <QueryClientProvider client={queryClient}>
+                        <Toaster toastOptions={{ duration: 1500 }} position="top-right" richColors />
+                        {children}
+                    </QueryClientProvider>
+                </UserProvider>
+            </AudioProvider>
         </Suspense>
     );
 }
