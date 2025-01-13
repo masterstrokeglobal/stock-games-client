@@ -1,6 +1,7 @@
 "use client";
 
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useGameState } from "@/hooks/use-current-game";
 import { useLeaderboard } from "@/hooks/use-leadboard";
 import { cn } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
@@ -19,6 +20,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
     const { stocks: leaderboardData } = useLeaderboard(roundRecord);
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
+    const { isGameOver } = useGameState(roundRecord);
 
 
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord.id);
@@ -37,6 +39,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
     const winnerNumber = useMemo(() => {
         if (!isSuccess) return null;
         const winningId = data.data?.winningId;
+        console.log('winningId', winningId);
 
         if (!winningId) return 0;
 
@@ -99,6 +102,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                             <th className="p-2 text-right">
                                 {t("change")}
                             </th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -129,11 +133,12 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                         {leaderboardData.filter((item) => item.horse !== winnerNumber).map((marketItem, index) => (
                             <tr
                                 key={index}
-                                className={cn("border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden", index === 0 && winnerNumber==0 ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm")}
+
+                                className={cn("border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden", (index === 0 && winnerNumber == 0) ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm")}
                             >
                                 <td className="p-2  text-gray-300">
 
-                                    {(index === 0 && winnerNumber == 0) ? (
+                                    {(index === 0 && winnerNumber == 0 && !isGameOver) ? (
                                         <img
                                             src="/rank-1.svg"
                                             alt="Rank 1"
@@ -147,7 +152,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                                         />
                                     ) : (
                                         <span className="text-[#8990A2]">
-                                            {winnerNumber == 0 ? (index + 1) : "-"}
+                                            {(winnerNumber == 0 && !isGameOver) ? (index + 1) : "-"}
                                         </span>
                                     )}
                                 </td>
@@ -163,10 +168,10 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                                 </td>
                                 <td className={cn(
                                     "p-2  text-right",
-                                    getChangeColor(marketItem.change_percent)
+                                    !isGameOver ? getChangeColor(marketItem.change_percent) : "text-gray-300"
                                 )}>
-                                    {parseFloat(marketItem.change_percent) > 0 ? '+' : ''}
-                                    {marketItem.change_percent ?? 0}%
+                                    {!isGameOver ?(parseFloat(marketItem.change_percent) > 0 ? '+' : ''): ''}
+                                    {!isGameOver?(marketItem.change_percent ?? 0):'--'}%
                                 </td>
                             </tr>
                         ))}

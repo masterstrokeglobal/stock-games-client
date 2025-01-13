@@ -185,6 +185,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     const boardChips = gameState.isPlaceOver ? bettedChips : [...bettedChips, ...chips];
 
+    console.log("boardChips", tab);
     return (
         <>
             <div className="max-w-4xl mx-auto lg:px-4 px-2 py-2  ">
@@ -196,11 +197,11 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
                         <div className={cn("relative w-full max-w-4xl mx-auto ", gameState.isPlaceOver ? 'cursor-not-allowed opacity-50' : 'cursor-crosshair')}>
                             <Tabs
-                                defaultValue={tab}
+                                value={tab}
                                 onValueChange={(value) => setTab(value as SchedulerType)}
                                 className="w-full relative z-10 mb-6"
                             >
-                                <TabsList className="w-full flex lg:hidden h-10 p-1 bg-[#0F214F]">
+                                <TabsList  className="w-full flex lg:hidden h-10 p-1 bg-[#0F214F]">
                                     <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && 'cursor-not-allowed')} value="nse">NSE</TabsTrigger>
                                     <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
                                 </TabsList>
@@ -346,7 +347,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
                     <div className='lg:w-6/12 flex justify-between flex-col '>
                         <Tabs
-                            defaultValue={tab}
+                            value={tab}
                             onValueChange={(value) => setTab(value as SchedulerType)}
                             className="w-full relative z-10"
                         >
