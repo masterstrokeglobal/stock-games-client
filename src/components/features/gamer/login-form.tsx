@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import FormInput from "@/components/ui/form/form-input";
 import FormPassword from "@/components/ui/form/form-password";
@@ -7,19 +8,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useTranslations } from "next-intl";
 
-// Zod schema for validating the login form fields
-export const createLoginSchema = z.object({
-    username: z
-        .string(),
+export const createLoginSchema = (t: any) => z.object({
+    username: z.string(),
     password: z
         .string()
-        .min(6, "Password must be at least 6 characters")
-        .max(20, "Password must be less than 20 characters")
-        .nonempty("Password is required"),
+        .min(6, t('validation.password-min'))
+        .max(20, t('validation.password-max'))
+        .nonempty(t('validation.password-required')),
 });
 
-export type LoginFormValues = z.infer<typeof createLoginSchema>;
+export type LoginFormValues = z.infer<ReturnType<typeof createLoginSchema>>;
 
 type Props = {
     defaultValues?: LoginFormValues;
@@ -29,8 +29,10 @@ type Props = {
 };
 
 const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
+    const t = useTranslations('auth');
+
     const form = useForm<LoginFormValues>({
-        resolver: zodResolver(createLoginSchema),
+        resolver: zodResolver(createLoginSchema(t)),
         defaultValues,
     });
 
@@ -42,41 +44,42 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
 
     return (
         <div className="w-full max-w-sm">
-            <h1 className="text-3xl text-center mb-10 font-semibold text-white">Welcome Back</h1>
+            <h1 className="text-3xl text-center mb-10 font-semibold text-white">
+                {t('titles.welcome-back')}
+            </h1>
 
             <FormProvider
                 methods={form}
                 onSubmit={handleSubmit(onSubmit)}
                 className="space-y-4"
             >
-                {/* Phone Field */}
                 <FormInput
                     control={control}
                     game
                     name="username"
-                    label="Username or Email*"
+                    label={t('labels.username-email')}
                     required
                 />
 
-                {/* Password Field */}
                 <div className="space-y-2">
                     <FormPassword
                         control={control}
                         game
                         name="password"
                         type="password"
-                        label="Password*"
+                        label={t('labels.password')}
                         required
                     />
 
-                    <Link href="/game/auth/forgot-password" className="text-white text-sm ml-auto text-end mt-1 block">
-                        Forgot Password?
+                    <Link
+                        href="/game/auth/forgot-password"
+                        className="text-white text-sm ml-auto text-end mt-1 block"
+                    >
+                        {t('links.forgot-password')}
                     </Link>
-
                 </div>
 
                 <footer className="flex justify-end flex-col gap-2 mt-12">
-
                     <Button
                         type="submit"
                         size="lg"
@@ -84,13 +87,13 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         className="w-full"
                         disabled={isLoading}
                     >
-                        {isLoading ? "Signing in..." : "Sign In"}
+                        {isLoading ? t('buttons.signing-in') : t('buttons.sign-in')}
                     </Button>
                 </footer>
 
                 <div className="flex items-center justify-center gap-3 text-white">
                     <Separator className="my-6 flex-1 bg-white/20" />
-                    <span>Or</span>
+                    <span>{t('common.or')}</span>
                     <Separator className="my-6 flex-1 bg-white/20" />
                 </div>
 
@@ -104,16 +107,15 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                     <img
                         className="mr-2 size-5"
                         src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg"
-                        alt="Google logo"
+                        alt={t('alt.google-logo')}
                     />
-                    Continue with Google
+                    {t('buttons.continue-with-google')}
                 </Button>
 
-                <div className="mt-8 ">
-
+                <div className="mt-8">
                     <Link href="/game/auth/register" className="text-white">
                         <Button variant="ghost" fullWidth>
-                            Create an Account
+                            {t('buttons.create-account')}
                         </Button>
                     </Link>
                 </div>

@@ -1,0 +1,352 @@
+{
+    "common": {
+        "app-name": "Stock Derby"
+    },
+    "game": {
+        "title": "Stock Derby",
+        "game-over": "Kraj igre",
+        "bet": "Opklada",
+        "game-ends-in": "Igra se završava za",
+        "current-bets": "Trenutne opklade",
+        "leaderboard": "Tabela",
+        "rank": "Rang",
+        "horse": "Konj",
+        "price": "Cena",
+        "name": "Ime",
+        "change": "Promena za 2 minuta",
+        "username": "Korisnička imena",
+        "amount": "Iznos",
+        "placement": "Pozicija",
+        "race-begin": "Trka će uskoro početi",
+        "no-bets": "Nema postavljenih opklada",
+        "betting-closed": "Opklade su zatvorene",
+        "place-your-bets": "Postavite svoje opklade",
+        "round-ends-in": "Runda se završava za",
+        "round-starts-in": "Runda počinje za",
+        "place-starts-in": "Postavljanje počinje za",
+        "place-ends-in": "Postavljanje se završava za"
+    },
+    "user-menu": {
+        "title": "Meni korisnika",
+        "profile-image-alt": "Slika profila",
+        "coin-image-alt": "Ikona kovanice",
+        "add-funds-alt": "Dodaj sredstva",
+        "loading": "...",
+        "your-info": "Vaše informacije",
+        "change-password": "Promeni lozinku",
+        "your-wallet": "Vaš novčanik",
+        "transaction-history": "Istorija transakcija",
+        "betting-history": "Istorija opklada",
+        "logout": "Odjavite se"
+    },
+    "profile": {
+        "page-title": "Vaše informacije",
+        "labels": {
+            "profile-image": "Slika profila",
+            "firstname": "Ime*",
+            "lastname": "Prezime*",
+            "username": "Korisničko ime",
+            "phone": "Broj telefona",
+            "email": "Email*",
+            "reference-code": "Referalni kod"
+        },
+        "validation": {
+            "firstname-required": "Ime je obavezno",
+            "firstname-max": "Ime mora biti kraće od 50 karaktera",
+            "lastname-required": "Prezime je obavezno",
+            "lastname-max": "Prezime mora biti kraće od 50 karaktera",
+            "username-max": "Korisničko ime mora biti kraće od 100 karaktera",
+            "email-invalid": "Nevalidna email adresa"
+        },
+        "buttons": {
+            "updating": "Ažuriranje...",
+            "update-profile": "Ažuriraj profil"
+        }
+    },
+    "form-image": {
+        "default-label": "Otpremite sliku",
+        "image": {
+            "preview-alt": "Pregled otpremljene slike"
+        },
+        "upload": {
+            "click-to-upload": "Kliknite da otpremite",
+            "select-image": "Izaberite sliku"
+        },
+        "status": {
+            "uploading": "Otpremanje slike..."
+        },
+        "toast": {
+            "upload-success": "Slika uspešno otpremljena",
+            "upload-error": "Slika nije mogla da bude otpremljena",
+            "invalid-file": "Molimo vas da otpremite validnu sliku",
+            "image-removed": "Slika je uklonjena"
+        }
+    },
+    "password": {
+        "title": "Promeni lozinku",
+        "oldPassword": {
+            "label": "Stara lozinka*",
+            "validation": {
+                "required": "Stara lozinka je obavezna",
+                "minLength": "Lozinka mora imati najmanje 8 karaktera"
+            }
+        },
+        "newPassword": {
+            "label": "Nova lozinka*",
+            "validation": {
+                "required": "Nova lozinka je obavezna",
+                "minLength": "Lozinka mora imati najmanje 8 karaktera"
+            }
+        },
+        "confirmPassword": {
+            "label": "Ponovno unesite novu lozinku*",
+            "validation": {
+                "required": "Potvrda nove lozinke je obavezna",
+                "match": "Nova lozinka i potvrda nove lozinke moraju biti iste"
+            }
+        },
+        "button": {
+            "submit": "Promeni lozinku",
+            "loading": "Menjanje..."
+        }
+    },
+    "wallet": {
+        "title": "Vaš novčanik",
+        "balance": {
+            "title": "Stanje na novčaniku",
+            "main": {
+                "label": "Glavni",
+                "alt": "kovanica"
+            },
+            "bonus": {
+                "label": "Bonus",
+                "alt": "bonus kovanica"
+            }
+        },
+        "menu": {
+            "deposit": "Depozit sredstva",
+            "withdraw": "Povlačenje sredstava",
+            "paymentMethod": "Metod plačanja"
+        }
+    },
+    "deposit-form": {
+        "transaction-id": "ID transakcije*",
+        "amount": "Iznos za depozit*",
+        "enter-transaction-id": "Unesite ID transakcije iz vaše banke",
+        "enter-amount": "Unesite iznos za depozit",
+        "confirm-deposit": "Potvrdite depozit",
+        "scan-qr-code": "Skenirajte QR kod",
+        "qr-code-description": "Skenirajte QR kod sa vašom bankarskom aplikacijom da započnete proces depozita",
+        "errors": {
+            "transaction-id-required": "ID transakcije je obavezan",
+            "transaction-id-max-length": "ID transakcije je predug",
+            "amount-required": "Iznos je obavezan",
+            "amount-number": "Iznos mora biti broj",
+            "amount-min": "Iznos mora biti veći od nule"
+        }
+    },
+    "withdraw": {
+        "total-balance": "Ukupno stanje",
+        "enter-bet-amount": "Unesite iznos opklade",
+        "withdrawal-amount-label": "Iznos za povlačenje*",
+        "withdrawal-amount-placeholder": "Unesite iznos za povlačenje",
+        "select-method-label": "Izaberite metod povlačenja*",
+        "no-methods-found": "Nema pronađenih metoda povlačenja. Molimo dodajte metod plačanja.",
+        "processing": "Obrada...",
+        "withdraw-funds": "Povucite sredstva",
+        "loading-methods": "Učitavanje metoda povlačenja...",
+        "error-loading": "Nije uspelo učitavanje metoda povlačenja",
+        "try-again": "Pokušajte ponovo",
+        "upi-id": "UPI ID",
+        "upi": "UPI",
+        "bank": "Banka",
+        "page-title": "Povucite sredstva",
+        "loading": "Učitavanje...",
+        "validation": {
+            "withdrawal-method-required": "Molimo izaberite metod povlačenja",
+            "amount-invalid": "Iznos mora biti broj",
+            "amount-required": "Iznos je obavezan"
+        }
+    },
+    "payment-methods": {
+        "page-title": "Metode plačanja",
+        "upi-id": "UPI ID",
+        "no-methods": "Nema dodanih metoda plačanja",
+        "add-method": "Dodajte metod plačanja",
+        "add-upi": "Dodajte UPI",
+        "add-bank": "Dodajte banke podatke"
+    },
+    "bank-form": {
+        "page-title": "Povucite sredstva",
+        "upi-id-label": "UPI ID*",
+        "upi-id-placeholder": "primer@banka",
+        "account-name-label": "Ime vlasnika računa*",
+        "account-number-label": "Broj računa*",
+        "ifsc-code-label": "IFSC kod*",
+        "ifsc-code-placeholder": "SBIN0012345",
+        "saving": "Spremanje...",
+        "save-method": "Spremite metod plačanja",
+        "validation": {
+            "account-name-required": "Ime vlasnika računa je obavezno",
+            "account-number-length": "Broj računa mora imati 16 cifara",
+            "account-number-digits": "Broj računa mora sadržati samo cifre",
+            "ifsc-length": "IFSC kod mora imati 11 karaktera",
+            "ifsc-format": "Nevalidan format IFSC koda. Primer: SBIN0012345",
+            "upi-format": "Nevalidan format UPI ID-a. Primer: primer@banka",
+            "provide-one-method": "Obezbedite jedan metod plačanja, ili banke podatke ili UPI ID, ne oboje"
+        }
+    },
+    "transaction-history": {
+        "page-title": "Istorija transakcija",
+        "tabs": {
+            "deposits": "Depoziti",
+            "withdrawals": "Povlačenja"
+        },
+        "table": {
+            "headers": {
+                "date-time": "Datum/Vreme",
+                "amount": "Iznos",
+                "status": "Status"
+            },
+            "status": {
+                "completed": "Završeno",
+                "failed": "Neuspešno",
+                "pending": "Na čekanju"
+            }
+        },
+        "errors": {
+            "load-failed": "Nije uspelo učitavanje transakcija. Molimo pokušajte ponovo kasnije."
+        }
+    },
+    "betting-history": {
+        "page-title": "Istorija opklada",
+        "date-range": {
+            "to": "do",
+            "page-size": "Veličina stranice"
+        },
+        "errors": {
+            "load-failed": "Nije uspelo učitavanje istorije opklada. Molimo pokušajte ponovo kasnije."
+        },
+        "table": {
+            "headers": {
+                "round": "Runda",
+                "date-time": "Datum & Vreme",
+                "bet-type": "Vrsta opklade",
+                "amount": "Iznos",
+                "winner": "Pobednik",
+                "status": "Status"
+            },
+            "status": {
+                "won": "Pobedio",
+                "lost": "Izgubljeno",
+                "pending": "Na čekanju"
+            },
+            "round-prefix": "Runda #"
+        }
+    },
+    "pagination": {
+        "previous": "Prethodno",
+        "next": "Sledeće"
+    },
+    "auth": {
+        "titles": {
+            "welcome-back": "Dobrodošli nazad"
+        },
+        "labels": {
+            "username-email": "Korisničko ime ili email*",
+            "password": "Lozinka*"
+        },
+        "validation": {
+            "password-min": "Lozinka mora imati najmanje 6 karaktera",
+            "password-max": "Lozinka mora imati manje od 20 karaktera",
+            "password-required": "Lozinka je obavezna"
+        },
+        "links": {
+            "forgot-password": "Zaboravljena lozinka?"
+        },
+        "buttons": {
+            "signing-in": "Prijavljivanje...",
+            "sign-in": "Prijavite se",
+            "continue-with-google": "Nastavite sa Google",
+            "create-account": "Kreirajte nalog"
+        },
+        "common": {
+            "or": "Ili"
+        },
+        "alt": {
+            "google-logo": "Google logo"
+        }
+    },
+    "reset-password": {
+        "title": "Zaboravljena lozinka",
+        "description": "Unesite svoju novu lozinku dva puta da biste resetovali novu lozinku.",
+        "labels": {
+            "new-password": "Unesite novu lozinku*",
+            "confirm-password": "Ponovno unesite novu lozinku*"
+        },
+        "validation": {
+            "password-min": "Lozinka mora imati najmanje 6 karaktera",
+            "password-max": "Lozinka mora imati manje od 20 karaktera",
+            "password-required": "Lozinka je obavezna",
+            "confirm-password-required": "Molimo potvrdite svoju lozinku",
+            "passwords-mismatch": "Lozinke se ne poklapaju"
+        },
+        "buttons": {
+            "resetting": "Resetuju se...",
+            "reset-password": "Resetujte lozinku"
+        }
+    },
+    "register": {
+        "form-title": "Kreirajte nalog",
+        "label-full-name": "Puno ime",
+        "label-username": "Korisničko ime",
+        "label-email": "Email",
+        "label-reference-code": "Referalni kod",
+        "label-password": "Lozinka",
+        "terms-message": "Nastavljanjem slažete se sa našim uslovima korišćenja",
+        "button-register": "Registrujte se",
+        "button-registering": "Registracija u toku...",
+        "or": "Ili",
+        "button-google": "Nastavite sa Google",
+        "have-account": "Već imate nalog?",
+        "sign-in": "prijavite se ovde",
+        "validation": {
+            "name-length": "Ime mora biti duže od 3 karaktera",
+            "name-max": "Ime ne može biti duže od 100 karaktera",
+            "name-full": "Unesite svoje puno ime",
+            "email-invalid": "Unesite validnu email adresu",
+            "username-max": "Korisničko ime ne može biti duže od 100 karaktera",
+            "username-required": "Korisničko ime je obavezno",
+            "password-min": "Lozinka mora imati najmanje 6 karaktera",
+            "password-max": "Lozinka ne može biti duža od 20 karaktera",
+            "password-required": "Lozinka je obavezna"
+        }
+    },
+    "otpVerification": {
+        "title": "Unesite OTP",
+        "description": "Unesite kod poslat na vaš telefon ili email.",
+        "validation": {
+            "otp-length": "OTP mora biti tačno 4 karaktera"
+        },
+        "buttons": {
+            "verifying": "Verifikacija...",
+            "verify": "Verifikujte",
+            "resend": "Ponovo pošaljite"
+        }
+    },
+    "forgotPassword": {
+        "title": "Zaboravljena lozinka",
+        "description": "Unesite email adresu povezanu sa vašim nalogom",
+        "email": {
+            "label": "Email adresa*",
+            "validation": {
+                "required": "Email je obavezan",
+                "invalid": "Unesite validnu email adresu"
+            }
+        },
+        "button": {
+            "sendCode": "Pošaljite verifikacioni kod",
+            "sending": "Šalje se..."
+        }
+    }
+}

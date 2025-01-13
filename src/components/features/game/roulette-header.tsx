@@ -2,15 +2,17 @@ import React from 'react';
 import { CurrentGameState } from './contants';
 import { RoundRecord } from '@/models/round-record';
 import { useGameState } from '@/hooks/use-current-game';
+import { useTranslations } from 'next-intl';
 
 interface GameHeaderProps {
     gameState: CurrentGameState;
 }
 
 export const GameHeader: React.FC<GameHeaderProps> = ({ gameState }) => {
+    const t = useTranslations('game');
     return (
         <header className='text-center hidden lg:block my-2 text-white'>
-            <h2>{gameState.isPlaceOver ? "Game Ends in" : "Round Starts in"}</h2>
+            <h2>{gameState.isPlaceOver ? t("game-ends-in") : t("round-starts-in")}</h2>
             <p className='text-7xl jersey leading-[5rem]'>
                 {gameState.isPlaceOver ? gameState.gameTimeLeft.formatted : gameState.placeTimeLeft.formatted}
             </p>
@@ -23,12 +25,15 @@ type Props = {
 }
 
 export const MobileGameHeader = ({ roundRecord }: Props) => {
+    const t = useTranslations('game');
     const gameState = useGameState(roundRecord);
     return (
         <header className='text-center relative h-16  text-white'>
             <img className='w-full h-full absolute object-cover' src='mobile-header.svg' alt='Roulette' />
             <div className='h-16 w-40 bg-[url("/mobile-header-center.svg")] bg-cover z-50  relative mx-auto'>
-                <span className='text-sm'>Round Ends In</span>
+                <span className='text-sm'>
+                    {gameState.isPlaceOver ? t('game-ends-in') : t('round-starts-in')}
+                </span>
                 <div className='text-xl font-bold mt-1'>
                     {gameState.isPlaceOver ? gameState.gameTimeLeft.formatted : gameState.placeTimeLeft.formatted}
                 </div>

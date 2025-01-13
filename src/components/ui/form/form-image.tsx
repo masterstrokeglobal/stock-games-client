@@ -5,6 +5,7 @@ import { ImagePlus, X } from "lucide-react"
 import React, { useCallback, useEffect, useState } from "react"
 import { Control, FieldValues, Path, useFormContext } from "react-hook-form"
 import { toast } from "sonner"
+import { useTranslations } from 'next-intl'
 
 interface FormImageProps<TFieldValues extends FieldValues = FieldValues> {
     control: Control<TFieldValues>
@@ -15,9 +16,10 @@ interface FormImageProps<TFieldValues extends FieldValues = FieldValues> {
 
 const FormImage = <TFieldValues extends FieldValues>({
     name,
-    label = "Upload Image",
+    label,
     className,
 }: FormImageProps<TFieldValues>) => {
+    const t = useTranslations('form-image')
     const { setValue, getFieldState, getValues } = useFormContext()
     const [previewUrl, setPreviewUrl] = useState<string | null>(null)
     const [isUploading, setIsUploading] = useState(false)
@@ -45,15 +47,15 @@ const FormImage = <TFieldValues extends FieldValues>({
                 setValue(name as any, uploadedFileUrl);
                 setPreviewUrl(uploadedFileUrl);
                 setIsUploading(false)
-                toast.success("Image uploaded successfully")
+                toast.success(t('toast.upload-success'))
             },
             onError: () => {
                 setPreviewUrl(null)
                 setIsUploading(false)
-                toast.error("Failed to upload image")
+                toast.error(t('toast.upload-error'))
             }
         })
-    }, [name, setValue, uploadImageMutation])
+    }, [name, setValue, uploadImageMutation, t])
 
     const handleDrop = useCallback((event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -65,10 +67,10 @@ const FormImage = <TFieldValues extends FieldValues>({
             if (file.type.startsWith('image/')) {
                 handleUpload(file);
             } else {
-                toast.error("Please upload a valid image file")
+                toast.error(t('toast.invalid-file'))
             }
         }
-    }, [handleUpload])
+    }, [handleUpload, t])
 
     const handleDragOver = useCallback((event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -85,16 +87,16 @@ const FormImage = <TFieldValues extends FieldValues>({
     const handleRemove = useCallback(() => {
         setPreviewUrl(null)
         setValue(name as any, null)
-        toast.info("Image removed")
-    }, [name, setValue])
+        toast.info(t('toast.image-removed'))
+    }, [name, setValue, t])
 
     return (
         <div className={`${className} space-y-2`}>
-            {label && <FormLabel className="text-white">{label}</FormLabel>}
+            {label && <FormLabel className="text-white">{label || t('default-label')}</FormLabel>}
 
             <div 
                 className={`
-                    relative border-2 border-dashed rounded-lg  text-center 
+                    relative border-2 border-dashed rounded-lg text-center 
                     transition-colors duration-300
                     ${previewUrl ? 'border-blue-400' : 'border-gray-300 hover:border-blue-500'}
                 `}
@@ -105,7 +107,7 @@ const FormImage = <TFieldValues extends FieldValues>({
                     <div className="relative aspect-square" >
                         <img 
                             src={previewUrl} 
-                            alt="Uploaded preview" 
+                            alt={t('image.preview-alt')}
                             className="mx-auto h-full rounded-md object-cover"
                         />
                         <Button
@@ -122,7 +124,7 @@ const FormImage = <TFieldValues extends FieldValues>({
                     <div className="flex flex-col items-center justify-center p-2 aspect-square space-y-2">
                         <ImagePlus className="h-12 w-12 text-gray-400" />
                         <p className="text-sm text-gray-600">
-                             click to upload
+                            {t('upload.click-to-upload')}
                         </p>
                         <input 
                             type="file" 
@@ -135,7 +137,7 @@ const FormImage = <TFieldValues extends FieldValues>({
                             htmlFor={`file-upload-${name}`}
                             className="cursor-pointer bg-blue-500 text-white text-sm mt-4 block px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
                         >
-                            Select Image
+                            {t('upload.select-image')}
                         </label>
                     </div>
                 )}
@@ -143,7 +145,7 @@ const FormImage = <TFieldValues extends FieldValues>({
 
             {isUploading && (
                 <div className="text-sm text-muted-foreground text-center">
-                    Uploading image...
+                    {t('status.uploading')}
                 </div>
             )}
 

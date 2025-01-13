@@ -1,0 +1,352 @@
+{
+    "common": {
+        "app-name": "ديربي الأسهم"
+    },
+    "game": {
+        "title": "ستوك ديربي",
+        "game-over": "انتهت اللعبة",
+        "bet": "رهان",
+        "game-ends-in": "تنتهي اللعبة في",
+        "current-bets": "الرهانات الحالية",
+        "leaderboard": "الترتيب",
+        "rank": "الترتيب",
+        "horse": "حصان",
+        "price": "السعر",
+        "name": "الاسم",
+        "change": "التغيير في دقيقتين",
+        "username": "أسماء المستخدمين",
+        "amount": "المبلغ",
+        "placement": "المكان",
+        "race-begin": "السباق على وشك البدء",
+        "no-bets": "لا توجد رهانات تم وضعها بعد",
+        "betting-closed": "تم إغلاق الرهان",
+        "place-your-bets": "ضع رهاناتك",
+        "round-ends-in": "تنتهي الجولة في",
+        "round-starts-in": "تبدأ الجولة في",
+        "place-starts-in": "تبدأ المراهنة في",
+        "place-ends-in": "تنتهي المراهنة في"
+      },
+    "user-menu": {
+        "title": "قائمة المستخدم",
+        "profile-image-alt": "صورة الملف الشخصي",
+        "coin-image-alt": "أيقونة العملة",
+        "add-funds-alt": "إضافة أموال",
+        "loading": "...",
+        "your-info": "معلوماتك",
+        "change-password": "تغيير كلمة المرور",
+        "your-wallet": "محفظتك",
+        "transaction-history": "سجل المعاملات",
+        "betting-history": "سجل الرهانات",
+        "logout": "تسجيل خروج"
+    },
+    "profile": {
+        "page-title": "معلوماتك",
+        "labels": {
+            "profile-image": "صورة الملف الشخصي",
+            "firstname": "الاسم الأول*",
+            "lastname": "اسم العائلة*",
+            "username": "اسم المستخدم",
+            "phone": "رقم الهاتف",
+            "email": "البريد الإلكتروني*",
+            "reference-code": "كود المرجع"
+        },
+        "validation": {
+            "firstname-required": "الاسم الأول مطلوب",
+            "firstname-max": "يجب ألا يتجاوز الاسم الأول 50 حرفًا",
+            "lastname-required": "اسم العائلة مطلوب",
+            "lastname-max": "يجب ألا يتجاوز اسم العائلة 50 حرفًا",
+            "username-max": "يجب ألا يتجاوز اسم المستخدم 100 حرف",
+            "email-invalid": "عنوان البريد الإلكتروني غير صالح"
+        },
+        "buttons": {
+            "updating": "جارٍ التحديث...",
+            "update-profile": "تحديث الملف الشخصي"
+        }
+    },
+    "form-image": {
+        "default-label": "تحميل صورة",
+        "image": {
+            "preview-alt": "معاينة الصورة التي تم تحميلها"
+        },
+        "upload": {
+            "click-to-upload": "انقر للتحميل",
+            "select-image": "اختر صورة"
+        },
+        "status": {
+            "uploading": "جارٍ تحميل الصورة..."
+        },
+        "toast": {
+            "upload-success": "تم تحميل الصورة بنجاح",
+            "upload-error": "فشل تحميل الصورة",
+            "invalid-file": "يرجى تحميل ملف صورة صالح",
+            "image-removed": "تمت إزالة الصورة"
+        }
+    },
+    "password": {
+        "title": "تغيير كلمة المرور",
+        "oldPassword": {
+            "label": "كلمة المرور القديمة*",
+            "validation": {
+                "required": "كلمة المرور القديمة مطلوبة",
+                "minLength": "يجب ألا تقل كلمة المرور عن 8 أحرف"
+            }
+        },
+        "newPassword": {
+            "label": "كلمة المرور الجديدة*",
+            "validation": {
+                "required": "كلمة المرور الجديدة مطلوبة",
+                "minLength": "يجب ألا تقل كلمة المرور عن 8 أحرف"
+            }
+        },
+        "confirmPassword": {
+            "label": "أعد إدخال كلمة المرور الجديدة*",
+            "validation": {
+                "required": "تأكيد كلمة المرور مطلوب",
+                "match": "يجب أن تتطابق كلمة المرور الجديدة مع تأكيدها"
+            }
+        },
+        "button": {
+            "submit": "تغيير كلمة المرور",
+            "loading": "جارٍ التغيير..."
+        }
+    },
+    "wallet": {
+        "title": "محفظتك",
+        "balance": {
+            "title": "رصيد المحفظة",
+            "main": {
+                "label": "الرئيسي",
+                "alt": "عملة"
+            },
+            "bonus": {
+                "label": "مكافأة",
+                "alt": "عملة المكافأة"
+            }
+        },
+        "menu": {
+            "deposit": "إيداع الأموال",
+            "withdraw": "سحب الأموال",
+            "paymentMethod": "طريقة الدفع"
+        }
+    },
+    "deposit-form": {
+        "transaction-id": "معرّف المعاملة*",
+        "amount": "المبلغ المراد إيداعه*",
+        "enter-transaction-id": "أدخل معرّف المعاملة من تطبيقك المصرفي",
+        "enter-amount": "أدخل المبلغ المراد إيداعه",
+        "confirm-deposit": "تأكيد الإيداع",
+        "scan-qr-code": "مسح رمز الاستجابة السريعة",
+        "qr-code-description": "قم بمسح رمز الاستجابة السريعة باستخدام تطبيقك المصرفي لبدء عملية الإيداع",
+        "errors": {
+            "transaction-id-required": "معرّف المعاملة مطلوب",
+            "transaction-id-max-length": "معرّف المعاملة طويل جدًا",
+            "amount-required": "المبلغ مطلوب",
+            "amount-number": "يجب أن يكون المبلغ رقمًا",
+            "amount-min": "يجب أن يكون المبلغ أكبر من صفر"
+        }
+    },
+    "withdraw": {
+        "total-balance": "الرصيد الإجمالي",
+        "enter-bet-amount": "أدخل مبلغ الرهان",
+        "withdrawal-amount-label": "مبلغ السحب*",
+        "withdrawal-amount-placeholder": "أدخل المبلغ المراد سحبه",
+        "select-method-label": "اختر طريقة السحب*",
+        "no-methods-found": "لم يتم العثور على طرق سحب. يرجى إضافة طريقة دفع.",
+        "processing": "جارٍ المعالجة...",
+        "withdraw-funds": "سحب الأموال",
+        "loading-methods": "جارٍ تحميل طرق السحب...",
+        "error-loading": "فشل تحميل طرق السحب",
+        "try-again": "حاول مرة أخرى",
+        "upi-id": "معرّف UPI",
+        "upi": "UPI",
+        "bank": "بنك",
+        "page-title": "سحب الأموال",
+        "loading": "جارٍ التحميل...",
+        "validation": {
+            "withdrawal-method-required": "يرجى اختيار طريقة سحب",
+            "amount-invalid": "يجب أن يكون المبلغ رقمًا",
+            "amount-required": "المبلغ مطلوب"
+        }
+    },
+    "payment-methods": {
+        "page-title": "طرق الدفع",
+        "upi-id": "معرّف UPI",
+        "no-methods": "لم يتم إضافة طرق دفع",
+        "add-method": "إضافة طريقة دفع",
+        "add-upi": "إضافة UPI",
+        "add-bank": "إضافة تفاصيل البنك"
+    },
+    "bank-form": {
+        "page-title": "سحب الأموال",
+        "upi-id-label": "معرّف UPI*",
+        "upi-id-placeholder": "example@bank",
+        "account-name-label": "اسم صاحب الحساب*",
+        "account-number-label": "رقم الحساب*",
+        "ifsc-code-label": "رمز IFSC*",
+        "ifsc-code-placeholder": "SBIN0012345",
+        "saving": "جارٍ الحفظ...",
+        "save-method": "حفظ طريقة الدفع",
+        "validation": {
+            "account-name-required": "اسم الحساب مطلوب",
+            "account-number-length": "يجب أن يكون رقم الحساب 16 رقمًا",
+            "account-number-digits": "يجب أن يحتوي رقم الحساب على أرقام فقط",
+            "ifsc-length": "يجب أن يكون رمز IFSC مكونًا من 11 حرفًا",
+            "ifsc-format": "تنسيق رمز IFSC غير صالح. مثال: SBIN0012345",
+            "upi-format": "تنسيق معرّف UPI غير صالح. مثال: example@bank",
+            "provide-one-method": "يرجى تقديم تفاصيل البنك أو معرّف UPI فقط، وليس كلاهما"
+        }
+    },
+    "transaction-history": {
+        "page-title": "سجل المعاملات",
+        "tabs": {
+            "deposits": "الودائع",
+            "withdrawals": "عمليات السحب"
+        },
+        "table": {
+            "headers": {
+                "date-time": "التاريخ/الوقت",
+                "amount": "المبلغ",
+                "status": "الحالة"
+            },
+            "status": {
+                "completed": "مكتمل",
+                "failed": "فشل",
+                "pending": "قيد الانتظار"
+            }
+        },
+        "errors": {
+            "load-failed": "فشل تحميل المعاملات. يرجى المحاولة لاحقًا."
+        }
+    },
+    "betting-history": {
+        "page-title": "سجل الرهانات",
+        "date-range": {
+            "to": "إلى",
+            "page-size": "حجم الصفحة"
+        },
+        "errors": {
+            "load-failed": "فشل تحميل سجل الرهانات. يرجى المحاولة لاحقًا."
+        },
+        "table": {
+            "headers": {
+                "round": "الجولة",
+                "date-time": "التاريخ والوقت",
+                "bet-type": "نوع الرهان",
+                "amount": "المبلغ",
+                "winner": "الفائز",
+                "status": "الحالة"
+            },
+            "status": {
+                "won": "ربح",
+                "lost": "خسر",
+                "pending": "قيد الانتظار"
+            },
+            "round-prefix": "الجولة #"
+        }
+    },
+    "pagination": {
+        "previous": "السابق",
+        "next": "التالي"
+    },
+    "auth": {
+        "titles": {
+            "welcome-back": "مرحبًا بعودتك"
+        },
+        "labels": {
+            "username-email": "اسم المستخدم أو البريد الإلكتروني*",
+            "password": "كلمة المرور*"
+        },
+        "validation": {
+            "password-min": "يجب ألا تقل كلمة المرور عن 6 أحرف",
+            "password-max": "يجب ألا تزيد كلمة المرور عن 20 حرفًا",
+            "password-required": "كلمة المرور مطلوبة"
+        },
+        "links": {
+            "forgot-password": "هل نسيت كلمة المرور؟"
+        },
+        "buttons": {
+            "signing-in": "جارٍ تسجيل الدخول...",
+            "sign-in": "تسجيل الدخول",
+            "continue-with-google": "المتابعة باستخدام Google",
+            "create-account": "إنشاء حساب"
+        },
+        "common": {
+            "or": "أو"
+        },
+        "alt": {
+            "google-logo": "شعار Google"
+        }
+    },
+    "reset-password": {
+        "title": "نسيت كلمة المرور",
+        "description": "أدخل كلمة المرور الجديدة مرتين أدناه لإعادة تعيينها.",
+        "labels": {
+            "new-password": "أدخل كلمة مرور جديدة*",
+            "confirm-password": "أعد إدخال كلمة المرور الجديدة*"
+        },
+        "validation": {
+            "password-min": "يجب ألا تقل كلمة المرور عن 6 أحرف",
+            "password-max": "يجب ألا تزيد كلمة المرور عن 20 حرفًا",
+            "password-required": "كلمة المرور مطلوبة",
+            "confirm-password-required": "يرجى تأكيد كلمة المرور",
+            "passwords-mismatch": "كلمات المرور غير متطابقة"
+        },
+        "buttons": {
+            "resetting": "جارٍ إعادة التعيين...",
+            "reset-password": "إعادة تعيين كلمة المرور"
+        }
+    },
+    "register": {
+        "form-title": "إنشاء حساب",
+        "label-full-name": "الاسم الكامل",
+        "label-username": "اسم المستخدم",
+        "label-email": "البريد الإلكتروني",
+        "label-reference-code": "كود المرجع",
+        "label-password": "كلمة المرور",
+        "terms-message": "بالاستمرار، فإنك توافق على شروط الخدمة لدينا",
+        "button-register": "تسجيل",
+        "button-registering": "جارٍ التسجيل...",
+        "or": "أو",
+        "button-google": "المتابعة باستخدام Google",
+        "have-account": "هل لديك حساب بالفعل؟",
+        "sign-in": "تسجيل الدخول هنا",
+        "validation": {
+            "name-length": "يجب ألا يقل الاسم عن 3 أحرف",
+            "name-max": "يجب ألا يتجاوز الاسم 100 حرف",
+            "name-full": "يرجى إدخال اسمك الكامل",
+            "email-invalid": "يرجى إدخال عنوان بريد إلكتروني صالح",
+            "username-max": "يجب ألا يتجاوز اسم المستخدم 100 حرف",
+            "username-required": "اسم المستخدم مطلوب",
+            "password-min": "يجب ألا تقل كلمة المرور عن 6 أحرف",
+            "password-max": "يجب ألا تزيد كلمة المرور عن 20 حرفًا",
+            "password-required": "كلمة المرور مطلوبة"
+        }
+    },
+    "otpVerification": {
+        "title": "أدخل OTP",
+        "description": "يرجى إدخال الرمز الذي تم إرساله إلى هاتفك أو بريدك الإلكتروني.",
+        "validation": {
+            "otp-length": "يجب أن يتكون OTP من 4 أحرف بالضبط"
+        },
+        "buttons": {
+            "verifying": "جارٍ التحقق...",
+            "verify": "تحقق",
+            "resend": "إعادة الإرسال"
+        }
+    },
+    "forgotPassword": {
+        "title": "نسيت كلمة المرور",
+        "description": "أدخل عنوان البريد الإلكتروني المرتبط بحسابك",
+        "email": {
+            "label": "عنوان البريد الإلكتروني*",
+            "validation": {
+                "required": "البريد الإلكتروني مطلوب",
+                "invalid": "يرجى إدخال عنوان بريد إلكتروني صالح"
+            }
+        },
+        "button": {
+            "sendCode": "إرسال رمز التحقق",
+            "sending": "جاري الإرسال..."
+        }
+    }
+}

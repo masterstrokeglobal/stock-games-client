@@ -2,6 +2,7 @@
 // components/BettingControls.tsx
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useTranslations } from 'next-intl';
 
 interface BettingControlsProps {
     betAmount: number;
@@ -18,6 +19,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
     isLoading,
     onPlaceBet
 }) => {
+    const t = useTranslations('game');
     return (
         <div className="max-w-4xl mx-auto bg-[#1A2D58] p-4 rounded-2xl">
             <div className="flex justify-center relative mb-2">
@@ -55,7 +57,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                 disabled={isPlaceOver || isLoading}
                 onClick={onPlaceBet}
             >
-                {isPlaceOver ? "BETTING CLOSED" : "BET"}
+                {isPlaceOver ? t('betting-closed').toUpperCase() : t('bet').toUpperCase()}
             </button>
         </div>
     );

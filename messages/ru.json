@@ -1,0 +1,351 @@
+{
+    "common": {
+        "app-name": "Скачки Акций"
+    },
+    "game": {
+        "title": "Stock Derby",
+        "game-over": "Игра окончена",
+        "bet": "Ставка",
+        "game-ends-in": "Игра заканчивается через",
+        "current-bets": "Текущие ставки",
+        "leaderboard": "Таблица лидеров",
+        "rank": "Ранг",
+        "horse": "Лошадь",
+        "price": "Цена",
+        "name": "Имя",
+        "change": "Изменение через 2 минуты",
+        "username": "Пользовательские имена",
+        "amount": "Сумма",
+        "placement": "Размещение",
+        "race-begin": "Гонка вот-вот начнется",
+        "no-bets": "Нет ставок",
+        "betting-closed": "Ставки закрыты",
+        "place-your-bets": "Сделайте ставки",
+        "round-ends-in": "Раунд заканчивается через",
+        "round-starts-in": "Раунд начинается через",
+        "place-starts-in": "Ставки начинаются через",
+        "place-ends-in": "Ставки заканчиваются через"
+    },
+    "user-menu": {
+        "title": "Меню пользователя",
+        "profile-image-alt": "Фото профиля",
+        "coin-image-alt": "Иконка монеты",
+        "add-funds-alt": "Пополнить",
+        "loading": "...",
+        "your-info": "Ваша информация",
+        "change-password": "Изменить пароль",
+        "your-wallet": "Ваш кошелёк",
+        "transaction-history": "История транзакций",
+        "betting-history": "История ставок",
+        "logout": "Выйти"
+    },
+    "profile": {
+        "page-title": "Ваша информация",
+        "labels": {
+            "profile-image": "Фото профиля",
+            "firstname": "Имя*",
+            "lastname": "Фамилия*",
+            "username": "Имя пользователя",
+            "phone": "Номер телефона",
+            "email": "Эл. почта*",
+            "reference-code": "Реферальный код"
+        },
+        "validation": {
+            "firstname-required": "Укажите имя",
+            "firstname-max": "Имя должно быть короче 50 символов",
+            "lastname-required": "Укажите фамилию",
+            "lastname-max": "Фамилия должна быть короче 50 символов",
+            "username-max": "Имя пользователя должно быть короче 100 символов",
+            "email-invalid": "Неверный формат эл. почты"
+        },
+        "buttons": {
+            "updating": "Обновление...",
+            "update-profile": "Обновить профиль"
+        }
+    },
+    "form-image": {
+        "default-label": "Загрузить изображение",
+        "image": {
+            "preview-alt": "Предпросмотр загруженного изображения"
+        },
+        "upload": {
+            "click-to-upload": "Нажмите для загрузки",
+            "select-image": "Выбрать изображение"
+        },
+        "status": {
+            "uploading": "Загрузка изображения..."
+        },
+        "toast": {
+            "upload-success": "Изображение успешно загружено",
+            "upload-error": "Не удалось загрузить изображение",
+            "invalid-file": "Пожалуйста, загрузите допустимый файл изображения",
+            "image-removed": "Изображение удалено"
+        }
+    },
+    "password": {
+        "title": "Изменить пароль",
+        "oldPassword": {
+            "label": "Старый пароль*",
+            "validation": {
+                "required": "Необходимо ввести старый пароль",
+                "minLength": "Пароль должен содержать не менее 8 символов"
+            }
+        },
+        "newPassword": {
+            "label": "Новый пароль*",
+            "validation": {
+                "required": "Необходимо ввести новый пароль",
+                "minLength": "Пароль должен содержать не менее 8 символов"
+            }
+        },
+        "confirmPassword": {
+            "label": "Повторите новый пароль*",
+            "validation": {
+                "required": "Необходимо подтвердить пароль",
+                "match": "Новый пароль и подтверждение пароля должны совпадать"
+            }
+        },
+        "button": {
+            "submit": "Изменить пароль",
+            "loading": "Изменение..."
+        }
+    },
+    "wallet": {
+        "title": "Ваш Кошелек",
+        "balance": {
+            "title": "Баланс кошелька",
+            "main": {
+                "label": "Основной",
+                "alt": "монета"
+            },
+            "bonus": {
+                "label": "Бонусный",
+                "alt": "бонусная монета"
+            }
+        },
+        "menu": {
+            "deposit": "Пополнить счет",
+            "withdraw": "Вывести средства",
+            "paymentMethod": "Способ оплаты"
+        }
+    },
+    "deposit": {
+        "scan-qr-code": "Сканировать QR код",
+        "qr-description": "Сканируйте QR код с помощью вашего банковского приложения, чтобы начать процесс депозита.",
+        "transaction-id-label": "ID транзакции*",
+        "transaction-id-placeholder": "Введите ID транзакции из вашего банковского приложения",
+        "amount-label": "Сумма депозита*",
+        "amount-placeholder": "Введите сумму депозита",
+        "confirm-deposit": "Подтвердить депозит"
+    },
+    "validation": {
+        "transaction-id-required": "ID транзакции обязателен",
+        "transaction-id-max": "ID транзакции слишком длинный",
+        "amount-invalid": "Сумма должна быть числом",
+        "amount-required": "Сумма обязательна"
+    },
+    "withdraw": {
+        "total-balance": "Общий баланс",
+        "enter-bet-amount": "Введите сумму ставки",
+        "withdrawal-amount-label": "Сумма вывода*",
+        "withdrawal-amount-placeholder": "Введите сумму для вывода",
+        "select-method-label": "Выберите способ вывода*",
+        "no-methods-found": "Способы вывода не найдены. Пожалуйста, добавьте способ оплаты.",
+        "processing": "Обработка...",
+        "withdraw-funds": "Вывести средства",
+        "loading-methods": "Загрузка способов вывода...",
+        "error-loading": "Не удалось загрузить способы вывода",
+        "try-again": "Попробовать снова",
+        "upi-id": "UPI ID",
+        "upi": "UPI",
+        "bank": "Банк",
+        "page-title": "Вывод средств",
+        "loading": "Загрузка...",
+        "validation": {
+            "withdrawal-method-required": "Пожалуйста, выберите способ вывода",
+            "amount-invalid": "Сумма должна быть числом",
+            "amount-required": "Необходимо указать сумму"
+        }
+    },
+    "payment-methods": {
+        "page-title": "Способы оплаты",
+        "upi-id": "UPI ID",
+        "no-methods": "Способы оплаты не добавлены",
+        "add-method": "Добавить способ оплаты",
+        "add-upi": "Добавить UPI",
+        "add-bank": "Добавить банковские реквизиты"
+    },
+    "bank-form": {
+        "page-title": "Ваш Кошелек",
+        "upi-id-label": "UPI ID*",
+        "upi-id-placeholder": "example@bank",
+        "account-name-label": "Имя владельца счета*",
+        "account-number-label": "Номер счета*",
+        "ifsc-code-label": "Код IFSC*",
+        "ifsc-code-placeholder": "SBIN0012345",
+        "saving": "Сохранение...",
+        "save-method": "Сохранить способ оплаты",
+        "validation": {
+            "account-name-required": "Требуется указать имя владельца счета",
+            "account-number-length": "Номер счета должен содержать 16 цифр",
+            "account-number-digits": "Номер счета должен содержать только цифры",
+            "ifsc-length": "Код IFSC должен содержать 11 символов",
+            "ifsc-format": "Неверный формат кода IFSC. Пример: SBIN0012345",
+            "upi-format": "Неверный формат UPI ID. Пример: example@bank",
+            "provide-one-method": "Укажите либо банковские реквизиты, либо UPI ID"
+        }
+    },
+    "transaction-history": {
+        "page-title": "История транзакций",
+        "tabs": {
+            "deposits": "Пополнения",
+            "withdrawals": "Выводы"
+        },
+        "table": {
+            "headers": {
+                "date-time": "Дата/Время",
+                "amount": "Сумма",
+                "status": "Статус"
+            },
+            "status": {
+                "completed": "Завершено",
+                "failed": "Ошибка",
+                "pending": "В обработке"
+            }
+        },
+        "errors": {
+            "load-failed": "Не удалось загрузить транзакции. Пожалуйста, попробуйте позже."
+        }
+    },
+    "betting-history": {
+        "page-title": "История ставок",
+        "date-range": {
+            "to": "до",
+            "page-size": "Размер страницы"
+        },
+        "errors": {
+            "load-failed": "Не удалось загрузить историю ставок. Пожалуйста, попробуйте позже."
+        },
+        "table": {
+            "headers": {
+                "round": "Раунд",
+                "date-time": "Дата и время",
+                "bet-type": "Тип ставки",
+                "amount": "Сумма",
+                "winner": "Победитель",
+                "status": "Статус"
+            },
+            "status": {
+                "won": "Выиграно",
+                "lost": "Проиграно",
+                "pending": "В ожидании"
+            },
+            "round-prefix": "Раунд #"
+        }
+    },
+    "pagination": {
+        "previous": "Предыдущая",
+        "next": "Следующая"
+    },
+    "auth": {
+        "titles": {
+            "welcome-back": "С возвращением"
+        },
+        "labels": {
+            "username-email": "Имя пользователя или Email*",
+            "password": "Пароль*"
+        },
+        "validation": {
+            "password-min": "Пароль должен содержать минимум 6 символов",
+            "password-max": "Пароль должен содержать не более 20 символов",
+            "password-required": "Пароль обязателен"
+        },
+        "links": {
+            "forgot-password": "Забыли пароль?"
+        },
+        "buttons": {
+            "signing-in": "Выполняется вход...",
+            "sign-in": "Войти",
+            "continue-with-google": "Продолжить с Google",
+            "create-account": "Создать аккаунт"
+        },
+        "common": {
+            "or": "Или"
+        },
+        "alt": {
+            "google-logo": "Логотип Google"
+        }
+    },
+    "reset-password": {
+        "title": "Восстановление пароля",
+        "description": "Введите новый пароль дважды ниже, чтобы установить новый пароль.",
+        "labels": {
+            "new-password": "Введите новый пароль*",
+            "confirm-password": "Повторите новый пароль*"
+        },
+        "validation": {
+            "password-min": "Пароль должен содержать минимум 6 символов",
+            "password-max": "Пароль должен содержать не более 20 символов",
+            "password-required": "Пароль обязателен",
+            "confirm-password-required": "Пожалуйста, подтвердите пароль",
+            "passwords-mismatch": "Пароли не совпадают"
+        },
+        "buttons": {
+            "resetting": "Сброс пароля...",
+            "reset-password": "Сбросить пароль"
+        }
+    },
+    "register": {
+        "form-title": "Создать аккаунт",
+        "label-full-name": "Полное имя",
+        "label-username": "Имя пользователя",
+        "label-email": "Электронная почта",
+        "label-reference-code": "Реферальный код",
+        "label-password": "Пароль",
+        "terms-message": "Продолжая, вы соглашаетесь с нашими условиями обслуживания",
+        "button-register": "Зарегистрироваться",
+        "button-registering": "Регистрируем...",
+        "or": "Или",
+        "button-google": "Продолжить с Google",
+        "have-account": "Уже есть аккаунт?",
+        "sign-in": "войдите здесь",
+        "validation": {
+            "name-length": "Имя должно быть не менее 3 символов",
+            "name-max": "Имя не может превышать 100 символов",
+            "name-full": "Пожалуйста, введите полное имя",
+            "email-invalid": "Пожалуйста, введите действующий адрес электронной почты",
+            "username-max": "Имя пользователя не может превышать 100 символов",
+            "username-required": "Имя пользователя обязательно",
+            "password-min": "Пароль должен содержать не менее 6 символов",
+            "password-max": "Пароль не может превышать 20 символов",
+            "password-required": "Пароль обязателен"
+        }
+    },
+    "otpVerification": {
+        "title": "Введите OTP",
+        "description": "Пожалуйста, введите код, отправленный на ваш номер телефона или электронную почту.",
+        "validation": {
+            "otp-length": "OTP должен содержать ровно 4 символа"
+        },
+        "buttons": {
+            "verifying": "Проверка...",
+            "verify": "Подтвердить",
+            "resend": "Отправить снова"
+        }
+    },
+    "forgotPassword": {
+        "title": "Забыли пароль",
+        "description": "Введите адрес электронной почты, связанный с вашей учетной записью",
+        "email": {
+            "label": "Электронная почта*",
+            "validation": {
+                "required": "Email обязателен",
+                "invalid": "Пожалуйста, введите действительный адрес электронной почты"
+            }
+        },
+        "button": {
+            "sendCode": "Отправить код подтверждения",
+            "sending": "Отправка..."
+        }
+    }
+}

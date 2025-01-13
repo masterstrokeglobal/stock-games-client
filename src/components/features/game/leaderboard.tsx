@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { useGetRoundRecordById } from "@/react-query/round-record-queries";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 // Enhanced interface for ranked market items
@@ -15,6 +16,7 @@ type Props = {
 }
 
 const LeaderBoard = ({ roundRecord }: Props) => {
+    const t = useTranslations("game");
     const { stocks: leaderboardData } = useLeaderboard(roundRecord);
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
@@ -69,15 +71,13 @@ const LeaderBoard = ({ roundRecord }: Props) => {
 
     const winnerMarketItem = leaderboardData.find((item) => item.horse === winnerNumber);
 
-    console.log('winnerNumber', winnerNumber);
-
     return (
         <section
             ref={sectionRef}
             className="p-4 md:rounded-2xl h-full w-full bg-[#122146]"
         >
             <h2 className="text-xl font-semibold mb-4 text-gray-200">
-                Leader Board
+                {t("leaderboard")}
             </h2>
             <ScrollArea
                 className="max-h-96 h-full"
@@ -87,11 +87,22 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                 <table className="min-w-full">
                     <thead>
                         <tr className="text-[#8990A2] text-sm">
-                            <th className="p-2 text-left w-12">Rank</th>
-                            <th className="p-2 text-left">Horse</th>
-                            <th className="p-2 text-left">Name</th>
-                            <th className="p-2 text-right">Price</th>
-                            <th className="p-2 text-right whitespace-nowrap">Change in 2 min</th>
+                            <th className="p-2 text-left w-12">
+                                {t("rank")}
+                            </th>
+                            <th className="p-2 text-left">
+                                {t("horse")}
+                            </th>
+                            <th className="p-2 text-left">
+                                {t("name")}
+                            </th>
+                            <th className="p-2 text-right">
+                                {t("price")}
+                            </th>
+                            <th className="p-2 text-right whitespace-nowrap">
+                                {t("change")}
+                            </th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -111,7 +122,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                                     {winnerMarketItem.price ? formatPrice(winnerMarketItem.price) : "-"}
                                 </td>
                                 <td className={cn(
-                                    "p-2  text-right",
+                                    "p-2 text-right",
                                     getChangeColor(winnerMarketItem.change_percent)
                                 )}>
                                     {parseFloat(winnerMarketItem.change_percent) > 0 ? '+' : ''}
@@ -122,6 +133,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                         {leaderboardData.filter((item) => item.horse !== winnerNumber).map((marketItem, index) => (
                             <tr
                                 key={index}
+
                                 className={cn("border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden", (index === 0 && winnerNumber == 0) ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm")}
                             >
                                 <td className="p-2  text-gray-300">

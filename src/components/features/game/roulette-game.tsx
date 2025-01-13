@@ -17,6 +17,7 @@ import { RouletteBettingGrid } from "./roulette-grid";
 import { GameHeader } from "./roulette-header";
 import useNSEAvailable from "@/hooks/use-nse-available";
 import GameResultDialog from "./result-dialog";
+import { useTranslations } from "next-intl";
 
 enum PlacementType {
     SINGLE = "single",
@@ -38,6 +39,7 @@ type Props = {
 
 const RouletteGame = ({ roundRecord }: Props) => {
 
+    const t = useTranslations("game");
     const [betAmount, setBetAmount] = useState<number>(10);
     const gameState = useGameState(roundRecord);
     const isNSEAvailable = useNSEAvailable();
@@ -190,7 +192,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                 <div className="relative rounded-xl lg:flex-row flex-col flex gap-8 border-brown-800">
                     <div className='lg:w-6/12'>
                         <h1 className='text-xl lg:text-left text-center mt-2 mb-4 leading-none text-white font-semibold'>
-                            {gameState.isPlaceOver ? "Betting Closed" : "Place Your Bets"}
+                            {gameState.isPlaceOver ? t("betting-closed") : t("place-your-bets")}
                         </h1>
 
                         <div className={cn("relative w-full max-w-4xl mx-auto ", gameState.isPlaceOver ? 'cursor-not-allowed opacity-50' : 'cursor-crosshair')}>

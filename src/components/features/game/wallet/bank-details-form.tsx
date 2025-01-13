@@ -6,21 +6,35 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import FormPassword from "@/components/ui/form/form-password";
+import { useTranslations } from "next-intl";
 
-// Zod schema for bank account or UPI form validation
-export const createWithdrawDetailsSchema = z.object({
+export const createWithdrawDetailsSchema = (t: any) => z.object({
     id: z.number().optional(),
-    accountName: z.string().min(1, "Account name is required").max(100).optional(),
-    accountNumber: z.string().length(16, "Account number must be 16 digits").regex(/^\d+$/, "Account number must contain only digits").optional(),
-    ifscCode: z.string().length(11, "IFSC code must be 11 characters").regex(/^[A-Z]{4}0[A-Z0-9]{6}$/, "Invalid IFSC code format. Example: SBIN0012345").optional(),
-    upiId: z.string().refine((value) => value.includes("@"), "Invalid UPI ID format. Example: example@bank").optional(),
-}).refine((data) => (data.upiId && !data.accountNumber && !data.ifscCode) ||
-    (!data.upiId && data.accountNumber && data.ifscCode), {
-    message: "Provide either bank details or a UPI ID, not both",
-});
+    accountName: z.string()
+        .min(1, t('validation.account-name-required'))
+        .max(100)
+        .optional(),
+    accountNumber: z.string()
+        .length(16, t('validation.account-number-length'))
+        .regex(/^\d+$/, t('validation.account-number-digits'))
+        .optional(),
+    ifscCode: z.string()
+        .length(11, t('validation.ifsc-length'))
+        .regex(/^[A-Z]{4}0[A-Z0-9]{6}$/, t('validation.ifsc-format'))
+        .optional(),
+    upiId: z.string()
+        .refine((value) => value.includes("@"), t('validation.upi-format'))
+        .optional(),
+}).refine(
+    (data) => 
+        (data.upiId && !data.accountNumber && !data.ifscCode) ||
+        (!data.upiId && data.accountNumber && data.ifscCode),
+    {
+        message: t('validation.provide-one-method')
+    }
+);
 
-
-export type BankAccountFormValues = z.infer<typeof createWithdrawDetailsSchema>;
+export type BankAccountFormValues = z.infer<ReturnType<typeof createWithdrawDetailsSchema>>;
 
 type Props = {
     defaultValues?: BankAccountFormValues;
@@ -30,9 +44,14 @@ type Props = {
 };
 
 const BankAccountForm = ({ defaultValues, onSubmit, isLoading, isUPI }: Props) => {
-    const defaultData = isUPI ? { upiId: "" } : { cardHolder: "", accountNumber: "", ifscCode: "" };
+    const t = useTranslations('bank-form');
+    
+    const defaultData = isUPI 
+        ? { upiId: "" } 
+        : { cardHolder: "", accountNumber: "", ifscCode: "" };
+        
     const form = useForm<BankAccountFormValues>({
-        resolver: zodResolver(createWithdrawDetailsSchema),
+        resolver: zodResolver(createWithdrawDetailsSchema(t)),
         defaultValues: {
             ...defaultData,
             ...defaultValues,
@@ -41,54 +60,53 @@ const BankAccountForm = ({ defaultValues, onSubmit, isLoading, isUPI }: Props) =
 
     const { control, handleSubmit } = form;
 
-
     return (
         <div className="w-full max-w-xl flex flex-col space-y-4 h-full">
-            <FormProvider methods={form} onSubmit={handleSubmit(onSubmit, (err) => console.log(err))} className="w-full h-full flex flex-col space-y-4">
+            <FormProvider 
+                methods={form} 
+                onSubmit={handleSubmit(onSubmit, (err) => console.log(err))} 
+                className="w-full h-full flex flex-col space-y-4"
+            >
                 {isUPI ? (
-                    // UPI ID Field
                     <FormInput
                         control={control}
                         name="upiId"
-                        label="UPI ID*"
+                        label={t('upi-id-label')}
                         game
                         required
-                        placeholder="example@bank"
+                        placeholder={t('upi-id-placeholder')}
                     />
                 ) : (
                     <>
-                        {/* Card Holder Name Field */}
                         <FormInput
                             control={control}
                             name="accountName"
                             game
-                            label="Account Holder Name*"
+                            label={t('account-name-label')}
                             required
                         />
 
-                        {/* Account Number Field */}
                         <FormPassword
                             control={control}
                             name="accountNumber"
                             game
-                            label="Account Number*"
+                            label={t('account-number-label')}
                             required
                             type="password"
                             maxLength={16}
                         />
 
-                        {/* IFSC Code Field */}
                         <FormInput
                             control={control}
                             name="ifscCode"
                             game
-                            label="IFSC Code*"
+                            label={t('ifsc-code-label')}
                             required
-                            placeholder="SBIN0012345"
+                            placeholder={t('ifsc-code-placeholder')}
                         />
                     </>
                 )}
-                <footer className="flex justify-end ">
+                <footer className="flex justify-end">
                     <Button
                         type="submit"
                         size="lg"
@@ -96,7 +114,7 @@ const BankAccountForm = ({ defaultValues, onSubmit, isLoading, isUPI }: Props) =
                         className="w-full"
                         disabled={isLoading}
                     >
-                        {isLoading ? "Saving..." : "Save Payment Method"}
+                        {isLoading ? t('saving') : t('save-method')}
                     </Button>
                 </footer>
             </FormProvider>

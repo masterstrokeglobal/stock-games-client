@@ -1,63 +1,61 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
 import FormInput from "@/components/ui/form/form-input";
 import FormProvider from "@/components/ui/form/form-provider";
+import { useAuthStore } from "@/context/auth-context";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuthStore } from "@/context/auth-context";
 
 // Zod schema for deposit form
-const depositSchema = z.object({
+const depositSchema = (t: any) => z.object({
     pgId: z
         .string()
-        .min(1, "Transaction ID is required")
-        .max(50, "Transaction ID is too long"),
+        .min(1, t('validation.transaction-id-required'))
+        .max(50, t('validation.transaction-id-max')),
     amount: z
         .coerce.number({
-            message: "Amount must be a number"
+            message: t('validation.amount-invalid')
         })
-        .min(1, "Amount is required")
+        .min(1, t('validation.amount-required'))
 });
 
-export type DepositFormValues = z.infer<typeof depositSchema>;
+export type DepositFormValues = z.infer<ReturnType<typeof depositSchema>>;
 
 type Props = {
     onSubmit: (data: DepositFormValues) => void;
 };
 
-
 const DepositForm = ({ onSubmit }: Props) => {
-
-    const {userDetails} = useAuthStore();
+    const t = useTranslations('deposit');
+    const { userDetails } = useAuthStore();
     const form = useForm<DepositFormValues>({
-        resolver: zodResolver(depositSchema),
+        resolver: zodResolver(depositSchema(t)),
         defaultValues: {
             pgId: '',
-            amount:0,
+            amount: 0,
         }
     });
 
     const { control, handleSubmit } = form;
-
     const paymentImage = userDetails?.company?.paymentImage;
 
     return (
         <div className="w-full max-w-sm flex flex-col min-h-[calc(100vh-5rem)]">
-
             {/* QR Code Section */}
             <header>
-                <h2 className="text-2xl font-semibold text-center mb-2 text-white">Scan QR Code                </h2>
-
+                <h2 className="text-2xl font-semibold text-center mb-2 text-white">
+                    {t('scan-qr-code')}
+                </h2>
                 <p className="text-[#6A84C3] text-center text-sm">
-                    Scan the QR code with your banking app to initiate the deposit process.
+                    {t('qr-description')}
                 </p>
-                <div className="bg-white p-4 rounded-lg w-fit mx-auto mt-4">
-                    <img src={paymentImage} alt="" />
-                </div>
+                {paymentImage && (
+                    <div className="bg-white p-4 rounded-lg w-fit mx-auto mt-4">
+                        <img src={paymentImage} alt="QR Code" />
+                    </div>
+                )}
             </header>
-
-
 
             <FormProvider
                 methods={form}
@@ -69,17 +67,16 @@ const DepositForm = ({ onSubmit }: Props) => {
                         control={control}
                         game
                         name="pgId"
-                        label="Transaction ID*"
-                        placeholder="Enter transaction ID from your bank app"
+                        label={t('transaction-id-label')}
+                        placeholder={t('transaction-id-placeholder')}
                         required
                     />
-
                     <FormInput
                         control={control}
                         game
                         name="amount"
-                        label="Deposit Amount*"
-                        placeholder="Enter amount to deposit"
+                        label={t('amount-label')}
+                        placeholder={t('amount-placeholder')}
                         type="number"
                         required
                     />
@@ -92,7 +89,7 @@ const DepositForm = ({ onSubmit }: Props) => {
                         variant="game"
                         className="w-full"
                     >
-                        Confirm Deposit
+                        {t('confirm-deposit')}
                     </Button>
                 </footer>
             </FormProvider>

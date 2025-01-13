@@ -1,3 +1,5 @@
+import User from "./user";
+
 export enum TransactionType {
     DEPOSIT = "deposit",
     WITHDRAWAL = "withdrawal",
@@ -20,8 +22,11 @@ export class Transaction {
     createdAt!: Date;
     updatedAt!: Date;
     deletedAt?: Date;
+    wallet: any;
+    user?: User;
 
     constructor(data: Partial<Transaction>) {
         Object.assign(this, data);
+        this.user = new User(data?.wallet?.user);
     }
 }

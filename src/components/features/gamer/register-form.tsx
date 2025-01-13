@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import FormInput from "@/components/ui/form/form-input";
@@ -10,26 +9,33 @@ import { z } from "zod";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import FormPassword from "@/components/ui/form/form-password";
+import { useTranslations } from "next-intl";
 
 // Zod schema for validating the registration form fields
-export const createRegisterSchema = z.object({
-    //full name with first and last name
-    name: z.string().min(3).max(100).refine((data) => data.split(" ").length > 1, {
-        message: "Please enter your full name",
+export const createRegisterSchema = (t: any) => z.object({
+    // Full name with first and last name
+    name: z.string().min(3, { message: t('validation.name-length') }).max(100, { message: t('validation.name-max') }).refine((data) => data.split(" ").length > 1, {
+        message: t('validation.name-full'),
     }),
 
-    //international
-    email: z.string().email("Please enter a valid email address"),
+    // Email
+    email: z.string().email(t('validation.email-invalid')),
+
+    // Optional reference code
     referenceCode: z.string().optional(),
-    username: z.string().max(100).nonempty("Username is required"),
+
+    // Username
+    username: z.string().max(100, { message: t('validation.username-max') }).nonempty({ message: t('validation.username-required') }),
+
+    // Password
     password: z
         .string()
-        .min(6, "Password must be at least 6 characters") // Password length validation
-        .max(20, "Password must be less than 20 characters")
-        .nonempty("Password is required"),
-})
+        .min(6, { message: t('validation.password-min') })
+        .max(20, { message: t('validation.password-max') })
+        .nonempty({ message: t('validation.password-required') }),
+});
 
-export type RegisterFormValues = z.infer<typeof createRegisterSchema>;
+export type RegisterFormValues = z.infer<ReturnType<typeof createRegisterSchema>>;
 
 type Props = {
     defaultValues?: RegisterFormValues;
@@ -38,47 +44,48 @@ type Props = {
 };
 
 const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
+    const t = useTranslations("register"); // Translation hook for register form
+
     const form = useForm<RegisterFormValues>({
-        resolver: zodResolver(createRegisterSchema),
+        resolver: zodResolver(createRegisterSchema(t)),
         defaultValues,
     });
 
     const { control, handleSubmit } = form;
     return (
         <div className="w-full max-w-sm">
-            <h1 className="text-3xl text-center mb-10 text-white ">Create an Account</h1>
+            <h1 className="text-3xl text-center mb-10 text-white">{t('form-title')}</h1>
             <FormProvider methods={form} onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 {/* Name Field */}
                 <FormInput
                     control={control}
                     game
                     name="name"
-                    label="Full Name*"
+                    label={t('label-full-name')}
                     required
                 />
-
+                {/* Username Field */}
                 <FormInput
                     control={control}
                     game
                     name="username"
-                    label="Username*"
+                    label={t('label-username')}
                     required
                 />
                 {/* Email Field */}
-                {/* Phone Field */}
                 <FormInput
                     control={control}
                     game
                     name="email"
-                    label="Email *"
+                    label={t('label-email')}
                     required
                 />
-
+                {/* Reference Code Field */}
                 <FormInput
                     control={control}
                     game
                     name="referenceCode"
-                    label="Reference Code"
+                    label={t('label-reference-code')}
                 />
                 {/* Password Field */}
                 <FormPassword
@@ -86,34 +93,30 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                     game
                     name="password"
                     type="password"
-                    label="Password*"
+                    label={t('label-password')}
                     required
                 />
 
-                <footer className="flex justify-end  flex-col gap-2 mt-12 ">
-                    <p className="text-sm text-white text-center">By continuing you agree with our terms of services</p>
+                <footer className="flex justify-end flex-col gap-2 mt-12">
+                    <p className="text-sm text-white text-center">{t('terms-message')}</p>
                     <Button type="submit" size="lg" variant="game" className="w-full" disabled={isLoading}>
-                        {isLoading ? "Registering..." : "Register"}
+                        {isLoading ? t('button-registering') : t('button-register')}
                     </Button>
                 </footer>
 
                 <div className="flex items-center justify-center gap-3 text-white">
                     <Separator className="my-6 flex-1 bg-white/20" />
-                    <span>
-                        Or
-                    </span>
+                    <span>{t('or')}</span>
                     <Separator className="my-6 flex-1  bg-white/20" />
                 </div>
                 <Button size="lg" variant="secondary" className="w-full bg-[#182B5A] border-[#EFF8FF17] text-white">
-
                     <img className="mr-2 size-5" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg" />
-
-                    Continue with Google
+                    {t('button-google')}
                 </Button>
-                <Button variant="ghost" className="text-[#F9F9F9B2] hover:bg-transparent flex  mt-8" fullWidth>
-                    Have an account already?
+                <Button variant="ghost" className="text-[#F9F9F9B2] hover:bg-transparent flex mt-8" fullWidth>
+                    {t('have-account')}
                     <Link href="/game/auth/login" className="text-white">
-                        sign in here
+                        {t('sign-in')}
                     </Link>
                 </Button>
             </FormProvider>

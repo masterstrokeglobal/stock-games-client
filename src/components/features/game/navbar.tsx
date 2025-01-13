@@ -1,5 +1,7 @@
 "use client";
+import LocaleSwitcher from "@/components/common/LocaleSwitcher";
 import Logo from "@/components/common/logo";
+import { MuteButton } from "@/components/common/mute-button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
@@ -24,11 +26,13 @@ const Navbar = () => {
             <div className="">
                 <span className="md:text-xl text-sm font-semibold flex items-end">
                     <Logo />
-                 
+
                 </span>
             </div>
             <div className="flex items-center space-x-4 ml-auto">
-                <div className="bg-[#112148] px-4 md:h-12 flex items-center md:py-2 py-2  rounded-full">
+                <MuteButton />
+                <LocaleSwitcher />
+                <div className="bg-[#112148] px-4 md:h-12 md:flex hidden items-center md:py-2 py-2   rounded-full">
                     <div className="shadow-custom-glow mr-2 rounded-full" >
                         <img src="/coin.svg" alt="coin" className="md:w-auto w-5" />
                     </div>

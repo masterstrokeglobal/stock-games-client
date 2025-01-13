@@ -61,6 +61,7 @@ export const useCurrentGame = (): {
         return roundRecord;
     }, [data?.data.roundRecords?.[0], isSuccess]);
 
+
     useEffect(() => {
 
         if (!roundRecord) return;
@@ -74,7 +75,7 @@ export const useCurrentGame = (): {
         const gameEnd = setTimeout(() => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' ||  query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
+                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
                 },
             });
         }, timeToGameEnd);
@@ -82,7 +83,7 @@ export const useCurrentGame = (): {
         const placeEnd = setTimeout(() => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' ||  query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
+                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
                 },
             });
         }, timeToPlace);
@@ -173,10 +174,6 @@ export const useIsPlaceOver = (roundRecord: RoundRecord | null) => {
 
     return isPlaceOver;
 };
-
-
-
-
 
 export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: {
     type: PlacementType;

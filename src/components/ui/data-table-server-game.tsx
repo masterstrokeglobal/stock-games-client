@@ -17,8 +17,8 @@ import {
 import { ReactNode, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import ErrorBoundary from "@/components/ui/error-boundary";
-import Pagination from "./pagination";
 import { Skeleton } from "./skeleton";
+import Pagination from "./game-pagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
