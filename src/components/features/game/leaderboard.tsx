@@ -91,7 +91,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                             <th className="p-2 text-left">Horse</th>
                             <th className="p-2 text-left">Name</th>
                             <th className="p-2 text-right">Price</th>
-                            <th className="p-2 text-right">Change</th>
+                            <th className="p-2 text-right whitespace-nowrap">Change in 2 min</th>
                         </tr>
                     </thead>
                     <tbody>
