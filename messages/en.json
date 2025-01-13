@@ -21,5 +21,108 @@
         "round-starts-in": "Round starts in",
         "place-starts-in": "Place starts in",
         "place-ends-in": "Place ends in"
-    }
+    },
+    "user-menu": {
+        "title": "User Menu",
+        "profile-image-alt": "Profile Image",
+        "coin-image-alt": "Coin Icon",
+        "add-funds-alt": "Add Funds",
+        "loading": "...",
+        "your-info": "Your Info",
+        "change-password": "Change Password",
+        "your-wallet": "Your Wallet",
+        "transaction-history": "Transaction History",
+        "betting-history": "Betting History",
+        "logout": "Log Out"
+    },
+    "profile": {
+        "page-title": "Your Info",
+        "labels": {
+            "profile-image": "Profile Image",
+            "firstname": "First Name*",
+            "lastname": "Last Name*",
+            "username": "Username",
+            "phone": "Phone Number",
+            "email": "Email*",
+            "reference-code": "Reference Code"
+        },
+        "validation": {
+            "firstname-required": "First name is required",
+            "firstname-max": "First name must be less than 50 characters",
+            "lastname-required": "Last name is required",
+            "lastname-max": "Last name must be less than 50 characters",
+            "username-max": "Username must be less than 100 characters",
+            "email-invalid": "Invalid email address"
+        },
+        "buttons": {
+            "updating": "Updating...",
+            "update-profile": "Update Profile"
+        }
+    },
+    "form-image": {
+        "default-label": "Загрузить изображение",
+        "image": {
+            "preview-alt": "Предпросмотр загруженного изображения"
+        },
+        "upload": {
+            "click-to-upload": "Нажмите для загрузки",
+            "select-image": "Выбрать изображение"
+        },
+        "status": {
+            "uploading": "Загрузка изображения..."
+        },
+        "toast": {
+            "upload-success": "Изображение успешно загружено",
+            "upload-error": "Не удалось загрузить изображение",
+            "invalid-file": "Пожалуйста, загрузите допустимый файл изображения",
+            "image-removed": "Изображение удалено"
+        }
+    },
+    "password": {
+        "title": "Change Password",
+        "oldPassword": {
+            "label": "Old Password*",
+            "validation": {
+                "required": "Old password is required",
+                "minLength": "Password must be at least 8 characters"
+            }
+        },
+        "newPassword": {
+            "label": "New Password*",
+            "validation": {
+                "required": "New password is required",
+                "minLength": "Password must be at least 8 characters"
+            }
+        },
+        "confirmPassword": {
+            "label": "Re-enter New Password*",
+            "validation": {
+                "required": "Password confirmation is required",
+                "match": "New password and confirm new password must match"
+            }
+        },
+        "button": {
+            "submit": "Change Password",
+            "loading": "Changing..."
+        }
+    },
+    "wallet": {
+        "title": "Your Wallet",
+        "balance": {
+          "title": "Wallet Balance",
+          "main": {
+            "label": "Main",
+            "alt": "coin"
+          },
+          "bonus": {
+            "label": "Bonus",
+            "alt": "bonus coin"
+          }
+        },
+        "menu": {
+          "deposit": "Deposit Funds",
+          "withdraw": "Withdraw Funds",
+          "paymentMethod": "Payment Method"
+        }
+      }
 }

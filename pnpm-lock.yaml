@@ -92,6 +92,9 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
+      howler:
+        specifier: ^2.2.4
+        version: 2.2.4
       input-otp:
         specifier: ^1.2.4
         version: 1.2.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -141,6 +144,9 @@ importers:
         specifier: ^3.23.8
         version: 3.23.8
     devDependencies:
+      '@types/howler':
+        specifier: ^2.2.12
+        version: 2.2.12
       '@types/node':
         specifier: ^20
         version: 20.17.4
@@ -1120,6 +1126,9 @@ packages:
   '@types/draco3d@1.4.10':
     resolution: {integrity: sha512-AX22jp8Y7wwaBgAixaSvkoG4M/+PlAcm3Qs4OW8yT9DM4xUpWKeFhLueTAyZF39pviAdcDdeJoACapiAceqNcw==}
 
+  '@types/howler@2.2.12':
+    resolution: {integrity: sha512-hy769UICzOSdK0Kn1FBk4gN+lswcj1EKRkmiDtMkUGvFfYJzgaDXmVXkSShS2m89ERAatGIPnTUlp2HhfkVo5g==}
+
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
@@ -1897,6 +1906,9 @@ packages:
 
   hls.js@1.5.17:
     resolution: {integrity: sha512-wA66nnYFvQa1o4DO/BFgLNRKnBTVXpNeldGRBJ2Y0SvFtdwvFKCbqa9zhHoZLoxHhZ+jYsj3aIBkWQQCPNOhMw==}
+
+  howler@2.2.4:
+    resolution: {integrity: sha512-iARIBPgcQrwtEr+tALF+rapJ8qSc+Set2GJQl7xT1MQzWaVkFebdJhR3alVlSiUf5U7nAANKuj3aWpwerocD5w==}
 
   ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
@@ -3925,6 +3937,8 @@ snapshots:
 
   '@types/draco3d@1.4.10': {}
 
+  '@types/howler@2.2.12': {}
+
   '@types/json5@0.0.29': {}
 
   '@types/node@20.17.4':
@@ -4893,6 +4907,8 @@ snapshots:
       function-bind: 1.1.2
 
   hls.js@1.5.17: {}
+
+  howler@2.2.4: {}
 
   ieee754@1.2.1: {}
 

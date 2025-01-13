@@ -2,14 +2,15 @@
 import Container from "@/components/common/container";
 import TopBar from "@/components/common/top-bar";
 import PasswordChangeForm from "@/components/features/gamer/user/change-password-form";
+import { useTranslations } from "next-intl";
 
 const UserProfilePage = () => {
+    const t = useTranslations('password');
+
     return (
-        <Container className="bg-primary-game  flex flex-col gap-12 pt-24 items-center min-h-screen ">
+        <Container className="bg-primary-game flex flex-col gap-12 pt-24 items-center min-h-screen">
             <TopBar>
-                <span>
-                    Change Password
-                </span>
+                <span>{t('title')}</span>
             </TopBar>
             <PasswordChangeForm />
         </Container>
