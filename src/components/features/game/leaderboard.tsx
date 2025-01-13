@@ -99,7 +99,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                             <th className="p-2 text-right">
                                 {t("price")}
                             </th>
-                            <th className="p-2 text-right">
+                            <th className="p-2 text-right whitespace-nowrap">
                                 {t("change")}
                             </th>
 
@@ -122,7 +122,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                                     {winnerMarketItem.price ? formatPrice(winnerMarketItem.price) : "-"}
                                 </td>
                                 <td className={cn(
-                                    "p-2  text-right",
+                                    "p-2 text-right",
                                     getChangeColor(winnerMarketItem.change_percent)
                                 )}>
                                     {parseFloat(winnerMarketItem.change_percent) > 0 ? '+' : ''}
