@@ -13,25 +13,30 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useTranslations } from "next-intl";
 
-const withdrawSchema = (t: any) => z.object({
+// Move schema outside component to prevent recreating on every render
+const createWithdrawSchema = (t: any,totalAmount:number) => z.object({
     withdrawDetails: z.string().min(1, t('validation.withdrawal-method-required')),
     amount: z.coerce
         .number({ message: t('validation.amount-invalid') })
-        .min(1, t('validation.amount-required')),
+        .min(1, t('validation.amount-required'))
+        // Add max validation based on total amount
+        .refine((val) => val <= totalAmount, t('validation.amount-exceeds-balance')),
 });
 
-export type WithdrawFormValues = z.infer<ReturnType<typeof withdrawSchema>>;
+export type WithdrawFormValues = z.infer<ReturnType<typeof createWithdrawSchema>>;
 
-const WithdrawMethodOption = ({
+interface WithdrawMethodOptionProps {
+    detail: WithdrawDetailsRecord;
+    selected: boolean;
+    onClick: () => void;
+    t: (key: string) => string;
+}
+
+const WithdrawMethodOption: React.FC<WithdrawMethodOptionProps> = ({
     detail,
     selected,
     onClick,
     t,
-}: {
-    detail: WithdrawDetailsRecord;
-    selected: boolean;
-    onClick: () => void;
-    t: any;
 }) => {
     const displayInfo = detail.isUpi ? (
         <div>
@@ -71,17 +76,17 @@ const WithdrawMethodOption = ({
     );
 };
 
-type Props = {
+interface WithdrawFormProps {
     onSubmit: (data: WithdrawFormValues) => void;
     isLoading?: boolean;
     totalAmount: number;
-};
+}
 
-const WithdrawForm = ({
+const WithdrawForm: React.FC<WithdrawFormProps> = ({
     onSubmit,
     isLoading: isSubmitting,
     totalAmount,
-}: Props) => {
+}) => {
     const t = useTranslations('withdraw');
     const { data, isLoading: isLoadingDetails, isSuccess, isError } = useGetAllWithdrawDetails({});
 
@@ -92,15 +97,29 @@ const WithdrawForm = ({
         return [];
     }, [data, isSuccess]);
 
+    const withdrawSchema = useMemo(() => createWithdrawSchema(t,totalAmount), [t,totalAmount]);
+
     const form = useForm<WithdrawFormValues>({
-        resolver: zodResolver(withdrawSchema(t)),
+        resolver: zodResolver(withdrawSchema),
         defaultValues: {
             withdrawDetails: '',
             amount: 0,
         },
     });
 
-    const { control, handleSubmit } = form;
+    const { control, handleSubmit, watch } = form;
+    const withdrawAmount = watch('amount');
+
+    // Calculate fees and total amount
+    const platformFee = useMemo(() => withdrawAmount * 0.04, [withdrawAmount]);
+    const totalWithdrawAmount = useMemo(() => Number(withdrawAmount) + Number(platformFee), [withdrawAmount, platformFee]);
+
+    const formatNumber = (num: number) => {
+        return num.toLocaleString('en-IN', {
+            style: 'currency',
+            currency: 'INR',
+        });
+    };
 
     if (isLoadingDetails) {
         return (
@@ -141,11 +160,11 @@ const WithdrawForm = ({
                     </Label>
                     <div className="flex justify-center relative mb-2">
                         <div className="mr-2 absolute left-2 top-3 bottom-2 rounded-full">
-                            <img src="/coin.svg" className='shadow-custom-glow rounded-full' alt="coin" />
+                            <img src="/coin.svg" className="shadow-custom-glow rounded-full" alt="coin" />
                         </div>
                         <Input
                             placeholder={t('enter-bet-amount')}
-                            value={totalAmount}
+                            value={formatNumber(totalAmount)}
                             disabled
                             className="bg-[#101F44] p-2 text-white pl-14 h-14 text-xl"
                         />
@@ -161,6 +180,23 @@ const WithdrawForm = ({
                     type="number"
                     required
                 />
+
+                {withdrawAmount > 0 && (
+                    <div className="bg-[#1A2238] p-4 rounded-lg space-y-2">
+                        <div className="flex justify-between text-sm">
+                            <span className="text-[#6A84C3]">{t('withdrawal-amount')}</span>
+                            <span className="text-white">{formatNumber(withdrawAmount)}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                            <span className="text-[#6A84C3]">{t('platform-fee')} (4%)</span>
+                            <span className="text-white">+{formatNumber(platformFee)}</span>
+                        </div>
+                        <div className="flex justify-between text-sm font-medium border-t border-[#2A3655] pt-2 mt-2">
+                            <span className="text-[#6A84C3]">{t('total-amount')}</span>
+                            <span className="text-white">{formatNumber(totalWithdrawAmount)}</span>
+                        </div>
+                    </div>
+                )}
 
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-white">

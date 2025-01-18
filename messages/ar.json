@@ -129,6 +129,21 @@
             "paymentMethod": "طريقة الدفع"
         }
     },
+    "deposit": {
+    "scan-qr-code": "مسح رمز QR",
+    "qr-description": "امسح رمز QR لإجراء الإيداع",
+    "transaction-id-label": "رقم المعاملة",
+    "transaction-id-placeholder": "أدخل رقم المعاملة",
+    "amount-label": "المبلغ",
+    "amount-placeholder": "أدخل مبلغ الإيداع",
+    "confirm-deposit": "تأكيد الإيداع",
+    "validation": {
+      "transaction-id-required": "رقم المعاملة مطلوب",
+      "transaction-id-max": "يجب ألا يتجاوز رقم المعاملة 50 حرفًا",
+      "amount-required": "المبلغ مطلوب",
+      "amount-invalid": "الرجاء إدخال مبلغ صحيح"
+    }
+  },
     "deposit-form": {
         "transaction-id": "معرّف المعاملة*",
         "amount": "المبلغ المراد إيداعه*",
@@ -162,10 +177,13 @@
         "bank": "بنك",
         "page-title": "سحب الأموال",
         "loading": "جارٍ التحميل...",
+        "withdrawal-amount": "مبلغ السحب",
+        "total-amount": "المبلغ الإجمالي",    
         "validation": {
             "withdrawal-method-required": "يرجى اختيار طريقة سحب",
             "amount-invalid": "يجب أن يكون المبلغ رقمًا",
-            "amount-required": "المبلغ مطلوب"
+            "amount-required": "المبلغ مطلوب",
+            "amount-exceeds-balance": "المبلغ يتجاوز الرصيد المتاح"
         }
     },
     "payment-methods": {

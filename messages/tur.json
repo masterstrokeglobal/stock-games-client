@@ -129,6 +129,21 @@
       "paymentMethod": "Ödeme Yöntemi"
     }
   },
+  "deposit": {
+    "scan-qr-code": "QR Kodu Tara",
+    "qr-description": "Para yatırmak için QR kodunu tarayın",
+    "transaction-id-label": "İşlem ID",
+    "transaction-id-placeholder": "İşlem ID'sini girin",
+    "amount-label": "Tutar",
+    "amount-placeholder": "Yatırılacak tutarı girin",
+    "confirm-deposit": "Para Yatırmayı Onayla",
+    "validation": {
+      "transaction-id-required": "İşlem ID'si gereklidir",
+      "transaction-id-max": "İşlem ID'si 50 karakteri geçemez",
+      "amount-required": "Tutar gereklidir",
+      "amount-invalid": "Lütfen geçerli bir tutar girin"
+    }
+  },
   "deposit-form": {
     "transaction-id": "İşlem ID*",
     "amount": "Yatırılacak Tutar*",
@@ -162,10 +177,13 @@
     "bank": "Banka",
     "page-title": "Para Çek",
     "loading": "Yükleniyor...",
+    "withdrawal-amount": "Çekim Tutarı",
+    "total-amount": "Toplam Tutar",
     "validation": {
       "withdrawal-method-required": "Lütfen bir çekim yöntemi seçin",
       "amount-invalid": "Tutar bir sayı olmalıdır",
-      "amount-required": "Tutar gereklidir"
+      "amount-required": "Tutar gereklidir",
+      "amount-exceeds-balance": "Tutar mevcut bakiyeyi aşıyor"
     }
   },
   "payment-methods": {

@@ -129,6 +129,21 @@
             "paymentMethod": "Payment Method"
         }
     },
+    "deposit": {
+        "scan-qr-code": "Scan QR Code",
+        "qr-description": "Scan the QR code to make your deposit",
+        "transaction-id-label": "Transaction ID",
+        "transaction-id-placeholder": "Enter your transaction ID",
+        "amount-label": "Amount",
+        "amount-placeholder": "Enter deposit amount",
+        "confirm-deposit": "Confirm Deposit",
+        "validation": {
+            "transaction-id-required": "Transaction ID is required",
+            "transaction-id-max": "Transaction ID must not exceed 50 characters",
+            "amount-required": "Amount is required",
+            "amount-invalid": "Please enter a valid amount"
+        }
+    },
     "deposit-form": {
         "transaction-id": "ID de transaction*",
         "amount": "Montant à déposer*",
@@ -162,10 +177,15 @@
         "bank": "Bank",
         "page-title": "Withdraw Funds",
         "loading": "Loading...",
+        "platform-fee": "Platform Fee",
+        "final-amount": "Final Amount",
+        "withdrawal-amount": "Withdrawal Amount",
+        "total-amount": "Total Amount",
         "validation": {
             "withdrawal-method-required": "Please select a withdrawal method",
             "amount-invalid": "Amount must be a number",
-            "amount-required": "Amount is required"
+            "amount-required": "Amount is required",
+            "amount-exceeds-balance": "Amount exceeds available balance"
         }
     },
     "payment-methods": {
@@ -338,15 +358,15 @@
         "title": "Forgot Password",
         "description": "Enter the email address associated with your account",
         "email": {
-          "label": "Email Address*",
-          "validation": {
-            "required": "Email is required",
-            "invalid": "Please enter a valid email address"
-          }
+            "label": "Email Address*",
+            "validation": {
+                "required": "Email is required",
+                "invalid": "Please enter a valid email address"
+            }
         },
         "button": {
-          "sendCode": "Send Verification Code",
-          "sending": "Sending..."
+            "sendCode": "Send Verification Code",
+            "sending": "Sending..."
         }
-      }
+    }
 }

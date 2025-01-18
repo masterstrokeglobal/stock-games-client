@@ -130,13 +130,19 @@
         }
     },
     "deposit": {
-        "scan-qr-code": "Сканировать QR код",
-        "qr-description": "Сканируйте QR код с помощью вашего банковского приложения, чтобы начать процесс депозита.",
-        "transaction-id-label": "ID транзакции*",
-        "transaction-id-placeholder": "Введите ID транзакции из вашего банковского приложения",
-        "amount-label": "Сумма депозита*",
+        "scan-qr-code": "Сканировать QR-код",
+        "qr-description": "Отсканируйте QR-код для внесения депозита",
+        "transaction-id-label": "ID транзакции",
+        "transaction-id-placeholder": "Введите ID транзакции",
+        "amount-label": "Сумма",
         "amount-placeholder": "Введите сумму депозита",
-        "confirm-deposit": "Подтвердить депозит"
+        "confirm-deposit": "Подтвердить депозит",
+        "validation": {
+            "transaction-id-required": "Требуется ID транзакции",
+            "transaction-id-max": "ID транзакции не должен превышать 50 символов",
+            "amount-required": "Требуется указать сумму",
+            "amount-invalid": "Пожалуйста, введите корректную сумму"
+        }
     },
     "validation": {
         "transaction-id-required": "ID транзакции обязателен",
@@ -160,11 +166,14 @@
         "upi": "UPI",
         "bank": "Банк",
         "page-title": "Вывод средств",
+        "withdrawal-amount": "Сумма вывода",
+        "total-amount": "Итоговая сумма",
         "loading": "Загрузка...",
         "validation": {
             "withdrawal-method-required": "Пожалуйста, выберите способ вывода",
             "amount-invalid": "Сумма должна быть числом",
-            "amount-required": "Необходимо указать сумму"
+            "amount-required": "Необходимо указать сумму",
+            "amount-exceeds-balance": "Сумма превышает доступный баланс"
         }
     },
     "payment-methods": {
