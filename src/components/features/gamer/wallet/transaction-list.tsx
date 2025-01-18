@@ -17,14 +17,14 @@ const TransactionTable = ({ transactions }: Props) => {
             [TransactionStatus.FAILED]: 'text-red-300',
             [TransactionStatus.PENDING]: 'text-yellow-200',
         };
-        
+
         return styles[status] || '';
     };
 
     const getTranslatedStatus = (status: TransactionStatus) => {
         return t(`status.${status.toLowerCase()}`);
     };
-    
+
     return (
         <div className="w-full rounded-xl">
             <Table>
@@ -43,11 +43,11 @@ const TransactionTable = ({ transactions }: Props) => {
                         >
                             <TableCell className="text-gray-300 rounded">
                                 {dayjs(transaction.createdAt).format('MMM D,')}
-                                <br/>
+                                <br />
                                 {dayjs(transaction.createdAt).format('YYYY h:mm A')}
                             </TableCell>
                             <TableCell className="font-medium text-white">
-                                {transaction.amount}
+                                {transaction.amount} 
                             </TableCell>
                             <TableCell className='rounded'>
                                 <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusStyles(transaction.status)}`}>

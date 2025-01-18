@@ -129,6 +129,21 @@
             "paymentMethod": "Metod plačanja"
         }
     },
+    "deposit": {
+        "scan-qr-code": "Skenirajte QR kod",
+        "qr-description": "Skenirajte QR kod da biste izvršili depozit",
+        "transaction-id-label": "ID transakcije",
+        "transaction-id-placeholder": "Unesite ID transakcije",
+        "amount-label": "Iznos",
+        "amount-placeholder": "Unesite iznos depozita",
+        "confirm-deposit": "Potvrdi depozit",
+        "validation": {
+            "transaction-id-required": "ID transakcije je obavezan",
+            "transaction-id-max": "ID transakcije ne sme biti duži od 50 karaktera",
+            "amount-required": "Iznos je obavezan",
+            "amount-invalid": "Molimo unesite važeći iznos"
+        }
+    },
     "deposit-form": {
         "transaction-id": "ID transakcije*",
         "amount": "Iznos za depozit*",
@@ -162,10 +177,13 @@
         "bank": "Banka",
         "page-title": "Povucite sredstva",
         "loading": "Učitavanje...",
+        "withdrawal-amount": "Iznos za isplatu",
+        "total-amount": "Ukupan iznos",
         "validation": {
             "withdrawal-method-required": "Molimo izaberite metod povlačenja",
             "amount-invalid": "Iznos mora biti broj",
-            "amount-required": "Iznos je obavezan"
+            "amount-required": "Iznos je obavezan",
+            "amount-exceeds-balance": "Iznos premašuje dostupno stanje"
         }
     },
     "payment-methods": {

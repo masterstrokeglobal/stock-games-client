@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 
 const DepositFormPage = () => {
 
-    const { mutate } = useCreateDepositRequest();
+    const { mutate,isPending } = useCreateDepositRequest();
 
     const router = useRouter();
 
@@ -30,7 +30,7 @@ const DepositFormPage = () => {
             <TopBar >
                 Deposit Funds
             </TopBar>
-            <DepositForm onSubmit={onSubmit} />
+            <DepositForm onSubmit={onSubmit} isLoading={isPending} />
         </Container>
     );
 };

@@ -24,9 +24,10 @@ export type DepositFormValues = z.infer<ReturnType<typeof depositSchema>>;
 
 type Props = {
     onSubmit: (data: DepositFormValues) => void;
+    isLoading: boolean;
 };
 
-const DepositForm = ({ onSubmit }: Props) => {
+const DepositForm = ({ onSubmit,isLoading }: Props) => {
     const t = useTranslations('deposit');
     const { userDetails } = useAuthStore();
     const form = useForm<DepositFormValues>({
@@ -87,6 +88,7 @@ const DepositForm = ({ onSubmit }: Props) => {
                         type="submit"
                         size="lg"
                         variant="game"
+                        disabled={isLoading}
                         className="w-full"
                     >
                         {t('confirm-deposit')}

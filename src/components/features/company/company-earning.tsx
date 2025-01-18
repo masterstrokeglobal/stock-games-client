@@ -33,13 +33,13 @@ const CompanyEarningsCard = ({ companyId }: Props) => {
         const result = data?.data?.result?.totalProfitAndLoss || {};
         return {
             totalDeposits: result.totalDeposits || 0,
-            totalBonus: data?.data.totalBonus || 0,
-            totalBets: data?.data.totalBets || 0,
-            totalWinnings: data?.data.totalWinnings || 0,
-            totalWithdrawals: data?.data.totalWithdrawals || 0,
-            grossRevenue: data?.data.grossRevenue || 0,
-            grossProfit: data?.data.grossProfit || 0,
-            netProfitOrLoss: data?.data.netProfitOrLoss || 0
+            totalBonus:result.totalBonus || 0,
+            totalBets:result.totalBets || 0,
+            totalWinnings:result.totalWinnings || 0,
+            totalWithdrawals:result.totalWithdrawals || 0,
+            grossRevenue:result.grossRevenue || 0,
+            grossProfit:result.grossProfit || 0,
+            netProfitOrLoss:result.netProfitOrLoss || 0
         };
     }, [data]);
 
