@@ -25,7 +25,7 @@
         "round-starts-in": "تبدأ الجولة في",
         "place-starts-in": "تبدأ المراهنة في",
         "place-ends-in": "تنتهي المراهنة في"
-      },
+    },
     "user-menu": {
         "title": "قائمة المستخدم",
         "profile-image-alt": "صورة الملف الشخصي",
@@ -130,20 +130,20 @@
         }
     },
     "deposit": {
-    "scan-qr-code": "مسح رمز QR",
-    "qr-description": "امسح رمز QR لإجراء الإيداع",
-    "transaction-id-label": "رقم المعاملة",
-    "transaction-id-placeholder": "أدخل رقم المعاملة",
-    "amount-label": "المبلغ",
-    "amount-placeholder": "أدخل مبلغ الإيداع",
-    "confirm-deposit": "تأكيد الإيداع",
-    "validation": {
-      "transaction-id-required": "رقم المعاملة مطلوب",
-      "transaction-id-max": "يجب ألا يتجاوز رقم المعاملة 50 حرفًا",
-      "amount-required": "المبلغ مطلوب",
-      "amount-invalid": "الرجاء إدخال مبلغ صحيح"
-    }
-  },
+        "scan-qr-code": "مسح رمز QR",
+        "qr-description": "امسح رمز QR لإجراء الإيداع",
+        "transaction-id-label": "رقم المعاملة",
+        "transaction-id-placeholder": "أدخل رقم المعاملة",
+        "amount-label": "المبلغ",
+        "amount-placeholder": "أدخل مبلغ الإيداع",
+        "confirm-deposit": "تأكيد الإيداع",
+        "validation": {
+            "transaction-id-required": "رقم المعاملة مطلوب",
+            "transaction-id-max": "يجب ألا يتجاوز رقم المعاملة 50 حرفًا",
+            "amount-required": "المبلغ مطلوب",
+            "amount-invalid": "الرجاء إدخال مبلغ صحيح"
+        }
+    },
     "deposit-form": {
         "transaction-id": "معرّف المعاملة*",
         "amount": "المبلغ المراد إيداعه*",
@@ -178,7 +178,7 @@
         "page-title": "سحب الأموال",
         "loading": "جارٍ التحميل...",
         "withdrawal-amount": "مبلغ السحب",
-        "total-amount": "المبلغ الإجمالي",    
+        "total-amount": "المبلغ الإجمالي",
         "validation": {
             "withdrawal-method-required": "يرجى اختيار طريقة سحب",
             "amount-invalid": "يجب أن يكون المبلغ رقمًا",
@@ -260,6 +260,29 @@
                 "pending": "قيد الانتظار"
             },
             "round-prefix": "الجولة #"
+        }
+    },
+    "game-history": {
+        "page-title": "سجل الألعاب",
+        "date-range": {
+            "to": "إلى",
+            "page-size": "حجم الصفحة"
+        },
+        "errors": {
+            "load-failed": "فشل في تحميل سجل الألعاب. يرجى المحاولة مرة أخرى لاحقاً."
+        },
+        "table": {
+            "headers": {
+                "round": "الجولة",
+                "type": "النوع",
+                "start-time": "وقت البدء",
+                "end-time": "وقت الانتهاء",
+                "total-placed": "إجمالي الرهان",
+                "total-winning": "إجمالي الربح",
+                "winner": "الفائز",
+                "profit-loss": "الربح/الخسارة",
+                "actions": "الإجراءات"
+            }
         }
     },
     "pagination": {

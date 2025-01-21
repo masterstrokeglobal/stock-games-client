@@ -1,5 +1,6 @@
 "use client";
 import {
+    ArrowLeft,
     CircleUser,
     Menu,
 } from "lucide-react"
@@ -58,10 +59,14 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
                             <Sidebar />
                         </SheetContent>
                     </Sheet>
+                    <Button variant="secondary"   onClick={() => router.back()}>
+                        <ArrowLeft className="size-4 mr-2" />
+                        <span >Go back</span>
+                    </Button>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="secondary" size="icon" className="rounded-full ml-auto">
-                                <CircleUser className="h-5 w-5" />
+                                <CircleUser className="size-4 mr-2" />
                                 <span className="sr-only">Toggle user menu</span>
                             </Button>
                         </DropdownMenuTrigger>

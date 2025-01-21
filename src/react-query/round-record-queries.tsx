@@ -74,3 +74,10 @@ export const useGetWinningReportExcel = (filter: any) => {
         queryFn: () => roundRecordsAPI.getWinningReportExcel(filter),
     });
 };
+
+export const useRoundBets = (roundRecordId: string) => {
+    return useQuery({
+        queryKey: ["round-bets", roundRecordId],
+        queryFn: () => roundRecordsAPI.getRoundBets(roundRecordId),
+    });
+}

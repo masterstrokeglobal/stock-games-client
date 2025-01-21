@@ -262,6 +262,29 @@
       "round-prefix": "Tur #"
     }
   },
+  "game-history": {
+    "page-title": "سجل الألعاب",
+    "date-range": {
+      "to": "إلى",
+      "page-size": "حجم الصفحة"
+    },
+    "errors": {
+      "load-failed": "فشل في تحميل سجل الألعاب. يرجى المحاولة مرة أخرى لاحقاً."
+    },
+    "table": {
+      "headers": {
+        "round": "الجولة",
+        "type": "النوع",
+        "start-time": "وقت البدء",
+        "end-time": "وقت الانتهاء",
+        "total-placed": "إجمالي الرهان",
+        "total-winning": "إجمالي الربح",
+        "winner": "الفائز",
+        "profit-loss": "الربح/الخسارة",
+        "actions": "الإجراءات"
+      }
+    }
+  },
   "pagination": {
     "previous": "Önceki",
     "next": "Sonraki"

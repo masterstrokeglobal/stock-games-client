@@ -1,98 +1,133 @@
-import dayjs from "dayjs";
+import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-
+import dayjs from "dayjs";
 import { useTranslations } from 'next-intl';
+import Link from "next/link";
 import React from 'react';
-import { ArrowDownCircle, ArrowUpCircle } from "lucide-react";
 
 // Header component for translated table headers
- const TranslatedHeader: React.FC<{ translationKey: string }> = ({ translationKey }) => {
-  const t = useTranslations('betting-history.table');
+const TranslatedHeader: React.FC<{ translationKey: string }> = ({ translationKey }) => {
+  const t = useTranslations('game-history.table');
   return <>{t(translationKey)}</>;
 };
 
-// Cell component for translations and dynamic content
- const RoundCell: React.FC<{ roundId: number }> = ({ roundId }) => {
-  const t = useTranslations('betting-history.table');
-  return <div className="flex items-center gap-2 whitespace-nowrap">{t('round-prefix')}{roundId}</div>;
-};
+interface MarketItem {
+  id: number;
+  type: string;
+  active: boolean;
+  placementAllowed: boolean;
+  name: string;
+  oddsMultiplier: number;
+  code: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+}
 
- const StatusCell: React.FC<{ isWinner: boolean; winnerName: string }> = ({ isWinner, winnerName }) => {
-  const t = useTranslations('betting-history.table');
+interface GameRecord {
+  roundId: number;
+  type: string;
+  startTime: string;
+  endTime: string;
+  totalPlaced: number;
+  totalWinningAmount: number;
+  netProfitLoss: number;
+  winningMarketItem: MarketItem;
+}
 
-  if (winnerName === "") {
-    return <span className="text-gray-400">{t('status.pending')}</span>;
-  }
-  
+// Status cell component
+const StatusCell: React.FC<{ netProfitLoss: number }> = ({ netProfitLoss }) => {
+  const isProfit = netProfitLoss > 0;
+
   return (
-    <div className={`flex items-center gap-2 ${isWinner ? 'text-green-400' : 'text-red-400'}`}>
-      {isWinner ? <ArrowUpCircle className="w-5 h-5 text-green-400" /> : <ArrowDownCircle className="w-5 h-5 text-red-400" />}
-      {isWinner ? t('status.won') : t('status.lost')}
+    <div className={`font-semibold ${isProfit ? 'text-green-500' : 'text-red-500'}`}>
+      {isProfit ? '+' : ''}{netProfitLoss.toFixed(2)}
     </div>
   );
 };
 
-interface BettingHistory {
-  id: number;
-  roundId: number;
-  winningId: number;
-  isWinner: boolean;
-  winnerName: string;
-  placementType: string;
-  placedValues: string;
-  winnerCode: string;
-  amount: number;
-  market: number[];
-  createdAt: string;
-}
-
-const bettingHistoryColumns: ColumnDef<BettingHistory>[] = [
+const gameHistoryColumns: ColumnDef<GameRecord>[] = [
   {
-    accessorKey: "round",
+    accessorKey: "roundId",
     header: () => <TranslatedHeader translationKey="headers.round" />,
-    cell: ({ row }) => <RoundCell roundId={row.original.roundId} />,
+    cell: ({ row }) => (
+      <div className="font-semibold">
+        #{row.original.roundId}
+      </div>
+    ),
   },
   {
-    accessorKey: "createdAt",
-    header: () => <TranslatedHeader translationKey="headers.date-time" />,
+    accessorKey: "type",
+    header: () => <TranslatedHeader translationKey="headers.type" />,
+    cell: ({ row }) => (
+      <span className="capitalize">
+        {row.original.type}
+      </span>
+    ),
+  },
+  {
+    accessorKey: "startTime",
+    header: () => <TranslatedHeader translationKey="headers.start-time" />,
     cell: ({ row }) => (
       <span className="whitespace-nowrap">
-        {dayjs(row.original.createdAt).format('DD MMM YYYY, h:mm A')}
+        {dayjs(row.original.startTime).format('DD MMM YYYY, HH:mm:ss')}
       </span>
     ),
   },
   {
-    accessorKey: "placementType",
-    header: () => <TranslatedHeader translationKey="headers.bet-type" />,
+    accessorKey: "endTime",
+    header: () => <TranslatedHeader translationKey="headers.end-time" />,
     cell: ({ row }) => (
-      <span className="font-semibold capitalize whitespace-nowrap">
-        {row.original.placedValues ?? row.original.placementType ?? "-"}
+      <span className="whitespace-nowrap">
+        {dayjs(row.original.endTime).format('DD MMM YYYY, HH:mm:ss')}
       </span>
     ),
   },
   {
-    accessorKey: "amount",
-    header: () => <TranslatedHeader translationKey="headers.amount" />,
+    accessorKey: "totalPlaced",
+    header: () => <TranslatedHeader translationKey="headers.total-placed" />,
     cell: ({ row }) => (
-      <span className="font-bold whitespace-nowrap">
-        ${row.original.amount.toFixed(2)}
+      <span className="font-semibold">
+        ${row.original.totalPlaced.toFixed(2)}
       </span>
     ),
   },
   {
-    accessorKey: "winner",
+    accessorKey: "totalWinningAmount",
+    header: () => <TranslatedHeader translationKey="headers.total-winning" />,
+    cell: ({ row }) => (
+      <span className="font-semibold">
+        ${row.original.totalWinningAmount.toFixed(2)}
+      </span>
+    ),
+  },
+  {
+    accessorKey: "winningMarketItem",
     header: () => <TranslatedHeader translationKey="headers.winner" />,
     cell: ({ row }) => (
-      <span className="font-semibold whitespace-nowrap">
-        {row.original.winnerName.length !== 0 ? row.original.winnerName : "-"}
+      <span className="font-semibold capitalize">
+        {row.original.winningMarketItem.name}
       </span>
     ),
   },
   {
-    accessorKey: "isWinner",
-    header: () => <TranslatedHeader translationKey="headers.status" />,
-    cell: ({ row }) => <StatusCell isWinner={row.original.isWinner} winnerName={row.original.winnerName} />,
+    accessorKey: "netProfitLoss",
+    header: () => <TranslatedHeader translationKey="headers.profit-loss" />,
+    cell: ({ row }) => <StatusCell netProfitLoss={row.original.netProfitLoss} />,
   },
+  {
+    accessorKey: "actions",
+    header: () => <TranslatedHeader translationKey="headers.actions" />,
+    cell: ({row}) => (
+      <div className="flex items-center justify-center space-x-2">
+        <Link href={`/game/betting-history/${row.original.roundId}`}>
+          <Button size="sm" variant="secondary">
+            <span className="text-sm">View</span>
+          </Button>
+        </Link>
+      </div>
+    ),
+  }
 ];
 
-export default bettingHistoryColumns;
+export default gameHistoryColumns;

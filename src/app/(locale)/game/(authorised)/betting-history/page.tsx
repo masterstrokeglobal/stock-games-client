@@ -42,7 +42,7 @@ const BettingHistoryPage = () => {
 
     const records = useMemo(() => {
         if (!data?.data) return [];
-        return data.data.gameRecordHistory;
+        return data.data.gameRecordHistory.roundRecords;
     }, [data]);
 
     const totalPages = useMemo(() => {
