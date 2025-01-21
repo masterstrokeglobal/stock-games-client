@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import Link from "next/link";
-import { Eye } from 'lucide-react';
+import { Eye, Users2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import Agent from "@/models/agent";
 
@@ -48,6 +48,11 @@ const ActionColumn = ({ agent }: { agent: Agent }) => {
             <Link href={`/dashboard/agents/${agent.id}`}>
                 <Button size="icon" variant="ghost" aria-label="View Agent">
                     <Eye className="w-5 h-5" />
+                </Button>
+            </Link>
+            <Link href={`/dashboard/agents/${agent.id}/users`}>
+                <Button size="icon" variant="ghost" aria-label="View Users">
+                    <Users2 className="w-5 h-5" />
                 </Button>
             </Link>
         </div>

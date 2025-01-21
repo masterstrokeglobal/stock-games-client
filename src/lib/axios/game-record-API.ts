@@ -21,7 +21,7 @@ export const gameRecordAPI = {
     });
   },
   getGameRecordHistory: async (filter:any) => {
-    return api.get("/game-records/history",{
+    return api.get("/round-records/history",{
       params: filter
     });
   }

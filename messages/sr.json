@@ -262,6 +262,29 @@
             "round-prefix": "Runda #"
         }
     },
+    "game-history": {
+        "page-title": "Istorija Igara",
+        "date-range": {
+            "to": "do",
+            "page-size": "Veličina Stranice"
+        },
+        "errors": {
+            "load-failed": "Neuspešno učitavanje istorije igara. Pokušajte ponovo kasnije."
+        },
+        "table": {
+            "headers": {
+                "round": "Runda",
+                "type": "Tip",
+                "start-time": "Vreme Početka",
+                "end-time": "Vreme Završetka",
+                "total-placed": "Ukupno Uloženo",
+                "total-winning": "Ukupno Dobijeno",
+                "winner": "Pobednik",
+                "profit-loss": "Profit/Gubitak",
+                "actions": "Akcije"
+            }
+        }
+    },
     "pagination": {
         "previous": "Prethodno",
         "next": "Sledeće"

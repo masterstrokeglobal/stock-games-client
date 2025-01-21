@@ -85,7 +85,7 @@ export const useConfirmWithdrawal = () => {
         mutationFn: paymentAPI.confirmWithdrawal,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["transactions"] });
-            toast.success("Withdrawal confirmed successfully");
+            toast.success("Withdrawal updated successfully");
         },
         onError: (error: any) => {
             toast.error(error.response?.data?.message ?? "Error confirming withdrawal");

@@ -22,7 +22,7 @@ export const roundRecordsAPI = {
     getWinningReportExcel: async (filter: any) => {
         return api.get("/round-records/winning-report/excel", {
             params: filter,
-            responseType: 'arraybuffer', 
+            responseType: 'arraybuffer',
         });
     },
     getRoundRecordById: async (id: number) => {
@@ -31,5 +31,8 @@ export const roundRecordsAPI = {
     getMyResult: async (id: number) => {
 
         return api.get(`/round-records/my-result/${id}`);
+    },
+    getRoundBets: async (id: string) => {
+        return api.get(`/round-records/history/${id}`);
     },
 };

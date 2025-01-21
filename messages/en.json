@@ -264,6 +264,29 @@
             "round-prefix": "Round #"
         }
     },
+    "game-history": {
+        "page-title": "Game History",
+        "date-range": {
+            "to": "to",
+            "page-size": "Page Size"
+        },
+        "errors": {
+            "load-failed": "Failed to load game history. Please try again later."
+        },
+        "table": {
+            "headers": {
+                "round": "Round",
+                "type": "Type",
+                "start-time": "Start Time",
+                "end-time": "End Time",
+                "total-placed": "Total Placed",
+                "total-winning": "Total Winning",
+                "winner": "Winner",
+                "profit-loss": "Profit/Loss",
+                "actions": "Action"
+            }
+        }
+    },
     "pagination": {
         "previous": "Previous",
         "next": "Next"
@@ -367,6 +390,40 @@
         "button": {
             "sendCode": "Send Verification Code",
             "sending": "Sending..."
+        }
+    },
+    "round-detail": {
+        "title": "Round #{roundId} Details",
+        "round": {
+            "details": "Round Information",
+            "start-time": "Start Time",
+            "end-time": "End Time",
+            "winner": "Winner",
+            "type": "Round Type"
+        },
+        "bets": {
+            "title": "Placed Bets"
+        },
+        "bet": {
+            "id": "Bet ID",
+            "type": "Bet Type",
+            "placed-on": "Placed On",
+            "amount": "Bet Amount",
+            "status": "Status",
+            "won": "Won",
+            "lost": "Lost"
+        },
+        "errors": {
+            "round-load-failed": "Failed to load round details",
+            "result-load-failed": "Failed to load round results",
+            "bets-load-failed": "Failed to load bets information"
+        },
+        "result": {
+            "title": "Your Round Results",
+            "total-bet": "Total Bet Amount",
+            "total-winnings": "Total Winnings",
+            "profit-loss": "Profit/Loss",
+            "winning-bet": "Winning Bet ID"
         }
     }
 }
