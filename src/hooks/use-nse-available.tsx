@@ -20,14 +20,14 @@ const useNSEAvailable = () => {
             const marketCloseTime = 15 * 60 + 30;
 
             const day = now.getDay();
-            const isWeekday = day >= 1 && day <= 5; 
+            const isWeekday = day >= 1 && day <= 5;
 
             const newMarketStatus = isWeekday && currentTimeInMinutes >= marketOpenTime && currentTimeInMinutes <= marketCloseTime;
 
             if (isNSEOpen !== newMarketStatus) {
                 setIsNSEOpen(newMarketStatus);
             }
-        };  
+        };
 
         checkNSEAvailability();
 
@@ -37,7 +37,7 @@ const useNSEAvailable = () => {
         return () => clearInterval(intervalId);
     }, []);
 
-    return isNSEOpen;
+    return true;
 };
 
 export default useNSEAvailable;    

@@ -389,5 +389,24 @@
             "sendCode": "Pošaljite verifikacioni kod",
             "sending": "Šalje se..."
         }
+    },
+    "contact": {
+        "titles": {
+            "contact-us": "Контактирајте нас"
+        },
+        "labels": {
+            "subject": "Наслов",
+            "message": "Порука"
+        },
+        "buttons": {
+            "send-message": "Пошаљи поруку",
+            "sending": "Слање..."
+        },
+        "validation": {
+            "subject-required": "Наслов је обавезан",
+            "message-required": "Порука је обавезна",
+            "message-min": "Порука мора имати најмање 10 карактера",
+            "message-max": "Порука не може бити дужа од 500 карактера"
+        }
     }
 }

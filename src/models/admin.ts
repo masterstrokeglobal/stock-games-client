@@ -46,8 +46,8 @@ class Admin {
 
         // Handle company initialization
         if (params.company) {
-            this.company = params.company instanceof Company 
-                ? params.company 
+            this.company = params.company instanceof Company
+                ? params.company
                 : new Company(params.company);
         }
 

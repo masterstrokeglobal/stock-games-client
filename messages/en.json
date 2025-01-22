@@ -12,6 +12,7 @@
         "rank": "Rank",
         "horse": "Horse",
         "price": "Price",
+        "betting-not-allowed": "Betting not allowed",
         "name": "Name",
         "change": "Change in 2 min",
         "username": "username",
@@ -424,6 +425,25 @@
             "total-winnings": "Total Winnings",
             "profit-loss": "Profit/Loss",
             "winning-bet": "Winning Bet ID"
+        }
+    },
+    "contact": {
+        "titles": {
+            "contact-us": "Contact Us"
+        },
+        "labels": {
+            "subject": "Subject",
+            "message": "Message"
+        },
+        "buttons": {
+            "send-message": "Send Message",
+            "sending": "Sending..."
+        },
+        "validation": {
+            "subject-required": "Subject is required",
+            "message-required": "Message is required",
+            "message-min": "Message must be at least 10 characters",
+            "message-max": "Message cannot exceed 500 characters"
         }
     }
 }

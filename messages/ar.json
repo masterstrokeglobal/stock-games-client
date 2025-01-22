@@ -389,5 +389,24 @@
             "sendCode": "إرسال رمز التحقق",
             "sending": "جاري الإرسال..."
         }
+    },
+    "contact": {
+      "titles": {
+        "contact-us": "اتصل بنا"
+      },
+      "labels": {
+        "subject": "الموضوع",
+        "message": "الرسالة"
+      },
+      "buttons": {
+        "send-message": "إرسال الرسالة",
+        "sending": "جاري الإرسال..."
+      },
+      "validation": {
+        "subject-required": "الموضوع مطلوب",
+        "message-required": "الرسالة مطلوبة",
+        "message-min": "يجب أن تتكون الرسالة من 10 أحرف على الأقل",
+        "message-max": "لا يمكن أن تتجاوز الرسالة 500 حرف"
+      }
     }
 }

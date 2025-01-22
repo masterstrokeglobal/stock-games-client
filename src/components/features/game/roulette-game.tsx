@@ -18,6 +18,8 @@ import { GameHeader } from "./roulette-header";
 import useNSEAvailable from "@/hooks/use-nse-available";
 import GameResultDialog from "./result-dialog";
 import { useTranslations } from "next-intl";
+import { useAuthStore } from "@/context/auth-context";
+import User from "@/models/user";
 
 enum PlacementType {
     SINGLE = "single",
@@ -44,6 +46,8 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const gameState = useGameState(roundRecord);
     const isNSEAvailable = useNSEAvailable();
     const [tab, setTab] = useGameType();
+    const { userDetails } = useAuthStore();
+    const currentUser = userDetails as User;
     const { mutate, isPending: isPlacingBet } = useCreateGameRecord();
 
     const boardRef = useRef<HTMLDivElement>(null);
@@ -107,23 +111,23 @@ const RouletteGame = ({ roundRecord }: Props) => {
         }]);
     };
 
-/*     // Handler for bottom bets using COLUMN type
-    const handleBottomBet = (numbers: number[]) => {
-        if (gameState.isPlaceOver) return;
-
-        const position = getBetPosition({
-            type: PlacementType.HIGH_LOW,
-            numbers,
-        });
-
-        setChips([{
-            type: PlacementType.HIGH_LOW,
-            numbers,
-            amount: betAmount,
-            position,
-        }]);
-    };
- */
+    /*     // Handler for bottom bets using COLUMN type
+        const handleBottomBet = (numbers: number[]) => {
+            if (gameState.isPlaceOver) return;
+    
+            const position = getBetPosition({
+                type: PlacementType.HIGH_LOW,
+                numbers,
+            });
+    
+            setChips([{
+                type: PlacementType.HIGH_LOW,
+                numbers,
+                amount: betAmount,
+                position,
+            }]);
+        };
+     */
     const handleSpecialBet = (betType: PlacementType, numbers: number[]) => {
         if (gameState.isPlaceOver) return;
 
@@ -164,10 +168,10 @@ const RouletteGame = ({ roundRecord }: Props) => {
     // Get all numbers for specific sections and other bets
     const first8Numbers = Array.from({ length: 8 }, (_, i) => i + 1);
     const second8Numbers = Array.from({ length: 8 }, (_, i) => i + 1 + 8);
-/*     const firstHigh = [1, 2, 5, 6, 9, 10, 13, 14];
-    const secondHigh = [3, 4, 7, 8, 11, 12, 15, 16]
-    const redNumbers = [1, 3, 5, 7, 9, 11, 13, 15];
-    const blackNumbers = [2, 4, 6, 8, 10, 12, 14, 16]; */
+    /*     const firstHigh = [1, 2, 5, 6, 9, 10, 13, 14];
+        const secondHigh = [3, 4, 7, 8, 11, 12, 15, 16]
+        const redNumbers = [1, 3, 5, 7, 9, 11, 13, 15];
+        const blackNumbers = [2, 4, 6, 8, 10, 12, 14, 16]; */
     const evenNumbers = Array.from({ length: 8 }, (_, i) => (i + 1) * 2);
     const oddNumbers = Array.from({ length: 8 }, (_, i) => (i * 2) + 1);
 
@@ -185,7 +189,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     const boardChips = gameState.isPlaceOver ? bettedChips : [...bettedChips, ...chips];
 
-    console.log("boardChips", tab);
+    const isNotAllowedToPlaceBet = currentUser.isNotAllowedToPlaceOrder(roundRecord.type);
     return (
         <>
             <div className="max-w-4xl mx-auto lg:px-4 px-2 py-2  ">
@@ -195,24 +199,28 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             {gameState.isPlaceOver ? t("betting-closed") : t("place-your-bets")}
                         </h1>
 
-                        <div className={cn("relative w-full max-w-4xl mx-auto ", gameState.isPlaceOver ? 'cursor-not-allowed opacity-50' : 'cursor-crosshair')}>
+                        <div className={cn("relative w-full max-w-4xl mx-auto ", gameState.isPlaceOver || isNotAllowedToPlaceBet ? 'cursor-not-allowed opacity-100' : 'cursor-crosshair')}>
                             <Tabs
                                 value={tab}
                                 onValueChange={(value) => setTab(value as SchedulerType)}
                                 className="w-full relative z-10 mb-6"
                             >
-                                <TabsList  className="w-full flex lg:hidden h-10 p-1 bg-[#0F214F]">
+                                <TabsList className="w-full flex lg:hidden h-10 p-1 bg-[#0F214F]">
                                     <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && 'cursor-not-allowed')} value="nse">NSE</TabsTrigger>
                                     <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
                                 </TabsList>
                             </Tabs>
+                            {isNotAllowedToPlaceBet && (<div className="absolute top-0 left-0 w-full h-full z-40 bg-black bg-opacity-50">
+                                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                    <span className="text-white text-lg opacity-100 font-semibold">{t("betting-not-allowed")}</span>
+                                </div>
+                            </div>)}
 
                             <div className="flex w-full">
                                 <div
                                     ref={boardRef}
-                                    onClick={!gameState.isPlaceOver ? handleBoardClick : undefined}
+                                    onClick={!(gameState.isPlaceOver || isNotAllowedToPlaceBet) ? handleBoardClick : undefined}
                                     onMouseLeave={() => setHoveredCell(null)}
-
                                     className={`relative flex-1 mx-auto`}
                                 >
                                     <RouletteBettingGrid
@@ -263,7 +271,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             </Button>
 
 
-                    {/*         <div className="grid grid-cols-2 gap-2 mt-2">
+                            {/*         <div className="grid grid-cols-2 gap-2 mt-2">
                                 <div className="relative">
                                     <Button
                                         variant="game-secondary"
@@ -303,7 +311,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                         <ButtonChip amount={getBetForPosition(PlacementType.EVEN_ODD, evenNumbers)!.amount} />
                                     )}
                                 </div>
-{/*                                 <div className="relative">
+                                {/*                                 <div className="relative">
                                     <Button
                                         variant="game-secondary"
                                         className="roulette-piece-black-select h-10 w-full"

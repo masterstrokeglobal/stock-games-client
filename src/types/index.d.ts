@@ -18,6 +18,8 @@ type SearchFilters = {
     active?: string;
     placementAllowed?: string;
     search: string;
+    orderByField?: string;
+    orderBy?: string;
     type?: string;
     limit?: number;
 };

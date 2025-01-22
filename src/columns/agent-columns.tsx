@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Eye, Users2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import Agent from "@/models/agent";
+import { Badge } from "@/components/ui/badge";
 
 const agentColumns: ColumnDef<Agent>[] = [
     {
@@ -25,6 +26,21 @@ const agentColumns: ColumnDef<Agent>[] = [
         header: "COMPANY",
         accessorKey: "company",
         cell: ({ row }) => <div className="text-[#6B7280] w-48 truncate">{row.original.company?.name || 'N/A'}</div>,
+    },
+    {
+        header: "Placement Not Allowed",
+        accessorKey: "placementAllowed",
+        cell: ({ row }) => (
+            // show in badges
+            <div className="flex space-x-2">
+                {row.original.placementNotAllowed.map((type) => (
+                    <Badge key={type} variant="default" >
+                        {type}
+                    </Badge>
+                ))}
+                {row.original.placementNotAllowed.length === 0 && <span className="text-[#6B7280]">No Restriction</span>}
+            </div>
+        )
     },
     {
         header: "CREATED ON",

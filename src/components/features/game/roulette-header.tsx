@@ -29,8 +29,8 @@ export const MobileGameHeader = ({ roundRecord }: Props) => {
     const gameState = useGameState(roundRecord);
     return (
         <header className='text-center relative h-16  text-white'>
-            <img className='w-full h-full absolute object-cover' src='mobile-header.svg' alt='Roulette' />
-            <div className='h-16 w-40 bg-[url("/mobile-header-center.svg")] bg-cover z-50  relative mx-auto'>
+            <img className='w-full h-full absolute object-cover z-10' src='mobile-header.svg' alt='Roulette' />
+            <div className='h-16 w-40 bg-[url("/mobile-header-center.svg")] bg-cover z-40  relative mx-auto'>
                 <span className='text-sm'>
                     {gameState.isPlaceOver ? t('game-ends-in') : t('round-starts-in')}
                 </span>

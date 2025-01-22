@@ -8,6 +8,7 @@ import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader,
 import { useDeleteUserById } from "@/react-query/user-queries"; // Ensure you have this hook implemented
 import { useAuthStore } from "@/context/auth-context";
 import Admin, { AdminRole } from "@/models/admin";
+import { Badge } from "@/components/ui/badge";
 
 const userColumns: ColumnDef<User>[] = [
     {
@@ -31,6 +32,21 @@ const userColumns: ColumnDef<User>[] = [
         cell: ({ row }) => <div className="text-[#6B7280]">{row.original.phone || 'N/A'}</div>,
     },
     {
+        header: "Placement Not Allowed",
+        accessorKey: "placementAllowed",
+        cell: ({ row }) => (
+            // show in badges
+            <div className="flex space-x-2">
+                {row.original.placementNotAllowed.map((type) => (
+                    <Badge key={type} variant="default" >
+                        {type}
+                    </Badge>
+                ))}
+                {row.original.placementNotAllowed.length === 0 && <span className="text-[#6B7280]">No Restriction</span>}
+            </div>
+        )
+    },
+    {
         header: "CREATED ON",
         accessorKey: "createdAt",
         cell: ({ row }) => (
@@ -48,8 +64,8 @@ const userColumns: ColumnDef<User>[] = [
 
 const ActionColumn = ({ user }: { user: User }) => {
     const { mutate: deleteUser, isPending: deleting } = useDeleteUserById();
-    const {userDetails} = useAuthStore();
-    const currentUser = userDetails as Admin;   
+    const { userDetails } = useAuthStore();
+    const currentUser = userDetails as Admin;
 
     const handleDeleting = () => {
         if (user.id) {
@@ -59,7 +75,7 @@ const ActionColumn = ({ user }: { user: User }) => {
 
     let showDelete = true;
 
-    if(currentUser.role == AdminRole.AGENT  ){
+    if (currentUser.role == AdminRole.AGENT) {
         showDelete = false;
     }
 
@@ -71,7 +87,7 @@ const ActionColumn = ({ user }: { user: User }) => {
                         <Eye className="w-5 h-5" />
                     </Button>
                 </Link>
-               {showDelete && <AlertDialogTrigger asChild>
+                {showDelete && <AlertDialogTrigger asChild>
                     <Button
                         variant="destructive"
                         size="icon"

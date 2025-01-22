@@ -1,4 +1,5 @@
 import Company from "./company";
+import { SchedulerType } from "./market-item";
 
 
 class User {
@@ -13,6 +14,7 @@ class User {
     profileImage?: string;
     otpSecret?: string;
     isVerified?: boolean;
+    placementNotAllowed: SchedulerType[];
     company?: Company;
     createdAt?: Date;
     updatedAt?: Date;
@@ -35,9 +37,15 @@ class User {
             this.company = new Company(params.company);
         }
 
+        this.placementNotAllowed = params.placementNotAllowed || [];
+
         this.createdAt = params.createdAt;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;
+    }
+
+    isNotAllowedToPlaceOrder(type: SchedulerType) {
+        return this.placementNotAllowed.includes(type);
     }
 
     get name() {
