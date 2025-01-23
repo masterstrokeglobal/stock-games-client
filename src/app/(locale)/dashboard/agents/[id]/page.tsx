@@ -3,6 +3,7 @@
 import LoadingScreen from "@/components/common/loading-screen";
 import AgentDetailsCard from "@/components/features/agent/agent-card";
 import AgentProfitLossCard from "@/components/features/agent/agent-profit-loss";
+import AgentPlacementManagement from "@/components/features/agent/agent-user-placement-bet";
 import DatePicker from "@/components/ui/date-picker";
 import Agent from "@/models/agent"; // Agent model class
 import { useGetAgentById, useGetAgentProfitLoss } from "@/react-query/agent-queries"; // Replace with the actual agent query hook
@@ -50,6 +51,7 @@ const ViewAgentPage = () => {
         <section className="container-main min-h-[60vh]">
             <main className="mt-4 space-y-8">
                 {agentDetails && <AgentDetailsCard agent={agentDetails} />}
+                {agentDetails && <AgentPlacementManagement user={agentDetails} />}
                 <div className="flex justify-end items-center gap-4">
                     <DatePicker value={filter.startDate} onSelect={(date) => setFilter({ ...filter, startDate: date })} label="Start Date" />
                     <DatePicker value={filter.endDate} onSelect={(date) => setFilter({ ...filter, endDate: date })} label="End Date" />

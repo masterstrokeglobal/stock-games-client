@@ -1,3 +1,5 @@
+import { SchedulerType } from "@/models/market-item";
+import User from "@/models/user";
 import api from "./instance";
 
 export const userAPI = {
@@ -15,10 +17,29 @@ export const userAPI = {
         return api.delete(`/user/${userId}`);
     },
     uploadImage: async (data: FormData) => {
-        return api.post("/company/upload-image", data,{
+        return api.post("/company/upload-image", data, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
         });
     },
+    createUser: async (data: User) => {
+        return api.post("/user", data);
+    },
+    updateUser: async (data: User) => {
+        return api.patch(`/user/${data.id}`, data);
+    },
+    addUserPlacementNotAllowed: async (data: { placementNotAllowed: SchedulerType, userId: string }) => {
+        return api.post(`/user/add-placement-not-allowed/${data.userId}`, data);
+    },
+    removeUserPlacementNotAllowed: async (data: { placementNotAllowed: SchedulerType, userId: string }) => {
+        return api.post(`/user/remove-placement-not-allowed/${data.userId}`, data);
+    },
+    addAgentUserPlacementNotAllowed: async (data: { placementNotAllowed: SchedulerType, userId: string }) => {
+        return api.post(`/user/add-agent-placement-not-allowed/${data.userId}`, data);
+    },
+    removeAgentUserPlacementNotAllowed: async (data: { placementNotAllowed: SchedulerType, userId: string }) => {
+        return api.post(`/user/remove-agent-placement-not-allowed/${data.userId}`, data);
+    },
 };
+

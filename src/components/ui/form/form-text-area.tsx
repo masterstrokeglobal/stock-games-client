@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
+import { cn } from "@/lib/utils"
 
 function FormTextArea<
   TFieldValues extends FieldValues = FieldValues,
@@ -18,13 +19,17 @@ function FormTextArea<
 >({
   control,
   name,
+  inputClassName,
+  game = false,
   description,
   label,
   ...props
 }: {
   label?: string
   control: Control<TFieldValues>
-  name: TName
+  name: TName,
+  game?: boolean,
+  inputClassName?: string
   description?: string
 } & React.InputHTMLAttributes<HTMLTextAreaElement>) {
   return (
@@ -33,9 +38,11 @@ function FormTextArea<
       name={name}
       render={({ field }) => (
         <FormItem>
-          {label && <FormLabel>{label}</FormLabel>}
+          {label && <FormLabel className={game ? "text-white" : ''}
+          >{label}</FormLabel>}
           <FormControl>
-            <Textarea {...props} {...field} />
+            <Textarea className={cn(inputClassName, game ? "h-52 text-white bg-[#122146] border border-[#EFF8FF17] focus:border-[#55B0FF]" : '')} {...props} {...field} />
+
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />

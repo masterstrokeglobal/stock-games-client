@@ -1,4 +1,5 @@
 import { Company } from "./company";
+import { SchedulerType } from "./market-item";
 
 class Agent {
     id?: number;
@@ -6,6 +7,7 @@ class Agent {
     lastname?: string;
     email?: string;
     password?: string;
+    placementNotAllowed: SchedulerType[];
     referenceCode?: string;
     company?: Company;
     createdAt?: Date;
@@ -19,6 +21,7 @@ class Agent {
         this.email = params.email;
         this.password = params.password;
         this.referenceCode = params.referenceCode;
+        this.placementNotAllowed = params.placementNotAllowed || [];
 
         if (params.company) {
             this.company = new Company(params.company);

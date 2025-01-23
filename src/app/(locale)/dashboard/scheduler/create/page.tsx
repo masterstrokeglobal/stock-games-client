@@ -10,6 +10,7 @@ import { useAuthStore } from "@/context/auth-context";
 const defaultValues: SchedulerFormValues = {
     startDate: new Date(),
     endDate: new Date(),
+    createRound: true,
     endTime: "",
     startTime: "",
     type: SchedulerType.NSE, // Replace 'SomeValidType' with an actual value from SchedulerType

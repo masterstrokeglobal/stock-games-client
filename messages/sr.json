@@ -11,6 +11,8 @@
         "leaderboard": "Tabela",
         "rank": "Rang",
         "horse": "Konj",
+
+  "betting-not-allowed": "Klađenje nije dozvoljeno",
         "price": "Cena",
         "name": "Ime",
         "change": "Promena za 2 minuta",
@@ -31,7 +33,8 @@
         "profile-image-alt": "Slika profila",
         "coin-image-alt": "Ikona kovanice",
         "add-funds-alt": "Dodaj sredstva",
-        "loading": "...",
+        "loading": "...", 
+        "contact-us": " Kontaktirajte nas",
         "your-info": "Vaše informacije",
         "change-password": "Promeni lozinku",
         "your-wallet": "Vaš novčanik",
@@ -388,6 +391,25 @@
         "button": {
             "sendCode": "Pošaljite verifikacioni kod",
             "sending": "Šalje se..."
+        }
+    },
+    "contact": {
+        "titles": {
+            "contact-us": "Контактирајте нас"
+        },
+        "labels": {
+            "subject": "Наслов",
+            "message": "Порука"
+        },
+        "buttons": {
+            "send-message": "Пошаљи поруку",
+            "sending": "Слање..."
+        },
+        "validation": {
+            "subject-required": "Наслов је обавезан",
+            "message-required": "Порука је обавезна",
+            "message-min": "Порука мора имати најмање 10 карактера",
+            "message-max": "Порука не може бити дужа од 500 карактера"
         }
     }
 }

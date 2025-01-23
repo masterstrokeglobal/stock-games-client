@@ -5,6 +5,8 @@ import { Scheduler } from "@/models/schedular"; // Import the Scheduler model
 import { Edit2, Eye } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { useUpdateSchedulerById } from "@/react-query/scheduler-queries";
+import { Switch } from "@/components/ui/switch";
 
 const schedulerColumns: ColumnDef<Scheduler>[] = [
     {
@@ -61,6 +63,11 @@ const schedulerColumns: ColumnDef<Scheduler>[] = [
         ),
     },
     {
+        header: "CREATE ROUND",
+        accessorKey: "createRound",
+        cell: ({ row }) => <CreateRoundColumn scheduler={row.original} />,
+    },
+    {
         header: "",
         accessorKey: "actions",
         cell: ({ row }) => <ActionColumn scheduler={row.original} />,
@@ -94,4 +101,30 @@ const convertTo12HourFormat = (time: string): string => {
     const period = hour >= 12 ? "PM" : "AM";
     const adjustedHour = hour % 12 || 12; // Convert 0 or 24 to 12 for AM/PM
     return `${adjustedHour}:${minute.toString().padStart(2, "0")} ${period}`;
+};
+
+
+const CreateRoundColumn = ({ scheduler }: { scheduler: Scheduler }) => {
+    const { mutate, isPending } = useUpdateSchedulerById();
+
+    const handleChange = () => {
+        mutate({
+            ...scheduler,
+            createRound: !scheduler.createRound,
+            id: scheduler.id?.toString(),
+            companyId: scheduler.companyId?.toString(),
+        });
+    };
+    return (
+        <div className="flex space-x-4  justify-start">
+            <Switch
+                disabled={isPending}
+                checked={scheduler.createRound}
+                onCheckedChange={() => {
+                    handleChange();
+                }}
+            />
+            {}
+        </div>
+    );
 };

@@ -10,12 +10,14 @@ import { useForm } from "react-hook-form";
 
 import { z } from "zod";
 import { SchedulerType } from "@/models/market-item";
+import FormSwitch from "@/components/ui/form/form-switch";
 
 export const createSchedulerInputSchema = z.object({
     id: z.string().optional(),
     companyId: z.string().optional(),
     type: z.nativeEnum(SchedulerType, { required_error: "Type is required" }),
     startDate: z.date({ required_error: "Start Date is required" }),
+    createRound: z.boolean().default(true).optional(),
     endDate: z.date({ required_error: "End Date is required" }),
     startTime: z.string({ required_error: "Start Time is required" }),
     endTime: z.string({ required_error: "End Time is required" }),
@@ -42,7 +44,7 @@ const SchedulerForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
     console.log(form.formState.errors)
 
     return (
-        <FormProvider methods={form} onSubmit={handleSubmit(onSubmit,(e)=>console.error(e))} className="space-y-4">
+        <FormProvider methods={form} onSubmit={handleSubmit(onSubmit, (e) => console.error(e))} className="space-y-4">
             {/* Type Dropdown */}
             <FormGroupSelect
                 control={control}
@@ -83,6 +85,9 @@ const SchedulerForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 label="End Time*"
                 type="time"
             />
+
+            {/* Create Round Checkbox */}
+            <FormSwitch control={control} name="createRound" label="Create Round" />
 
             {/* Submit Button */}
             <footer className="flex justify-end gap-4 mt-8">

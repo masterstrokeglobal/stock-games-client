@@ -26,6 +26,7 @@ const EditSchedulerPage = () => {
             startTime: scheduler.startTime,
             endTime: scheduler.endTime,
             type: scheduler.type ?? "",
+            createRound: scheduler.createRound ?? false,
             companyId: scheduler.companyId.toString() ?? null,
         };
     }, [data, isSuccess]);

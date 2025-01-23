@@ -2,6 +2,7 @@
 
 import LoadingScreen from "@/components/common/loading-screen";
 import TransactionTable from "@/components/features/transaction/transaction-table"; // Adjust the import based on your transaction table component
+import PlacementManagement from "@/components/features/user/placement-allowed";
 import UserCard from "@/components/features/user/user-card"; // Assuming you have a UserCard component
 import UserEarningsCard from "@/components/features/user/user-earning";
 import { Separator } from "@/components/ui/separator";
@@ -38,7 +39,10 @@ const ViewUserPage = () => {
             <main className="mt-4">
                 {userDetails && <UserCard user={userDetails} />} {/* Render UserCard if data exists */}
             </main>
-
+            {(!user.isAgent && userDetails) && <main className="mt-4" >
+                <PlacementManagement user={userDetails} />
+            </main>
+            }
             <UserEarningsCard userId={id.toString()} /> {/* Render UserEarningsCard with user ID */}
 
             {user?.role != AdminRole.AGENT && <main className="mt-4">

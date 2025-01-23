@@ -8,6 +8,7 @@ export class Scheduler {
     startTime?: string;
     endTime?: string;
     type?: SchedulerType;
+    createRound?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
@@ -20,6 +21,7 @@ export class Scheduler {
         this.startTime = params.startTime;
         this.endTime = params.endTime;
         this.type = params.type;
+        this.createRound = params.createRound;
         this.createdAt = params.createdAt;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;

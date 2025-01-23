@@ -17,18 +17,17 @@ export const useGetUserById = (userId: string) => {
     });
 };
 
-
 export const useDeleteUserById = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: userAPI.deleteUserById, // You need to implement this function in userAPI
+        mutationFn: userAPI.deleteUserById,
         onSuccess: () => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
                     return query.queryKey[0] === "users";
                 },
-            }); // Invalidate the users query to refresh the list
+            });
             toast.success("User deleted successfully");
         },
         onError: (error: any) => {
@@ -56,7 +55,6 @@ export const usePasswordChange = () => {
     });
 }
 
-
 export const useUploadImage = () => {
     return useMutation({
         mutationFn: userAPI.uploadImage,
@@ -65,6 +63,120 @@ export const useUploadImage = () => {
         },
         onError: (error: any) => {
             toast.error(error.response?.data.message ?? "Error uploading image");
+        },
+    });
+}
+
+export const useCreateUser = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: userAPI.createUser,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "users";
+                },
+            });
+            toast.success("User created successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error creating user");
+        },
+    });
+}
+
+export const useUpdateUser = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: userAPI.updateUser,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "users";
+                },
+            });
+            toast.success("User updated successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error updating user");
+        },
+    });
+}
+
+export const useAddUserPlacementNotAllowed = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: userAPI.addUserPlacementNotAllowed,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "users";
+                },
+            });
+            toast.success("Placement not allowed added successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error adding placement not allowed");
+        },
+    });
+}
+
+export const useRemoveUserPlacementNotAllowed = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: userAPI.removeUserPlacementNotAllowed,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "users";
+                },
+            });
+            toast.success("Placement not allowed removed successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error removing placement not allowed");
+        },
+    });
+}
+
+export const useAddAgentUserPlacementNotAllowed = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: userAPI.addAgentUserPlacementNotAllowed,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "agents";
+                },
+            });
+            toast.success("Agent placement not allowed added successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error adding agent placement not allowed");
+        },
+    });
+}
+
+export const useRemoveAgentUserPlacementNotAllowed = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: userAPI.removeAgentUserPlacementNotAllowed,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "agents";
+                },
+            });
+            toast.success("Agent placement not allowed removed successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error removing agent placement not allowed");
         },
     });
 }
