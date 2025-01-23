@@ -10,7 +10,7 @@ import { useTranslations } from "next-intl";
 
 export const createContactSchema = (t: any) => z.object({
     subject: z.string().nonempty(t('validation.subject-required')),
-    message: z.string()
+    description: z.string()
         .min(10, t('validation.message-min'))
         .max(500, t('validation.message-max'))
         .nonempty(t('validation.message-required')),
@@ -31,7 +31,7 @@ const ContactForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
         resolver: zodResolver(createContactSchema(t)),
         defaultValues: defaultValues || {
             subject: '',
-            message: ''
+            description: ''
         },
     });
 
@@ -59,7 +59,7 @@ const ContactForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 <FormTextarea
                     control={control}
                     game
-                    name="message"
+                    name="description"
                     label={t('labels.message')}
                     required
                 />

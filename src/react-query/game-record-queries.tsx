@@ -33,11 +33,11 @@ export const useGetWinningGameRecord = () => {
 
 // Get Top Placements Hook
 export const useGetTopPlacements = (roundId: string) => {
+    const THREE_SECOND = 3000;
     return useQuery({
         queryKey: ["topPlacements", roundId],
         queryFn: () => gameRecordAPI.getTopPlacements(roundId),
-        staleTime: 1000 * 3, // 
-
+        staleTime:  THREE_SECOND,
     });
 };
 

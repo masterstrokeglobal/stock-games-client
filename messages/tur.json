@@ -33,6 +33,7 @@
     "add-funds-alt": "Para Yatır",
     "loading": "...",
     "your-info": "Bilgileriniz",
+    "contact-us": " İletişim",
     "change-password": "Şifreyi Değiştir",
     "your-wallet": "Cüzdanınız",
     "transaction-history": "İşlem Geçmişi",
@@ -388,6 +389,25 @@
     "button": {
       "sendCode": "Doğrulama Kodu Gönder",
       "sending": "Gönderiliyor..."
+    }
+  },
+  "contact": {
+    "titles": {
+      "contact-us": "Свяжитесь с нами"
+    },
+    "labels": {
+      "subject": "Тема",
+      "message": "Сообщение"
+    },
+    "buttons": {
+      "send-message": "Отправить сообщение",
+      "sending": "Отправка..."
+    },
+    "validation": {
+      "subject-required": "Тема обязательна",
+      "message-required": "Сообщение обязательно",
+      "message-min": "Сообщение должно содержать не менее 10 символов",
+      "message-max": "Сообщение не может быть длиннее 500 символов"
     }
   }
 }

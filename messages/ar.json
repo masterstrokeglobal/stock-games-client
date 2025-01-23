@@ -13,6 +13,7 @@
         "horse": "حصان",
         "price": "السعر",
         "name": "الاسم",
+        "betting-not-allowed": "المراهنة غير مسموحة",
         "change": "التغيير في دقيقتين",
         "username": "أسماء المستخدمين",
         "amount": "المبلغ",
@@ -32,6 +33,7 @@
         "coin-image-alt": "أيقونة العملة",
         "add-funds-alt": "إضافة أموال",
         "loading": "...",
+        "contact-us": " اتصل بنا",
         "your-info": "معلوماتك",
         "change-password": "تغيير كلمة المرور",
         "your-wallet": "محفظتك",
@@ -391,22 +393,22 @@
         }
     },
     "contact": {
-      "titles": {
-        "contact-us": "اتصل بنا"
-      },
-      "labels": {
-        "subject": "الموضوع",
-        "message": "الرسالة"
-      },
-      "buttons": {
-        "send-message": "إرسال الرسالة",
-        "sending": "جاري الإرسال..."
-      },
-      "validation": {
-        "subject-required": "الموضوع مطلوب",
-        "message-required": "الرسالة مطلوبة",
-        "message-min": "يجب أن تتكون الرسالة من 10 أحرف على الأقل",
-        "message-max": "لا يمكن أن تتجاوز الرسالة 500 حرف"
-      }
+        "titles": {
+            "contact-us": "اتصل بنا"
+        },
+        "labels": {
+            "subject": "الموضوع",
+            "message": "الرسالة"
+        },
+        "buttons": {
+            "send-message": "إرسال الرسالة",
+            "sending": "جاري الإرسال..."
+        },
+        "validation": {
+            "subject-required": "الموضوع مطلوب",
+            "message-required": "الرسالة مطلوبة",
+            "message-min": "يجب أن تتكون الرسالة من 10 أحرف على الأقل",
+            "message-max": "لا يمكن أن تتجاوز الرسالة 500 حرف"
+        }
     }
 }

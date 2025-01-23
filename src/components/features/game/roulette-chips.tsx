@@ -8,6 +8,7 @@ interface BettingControlsProps {
     betAmount: number;
     setBetAmount: (amount: number) => void;
     onPlaceBet: () => void;
+
     isLoading: boolean;
     isPlaceOver: boolean;
 }

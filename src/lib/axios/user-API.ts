@@ -1,7 +1,6 @@
+import { SchedulerType } from "@/models/market-item";
 import User from "@/models/user";
 import api from "./instance";
-import { add } from "date-fns";
-import { SchedulerType } from "@/models/market-item";
 
 export const userAPI = {
     getAllUsers: async (filter: SearchFilters) => {

@@ -7,7 +7,7 @@ import User from '@/models/user';
 import Wallet from '@/models/wallet';
 import { useUserLogout } from '@/react-query/admin-auth-queries';
 import { useGetWallet } from '@/react-query/payment-queries';
-import { Coins, LogOutIcon } from 'lucide-react';
+import { Coins, HelpCircleIcon, LogOutIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { PasswordIcon, ProfileIcon, TransactionIcon, WalletIcon } from './icons';
@@ -25,7 +25,7 @@ const UserMenu = () => {
         return new Wallet(data?.data?.wallet);
     }, [data])
     const user = userDetails as User;
-    
+
     return (
         <Container className="flex flex-col items-center min-h-screen pt-24 ">
             <TopBar>
@@ -85,6 +85,12 @@ const UserMenu = () => {
                         <Button variant="game-secondary" className="w-full gap-2 h-14">
                             <Coins className='text-white' />
                             {t('betting-history')}
+                        </Button>
+                    </Link>
+                    <Link href="/game/contact" passHref>
+                        <Button variant="game-secondary" className="w-full gap-2 h-14">
+                            <HelpCircleIcon />
+                            {t('contact-us')}
                         </Button>
                     </Link>
                 </nav>

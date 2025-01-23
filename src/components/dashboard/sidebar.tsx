@@ -51,7 +51,12 @@ const adminMenuItems: MenuItem[] = [
         name: 'Market Items',
         icon: Users,
         link: '/dashboard/market-items',
-    }/* {
+    }, {
+        name: "holiday",
+        icon: DollarSign,
+        link: '/dashboard/holiday'
+    }
+    /* {
         name:"Holidays",
         icon: Clock,
         link:'/dashboard/holiday'
@@ -97,6 +102,11 @@ const companyMenuItems: MenuItem[] = [
         name: 'Market Items',
         icon: Users,
         link: '/dashboard/market-items',
+    },
+    {
+        name: "Contact Queries",
+        icon: DollarSign,
+        link: '/dashboard/contact'
     }
 ];
 

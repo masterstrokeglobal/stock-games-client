@@ -4,7 +4,6 @@ import LoadingScreen from "@/components/common/loading-screen";
 import AgentDetailsCard from "@/components/features/agent/agent-card";
 import AgentProfitLossCard from "@/components/features/agent/agent-profit-loss";
 import AgentPlacementManagement from "@/components/features/agent/agent-user-placement-bet";
-import PlacementManagement from "@/components/features/user/placement-allowed";
 import DatePicker from "@/components/ui/date-picker";
 import Agent from "@/models/agent"; // Agent model class
 import { useGetAgentById, useGetAgentProfitLoss } from "@/react-query/agent-queries"; // Replace with the actual agent query hook

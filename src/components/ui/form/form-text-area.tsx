@@ -38,9 +38,10 @@ function FormTextArea<
       name={name}
       render={({ field }) => (
         <FormItem>
-          {label && <FormLabel>{label}</FormLabel>}
+          {label && <FormLabel className={game ? "text-white" : ''}
+          >{label}</FormLabel>}
           <FormControl>
-            <Textarea className={cn(inputClassName, game ? " text-white bg-[#122146] border border-[#EFF8FF17] focus:border-[#55B0FF]" : '')} {...props} {...field} />
+            <Textarea className={cn(inputClassName, game ? "h-52 text-white bg-[#122146] border border-[#EFF8FF17] focus:border-[#55B0FF]" : '')} {...props} {...field} />
 
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}

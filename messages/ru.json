@@ -31,6 +31,7 @@
         "profile-image-alt": "Фото профиля",
         "coin-image-alt": "Иконка монеты",
         "add-funds-alt": "Пополнить",
+        "contact-us": " Связаться с нами",
         "loading": "...",
         "your-info": "Ваша информация",
         "change-password": "Изменить пароль",
@@ -378,6 +379,25 @@
                 "profit-loss": "Прибыль/Убыток",
                 "actions": "Действия"
             }
+        }
+    },
+    "contact": {
+        "titles": {
+            "contact-us": "Свяжитесь с нами"
+        },
+        "labels": {
+            "subject": "Тема",
+            "message": "Сообщение"
+        },
+        "buttons": {
+            "send-message": "Отправить сообщение",
+            "sending": "Отправка..."
+        },
+        "validation": {
+            "subject-required": "Тема обязательна",
+            "message-required": "Сообщение обязательно",
+            "message-min": "Сообщение должно содержать не менее 10 символов",
+            "message-max": "Сообщение не может быть длиннее 500 символов"
         }
     }
 }

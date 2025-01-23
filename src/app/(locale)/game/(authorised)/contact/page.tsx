@@ -1,22 +1,26 @@
 "use client";
+import Container from "@/components/common/container";
+import TopBar from "@/components/common/top-bar";
 import ContactForm, { ContactFormValues } from "@/components/features/gamer/contact-form";
-import { useRouter } from "next/navigation";
+import { useCreateContact } from "@/react-query/contact-queries";
 
 const ContactPage = () => {
-    const router = useRouter();
+    const { mutate, isPending } = useCreateContact();
 
     const handleSubmit = (data: ContactFormValues) => {
-        // Here you would typically handle the contact form submission
-        console.log('Contact form submitted:', data);
-        // You could add API call here
-        // After successful submission, redirect to a thank you page or home
-        router.push("/game");
+        mutate({...data});
     };
 
     return (
-        <ContactForm
-            onSubmit={handleSubmit}
-        />
+        <Container className="flex flex-col items-center min-h-screen pt-24 ">
+            <TopBar>
+                Contact
+            </TopBar>
+            <ContactForm
+                isLoading={isPending}
+                onSubmit={handleSubmit}
+            />
+        </Container>
     );
 };
 

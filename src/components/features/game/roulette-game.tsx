@@ -198,21 +198,23 @@ const RouletteGame = ({ roundRecord }: Props) => {
                         <h1 className='text-xl lg:text-left text-center mt-2 mb-4 leading-none text-white font-semibold'>
                             {gameState.isPlaceOver ? t("betting-closed") : t("place-your-bets")}
                         </h1>
+                        <Tabs
+                            value={tab}
+                            onValueChange={(value) => setTab(value as SchedulerType)}
+                            className="w-full relative z-10 mb-6"
+                        >
+                            <TabsList className="w-full flex lg:hidden h-10 p-1 bg-[#0F214F]">
+                                <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && 'cursor-not-allowed')} value="nse">NSE</TabsTrigger>
+                                <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
+                            </TabsList>
+                        </Tabs>
 
                         <div className={cn("relative w-full max-w-4xl mx-auto ", gameState.isPlaceOver || isNotAllowedToPlaceBet ? 'cursor-not-allowed opacity-100' : 'cursor-crosshair')}>
-                            <Tabs
-                                value={tab}
-                                onValueChange={(value) => setTab(value as SchedulerType)}
-                                className="w-full relative z-10 mb-6"
-                            >
-                                <TabsList className="w-full flex lg:hidden h-10 p-1 bg-[#0F214F]">
-                                    <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && 'cursor-not-allowed')} value="nse">NSE</TabsTrigger>
-                                    <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
-                                </TabsList>
-                            </Tabs>
-                            {isNotAllowedToPlaceBet && (<div className="absolute top-0 left-0 w-full h-full z-40 bg-black bg-opacity-50">
+
+
+                            {isNotAllowedToPlaceBet && (<div className="absolute top-0 left-0 w-full text-center h-full z-40 bg-black bg-opacity-80">
                                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                                    <span className="text-white text-lg opacity-100 font-semibold">{t("betting-not-allowed")}</span>
+                                    <span className="text-white text-lg opacity-100  font-semibold">{t("betting-not-allowed")}</span>
                                 </div>
                             </div>)}
 
@@ -223,6 +225,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                     onMouseLeave={() => setHoveredCell(null)}
                                     className={`relative flex-1 mx-auto`}
                                 >
+
                                     <RouletteBettingGrid
                                         roundRecord={roundRecord}
                                         hoveredCell={hoveredCell as unknown as Bet}
@@ -371,7 +374,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                 betAmount={betAmount}
                                 onPlaceBet={handlePlaceBet}
                                 setBetAmount={setBetAmount}
-                                isPlaceOver={gameState.isPlaceOver}
+                                isPlaceOver={gameState.isPlaceOver || isNotAllowedToPlaceBet}
                             />
                         </Tabs>
                     </div>

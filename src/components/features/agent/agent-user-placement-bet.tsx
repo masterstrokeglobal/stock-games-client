@@ -1,7 +1,10 @@
-import React from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import {
+    Alert,
+    AlertDescription
+} from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { Button } from '@/components/ui/button';
-import { PlusCircle, XCircle, AlertCircle } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Select,
     SelectContent,
@@ -9,15 +12,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import {
-    Alert,
-    AlertDescription
-} from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import User from '@/models/user';
+import Agent from '@/models/agent';
 import { SchedulerType } from '@/models/market-item';
 import { useAddAgentUserPlacementNotAllowed, useRemoveAgentUserPlacementNotAllowed } from '@/react-query/user-queries';
-import Agent from '@/models/agent';
+import { AlertCircle, PlusCircle, XCircle } from 'lucide-react';
+import React from 'react';
 
 interface AgentPlacementManagementProps {
     user: Agent;
