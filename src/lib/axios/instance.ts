@@ -7,7 +7,7 @@ const api: AxiosInstance = axios.create({
         'Content-Type': 'application/json',
     },
     params: {
-        companyId: 4,
+        companyId: process.env.NEXT_PUBLIC_COMPANY_ID ?? 4,
     },
 
     withCredentials: true,
