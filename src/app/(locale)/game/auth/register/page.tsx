@@ -33,7 +33,7 @@ const registerUser = (data: RegisterFormValues) => {
         email: data.email,
         referenceCode: data.referenceCode,
         password: data.password,
-        company: 4,
+        company: process.env.NEXT_PUBLIC_COMPANY_ID ?? 4,
     }, {
         onSuccess: (data) => {
             const user = new User(data.data);
