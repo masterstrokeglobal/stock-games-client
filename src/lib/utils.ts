@@ -74,3 +74,5 @@ export const getPlacementString = (bet: { market: number[], placementType: Place
 
   }
 }
+
+export const COMPANYID = Number(process.env.NEXT_PUBLIC_COMPANY_ID) ?? 4

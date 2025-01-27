@@ -18,7 +18,6 @@ const RegisterPage = () => {
             }
         });
     }
-
     const resendOTP = () => {
         console.log('resendOTP');
     }

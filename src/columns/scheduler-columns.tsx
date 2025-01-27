@@ -76,8 +76,6 @@ const schedulerColumns: ColumnDef<Scheduler>[] = [
 
 // Action column for managing scheduler actions
 const ActionColumn = ({ scheduler }: { scheduler: Scheduler }) => {
-
-
     return (
         <div className="flex space-x-4 w-36 justify-end">
             <Link href={`/dashboard/scheduler/${scheduler.id}`}>
@@ -124,7 +122,6 @@ const CreateRoundColumn = ({ scheduler }: { scheduler: Scheduler }) => {
                     handleChange();
                 }}
             />
-            {}
         </div>
     );
 };

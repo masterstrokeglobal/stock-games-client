@@ -25,7 +25,7 @@ const CreateHolidayPage = () => {
                 companyId: companyId.toString(),
             }, {
                 onSuccess: () => {
-                    router.push("/dashboard/holidays");
+                    router.push("/dashboard/holiday");
                 },
             });
         }

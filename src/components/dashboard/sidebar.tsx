@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Building, Clock, DollarSign, Home, LucideIcon, Repeat1, Users } from 'lucide-react';
+import { Building, Clock, Contact2, DollarSign, Home, LucideIcon, Repeat1, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -56,11 +56,6 @@ const adminMenuItems: MenuItem[] = [
         icon: DollarSign,
         link: '/dashboard/holiday'
     }
-    /* {
-        name:"Holidays",
-        icon: Clock,
-        link:'/dashboard/holiday'
-    } */
 ];
 
 const companyMenuItems: MenuItem[] = [
@@ -94,31 +89,19 @@ const companyMenuItems: MenuItem[] = [
         link: '/dashboard/transactions',
     },
     {
-        name: 'Rounds',
-        icon: Repeat1,
-        link: '/dashboard/round-records',
-    },
-    {
-        name: 'Market Items',
-        icon: Users,
-        link: '/dashboard/market-items',
-    },
-    {
         name: "Contact Queries",
-        icon: DollarSign,
+        icon: Contact2,
         link: '/dashboard/contact'
     }
 ];
 
 const agentMenuItems: MenuItem[] = [
     { name: 'Dashboard', icon: Home, link: '/dashboard/agent' },
-    //users
     {
         name: 'Users',
         icon: Users,
         link: '/dashboard/agent-users',
     },
-
     {
         name: "Profit/Loss",
         icon: DollarSign,

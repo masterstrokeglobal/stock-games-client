@@ -40,7 +40,10 @@ const LoginForm = () => {
 
 
     const onSubmit = (formValue: LoginFormValues) => {
-        mutate(formValue, {
+        mutate({
+            email: formValue.email,
+            password: formValue.password
+        }, {
             onSuccess: (data) => {
                 const admin = new Admin(data.data.admin);
                 setUser(admin);

@@ -1,12 +1,11 @@
 import { Button } from "@/components/ui/button";
-import FormInput from "@/components/ui/form/form-input";
-import FormProvider from "@/components/ui/form/form-provider";
+import FormDatePicker from "@/components/ui/form/form-date-picker";
+import cFormProvider from "@/components/ui/form/form-provider";
 import FormGroupSelect from "@/components/ui/form/form-select";
 import { SchedulerType } from "@/models/market-item";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
 export const createHolidayInputSchema = z.object({
     type: z.nativeEnum(SchedulerType, {
         errorMap: () => ({ message: "Type is required" })
@@ -43,7 +42,7 @@ const HolidayForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 label="Scheduler Type"
                 options={typeOptions}
             />
-            <FormInput
+            <FormDatePicker
                 control={control}
                 name="date"
                 type="date"

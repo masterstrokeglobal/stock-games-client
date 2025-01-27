@@ -1,6 +1,7 @@
 import { SchedulerType } from "@/models/market-item";
 import User from "@/models/user";
 import api from "./instance";
+import { COMPANYID } from "../utils";
 
 export const userAPI = {
     getAllUsers: async (filter: SearchFilters) => {
@@ -24,7 +25,7 @@ export const userAPI = {
         });
     },
     createUser: async (data: User) => {
-        return api.post("/user", data);
+        return api.post("/user", { ...data, companyId: COMPANYID });
     },
     updateUser: async (data: User) => {
         return api.patch(`/user/${data.id}`, data);
