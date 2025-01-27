@@ -16,7 +16,7 @@ const HolidayTable = () => {
 
     const { data, isSuccess, isFetching } = useGetAllHolidays({
         page: page,
-        startDate: date,
+        date: date,
     });
 
     const holidays = useMemo(() => {

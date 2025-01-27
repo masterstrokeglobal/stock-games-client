@@ -225,7 +225,6 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                     onMouseLeave={() => setHoveredCell(null)}
                                     className={`relative flex-1 mx-auto`}
                                 >
-
                                     <RouletteBettingGrid
                                         roundRecord={roundRecord}
                                         hoveredCell={hoveredCell as unknown as Bet}
@@ -265,7 +264,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
                             <Button
                                 variant="game-secondary"
-                                className="col-span-1 justify-center gap-4 w-full mt-2"
+                                className="col-span-1 justify-center gap-4 w-full mt-2 opacity-80"
                             >
                                 <span>
                                     0

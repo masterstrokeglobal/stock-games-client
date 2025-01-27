@@ -1,8 +1,9 @@
+import { COMPANYID } from "../utils";
 import api from "./instance";
 
 export const gameUserAPI = {
     createUser: async (payload: any) => {
-        return api.post("/user", payload);
+        return api.post("/user", { ...payload, company: COMPANYID });
     },
 
     verifyUser: async ({ userId, verificationData }: { userId: string; verificationData: { otp: string } }) => {
@@ -24,19 +25,19 @@ export const gameUserAPI = {
     deleteUserById: async ({ userId }: { userId: string }) => {
         return api.delete(`/user/${userId}`);
     },
-    forgotPassword: async ({email}: {email:string}) => {
-        return api.post(`/user/forget-password`, {email});
+    forgotPassword: async ({ email }: { email: string }) => {
+        return api.post(`/user/forget-password`, { email });
     },
 
-    verifyForgotPassword: async (verificationData: {otp: string,userId: string, }) => {
+    verifyForgotPassword: async (verificationData: { otp: string, userId: string, }) => {
         return api.post(`/user/verify-forget-password/${verificationData.userId}`, verificationData);
     },
 
-    changeForgotPassword: async (payload: {password: string,userId: string}) => {
+    changeForgotPassword: async (payload: { password: string, userId: string }) => {
         return api.post(`/user/forget-password/change`, payload);
     },
     login: async (payload: any) => {
-        return api.post("/auth/user-login", payload);
+        return api.post("/auth/user-login", { ...payload, companyId: COMPANYID });
     },
 
     myProfile: async () => {

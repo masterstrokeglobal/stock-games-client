@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import { COMPANYID } from '../utils';
 
 
 const api: AxiosInstance = axios.create({
@@ -7,7 +8,7 @@ const api: AxiosInstance = axios.create({
         'Content-Type': 'application/json',
     },
     params: {
-        companyId: process.env.NEXT_PUBLIC_COMPANY_ID ?? 4,
+        companyId: COMPANYID,
     },
 
     withCredentials: true,

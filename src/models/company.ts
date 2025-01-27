@@ -1,3 +1,5 @@
+import { SchedulerType } from "./market-item";
+
 export class Company {
     id?: number;
     name?: string;
@@ -7,10 +9,11 @@ export class Company {
     logo?: string;
     primaryColor?: string;
     secondaryColor?: string;
-    paymentImage?:string;
+    paymentImage?: string;
     domain?: string;
     createdAt?: Date;
     updatedAt?: Date;
+    placementNotAllowed?: SchedulerType[];
     deletedAt?: Date;
 
     constructor(params: Partial<Company> = {}) {
@@ -21,6 +24,8 @@ export class Company {
         this.contactPersonEmail = params.contactPersonEmail;
         this.logo = params.logo;
         this.primaryColor = params.primaryColor;
+        this.placementNotAllowed = params.placementNotAllowed || [];
+
         this.secondaryColor = params.secondaryColor;
         this.domain = params.domain;
         this.createdAt = params.createdAt;

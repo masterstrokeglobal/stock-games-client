@@ -40,7 +40,7 @@ const holidayColumns: ColumnDef<Holiday>[] = [
         accessorKey: "actions",
         cell: ({ row }) => (
             <div className="flex justify-end">
-                <Link href={`/dashboard/holidays/${row.original.id}`}>
+                <Link href={`/dashboard/holiday/${row.original.id}`}>
                     <Button variant="ghost" aria-label="View Holiday">
                         <Edit2 size={18} />
                     </Button>

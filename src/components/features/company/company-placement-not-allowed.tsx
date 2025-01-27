@@ -1,7 +1,10 @@
-import React from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import {
+    Alert,
+    AlertDescription
+} from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { Button } from '@/components/ui/button';
-import { PlusCircle, XCircle, AlertCircle } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Select,
     SelectContent,
@@ -9,29 +12,26 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import {
-    Alert,
-    AlertDescription
-} from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import User from '@/models/user';
+import Company from '@/models/company';
 import { SchedulerType } from '@/models/market-item';
-import { useAddUserPlacementNotAllowed, useRemoveUserPlacementNotAllowed } from '@/react-query/user-queries';
+import { useAddPlacementNotAllowed,useRemovePlacementNotAllowed } from '@/react-query/company-queries';
+import { AlertCircle, PlusCircle, XCircle } from 'lucide-react';
+import React from 'react';
 
-interface PlacementManagementProps {
-    user: User;
+interface CompanyPlacementManagementProps {
+    company: Company;
 }
 
-const PlacementManagement: React.FC<PlacementManagementProps> = ({ user }) => {
+const CompanyPlacementManagement: React.FC<CompanyPlacementManagementProps> = ({ company }) => {
     const [selectedType, setSelectedType] = React.useState<SchedulerType | ''>('');
 
-    const addPlacement = useAddUserPlacementNotAllowed();
-    const removePlacement = useRemoveUserPlacementNotAllowed();
+    const addCompanyPlacement = useAddPlacementNotAllowed();
+    const removeCompanyPlacement = useRemovePlacementNotAllowed();
 
     const handleAddPlacement = () => {
-        if (selectedType && user.id) {
-            addPlacement.mutate({
-                userId: user.id.toString(),
+        if (selectedType && company.id) {
+            addCompanyPlacement.mutate({
+                companyId: company.id.toString(),
                 placementNotAllowed: selectedType
             });
             setSelectedType('');
@@ -39,9 +39,9 @@ const PlacementManagement: React.FC<PlacementManagementProps> = ({ user }) => {
     };
 
     const handleRemovePlacement = (type: SchedulerType) => {
-        if (user.id) {
-            removePlacement.mutate({
-                userId: user.id.toString(),
+        if (company.id) {
+            removeCompanyPlacement.mutate({
+                companyId: company.id.toString(),
                 placementNotAllowed: type
             });
         }
@@ -51,11 +51,11 @@ const PlacementManagement: React.FC<PlacementManagementProps> = ({ user }) => {
         <Card>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                    <span>Placement Management</span>
+                    <span>Company Placement Management</span>
                     <AlertCircle className="h-4 w-4 text-muted-foreground" />
                 </CardTitle>
                 <CardDescription>
-                    Manage which placement types are not allowed for this user
+                    Manage which placement types are not allowed for this company
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -78,10 +78,10 @@ const PlacementManagement: React.FC<PlacementManagementProps> = ({ user }) => {
 
                     <Button
                         onClick={handleAddPlacement}
-                        disabled={!selectedType || addPlacement.isPending}
+                        disabled={!selectedType || addCompanyPlacement.isPending}
                         className="w-full sm:w-auto"
                     >
-                        {addPlacement.isPending ? (
+                        {addCompanyPlacement.isPending ? (
                             <>
                                 <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-background border-t-foreground" />
                                 Adding...
@@ -98,7 +98,7 @@ const PlacementManagement: React.FC<PlacementManagementProps> = ({ user }) => {
                 <div className="space-y-3">
                     <h4 className="text-sm font-medium">Current Restrictions</h4>
 
-                    {user.placementNotAllowed.length === 0 ? (
+                    {company.placementNotAllowed?.length === 0 || !company.placementNotAllowed ? (
                         <Alert variant="default" className="bg-muted">
                             <AlertDescription>
                                 No placement types are currently restricted
@@ -106,7 +106,7 @@ const PlacementManagement: React.FC<PlacementManagementProps> = ({ user }) => {
                         </Alert>
                     ) : (
                         <div className="flex flex-wrap gap-2">
-                            {user.placementNotAllowed.map((type) => (
+                            {company.placementNotAllowed.map((type) => (
                                 <Badge
                                     key={type}
                                     variant="secondary"
@@ -118,10 +118,10 @@ const PlacementManagement: React.FC<PlacementManagementProps> = ({ user }) => {
                                         variant="ghost"
                                         className="h-6 w-6 p-0 hover:text-destructive"
                                         onClick={() => handleRemovePlacement(type)}
-                                        disabled={removePlacement.isPending}
+                                        disabled={removeCompanyPlacement.isPending}
                                     >
                                         <XCircle className="h-4 w-4" />
-                                        <span className="sr-only">Remove {type}</span>
+                                        <span className="sr-only">Remove {type} restriction</span>
                                     </Button>
                                 </Badge>
                             ))}
@@ -133,4 +133,4 @@ const PlacementManagement: React.FC<PlacementManagementProps> = ({ user }) => {
     );
 };
 
-export default PlacementManagement;
+export default CompanyPlacementManagement;

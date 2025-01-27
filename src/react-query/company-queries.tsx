@@ -65,3 +65,39 @@ export const useDeleteCompanyById = () => {
         },
     });
 };
+
+export const useAddPlacementNotAllowed = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: companyAPI.addPlacementNotAllowed,
+        onSuccess: () => {
+            toast.success("Placement not allowed added successfully");
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "company";
+                }
+            });
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error adding placement not allowed");
+        },
+    });
+}
+
+export const useRemovePlacementNotAllowed = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: companyAPI.removePlacementNotAllowed,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "company";
+                }
+            });
+            toast.success("Placement not allowed removed successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error removing placement not allowed");
+        },
+    });
+}
