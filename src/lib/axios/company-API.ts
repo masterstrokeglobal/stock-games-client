@@ -1,3 +1,4 @@
+import { SchedulerType } from "@/models/market-item";
 import api from "./instance";
 import { CompanyFormValues } from "@/components/features/company/company-form";
 
@@ -21,5 +22,11 @@ export const companyAPI = {
 
     deleteCompanyById: async (companyId: string) => {
         return api.delete(`/company/${companyId}`);
+    },
+    addPlacementNotAllowed: async (data: { placementNotAllowed: SchedulerType, companyId: string }) => {
+        return api.post(`/company/add-placement-not-allowed/${data.companyId}`, data);
+    },
+    removePlacementNotAllowed: async (data: { placementNotAllowed: SchedulerType, companyId: string }) => {
+        return api.post(`/company/remove-placement-not-allowed/${data.companyId}`, data);
     },
 };

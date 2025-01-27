@@ -17,6 +17,7 @@ import {
     AlertDialogAction,
 } from '@/components/ui/alert-dialog';
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 const companyColumns: ColumnDef<Company>[] = [
     {
@@ -43,6 +44,21 @@ const companyColumns: ColumnDef<Company>[] = [
         header: "ADDRESS",
         accessorKey: "address",
         cell: ({ row }) => <div className="text-[#6B7280] w-48 truncate">{row.original.address}</div>,
+    },
+    {
+        header: "Placement Not Allowed",
+        accessorKey: "placementAllowed",
+        cell: ({ row }) => (
+            // show in badges
+            <div className="flex space-x-2">
+                {row.original.placementNotAllowed?.map((type) => (
+                    <Badge key={type} variant="default" >
+                        {type}
+                    </Badge>
+                ))}
+                {row.original.placementNotAllowed?.length === 0 && <span className="text-[#6B7280]">No Restriction</span>}
+            </div>
+        )
     },
     {
         header: "CREATED ON",

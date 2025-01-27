@@ -37,11 +37,12 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
     });
 
     const { control, handleSubmit } = form;
-
     const googleAuth = () => {
-        window.open(`${process.env.NEXT_PUBLIC_API_URL}auth/google`, "_self");
+        window.open(
+            ` ${process.env.NEXT_PUBLIC_API_URL}auth/google?companyId=${process.env.NEXT_PUBLIC_COMPANY_ID}`,
+            "_self"
+        );
     };
-
     return (
         <div className="w-full max-w-sm">
             <h1 className="text-3xl text-center mb-10 font-semibold text-white">

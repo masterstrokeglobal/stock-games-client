@@ -54,11 +54,11 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
             </div>
             <button
 
-                className={`bet-button w-full ${isPlaceOver ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`bet-button w-full ${isPlaceOver || isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 disabled={isPlaceOver || isLoading}
                 onClick={onPlaceBet}
             >
-                {isPlaceOver ? t('betting-closed').toUpperCase() : t('bet').toUpperCase()}
+                {isPlaceOver ? t('betting-closed').toUpperCase() : isLoading ? t('please-wait').toUpperCase() : t('bet').toUpperCase()}
             </button>
         </div>
     );
