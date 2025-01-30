@@ -1,13 +1,14 @@
 import React from 'react';
 import { Separator } from '@/components/ui/separator';
-import { Building, Mail, User, Globe, Calendar } from 'lucide-react'; // Import icons for better visual presentation
+import { Building, Mail, User, Globe, Calendar, Coins } from 'lucide-react'; // Import icons for better visual presentation
 import Company from '@/models/company'; // Adjust the path as needed
 
 interface CompanyCardProps {
     company: Company;
+    showBonusPercentage?: boolean;
 }
 
-const CompanyCard: React.FC<CompanyCardProps> = ({ company }) => {
+const CompanyCard: React.FC<CompanyCardProps> = ({ company, showBonusPercentage=false }) => {
     return (
         <div className="bg-white border rounded-lg p-6 flex flex-col">
             <h2 className="text-xl font-semibold mb-4">Company Details</h2>
@@ -31,6 +32,11 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ company }) => {
                 <span className="font-medium">Domain:</span>
                 <span className="ml-auto">{company.domain || 'N/A'}</span>
             </div>
+            {showBonusPercentage && <div className="flex items-center mb-2">
+                <Coins className="w-5 h-5 text-gray-700 mr-2" />
+                <span className="font-medium">Bonus Percentage:</span>
+                <span className="ml-auto">{company.depositBonusPercentage || 'N/A'}</span>
+            </div>}
             <div className="flex items-center mb-2">
                 <Calendar className="w-5 h-5 text-gray-700 mr-2" />
                 <span className="font-medium">Created At:</span>

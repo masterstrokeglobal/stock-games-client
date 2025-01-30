@@ -32,6 +32,11 @@ const userColumns: ColumnDef<User>[] = [
         cell: ({ row }) => <div className="text-[#6B7280]">{row.original.phone || 'N/A'}</div>,
     },
     {
+        header: "Bonus Percentage",
+        accessorKey: "bonusPercentage",
+        cell: ({ row }) => <span>{row.original.depositBonusPercentage}</span>
+    },
+    {
         header: "Placement Not Allowed",
         accessorKey: "placementAllowed",
         cell: ({ row }) => (

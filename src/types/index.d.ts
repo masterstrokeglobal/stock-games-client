@@ -13,6 +13,10 @@ type PaginationData = {
 
 type SelectOption = { value: string; label: string }
 
+type KeyValue = {
+    [key: string]: string | number | boolean | undefined;
+}
+
 type SearchFilters = {
     page: number;
     active?: string;
@@ -23,4 +27,4 @@ type SearchFilters = {
     orderBy?: string;
     type?: string;
     limit?: number;
-};
+} & KeyValue

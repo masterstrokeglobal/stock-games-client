@@ -1,23 +1,23 @@
-import { ColumnDef } from "@tanstack/react-table";
-import dayjs from "dayjs";
-import Link from "next/link";
-import { Company } from "@/models/company";
-import { Dialog } from "@/components/ui/dialog";
-import { useDeleteCompanyById } from "@/react-query/company-queries";
-import { Edit2, Trash2, Loader2, Eye } from 'lucide-react';
 import {
     AlertDialog,
-    AlertDialogTrigger,
+    AlertDialogAction,
+    AlertDialogCancel,
     AlertDialogContent,
-    AlertDialogHeader,
-    AlertDialogTitle,
     AlertDialogDescription,
     AlertDialogFooter,
-    AlertDialogCancel,
-    AlertDialogAction,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
+import { Company } from "@/models/company";
+import { useDeleteCompanyById } from "@/react-query/company-queries";
+import { ColumnDef } from "@tanstack/react-table";
+import dayjs from "dayjs";
+import { Edit2, Eye, Loader2, Trash2, Users2 } from 'lucide-react';
+import Link from "next/link";
 
 const companyColumns: ColumnDef<Company>[] = [
     {
@@ -41,10 +41,17 @@ const companyColumns: ColumnDef<Company>[] = [
         cell: ({ row }) => <div className="text-[#6B7280]">{row.original.contactPersonEmail}</div>,
     },
     {
-        header: "ADDRESS",
-        accessorKey: "address",
-        cell: ({ row }) => <div className="text-[#6B7280] w-48 truncate">{row.original.address}</div>,
+        header: "Bonus Percentage",
+        accessorKey: "bonusPercentage",
+        cell: ({ row }) => <Badge variant="secondary">{row.original.depositBonusPercentage}</Badge>
     },
+    {
+        header: "Bonus Enabled",
+        accessorKey: "bonusEnabled",
+        cell: ({ row }) => <DepositBonusColumn company={row.original} />
+
+    },
+
     {
         header: "Placement Not Allowed",
         accessorKey: "placementAllowed",
@@ -100,6 +107,12 @@ const ActionColumn = ({ company }: { company: Company }) => {
                         </Button>
                     </Link>
 
+                    <Link href={`/dashboard/company/${company.id}/agents`}>
+                        <Button variant="ghost" size="icon" aria-label="Agents">
+                            <Users2 className="w-5 h-5" />
+                        </Button>
+                    </Link>
+
                     <AlertDialogTrigger asChild>
                         <Button
                             variant="destructive"
@@ -137,6 +150,13 @@ const ActionColumn = ({ company }: { company: Company }) => {
             </AlertDialog>
         </Dialog>
     );
+};
+
+const DepositBonusColumn = ({ company }: { company: Company }) => {
+    return (
+        <Badge variant={company.depositBonusPercentageEnabled ? 'success' : 'destructive'}>{company.depositBonusPercentageEnabled ? "active" : "inactive"
+        }</Badge>
+    )
 };
 
 export default companyColumns;

@@ -14,6 +14,7 @@ class User {
     profileImage?: string;
     otpSecret?: string;
     isVerified?: boolean;
+    depositBonusPercentage!: number;
     placementNotAllowed: SchedulerType[];
     company?: Company;
     createdAt?: Date;
@@ -29,6 +30,7 @@ class User {
         this.phone = params.phone;
         this.password = params.password;
         this.googleId = params.googleId;
+        this.depositBonusPercentage = params.depositBonusPercentage??0;
         this.otpSecret = params.otpSecret;
         this.isVerified = params.isVerified;
         this.profileImage = params.profileImage;
