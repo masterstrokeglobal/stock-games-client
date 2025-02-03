@@ -1,34 +1,38 @@
 "use client";
-import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import Container from '@/components/common/container';
-import TopBar from '@/components/common/top-bar';
-import { Input } from '@/components/ui/input';
+import LoadingScreen from '@/components/common/loading-screen';
+import Navbar from '@/components/features/game/navbar';
+import LobbySettings from '@/components/features/lobby/lobby-settings';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Crown, Gamepad2, Timer, Smile, SendHorizontal, Users, Settings, Volume2, VolumeX, Medal, ShieldAlert } from 'lucide-react';
 import { Progress } from "@/components/ui/progress";
+import { useGetCurrentLobbyRound, useGetLobbyByCode } from '@/react-query/lobby-query';
+import dayjs from 'dayjs';
+import { Gamepad2, Medal, SendHorizontal, ShieldAlert, Smile, Timer, Users } from 'lucide-react';
+import { useParams } from 'next/navigation';
+import { useState } from 'react';
 
 const LobbyWithChat = () => {
-  const [message, setMessage] = useState('');
-  const [isMuted, setIsMuted] = useState(false);
-  const [isReady, setIsReady] = useState(false);
+  const lobbyCode = useParams().id!.toString();
+  const { data: lobby, isLoading } = useGetLobbyByCode(lobbyCode);
+  const {data}  = useGetCurrentLobbyRound(lobby?.id);
 
-  const players = [
-    { id: 1, name: "Player123", level: 42, isHost: true, status: "Ready", avatar: "/api/placeholder/40/40", rank: "Diamond", wins: 156 },
-    { id: 2, name: "GameMaster", level: 38, isHost: false, status: "Ready", avatar: "/api/placeholder/40/40", rank: "Platinum", wins: 89 },
-    { id: 3, name: "ProGamer", level: 27, isHost: false, status: "Not Ready", avatar: "/api/placeholder/40/40", rank: "Gold", wins: 45 },
-    { id: 4, name: "NewPlayer", level: 15, isHost: false, status: "Joining...", avatar: "/api/placeholder/40/40", rank: "Bronze", wins: 12 },
-  ];
+  console.log("lobby Roubd", data);
+
+  const [message, setMessage] = useState('');
+
 
   const messages = [
     { id: 1, type: 'system', content: 'Game will start in 2:30 minutes' },
@@ -40,14 +44,6 @@ const LobbyWithChat = () => {
 
   const emojis = ['👋', '😊', '🎮', '🏆', '👍', '🔥', '💪', '⭐', '🎯', '🎲', '🎪', '🎨', '🎭', '🎪', '🎯'];
 
-  const lobbyRules = {
-    gameMode: "Battle Royale",
-    maxPlayers: 50,
-    minLevel: 10,
-    prizePool: 1000,
-    mapName: "Ancient Ruins",
-    gameLength: "20 minutes"
-  };
 
   const handleSendMessage = () => {
     if (message.trim()) {
@@ -63,24 +59,13 @@ const LobbyWithChat = () => {
     }
   };
 
+  if (isLoading) return <LoadingScreen className='bg-primary-game  min-h-screen' />;
+
   return (
     <div className='bg-primary-game w-full'>
       <Container className="flex flex-col items-center min-h-screen pt-24">
-        <TopBar>
-          <div className="flex items-center justify-between w-full">
-            <span>Battle Royale Lobby</span>
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon" onClick={() => setIsMuted(!isMuted)}>
-                {isMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-              </Button>
-              <Button variant="ghost" size="icon">
-                <Settings className="w-5 h-5" />
-              </Button>
-            </div>
-          </div>
-        </TopBar>
-
-        <div className="w-full max-w-7xl mx-auto mt-8 px-4">
+        <Navbar />
+        <div className="w-full  mx-auto mt-8 px-4">
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Left Side - Game Info and Players */}
             <div className="flex-1 space-y-6">
@@ -93,10 +78,10 @@ const LobbyWithChat = () => {
                         <Gamepad2 className="w-6 h-6 text-[#EEC53C]" />
                       </div>
                       <div>
-                        <h3 className="text-white font-semibold text-xl">{lobbyRules.gameMode}</h3>
+                        <h3 className="text-white font-semibold text-xl">{lobby?.name}</h3>
                         <div className="flex items-center gap-4 mt-1">
-                          <span className="text-sm text-gray-400">Map: {lobbyRules.mapName}</span>
-                          <span className="text-sm text-gray-400">Length: {lobbyRules.gameLength}</span>
+                          <span className="text-sm text-gray-400">Game: {lobby?.getTypeName}</span>
+                          <span className="text-sm text-gray-400">Created At: {dayjs(lobby?.startTime).format(" MMM DD, YYYY hh:mm A")}</span>
                         </div>
                       </div>
                     </div>
@@ -107,29 +92,30 @@ const LobbyWithChat = () => {
                       </div>
                     </div>
                   </div>
-                  
+
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                     <div className="bg-gray-800 p-3 rounded-lg">
-                      <div className="text-gray-400 text-sm mb-1">Prize Pool</div>
-                      <div className="text-[#EEC53C] font-semibold">{lobbyRules.prizePool} Coins</div>
+                      <div className="text-gray-400 text-sm mb-1">Entry Fee</div>
+                      <div className="text-[#EEC53C] font-semibold">{lobby?.amount} Coins</div>
                     </div>
                     <div className="bg-gray-800 p-3 rounded-lg">
                       <div className="text-gray-400 text-sm mb-1">Players</div>
-                      <div className="text-white font-semibold">4/{lobbyRules.maxPlayers}</div>
-                    </div>
-                    <div className="bg-gray-800 p-3 rounded-lg">
-                      <div className="text-gray-400 text-sm mb-1">Min Level</div>
-                      <div className="text-white font-semibold">{lobbyRules.minLevel}</div>
+                      <div className="text-white font-semibold">{lobby?.lobbyUsers?.length}</div>
                     </div>
                     <div className="bg-gray-800 p-3 rounded-lg">
                       <div className="text-gray-400 text-sm mb-1">Status</div>
-                      <div className="text-green-400 font-semibold">Waiting</div>
+                      <div className="text-green-400 font-semibold">{lobby?.status}</div>
+                    </div>
+                    <div className="bg-gray-800 p-3 rounded-lg">
+                      <div className="text-gray-400 text-sm mb-1">Market</div>
+                      <div className="text-[#EEC53C] font-semibold capitalize">{lobby?.marketType}</div>
                     </div>
                   </div>
 
-                  <Progress value={8} className="bg-gray-800" />
+                  <Progress value={lobby?.userPercentage} />
                 </CardContent>
               </Card>
+
 
               {/* Players Section */}
               <Card className="bg-gray-900 border-gray-800">
@@ -140,14 +126,14 @@ const LobbyWithChat = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {players.map((player) => (
+                  {lobby?.lobbyUsers?.map((player) => (
                     <Card key={player.id} className="bg-gray-800 border-gray-700">
                       <CardContent className="flex items-center justify-between p-4">
                         <div className="flex items-center gap-3">
                           <div className="relative">
                             <img
-                              src={player.avatar}
-                              alt={player.name}
+                              src={player.user?.profileImage}
+                              alt={player.user?.name}
                               className="w-12 h-12 rounded-full border-2 border-gray-700"
                             />
                             <div className="absolute -bottom-1 -right-1 bg-gray-900 rounded-full p-1">
@@ -156,44 +142,22 @@ const LobbyWithChat = () => {
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <span className="text-white font-medium">{player.name}</span>
-                              {player.isHost && (
-                                <Crown className="w-4 h-4 text-[#EEC53C]" />
-                              )}
-                            </div>
-                            <div className="flex items-center gap-2 text-sm">
-                              <span className="text-gray-400">Level {player.level}</span>
-                              <span className="text-[#EEC53C]">{player.rank}</span>
-                              <span className="text-gray-400">{player.wins} wins</span>
+                              <span className="text-white font-medium">{player.user?.name}</span>
                             </div>
                           </div>
                         </div>
                         <div className="flex items-center gap-3">
-                          <span className={`text-sm px-3 py-1 rounded-full ${
-                            player.status === 'Ready'
-                              ? 'bg-green-900/50 text-green-400'
-                              : player.status === 'Joining...'
-                                ? 'bg-blue-900/50 text-blue-400'
-                                : 'bg-gray-800 text-gray-400'
-                          }`}>
-                            {player.status}
-                          </span>
+                          <Badge variant="success">{player.status}</Badge>
                         </div>
                       </CardContent>
                     </Card>
                   ))}
                 </CardContent>
               </Card>
+              {lobby && <LobbySettings lobby={lobby} />}
 
-              {/* Ready Button */}
-              <Button 
-                variant={isReady ? "destructive" : "game"} 
-                className="w-full h-14 gap-2"
-                onClick={() => setIsReady(!isReady)}
-              >
-                {isReady ? 'Cancel Ready' : 'Ready'}
-              </Button>
             </div>
+
 
             {/* Right Side - Chat */}
             <Card className="lg:w-[400px] bg-gray-900 border-gray-800">
@@ -251,7 +215,7 @@ const LobbyWithChat = () => {
                       </div>
                     </PopoverContent>
                   </Popover>
-                  
+
                   <Input
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
@@ -259,7 +223,7 @@ const LobbyWithChat = () => {
                     placeholder="Type a message..."
                     className="flex-1 bg-gray-800 border-gray-700 text-white h-12"
                   />
-                  
+
                   <Button variant="game" className="h-12 px-4" onClick={handleSendMessage}>
                     <SendHorizontal className="w-5 h-5" />
                   </Button>
