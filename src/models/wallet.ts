@@ -18,9 +18,15 @@ export class Wallet {
         this.deletedAt = params.deletedAt;
     }
 
+
+    get withdrawableBalance(): number {
+        // main - by 4 percent of main 
+        return (this.mainBalance || 0) - (this.mainBalance || 0) * 0.04;
+    }
+
     // Getter for total balance
     get totalBalance(): number {
-        return (this.mainBalance || 0) + (this.bonusBalance || 0);
+        return (Number(this.mainBalance) || 0) + (Number(this.bonusBalance) || 0);
     }
 }
 

@@ -165,6 +165,7 @@
     "withdraw": {
         "total-balance": "الرصيد الإجمالي",
         "enter-bet-amount": "أدخل مبلغ الرهان",
+        "withdraw-all": "سحب الكل",
         "withdrawal-amount-label": "مبلغ السحب*",
         "withdrawal-amount-placeholder": "أدخل المبلغ المراد سحبه",
         "select-method-label": "اختر طريقة السحب*",

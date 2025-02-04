@@ -30,6 +30,9 @@ export const userAPI = {
     updateUser: async (data: User) => {
         return api.patch(`/user/${data.id}`, data);
     },
+    getUserWallet: async (userId: string) => {
+        return api.get(`/admin/user-wallet/${userId}`);
+    },
     addUserPlacementNotAllowed: async (data: { placementNotAllowed: SchedulerType, userId: string }) => {
         return api.post(`/user/add-placement-not-allowed/${data.userId}`, data);
     },

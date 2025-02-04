@@ -86,6 +86,12 @@ export const useCreateUser = () => {
     });
 }
 
+export const useGetUserWallet = (userId: string) => {
+    return useQuery({
+        queryKey: ["users", "wallet", userId],
+        queryFn: () => userAPI.getUserWallet(userId),
+    });
+}
 export const useUpdateUser = () => {
     const queryClient = useQueryClient();
 

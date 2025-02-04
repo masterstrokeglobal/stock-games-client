@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { useTranslations } from "next-intl";
 
 // Move schema outside component to prevent recreating on every render
-const createWithdrawSchema = (t: any,totalAmount:number) => z.object({
+const createWithdrawSchema = (t: any, totalAmount: number) => z.object({
     withdrawDetails: z.string().min(1, t('validation.withdrawal-method-required')),
     amount: z.coerce
         .number({ message: t('validation.amount-invalid') })
@@ -97,7 +97,7 @@ const WithdrawForm: React.FC<WithdrawFormProps> = ({
         return [];
     }, [data, isSuccess]);
 
-    const withdrawSchema = useMemo(() => createWithdrawSchema(t,totalAmount), [t,totalAmount]);
+    const withdrawSchema = useMemo(() => createWithdrawSchema(t, totalAmount), [t, totalAmount]);
 
     const form = useForm<WithdrawFormValues>({
         resolver: zodResolver(withdrawSchema),
@@ -107,12 +107,18 @@ const WithdrawForm: React.FC<WithdrawFormProps> = ({
         },
     });
 
-    const { control, handleSubmit, watch } = form;
+    const { control, handleSubmit, watch, setValue } = form;
     const withdrawAmount = watch('amount');
 
     // Calculate fees and total amount
     const platformFee = useMemo(() => withdrawAmount * 0.04, [withdrawAmount]);
     const totalWithdrawAmount = useMemo(() => Number(withdrawAmount) + Number(platformFee), [withdrawAmount, platformFee]);
+
+    const handleWithdrawAll = () => {
+        // Calculate the amount that will result in totalWithdrawAmount being exactly totalAmount
+        const withdrawAllAmount = totalAmount / 1.04;
+        setValue('amount', Number(withdrawAllAmount.toFixed(2)));
+    };
 
     const formatNumber = (num: number) => {
         return num.toLocaleString('en-IN', {
@@ -180,6 +186,15 @@ const WithdrawForm: React.FC<WithdrawFormProps> = ({
                     type="number"
                     required
                 />
+
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleWithdrawAll}
+                    className="text-[#4C6EF5] text-sm"
+                >
+                    {t('withdraw-all')}
+                </Button>
 
                 {withdrawAmount > 0 && (
                     <div className="bg-[#1A2238] p-4 rounded-lg space-y-2">

@@ -173,6 +173,7 @@
         "processing": "Obrada...",
         "withdraw-funds": "Povucite sredstva",
         "loading-methods": "Učitavanje metoda povlačenja...",
+        "withdraw-all": "Povucite sve",
         "error-loading": "Nije uspelo učitavanje metoda povlačenja",
         "try-again": "Pokušajte ponovo",
         "upi-id": "UPI ID",
