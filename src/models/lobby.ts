@@ -3,22 +3,25 @@ import LobbyUser, { LobbyUserStatus } from "./lobby-user";
 import { SchedulerType } from "./market-item";
 import User from "./user";
 
-export enum LobbyGameType {
-    PRACTICE = "PRACTICE",
-    TOURNAMENT = "TOURNAMENT"
-    // Add other game types as needed
+export enum LobbyStatus {
+    OPEN = "open",
+    IN_PROGRESS = "in_progress",
+    CLOSED = "closed",
 }
 
-export enum LobbyStatus {
-    OPEN = "OPEN",
-    CLOSED = "CLOSED"
+export enum LobbyGameType {
+    GUESS_FIRST = "guess_first",
+    GUESS_LAST = "guess_last",
+    GUESS_FIRST_EIGHT = "guess_first_eight",
+    GUESS_LAST_EIGHT = "guess_last_eight",
+    GUESS_FIRST_THREE = "guess_first_three",
+    GUESS_LAST_THREE = "guess_last_three",
 }
 
 export enum LobbyType {
+    PRIVATE = "private",
     PUBLIC = "public",
-    PRIVATE = "private"
 }
-
 export class Lobby {
     id?: number;
     company?: Company;
@@ -89,6 +92,10 @@ export class Lobby {
 
     isPublic(): boolean {
         return this.type === LobbyType.PUBLIC;
+    }
+
+    get isStarted(): boolean {
+        return this.status === LobbyStatus.IN_PROGRESS;
     }
 
     canJoin(userId?: string | number): boolean {

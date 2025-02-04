@@ -2,6 +2,7 @@
 import { useGetLobbies, useGetMyLobbies } from '@/react-query/lobby-query';
 import { useMemo } from 'react';
 import LobbyCard from './lobby-card';
+import Lobby from '@/models/lobby';
 
 
 const LobbyList = () => {
@@ -9,14 +10,16 @@ const LobbyList = () => {
 
     const { data: lobbyuser } = useGetMyLobbies();
 
-    const lobbies = data?.lobbies;
+    const lobbies = useMemo(() => {
+        if (!data) return [];
+        return data.lobbies.map(lobby => new Lobby(lobby));
+    }, [data]);
 
     const otherLobbies = useMemo(() => {
         if (lobbies && !lobbyuser) return lobbies;
         if (!lobbyuser || !lobbies) return [];
         const otherLobbies = lobbies.filter(lobby => lobbyuser.lobby && lobby.id !== lobbyuser.lobby.id);
-        return otherLobbies;
-
+        return otherLobbies.map(lobby => new Lobby(lobby));
     }, [lobbies, lobbyuser])
 
     if (isLoading) {
@@ -26,7 +29,6 @@ const LobbyList = () => {
     if (!lobbies?.length) {
         return <div className="text-white">No active lobbies found.</div>;
     }
-
 
     return (
         <div className="flex flex-col gap-4">

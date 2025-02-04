@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
 import Lobby from "@/models/lobby";
 import { useJoinLobby, useLeaveLobby, useReadyToPlay, useStartRound } from "@/react-query/lobby-query";
+import Link from "next/link";
 
 type Props = {
     lobby: Lobby;
@@ -31,6 +32,8 @@ const LobbySettings = ({ lobby }: Props) => {
         leaveLobby(lobby.id!);
     };
 
+    console.log(lobby.isStarted, lobby);
+
 
     return (
         <div className="flex gap-4 flex-col">
@@ -54,6 +57,19 @@ const LobbySettings = ({ lobby }: Props) => {
                 >
                     {isJoinLoading ? "Joining..." : "Join Lobby"}
                 </Button>
+            )}
+            {/* Play Button */}
+            {lobby.isStarted && (
+
+                <Link href={`/game/lobby/${lobby.joiningCode}/play`} >
+                    <Button
+
+                        variant="game"
+                        className="w-full flex-1"
+                    >
+                        Play Game
+                    </Button>
+                </Link>
             )}
 
             {isLeader && (

@@ -25,6 +25,7 @@ export class RoundRecord {
         this.endTime = data.endTime ? new Date(data.endTime) : new Date();
         this.placementStartTime = data.placementStartTime ? new Date(data.placementStartTime) : new Date();
         this.placementEndTime = data.placementEndTime ? new Date(data.placementEndTime) : new Date();
+        console.log(data)
         this.market = data.market?.map((item: any, index) => new MarketItem({ ...item, horse: index + 1 })) || [];
         this.type = data.type || SchedulerType.NSE;
         this.winningMarket = data.winningMarket;

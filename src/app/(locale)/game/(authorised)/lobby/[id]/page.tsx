@@ -3,6 +3,7 @@ import Container from '@/components/common/container';
 import LoadingScreen from '@/components/common/loading-screen';
 import Navbar from '@/components/features/game/navbar';
 import LobbySettings from '@/components/features/lobby/lobby-settings';
+import TimeLeft from '@/components/features/lobby/time-left';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -18,6 +19,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Progress } from "@/components/ui/progress";
+import LobbyRound from '@/models/lobby-round';
 import { useGetCurrentLobbyRound, useGetLobbyByCode } from '@/react-query/lobby-query';
 import dayjs from 'dayjs';
 import { Gamepad2, Medal, SendHorizontal, ShieldAlert, Smile, Timer, Users } from 'lucide-react';
@@ -27,9 +29,7 @@ import { useState } from 'react';
 const LobbyWithChat = () => {
   const lobbyCode = useParams().id!.toString();
   const { data: lobby, isLoading } = useGetLobbyByCode(lobbyCode);
-  const {data}  = useGetCurrentLobbyRound(lobby?.id);
-
-  console.log("lobby Roubd", data);
+  const { data: lobbyRound } = useGetCurrentLobbyRound(lobby?.id);
 
   const [message, setMessage] = useState('');
 
@@ -86,10 +86,7 @@ const LobbyWithChat = () => {
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-2 text-gray-400">
-                        <Timer className="w-5 h-5" />
-                        <span>Starting in 2:30</span>
-                      </div>
+                      {lobbyRound?.roundRecord?.endTime && <TimeLeft endTime={lobbyRound.roundRecord?.endTime} />}
                     </div>
                   </div>
 
@@ -136,9 +133,11 @@ const LobbyWithChat = () => {
                               alt={player.user?.name}
                               className="w-12 h-12 rounded-full border-2 border-gray-700"
                             />
-                            <div className="absolute -bottom-1 -right-1 bg-gray-900 rounded-full p-1">
-                              <Medal className="w-4 h-4 text-[#EEC53C]" />
-                            </div>
+                            {lobby.isLeader(player.user?.id!) && (
+                              <Badge className="absolute -bottom-2 bg-yellow-500 text-white text-xs rounded-full">
+                                Host
+                              </Badge>
+                            )}
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
@@ -157,8 +156,6 @@ const LobbyWithChat = () => {
               {lobby && <LobbySettings lobby={lobby} />}
 
             </div>
-
-
             {/* Right Side - Chat */}
             <Card className="lg:w-[400px] bg-gray-900 border-gray-800">
               <CardHeader>

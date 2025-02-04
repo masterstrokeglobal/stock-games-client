@@ -23,6 +23,28 @@ export const useCreateGameRecord = () => {
         },
     });
 };
+
+export const useCreatePlacementBet = () => {
+     
+    const queryClient = useQueryClient();
+
+    return useMutation ({
+        mutationFn: gameRecordAPI.createPlacementBet,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) =>
+                    query.queryKey[0] === "winningGameRecord" ||
+                    query.queryKey[0] === "topPlacements" ||
+                    query.queryKey[0] === "myPlacements" ||
+                    query.queryKey[0] === "user" && query.queryKey[1] == 'wallet',
+            });
+            toast.success("Bet placed successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error creating game record");
+        },
+    });
+};
 // Get Winning Game Record Hook
 export const useGetWinningGameRecord = () => {
     return useQuery({

@@ -1,6 +1,7 @@
 import { GetLobbiesFilter, lobbyAPI } from "@/lib/axios/lobby-API";
 import Lobby from "@/models/lobby";
 import LobbyUser from "@/models/lobby-user";
+import LobbyRound from "@/models/lobby-round";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -143,7 +144,7 @@ export const useGetCurrentLobbyRound = (lobbyId?: number) => {
         queryKey: ["lobbies", "round", lobbyId],
         queryFn: async () => {
             const response = await lobbyAPI.getCurrentLobbyRound(lobbyId!);
-            const lobby = new Lobby(response);
+            const lobby = new LobbyRound(response);
             return lobby;
         },
         enabled: Boolean(lobbyId),
