@@ -10,6 +10,13 @@ export const gameRecordAPI = {
   },
 
 
+  getCurrentPlacementForLobbyRound: async (id: string) => {
+    return api.get(`/lobby/current-placement/${id}`);
+  },
+  getAllPlacementForLobbyRound: async (id: string) => {
+    return api.get(`/lobby/user-placement/${id}`);
+  },
+
   getWinningGameRecord: async () => {
     return api.get("/game-records/winning");
   },

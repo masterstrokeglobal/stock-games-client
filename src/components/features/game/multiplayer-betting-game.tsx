@@ -18,9 +18,8 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
 }) => {
     const t = useTranslations('game');
     return (
-        <div className="max-w-4xl mx-auto bg-[#1A2D58] p-4 rounded-2xl">
+        <div className="max-w-4xl w-full mx-auto bg-[#1A2D58] p-4 rounded-2xl">
             <button
-
                 className={`bet-button w-full ${isPlaceOver || isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 disabled={isPlaceOver || isLoading}
                 onClick={onPlaceBet}

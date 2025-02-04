@@ -128,7 +128,7 @@ export const useReadyToPlay = () => {
         mutationFn: lobbyAPI.readyToPlay,
         onSuccess: () => {
             queryClient.invalidateQueries({
-                predicate: (query) => query.queryKey[0] === "lobbies",
+                predicate: (query) => query.queryKey[0] === "lobbies"|| query.queryKey[0] === "user" && query.queryKey[1] == 'wallet',
             });
             toast.success("Ready to play");
         },

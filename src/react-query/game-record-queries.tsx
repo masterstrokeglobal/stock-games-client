@@ -33,9 +33,9 @@ export const useCreatePlacementBet = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({
                 predicate: (query) =>
+                    query.queryKey[0] === "allPlacement" ||
+                    query.queryKey[0] === "currentPlacement" ||
                     query.queryKey[0] === "winningGameRecord" ||
-                    query.queryKey[0] === "topPlacements" ||
-                    query.queryKey[0] === "myPlacements" ||
                     query.queryKey[0] === "user" && query.queryKey[1] == 'wallet',
             });
             toast.success("Bet placed successfully");
@@ -45,6 +45,24 @@ export const useCreatePlacementBet = () => {
         },
     });
 };
+
+// Get user placement for lobby round Hook
+export const useGetCurrentPlacementForLobbyRound = (id: string) => {
+    return useQuery({
+        queryKey: ["currentPlacement", id],
+        queryFn: () => gameRecordAPI.getCurrentPlacementForLobbyRound(id),
+    });
+};
+
+// Get All Placement for Lobby Round Hook
+export const useGetAllPlacementForLobbyRound = (id: string) => {
+    return useQuery({
+        queryKey: ["allPlacement", id],
+        queryFn: () => gameRecordAPI.getAllPlacementForLobbyRound(id),
+    });
+};
+
+
 // Get Winning Game Record Hook
 export const useGetWinningGameRecord = () => {
     return useQuery({

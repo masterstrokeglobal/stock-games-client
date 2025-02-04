@@ -60,7 +60,6 @@ const LobbySettings = ({ lobby }: Props) => {
             )}
             {/* Play Button */}
             {lobby.isStarted && (
-
                 <Link href={`/game/lobby/${lobby.joiningCode}/play`} >
                     <Button
 
@@ -72,7 +71,7 @@ const LobbySettings = ({ lobby }: Props) => {
                 </Link>
             )}
 
-            {isLeader && (
+            {(isLeader && isReady  && !lobby.isStarted) &&(
                 <Button
                     variant="game"
                     className="w-full flex-1"

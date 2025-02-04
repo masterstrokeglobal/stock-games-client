@@ -44,6 +44,11 @@ export class RoundRecord {
         return this.market.find(item => item.id === this.winningId)?.horse || 0;
     }
 
+    // find market number by id 
+    getMarketNumberById(id: number): number {
+        return this.market.find(item => item.id === id)?.horse || 0;
+    }
+
     // Helper method to serialize the instance to a plain object
     toJSON(): Record<string, any> {
         return {
@@ -61,6 +66,8 @@ export class RoundRecord {
             deletedAt: this.deletedAt?.toISOString()
         };
     }
+
+
 
     // Static method to create instance from API response
     static fromAPI(data: any): RoundRecord {

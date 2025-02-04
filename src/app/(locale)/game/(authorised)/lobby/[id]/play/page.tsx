@@ -27,7 +27,6 @@ const GamePage = () => {
     const { isMobile } = useWindowSize();
     let roundRecord = lobbyRound ? lobbyRound.roundRecord : null;
     useHorseRaceSound(roundRecord);
-    console.log(roundRecord);
     if (isLoading && lobbyRound == undefined) return <div>Loading...</div>
 
 
