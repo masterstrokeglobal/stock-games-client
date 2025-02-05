@@ -3,6 +3,7 @@ import CurrentBets from "@/components/features/game/current-bets";
 import LeaderBoard from "@/components/features/game/leaderboard";
 import MultiplayerRouletteGame from "@/components/features/game/multiplayer-roulette-board";
 import Navbar from "@/components/features/game/navbar";
+import PlacementBetsLobby from "@/components/features/game/placement-bets-lobby";
 import RouletteGame from "@/components/features/game/roulette-game";
 import { MobileGameHeader } from "@/components/features/game/roulette-header";
 import HorseRace from "@/components/features/horse-animation/horse";
@@ -43,7 +44,7 @@ const GamePage = () => {
                     style={borderStyle}
 
                     className="xl:col-span-5 col-span-4 row-span-2 rounded-2xl ">
-                    {roundRecord && <CurrentBets round={roundRecord} />}
+                    {lobbyRound && <PlacementBetsLobby lobbyRound={lobbyRound}/>}
 
                 </div>
                 <div

@@ -18,6 +18,15 @@ export enum LobbyGameType {
     GUESS_LAST_THREE = "guess_last_three",
 }
 
+export enum LobbyEvents {
+    USER_JOINED = "user_joined",
+    USER_LEFT = "user_left",
+    ROUND_STARTED = "round_started",
+    ROUND_ENDED = "round_ended",
+    LOBBY_CLOSED = "lobby_closed",
+    USER_READY = "user_ready",
+}
+
 export enum LobbyType {
     PRIVATE = "private",
     PUBLIC = "public",
@@ -67,12 +76,11 @@ export class Lobby {
     }
 
     isLeader(userId: string | number): boolean {
-        console.log(this.leader?.id, userId);
         return this.leader?.id == userId;
     }
 
     isParticipant(userId: string | number): boolean {
-        const participant = this.lobbyUsers?.findIndex((user) => user.user?.id == userId);
+        const participant = this.lobbyUsers?.findIndex((user) => user.user?.id == userId && user.status !== LobbyUserStatus.LEFT);
         return participant !== -1;
     }
 
@@ -100,6 +108,11 @@ export class Lobby {
 
     canJoin(userId?: string | number): boolean {
         return this.isOpen() && this.leader?.id !== userId;
+    }
+
+    // clone 
+    clone(): Lobby {
+        return new Lobby(this);
     }
 }
 

@@ -83,7 +83,10 @@ const gameTypeOptions = [
     { label: "Guess Last 3", value: LobbyGameType.GUESS_LAST_THREE },
 ];
 
-const CreateLobbyForm = () => {
+type Props = {
+    onCreate: () => void;
+}
+const CreateLobbyForm = ({ onCreate }: Props) => {
     const { mutate: createLobby, isPending } = useCreateLobby();
 
     const form = useForm<CreateLobbyFormValues>({
@@ -93,11 +96,16 @@ const CreateLobbyForm = () => {
 
     const onSubmit = (formValue: CreateLobbyFormValues) => {
         createLobby({
-            name:formValue.name,
+            name: formValue.name,
             amount: formValue.prizePool,
             game_type: formValue.gameType,
             marketType: formValue.marketType,
             type: formValue.isPublic ? LobbyType.PUBLIC : LobbyType.PRIVATE,
+        }, {
+            onSuccess: () => {
+                form.reset(defaultValues);
+                onCreate();
+            }
         });
     };
 

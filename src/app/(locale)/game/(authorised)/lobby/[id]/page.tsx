@@ -3,6 +3,7 @@ import Container from '@/components/common/container';
 import LoadingScreen from '@/components/common/loading-screen';
 import Navbar from '@/components/features/game/navbar';
 import LobbySettings from '@/components/features/lobby/lobby-settings';
+import useLobbyWebSocket from '@/components/features/lobby/lobby-websocket';
 import TimeLeft from '@/components/features/lobby/time-left';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -19,18 +20,23 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Progress } from "@/components/ui/progress";
-import LobbyRound from '@/models/lobby-round';
 import { useGetCurrentLobbyRound, useGetLobbyByCode } from '@/react-query/lobby-query';
 import dayjs from 'dayjs';
-import { Gamepad2, Medal, SendHorizontal, ShieldAlert, Smile, Timer, Users } from 'lucide-react';
+import { Gamepad2, SendHorizontal, ShieldAlert, Smile, Users } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const LobbyWithChat = () => {
   const lobbyCode = useParams().id!.toString();
   const { data: lobby, isLoading } = useGetLobbyByCode(lobbyCode);
   const { data: lobbyRound } = useGetCurrentLobbyRound(lobby?.id);
+  useLobbyWebSocket(lobby?.id,lobby?.joiningCode);  
 
+   useEffect(() => {
+    if (lobby?.lobbyUsers) {
+      console.log('Lobby users updated:', lobby.lobbyUsers.length);
+    }
+  }, [lobby?.lobbyUsers]);
   const [message, setMessage] = useState('');
 
 

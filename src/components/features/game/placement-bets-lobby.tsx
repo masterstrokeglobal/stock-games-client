@@ -2,9 +2,11 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn, getPlacementString } from "@/lib/utils";
 import GameRecord from "@/models/game-record";
+import LobbyPlacement from "@/models/lobby-placement";
 import LobbyRound from "@/models/lobby-round";
 import { RoundRecord } from "@/models/round-record";
 import { useGetAllPlacementForLobbyRound, useGetTopPlacements } from "@/react-query/game-record-queries";
+import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -13,13 +15,13 @@ type Props = {
     lobbyRound: LobbyRound;
 };
 
-const CurrentBets = ({ className, lobbyRound }: Props) => {
+const PlacementBetsLobby = ({ className, lobbyRound }: Props) => {
     const t = useTranslations("game");
     const { data, isSuccess } = useGetAllPlacementForLobbyRound(lobbyRound?.id!.toString());
 
-    const currentBetsData: GameRecord[] = useMemo(() => {
+    const currentBetsData: LobbyPlacement[] = useMemo(() => {
         if (isSuccess) {
-            return data.data;
+            return data.data.placements;
         }
         return [];
     }, [isSuccess, data]);
@@ -54,25 +56,25 @@ const CurrentBets = ({ className, lobbyRound }: Props) => {
                                     {t("username")}
                                 </th>
                                 <th className="p-2 text-sm text-right text-gray-300 rounded-tr-lg flex-1">
-                                    {t("amount")}
+                                    {t("time")}
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            {currentBetsData.map((bet: any, index: number) => (
+                            {currentBetsData.map((bet, index: number) => (
                                 <tr
                                     key={index}
                                     className="flex border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden"
                                     style={{ display: 'flex', flexDirection: 'row' }}
                                 >
                                     <td className="p-2 text-sm text-gray-300 rounded-l-lg flex-1">
-                                        {getPlacementString(bet, lobbyRound.roundRecord!)}
+                                        {bet.marketItem?.name}
                                     </td>
                                     <td className="p-2 text-sm text-gray-300 flex-1">
-                                        {bet.user.username}
+                                        {bet.user?.username}
                                     </td>
                                     <td className="p-2 text-sm text-right text-gray-300 rounded-r-lg flex-1">
-                                        {bet.amount}
+                                        {dayjs(bet.createdAt).format("HH:mm a")}
                                     </td>
                                 </tr>
                             ))}
@@ -88,4 +90,4 @@ const CurrentBets = ({ className, lobbyRound }: Props) => {
     );
 };
 
-export default CurrentBets;
+export default PlacementBetsLobby;

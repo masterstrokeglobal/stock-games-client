@@ -32,8 +32,6 @@ const LobbySettings = ({ lobby }: Props) => {
         leaveLobby(lobby.id!);
     };
 
-    console.log(lobby.isStarted, lobby);
-
 
     return (
         <div className="flex gap-4 flex-col">

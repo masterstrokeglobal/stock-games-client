@@ -35,7 +35,7 @@ const GameLobby = () => {
                         </Button>
                     </div>
 
-                    {activeTab === 'create' ? <CreateLobbyForm /> : <LobbyList />}
+                    {activeTab === 'create' ? <CreateLobbyForm onCreate={() => setActiveTab('join')} /> : <LobbyList />}
                 </div>
             </Container>
         </div>
