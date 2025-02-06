@@ -150,3 +150,15 @@ export const useGetCurrentLobbyRound = (lobbyId?: number) => {
         enabled: Boolean(lobbyId),
     });
 };
+
+// lobby chat history
+export const useGetLobbyChat = (lobbyId: number) => {
+return useQuery({
+    queryKey: ["lobbies", "chat", lobbyId],
+    queryFn: async () => {
+        const response = await lobbyAPI.getLobbyChat(lobbyId);
+        return response;
+    },
+    enabled: Boolean(lobbyId),
+});
+};

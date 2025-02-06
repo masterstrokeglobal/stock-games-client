@@ -13,6 +13,7 @@ import {
     Coins,
     DollarSign
 } from "lucide-react";
+import { PLATFORMFEES } from '@/lib/utils';
 
 type Props = {
     data: {
@@ -22,6 +23,9 @@ type Props = {
             totalBets: number;
             totalWinnings: number;
             totalWithdrawals: number;
+            totalMainBalance: number;
+            totalBonusBalance: number;
+            totalBalance: number;
             netProfitOrLoss: number;
         }
     };
@@ -33,17 +37,28 @@ const AgentProfitLossCard = ({ data }: Props) => {
         totalDeposits,
         totalBonus,
         totalBets,
+        totalBalance,
+        totalBonusBalance,
+        WithdrawalableAmount,
+        totalMainBalance,
         totalWinnings,
         totalWithdrawals,
         netProfitOrLoss,
     } = useMemo(() => {
         const result = data?.totalProfitAndLoss || {};
+
+        const totalAmount = result.totalMainBalance + result.totalBonusBalance;
+        const WithdrawalableAmount = result.totalMainBalance - (result.totalMainBalance * PLATFORMFEES / 100);
         return {
             totalDeposits: result.totalDeposits ?? 0,
             totalBonus: result.totalBonus ?? 0,
             totalBets: result.totalBets ?? 0,
             totalWinnings: result.totalWinnings ?? 0,
             totalWithdrawals: result.totalWithdrawals ?? 0,
+            totalMainBalance: result.totalMainBalance ?? 0,
+            totalBonusBalance: result.totalBonusBalance ?? 0,
+            totalBalance: totalAmount,
+            WithdrawalableAmount: WithdrawalableAmount,
             netProfitOrLoss: result.netProfitOrLoss ?? 0,
         };
     }, [data]);
@@ -106,6 +121,38 @@ const AgentProfitLossCard = ({ data }: Props) => {
                         label="Net Profit/Loss"
                         value={netProfitOrLoss}
                         color={netProfitOrLoss >= 0 ? "green" : "red"}
+                    />
+
+                    {/* Total Main Balance */}
+                    <StatCard
+                        icon={<DollarSign className="text-green-600 w-8 h-8" />}
+                        label="Total Main Balance"
+                        value={totalMainBalance}
+                        color="green"
+                    />
+
+                    {/* Total Bonus Balance */}
+                    <StatCard
+                        icon={<Coins className="text-yellow-600 w-8 h-8" />}
+                        label="Total Bonus Balance"
+                        value={totalBonusBalance}
+                        color="yellow"
+                    />
+
+                    {/* Total Balance */}
+                    <StatCard
+                        icon={<Coins className="text-blue-600 w-8 h-8" />}
+                        label="Total Balance"
+                        value={totalBalance}
+                        color="blue"
+                    />
+
+                    {/* Withdrawable Amount */}
+                    <StatCard
+                        icon={<Coins className="text-green-600 w-8 h-8" />}
+                        label="Withdrawable Amount"
+                        value={WithdrawalableAmount}
+                        color="green"
                     />
                 </div>
             </CardContent>

@@ -1,3 +1,4 @@
+
 "use client";
 import Container from '@/components/common/container';
 import TopBar from '@/components/common/top-bar';
@@ -92,6 +93,11 @@ const UserMenu = () => {
                             <HelpCircleIcon />
                             {t('contact-us')}
                         </Button>
+                    </Link>
+                    <Link href="/game/lobby" passHref>
+                        <Button variant="game-secondary" className="w-full gap-2 h-14">
+                            <HelpCircleIcon />
+                            Lobby                        </Button>
                     </Link>
                 </nav>
             </div>

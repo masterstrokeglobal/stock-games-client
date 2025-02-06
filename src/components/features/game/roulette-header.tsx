@@ -8,18 +8,35 @@ interface GameHeaderProps {
     gameState: CurrentGameState;
 }
 
+
 export const GameHeader: React.FC<GameHeaderProps> = ({ gameState }) => {
-    const t = useTranslations('game');
+    const getMessage = () => {
+        if (gameState.isGameOver) {
+            return "Game Over";
+        }
+        return gameState.isPlaceOver ? "Game ends in" : "Round starts in";
+    };
+
+    const getTime = () => {
+        if (gameState.isGameOver) {
+            return "00:00";
+        }
+        return gameState.isPlaceOver
+            ? gameState.gameTimeLeft.formatted
+            : gameState.placeTimeLeft.formatted;
+    };
+
     return (
         <header className='text-center hidden lg:block my-2 text-white'>
-            <h2>{gameState.isPlaceOver ? t("game-ends-in") : t("round-starts-in")}</h2>
+            <h2 className="text-lg font-semibold text-gray-">
+                {getMessage()}
+            </h2>
             <p className='text-7xl jersey leading-[5rem]'>
-                {gameState.isPlaceOver ? gameState.gameTimeLeft.formatted : gameState.placeTimeLeft.formatted}
+                {getTime()}
             </p>
         </header>
     );
 };
-
 type Props = {
     roundRecord: RoundRecord;
 }

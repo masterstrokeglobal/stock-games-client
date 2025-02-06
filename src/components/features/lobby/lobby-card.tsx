@@ -33,15 +33,19 @@ const LobbyCard = ({ lobby, joined = false }: LobbyCardProps) => {
 
     const userId = userDetails?.id!;
     const isLeader = lobby.isLeader(userId);
-    
+    console.log(lobby.leader?.id, userId)
+
     return <Link href={joined || isLeader ? `/game/lobby/${lobby.joiningCode}` : "#"} passHref>
         <Card className={`${'bg-gray-900 border-gray-800'}`}>
             <CardContent className="flex items-center justify-between p-6">
                 <div className="flex items-center gap-4">
-                    <div className={`p-3 rounded-lg ${'bg-gray-800'}`}>
-                        <Gamepad2 className="w-6 h-6 text-white" />
+                    <div>
+
+                        <div className={`p-3 rounded-lg ${'bg-gray-800'}`}>
+                            <Gamepad2 className="w-6 h-6 text-white" />
+                        </div>
+                        {isLeader && <Badge className='text-white bg-yellow-500'>Host</Badge>}
                     </div>
-                    {isLeader && <Badge className='text-white bg-yellow-500'>Host</Badge>}
                     <div>
                         <div className="flex items-center gap-2">
                             <h3 className="text-white font-semibold">{lobby.name}</h3>
@@ -51,7 +55,7 @@ const LobbyCard = ({ lobby, joined = false }: LobbyCardProps) => {
                                 </span>
                             )}
                         </div>
-                        <p className="text-sm text-gray-400">Type: {lobby.name}</p>
+                        <p className="text-sm text-gray-400"> {lobby.getTypeName} ({lobby.marketType.toUpperCase()})</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-4">

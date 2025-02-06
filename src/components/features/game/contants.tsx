@@ -29,6 +29,8 @@ export interface FormattedTime {
 
 export interface CurrentGameState {
     placeTimeLeft: FormattedTime;
+    placeStartTimeLeft: FormattedTime,
+    isPlaceStarted: boolean,
     gameTimeLeft: FormattedTime;
     isPlaceOver: boolean;
     isGameOver: boolean;

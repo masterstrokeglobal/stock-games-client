@@ -7,8 +7,9 @@ import PlacementBetsLobby from "@/components/features/game/placement-bets-lobby"
 import RouletteGame from "@/components/features/game/roulette-game";
 import { MobileGameHeader } from "@/components/features/game/roulette-header";
 import HorseRace from "@/components/features/horse-animation/horse";
+import useLobbyWebSocket from "@/components/features/lobby/lobby-websocket";
 import { useHorseRaceSound } from "@/context/audio-context";
-import { useCurrentGame, useGameState, useIsPlaceOver } from "@/hooks/use-current-game";
+import { useGameState, useIsPlaceOver } from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
 import { RoundRecord } from "@/models/round-record";
 import { useGetCurrentLobbyRound, useGetLobbyByCode } from "@/react-query/lobby-query";
@@ -26,6 +27,8 @@ const GamePage = () => {
     const { data: lobby, isLoading } = useGetLobbyByCode(lobbyCode);
     const { data: lobbyRound } = useGetCurrentLobbyRound(lobby?.id);
     const { isMobile } = useWindowSize();
+    useLobbyWebSocket(lobby?.id, lobby?.joiningCode);
+
     let roundRecord = lobbyRound ? lobbyRound.roundRecord : null;
     useHorseRaceSound(roundRecord);
     if (isLoading && lobbyRound == undefined) return <div>Loading...</div>
@@ -44,7 +47,7 @@ const GamePage = () => {
                     style={borderStyle}
 
                     className="xl:col-span-5 col-span-4 row-span-2 rounded-2xl ">
-                    {lobbyRound && <PlacementBetsLobby lobbyRound={lobbyRound}/>}
+                    {lobbyRound && <PlacementBetsLobby lobbyRound={lobbyRound} />}
 
                 </div>
                 <div

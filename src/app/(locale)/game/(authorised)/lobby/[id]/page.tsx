@@ -2,27 +2,23 @@
 import Container from '@/components/common/container';
 import LoadingScreen from '@/components/common/loading-screen';
 import Navbar from '@/components/features/game/navbar';
+import LobbyChat from '@/components/features/lobby/lobby-chat';
+import LobbyPlayers from '@/components/features/lobby/lobby-players';
 import LobbySettings from '@/components/features/lobby/lobby-settings';
 import useLobbyWebSocket from '@/components/features/lobby/lobby-websocket';
 import TimeLeft from '@/components/features/lobby/time-left';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Progress } from "@/components/ui/progress";
+import { cn } from '@/lib/utils';
 import { useGetCurrentLobbyRound, useGetLobbyByCode } from '@/react-query/lobby-query';
 import dayjs from 'dayjs';
-import { Gamepad2, SendHorizontal, ShieldAlert, Smile, Users } from 'lucide-react';
+import { Gamepad2, Users } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -30,40 +26,16 @@ const LobbyWithChat = () => {
   const lobbyCode = useParams().id!.toString();
   const { data: lobby, isLoading } = useGetLobbyByCode(lobbyCode);
   const { data: lobbyRound } = useGetCurrentLobbyRound(lobby?.id);
-  useLobbyWebSocket(lobby?.id,lobby?.joiningCode);  
+  const { sendMessage } = useLobbyWebSocket(lobby?.id, lobby?.joiningCode);
 
-   useEffect(() => {
+  useEffect(() => {
     if (lobby?.lobbyUsers) {
       console.log('Lobby users updated:', lobby.lobbyUsers.length);
     }
   }, [lobby?.lobbyUsers]);
-  const [message, setMessage] = useState('');
 
 
-  const messages = [
-    { id: 1, type: 'system', content: 'Game will start in 2:30 minutes' },
-    { id: 2, type: 'player', sender: 'Player123', content: 'Hello everyone! 👋', timestamp: '2:45 PM' },
-    { id: 3, type: 'player', sender: 'GameMaster', content: 'Good luck! 🎮', timestamp: '2:46 PM' },
-    { id: 4, type: 'system', content: 'ProGamer joined the lobby' },
-    { id: 5, type: 'player', sender: 'ProGamer', content: 'Ready to win 🏆', timestamp: '2:47 PM' },
-  ];
 
-  const emojis = ['👋', '😊', '🎮', '🏆', '👍', '🔥', '💪', '⭐', '🎯', '🎲', '🎪', '🎨', '🎭', '🎪', '🎯'];
-
-
-  const handleSendMessage = () => {
-    if (message.trim()) {
-      // Add message handling logic here
-      setMessage('');
-    }
-  };
-
-  const handleKeyPress = (e: { key: string; shiftKey: any; preventDefault: () => void; }) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
 
   if (isLoading) return <LoadingScreen className='bg-primary-game  min-h-screen' />;
 
@@ -118,121 +90,14 @@ const LobbyWithChat = () => {
                   <Progress value={lobby?.userPercentage} />
                 </CardContent>
               </Card>
+              {/* Players Card */}
+              {lobby && <LobbyPlayers lobby={lobby} />}
 
-
-              {/* Players Section */}
-              <Card className="bg-gray-900 border-gray-800">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2">
-                    <Users className="w-5 h-5" />
-                    Players
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {lobby?.lobbyUsers?.map((player) => (
-                    <Card key={player.id} className="bg-gray-800 border-gray-700">
-                      <CardContent className="flex items-center justify-between p-4">
-                        <div className="flex items-center gap-3">
-                          <div className="relative">
-                            <img
-                              src={player.user?.profileImage}
-                              alt={player.user?.name}
-                              className="w-12 h-12 rounded-full border-2 border-gray-700"
-                            />
-                            {lobby.isLeader(player.user?.id!) && (
-                              <Badge className="absolute -bottom-2 bg-yellow-500 text-white text-xs rounded-full">
-                                Host
-                              </Badge>
-                            )}
-                          </div>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-white font-medium">{player.user?.name}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <Badge variant="success">{player.status}</Badge>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </CardContent>
-              </Card>
               {lobby && <LobbySettings lobby={lobby} />}
 
             </div>
             {/* Right Side - Chat */}
-            <Card className="lg:w-[400px] bg-gray-900 border-gray-800">
-              <CardHeader>
-                <CardTitle className="text-white flex items-center justify-between">
-                  <span>Chat</span>
-                  <Button variant="ghost" size="icon">
-                    <ShieldAlert className="w-5 h-5" />
-                  </Button>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 flex flex-col h-[600px]">
-                {/* Chat Messages */}
-                <div className="flex-1 overflow-y-auto space-y-4 mb-4">
-                  {messages.map((msg) => (
-                    <div key={msg.id} className="flex flex-col">
-                      {msg.type === 'system' ? (
-                        <div className="text-sm text-gray-400 text-center py-1 bg-gray-800/50 rounded">
-                          {msg.content}
-                        </div>
-                      ) : (
-                        <div className="bg-gray-800 rounded-lg p-3">
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-[#EEC53C] font-medium">{msg.sender}</span>
-                            {msg.timestamp && (
-                              <span className="text-xs text-gray-500">{msg.timestamp}</span>
-                            )}
-                          </div>
-                          <p className="text-white">{msg.content}</p>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Chat Input */}
-                <div className="flex gap-2">
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white">
-                        <Smile className="w-5 h-5" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-full p-2 bg-gray-900 border-gray-800">
-                      <div className="grid grid-cols-5 gap-2">
-                        {emojis.map((emoji) => (
-                          <button
-                            key={emoji}
-                            className="text-2xl hover:bg-gray-800 p-2 rounded"
-                            onClick={() => setMessage(prev => prev + emoji)}
-                          >
-                            {emoji}
-                          </button>
-                        ))}
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-
-                  <Input
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder="Type a message..."
-                    className="flex-1 bg-gray-800 border-gray-700 text-white h-12"
-                  />
-
-                  <Button variant="game" className="h-12 px-4" onClick={handleSendMessage}>
-                    <SendHorizontal className="w-5 h-5" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            {lobby && <LobbyChat lobbyId={lobby.id!} onSend={sendMessage} />}
           </div>
         </div>
       </Container>

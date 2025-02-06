@@ -69,7 +69,7 @@ const LobbySettings = ({ lobby }: Props) => {
                 </Link>
             )}
 
-            {(isLeader && isReady  && !lobby.isStarted) &&(
+            {(isLeader && isReady && !lobby.isStarted) && (
                 <Button
                     variant="game"
                     className="w-full flex-1"

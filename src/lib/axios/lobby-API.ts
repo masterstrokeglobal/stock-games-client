@@ -70,7 +70,6 @@ export const lobbyAPI = {
         });
         return response.data;
     },
-
     // Get my lobby
     myLobby: async () => {
         const response = await api.get("/lobby/my-lobby");
@@ -81,4 +80,10 @@ export const lobbyAPI = {
         const response = await api.get(`/lobby/code/${code}`);
         return response.data;
     }
+    ,
+    // lobby chat 
+    getLobbyChat: async (lobbyId: number) => {
+        const response = await api.get(`/lobby/chat-history/${lobbyId}`);
+        return response.data;
+    },
 };
