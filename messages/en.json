@@ -166,6 +166,7 @@
     "withdraw": {
         "total-balance": "Total Balance",
         "enter-bet-amount": "Enter bet amount",
+        "withdraw-all": "Withdraw All",
         "withdrawal-amount-label": "Withdrawal Amount*",
         "withdrawal-amount-placeholder": "Enter amount to withdraw",
         "select-method-label": "Select Withdrawal Method*",

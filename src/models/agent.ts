@@ -8,6 +8,7 @@ class Agent {
     email?: string;
     password?: string;
     placementNotAllowed: SchedulerType[];
+    depositBonusPercentage?: number;
     referenceCode?: string;
     company?: Company;
     createdAt?: Date;
@@ -18,6 +19,7 @@ class Agent {
         this.id = params.id;
         this.firstname = params.firstname;
         this.lastname = params.lastname;
+        this.depositBonusPercentage = params.depositBonusPercentage;
         this.email = params.email;
         this.password = params.password;
         this.referenceCode = params.referenceCode;

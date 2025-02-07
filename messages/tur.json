@@ -166,6 +166,7 @@
     "enter-bet-amount": "Bahis tutarını girin",
     "withdrawal-amount-label": "Çekilecek Tutar*",
     "withdrawal-amount-placeholder": "Çekilecek tutarı girin",
+    "withdraw-all": "Tümünü Çek",
     "select-method-label": "Çekim Yöntemi Seçin*",
     "no-methods-found": "Çekim yöntemi bulunamadı. Lütfen bir ödeme yöntemi ekleyin.",
     "processing": "İşleniyor...",
