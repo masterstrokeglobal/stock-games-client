@@ -1,7 +1,7 @@
 import { GetLobbiesFilter, lobbyAPI } from "@/lib/axios/lobby-API";
 import Lobby from "@/models/lobby";
-import LobbyUser from "@/models/lobby-user";
 import LobbyRound from "@/models/lobby-round";
+import LobbyUser from "@/models/lobby-user";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 

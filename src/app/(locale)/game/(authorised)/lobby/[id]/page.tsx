@@ -2,25 +2,22 @@
 import Container from '@/components/common/container';
 import LoadingScreen from '@/components/common/loading-screen';
 import Navbar from '@/components/features/game/navbar';
-import LobbyChat from '@/components/features/lobby/lobby-chat';
+import LobbyChatSection from '@/components/features/lobby/lobby-chat';
+import LobbyChatSheet from '@/components/features/lobby/lobby-chat-sheet';
 import LobbyPlayers from '@/components/features/lobby/lobby-players';
 import LobbySettings from '@/components/features/lobby/lobby-settings';
 import useLobbyWebSocket from '@/components/features/lobby/lobby-websocket';
 import TimeLeft from '@/components/features/lobby/time-left';
-import { Badge } from '@/components/ui/badge';
 import {
   Card,
-  CardContent,
-  CardHeader,
-  CardTitle
+  CardContent
 } from '@/components/ui/card';
 import { Progress } from "@/components/ui/progress";
-import { cn } from '@/lib/utils';
 import { useGetCurrentLobbyRound, useGetLobbyByCode } from '@/react-query/lobby-query';
 import dayjs from 'dayjs';
-import { Gamepad2, Users } from 'lucide-react';
+import { Gamepad2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 const LobbyWithChat = () => {
   const lobbyCode = useParams().id!.toString();
@@ -35,8 +32,6 @@ const LobbyWithChat = () => {
   }, [lobby?.lobbyUsers]);
 
 
-
-
   if (isLoading) return <LoadingScreen className='bg-primary-game  min-h-screen' />;
 
   return (
@@ -45,7 +40,7 @@ const LobbyWithChat = () => {
         <Navbar />
         <div className="w-full  mx-auto mt-8 px-4">
           <div className="flex flex-col lg:flex-row gap-6">
-            {/* Left Side - Game Info and Players */}
+            {lobby && <LobbyChatSheet lobby={lobby} onSend={sendMessage} />}
             <div className="flex-1 space-y-6">
               {/* Game Info Card */}
               <Card className="bg-gray-900 border-gray-800">
@@ -97,7 +92,7 @@ const LobbyWithChat = () => {
 
             </div>
             {/* Right Side - Chat */}
-            {lobby && <LobbyChat lobbyId={lobby.id!} onSend={sendMessage} />}
+            {lobby && <LobbyChatSection lobbyId={lobby.id!} onSend={sendMessage} />}
           </div>
         </div>
       </Container>

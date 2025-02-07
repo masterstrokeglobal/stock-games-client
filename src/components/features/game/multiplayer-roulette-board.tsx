@@ -1,12 +1,11 @@
-import { useAuthStore } from "@/context/auth-context";
 import { useGameState, useShowResults } from "@/hooks/use-current-game";
 import { useRouletteBetting } from "@/hooks/use-roulette-betting";
 import { cn } from "@/lib/utils";
-import GameRecord, { PlacementType } from "@/models/game-record";
+import { PlacementType } from "@/models/game-record";
 import Lobby from "@/models/lobby";
+import LobbyPlacement from "@/models/lobby-placement";
 import LobbyRound from "@/models/lobby-round";
-import User from "@/models/user";
-import { useCreatePlacementBet, useGetCurrentPlacementForLobbyRound, useGetMyPlacements } from "@/react-query/game-record-queries";
+import { useCreatePlacementBet, useGetCurrentPlacementForLobbyRound } from "@/react-query/game-record-queries";
 import { useTranslations } from "next-intl";
 import { useMemo, useRef, useState } from "react";
 import BettingChips from "./betting-chip";
@@ -15,7 +14,6 @@ import { BettingControls } from "./multiplayer-betting-game";
 import GameResultDialog from "./result-dialog";
 import { RouletteBettingGrid } from "./roulette-grid";
 import { GameHeader } from "./roulette-header";
-import LobbyPlacement from "@/models/lobby-placement";
 
 
 
@@ -33,7 +31,7 @@ const MultiplayerRouletteGame = ({ lobbyRound, lobby }: Props) => {
     const { mutate, isPending: isPlacingBet } = useCreatePlacementBet();
 
     const boardRef = useRef<HTMLDivElement>(null);
-    const { data, isSuccess } = useGetCurrentPlacementForLobbyRound(lobbyRound.id?.toString()!);
+    const { data, isSuccess } = useGetCurrentPlacementForLobbyRound(lobbyRound.id!.toString());
 
 
     const bettedChips = useMemo(() => {
@@ -41,7 +39,7 @@ const MultiplayerRouletteGame = ({ lobbyRound, lobby }: Props) => {
         const gameRecords: LobbyPlacement[] = data.data.placements.map((record: Partial<LobbyPlacement>) => new LobbyPlacement(record));
 
         if (gameRecords.length === 0) return [];
-        const marketNumber = roundRecord.getMarketNumberById(gameRecords[0].marketItem?.id!);
+        const marketNumber = roundRecord.getMarketNumberById(gameRecords[0].marketItem!.id!);
         const chips = [{
             type: PlacementType.SINGLE,
             amount: lobby.amount,

@@ -23,6 +23,7 @@ export enum LobbyEvents {
     USER_LEFT = "user_left",
     ROUND_STARTED = "round_started",
     ROUND_ENDED = "round_ended",
+    CHAT_MESSAGE = "chat_message",
     LOBBY_CLOSED = "lobby_closed",
     USER_READY = "user_ready",
 }

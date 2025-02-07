@@ -1,8 +1,9 @@
 import { useAuthStore } from '@/context/auth-context';
 import Lobby, { LobbyEvents, LobbyStatus } from '@/models/lobby';
-import LobbyUser, { LobbyUserStatus } from '@/models/lobby-user';
+import LobbyChat from '@/models/lobby-chat';
+import { LobbyUserStatus } from '@/models/lobby-user';
 import { useQueryClient } from '@tanstack/react-query';
-import { useEffect, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 interface WebSocketMessage {
     event: LobbyEvents;
@@ -97,7 +98,8 @@ function useLobbyWebSocket<T extends Lobby>(lobbyId?: number, lobbyCode?: string
         const code = lobbyCode;
         // Update the specific lobby query data
         const queryKey = ['lobbies', 'code', code];
-        console.log('Message:', message);
+        const chatQueryKey = ["lobbies", "chat", lobbyId];
+
 
         switch (message.event) {
             case LobbyEvents.USER_JOINED:
@@ -158,6 +160,16 @@ function useLobbyWebSocket<T extends Lobby>(lobbyId?: number, lobbyCode?: string
                 // Optionally invalidate the query to trigger a refetch
                 queryClient.invalidateQueries({
                     predicate: (query) => query.queryKey[0] === 'lobbies',
+                });
+                break;
+
+            case LobbyEvents.CHAT_MESSAGE:
+                queryClient.setQueryData<T>(chatQueryKey, (oldData) => {
+                    const chat = oldData as unknown as  LobbyChat[];
+
+                    const newChat = [...chat, message.data];
+
+                    return newChat as unknown as T;
                 });
                 break;
 

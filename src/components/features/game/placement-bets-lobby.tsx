@@ -1,11 +1,9 @@
 "use client";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn, getPlacementString } from "@/lib/utils";
-import GameRecord from "@/models/game-record";
+import { cn } from "@/lib/utils";
 import LobbyPlacement from "@/models/lobby-placement";
 import LobbyRound from "@/models/lobby-round";
-import { RoundRecord } from "@/models/round-record";
-import { useGetAllPlacementForLobbyRound, useGetTopPlacements } from "@/react-query/game-record-queries";
+import { useGetAllPlacementForLobbyRound } from "@/react-query/game-record-queries";
 import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";

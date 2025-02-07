@@ -31,7 +31,7 @@ const LobbyCard = ({ lobby, joined = false }: LobbyCardProps) => {
     };
 
 
-    const userId = userDetails?.id!;
+    const userId = userDetails!.id!;
     const isLeader = lobby.isLeader(userId);
     console.log(lobby.leader?.id, userId)
 

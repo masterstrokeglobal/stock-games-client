@@ -1,38 +1,37 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ShieldAlert, Smile, SendHorizontal } from 'lucide-react';
 import { useGetLobbyChat } from '@/react-query/lobby-query';
+import dayjs from 'dayjs';
+import LobbyChat from '@/models/lobby-chat';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useAuthStore } from '@/context/auth-context';
 
-type Message = {
-    id: number;
-    type: 'system' | 'message';
-    content: string;
-    sender?: string;
-    timestamp?: string;
-};
 
 type Props = {
     lobbyId: number;
     onSend: (message: string) => void;
+    className?: string;
 };
 
-const LobbyChat = ({ lobbyId, onSend }: Props) => {
+const LobbyChatSection = ({ lobbyId, onSend }: Props) => {
     const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState<Message[]>([]);
     const messagesEndRef = useRef<HTMLDivElement>(null);
-    const { data: chatData, isLoading } = useGetLobbyChat(lobbyId);
+    const { data: chatData, isLoading, isSuccess } = useGetLobbyChat(lobbyId);
+    const { userDetails } = useAuthStore();
 
     const emojis = ['😀', '😂', '🎮', '👋', '❤️', '🎯', '🎲', '🎪', '🏆', '✨'];
 
-    useEffect(() => {
-        if (chatData) {
-            setMessages(chatData);
-        }
-    }, [chatData]);
 
+    const messages: LobbyChat[] = useMemo(() => {
+        if (!isSuccess) return [];
+        const chatMessages = chatData?.map((chat: any) => new LobbyChat(chat));
+        return chatMessages;
+    }, [chatData, isSuccess]);
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
@@ -41,14 +40,7 @@ const LobbyChat = ({ lobbyId, onSend }: Props) => {
         if (message.trim()) {
             try {
                 onSend(message);
-                // Only update local state after successful send
-                setMessages(prev => [...prev, {
-                    id: Date.now(),
-                    type: 'message',
-                    sender: 'You',
-                    content: message,
-                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                }]);
+
                 setMessage('');
             } catch (error) {
                 console.error('Failed to send message:', error);
@@ -64,7 +56,7 @@ const LobbyChat = ({ lobbyId, onSend }: Props) => {
     };
 
     return (
-        <Card className="lg:w-[400px] bg-gray-950  h-[calc(100vh-200px)]  border-gray-800 shadow-xl">
+        <Card className="lg:w-[400px] bg-gray-950 overflow-hidden border-gray-800 shadow-xl">
             <CardHeader className="border-b border-gray-800">
                 <CardTitle className="text-white flex items-center justify-between">
                     <span className="text-lg font-semibold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
@@ -76,35 +68,38 @@ const LobbyChat = ({ lobbyId, onSend }: Props) => {
                 </CardTitle>
             </CardHeader>
             <CardContent className="p-4 flex flex-col overflow-hidden bg-gradient-to-b from-gray-900 to-gray-950">
-                {isLoading ? (
-                    <div className="flex-1 flex items-center justify-center">
-                        <div className="text-gray-400">Loading chat...</div>
-                    </div>
-                ) : (
-                    <div className="flex-1 overflow-y-auto space-y-4 mb-4 scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent">
-                        {messages.map((msg) => (
-                            <div key={msg.id} className="flex flex-col">
-                                {msg.type === 'system' ? (
-                                    <div className="text-sm text-gray-400 text-center py-2 px-3 bg-gray-800/30 rounded-md backdrop-blur-sm">
-                                        {msg.content}
-                                    </div>
-                                ) : (
+                <ScrollArea className='h-[calc(100vh-350px)] '>
+                    {isLoading ? (
+                        <div className="flex-1 flex items-center justify-center">
+                            <div className="text-gray-400">Loading chat...</div>
+                        </div>
+                    ) : (
+                        <div className="flex-1 overflow-y-auto space-y-4 mb-4 scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent">
+                            {messages.map((msg) => (
+                                <div key={msg.id} className="flex flex-col">
                                     <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-3 hover:bg-gray-800/60 transition-colors">
                                         <div className="flex items-center justify-between mb-1">
-                                            <span className="text-yellow-400 font-medium">{msg.sender}</span>
-                                            {msg.timestamp && (
-                                                <span className="text-xs text-gray-500">{msg.timestamp}</span>
+                                            <div className='flex gap-2 items-center text-sm'>
+                                                <Avatar className='size-5' >
+                                                    <AvatarImage src={msg.user?.profileImage} alt={msg.user?.username} />
+                                                    <AvatarFallback>{msg.user?.username?.charAt(0)}</AvatarFallback>
+                                                </Avatar>
+                                                <span className="text-yellow-400 font-medium">{userDetails?.id === msg.user?.id ? 'You' : msg.user?.username}
+                                                </span>
+                                            </div>
+                                            {msg.createdAt && (
+                                                <span className="text-xs text-gray-500">{dayjs(msg.createdAt).format("HH:mm a")}</span>
                                             )}
                                         </div>
-                                        <p className="text-gray-100">{msg.content}</p>
+                                        <p className="text-gray-100">{msg.message}</p>
                                     </div>
-                                )}
-                            </div>
-                        ))}
-                        <div ref={messagesEndRef} />
-                    </div>
-                )}
+                                </div>
+                            ))}
+                            <div ref={messagesEndRef} />
+                        </div>
+                    )}
 
+                </ScrollArea>
                 <div className="flex gap-2 pt-3 border-t border-gray-800">
                     <Popover>
                         <PopoverTrigger asChild>
@@ -152,4 +147,4 @@ const LobbyChat = ({ lobbyId, onSend }: Props) => {
     );
 };
 
-export default LobbyChat;
+export default LobbyChatSection;

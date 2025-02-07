@@ -29,7 +29,7 @@ const GamePage = () => {
     const { isMobile } = useWindowSize();
     useLobbyWebSocket(lobby?.id, lobby?.joiningCode);
 
-    let roundRecord = lobbyRound ? lobbyRound.roundRecord : null;
+    const roundRecord = lobbyRound ? lobbyRound.roundRecord : null;
     useHorseRaceSound(roundRecord);
     if (isLoading && lobbyRound == undefined) return <div>Loading...</div>
 
