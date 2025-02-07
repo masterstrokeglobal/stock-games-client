@@ -27,9 +27,10 @@ const BORDER_THRESHOLD = 6;
 
 type Props = {
     container: RefObject<HTMLDivElement>;
+    onlySingleBet?: boolean;
 };
 
-export const useRouletteBetting = ({ container }: Props) => {
+export const useRouletteBetting = ({ container,onlySingleBet }: Props) => {
     const [hoveredCell, setHoveredCell] = useState<Bet | null>(null);
     const [chips, setChips] = useState<Chip[]>([]);
 
@@ -138,6 +139,10 @@ export const useRouletteBetting = ({ container }: Props) => {
                 type: PlacementType.SINGLE,
                 numbers: [currentNumber]
             };
+        }
+
+        if (onlySingleBet) {
+            return null;
         }
 
         // Left border split

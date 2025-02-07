@@ -100,6 +100,8 @@ function useLobbyWebSocket<T extends Lobby>(lobbyId?: number, lobbyCode?: string
         const queryKey = ['lobbies', 'code', code];
         const chatQueryKey = ["lobbies", "chat", lobbyId];
 
+        console.log('Received message:', message);
+
 
         switch (message.event) {
             case LobbyEvents.USER_JOINED:

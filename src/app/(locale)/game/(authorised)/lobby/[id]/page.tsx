@@ -38,27 +38,30 @@ const LobbyWithChat = () => {
     <div className='bg-primary-game w-full'>
       <Container className="flex flex-col items-center min-h-screen pt-24">
         <Navbar />
-        <div className="w-full  mx-auto mt-8 px-4">
+        <div className="w-full  mx-auto mt-8 ">
           <div className="flex flex-col lg:flex-row gap-6">
-            {lobby && <LobbyChatSheet lobby={lobby} onSend={sendMessage} />}
             <div className="flex-1 space-y-6">
               {/* Game Info Card */}
               <Card className="bg-gray-900 border-gray-800">
                 <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-4">
-                      <div className="p-3 bg-gray-800 rounded-lg">
-                        <Gamepad2 className="w-6 h-6 text-[#EEC53C]" />
+                  <div className="flex sm:flex-row flex-col sm:items-center sm:justify-between items-start  mb-6">
+                    <div className="flex sm:items-center items-start sm:flex-row flex-col  w-full md:w-fit gap-4">
+                      <div className="flex justify-between  md:w-fit w-full">
+                        <div className="p-3 bg-gray-800 rounded-lg">
+                          <Gamepad2 className="w-6 h-6 text-[#EEC53C]" />
+                        </div>
+                        {lobby && <LobbyChatSheet className='md:hidden block' lobby={lobby} onSend={sendMessage} />}
                       </div>
+
                       <div>
                         <h3 className="text-white font-semibold text-xl">{lobby?.name}</h3>
-                        <div className="flex items-center gap-4 mt-1">
+                        <div className="flex sm:flex-row flex-col  sm:items-center sm:justify-between items-start gap-4 mt-1">
                           <span className="text-sm text-gray-400">Game: {lobby?.getTypeName}</span>
                           <span className="text-sm text-gray-400">Created At: {dayjs(lobby?.startTime).format(" MMM DD, YYYY hh:mm A")}</span>
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex sm:items-center items-star gap-4">
                       {lobbyRound?.roundRecord?.endTime && <TimeLeft endTime={lobbyRound.roundRecord?.endTime} />}
                     </div>
                   </div>
@@ -92,7 +95,8 @@ const LobbyWithChat = () => {
 
             </div>
             {/* Right Side - Chat */}
-            {lobby && <LobbyChatSection lobbyId={lobby.id!} onSend={sendMessage} />}
+
+            {lobby && <LobbyChatSection className='md:block hidden' lobbyId={lobby.id!} onSend={sendMessage} />}
           </div>
         </div>
       </Container>

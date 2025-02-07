@@ -33,7 +33,6 @@ const LobbyCard = ({ lobby, joined = false }: LobbyCardProps) => {
 
     const userId = userDetails!.id!;
     const isLeader = lobby.isLeader(userId);
-    console.log(lobby.leader?.id, userId)
 
     return <Link href={joined || isLeader ? `/game/lobby/${lobby.joiningCode}` : "#"} passHref>
         <Card className={`${'bg-gray-900 border-gray-800'}`}>

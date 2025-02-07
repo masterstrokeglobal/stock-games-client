@@ -10,6 +10,7 @@ import LobbyChat from '@/models/lobby-chat';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuthStore } from '@/context/auth-context';
+import { cn } from '@/lib/utils';
 
 
 type Props = {
@@ -18,7 +19,7 @@ type Props = {
     className?: string;
 };
 
-const LobbyChatSection = ({ lobbyId, onSend }: Props) => {
+const LobbyChatSection = ({ lobbyId, onSend,className }: Props) => {
     const [message, setMessage] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const { data: chatData, isLoading, isSuccess } = useGetLobbyChat(lobbyId);
@@ -56,7 +57,7 @@ const LobbyChatSection = ({ lobbyId, onSend }: Props) => {
     };
 
     return (
-        <Card className="lg:w-[400px] bg-gray-950 overflow-hidden border-gray-800 shadow-xl">
+        <Card className={cn("lg:w-[400px] bg-gray-950 overflow-hidden border-gray-800 shadow-xl",className)}>
             <CardHeader className="border-b border-gray-800">
                 <CardTitle className="text-white flex items-center justify-between">
                     <span className="text-lg font-semibold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">

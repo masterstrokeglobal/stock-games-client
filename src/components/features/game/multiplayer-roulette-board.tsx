@@ -58,7 +58,7 @@ const MultiplayerRouletteGame = ({ lobbyRound, lobby }: Props) => {
         getBetPosition,
         setHoveredCell,
         getBetTypeFromClick
-    } = useRouletteBetting({ container: boardRef });
+    } = useRouletteBetting({ container: boardRef, onlySingleBet:true});
 
     const handlePlaceBet = () => {
         const chip = chips[0];

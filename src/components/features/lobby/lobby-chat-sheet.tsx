@@ -7,20 +7,22 @@ import {
 import { Lobby } from "@/models/lobby";
 import { MessageCircle } from "lucide-react";
 import LobbyChatSection from './lobby-chat';
+import { cn } from "@/lib/utils";
 
 interface LobbyChatSectionProps {
     lobby: Lobby;
     onSend: (message: string) => void;
+    className?: string;
 }
 
-const LobbyChatSheet = ({ lobby, onSend }: LobbyChatSectionProps) => {
+const LobbyChatSheet = ({ lobby, onSend,className }: LobbyChatSectionProps) => {
     return (
         <Sheet>
             <SheetTrigger asChild>
                 <Button
                     variant="ghost"
                     size="icon"
-                    className="relative hover:bg-gray-800/50"
+                    className={cn("relative hover:bg-gray-800/50",className)}
                 >
                     <MessageCircle className="h-5 w-5 text-gray-400" />
                     {/* Optional: Add unread messages indicator */}

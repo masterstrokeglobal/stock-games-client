@@ -14,7 +14,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({ gameState }) => {
         if (gameState.isGameOver) {
             return "Game Over";
         }
-        return gameState.isPlaceOver ? "Game ends in" : "Round starts in";
+        return  gameState.isPlaceOver ? "Game ends in" : "Round starts in";
     };
 
     const getTime = () => {
