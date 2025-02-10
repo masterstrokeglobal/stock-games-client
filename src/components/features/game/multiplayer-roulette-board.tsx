@@ -14,6 +14,7 @@ import { BettingControls } from "./multiplayer-betting-game";
 import GameResultDialog from "./result-dialog";
 import { RouletteBettingGrid } from "./roulette-grid";
 import { GameHeader } from "./roulette-header";
+import Link from "next/link";
 
 
 
@@ -58,7 +59,7 @@ const MultiplayerRouletteGame = ({ lobbyRound, lobby }: Props) => {
         getBetPosition,
         setHoveredCell,
         getBetTypeFromClick
-    } = useRouletteBetting({ container: boardRef, onlySingleBet:true});
+    } = useRouletteBetting({ container: boardRef, onlySingleBet: true });
 
     const handlePlaceBet = () => {
         const chip = chips[0];
@@ -130,8 +131,11 @@ const MultiplayerRouletteGame = ({ lobbyRound, lobby }: Props) => {
                         betAmount={betAmount}
                         onPlaceBet={handlePlaceBet}
                         setBetAmount={setBetAmount}
+                        isGameOver={gameState.isGameOver}
+                        joiningCode={lobby.joiningCode}
                         isPlaceOver={gameState.isPlaceOver}
                     />
+
                 </div>
                 <GameResultDialog key={String(showResults)} open={showResults} roundRecordId={previousRoundId!} />
             </div>

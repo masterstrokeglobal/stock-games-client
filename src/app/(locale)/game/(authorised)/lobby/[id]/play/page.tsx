@@ -27,7 +27,7 @@ const GamePage = () => {
     const { data: lobby, isLoading } = useGetLobbyByCode(lobbyCode);
     const { data: lobbyRound } = useGetCurrentLobbyRound(lobby?.id);
     const { isMobile } = useWindowSize();
-    useLobbyWebSocket(lobby?.id, lobby?.joiningCode);
+    useLobbyWebSocket({ lobbyCode: lobbyCode, lobbyId: lobby?.id, lobbyRoundId: lobbyRound?.id });
 
     const roundRecord = lobbyRound ? lobbyRound.roundRecord : null;
     useHorseRaceSound(roundRecord);

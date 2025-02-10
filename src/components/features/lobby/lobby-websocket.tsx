@@ -1,7 +1,7 @@
 import { useAuthStore } from '@/context/auth-context';
 import Lobby, { LobbyEvents, LobbyStatus } from '@/models/lobby';
 import LobbyChat from '@/models/lobby-chat';
-import { LobbyUserStatus } from '@/models/lobby-user';
+import LobbyUser, { LobbyUserStatus } from '@/models/lobby-user';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef } from 'react';
 
@@ -20,7 +20,7 @@ const DEFAULT_CONFIG = {
     reconnectInterval: 5000,
 };
 
-function useLobbyWebSocket<T extends Lobby>(lobbyId?: number, lobbyCode?: string) {
+function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, lobbyRoundId }: { lobbyId?: number, lobbyCode?: string, lobbyRoundId?: number }) {
     const queryClient = useQueryClient();
     const { userDetails } = useAuthStore();
     const wsRef = useRef<WebSocket | null>(null);
@@ -99,8 +99,7 @@ function useLobbyWebSocket<T extends Lobby>(lobbyId?: number, lobbyCode?: string
         // Update the specific lobby query data
         const queryKey = ['lobbies', 'code', code];
         const chatQueryKey = ["lobbies", "chat", lobbyId];
-
-        console.log('Received message:', message);
+        const placementQueryKey = ["allPlacement", lobbyRoundId];
 
 
         switch (message.event) {
@@ -145,6 +144,17 @@ function useLobbyWebSocket<T extends Lobby>(lobbyId?: number, lobbyCode?: string
                 });
                 break;
 
+            case LobbyEvents.USER_PLACED:
+                queryClient.setQueryData<T>(placementQueryKey, (oldData) => {
+                    const placements = oldData as unknown as LobbyUser[];
+
+                    console.log('User placed:', placements, message.data);
+
+
+                    return placements as unknown as T;
+                });
+                break;
+
             case LobbyEvents.ROUND_ENDED:
                 queryClient.setQueryData<T>(queryKey, (oldData) => {
                     const lobby = oldData?.clone() as Lobby;
@@ -167,7 +177,7 @@ function useLobbyWebSocket<T extends Lobby>(lobbyId?: number, lobbyCode?: string
 
             case LobbyEvents.CHAT_MESSAGE:
                 queryClient.setQueryData<T>(chatQueryKey, (oldData) => {
-                    const chat = oldData as unknown as  LobbyChat[];
+                    const chat = oldData as unknown as LobbyChat[];
 
                     const newChat = [...chat, message.data];
 

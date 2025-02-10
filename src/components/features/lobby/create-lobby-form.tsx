@@ -26,15 +26,14 @@ export enum LobbyStatus {
     CLOSED = "closed",
 }
 
-export enum LobbyGameType {
-    GUESS_FIRST = "guess_first",
-    GUESS_LAST = "guess_last",
-    GUESS_FIRST_EIGHT = "guess_first_eight",
-    GUESS_LAST_EIGHT = "guess_last_eight",
-    GUESS_FIRST_THREE = "guess_first_three",
-    GUESS_LAST_THREE = "guess_last_three",
-}
 
+export enum LobbyGameType {
+  GUESS_FIRST_FOUR = "guess_first_four",
+  GUESS_LAST_FOUR = "guess_last_four",
+  GUESS_FIRST_EIGHT = "guess_first_eight",
+  GUESS_LAST_EIGHT = "guess_last_eight",
+  GUESS_HIGHER = "guess_higher",
+}
 
 
 export enum LobbyUserStatus {
@@ -66,7 +65,7 @@ type CreateLobbyFormValues = z.infer<typeof createLobbySchema>;
 
 const defaultValues: CreateLobbyFormValues = {
     name: "",
-    gameType: LobbyGameType.GUESS_FIRST,
+    gameType: LobbyGameType.GUESS_FIRST_FOUR,
     marketType: SchedulerType.NSE,
     maxCapacity: 10,
     prizePool: 100,
@@ -75,14 +74,12 @@ const defaultValues: CreateLobbyFormValues = {
 };
 
 const gameTypeOptions = [
-    { label: "Guess First", value: LobbyGameType.GUESS_FIRST },
-    { label: "Guess Last", value: LobbyGameType.GUESS_LAST },
-    { label: "Guess First 8", value: LobbyGameType.GUESS_FIRST_EIGHT },
-    { label: "Guess Last 8", value: LobbyGameType.GUESS_LAST_EIGHT },
-    { label: "Guess First 3", value: LobbyGameType.GUESS_FIRST_THREE },
-    { label: "Guess Last 3", value: LobbyGameType.GUESS_LAST_THREE },
+    { label: "Guess First Four", value: LobbyGameType.GUESS_FIRST_FOUR },
+    { label: "Guess Last Four", value: LobbyGameType.GUESS_LAST_FOUR },
+    { label: "Guess First Eight", value: LobbyGameType.GUESS_FIRST_EIGHT },
+    { label: "Guess Last Eight", value: LobbyGameType.GUESS_LAST_EIGHT },
+    { label: "Guess Higher", value: LobbyGameType.GUESS_HIGHER }
 ];
-
 type Props = {
     onCreate: () => void;
 }

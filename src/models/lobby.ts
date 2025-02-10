@@ -9,15 +9,14 @@ export enum LobbyStatus {
     CLOSED = "closed",
 }
 
+
 export enum LobbyGameType {
-    GUESS_FIRST = "guess_first",
-    GUESS_LAST = "guess_last",
+    GUESS_FIRST_FOUR = "guess_first_four",
+    GUESS_LAST_FOUR = "guess_last_four",
     GUESS_FIRST_EIGHT = "guess_first_eight",
     GUESS_LAST_EIGHT = "guess_last_eight",
-    GUESS_FIRST_THREE = "guess_first_three",
-    GUESS_LAST_THREE = "guess_last_three",
-}
-
+    GUESS_HIGHER = "guess_higher",
+  }
 export enum LobbyEvents {
     USER_JOINED = "user_joined",
     USER_LEFT = "user_left",
@@ -26,6 +25,8 @@ export enum LobbyEvents {
     CHAT_MESSAGE = "chat_message",
     LOBBY_CLOSED = "lobby_closed",
     USER_READY = "user_ready",
+    USER_PLACED = "user_placement_placed",
+    INITIAL_VALUE_FETCHED = "initial_values_fetched",
 }
 
 export enum LobbyType {
