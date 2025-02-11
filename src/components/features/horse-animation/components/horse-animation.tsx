@@ -1,10 +1,10 @@
 import { useLeaderboard } from "@/hooks/use-leadboard";
+import MarketItem from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { useFrame } from "@react-three/fiber";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import HorseModel from "./horse-model";
-import MarketItem from "@/models/market-item";
 
 // Memoize color array to prevent recreation
 const HORSE_COLORS = [
@@ -43,7 +43,6 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
     const generateNewPositions = useMemo(() => {
         return roundRecord.market.map((horse, index) => {
             const currentHorse = stocks.find(stock => stock.horse === horse.horse);
-            const GAP_BETWEEN_HORSES = 12;
             const zBasedOnRank = currentHorse?.rank ? -(currentHorse.rank * 12) + 30 : 0;
 
             return {
