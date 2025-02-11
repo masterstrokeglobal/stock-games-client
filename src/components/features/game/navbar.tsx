@@ -5,6 +5,7 @@ import { MuteButton } from "@/components/common/mute-button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
+import usePlayGameType from "@/hooks/use-play-game-type";
 import User from "@/models/user";
 import Wallet from "@/models/wallet";
 import { useGetWallet } from "@/react-query/payment-queries";
@@ -20,16 +21,21 @@ const Navbar = () => {
         return new Wallet(data?.data?.wallet);
     }, [data])
 
+    const { isDerby } = usePlayGameType();
     const user = userDetails as User;
     return (
         <nav className="items-center md:px-6 px-4 z-50  flex fixed top-0 justify-between text-white font-semibold w-full h-16 bg-primary-game ">
             <div className="">
                 <span className="md:text-xl text-sm font-semibold flex items-end">
                     <Logo />
-
                 </span>
             </div>
             <div className="flex items-center space-x-4 ml-auto">
+                {isDerby && <Link href="/game/lobby/">
+                    <Button className="px-4 py-2 text-white hidden md:flex bg-[#122146] border border-[#EFF8FF17]  h-11 rounded-full ">
+                        <img width="24" height="24" className="mr-2" src="https://img.icons8.com/external-filled-line-andi-nur-abdillah/64/external-Multiplayer-gaming-(filled-line)-filled-line-andi-nur-abdillah.png" alt="external-Multiplayer-gaming-(filled-line)-filled-line-andi-nur-abdillah" />
+                        Play with Friends             </Button>
+                </Link>}
                 <MuteButton />
                 <LocaleSwitcher />
                 <div className="bg-[#112148] px-4 md:h-12 md:flex hidden items-center md:py-2 py-2   rounded-full">

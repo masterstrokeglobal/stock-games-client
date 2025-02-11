@@ -96,8 +96,8 @@ const UserMenu = () => {
                     </Link>
                     <Link href="/game/lobby" passHref>
                         <Button variant="game-secondary" className="w-full gap-2 h-14">
-                            <HelpCircleIcon />
-                            Lobby                        </Button>
+                            <img width="24" height="24" className="mr-2" src="https://img.icons8.com/external-filled-line-andi-nur-abdillah/64/external-Multiplayer-gaming-(filled-line)-filled-line-andi-nur-abdillah.png" alt="external-Multiplayer-gaming-(filled-line)-filled-line-andi-nur-abdillah" />
+                            Play with Friends                                   </Button>
                     </Link>
                 </nav>
             </div>

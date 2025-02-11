@@ -55,10 +55,11 @@ export const useGetCurrentPlacementForLobbyRound = (id: string) => {
 };
 
 // Get All Placement for Lobby Round Hook
-export const useGetAllPlacementForLobbyRound = (id: string) => {
+export const useGetAllPlacementForLobbyRound = (id?: string) => {
     return useQuery({
         queryKey: ["allPlacement", id],
-        queryFn: () => gameRecordAPI.getAllPlacementForLobbyRound(id),
+        queryFn:id? () => gameRecordAPI.getAllPlacementForLobbyRound(id): undefined,
+        enabled: !!id,
     });
 };
 

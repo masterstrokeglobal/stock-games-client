@@ -47,6 +47,10 @@ export class LobbyRound {
         }
         return null;
     }
+
+    clone = (): LobbyRound => {
+        return new LobbyRound(this);
+    };
 }
 
 export default LobbyRound;

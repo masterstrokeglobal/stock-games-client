@@ -25,8 +25,7 @@ const LobbyWithChat = () => {
   const { data: lobbyRound } = useGetCurrentLobbyRound(lobby?.id);
   const { sendMessage } = useLobbyWebSocket({
     lobbyCode: lobbyCode,
-    lobbyId: lobby?.id,
-    lobbyRoundId: lobbyRound?.id
+    lobbyId: lobby?.id
   });
 
   useEffect(() => {

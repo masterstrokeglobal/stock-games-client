@@ -1,4 +1,4 @@
-import { useGameState, useShowResults } from "@/hooks/use-current-game";
+import { useGameState } from "@/hooks/use-current-game";
 import { useRouletteBetting } from "@/hooks/use-roulette-betting";
 import { cn } from "@/lib/utils";
 import { PlacementType } from "@/models/game-record";
@@ -11,10 +11,8 @@ import { useMemo, useRef, useState } from "react";
 import BettingChips from "./betting-chip";
 import { Bet, Chip } from "./contants";
 import { BettingControls } from "./multiplayer-betting-game";
-import GameResultDialog from "./result-dialog";
 import { RouletteBettingGrid } from "./roulette-grid";
 import { GameHeader } from "./roulette-header";
-import Link from "next/link";
 
 
 
@@ -50,7 +48,6 @@ const MultiplayerRouletteGame = ({ lobbyRound, lobby }: Props) => {
 
     }, [data]);
 
-    const { previousRoundId, showResults } = useShowResults(roundRecord, bettedChips);
 
     const {
         chips,
@@ -114,14 +111,11 @@ const MultiplayerRouletteGame = ({ lobbyRound, lobby }: Props) => {
                                     roundRecord={roundRecord}
                                     hoveredCell={hoveredCell as unknown as Bet}
                                     chips={chips as unknown as Chip[]}
-                                    previousRoundId={previousRoundId?.toString()}
+                                    previousRoundId={roundRecord.id.toString()}
                                 />
                                 <BettingChips chips={boardChips} getBetPosition={getBetPosition} />
                             </div>
-
                         </div>
-
-
                     </div>
                 </div>
                 <div className='lg:w-6/12 flex justify-between flex-col '>
@@ -137,7 +131,6 @@ const MultiplayerRouletteGame = ({ lobbyRound, lobby }: Props) => {
                     />
 
                 </div>
-                <GameResultDialog key={String(showResults)} open={showResults} roundRecordId={previousRoundId!} />
             </div>
         </div>
     );

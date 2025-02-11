@@ -1,6 +1,12 @@
 import MarketItem, { SchedulerType } from "./market-item";
 
 
+
+export enum RoundRecordGameType {
+    DERBY = "derby",
+    LOBBY = "lobby",
+}
+
 export class RoundRecord {
     id: number;
     startTime: Date;
@@ -10,6 +16,7 @@ export class RoundRecord {
     placementEndTime: Date;
     market: MarketItem[];
     type: SchedulerType;
+    roundRecordGameType: RoundRecordGameType;
     winningId?: number;
     createdAt: Date;
     winningMarket?: MarketItem;
@@ -18,18 +25,17 @@ export class RoundRecord {
     initialValues: any | null;
 
     constructor(data: Partial<RoundRecord>) {
-        console.log(data.winningMarket)
         this.id = data.id || 0;
         this.startTime = data.startTime ? new Date(data.startTime) : new Date();
         this.companyId = data.companyId || 0;
         this.endTime = data.endTime ? new Date(data.endTime) : new Date();
         this.placementStartTime = data.placementStartTime ? new Date(data.placementStartTime) : new Date();
         this.placementEndTime = data.placementEndTime ? new Date(data.placementEndTime) : new Date();
-        console.log(data)
         this.market = data.market?.map((item: any, index) => new MarketItem({ ...item, horse: index + 1 })) || [];
         this.type = data.type || SchedulerType.NSE;
         this.winningMarket = data.winningMarket;
         this.winningId = data.winningId;
+        this.roundRecordGameType = data.roundRecordGameType || RoundRecordGameType.DERBY;
         this.createdAt = data.createdAt ? new Date(data.createdAt) : new Date();
         this.updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
         this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : undefined;

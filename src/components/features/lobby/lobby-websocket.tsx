@@ -1,10 +1,11 @@
 import { useAuthStore } from '@/context/auth-context';
 import Lobby, { LobbyEvents, LobbyStatus } from '@/models/lobby';
 import LobbyChat from '@/models/lobby-chat';
-import LobbyUser, { LobbyUserStatus } from '@/models/lobby-user';
+import LobbyRound from '@/models/lobby-round';
+import { LobbyUserStatus } from '@/models/lobby-user';
 import { useQueryClient } from '@tanstack/react-query';
-import { useCallback, useEffect, useRef } from 'react';
-
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 interface WebSocketMessage {
     event: LobbyEvents;
     data: any;
@@ -20,10 +21,13 @@ const DEFAULT_CONFIG = {
     reconnectInterval: 5000,
 };
 
-function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, lobbyRoundId }: { lobbyId?: number, lobbyCode?: string, lobbyRoundId?: number }) {
+function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId }: { lobbyId?: number, lobbyCode?: string }) {
     const queryClient = useQueryClient();
+    const [showResults, setShowResult] = useState<boolean>(false);
+    const [resultData, setResultData] = useState<any | null>(null);
     const { userDetails } = useAuthStore();
     const wsRef = useRef<WebSocket | null>(null);
+    const router = useRouter();
 
     useEffect(() => {
         let reconnectCount = 0;
@@ -36,7 +40,6 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, lobbyRoundId }
             const websocketUrl = process.env.NEXT_PUBLIC_LOBBY_ROUND_WEBSOCKET_URL || 'ws://localhost:8080';
             const ws = new WebSocket(`${websocketUrl}?lobbyId=${lobbyId}&userId=${userDetails?.id}`);
             wsRef.current = ws;
-            console.log('Connecting to WebSocket:', wsRef.current);
 
             ws.onopen = () => {
                 console.log('WebSocket Connected');
@@ -57,11 +60,9 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, lobbyRoundId }
             };
 
             ws.onclose = () => {
-                console.log('WebSocket disconnected');
                 wsRef.current = null;
 
                 if (reconnectCount < DEFAULT_CONFIG.reconnectAttempts) {
-                    console.log(`Attempting to reconnect... (${reconnectCount + 1}/${DEFAULT_CONFIG.reconnectAttempts})`);
                     setTimeout(() => {
                         reconnectCount++;
                         connect();
@@ -74,6 +75,7 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, lobbyRoundId }
 
         return () => {
             if (wsRef.current) {
+                console.error('Closing WebSocket connection');
                 wsRef.current.close();
                 wsRef.current = null;
             }
@@ -99,9 +101,11 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, lobbyRoundId }
         // Update the specific lobby query data
         const queryKey = ['lobbies', 'code', code];
         const chatQueryKey = ["lobbies", "chat", lobbyId];
-        const placementQueryKey = ["allPlacement", lobbyRoundId];
+        const lobbyRoundQueryKey = ["lobbies", "round", lobbyId];
 
 
+
+        console.log('Received message:', message);  
         switch (message.event) {
             case LobbyEvents.USER_JOINED:
                 queryClient.invalidateQueries({
@@ -127,7 +131,6 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, lobbyRoundId }
                 queryClient.setQueryData<T>(queryKey, (oldData) => {
                     const lobby = oldData?.clone() as Lobby;
                     const user = lobby.lobbyUsers?.find((user) => user.user?.id == message.data?.userId);
-                    console.log('User ready:', lobby.lobbyUsers?.map((user) => user.user?.id), message.data?.userId);
                     if (user) {
                         user.status = LobbyUserStatus.PLAYING;
                     }
@@ -137,21 +140,30 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, lobbyRoundId }
 
             case LobbyEvents.ROUND_STARTED:
                 queryClient.setQueryData<T>(queryKey, (oldData) => {
-                    console.log('Round started:', message);
                     const lobby = oldData?.clone() as Lobby;
                     lobby.status = LobbyStatus.IN_PROGRESS;
                     return lobby as T;
                 });
+
+                router.push(`/game/lobby/${lobbyCode}/play`);
+                break;
+
+            case LobbyEvents.INITIAL_VALUE_FETCHED:
+                queryClient.setQueryData<T>(lobbyRoundQueryKey, (oldData) => {
+                    const lobby = oldData?.clone() as unknown as LobbyRound;
+                    if (lobby.roundRecord) {
+                        lobby.roundRecord!.initialValues = message.data.round.initialValues;
+                    }
+
+                    console.log('Initial values fetched:', lobby.roundRecord?.initialValues);
+                    return lobby as unknown as T;
+                });
                 break;
 
             case LobbyEvents.USER_PLACED:
-                queryClient.setQueryData<T>(placementQueryKey, (oldData) => {
-                    const placements = oldData as unknown as LobbyUser[];
-
-                    console.log('User placed:', placements, message.data);
-
-
-                    return placements as unknown as T;
+                // invalidate the placement query
+                queryClient.invalidateQueries({
+                    predicate: (query) => query.queryKey[0] === 'allPlacement',
                 });
                 break;
 
@@ -160,6 +172,12 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, lobbyRoundId }
                     const lobby = oldData?.clone() as Lobby;
                     lobby.status = LobbyStatus.CLOSED;
                     return lobby as T;
+                });
+
+                setShowResult(true);
+                setResultData(message.data);
+                queryClient.invalidateQueries({
+                    predicate: (query) => query.queryKey[0] === 'allPlacement',
                 });
                 break;
 
@@ -179,7 +197,10 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, lobbyRoundId }
                 queryClient.setQueryData<T>(chatQueryKey, (oldData) => {
                     const chat = oldData as unknown as LobbyChat[];
 
-                    const newChat = [...chat, message.data];
+                    let newChat = [...chat, message.data];
+
+                    // filter unique messages
+                    newChat = newChat.filter((item, index, self) => self.findIndex((t) => t.id === item.id) === index);
 
                     return newChat as unknown as T;
                 });
@@ -191,7 +212,7 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, lobbyRoundId }
     };
 
 
-    return { sendMessage };
+    return { sendMessage, showResults, resultData };
 
 }
 

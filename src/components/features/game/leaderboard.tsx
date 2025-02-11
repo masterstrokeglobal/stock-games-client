@@ -4,7 +4,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useGameState } from "@/hooks/use-current-game";
 import { useLeaderboard } from "@/hooks/use-leadboard";
 import { cn } from "@/lib/utils";
-import { SchedulerType } from "@/models/market-item";
+import MarketItem, { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { useGetRoundRecordById } from "@/react-query/round-record-queries";
 import { useTranslations } from "next-intl";
@@ -13,15 +13,22 @@ import { useEffect, useMemo, useRef, useState } from "react";
 // Enhanced interface for ranked market items
 type Props = {
     roundRecord: RoundRecord;
+    filteredMarket?: MarketItem[];
 }
 
-const LeaderBoard = ({ roundRecord }: Props) => {
+const LeaderBoard = ({ roundRecord, filteredMarket }: Props) => {
     const t = useTranslations("game");
-    const { stocks: leaderboardData } = useLeaderboard(roundRecord);
+    const { stocks: unfilteredleaderboardData } = useLeaderboard(roundRecord);
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
     const { isGameOver } = useGameState(roundRecord);
 
+    const leaderboardData = useMemo(() => {
+        if (filteredMarket) {
+            return unfilteredleaderboardData.filter((item) => filteredMarket.find((filteredItem) => filteredItem.id === item.id));
+        }
+        return unfilteredleaderboardData;
+    }, [filteredMarket, unfilteredleaderboardData]);
 
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord.id);
 
@@ -29,7 +36,6 @@ const LeaderBoard = ({ roundRecord }: Props) => {
         const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 4000;
 
         const timer = setTimeout(() => {
-            console.log('refetching');
             refetch();
         }, resultFetchTime);
 
@@ -39,7 +45,6 @@ const LeaderBoard = ({ roundRecord }: Props) => {
     const winnerNumber = useMemo(() => {
         if (!isSuccess) return null;
         const winningId = data.data?.winningId;
-        console.log('winningId', winningId);
 
         if (!winningId) return 0;
 
@@ -170,8 +175,8 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                                     "p-2  text-right",
                                     !isGameOver ? getChangeColor(marketItem.change_percent) : "text-gray-300"
                                 )}>
-                                    {!isGameOver ?(parseFloat(marketItem.change_percent) > 0 ? '+' : ''): ''}
-                                    {!isGameOver?(marketItem.change_percent ?? 0):'--'}%
+                                    {!isGameOver ? (parseFloat(marketItem.change_percent) > 0 ? '+' : '') : ''}
+                                    {!isGameOver ? (marketItem.change_percent ?? 0) : '--'}%
                                 </td>
                             </tr>
                         ))}

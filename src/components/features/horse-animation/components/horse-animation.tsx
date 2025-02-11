@@ -4,6 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import HorseModel from "./horse-model";
+import MarketItem from "@/models/market-item";
 
 // Memoize color array to prevent recreation
 const HORSE_COLORS = [
@@ -16,9 +17,10 @@ const HORSE_COLORS = [
 
 type Props = {
     roundRecord: RoundRecord;
+    filteredMarket?: MarketItem[];
 };
 
-const HorseAnimation = React.memo(({ roundRecord }: Props) => {
+const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
     const numberOfHorses = roundRecord.market.length;
     const animationProgressRef = useRef(0);
     const horsesRef = useRef<(THREE.Object3D | null)[]>([]);
@@ -94,17 +96,34 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
     });
 
     // Memoize horses rendering data
-    const horses = useMemo(() =>
-        roundRecord.market.map((stock, index) => {
-            const initialPos = currentPositions[index] || initialPositions[index];
-            return {
-                position: [initialPos.x, 0, initialPos.z],
-                scale: [0.05, 0.05, 0.05],
-                speed: 1 + Math.random() * 0.2,
-                horseNumber: stock.horse,
-            };
-        }),
-        [numberOfHorses, currentPositions, initialPositions]);
+    const horses = useMemo(() => {
+        if (filteredMarket && filteredMarket.length > 0) {
+
+            return roundRecord.market.filter((stock) => filteredMarket.some((filteredStock) => filteredStock.id === stock.id)).
+                map((stock, index) => {
+                    const initialPos = currentPositions[index] || initialPositions[index];
+                    return {
+                        position: [initialPos.x, 0, initialPos.z],
+                        scale: [0.05, 0.05, 0.05],
+                        speed: 1 + Math.random() * 0.2,
+                        horseNumber: stock.horse,
+                    };
+                });
+        }
+        else {
+            return roundRecord.market.map((stock, index) => {
+                const initialPos = currentPositions[index] || initialPositions[index];
+                return {
+                    position: [initialPos.x, 0, initialPos.z],
+                    scale: [0.05, 0.05, 0.05],
+                    speed: 1 + Math.random() * 0.2,
+                    horseNumber: stock.horse,
+                };
+            });
+
+        }
+    },
+        [numberOfHorses, currentPositions, initialPositions, filteredMarket]);
 
     return (
         <>

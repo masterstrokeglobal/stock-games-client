@@ -7,13 +7,17 @@ import { useGetAllPlacementForLobbyRound } from "@/react-query/game-record-queri
 import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
+import LobbyChatSheet from "../lobby/lobby-chat-sheet";
+import Lobby from "@/models/lobby";
 
 type Props = {
     className?: string;
     lobbyRound: LobbyRound;
+    lobby: Lobby;
+    sendMessage: (message: string) => void;
 };
 
-const PlacementBetsLobby = ({ className, lobbyRound }: Props) => {
+const PlacementBetsLobby = ({ className, lobbyRound ,lobby,sendMessage}: Props) => {
     const t = useTranslations("game");
     const { data, isSuccess } = useGetAllPlacementForLobbyRound(lobbyRound?.id!.toString());
 
@@ -39,9 +43,14 @@ const PlacementBetsLobby = ({ className, lobbyRound }: Props) => {
             ref={sectionRef}
             className={cn("p-4 rounded-2xl h-full w-full bg-[#122146]", className)}
         >
+            <header className="flex justify-between items-center mb-4">
+
             <h2 className="text-xl font-semibold mb-4 text-gray-200">
                 {t("current-bets")}
             </h2>
+            {lobby && <LobbyChatSheet className='md:hidden block' lobby={lobby} onSend={sendMessage} />}
+            </header>
+
             <ScrollArea className="max-h-96 w-full" style={{ height: `${scrollAreaHeight - 20}px` }} type="auto">
                 {currentBetsData.length > 0 ? (
                     <table className="min-w-full">
