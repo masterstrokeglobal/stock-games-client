@@ -24,7 +24,7 @@ const LeaderBoard = ({ roundRecord, filteredMarket }: Props) => {
     const { isGameOver } = useGameState(roundRecord);
 
     const leaderboardData = useMemo(() => {
-        if (filteredMarket) {
+        if (filteredMarket && filteredMarket.length > 0) {
             return unfilteredleaderboardData.filter((item) => filteredMarket.find((filteredItem) => filteredItem.id === item.id));
         }
         return unfilteredleaderboardData;

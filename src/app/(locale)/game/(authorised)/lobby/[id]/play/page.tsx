@@ -50,7 +50,6 @@ const GamePage = () => {
     if (isLoading && lobbyRound == undefined) return <div>Loading...</div>
 
 
-
     return (
         <section className="bg-primary-game pt-20 md:h-screen ">
             <Navbar />
@@ -79,10 +78,10 @@ const GamePage = () => {
 
                 </div>
             </main>}
-            {lobbyRound?.id && lobby && <LobbyGameResultDialog lobby={lobby} key={String(showResults)} open={showResults} result={resultData} />}
+            {lobbyRound?.id && lobby && <LobbyGameResultDialog lobby={lobby} key={String(showResults)} open={showResults} result={resultData}  />}
 
 
-            {(isMobile && lobbyRound && lobby) && <MobileGame lobby={lobby} lobbyRound={lobbyRound} sendMessage={sendMessage} />}
+            {(isMobile && lobbyRound && lobby) && <MobileGame lobby={lobby} lobbyRound={lobbyRound} sendMessage={sendMessage} filteredMarket={filteredMarket} />}
         </section>
     );
 };
@@ -95,7 +94,7 @@ const TimeLeft = ({ roundRecord }: { roundRecord: RoundRecord }) => {
 }
 
 
-const MobileGame = ({ lobby, lobbyRound, sendMessage }: { lobbyRound: LobbyRound, lobby: Lobby, sendMessage: (message: string) => void }) => {
+const MobileGame = ({ lobby, lobbyRound, sendMessage,filteredMarket }: { lobbyRound: LobbyRound, lobby: Lobby, sendMessage: (message: string) => void,       filteredMarket?: MarketItem[];}) => {
     const isPlaceOver = useIsPlaceOver(lobbyRound.roundRecord);
 
     return <section className="text-white">
@@ -106,7 +105,7 @@ const MobileGame = ({ lobby, lobbyRound, sendMessage }: { lobbyRound: LobbyRound
                 {lobbyRound && lobby && <PlacementBetsLobby lobbyRound={lobbyRound} lobby={lobby} sendMessage={sendMessage} />}
             </div>
         </main>}
-        {(isPlaceOver && lobbyRound.roundRecord) && <LeaderBoard roundRecord={lobbyRound.roundRecord} />}
+        {(isPlaceOver && lobbyRound.roundRecord) && <LeaderBoard roundRecord={lobbyRound.roundRecord} filteredMarket={filteredMarket} />}
         {lobbyRound.roundRecord && <MultiplayerRouletteGame lobbyRound={lobbyRound} lobby={lobby} />}
     </section>
 }

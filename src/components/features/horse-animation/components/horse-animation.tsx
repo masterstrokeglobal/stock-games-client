@@ -43,6 +43,7 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
     const generateNewPositions = useMemo(() => {
         return roundRecord.market.map((horse, index) => {
             const currentHorse = stocks.find(stock => stock.horse === horse.horse);
+            const GAP_BETWEEN_HORSES = 12;
             const zBasedOnRank = currentHorse?.rank ? -(currentHorse.rank * 12) + 30 : 0;
 
             return {
@@ -98,7 +99,6 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
     // Memoize horses rendering data
     const horses = useMemo(() => {
         if (filteredMarket && filteredMarket.length > 0) {
-
             return roundRecord.market.filter((stock) => filteredMarket.some((filteredStock) => filteredStock.id === stock.id)).
                 map((stock, index) => {
                     const initialPos = currentPositions[index] || initialPositions[index];
@@ -125,6 +125,7 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
     },
         [numberOfHorses, currentPositions, initialPositions, filteredMarket]);
 
+    console.log('Horses:', JSON.stringify(horses.map(horse =>(({position: horse.position[0], horsenumner: horse.horseNumber})))));
     return (
         <>
             {horses.map((horse, index) => (

@@ -7,6 +7,7 @@ import {
 import { useAuthStore } from '@/context/auth-context';
 import { cn } from '@/lib/utils';
 import Lobby from '@/models/lobby';
+import MarketItem from '@/models/market-item';
 import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -44,6 +45,8 @@ interface GameResultDialogProps {
   open: boolean;
   result: Result;
   lobby: Lobby;
+  filteredMarket?: MarketItem[];
+  
 }
 
 const LobbyGameResultDialog = ({ open, result, lobby }: GameResultDialogProps) => {
