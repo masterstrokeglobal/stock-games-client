@@ -10,7 +10,7 @@ import useLobbyWebSocket from "@/components/features/lobby/lobby-websocket";
 import { useHorseRaceSound } from "@/context/audio-context";
 import { useGameState, useIsPlaceOver } from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
-import Lobby, { LobbyGameType, LobbyType } from "@/models/lobby";
+import Lobby, { LobbyGameType } from "@/models/lobby";
 import LobbyPlacement from "@/models/lobby-placement";
 import LobbyRound from "@/models/lobby-round";
 import MarketItem from "@/models/market-item";
