@@ -122,7 +122,7 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                                     if (!setStock.has(stock.bitcode!)) {
                                         setStock.add(stock.bitcode!);
                                     }
-                                    
+
                                     if (stock.bitcode === streamData.s) {
 
                                         return {
@@ -278,7 +278,7 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
         latestDataRef.current = roundRecord.market as RankedMarketItem[];
     }, [roundRecord]);
 
-    console.log('stocks', set.values(),set.size, setStock.values(),setStock.size);
+    console.log('stocks', set.values(), set.size, setStock.values(), setStock.size);
     return {
         stocks,
         connectionStatus,
