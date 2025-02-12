@@ -25,6 +25,8 @@ const EditCompanyPage = () => {
             contactPersonName: company.contactPersonName,
             contactPersonEmail: company.contactPersonEmail,
             logo: company.logo,
+            depositBonusPercentage: company.depositBonusPercentage,
+            depositBonusPercentageEnabled: company.depositBonusPercentageEnabled,
             primaryColor: company.primaryColor,
             secondaryColor: company.secondaryColor,
             domain: company.domain,
@@ -49,9 +51,9 @@ const EditCompanyPage = () => {
             </header>
             <main className="mt-4">
                 <CompanyForm
-                    defaultValues={defaultValues as any} // Pass default values to the form
+                    defaultValues={defaultValues as any}
                     onSubmit={onSubmit}
-                    isLoading={isPending} // Loading state for the submission
+                    isLoading={isPending}
                 />
 
             </main>

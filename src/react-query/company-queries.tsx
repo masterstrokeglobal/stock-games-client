@@ -101,3 +101,57 @@ export const useRemovePlacementNotAllowed = () => {
         },
     });
 }
+
+export const useUpdateDepositBonusPercentage = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: companyAPI.updateDepositBonusPercentage,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "company";
+                }
+            });
+            toast.success("Deposit bonus percentage updated successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error updating deposit bonus percentage");
+        },
+    });
+}
+
+export const useUpdateAgentUserBonusPercentage = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: companyAPI.updateAgentUserBonusPercentage,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "company";
+                }
+            });
+            toast.success("Agent user bonus percentage updated successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error updating agent user bonus percentage");
+        },
+    });
+}
+
+export const useUpdateDepositBonusPercentageEnabled = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: companyAPI.updateDepositBonusPercentageEnabled,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "company";
+                }
+            });
+            toast.success("Deposit bonus percentage enabled updated successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error updating deposit bonus percentage enabled");
+        },
+    });
+}

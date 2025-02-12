@@ -1,6 +1,7 @@
 "use client";
 
 import LoadingScreen from "@/components/common/loading-screen";
+import UpdateAgentBonusPercentageForm from "@/components/common/update-agent-bonus-percentage";
 import TransactionTable from "@/components/features/transaction/transaction-table"; // Adjust the import based on your transaction table component
 import PlacementManagement from "@/components/features/user/placement-allowed";
 import UserCard from "@/components/features/user/user-card"; // Assuming you have a UserCard component
@@ -9,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { useAuthStore } from "@/context/auth-context";
 import Admin, { AdminRole } from "@/models/admin";
 import User from "@/models/user"; // Assuming you have a User model
+import { useGameUserUpdateById } from "@/react-query/game-user-queries";
 import { useGetUserById } from "@/react-query/user-queries"; // Custom hook for fetching user details
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
@@ -17,7 +19,13 @@ const ViewUserPage = () => {
     const params = useParams();
     const { id } = params;
     const { data, isLoading, isSuccess } = useGetUserById(id.toString());
+    const { mutate, isPending } = useGameUserUpdateById();
     const { userDetails: currentUser } = useAuthStore();
+
+    const updateUserBonusPercentage = (data: { depositBonusPercentage: number }) => {
+        mutate({ updateData: data, userId: id.toString() });
+    };
+
 
     const userDetails = useMemo(() => {
         if (isSuccess) {
@@ -41,8 +49,9 @@ const ViewUserPage = () => {
             </main>
             {(!user.isAgent && userDetails) && <main className="mt-4" >
                 <PlacementManagement user={userDetails} />
-            </main>
-            }
+            </main>}
+
+            {(!user.isAgent && userDetails && userDetails.company?.depositBonusPercentageEnabled) && <UpdateAgentBonusPercentageForm defaultValues={{ depositBonusPercentage: userDetails.depositBonusPercentage }} onSubmit={updateUserBonusPercentage} isLoading={isPending} />}
             <UserEarningsCard userId={id.toString()} /> {/* Render UserEarningsCard with user ID */}
 
             {user?.role != AdminRole.AGENT && <main className="mt-4">
