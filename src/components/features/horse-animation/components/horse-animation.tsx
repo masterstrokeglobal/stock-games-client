@@ -43,14 +43,25 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
     const generateNewPositions = useMemo(() => {
         return roundRecord.market.map((horse, index) => {
             const currentHorse = stocks.find(stock => stock.horse === horse.horse);
+            
+            
+            if(filteredMarket && filteredMarket.length > 0){
+                // if filtered market is present, then we need to calculate the z position based on the filtered market
+                const filteredHorse = stocks.find(stock => stock.horse === horse.horse && filteredMarket.some((filteredStock) => filteredStock.id === stock.id));
+                const zBasedOnRank = filteredHorse?.rank  ? -(filteredHorse.rank * 12) + 52 : 0;
+                return {
+                    x: -15 + (index) * 4 + (Math.random() * 20),
+                    z: zBasedOnRank,
+                };
+            }                
+            
             const zBasedOnRank = currentHorse?.rank ? -(currentHorse.rank * 12) + 30 : 0;
-
             return {
                 x: -15 + (index) * 4 + (Math.random() * 20),
                 z: zBasedOnRank,
             };
         });
-    }, [stocks, roundRecord.market]);
+    }, [stocks, roundRecord.market,filteredMarket]);
 
     // Reduce effect dependencies and optimize transition logic
     useEffect(() => {

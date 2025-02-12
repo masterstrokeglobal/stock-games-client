@@ -112,6 +112,10 @@ export class Lobby {
         return this.isOpen() && this.leader?.id !== userId;
     }
 
+    get isClosed(): boolean {
+        return this.status === LobbyStatus.CLOSED;
+    }
+
     // clone 
     clone(): Lobby {
         return new Lobby(this);

@@ -30,6 +30,7 @@ const LeaderBoard = ({ roundRecord, filteredMarket }: Props) => {
         return unfilteredleaderboardData;
     }, [filteredMarket, unfilteredleaderboardData]);
 
+   
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord.id);
 
     useEffect(() => {

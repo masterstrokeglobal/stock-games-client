@@ -24,6 +24,7 @@ const LobbySettings = ({ lobby }: Props) => {
     const isReady = lobby.isReadyToPlay(userId);
     const isLeader = lobby.isLeader(userId);
 
+
     const handleReadyToPlay = () => {
         readyToPlay(lobby.id!);
     };
@@ -46,7 +47,7 @@ const LobbySettings = ({ lobby }: Props) => {
                 </Button>
             )}
 
-            {!isParticipant && ( // Join Button
+            {(!isParticipant && !lobby.isClosed) && ( // Join Button
                 <Button
                     variant="game"
                     className="w-full flex-1"
@@ -90,6 +91,13 @@ const LobbySettings = ({ lobby }: Props) => {
                 >
                     {isLeaveLoading ? "Leaving..." : "Leave Lobby"}
                 </Button>
+            )}
+            {lobby.isClosed && (    // Lobby is closed
+                <Link href="/game/lobby">
+                    <Button variant="game" className="w-full flex-1">
+                        Back to Lobbies
+                    </Button>
+                </Link>
             )}
         </div>
     );

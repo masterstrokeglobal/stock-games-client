@@ -8,6 +8,8 @@ interface RankedMarketItem extends MarketItem {
     price: number;
     initialPrice?: number;
 }
+const set = new Set<string>();
+const setStock = new Set<string>();
 
 export const useLeaderboard = (roundRecord: RoundRecord) => {
     const [stocks, setStocks] = useState<RankedMarketItem[]>(roundRecord.market as RankedMarketItem[]);
@@ -114,7 +116,15 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                                 );
 
                                 latestDataRef.current = latestDataRef.current.map(stock => {
+                                    if (!set.has(streamData.s!)) {
+                                        set.add(streamData.s!);
+                                    }
+                                    if (!setStock.has(stock.bitcode!)) {
+                                        setStock.add(stock.bitcode!);
+                                    }
+                                    
                                     if (stock.bitcode === streamData.s) {
+
                                         return {
                                             ...stock,
                                             price: currentPrice,
@@ -268,6 +278,7 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
         latestDataRef.current = roundRecord.market as RankedMarketItem[];
     }, [roundRecord]);
 
+    console.log('stocks', set.values(),set.size, setStock.values(),setStock.size);
     return {
         stocks,
         connectionStatus,
