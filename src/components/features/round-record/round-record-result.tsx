@@ -39,9 +39,9 @@ const RoundResult: React.FC<RoundResultProps> = ({ roundRecordId }) => {
         );
     }
 
-    const { totalBetAmount, totalWinnings, winningId } = resultData.data;
+    const { totalBetAmount, totalWinnings, winningId,netWinning,totalPlatformFeeAmount } = resultData.data;
     const hasWon = winningId !== null;
-    const profitLoss = totalWinnings - totalBetAmount;
+    const profitLoss = netWinning - totalBetAmount;
 
     return (
         <Card className="bg-[#122146] border-[#EFF8FF17]">
@@ -59,6 +59,16 @@ const RoundResult: React.FC<RoundResultProps> = ({ roundRecordId }) => {
                     <div className="flex justify-between items-center">
                         <span className="text-gray-400">{t('result.total-winnings')}</span>
                         <span className="font-medium">${totalWinnings.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <span className="text-gray-400">{t('result.platform-fees')}</span>
+                        <span className="font-medium">
+                            ${totalPlatformFeeAmount.toFixed(2)}
+                        </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <span className="text-gray-400">{t('result.net-winning')}</span>
+                        <span className="font-medium">${ netWinning.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between items-center">
                         <span className="text-gray-400">{t('result.profit-loss')}</span>
