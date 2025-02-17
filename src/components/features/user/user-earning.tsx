@@ -106,7 +106,32 @@ const UserEarningsCard = ({ userId }: Props) => {
                     />
 
 
+
                     {/* Net Profit or Loss */}
+
+
+                    <StatCard
+                        icon={<DollarSign className="text-green-600 w-8 h-8" />}
+                        label="Main Balance"
+                        value={wallet?.mainBalance ?? 0}
+                        color="green"
+                    />
+
+                    <StatCard
+                        icon={<Banknote className="text-blue-600 w-8 h-8" />}
+                        label="Bonus Balance"
+                        value={wallet?.bonusBalance ?? 0}
+                        color="blue"
+                    />
+
+                    <StatCard
+                        icon={<Briefcase className="text-yellow-600 w-8 h-8" />}
+                        label="Total Balance"
+                        value={wallet?.totalBalance ?? 0}
+                        color="yellow"
+                    />
+
+
                     <StatCard
                         icon={
                             <ArrowUpCircle

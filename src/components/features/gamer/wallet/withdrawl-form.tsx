@@ -1,17 +1,17 @@
-import React, { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import FormInput from "@/components/ui/form/form-input";
 import FormProvider from "@/components/ui/form/form-provider";
-import { useForm, Controller } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
-import WithdrawDetailsRecord from "@/models/withdrawl-details";
-import { useGetAllWithdrawDetails } from "@/react-query/withdrawl-details-queries";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
+import WithdrawDetailsRecord from "@/models/withdrawl-details";
+import { useGetAllWithdrawDetails } from "@/react-query/withdrawl-details-queries";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import React, { useMemo } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
 
 // Move schema outside component to prevent recreating on every render
 const createWithdrawSchema = (t: any, totalAmount: number) => z.object({
@@ -107,12 +107,9 @@ const WithdrawForm: React.FC<WithdrawFormProps> = ({
         },
     });
 
-    const { control, handleSubmit, watch, setValue } = form;
-    const withdrawAmount = watch('amount');
+    const { control, handleSubmit } = form;
 
-    // Calculate fees and total amount
-    const platformFee = useMemo(() => withdrawAmount * 0.04, [withdrawAmount]);
-    const totalWithdrawAmount = useMemo(() => Number(withdrawAmount) + Number(platformFee), [withdrawAmount, platformFee]);
+
 
     const handleWithdrawAll = () => {
         // Calculate the amount that will result in totalWithdrawAmount being exactly totalAmount
@@ -186,32 +183,6 @@ const WithdrawForm: React.FC<WithdrawFormProps> = ({
                     type="number"
                     required
                 />
-
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleWithdrawAll}
-                    className="text-[#4C6EF5] text-sm"
-                >
-                    {t('withdraw-all')}
-                </Button>
-
-                {withdrawAmount > 0 && (
-                    <div className="bg-[#1A2238] p-4 rounded-lg space-y-2">
-                        <div className="flex justify-between text-sm">
-                            <span className="text-[#6A84C3]">{t('withdrawal-amount')}</span>
-                            <span className="text-white">{formatNumber(withdrawAmount)}</span>
-                        </div>
-                        <div className="flex justify-between text-sm">
-                            <span className="text-[#6A84C3]">{t('platform-fee')} (4%)</span>
-                            <span className="text-white">+{formatNumber(platformFee)}</span>
-                        </div>
-                        <div className="flex justify-between text-sm font-medium border-t border-[#2A3655] pt-2 mt-2">
-                            <span className="text-[#6A84C3]">{t('total-amount')}</span>
-                            <span className="text-white">{formatNumber(totalWithdrawAmount)}</span>
-                        </div>
-                    </div>
-                )}
 
                 <div className="space-y-2">
                     <label className="text-sm font-medium text-white">

@@ -23,6 +23,8 @@ type Props = {
             totalWinnings: number;
             totalWithdrawals: number;
             netProfitOrLoss: number;
+            "totalMainBalance": number;
+            "totalBonusBalance": number;
         }
     };
 };
@@ -36,6 +38,8 @@ const AgentProfitLossCard = ({ data }: Props) => {
         totalWinnings,
         totalWithdrawals,
         netProfitOrLoss,
+        totalBonusBalance,
+        totalMainBalance,
     } = useMemo(() => {
         const result = data?.totalProfitAndLoss || {};
         return {
@@ -45,6 +49,9 @@ const AgentProfitLossCard = ({ data }: Props) => {
             totalWinnings: result.totalWinnings ?? 0,
             totalWithdrawals: result.totalWithdrawals ?? 0,
             netProfitOrLoss: result.netProfitOrLoss ?? 0,
+            totalMainBalance: result.totalMainBalance ?? 0,
+            totalBonusBalance: result.totalBonusBalance ?? 0,
+
         };
     }, [data]);
 
@@ -106,6 +113,24 @@ const AgentProfitLossCard = ({ data }: Props) => {
                         label="Net Profit/Loss"
                         value={netProfitOrLoss}
                         color={netProfitOrLoss >= 0 ? "green" : "red"}
+                    />
+                    <StatCard
+                        icon={<DollarSign className="text-green-600 w-8 h-8" />}
+                        label="Total Main Balance"
+                        value={totalMainBalance}
+                        color="green"
+                    />
+                    <StatCard
+                     icon={<Coins className="text-yellow-600 w-8 h-8" />}   
+                        label="Total Bonus Balance"
+                        value={totalBonusBalance}
+                        color="yellow"
+                    />
+                    <StatCard
+                        icon={<DollarSign className="text-green-600 w-8 h-8" />}
+                        label="Total Balance"
+                        value={totalMainBalance + totalBonusBalance}
+                        color="blue"
                     />
                 </div>
             </CardContent>
