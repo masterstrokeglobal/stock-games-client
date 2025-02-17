@@ -35,7 +35,7 @@ const LobbyWithChat = () => {
   }, [lobby?.lobbyUsers]);
 
 
-  if (isLoading) return <LoadingScreen className='bg-primary-game  min-h-screen' />;
+  if (isLoading) return <LoadingScreen className='bg-primary-game text-white  min-h-screen' />;
 
   return (
     <div className='bg-primary-game w-full'>
