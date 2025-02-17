@@ -110,13 +110,6 @@ const WithdrawForm: React.FC<WithdrawFormProps> = ({
     const { control, handleSubmit } = form;
 
 
-
-    const handleWithdrawAll = () => {
-        // Calculate the amount that will result in totalWithdrawAmount being exactly totalAmount
-        const withdrawAllAmount = totalAmount / 1.04;
-        setValue('amount', Number(withdrawAllAmount.toFixed(2)));
-    };
-
     const formatNumber = (num: number) => {
         return num.toLocaleString('en-IN', {
             style: 'currency',
