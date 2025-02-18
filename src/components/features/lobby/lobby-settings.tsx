@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
 import Lobby from "@/models/lobby";
-import { useJoinLobby, useLeaveLobby, useReadyToPlay, useStartRound } from "@/react-query/lobby-query";
+import { useJoinLobby, useLeaveLobby, useReadyToPlay, useStartRound, useUnreadyToPlay } from "@/react-query/lobby-query";
 import Link from "next/link";
 
 type Props = {
@@ -17,6 +17,7 @@ const LobbySettings = ({ lobby }: Props) => {
         isPending: isStartLoading,
     } = useStartRound();
     const { mutate: leaveLobby, isPending: isLeaveLoading } = useLeaveLobby();
+    const { mutate: unreadyToPlay, isPending: isUnreadyLoading } = useUnreadyToPlay();
 
     // Assuming these methods exist on the Lobby model
     const userId = userDetails!.id!;
@@ -46,6 +47,7 @@ const LobbySettings = ({ lobby }: Props) => {
                     {isReadyLoading ? "Getting Ready..." : "Ready to Play"}
                 </Button>
             )}
+
 
             {(!isParticipant && !lobby.isClosed) && ( // Join Button
                 <Button
@@ -80,6 +82,18 @@ const LobbySettings = ({ lobby }: Props) => {
                     {isStartLoading ? "Starting..." : "Start Round"}
                 </Button>
             )}
+
+            {isReady && !lobby.isStarted && (
+                <Button
+                    variant="destructive"
+                    className="w-full flex-1"
+                    onClick={() => unreadyToPlay(lobby.id!)}
+                    disabled={isUnreadyLoading}
+                >
+                    {isUnreadyLoading ? "Unready..." : "Unready to Play"}
+                </Button>
+            )}
+
 
             {/* Leave Button */}
             {isParticipant && (

@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -20,6 +20,7 @@ import { useCreateLobby } from '@/react-query/lobby-query';
 import { SchedulerType } from '@/models/market-item';
 import { LobbyType } from '@/models/lobby';
 import { useRouter } from 'next/navigation';
+import useNSEAvailable from '@/hooks/use-nse-available';
 
 export enum LobbyStatus {
     OPEN = "open",
@@ -88,10 +89,24 @@ const CreateLobbyForm = ({ onCreate }: Props) => {
     const router  = useRouter();
     const { mutate: createLobby, isPending } = useCreateLobby();
 
+    const isNSEOpen  = useNSEAvailable();
     const form = useForm<CreateLobbyFormValues>({
         resolver: zodResolver(createLobbySchema),
         defaultValues,
     });
+
+    const marketOptions = useMemo(() => {
+        if (isNSEOpen) {
+            return [
+                { label: "NSE", value: SchedulerType.NSE },
+                { label: "Crypto", value: SchedulerType.CRYPTO }
+            ];
+        }
+        return [
+            { label: "Crypto", value: SchedulerType.CRYPTO }
+        ];
+    }
+, []);
 
     const onSubmit = (formValue: CreateLobbyFormValues) => {
         createLobby({
@@ -102,7 +117,7 @@ const CreateLobbyForm = ({ onCreate }: Props) => {
             type: formValue.isPublic ? LobbyType.PUBLIC : LobbyType.PRIVATE,
         }, {
             onSuccess: (data) => {
-                router.push(`/lobby/${data.joiningCode}`);
+                router.push(`/game/lobby/${data.joiningCode}`);
                 form.reset(defaultValues);
                 onCreate();
             }
@@ -156,10 +171,7 @@ const CreateLobbyForm = ({ onCreate }: Props) => {
                                 name="marketType"
                                 label="Market Type"
                                 labelClassName='text-white'
-                                options={[
-                                    { label: "NSE", value: SchedulerType.NSE },
-                                    { label: "Crypto", value: SchedulerType.CRYPTO }
-                                ]}
+                                options={marketOptions}
                                 className="h-14 bg-gray-800 text-white border-gray-700"
                             />
 

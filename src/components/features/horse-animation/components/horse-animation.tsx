@@ -18,10 +18,9 @@ const FRAME_TIME = 0.016;
 const INITIAL_X_OFFSET = -15;
 const HORSE_SPACING = 4;
 const Z_SPACING = 8;
-const MAX_Z_POSITION = 200;
+const MAX_Z_POSITION = 80;
 const MIN_Z_POSITION = -80;
 const Z_BASE_OFFSET = -120;
-const MAX_HORSE_COUNT = 16;
 
 interface HorsePosition {
     x: number;
@@ -51,22 +50,17 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
         })),
         [numberOfHorses]);
 
-    const constrainZPosition = useCallback((z: number) => {
+const constrainZPosition = useCallback((z: number) => {
         return Math.min(Math.max(z, MIN_Z_POSITION), MAX_Z_POSITION);
     }, []);
 
     const rankToZPosition = useCallback((rank: number, totalHorses: number) => {
-        const reversedRank = rank ;
+        // Fixed calculation for consistent spacing
+        const basePosition = Z_BASE_OFFSET + (totalHorses * Z_SPACING * 0.5);
+        const positionOffset = (totalHorses - rank + 1) * Z_SPACING;
 
-        if (totalHorses <= MAX_HORSE_COUNT) {
-            // Center horses when there are fewer
-            const offset = (MAX_HORSE_COUNT - totalHorses) * Z_SPACING * 0.5;
-            return (reversedRank) + Z_BASE_OFFSET + totalHorses * Z_SPACING * 0.5 + offset;
-        } else {
-            // Keep horses near start when there are more
-            return (reversedRank) + Z_BASE_OFFSET + MAX_HORSE_COUNT * Z_SPACING * 0.5;
-        }
-    }, []);
+        return constrainZPosition(basePosition + positionOffset);
+    }, [constrainZPosition]);
 
     const generateNewPositions = useMemo(() => {
         const totalHorses = stocks.length;
@@ -75,28 +69,25 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
             const currentHorse = stocks.find(stock => stock.horse === horse.horse);
 
             if (filteredMarket && filteredMarket.length > 0) {
-                const filteredHorse = stocks.find(stock => stock.horse === horse.horse && filteredMarket.some(filteredStock => filteredStock.id === stock.id));
+                const filteredHorse = stocks.find(stock =>
+                    stock.horse === horse.horse &&
+                    filteredMarket.some(filteredStock => filteredStock.id === stock.id)
+                );
 
                 if (filteredHorse?.rank) {
-                    let zPosition = rankToZPosition(filteredHorse.rank, filteredMarket.length);
-                    zPosition = constrainZPosition(zPosition);
-
                     return {
-                        x: INITIAL_X_OFFSET + index * HORSE_SPACING + (Math.random() * 5),
-                        z: zPosition,
+                        x: INITIAL_X_OFFSET + index * HORSE_SPACING + (Math.random() * 2 - 1),
+                        z: rankToZPosition(filteredHorse.rank, filteredMarket.length),
                     };
                 }
             }
 
-            // Regular positioning with reversed rank logic
-            let zPosition = currentHorse?.rank
-                ? rankToZPosition(currentHorse.rank, totalHorses)
-                : Z_BASE_OFFSET + (totalHorses * Z_SPACING);
-            zPosition = constrainZPosition(zPosition);
-
+            // Regular positioning with consistent spacing
             return {
-                x: INITIAL_X_OFFSET + index * HORSE_SPACING + (Math.random() * 5),
-                z: zPosition,
+                x: INITIAL_X_OFFSET + index * HORSE_SPACING + (Math.random() * 2 - 1),
+                z: currentHorse?.rank
+                    ? rankToZPosition(currentHorse.rank, totalHorses)
+                    : constrainZPosition(Z_BASE_OFFSET + (totalHorses * Z_SPACING * 0.5)),
             };
         });
     }, [stocks, roundRecord.market, filteredMarket, constrainZPosition, rankToZPosition]);
@@ -158,8 +149,6 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
             };
         });
     }, [roundRecord.market, currentPositions, initialPositions, filteredMarket, stocks]);
-
-    console.log("HorseAnimation render", horses);
 
     return (
         <>

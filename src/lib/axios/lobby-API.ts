@@ -44,6 +44,12 @@ export const lobbyAPI = {
         return response.data;
     },
 
+    unreadyLobby: async (lobbyId: number) => {
+        const response = await api.patch<string>(`/lobby/unready/${lobbyId}`);
+        return response.data;
+    }
+    ,
+
     // Start a round
     startRound: async (lobbyId: number) => {
         const response = await api.post(`/lobby/start-round/${lobbyId}`);

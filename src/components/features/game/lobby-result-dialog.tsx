@@ -13,8 +13,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
-
-
 // Interface for price difference data
 interface PriceDifference {
   code: string;
@@ -30,38 +28,35 @@ interface Winner {
   lastname: string;
   email: string;
   username: string;
-  winningAmount: number;
+  amount: number;
 }
 
 // Main interface for the entire data structure
-interface Result {
+export interface LobbyResult {
   priceDifferences: PriceDifference[];
   winners: Winner[];
   count: number;
+  winningItems?: PriceDifference[];
 }
-
 
 interface GameResultDialogProps {
   open: boolean;
-  result: Result;
+  result: LobbyResult;
   lobby: Lobby;
   filteredMarket?: MarketItem[];
-  
 }
 
 const LobbyGameResultDialog = ({ open, result, lobby }: GameResultDialogProps) => {
   const [showDialog, setShowDialog] = useState(open);
-  const router   = useRouter();
+  const router = useRouter();
   const { userDetails } = useAuthStore();
 
   const resultData = useMemo(() => {
     if (result) {
       const winner = result.winners.find(winner => winner.id === userDetails?.id);
-
-      const totalWinnings = winner ? winner.winningAmount : 0;
+      const totalWinnings = winner ? winner.amount : 0;
       return {
         totalBetAmount: lobby.amount.toFixed(2),
-        totalWinnings: totalWinnings.toFixed(2),
         profit: (totalWinnings - lobby.amount).toFixed(2)
       };
     }
@@ -74,13 +69,11 @@ const LobbyGameResultDialog = ({ open, result, lobby }: GameResultDialogProps) =
     }
   }, [open]);
 
-  const playAgain = () => { 
+  const playAgain = () => {
     setShowDialog(false);
     router.push(`/game/lobby/${lobby.joiningCode}`);
   };
 
-
-  // Check if the result is a win or loss
   const isWin = resultData && Number(resultData.profit) >= 0;
 
   return (
@@ -95,46 +88,56 @@ const LobbyGameResultDialog = ({ open, result, lobby }: GameResultDialogProps) =
             <div className="flex flex-col items-center justify-center p-8 space-y-4">
               <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
               <p className="text-gray-600">Loading results...</p>
-              <button className="bet-button w-full" onClick={playAgain}>
-                Play Again
-              </button>
             </div>
           ) : (
             <div className="space-y-4">
-              {/* Display the image and message */}
               <div className="space-y-4 mb-4">
                 <Image
                   src={isWin ? '/won.png' : '/lost.png'}
                   alt={isWin ? 'You Won!' : 'Better Luck Next Time'}
                   width={100}
                   height={100}
-                  className="rounded-full w-32 mx-auto" // Add this to remove any white 
+                  className="rounded-full w-32 mx-auto"
                 />
-                <p className={cn("text-2xl  font-bold text-center",
+                <p className={cn("text-2xl font-bold text-center",
                   isWin ? 'text-yellow-600' : 'text-gray-100'
                 )}>
                   {isWin ? 'Congratulations! You won!' : 'Better luck next time!'}
                 </p>
               </div>
 
-              {/* Display result data */}
-              <div className="space-y-4">
-                <div className="text-center  flex justify-between  rounded-lg">
-                  <p className="">Total Bet Amount</p>
-                  <p className="text-xl ">₹{resultData.totalBetAmount}</p>
-                </div>
-                <div className="text-center  flex justify-between rounded-lg">
-                  <p className="">Total Winnings</p>
-                  <p className="text-xl ">₹{resultData.totalWinnings}</p>
-                </div>
-                <div className="text-center flex justify-between  rounded-lg">
-                  <p className="">Profit/Loss</p>
-                  <p className={`text-xl  ${isWin ? 'text-green-600' : 'text-red-600'}`}>
-                    ₹{resultData.profit}
-                  </p>
+            
+
+              {/* All Players Results */}
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-left mb-2">All Players</h3>
+                <div className="max-h-40 overflow-y-auto">
+                  {result.winners.map((winner) => (
+                    <div 
+                      key={winner.id}
+                      className={cn(
+                        "p-2 rounded-lg mb-2",
+                        winner.id === userDetails?.id ? "bg-blue-900/30 border-yellow-400 border" : "bg-gray-800/30"
+                      )}
+                    >
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="font-medium text-sm">{winner.username}</p>
+                          <p className="text-sm text-gray-400">{winner.firstname} {winner.lastname}</p>
+                        </div>
+                        <p className={cn(
+                          "font-semibold",
+                          winner.amount > 0 ? "text-green-500" : "text-red-500"
+                        )}>
+                          ₹{winner.amount.toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
+           
               <button className="bet-button w-full" onClick={playAgain}>
                 Play Again
               </button>

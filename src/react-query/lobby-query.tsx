@@ -102,6 +102,23 @@ export const useLeaveLobby = () => {
     });
 };
 
+export const useUnreadyToPlay = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: lobbyAPI.unreadyLobby,
+       onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "lobbies",
+            });
+            toast.success("Unready to play");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error unready to play");
+        },
+    })
+};
+
 // Start round
 export const useStartRound = () => {
     const queryClient = useQueryClient();

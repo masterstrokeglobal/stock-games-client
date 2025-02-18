@@ -6,6 +6,7 @@ import { LobbyUserStatus } from '@/models/lobby-user';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { LobbyResult } from '../game/lobby-result-dialog';
 interface WebSocketMessage {
     event: LobbyEvents;
     data: any;
@@ -24,7 +25,7 @@ const DEFAULT_CONFIG = {
 function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId }: { lobbyId?: number, lobbyCode?: string }) {
     const queryClient = useQueryClient();
     const [showResults, setShowResult] = useState<boolean>(false);
-    const [resultData, setResultData] = useState<any | null>(null);
+    const [resultData, setResultData] = useState<LobbyResult | undefined>(undefined);
     const { userDetails } = useAuthStore();
     const wsRef = useRef<WebSocket | null>(null);
     const router = useRouter();
