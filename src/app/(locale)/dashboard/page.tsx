@@ -27,7 +27,7 @@ function HomePage() {
                 router.push('/dashboard/users');
             }
         }
-    }, [userDetails, router]);
+    }, [userDetails, router,loading]);
     return (
         <LoadingScreen className="min-h-screen" />
     )

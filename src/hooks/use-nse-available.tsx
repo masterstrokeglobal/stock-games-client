@@ -35,7 +35,7 @@ const useNSEAvailable = () => {
 
 
         return () => clearInterval(intervalId);
-    }, []);
+    }, [isNSEOpen]);
 
     return isNSEOpen;
 };

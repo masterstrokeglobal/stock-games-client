@@ -1,14 +1,13 @@
 "use client";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import Lobby from "@/models/lobby";
 import LobbyPlacement from "@/models/lobby-placement";
 import LobbyRound from "@/models/lobby-round";
 import { useGetAllPlacementForLobbyRound } from "@/react-query/game-record-queries";
-import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
 import LobbyChatSheet from "../lobby/lobby-chat-sheet";
-import Lobby from "@/models/lobby";
 
 type Props = {
     className?: string;
@@ -82,10 +81,10 @@ const PlacementBetsLobby = ({ className, lobbyRound, lobby, sendMessage }: Props
                                         {bet.user?.username}
                                     </td>
                                     <td className="p-2 text-sm text-right text-gray-300 rounded-r-lg flex-1">
-                                        {lobbyRound.roundRecord?.getMarketNumberById(bet.marketItem?.id!)}
+                                        {bet.marketItem?.id ?lobbyRound.roundRecord?.getMarketNumberById(bet.marketItem.id):"-"}
                                     </td>
                                 </tr>
-                            ))}
+                        ))}
                         </tbody>
                     </table>
                 ) : (

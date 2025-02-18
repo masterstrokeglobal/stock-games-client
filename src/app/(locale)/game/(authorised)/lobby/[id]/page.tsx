@@ -13,12 +13,11 @@ import {
   CardContent
 } from '@/components/ui/card';
 import { Progress } from "@/components/ui/progress";
-import { LobbyUserStatus } from '@/models/lobby-user';
 import { useGetCurrentLobbyRound, useGetLobbyByCode } from '@/react-query/lobby-query';
 import dayjs from 'dayjs';
 import { Gamepad2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 
 const LobbyWithChat = () => {
   const lobbyCode = useParams().id!.toString();

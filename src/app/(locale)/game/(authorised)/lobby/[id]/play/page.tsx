@@ -42,7 +42,7 @@ const GamePage = () => {
             return [];
         }
         return [];
-    }, [isSuccess, data]);
+    }, [isSuccess, data,lobby?.gameType]);
     const { showResults, resultData, sendMessage } = useLobbyWebSocket({ lobbyCode: lobbyCode, lobbyId: lobby?.id });
 
     const roundRecord = lobbyRound ? lobbyRound.roundRecord : null;

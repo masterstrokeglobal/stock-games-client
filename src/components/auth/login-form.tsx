@@ -43,7 +43,7 @@ const LoginForm = () => {
         mutate({
             email: formValue.email,
             password: formValue.password,
-            role: formValue.loginAs,
+            loginAs: formValue.loginAs,
         }, {
             onSuccess: (data) => {
                 const admin = new Admin(data.data.admin);
