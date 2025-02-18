@@ -29,6 +29,11 @@ export const agentAPI = {
     updateAgent: async (agentId: string, updateData: any) => {
         return api.patch(`/agent/${agentId}`, updateData);
     },
+
+    // Update agent password
+    updateAgentPassword: async (agentId: string, password: string) => {
+        return api.patch(`/agent/password/${agentId}`, { password });
+    },
     profitLoss: async (filter :{
         agentId?: string,
         startDate?: Date;

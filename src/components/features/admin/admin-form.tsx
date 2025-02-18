@@ -10,15 +10,7 @@ import { useGetAllCompanies } from '@/react-query/company-queries';
 import FormPassword from '@/components/ui/form/form-password';
 
 // Define the schema for admin input
-const passwordValidation = z.string().min(8).refine((val) =>
-    /[a-z]/.test(val) && // at least one lowercase letter
-    /[A-Z]/.test(val) && // at least one uppercase letter
-    /[0-9]/.test(val) && // at least one number
-    /[!@#$%^&*(),.?":{}|<>]/.test(val) // at least one special character
-    , {
-        message: "Password must include 8 characters, 1 uppercase, 1 lowercase, 1 number, and 1 special character."
-    });
-
+const passwordValidation = z.string().min(8);
 export const createAdminInputSchema = z.object({
     id: z.string().optional(),
     name: z.string().max(100).optional(),
