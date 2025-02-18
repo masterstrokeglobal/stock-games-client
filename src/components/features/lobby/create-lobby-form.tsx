@@ -99,7 +99,8 @@ const CreateLobbyForm = ({ onCreate }: Props) => {
             marketType: formValue.marketType,
             type: formValue.isPublic ? LobbyType.PUBLIC : LobbyType.PRIVATE,
         }, {
-            onSuccess: () => {
+            onSuccess: (data) => {
+                console.log("Lobby created successfully", data);
                 form.reset(defaultValues);
                 onCreate();
             }

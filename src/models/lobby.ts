@@ -16,7 +16,7 @@ export enum LobbyGameType {
     GUESS_FIRST_EIGHT = "guess_first_eight",
     GUESS_LAST_EIGHT = "guess_last_eight",
     GUESS_HIGHER = "guess_higher",
-  }
+}
 export enum LobbyEvents {
     USER_JOINED = "user_joined",
     USER_LEFT = "user_left",
@@ -44,7 +44,6 @@ export class Lobby {
     gameType: LobbyGameType;
     marketType: SchedulerType;
     lobbyUsers?: LobbyUser[];
-    totalPool?: number;
     status: LobbyStatus;
     type: LobbyType;
     joiningCode: string;
@@ -59,7 +58,6 @@ export class Lobby {
         this.lobbyUsers = params.lobbyUsers?.map((user) => new LobbyUser(user));
         this.name = params.name;
         this.startTime = params.startTime;
-        this.totalPool = params.totalPool;
         this.endTime = params.endTime;
         this.amount = params.amount;
         this.gameType = params.gameType;
@@ -115,6 +113,14 @@ export class Lobby {
     get isClosed(): boolean {
         return this.status === LobbyStatus.CLOSED;
     }
+
+    get totalPool(): number {
+        const readyUsers = this?.lobbyUsers?.filter(u => u.status === LobbyUserStatus.PLAYING).length;
+        if (!readyUsers) return 0;
+
+        return readyUsers * (this?.amount * .90);
+    }
+
 
     // clone 
     clone(): Lobby {

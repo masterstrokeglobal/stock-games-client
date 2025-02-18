@@ -78,7 +78,7 @@ const GamePage = () => {
 
                 </div>
             </main>}
-            {lobbyRound?.id && lobby && <LobbyGameResultDialog lobby={lobby} key={String(showResults)} open={showResults} result={resultData}  />}
+            {lobbyRound?.id && lobby && <LobbyGameResultDialog lobby={lobby} key={String(showResults)} open={showResults} result={resultData} />}
 
 
             {(isMobile && lobbyRound && lobby) && <MobileGame lobby={lobby} lobbyRound={lobbyRound} sendMessage={sendMessage} filteredMarket={filteredMarket} />}
@@ -94,7 +94,7 @@ const TimeLeft = ({ roundRecord }: { roundRecord: RoundRecord }) => {
 }
 
 
-const MobileGame = ({ lobby, lobbyRound, sendMessage,filteredMarket }: { lobbyRound: LobbyRound, lobby: Lobby, sendMessage: (message: string) => void,       filteredMarket?: MarketItem[];}) => {
+const MobileGame = ({ lobby, lobbyRound, sendMessage, filteredMarket }: { lobbyRound: LobbyRound, lobby: Lobby, sendMessage: (message: string) => void, filteredMarket?: MarketItem[]; }) => {
     const isPlaceOver = useIsPlaceOver(lobbyRound.roundRecord);
 
     return <section className="text-white">
@@ -106,7 +106,8 @@ const MobileGame = ({ lobby, lobbyRound, sendMessage,filteredMarket }: { lobbyRo
             </div>
         </main>}
         {(isPlaceOver && lobbyRound.roundRecord) && <LeaderBoard roundRecord={lobbyRound.roundRecord} filteredMarket={filteredMarket} />}
-        {lobbyRound.roundRecord && <MultiplayerRouletteGame lobbyRound={lobbyRound} lobby={lobby} />}
+         {isPlaceOver && lobbyRound && lobby && <PlacementBetsLobby className="my-6" lobbyRound={lobbyRound} lobby={lobby} sendMessage={sendMessage} />}
+        {!isPlaceOver && lobbyRound.roundRecord && <MultiplayerRouletteGame lobbyRound={lobbyRound} lobby={lobby} />}
     </section>
 }
 

@@ -17,7 +17,7 @@ type Props = {
     sendMessage: (message: string) => void;
 };
 
-const PlacementBetsLobby = ({ className, lobbyRound ,lobby,sendMessage}: Props) => {
+const PlacementBetsLobby = ({ className, lobbyRound, lobby, sendMessage }: Props) => {
     const t = useTranslations("game");
     const { data, isSuccess } = useGetAllPlacementForLobbyRound(lobbyRound?.id!.toString());
 
@@ -38,6 +38,7 @@ const PlacementBetsLobby = ({ className, lobbyRound ,lobby,sendMessage}: Props) 
         }
     }, []);
 
+
     return (
         <section
             ref={sectionRef}
@@ -45,10 +46,10 @@ const PlacementBetsLobby = ({ className, lobbyRound ,lobby,sendMessage}: Props) 
         >
             <header className="flex justify-between items-center mb-4">
 
-            <h2 className="text-xl font-semibold mb-4 text-gray-200">
-                {t("current-bets")}
-            </h2>
-            {lobby && <LobbyChatSheet className='md:hidden block' lobby={lobby} onSend={sendMessage} />}
+                <h2 className="text-xl font-semibold mb-4 text-gray-200">
+                    {t("current-bets")}
+                </h2>
+                {lobby && <LobbyChatSheet lobby={lobby} onSend={sendMessage} />}
             </header>
 
             <ScrollArea className="max-h-96 w-full" style={{ height: `${scrollAreaHeight - 20}px` }} type="auto">
@@ -63,7 +64,7 @@ const PlacementBetsLobby = ({ className, lobbyRound ,lobby,sendMessage}: Props) 
                                     {t("username")}
                                 </th>
                                 <th className="p-2 text-sm text-right text-gray-300 rounded-tr-lg flex-1">
-                                    {t("time")}
+                                    Horse No
                                 </th>
                             </tr>
                         </thead>
@@ -81,7 +82,7 @@ const PlacementBetsLobby = ({ className, lobbyRound ,lobby,sendMessage}: Props) 
                                         {bet.user?.username}
                                     </td>
                                     <td className="p-2 text-sm text-right text-gray-300 rounded-r-lg flex-1">
-                                        {dayjs(bet.createdAt).format("HH:mm a")}
+                                        {lobbyRound.roundRecord?.getMarketNumberById(bet.marketItem?.id!)}
                                     </td>
                                 </tr>
                             ))}

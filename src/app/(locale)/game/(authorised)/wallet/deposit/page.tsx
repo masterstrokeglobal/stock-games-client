@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 
 const DepositFormPage = () => {
 
-    const { mutate,isPending } = useCreateDepositRequest();
+    const { mutate, isPending } = useCreateDepositRequest();
 
     const router = useRouter();
 

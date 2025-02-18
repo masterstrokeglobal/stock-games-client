@@ -13,11 +13,12 @@ import {
   CardContent
 } from '@/components/ui/card';
 import { Progress } from "@/components/ui/progress";
+import { LobbyUserStatus } from '@/models/lobby-user';
 import { useGetCurrentLobbyRound, useGetLobbyByCode } from '@/react-query/lobby-query';
 import dayjs from 'dayjs';
 import { Gamepad2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 const LobbyWithChat = () => {
   const lobbyCode = useParams().id!.toString();
@@ -33,6 +34,7 @@ const LobbyWithChat = () => {
       console.log('Lobby users updated:', lobby.lobbyUsers.length);
     }
   }, [lobby?.lobbyUsers]);
+
 
 
   if (isLoading) return <LoadingScreen className='bg-primary-game text-white  min-h-screen' />;
@@ -69,7 +71,7 @@ const LobbyWithChat = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
                     <div className="bg-gray-800 p-3 rounded-lg">
                       <div className="text-gray-400 text-sm mb-1">Entry Fee</div>
                       <div className="text-[#EEC53C] font-semibold">{lobby?.amount} Coins</div>
@@ -85,6 +87,10 @@ const LobbyWithChat = () => {
                     <div className="bg-gray-800 p-3 rounded-lg">
                       <div className="text-gray-400 text-sm mb-1">Market</div>
                       <div className="text-[#EEC53C] font-semibold capitalize">{lobby?.marketType}</div>
+                    </div>
+                    <div className="bg-gray-800 p-3 rounded-lg">
+                      <div className="text-gray-400 text-sm mb-1">Total Prize</div>
+                      <div className="text-[#EEC53C] font-semibold">{lobby?.totalPool} Coins</div>
                     </div>
                   </div>
 

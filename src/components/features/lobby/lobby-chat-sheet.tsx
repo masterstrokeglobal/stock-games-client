@@ -35,6 +35,7 @@ const LobbyChatSheet = ({ lobby, onSend,className }: LobbyChatSectionProps) => {
                 <LobbyChatSection
                     lobbyId={lobby!.id!}
                     onSend={onSend}
+                    className="h-full"
                 />
             </SheetContent>
         </Sheet>
