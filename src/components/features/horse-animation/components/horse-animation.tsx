@@ -50,20 +50,10 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
         })),
         [numberOfHorses]);
 
-const constrainZPosition = useCallback((z: number) => {
-        return Math.min(Math.max(z, MIN_Z_POSITION), MAX_Z_POSITION);
-    }, []);
 
-    const rankToZPosition = useCallback((rank: number, totalHorses: number) => {
-        // Fixed calculation for consistent spacing
-        const basePosition = Z_BASE_OFFSET + (totalHorses * Z_SPACING * 0.5);
-        const positionOffset = (totalHorses - rank + 1) * Z_SPACING;
 
-        return constrainZPosition(basePosition + positionOffset);
-    }, [constrainZPosition]);
 
     const generateNewPositions = useMemo(() => {
-        const totalHorses = stocks.length;
 
         return roundRecord.market.map((horse, index) => {
             const currentHorse = stocks.find(stock => stock.horse === horse.horse);
@@ -77,7 +67,8 @@ const constrainZPosition = useCallback((z: number) => {
                 if (filteredHorse?.rank) {
                     return {
                         x: INITIAL_X_OFFSET + index * HORSE_SPACING + (Math.random() * 2 - 1),
-                        z: rankToZPosition(filteredHorse.rank, filteredMarket.length),
+                        z: currentHorse?.rank ? -(currentHorse.rank * 12) + 30 : 0,
+
                     };
                 }
             }
@@ -85,12 +76,11 @@ const constrainZPosition = useCallback((z: number) => {
             // Regular positioning with consistent spacing
             return {
                 x: INITIAL_X_OFFSET + index * HORSE_SPACING + (Math.random() * 2 - 1),
-                z: currentHorse?.rank
-                    ? rankToZPosition(currentHorse.rank, totalHorses)
-                    : constrainZPosition(Z_BASE_OFFSET + (totalHorses * Z_SPACING * 0.5)),
+                z: currentHorse?.rank ? -(currentHorse.rank * 12) + 30 : 0,
+
             };
         });
-    }, [stocks, roundRecord.market, filteredMarket, constrainZPosition, rankToZPosition]);
+    }, [stocks, roundRecord.market, filteredMarket]);
 
     useEffect(() => {
         if (roundRecord.market.length === 0) return;
