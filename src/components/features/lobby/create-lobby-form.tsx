@@ -19,6 +19,7 @@ import FormSwitch from '@/components/ui/form/form-switch';
 import { useCreateLobby } from '@/react-query/lobby-query';
 import { SchedulerType } from '@/models/market-item';
 import { LobbyType } from '@/models/lobby';
+import { useRouter } from 'next/navigation';
 
 export enum LobbyStatus {
     OPEN = "open",
@@ -84,6 +85,7 @@ type Props = {
     onCreate: () => void;
 }
 const CreateLobbyForm = ({ onCreate }: Props) => {
+    const router  = useRouter();
     const { mutate: createLobby, isPending } = useCreateLobby();
 
     const form = useForm<CreateLobbyFormValues>({
@@ -100,7 +102,7 @@ const CreateLobbyForm = ({ onCreate }: Props) => {
             type: formValue.isPublic ? LobbyType.PUBLIC : LobbyType.PRIVATE,
         }, {
             onSuccess: (data) => {
-                console.log("Lobby created successfully", data);
+                router.push(`/lobby/${data.joiningCode}`);
                 form.reset(defaultValues);
                 onCreate();
             }

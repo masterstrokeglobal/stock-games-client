@@ -1,7 +1,7 @@
 "use client";
 import LeaderBoard from "@/components/features/game/leaderboard";
 import MultiplayerRouletteGame from "@/components/features/game/multiplayer-roulette-board";
-import LobbyGameResultDialog from "@/components/features/game/multiple-result-dialog";
+import LobbyGameResultDialog from "@/components/features/game/lobby-result-dialog";
 import Navbar from "@/components/features/game/navbar";
 import PlacementBetsLobby from "@/components/features/game/placement-bets-lobby";
 import { MobileGameHeader } from "@/components/features/game/roulette-header";
@@ -42,7 +42,7 @@ const GamePage = () => {
             return [];
         }
         return [];
-    }, [isSuccess, data,lobby?.gameType]);
+    }, [isSuccess, data, lobby?.gameType]);
     const { showResults, resultData, sendMessage } = useLobbyWebSocket({ lobbyCode: lobbyCode, lobbyId: lobby?.id });
 
     const roundRecord = lobbyRound ? lobbyRound.roundRecord : null;
@@ -106,7 +106,7 @@ const MobileGame = ({ lobby, lobbyRound, sendMessage, filteredMarket }: { lobbyR
             </div>
         </main>}
         {(isPlaceOver && lobbyRound.roundRecord) && <LeaderBoard roundRecord={lobbyRound.roundRecord} filteredMarket={filteredMarket} />}
-         {isPlaceOver && lobbyRound && lobby && <PlacementBetsLobby className="my-6" lobbyRound={lobbyRound} lobby={lobby} sendMessage={sendMessage} />}
+        {isPlaceOver && lobbyRound && lobby && <PlacementBetsLobby className="my-6" lobbyRound={lobbyRound} lobby={lobby} sendMessage={sendMessage} />}
         {!isPlaceOver && lobbyRound.roundRecord && <MultiplayerRouletteGame lobbyRound={lobbyRound} lobby={lobby} />}
     </section>
 }

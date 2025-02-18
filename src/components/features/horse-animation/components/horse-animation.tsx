@@ -17,10 +17,11 @@ const ANIMATION_SPEED = 0.5;
 const FRAME_TIME = 0.016;
 const INITIAL_X_OFFSET = -15;
 const HORSE_SPACING = 4;
-const Z_SPACING = 8; 
-const MAX_Z_POSITION = 200; 
-const MIN_Z_POSITION = -80; 
-const Z_BASE_OFFSET = -120; 
+const Z_SPACING = 8;
+const MAX_Z_POSITION = 200;
+const MIN_Z_POSITION = -80;
+const Z_BASE_OFFSET = -120;
+const MAX_HORSE_COUNT = 16;
 
 interface HorsePosition {
     x: number;
@@ -54,12 +55,17 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
         return Math.min(Math.max(z, MIN_Z_POSITION), MAX_Z_POSITION);
     }, []);
 
-    // Helper to convert rank to Z position with reversed logic
     const rankToZPosition = useCallback((rank: number, totalHorses: number) => {
-            // Reverse the rank so that rank 1 is closest to camera
-            const reversedRank = totalHorses - rank + 1;
-            // Add progressive spacing to create more separation for horses further back
-            return Z_BASE_OFFSET + (reversedRank * Z_SPACING * 1.2);
+        const reversedRank = rank ;
+
+        if (totalHorses <= MAX_HORSE_COUNT) {
+            // Center horses when there are fewer
+            const offset = (MAX_HORSE_COUNT - totalHorses) * Z_SPACING * 0.5;
+            return (reversedRank) + Z_BASE_OFFSET + totalHorses * Z_SPACING * 0.5 + offset;
+        } else {
+            // Keep horses near start when there are more
+            return (reversedRank) + Z_BASE_OFFSET + MAX_HORSE_COUNT * Z_SPACING * 0.5;
+        }
     }, []);
 
     const generateNewPositions = useMemo(() => {
@@ -69,10 +75,7 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
             const currentHorse = stocks.find(stock => stock.horse === horse.horse);
 
             if (filteredMarket && filteredMarket.length > 0) {
-                const filteredHorse = stocks.find(
-                    stock => stock.horse === horse.horse &&
-                        filteredMarket.some(filteredStock => filteredStock.id === stock.id)
-                );
+                const filteredHorse = stocks.find(stock => stock.horse === horse.horse && filteredMarket.some(filteredStock => filteredStock.id === stock.id));
 
                 if (filteredHorse?.rank) {
                     let zPosition = rankToZPosition(filteredHorse.rank, filteredMarket.length);
@@ -88,7 +91,7 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
             // Regular positioning with reversed rank logic
             let zPosition = currentHorse?.rank
                 ? rankToZPosition(currentHorse.rank, totalHorses)
-                : Z_BASE_OFFSET + (totalHorses * Z_SPACING); // Place unranked horses at the back
+                : Z_BASE_OFFSET + (totalHorses * Z_SPACING);
             zPosition = constrainZPosition(zPosition);
 
             return {
@@ -155,6 +158,8 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
             };
         });
     }, [roundRecord.market, currentPositions, initialPositions, filteredMarket, stocks]);
+
+    console.log("HorseAnimation render", horses);
 
     return (
         <>

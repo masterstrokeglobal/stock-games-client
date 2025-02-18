@@ -21,7 +21,7 @@ const HorseRaceEnvironment = ({
 }: Props) => {
     return (
         <>
-            <PerspectiveCamera makeDefault fov={70} zoom={13} position={[-220, 250, 20]} />
+            <PerspectiveCamera makeDefault fov={70} zoom={13} position={[-220, 320, 20]} />
             <color attach="background" args={[0xf0f0f0]} />
             <Sky sunPosition={[100, 20, 100]} />
             <ambientLight intensity={0.3} />

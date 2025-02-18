@@ -105,7 +105,6 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId }: { lobbyId?: 
 
 
 
-        console.log('Received message:', message);  
         switch (message.event) {
             case LobbyEvents.USER_JOINED:
                 queryClient.invalidateQueries({
@@ -152,7 +151,7 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId }: { lobbyId?: 
                 queryClient.setQueryData<T>(lobbyRoundQueryKey, (oldData) => {
                     const lobby = oldData?.clone() as unknown as LobbyRound;
                     if (lobby.roundRecord) {
-                        lobby.roundRecord!.initialValues = message.data.round.initialValues;
+                        lobby.roundRecord!.initialValues = message.data.prices;
                     }
 
                     console.log('Initial values fetched:', lobby.roundRecord?.initialValues);
