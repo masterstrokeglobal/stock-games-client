@@ -152,9 +152,11 @@
         "amount-required": "Сумма обязательна"
     },
     "withdraw": {
+
         "total-balance": "Общий баланс",
         "enter-bet-amount": "Введите сумму ставки",
         "withdrawal-amount-label": "Сумма вывода*",
+        "withdraw-all": "Вывести все",
         "withdrawal-amount-placeholder": "Введите сумму для вывода",
         "select-method-label": "Выберите способ вывода*",
         "no-methods-found": "Способы вывода не найдены. Пожалуйста, добавьте способ оплаты.",

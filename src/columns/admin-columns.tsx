@@ -1,23 +1,23 @@
-import { ColumnDef } from "@tanstack/react-table";
-import dayjs from "dayjs";
-import Link from "next/link";
-import Admin, { AdminRole } from "@/models/admin";
-import { Dialog } from "@/components/ui/dialog";
-import { useDeleteAdminById } from "@/react-query/admin-queries"; // You'll need to create this hook
-import { Edit2, Trash2, Loader2, Eye } from 'lucide-react';
 import {
     AlertDialog,
-    AlertDialogTrigger,
+    AlertDialogAction,
+    AlertDialogCancel,
     AlertDialogContent,
-    AlertDialogHeader,
-    AlertDialogTitle,
     AlertDialogDescription,
     AlertDialogFooter,
-    AlertDialogCancel,
-    AlertDialogAction,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
+import Admin, { AdminRole } from "@/models/admin";
+import { useDeleteAdminById } from "@/react-query/admin-queries"; // You'll need to create this hook
+import { ColumnDef } from "@tanstack/react-table";
+import dayjs from "dayjs";
+import { Edit2, Loader2, Trash2 } from 'lucide-react';
+import Link from "next/link";
 
 const adminColumns: ColumnDef<Admin>[] = [
     {
@@ -86,12 +86,6 @@ const ActionColumn = ({ admin }: { admin: Admin }) => {
                             <Edit2 className="w-5 h-5" />
                         </Button>
                     </Link>
-                    <Link href={`/dashboard/admins/${admin.id}/view`}>
-                        <Button variant="ghost" size="icon" aria-label="View Admin">
-                            <Eye className="w-5 h-5" />
-                        </Button>
-                    </Link>
-
                     <AlertDialogTrigger asChild>
                         <Button
                             variant="destructive"

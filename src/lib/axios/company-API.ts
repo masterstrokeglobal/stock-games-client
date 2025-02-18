@@ -1,6 +1,6 @@
+import { CompanyFormValues } from "@/components/features/company/company-form";
 import { SchedulerType } from "@/models/market-item";
 import api from "./instance";
-import { CompanyFormValues } from "@/components/features/company/company-form";
 
 
 export const companyAPI = {
@@ -17,7 +17,8 @@ export const companyAPI = {
     },
 
     updateCompanyById: async (payload: CompanyFormValues) => {
-        return api.patch(`/company/${payload.id}`, payload);
+        const { id ,...rest} = payload;
+        return api.patch(`/company/${id}`, rest);
     },
 
     deleteCompanyById: async (companyId: string) => {
@@ -28,5 +29,14 @@ export const companyAPI = {
     },
     removePlacementNotAllowed: async (data: { placementNotAllowed: SchedulerType, companyId: string }) => {
         return api.post(`/company/remove-placement-not-allowed/${data.companyId}`, data);
+    },
+    updateDepositBonusPercentage: async (data: { companyId: string, depositBonusPercentage: number, updateAllUsers: boolean }) => {
+        return api.patch(`/company/update-deposit-bonus`, data);
+    },
+    updateAgentUserBonusPercentage: async (data: { agentId: string, depositBonusPercentage: number, }) => {
+        return api.patch(`/company/update-agent-user-deposit-bonus/${data.agentId}`, data);
+    },
+    updateDepositBonusPercentageEnabled: async (data: { companyId: string, depositBonusPercentageEnabled: boolean }) => {
+        return api.patch(`/company/update-deposit-bonus-percentage-enabled/${data.companyId}`, data);
     },
 };

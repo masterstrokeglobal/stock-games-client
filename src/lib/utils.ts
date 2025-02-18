@@ -79,7 +79,7 @@ export const  deepClone = (obj: any) => {
   return JSON.parse(JSON.stringify(obj));
 }
 
-export const COMPANYID = Number(process.env.NEXT_PUBLIC_COMPANY_ID) ?? 4
+export const COMPANYID = Number(process.env.NEXT_PUBLIC_COMPANY_ID) ?? 4;
 
 export const PLATFORMFEES = 4
 

@@ -6,6 +6,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import Wallet from "@/models/wallet";
 import { useGetUserProfitLoss } from "@/react-query/payment-queries"; // Adjust this hook to fetch user-specific data
 import {
     ArrowDownCircle,
@@ -13,7 +14,8 @@ import {
     Banknote,
     Briefcase,
     Coins,
-    DollarSign
+    DollarSign,
+    HandCoins
 } from "lucide-react";
 import React, { useMemo } from "react";
 
@@ -31,7 +33,9 @@ const UserEarningsCard = ({ userId }: Props) => {
         totalBets,
         totalWinnings,
         totalWithdrawals,
+        totalplatformfees,
         netProfitOrLoss,
+        wallet,
     } = useMemo(() => {
         const result = data?.data?.result || {};
         return {
@@ -39,8 +43,10 @@ const UserEarningsCard = ({ userId }: Props) => {
             totalBonus: result.totalbonus ?? 0,
             totalBets: result.totalbets ?? 0,
             totalWinnings: result.totalwinnings ?? 0,
+            totalplatformfees: result.totalplatformfees ?? 0,
             totalWithdrawals: result.totalwithdrawals ?? 0,
             netProfitOrLoss: result.netProfitOrLoss ?? 0,
+            wallet: new Wallet(result.wallet),
         };
     }, [data]);
 
@@ -90,8 +96,42 @@ const UserEarningsCard = ({ userId }: Props) => {
                         value={totalWithdrawals}
                         color="red"
                     />
+                
+                    {/* Total Platform Fees */}
+                    <StatCard
+                        icon={<HandCoins className="text-blue-500 w-8 h-8" />}
+                        label="Total Platform Fees"
+                        value={totalplatformfees}
+                        color="red"
+                    />
+
+
 
                     {/* Net Profit or Loss */}
+
+
+                    <StatCard
+                        icon={<DollarSign className="text-green-600 w-8 h-8" />}
+                        label="Main Balance"
+                        value={wallet?.mainBalance ?? 0}
+                        color="green"
+                    />
+
+                    <StatCard
+                        icon={<Banknote className="text-blue-600 w-8 h-8" />}
+                        label="Bonus Balance"
+                        value={wallet?.bonusBalance ?? 0}
+                        color="blue"
+                    />
+
+                    <StatCard
+                        icon={<Briefcase className="text-yellow-600 w-8 h-8" />}
+                        label="Total Balance"
+                        value={wallet?.totalBalance ?? 0}
+                        color="yellow"
+                    />
+
+
                     <StatCard
                         icon={
                             <ArrowUpCircle
@@ -103,6 +143,34 @@ const UserEarningsCard = ({ userId }: Props) => {
                         value={netProfitOrLoss}
                         color={netProfitOrLoss >= 0 ? "green" : "red"}
                     />
+
+                    <StatCard
+                        icon={<DollarSign className="text-green-600 w-8 h-8" />}
+                        label="Main Balance"
+                        value={wallet?.mainBalance ?? 0}
+                        color="green"
+                    />
+
+                    <StatCard
+                        icon={<Banknote className="text-blue-600 w-8 h-8" />}
+                        label="Bonus Balance"
+                        value={wallet?.bonusBalance ?? 0}
+                        color="blue"
+                    />
+
+                    <StatCard
+                        icon={<Briefcase className="text-yellow-600 w-8 h-8" />}
+                        label="Total Balance"
+                        value={wallet?.totalBalance ?? 0}
+                        color="yellow"
+                    />
+
+                    <StatCard
+                        icon={<Coins className="text-blue-600 w-8 h-8" />}
+                        label="Withdrawable Balance"
+                        value={wallet?.withdrawableBalance ?? 0}
+                        color="blue"
+                    />
                 </div>
             </CardContent>
         </Card>
@@ -110,7 +178,7 @@ const UserEarningsCard = ({ userId }: Props) => {
 };
 
 // Reusable Stat Card component
-const StatCard = ({
+export const StatCard = ({
     icon,
     label,
     value,

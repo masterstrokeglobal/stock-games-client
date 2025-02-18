@@ -9,6 +9,8 @@ export class Company {
     logo?: string;
     primaryColor?: string;
     secondaryColor?: string;
+    depositBonusPercentage?: string;
+    depositBonusPercentageEnabled?:boolean;
     paymentImage?: string;
     domain?: string;
     createdAt?: Date;
@@ -25,13 +27,14 @@ export class Company {
         this.logo = params.logo;
         this.primaryColor = params.primaryColor;
         this.placementNotAllowed = params.placementNotAllowed || [];
-
+        this.depositBonusPercentageEnabled = params.depositBonusPercentageEnabled;
         this.secondaryColor = params.secondaryColor;
         this.domain = params.domain;
         this.createdAt = params.createdAt;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;
         this.paymentImage = params.paymentImage;
+        this.depositBonusPercentage = params.depositBonusPercentage;
     }
 }
 

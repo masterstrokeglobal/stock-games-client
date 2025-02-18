@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { useGetMyRoundResult } from '@/react-query/round-record-queries';
 import { AlertCircle, Loader2 } from 'lucide-react';
@@ -25,7 +26,9 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
       return {
         totalBetAmount: data.data.totalBetAmount.toFixed(2),
         totalWinnings: data.data.totalWinnings.toFixed(2),
-        profit: (data.data.totalWinnings - data.data.totalBetAmount).toFixed(2)
+        platformFees:data.data.totalPlatformFeeAmount.toFixed(2),
+        netWinning: (data.data.netWinning).toFixed(2),
+        profit: (data.data.netWinning - data.data.totalBetAmount).toFixed(2)
       };
     }
     return null;
@@ -96,6 +99,15 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
                 <div className="text-center  flex justify-between rounded-lg">
                   <p className="">Total Winnings</p>
                   <p className="text-xl ">₹{resultData.totalWinnings}</p>
+                </div>
+                <div className="text-center  flex justify-between rounded-lg">
+                  <p className="">Platform Fees</p>
+                  <p className="text-xl ">- ₹{resultData.platformFees}</p>
+                </div>
+                <Separator />
+                <div className="text-center  flex justify-between rounded-lg">
+                  <p className="">Net Winning</p>
+                  <p className="text-xl ">₹{resultData.netWinning}</p>
                 </div>
                 <div className="text-center flex justify-between  rounded-lg">
                   <p className="">Profit/Loss</p>

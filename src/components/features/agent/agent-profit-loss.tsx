@@ -23,10 +23,10 @@ type Props = {
             totalBets: number;
             totalWinnings: number;
             totalWithdrawals: number;
-            totalMainBalance: number;
-            totalBonusBalance: number;
             totalBalance: number;
             netProfitOrLoss: number;
+            "totalMainBalance": number;
+            "totalBonusBalance": number;
         }
     };
 };
@@ -38,12 +38,12 @@ const AgentProfitLossCard = ({ data }: Props) => {
         totalBonus,
         totalBets,
         totalBalance,
-        totalBonusBalance,
         WithdrawalableAmount,
-        totalMainBalance,
         totalWinnings,
         totalWithdrawals,
         netProfitOrLoss,
+        totalBonusBalance,
+        totalMainBalance,
     } = useMemo(() => {
         const result = data?.totalProfitAndLoss || {};
 
@@ -55,11 +55,12 @@ const AgentProfitLossCard = ({ data }: Props) => {
             totalBets: result.totalBets ?? 0,
             totalWinnings: result.totalWinnings ?? 0,
             totalWithdrawals: result.totalWithdrawals ?? 0,
-            totalMainBalance: result.totalMainBalance ?? 0,
-            totalBonusBalance: result.totalBonusBalance ?? 0,
             totalBalance: totalAmount,
             WithdrawalableAmount: WithdrawalableAmount,
             netProfitOrLoss: result.netProfitOrLoss ?? 0,
+            totalMainBalance: result.totalMainBalance ?? 0,
+            totalBonusBalance: result.totalBonusBalance ?? 0,
+
         };
     }, [data]);
 
@@ -133,7 +134,7 @@ const AgentProfitLossCard = ({ data }: Props) => {
 
                     {/* Total Bonus Balance */}
                     <StatCard
-                        icon={<Coins className="text-yellow-600 w-8 h-8" />}
+                     icon={<Coins className="text-yellow-600 w-8 h-8" />}   
                         label="Total Bonus Balance"
                         value={totalBonusBalance}
                         color="yellow"
@@ -153,6 +154,12 @@ const AgentProfitLossCard = ({ data }: Props) => {
                         label="Withdrawable Amount"
                         value={WithdrawalableAmount}
                         color="green"
+                    />
+                    <StatCard
+                        icon={<DollarSign className="text-green-600 w-8 h-8" />}
+                        label="Total Balance"
+                        value={totalMainBalance + totalBonusBalance}
+                        color="blue"
                     />
                 </div>
             </CardContent>
