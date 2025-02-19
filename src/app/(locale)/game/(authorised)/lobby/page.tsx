@@ -6,9 +6,15 @@ import TopBar from '@/components/common/top-bar';
 import { Users, Plus } from 'lucide-react';
 import CreateLobbyForm from '@/components/features/lobby/create-lobby-form';
 import LobbyList from '@/components/features/lobby/lobby-list';
+import { notFound, useSearchParams } from 'next/navigation';
+import { LobbyGameType } from '@/models/lobby';
 
 const GameLobby = () => {
-    const [activeTab, setActiveTab] = React.useState('join');
+    const searchParams = useSearchParams();
+    const gameType = searchParams.get('gameType') as LobbyGameType;
+    const [activeTab, setActiveTab] = React.useState('join'); 
+
+    if (gameType === null) return notFound();
 
     return (
         <div className="bg-primary-game w-full">
@@ -35,7 +41,7 @@ const GameLobby = () => {
                         </Button>
                     </div>
 
-                    {activeTab === 'create' ? <CreateLobbyForm onCreate={() => setActiveTab('join')} /> : <LobbyList />}
+                    {activeTab === 'create' ? <CreateLobbyForm gameType={gameType} onCreate={() => setActiveTab('join')} /> : <LobbyList type={gameType} />}
                 </div>
             </Container>
         </div>

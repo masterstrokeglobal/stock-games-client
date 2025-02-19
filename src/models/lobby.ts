@@ -17,6 +17,7 @@ export enum LobbyGameType {
     GUESS_LAST_EIGHT = "guess_last_eight",
     GUESS_HIGHER = "guess_higher",
 }
+
 export enum LobbyEvents {
     USER_JOINED = "user_joined",
     USER_LEFT = "user_left",
@@ -120,11 +121,11 @@ export class Lobby {
 
         return readyUsers * (this?.amount * .90);
     }
-    
+
     getWinnerCode = (resultData: any): string | null => {
-        if (resultData?.priceDifferences && Array.isArray(resultData.priceDifferences) && resultData.priceDifferences.length > 0 ) {
+        if (resultData?.priceDifferences && Array.isArray(resultData.priceDifferences) && resultData.priceDifferences.length > 0) {
             if (resultData.priceDifferences[0].code)
-            return resultData.priceDifferences[0].codeName;
+                return resultData.priceDifferences[0].codeName;
         }
         return null;
 

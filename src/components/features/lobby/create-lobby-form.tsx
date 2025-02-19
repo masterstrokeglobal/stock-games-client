@@ -1,8 +1,5 @@
 "use client";
-import React, { useMemo } from 'react';
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { Button } from '@/components/ui/button';
 import {
     Card,
     CardContent,
@@ -10,31 +7,26 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { Separator } from "@/components/ui/separator";
-import { Button } from '@/components/ui/button';
-import FormProvider from '@/components/ui/form/form-provider';
 import FormInput from '@/components/ui/form/form-input';
+import FormProvider from '@/components/ui/form/form-provider';
 import FormGroupSelect from '@/components/ui/form/form-select';
 import FormSwitch from '@/components/ui/form/form-switch';
-import { useCreateLobby } from '@/react-query/lobby-query';
-import { SchedulerType } from '@/models/market-item';
-import { LobbyType } from '@/models/lobby';
-import { useRouter } from 'next/navigation';
+import { Separator } from "@/components/ui/separator";
 import useNSEAvailable from '@/hooks/use-nse-available';
+import { LOBBY_GAMES } from '@/lib/constants';
+import { LobbyGameType, LobbyType } from '@/models/lobby';
+import { SchedulerType } from '@/models/market-item';
+import { useCreateLobby } from '@/react-query/lobby-query';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 export enum LobbyStatus {
     OPEN = "open",
     IN_PROGRESS = "in_progress",
     CLOSED = "closed",
-}
-
-
-export enum LobbyGameType {
-  GUESS_FIRST_FOUR = "guess_first_four",
-  GUESS_LAST_FOUR = "guess_last_four",
-  GUESS_FIRST_EIGHT = "guess_first_eight",
-  GUESS_LAST_EIGHT = "guess_last_eight",
-  GUESS_HIGHER = "guess_higher",
 }
 
 
@@ -75,24 +67,18 @@ const defaultValues: CreateLobbyFormValues = {
     isPublic: true
 };
 
-const gameTypeOptions = [
-    { label: "Guess First Four", value: LobbyGameType.GUESS_FIRST_FOUR },
-    { label: "Guess Last Four", value: LobbyGameType.GUESS_LAST_FOUR },
-    { label: "Guess First Eight", value: LobbyGameType.GUESS_FIRST_EIGHT },
-    { label: "Guess Last Eight", value: LobbyGameType.GUESS_LAST_EIGHT },
-    { label: "Guess Higher", value: LobbyGameType.GUESS_HIGHER }
-];
 type Props = {
     onCreate: () => void;
+    gameType: LobbyGameType;
 }
-const CreateLobbyForm = ({ onCreate }: Props) => {
-    const router  = useRouter();
+const CreateLobbyForm = ({ onCreate, gameType }: Props) => {
+    const router = useRouter();
     const { mutate: createLobby, isPending } = useCreateLobby();
 
-    const isNSEOpen  = useNSEAvailable();
+    const isNSEOpen = useNSEAvailable();
     const form = useForm<CreateLobbyFormValues>({
         resolver: zodResolver(createLobbySchema),
-        defaultValues,
+        defaultValues: { ...defaultValues, gameType }
     });
 
     const marketOptions = useMemo(() => {
@@ -106,7 +92,7 @@ const CreateLobbyForm = ({ onCreate }: Props) => {
             { label: "Crypto", value: SchedulerType.CRYPTO }
         ];
     }
-, []);
+        , []);
 
     const onSubmit = (formValue: CreateLobbyFormValues) => {
         createLobby({
@@ -124,11 +110,16 @@ const CreateLobbyForm = ({ onCreate }: Props) => {
         });
     };
 
+    const currentGame = useMemo(() => {
+        return LOBBY_GAMES.find(game => game.gameType === gameType);
+    }, [gameType]);
     return (
         <Card className="bg-gray-900 border-gray-800">
             <CardHeader>
-                <CardTitle className="text-white">Create New Lobby</CardTitle>
-                <CardDescription className="text-gray-400">Set up your game lobby</CardDescription>
+                <CardTitle className="text-white text-xl">Create New Lobby for {currentGame?.title}</CardTitle>
+                <CardDescription className="text-gray-400">{
+                    currentGame?.description
+                    }</CardDescription>
             </CardHeader>
             <CardContent>
                 <FormProvider
@@ -147,16 +138,6 @@ const CreateLobbyForm = ({ onCreate }: Props) => {
                             className='text-white'
                             inputClassName="h-14 bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
                         />
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <FormGroupSelect
-                                control={form.control}
-                                name="gameType"
-                                labelClassName='text-white'
-                                label="Game Type"
-                                options={gameTypeOptions}
-                                className="h-14 bg-gray-800 text-white border-gray-700"
-                            />
-                        </div>
                     </div>
 
                     <Separator className="bg-gray-800" />

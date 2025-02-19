@@ -19,7 +19,7 @@ const EditContactPage = () => {
         if (isSuccess && data?.data) return new Contact(data?.data);
 
         return null;
-    }, [data]);
+    }, [data,isSuccess]);
 
     const onSubmit = (updatedData: any) => {
         mutate({

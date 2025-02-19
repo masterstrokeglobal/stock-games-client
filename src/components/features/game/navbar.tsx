@@ -31,7 +31,7 @@ const Navbar = () => {
                 </span>
             </div>
             <div className="flex items-center space-x-4 ml-auto">
-                {isDerby && <Link href="/game/lobby/">
+                {isDerby && <Link href="/game/lobby/select">
                     <Button className="px-4 py-2 text-white hidden md:flex bg-[#122146] border border-[#EFF8FF17]  h-11 rounded-full ">
                         <img width="24" height="24" className="mr-2" src="https://img.icons8.com/external-filled-line-andi-nur-abdillah/64/external-Multiplayer-gaming-(filled-line)-filled-line-andi-nur-abdillah.png" alt="external-Multiplayer-gaming-(filled-line)-filled-line-andi-nur-abdillah" />
                         Play with Friends             </Button>

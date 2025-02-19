@@ -1,6 +1,23 @@
 import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin();
 
+const gameType = process.env.NEXT_PUBLIC_GAME_TYPE || 'derby';
+
+const isDerby = gameType === 'derby';
+
+const redirects = [
+  {
+    source: '/admin',
+    destination: '/dashboard',
+    permanent: true,
+  },
+  {
+    source: '/',
+    destination: isDerby ? "/game" : "game/lobby/select",
+    permanent: true,
+  }
+];
+
 
 const nextConfig = {
   /* config options here */
@@ -10,18 +27,7 @@ const nextConfig = {
     ],
   },
   redirects: async () => {
-    return [
-      {
-        source: '/',
-        destination: '/game',
-        permanent: true,
-      },
-      {
-        source: '/admin',
-        destination: '/dashboard',
-        permanent: true,
-      },
-    ];
+    return redirects;
   }
 };
 

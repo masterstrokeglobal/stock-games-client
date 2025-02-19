@@ -1,4 +1,4 @@
-import Lobby, { LobbyType } from "@/models/lobby";
+import Lobby, { LobbyGameType, LobbyType } from "@/models/lobby";
 import { SchedulerType } from "@/models/market-item";
 import api from "./instance";
 export enum LobbyStatus {
@@ -22,6 +22,7 @@ export interface GetLobbiesFilter {
     page?: number;
     limit?: number;
     type?: LobbyType;
+    gameType?: LobbyGameType
 }
 
 // API Service
