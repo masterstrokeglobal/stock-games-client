@@ -45,7 +45,7 @@ const UserTable = () => {
         page,
         search,
         orderByField,
-        companyId: admin.isSuperAdmin ? undefined : COMPANYID.toString(),
+        companyId: admin.isSuperAdmin ? companyId?.toString() : COMPANYID.toString(),
         orderBy,
     });
 
