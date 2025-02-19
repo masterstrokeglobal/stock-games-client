@@ -79,3 +79,17 @@ export const useGetAgentProfitLoss = (filter: {
         enabled: !!filter.agentId,
     });
 };
+
+// Update agent password
+export const useUpdateAgentPassword = () => {
+    return useMutation({
+        mutationFn: ({ agentId, password }: { agentId: string; password: string }) =>
+            agentAPI.updateAgentPassword(agentId, password),
+        onSuccess: () => {
+            toast.success("Agent password updated successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error updating password");
+        },
+    });
+};

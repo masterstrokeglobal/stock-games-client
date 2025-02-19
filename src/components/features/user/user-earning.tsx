@@ -106,18 +106,9 @@ const UserEarningsCard = ({ userId }: Props) => {
                     />
 
 
+
                     {/* Net Profit or Loss */}
-                    <StatCard
-                        icon={
-                            <ArrowUpCircle
-                                className={`w-8 h-8 ${netProfitOrLoss >= 0 ? "text-green-600" : "text-red-600"
-                                    }`}
-                            />
-                        }
-                        label="Net Profit/Loss"
-                        value={netProfitOrLoss}
-                        color={netProfitOrLoss >= 0 ? "green" : "red"}
-                    />
+
 
                     <StatCard
                         icon={<DollarSign className="text-green-600 w-8 h-8" />}
@@ -140,12 +131,19 @@ const UserEarningsCard = ({ userId }: Props) => {
                         color="yellow"
                     />
 
+
                     <StatCard
-                        icon={<Coins className="text-blue-600 w-8 h-8" />}
-                        label="Withdrawable Balance"
-                        value={wallet?.withdrawableBalance ?? 0}
-                        color="blue"
+                        icon={
+                            <ArrowUpCircle
+                                className={`w-8 h-8 ${netProfitOrLoss >= 0 ? "text-green-600" : "text-red-600"
+                                    }`}
+                            />
+                        }
+                        label="Net Profit/Loss"
+                        value={netProfitOrLoss}
+                        color={netProfitOrLoss >= 0 ? "green" : "red"}
                     />
+
                 </div>
             </CardContent>
         </Card>
