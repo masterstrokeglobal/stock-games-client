@@ -17,9 +17,6 @@ const ANIMATION_SPEED = 0.5;
 const FRAME_TIME = 0.016;
 const INITIAL_X_OFFSET = -15;
 const HORSE_SPACING = 4;
-const Z_SPACING = 8;
-const MAX_Z_POSITION = 80;
-const MIN_Z_POSITION = -80;
 const Z_BASE_OFFSET = -120;
 
 interface HorsePosition {
