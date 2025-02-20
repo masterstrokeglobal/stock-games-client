@@ -49,7 +49,7 @@ const LobbySettings = ({ lobby }: Props) => {
             )}
 
 
-            {(!isParticipant && !lobby.isClosed) && ( // Join Button
+            {(!isParticipant && !lobby.isClosed) && (
                 <Button
                     variant="game"
                     className="w-full flex-1"
@@ -63,7 +63,6 @@ const LobbySettings = ({ lobby }: Props) => {
             {lobby.isStarted && (
                 <Link href={`/game/lobby/${lobby.joiningCode}/play`} >
                     <Button
-
                         variant="game"
                         className="w-full flex-1"
                     >
@@ -107,7 +106,7 @@ const LobbySettings = ({ lobby }: Props) => {
                 </Button>
             )}
             {lobby.isClosed && (    // Lobby is closed
-                <Link href="/game/lobby">
+                <Link href={`/game/lobby?gameType=${lobby.gameType}`} >
                     <Button variant="game" className="w-full flex-1">
                         Back to Lobbies
                     </Button>

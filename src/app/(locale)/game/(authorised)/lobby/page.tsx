@@ -12,7 +12,7 @@ import { LobbyGameType } from '@/models/lobby';
 const GameLobby = () => {
     const searchParams = useSearchParams();
     const gameType = searchParams.get('gameType') as LobbyGameType;
-    const [activeTab, setActiveTab] = React.useState('join'); 
+    const [activeTab, setActiveTab] = React.useState('join');
 
     if (gameType === null) return notFound();
 

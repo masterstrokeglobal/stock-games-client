@@ -26,7 +26,7 @@ const LeaderBoard = ({ roundRecord, filteredMarket, result }: Props) => {
 
     const leaderboardData = useMemo(() => {
         if (result) {
-            const leadboardResult =  result.priceDifferences.map((item, index) => ({
+            const leadboardResult = result.priceDifferences.map((item, index) => ({
                 horse: index + 1,
                 name: item.code,
                 price: item.currentPrice,

@@ -14,8 +14,8 @@ const GameDescriptionPage = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-[#0A0F1F] mt-20 p-4 md:p-8">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-[#0A0F1F]  px-4  md:p-8">
+        <div className="max-w-7xl mx-auto mt-20">
           <div className="text-center mb-16 animate-fadeIn">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-tight">
               Select Your Game
