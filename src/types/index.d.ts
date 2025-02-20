@@ -22,6 +22,7 @@ type SearchFilters = {
     active?: string;
     status?: string;
     placementAllowed?: string;
+    companyId?: string;
     search: string;
     orderByField?: string;
     orderBy?: string;

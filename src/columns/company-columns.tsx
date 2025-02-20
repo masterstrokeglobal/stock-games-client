@@ -16,10 +16,15 @@ import { Company } from "@/models/company";
 import { useDeleteCompanyById } from "@/react-query/company-queries";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { Edit2, Eye, Loader2, Trash2, Users2 } from 'lucide-react';
+import { Edit2, Eye, Loader2, Trash2 } from 'lucide-react';
 import Link from "next/link";
 
 const companyColumns: ColumnDef<Company>[] = [
+    {
+        header: "ID",
+        accessorKey: "id",
+        cell: ({ row }) => <div className="text-[#6B7280]">{row.original.id}</div>,
+    },
     {
         header: "NAME",
         accessorKey: "name",
@@ -77,6 +82,28 @@ const companyColumns: ColumnDef<Company>[] = [
         ),
     },
     {
+        header: "Users",
+        accessorKey: "users",
+        cell: ({ row }) => (
+            <Link href={`/dashboard/users?company=${row.original.id}`}>
+                <Button variant="secondary" size="sm" aria-label="View Users">
+                    View Users
+                </Button>
+            </Link>
+        ),
+    },
+    {
+        header: "Agents",
+        accessorKey: "agents",
+        cell: ({ row }) => (
+            <Link href={`/dashboard/company/${row.original.id}/agents`}>
+               <Button variant="secondary" size="sm" aria-label="View Users">
+                    View Agents
+                </Button>
+            </Link>
+        ),
+    },
+    {
         header: "",
         accessorKey: "actions",
         cell: ({ row }) => <ActionColumn company={row.original} />,
@@ -95,7 +122,7 @@ const ActionColumn = ({ company }: { company: Company }) => {
     return (
         <Dialog>
             <AlertDialog>
-                <div className="flex space-x-4 w-36 justify-end">
+                <div className="flex space-x-4 min-w-36 justify-end">
                     <Link href={`/dashboard/company/${company.id}`}>
                         <Button variant="ghost" size="icon" aria-label="Edit Company">
                             <Edit2 className="w-5 h-5" />
@@ -107,11 +134,7 @@ const ActionColumn = ({ company }: { company: Company }) => {
                         </Button>
                     </Link>
 
-                    <Link href={`/dashboard/company/${company.id}/agents`}>
-                        <Button variant="ghost" size="icon" aria-label="Agents">
-                            <Users2 className="w-5 h-5" />
-                        </Button>
-                    </Link>
+
 
                     <AlertDialogTrigger asChild>
                         <Button
