@@ -69,7 +69,7 @@ const LobbyChatSection = ({ lobbyId, onSend,className }: Props) => {
                 </CardTitle>
             </CardHeader>
             <CardContent className="p-4 flex flex-col overflow-hidden bg-gradient-to-b from-gray-900 to-gray-950">
-                <ScrollArea className='h-[calc(100vh-350px)] '>
+                <ScrollArea className='md:h-[calc(100vh-400px)] '>
                     {isLoading ? (
                         <div className="flex-1 flex items-center justify-center">
                             <div className="text-gray-400">Loading chat...</div>

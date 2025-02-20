@@ -27,7 +27,7 @@ type Props = {
 const MultiplayerRouletteGame = ({ lobbyRound, lobby, result }: Props) => {
     const roundRecord = lobbyRound.roundRecord!;
     const t = useTranslations("game");
-    const [betAmount, setBetAmount] = useState<number>(lobby.amount);
+    const [betAmount, setBetAmount] = useState<number>(lobby.bettedAmount);
     const gameState = useGameState(roundRecord);
     const { mutate, isPending: isPlacingBet } = useCreatePlacementBet();
 
@@ -43,7 +43,7 @@ const MultiplayerRouletteGame = ({ lobbyRound, lobby, result }: Props) => {
         const marketNumber = roundRecord.getMarketNumberById(gameRecords[0].marketItem!.id!);
         const chips = [{
             type: PlacementType.SINGLE,
-            amount: lobby.amount,
+            amount: lobby.bettedAmount,
             numbers: [marketNumber]
         }];
         return chips;
@@ -117,7 +117,6 @@ const MultiplayerRouletteGame = ({ lobbyRound, lobby, result }: Props) => {
                                     roundRecord={roundRecord}
                                     hoveredCell={hoveredCell as unknown as Bet}
                                     chips={chips as unknown as Chip[]}
-
                                     result={result}
                                     previousRoundId={roundRecord.id.toString()}
                                 />

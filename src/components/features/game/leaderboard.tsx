@@ -36,7 +36,7 @@ const LeaderBoard = ({ roundRecord, filteredMarket, result }: Props) => {
 
             if (filteredMarket && filteredMarket.length > 0) {
                 return leadboardResult.filter((item) =>
-                    filteredMarket.find((filteredItem) => filteredItem.id === item.horse)
+                    filteredMarket.find((filteredItem) => filteredItem.code == item.name)
                 );
             }
         }
@@ -137,7 +137,7 @@ const LeaderBoard = ({ roundRecord, filteredMarket, result }: Props) => {
                                 key={index}
                                 className={cn(
                                     "border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden",
-                                    (index === 0 && winnerNumber === 0) ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm"
+                                    (index === 0 && winnerNumber === 0 && !isGameOver) ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm"
                                 )}
                             >
                                 <td className="p-2 text-gray-300">

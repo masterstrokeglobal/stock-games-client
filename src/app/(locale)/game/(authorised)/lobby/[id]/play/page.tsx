@@ -46,8 +46,6 @@ const GamePage = () => {
     }, [isSuccess, data, lobby?.gameType]);
     const { showResults, resultData, sendMessage } = useLobbyWebSocket({ lobbyCode: lobbyCode, lobbyId: lobby?.id });
 
-    console.log("lobbyRound", filteredMarket);
-
     const roundRecord = lobbyRound ? lobbyRound.roundRecord : null;
     useHorseRaceSound(roundRecord);
     if (isLoading && lobbyRound == undefined) return <div>Loading...</div>
@@ -76,7 +74,7 @@ const GamePage = () => {
                 <div
                     style={borderStyle}
                     className="xl:col-span-5 col-span-4 row-span-3 rounded-2xl ">
-                    {roundRecord && <LeaderBoard roundRecord={roundRecord} filteredMarket={filteredMarket} result={resultData} />}
+                    {roundRecord && filteredMarket && <LeaderBoard roundRecord={roundRecord} filteredMarket={filteredMarket} result={resultData} />}
 
                 </div>
             </main>}
@@ -86,7 +84,7 @@ const GamePage = () => {
                     {!isPlaceOver && <main className="bg-[#0A1634]">
                         <div className="px-2">
                             {lobbyRound.roundRecord && <MultiplayerRouletteGame lobbyRound={lobbyRound} lobby={lobby} />}
-                            {lobbyRound && lobby && <PlacementBetsLobby lobbyRound={lobbyRound} lobby={lobby} sendMessage={sendMessage} />}
+                            {lobbyRound && lobby &&  <PlacementBetsLobby lobbyRound={lobbyRound} lobby={lobby} sendMessage={sendMessage} />}
                         </div>
                     </main>}
                     {(isPlaceOver && lobbyRound.roundRecord) && <LeaderBoard roundRecord={lobbyRound.roundRecord} filteredMarket={filteredMarket} result={resultData} />}
@@ -112,7 +110,7 @@ const MobileHeader = ({ roundRecord, filteredMarket }: { roundRecord: RoundRecor
     if (isPlaceOver) return <>
         <MobileGameHeader roundRecord={roundRecord} />
         <div className="m-2 rounded-xl overflow-hidden">
-            {roundRecord && <HorseRace roundRecord={roundRecord} filteredMarket={filteredMarket} />}
+            {(roundRecord && filteredMarket )&& <HorseRace roundRecord={roundRecord} filteredMarket={filteredMarket} />}
         </div>
     </>
 

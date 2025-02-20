@@ -24,7 +24,6 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord, result }:
         const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 4000;
 
         const timer = setTimeout(() => {
-            console.log('refetching');
             refetch();
         }, resultFetchTime);
 
@@ -41,7 +40,7 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord, result }:
 
                 return marketItem?.horse || null;
             }).filter(Boolean) ?? [];
-        } else if (isSuccess && data.data?.winningId && roundRecord.roundRecordGameType === RoundRecordGameType.DERBY){
+        } else if (isSuccess && data.data?.winningId && roundRecord.roundRecordGameType === RoundRecordGameType.DERBY) {
             // If no result but we have successful data fetch with winningId
             const winningNumber = roundRecord.market.find(
                 (item) => item.id === data.data?.winningId
@@ -51,7 +50,6 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord, result }:
         return [];
     }, [data, isSuccess, result, roundRecord.market]);
 
-    console.log('winningNumbers', winningNumbers);
     const getCodeByIndex = (index: number) => {
         return `${roundRecord.market[index - 1]?.codeName}`;
     }

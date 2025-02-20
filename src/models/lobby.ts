@@ -1,3 +1,4 @@
+import { LOBBY_PLATFORM_FEES } from "@/lib/utils";
 import { Company } from "./company";
 import LobbyUser, { LobbyUserStatus } from "./lobby-user";
 import { SchedulerType } from "./market-item";
@@ -120,6 +121,10 @@ export class Lobby {
         if (!readyUsers) return 0;
 
         return readyUsers * (this?.amount * .90);
+    }
+
+    get bettedAmount(): number {
+         return this.amount - (LOBBY_PLATFORM_FEES/100 * this.amount);
     }
 
     getWinnerCode = (resultData: any): string | null => {

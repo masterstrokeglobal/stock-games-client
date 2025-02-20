@@ -7,6 +7,7 @@ import LobbyChatSheet from '@/components/features/lobby/lobby-chat-sheet';
 import LobbyPlayers from '@/components/features/lobby/lobby-players';
 import LobbySettings from '@/components/features/lobby/lobby-settings';
 import useLobbyWebSocket from '@/components/features/lobby/lobby-websocket';
+import ShareLink from '@/components/features/lobby/share-link';
 import TimeLeft from '@/components/features/lobby/time-left';
 import {
   Card,
@@ -104,7 +105,10 @@ const LobbyWithChat = () => {
             </div>
             {/* Right Side - Chat */}
 
-            {lobby && <LobbyChatSection className='md:block hidden' lobbyId={lobby.id!} onSend={sendMessage} />}
+            <div>
+              {lobby && <LobbyChatSection className='md:block hidden' lobbyId={lobby.id!} onSend={sendMessage} />}
+              <ShareLink className='mt-2' />
+            </div>
           </div>
         </div>
       </Container>
