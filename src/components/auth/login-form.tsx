@@ -18,7 +18,7 @@ const loginFormSchema = z.object({
         .email({ message: "Invalid email format" })
         .max(255, { message: "Email must be less than 255 characters" }),
     loginAs: z.nativeEnum(AdminRole),
-    password: z.string().min(8, { message: "Password must be at least 8 characters" }),
+    password: z.string().min(4, { message: "Password must be at least 4  characters" }),
 });
 
 type LoginFormValues = z.infer<typeof loginFormSchema>;

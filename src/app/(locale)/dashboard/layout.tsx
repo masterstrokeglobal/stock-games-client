@@ -3,9 +3,11 @@ import {
     ArrowLeft,
     CircleUser,
     Menu,
-} from "lucide-react"
+} from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import LoadingScreen from "@/components/common/loading-screen";
+import Sidebar from "@/components/dashboard/sidebar";
+import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,16 +15,14 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import Sidebar from "@/components/dashboard/sidebar"
-import { PropsWithChildren, useEffect } from "react"
-import { useAuthStore } from "@/context/auth-context"
-import LoadingScreen from "@/components/common/loading-screen"
-import { useRouter } from "next/navigation";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@/components/ui/dropdown-menu";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useAuthStore } from "@/context/auth-context";
 import useLogin from "@/hooks/use-login";
 import { useAdminLogout } from "@/react-query/admin-auth-queries";
+import { useRouter } from "next/navigation";
+import { PropsWithChildren, useEffect } from "react";
 
 const DashboardLayout = ({ children }: PropsWithChildren) => {
     const { loading, userDetails } = useAuthStore();
@@ -85,6 +85,8 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
                 <main className="flex-1 p-4 lg:p-6">
                     {children}
                 </main>
+                <ScrollBar orientation="vertical"/>
+                <ScrollBar orientation="horizontal"/>
             </ScrollArea>
         </div>
     )

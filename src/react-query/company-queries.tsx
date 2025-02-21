@@ -21,10 +21,11 @@ export const useGetAllCompanies = (filter: SearchFilters) => {
     });
 };
 
-export const useGetCompanyById = (companyId: string) => {
+export const useGetCompanyById = (companyId?: string) => {
     return useQuery({
         queryKey: ["company", companyId],
-        queryFn: () => companyAPI.getCompanyById(companyId),
+        queryFn:companyId? () => companyAPI.getCompanyById(companyId):undefined,
+         enabled: !!companyId,
     });
 };
 

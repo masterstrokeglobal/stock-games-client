@@ -144,33 +144,6 @@ const UserEarningsCard = ({ userId }: Props) => {
                         color={netProfitOrLoss >= 0 ? "green" : "red"}
                     />
 
-                    <StatCard
-                        icon={<DollarSign className="text-green-600 w-8 h-8" />}
-                        label="Main Balance"
-                        value={wallet?.mainBalance ?? 0}
-                        color="green"
-                    />
-
-                    <StatCard
-                        icon={<Banknote className="text-blue-600 w-8 h-8" />}
-                        label="Bonus Balance"
-                        value={wallet?.bonusBalance ?? 0}
-                        color="blue"
-                    />
-
-                    <StatCard
-                        icon={<Briefcase className="text-yellow-600 w-8 h-8" />}
-                        label="Total Balance"
-                        value={wallet?.totalBalance ?? 0}
-                        color="yellow"
-                    />
-
-                    <StatCard
-                        icon={<Coins className="text-blue-600 w-8 h-8" />}
-                        label="Withdrawable Balance"
-                        value={wallet?.withdrawableBalance ?? 0}
-                        color="blue"
-                    />
                 </div>
             </CardContent>
         </Card>

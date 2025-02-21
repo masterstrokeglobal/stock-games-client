@@ -14,17 +14,38 @@ import DataTable from "@/components/ui/data-table-server";
 import { Input } from "@/components/ui/input";
 import { useGetAllUsers } from "@/react-query/user-queries";
 import User from "@/models/user";
+import { useAuthStore } from "@/context/auth-context";
+import Admin from "@/models/admin";
+import { COMPANYID } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
+import CompanyCard from "@/components/features/company/company-card";
+import { useGetCompanyById } from "@/react-query/company-queries";
+import Company from "@/models/company";
 
 const UserTable = () => {
+    const searchParams = useSearchParams();
+    const companyId = searchParams.get("company");
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
+    const { data: CompanyData, isSuccess: companySuccess } = useGetCompanyById(companyId ?? undefined);
     const [orderByField, setOrderByField] = useState("createdAt");
     const [orderBy, setOrderBy] = useState("DESC");
+
+    const company = useMemo(() => {
+        if (companySuccess && CompanyData) {
+            return new Company(CompanyData.data);
+        }
+        return undefined;
+    }, [CompanyData, companySuccess]);
+
+    const { userDetails } = useAuthStore();
+    const admin = userDetails as Admin;
 
     const { data, isSuccess, isFetching } = useGetAllUsers({
         page,
         search,
         orderByField,
+        companyId: admin.isSuperAdmin ? companyId?.toString() : COMPANYID.toString(),
         orderBy,
     });
 
@@ -60,7 +81,8 @@ const UserTable = () => {
 
     return (
         <section className="container-main min-h-[60vh] my-12">
-            <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between">
+            {company && <CompanyCard company={company} showBonusPercentage />}
+            <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center mt-20 justify-between">
                 <h2 className="text-xl font-semibold">Users</h2>
                 <div className="flex gap-4 flex-wrap items-center">
                     <div className="relative min-w-60 flex-1">
