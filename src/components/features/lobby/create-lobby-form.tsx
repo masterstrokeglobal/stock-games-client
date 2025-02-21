@@ -91,8 +91,7 @@ const CreateLobbyForm = ({ onCreate, gameType }: Props) => {
         return [
             { label: "Crypto", value: SchedulerType.CRYPTO }
         ];
-    }
-        , []);
+    }, [isNSEOpen]);
 
     const onSubmit = (formValue: CreateLobbyFormValues) => {
         createLobby({
@@ -119,7 +118,7 @@ const CreateLobbyForm = ({ onCreate, gameType }: Props) => {
                 <CardTitle className="text-white text-xl">Create New Lobby for {currentGame?.title}</CardTitle>
                 <CardDescription className="text-gray-400">{
                     currentGame?.description
-                    }</CardDescription>
+                }</CardDescription>
             </CardHeader>
             <CardContent>
                 <FormProvider

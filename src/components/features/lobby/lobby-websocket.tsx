@@ -7,6 +7,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { LobbyResult } from '../game/lobby-result-dialog';
+import WebSocketSingleton from '@/lib/websocket-singleton';
 interface WebSocketMessage {
     event: LobbyEvents;
     data: any;
@@ -17,11 +18,6 @@ interface ChatMessage {
     message: string;
 }
 
-const DEFAULT_CONFIG = {
-    reconnectAttempts: 3,
-    reconnectInterval: 5000,
-};
-
 function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId }: { lobbyId?: number, lobbyCode?: string }) {
     const queryClient = useQueryClient();
     const [showResults, setShowResult] = useState<boolean>(false);
@@ -30,80 +26,11 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId }: { lobbyId?: 
     const wsRef = useRef<WebSocket | null>(null);
     const router = useRouter();
 
-    useEffect(() => {
-        let reconnectCount = 0;
-
-        if (!lobbyId) {
-            return;
-        }
-
-        const connect = () => {
-            const websocketUrl = process.env.NEXT_PUBLIC_LOBBY_ROUND_WEBSOCKET_URL || 'ws://localhost:8080';
-            const ws = new WebSocket(`${websocketUrl}?lobbyId=${lobbyId}&userId=${userDetails?.id}`);
-            wsRef.current = ws;
-
-            ws.onopen = () => {
-                console.log('WebSocket Connected');
-                reconnectCount = 0;
-            };
-
-            ws.onmessage = (event: MessageEvent) => {
-                try {
-                    const message: WebSocketMessage = JSON.parse(event.data);
-                    handleAction(message);
-                } catch (error) {
-                    console.error('Error parsing WebSocket message:', error);
-                }
-            };
-
-            ws.onerror = (error: Event) => {
-                console.error('WebSocket error:', error);
-            };
-
-            ws.onclose = () => {
-                wsRef.current = null;
-
-                if (reconnectCount < DEFAULT_CONFIG.reconnectAttempts) {
-                    setTimeout(() => {
-                        reconnectCount++;
-                        connect();
-                    }, DEFAULT_CONFIG.reconnectInterval);
-                }
-            };
-        };
-
-        connect();
-
-        return () => {
-            if (wsRef.current) {
-                console.error('Closing WebSocket connection');
-                wsRef.current.close();
-                wsRef.current = null;
-            }
-        };
-    }, [lobbyId, queryClient, userDetails?.id]);
-
-    const sendMessage = useCallback((message: string) => {
-        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
-            throw new Error('WebSocket is not connected');
-        }
-
-        const chatMessage: ChatMessage = {
-            type: 'chat_message',
-            message
-        };
-
-        wsRef.current.send(JSON.stringify(chatMessage));
-    }, []);
-
-    const handleAction = (message: WebSocketMessage) => {
-        // Get the code from the updated lobby data
+    const handleAction = useCallback((message: WebSocketMessage) => {
         const code = lobbyCode;
-        // Update the specific lobby query data
         const queryKey = ['lobbies', 'code', code];
         const chatQueryKey = ["lobbies", "chat", lobbyId];
         const lobbyRoundQueryKey = ["lobbies", "round", lobbyId];
-
 
 
         switch (message.event) {
@@ -155,7 +82,6 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId }: { lobbyId?: 
                         lobby.roundRecord!.initialValues = message.data.prices;
                     }
 
-                    console.log('Initial values fetched:', lobby.roundRecord?.initialValues);
                     return lobby as unknown as T;
                 });
                 break;
@@ -173,6 +99,8 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId }: { lobbyId?: 
                     lobby.status = LobbyStatus.CLOSED;
                     return lobby as T;
                 });
+
+                console.log('Round ended:', message.data);
 
                 setShowResult(true);
                 setResultData(message.data);
@@ -209,10 +137,38 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId }: { lobbyId?: 
             default:
                 console.log('Unknown event:', message);
         }
-    };
+    }, [lobbyCode, lobbyId, queryClient, router]);
 
+
+    useEffect(() => {
+        if (!lobbyId || !userDetails?.id) return;
+          
+        console.log('Connecting to lobby websocket', lobbyId, userDetails.id);
+        const wsInstance = WebSocketSingleton.getInstance();
+        wsInstance.connect(lobbyId, userDetails.id.toString());
+        wsInstance.addListener(handleAction);
+
+        return () => {
+            wsInstance.removeListener(handleAction);
+        };
+    }, [lobbyId, userDetails?.id]);
+
+    const sendMessage = useCallback((message: string) => {
+        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
+            throw new Error('WebSocket is not connected');
+        }
+
+        const chatMessage: ChatMessage = {
+            type: 'chat_message',
+            message
+        };
+
+        wsRef.current.send(JSON.stringify(chatMessage));
+    }, []);
 
     return { sendMessage, showResults, resultData };
+
+
 
 }
 

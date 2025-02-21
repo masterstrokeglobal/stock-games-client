@@ -18,7 +18,6 @@ import { useGetCurrentLobbyRound, useGetLobbyByCode } from '@/react-query/lobby-
 import dayjs from 'dayjs';
 import { Gamepad2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
-import { useEffect } from 'react';
 
 const LobbyWithChat = () => {
   const lobbyCode = useParams().id!.toString();
@@ -29,11 +28,6 @@ const LobbyWithChat = () => {
     lobbyId: lobby?.id
   });
 
-  useEffect(() => {
-    if (lobby?.lobbyUsers) {
-      console.log('Lobby users updated:', lobby.lobbyUsers.length);
-    }
-  }, [lobby?.lobbyUsers]);
 
 
 

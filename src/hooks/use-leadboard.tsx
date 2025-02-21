@@ -94,7 +94,6 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
 
             try {
                 setConnectionStatus('connecting');
-                console.log('Connecting to WebSocket', roundRecord.type);
 
                 if (roundRecord.type === SchedulerType.CRYPTO) {
                     socketRef.current = new WebSocket(process.env.NEXT_PUBLIC_CRYPTO_WEBSOCKET_URL as string);
@@ -136,7 +135,7 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                                 }
                             }
                         } catch (error) {
-                            console.error('Error processing WebSocket message:', error);
+                            console.log('Error parsing crypto data', error);
                         }
                     };
                 }
@@ -186,14 +185,13 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                                     latestDataRef.current = calculateRanks(latestDataRef.current);
                                 }
                             });
-
                         } catch (error) {
-                            console.error('Error processing WebSocket message:', error);
+                            console.log('Error parsing NSE data', error);
                         }
                     };
                 }
             } catch (error) {
-                console.error('Error creating WebSocket connection:', error);
+                console.log(error)
                 setConnectionStatus('disconnected');
             }
 
@@ -214,8 +212,7 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                 }, 3000);
             };
 
-            socketRef.current.onerror = (error) => {
-                console.error('WebSocket error:', error);
+            socketRef.current.onerror = () => {
                 setConnectionStatus('disconnected');
             };
 

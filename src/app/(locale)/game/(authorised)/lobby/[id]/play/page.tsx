@@ -84,7 +84,7 @@ const GamePage = () => {
                     {!isPlaceOver && <main className="bg-[#0A1634]">
                         <div className="px-2">
                             {lobbyRound.roundRecord && <MultiplayerRouletteGame lobbyRound={lobbyRound} lobby={lobby} />}
-                            {lobbyRound && lobby &&  <PlacementBetsLobby lobbyRound={lobbyRound} lobby={lobby} sendMessage={sendMessage} />}
+                            {lobbyRound && lobby && <PlacementBetsLobby lobbyRound={lobbyRound} lobby={lobby} sendMessage={sendMessage} />}
                         </div>
                     </main>}
                     {(isPlaceOver && lobbyRound.roundRecord) && <LeaderBoard roundRecord={lobbyRound.roundRecord} filteredMarket={filteredMarket} result={resultData} />}
@@ -110,7 +110,7 @@ const MobileHeader = ({ roundRecord, filteredMarket }: { roundRecord: RoundRecor
     if (isPlaceOver) return <>
         <MobileGameHeader roundRecord={roundRecord} />
         <div className="m-2 rounded-xl overflow-hidden">
-            {(roundRecord && filteredMarket )&& <HorseRace roundRecord={roundRecord} filteredMarket={filteredMarket} />}
+            {(roundRecord && filteredMarket) && <HorseRace roundRecord={roundRecord} filteredMarket={filteredMarket} />}
         </div>
     </>
 
