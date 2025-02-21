@@ -57,7 +57,7 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
         return marketToRender.map((horse, index) => {
             const currentHorse = stocks.find(stock => stock.horse === horse.horse);
 
-            const zBasedOnRank = currentHorse?.rank ? -(currentHorse.rank * 8) + 30 : 0;
+            const zBasedOnRank = currentHorse?.rank ? -(currentHorse.rank * 8) + 60 : 0;
 
             return {
                 x: -15 + (index) * 4 + (Math.random() * 20),

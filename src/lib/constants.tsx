@@ -64,7 +64,7 @@ export const LOBBY_GAMES = [
     },
     {
         title: "Mini Mutual Fund",
-        gameType: "mutual-fund",
+        gameType: LobbyGameType.MINI_MUTUAL_FUND,
         description: "Create a small portfolio and compete with other players",
         rules: [
             "Select multiple stocks",

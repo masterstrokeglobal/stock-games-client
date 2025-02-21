@@ -17,6 +17,7 @@ export enum LobbyGameType {
     GUESS_FIRST_EIGHT = "guess_first_eight",
     GUESS_LAST_EIGHT = "guess_last_eight",
     GUESS_HIGHER = "guess_higher",
+    MINI_MUTUAL_FUND = "mini_mutual_fund",
 }
 
 export enum LobbyEvents {
@@ -124,7 +125,7 @@ export class Lobby {
     }
 
     get bettedAmount(): number {
-         return this.amount - (LOBBY_PLATFORM_FEES/100 * this.amount);
+        return this.amount - (LOBBY_PLATFORM_FEES / 100 * this.amount);
     }
 
     getWinnerCode = (resultData: any): string | null => {

@@ -6,20 +6,25 @@ import TopBar from '@/components/common/top-bar';
 import { Users, Plus } from 'lucide-react';
 import CreateLobbyForm from '@/components/features/lobby/create-lobby-form';
 import LobbyList from '@/components/features/lobby/lobby-list';
-import { notFound, useSearchParams } from 'next/navigation';
+import { notFound, useRouter, useSearchParams } from 'next/navigation';
 import { LobbyGameType } from '@/models/lobby';
 
 const GameLobby = () => {
+    const router = useRouter();
     const searchParams = useSearchParams();
     const gameType = searchParams.get('gameType') as LobbyGameType;
     const [activeTab, setActiveTab] = React.useState('join');
 
-    if (gameType === null) return notFound();
+    const handleBack = () => {
+        router.push('/game/lobby/select');
+    };
+
+    if (gameType === null) return handleBack();
 
     return (
         <div className="bg-primary-game w-full">
             <Container className="flex flex-col bg-primary-game items-center min-h-screen pt-24">
-                <TopBar>Game Lobby</TopBar>
+                <TopBar handleBackButton={handleBack}>Game Lobby</TopBar>
 
                 <div className="w-full max-w-3xl mx-auto mt-8">
                     <div className="flex gap-4 mb-6">

@@ -4,8 +4,8 @@ class WebSocketSingleton {
     private listeners: Set<(message: any) => void> = new Set();
     private reconnectCount = 0;
     private readonly DEFAULT_CONFIG = {
-        reconnectAttempts: 3,
-        reconnectInterval: 5000,
+        reconnectAttempts: 5,
+        reconnectInterval: 0,
     };
 
     private constructor() { }
@@ -18,7 +18,11 @@ class WebSocketSingleton {
     }
 
     connect(lobbyId: number, userId: string) {
-        if (this.ws?.readyState === WebSocket.OPEN) {
+        if (this.ws?.url
+            && this.ws.url.includes(`lobbyId=${lobbyId}`)
+            && this.ws.url.includes(`userId=${userId}`)
+            && this.ws.readyState === WebSocket.OPEN
+        ) {
             return;
         }
 

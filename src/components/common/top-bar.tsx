@@ -5,12 +5,17 @@ import { useRouter } from "next/navigation";
 
 interface TopBarProps extends PropsWithChildren {
     rightContent?: React.ReactNode;
+    handleBackButton?: () => void;
 }
 
-const TopBar = ({ children, rightContent }: TopBarProps) => {
+const TopBar = ({ children, rightContent,handleBackButton }: TopBarProps) => {
     const router = useRouter();
 
     const handleBack = () => {
+        if (handleBackButton) {
+            handleBackButton();
+            return;
+        }
         router.back();
     }
     return (

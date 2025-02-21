@@ -105,7 +105,7 @@ const LobbySettings = ({ lobby }: Props) => {
                     {isLeaveLoading ? "Leaving..." : "Leave Lobby"}
                 </Button>
             )}
-            {lobby.isClosed && (    // Lobby is closed
+            {(lobby.isClosed || !isParticipant) && (    // Lobby is closed
                 <Link href={`/game/lobby?gameType=${lobby.gameType}`} >
                     <Button variant="game" className="w-full flex-1">
                         Back to Lobbies
