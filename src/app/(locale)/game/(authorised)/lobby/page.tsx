@@ -1,13 +1,13 @@
 "use client";
-import React from 'react';
-import { Button } from '@/components/ui/button';
 import Container from '@/components/common/container';
 import TopBar from '@/components/common/top-bar';
-import { Users, Plus } from 'lucide-react';
 import CreateLobbyForm from '@/components/features/lobby/create-lobby-form';
 import LobbyList from '@/components/features/lobby/lobby-list';
-import { notFound, useRouter, useSearchParams } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 import { LobbyGameType } from '@/models/lobby';
+import { Plus, Users } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React from 'react';
 
 const GameLobby = () => {
     const router = useRouter();

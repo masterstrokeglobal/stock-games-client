@@ -21,7 +21,7 @@ import { useParams } from 'next/navigation';
 
 const LobbyWithChat = () => {
   const lobbyCode = useParams().id!.toString();
-  const { data: lobby, isLoading } = useGetLobbyByCode(lobbyCode);
+  const { data: lobby ,isFetching} = useGetLobbyByCode(lobbyCode);
   const { data: lobbyRound } = useGetCurrentLobbyRound(lobby?.id);
   const { sendMessage } = useLobbyWebSocket({
     lobbyCode: lobbyCode,
@@ -31,7 +31,7 @@ const LobbyWithChat = () => {
 
 
 
-  if (isLoading) return <LoadingScreen className='bg-primary-game text-white  min-h-screen' />;
+  if (isFetching) return <LoadingScreen className='bg-primary-game text-white  min-h-screen' />;
 
   return (
     <div className='bg-primary-game w-full'>

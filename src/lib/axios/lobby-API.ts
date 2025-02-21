@@ -11,6 +11,7 @@ export interface CreateLobbyRequest {
     amount: number;
     type: LobbyType;
     marketType: SchedulerType;
+    roundTime?: number;
     name: string;
 }
 

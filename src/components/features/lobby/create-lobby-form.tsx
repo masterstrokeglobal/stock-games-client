@@ -45,6 +45,7 @@ const createLobbySchema = z.object({
     marketType: z.nativeEnum(SchedulerType, {
         required_error: "Please select a market type"
     }),
+    roundTime: z.coerce.number(),
     maxCapacity: z.coerce.number()
         .min(2, { message: "Minimum 2 players required" })
         .max(50, { message: "Maximum 50 players allowed" }),
@@ -63,6 +64,7 @@ const defaultValues: CreateLobbyFormValues = {
     marketType: SchedulerType.NSE,
     maxCapacity: 10,
     prizePool: 100,
+    roundTime: 3,
     type: LobbyType.PUBLIC,
     isPublic: true
 };
@@ -98,6 +100,7 @@ const CreateLobbyForm = ({ onCreate, gameType }: Props) => {
             name: formValue.name,
             amount: formValue.prizePool,
             game_type: formValue.gameType,
+            roundTime: formValue.roundTime,
             marketType: formValue.marketType,
             type: formValue.isPublic ? LobbyType.PUBLIC : LobbyType.PRIVATE,
         }, {
@@ -108,6 +111,7 @@ const CreateLobbyForm = ({ onCreate, gameType }: Props) => {
             }
         });
     };
+
 
     const currentGame = useMemo(() => {
         return LOBBY_GAMES.find(game => game.gameType === gameType);
@@ -169,7 +173,26 @@ const CreateLobbyForm = ({ onCreate, gameType }: Props) => {
                                 className="h-14 bg-gray-800 text-white border-gray-700"
                             />
                         </div>
+                        {gameType === LobbyGameType.MINI_MUTUAL_FUND &&
+                            <FormGroupSelect
+                                control={form.control}
+                                name="roundTime"
+                                labelClassName='text-white'
+                                label="Round Time"
+                                options={[
+                                    {
+                                        label: "5 min", value: "5"
+                                    },
+                                    {
+                                        label: "10 min", value: "10"
+                                    },
+                                    {
+                                        label: "15 min", value: "15"
+                                    },
 
+                                ]}
+                                className="h-14 bg-gray-800 text-white border-gray-700"
+                            />}
                         <FormSwitch
                             control={form.control}
                             name="isPublic"

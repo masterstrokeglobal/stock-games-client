@@ -51,10 +51,8 @@ class WebSocketSingleton {
             this.ws = null;
             console.log('WebSocket Closed:', error);
             if (this.reconnectCount < this.DEFAULT_CONFIG.reconnectAttempts) {
-                setTimeout(() => {
                     this.reconnectCount++;
                     this.connect(lobbyId, userId);
-                }, this.DEFAULT_CONFIG.reconnectInterval);
             }
         };
     }
