@@ -1,29 +1,24 @@
 import { useAuthStore } from '@/context/auth-context';
-import Lobby, { LobbyEvents, LobbyStatus } from '@/models/lobby';
+import WebSocketSingleton from '@/lib/websocket-singleton';
+import Lobby, { LobbyEvents, LobbyGameType, LobbyStatus } from '@/models/lobby';
 import LobbyChat from '@/models/lobby-chat';
 import LobbyRound from '@/models/lobby-round';
 import { LobbyUserStatus } from '@/models/lobby-user';
 import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { LobbyResult } from '../game/lobby-result-dialog';
-import WebSocketSingleton from '@/lib/websocket-singleton';
 interface WebSocketMessage {
     event: LobbyEvents;
     data: any;
 }
 
-interface ChatMessage {
-    type: 'chat_message';
-    message: string;
-}
 
-function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId }: { lobbyId?: number, lobbyCode?: string }) {
+function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, gameType }: { lobbyId?: number, lobbyCode?: string, gameType?: LobbyGameType }) {
     const queryClient = useQueryClient();
     const [showResults, setShowResult] = useState<boolean>(false);
     const [resultData, setResultData] = useState<LobbyResult | undefined>(undefined);
     const { userDetails } = useAuthStore();
-    const wsRef = useRef<WebSocket | null>(null);
     const router = useRouter();
 
     const handleAction = useCallback((message: WebSocketMessage) => {
@@ -72,7 +67,13 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId }: { lobbyId?: 
                     return lobby as T;
                 });
 
-                router.push(`/game/lobby/${lobbyCode}/play`);
+                let url = `/game/lobby/${lobbyCode}/play`;
+
+                if (gameType === LobbyGameType.MINI_MUTUAL_FUND) {
+                    url = `/game/lobby/${lobbyCode}/mini-mutual-fund`;
+                }
+
+                router.push(url);
                 break;
 
             case LobbyEvents.INITIAL_VALUE_FETCHED:
@@ -87,7 +88,6 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId }: { lobbyId?: 
                 break;
 
             case LobbyEvents.USER_PLACED:
-                // invalidate the placement query
                 queryClient.invalidateQueries({
                     predicate: (query) => query.queryKey[0] === 'allPlacement',
                 });
@@ -99,8 +99,6 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId }: { lobbyId?: 
                     lobby.status = LobbyStatus.CLOSED;
                     return lobby as T;
                 });
-
-                console.log('Round ended:', message.data);
 
                 setShowResult(true);
                 setResultData(message.data);
@@ -142,33 +140,24 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId }: { lobbyId?: 
 
     useEffect(() => {
         if (!lobbyId || !userDetails?.id) return;
-          
+
         console.log('Connecting to lobby websocket', lobbyId, userDetails.id);
         const wsInstance = WebSocketSingleton.getInstance();
         wsInstance.connect(lobbyId, userDetails.id.toString());
         wsInstance.addListener(handleAction);
 
+
         return () => {
             wsInstance.removeListener(handleAction);
         };
-    }, [lobbyId, userDetails?.id]);
+    }, [lobbyId, userDetails?.id, handleAction]);
 
-    const sendMessage = useCallback((message: string) => {
-        if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
-            throw new Error('WebSocket is not connected');
-        }
-
-        const chatMessage: ChatMessage = {
-            type: 'chat_message',
-            message
-        };
-
-        wsRef.current.send(JSON.stringify(chatMessage));
-    }, []);
+    const sendMessage = (message: string) => {
+        const wsInstance = WebSocketSingleton.getInstance();
+        wsInstance.sendMessage(message);
+    };
 
     return { sendMessage, showResults, resultData };
-
-
 
 }
 
