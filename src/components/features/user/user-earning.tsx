@@ -96,16 +96,7 @@ const UserEarningsCard = ({ userId }: Props) => {
                         value={totalWithdrawals}
                         color="red"
                     />
-                
-                    {/* Total Platform Fees */}
-                    <StatCard
-                        icon={<HandCoins className="text-blue-500 w-8 h-8" />}
-                        label="Total Platform Fees"
-                        value={totalplatformfees}
-                        color="red"
-                    />
-
-
+            
 
                     {/* Net Profit or Loss */}
 
