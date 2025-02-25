@@ -12,11 +12,11 @@ const MiniMutualFundBet = () => {
     const [selectedStock, setSelectedStock] = useState<MarketItem | null>(null);
     const [betAmount, setBetAmount] = useState(100);
     const { mutate, isPending: isLoading } = useCreateMiniMutualFundPlacementBet();
+    const isPlaceOver = useIsPlaceOver(lobbyRound!.roundRecord);
 
     if (!lobbyRound || !lobbyRound.roundRecord) return null;
 
     const marketItems = lobbyRound.roundRecord.market || [];
-    const isPlaceOver = useIsPlaceOver(lobbyRound.roundRecord);
 
     const handleSelectStock = (stock: MarketItem) => {
         if (isPlaceOver) return;
@@ -25,7 +25,7 @@ const MiniMutualFundBet = () => {
 
     const handlePlaceBet = () => {
         if (!selectedStock || isPlaceOver) return;
-
+        
         // Call the mutation to place the bet
         mutate({
             marketItemId: selectedStock.id,
@@ -101,6 +101,7 @@ const MiniMutualFundBet = () => {
                             </div>
                         </div>
 
+                        {/* Bet button */}
                         <button
                             className={`bet-button w-full ${(isPlaceOver || isLoading || !selectedStock) ? 'opacity-50 cursor-not-allowed' : ''}`}
                             disabled={isPlaceOver || isLoading || !selectedStock}
@@ -108,6 +109,16 @@ const MiniMutualFundBet = () => {
                         >
                             {isPlaceOver ? "BETTING CLOSED" : isLoading ? "PLEASE WAIT" : "BET NOW"}
                         </button>
+
+                        {/* Selected stock info */}
+                        {selectedStock && (
+                            <div className="mt-4 text-center text-white">
+                                <p>Selected: <span className="font-bold">{selectedStock.name}</span></p>
+                                <p className="text-yellow-500">
+                                    Potential win: ₹{(betAmount * (selectedStock.oddsMultiplier || 1)).toFixed(2)}
+                                </p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

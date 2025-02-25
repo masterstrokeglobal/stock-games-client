@@ -1,4 +1,3 @@
-import { create } from "domain";
 import api from "./instance";
 
 export const gameRecordAPI = {

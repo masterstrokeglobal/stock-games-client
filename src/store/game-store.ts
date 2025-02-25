@@ -1,6 +1,6 @@
-import { create } from 'zustand'
-import Lobby, { LobbyGameType } from '@/models/lobby'
+import Lobby from '@/models/lobby'
 import LobbyRound from '@/models/lobby-round'
+import { create } from 'zustand'
 
 interface LoadingState {
     isLobbyLoading: boolean

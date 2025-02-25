@@ -3,23 +3,19 @@ import { MobileHeader } from "@/components/features/game/common/mobile-component
 import LeaderBoard from "@/components/features/game/leaderboard";
 import LobbyGameResultDialog from "@/components/features/game/lobby-result-dialog";
 import MiniMutualFundBet from "@/components/features/game/mini-mutual-fund-bet";
-import MultiplayerRouletteGame from "@/components/features/game/multiplayer-roulette-board";
 import Navbar from "@/components/features/game/navbar";
 import PlacementBetsLobby from "@/components/features/game/placement-bets-lobby";
-import { MobileGameHeader } from "@/components/features/game/roulette-header";
 import HorseRace from "@/components/features/horse-animation/horse";
 import useLobbyWebSocket from "@/components/features/lobby/lobby-websocket";
 import { useHorseRaceSound } from "@/context/audio-context";
-import { useGameState, useIsPlaceOver } from "@/hooks/use-current-game";
+import { useIsPlaceOver } from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
 import { LobbyGameType } from "@/models/lobby";
 import LobbyPlacement from "@/models/lobby-placement";
 import MarketItem from "@/models/market-item";
-import { RoundRecord } from "@/models/round-record";
 import { useGetAllPlacementForLobbyRound } from "@/react-query/game-record-queries";
 import { useGetCurrentLobbyRound, useGetLobbyByCode } from "@/react-query/lobby-query";
 import { useGameStore } from "@/store/game-store";
-import { useTranslations } from "next-intl";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo } from "react";
 
