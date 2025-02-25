@@ -47,7 +47,6 @@ const MultiplayerRouletteGame = ({ lobbyRound, lobby, result }: Props) => {
             numbers: [marketNumber]
         }];
         return chips;
-
     }, [data]);
 
 
@@ -98,9 +97,12 @@ const MultiplayerRouletteGame = ({ lobbyRound, lobby, result }: Props) => {
                     <h1 className='text-xl lg:text-left text-center mt-2 mb-4 leading-none text-white font-semibold'>
                         {gameState.isPlaceOver ? t("betting-closed") : t("place-your-bets")}
                     </h1>
+                    <div className="flex flex-wrap justify-between">
                     <div className="flex mb-4  text-white gap-4">
                         <p className="text-xl font-semibold">{t('total-pool')}</p>
                         <p className="text-xl font-bold text-yellow-500">Rs. {lobby.totalPool?.toLocaleString() || 0}</p>
+                    </div>
+                        <p className="text-xl font-bold text-white capitalize"> {lobby.getTypeName}</p>
                     </div>
 
                     <div className={cn("relative w-full max-w-4xl mx-auto ", gameState.isPlaceOver ? 'cursor-not-allowed opacity-100' : 'cursor-crosshair')}>

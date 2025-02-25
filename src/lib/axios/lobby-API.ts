@@ -34,6 +34,7 @@ export const lobbyAPI = {
         return response.data;
     },
 
+    
     // Join an existing lobby
     joinLobby: async (data: JoinLobbyRequest) => {
         const response = await api.post<string>("/lobby/join-lobby", data);

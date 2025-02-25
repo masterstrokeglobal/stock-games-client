@@ -64,8 +64,7 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord, result }:
                   ${color === 'red' ? 'routelette-piece-red' : 'routelette-piece-black'}
                   ${hoveredCell?.numbers.includes(number) ? 'ring-4 ring-yellow-400 ring-opacity-75' : ''}
                   ${chips.some(chip => chip.numbers.includes(number)) ? 'ring-2 ring-yellow-500' : ''}
-                  transition-all duration-150
-                `}
+                  transition-all duration-150`}
                 >
                     <span className="absolute inset-0 flex items-end ml-1 sm:text-[10px] text-[8px] justify-start text-white ">
                         {getCodeByIndex(number)}

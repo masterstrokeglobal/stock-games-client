@@ -1,3 +1,4 @@
+import { create } from "domain";
 import api from "./instance";
 
 export const gameRecordAPI = {
@@ -9,7 +10,9 @@ export const gameRecordAPI = {
     return api.post("/lobby/create-placement", data);
   },
 
-
+  createMiniMutualFundPlacementBet: async (data: any) => {
+    return api.post("/lobby/mini-mutual-fund/create-placement", data);
+  },
   getCurrentPlacementForLobbyRound: async (id: string) => {
     return api.get(`/lobby/user-placement/${id}`);
   },

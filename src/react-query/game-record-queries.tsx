@@ -25,11 +25,32 @@ export const useCreateGameRecord = () => {
 };
 
 export const useCreatePlacementBet = () => {
-     
+
     const queryClient = useQueryClient();
 
-    return useMutation ({
+    return useMutation({
         mutationFn: gameRecordAPI.createPlacementBet,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) =>
+                    query.queryKey[0] === "allPlacement" ||
+                    query.queryKey[0] === "currentPlacement" ||
+                    query.queryKey[0] === "winningGameRecord" ||
+                    query.queryKey[0] === "user" && query.queryKey[1] == 'wallet',
+            });
+            toast.success("Bet placed successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error creating game record");
+        },
+    });
+};
+
+export const useCreateMiniMutualFundPlacementBet = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: gameRecordAPI.createMiniMutualFundPlacementBet,
         onSuccess: () => {
             queryClient.invalidateQueries({
                 predicate: (query) =>
@@ -58,7 +79,7 @@ export const useGetCurrentPlacementForLobbyRound = (id: string) => {
 export const useGetAllPlacementForLobbyRound = (id?: string) => {
     return useQuery({
         queryKey: ["allPlacement", id],
-        queryFn:id? () => gameRecordAPI.getAllPlacementForLobbyRound(id): undefined,
+        queryFn: id ? () => gameRecordAPI.getAllPlacementForLobbyRound(id) : undefined,
         enabled: !!id,
     });
 };
@@ -78,7 +99,7 @@ export const useGetTopPlacements = (roundId: string) => {
     return useQuery({
         queryKey: ["topPlacements", roundId],
         queryFn: () => gameRecordAPI.getTopPlacements(roundId),
-        staleTime:  THREE_SECOND,
+        staleTime: THREE_SECOND,
     });
 };
 

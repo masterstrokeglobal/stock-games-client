@@ -67,7 +67,6 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     const { previousRoundId, showResults } = useShowResults(roundRecord, bettedChips);
 
-
     const {
         chips,
         setChips,

@@ -74,8 +74,7 @@ export class Lobby {
     }
 
     get getTypeName(): string {
-        // remove _ and capitalize
-        return this.gameType.replace("_", " ").toUpperCase();
+        return this.gameType?.replace(/_/g, " ").toLowerCase() ?? "";
     }
 
     isLeader(userId: string | number): boolean {
