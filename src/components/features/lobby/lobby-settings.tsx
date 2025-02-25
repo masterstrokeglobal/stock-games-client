@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
-import Lobby from "@/models/lobby";
+import Lobby, { LobbyGameType } from "@/models/lobby";
 import { useJoinLobby, useLeaveLobby, useReadyToPlay, useStartRound, useUnreadyToPlay } from "@/react-query/lobby-query";
 import Link from "next/link";
 
@@ -61,7 +61,7 @@ const LobbySettings = ({ lobby }: Props) => {
             )}
             {/* Play Button */}
             {lobby.isStarted && (
-                <Link href={`/game/lobby/${lobby.joiningCode}/play`} >
+                <Link href={`/game/lobby/${lobby.joiningCode}/play/${lobby.gameType == LobbyGameType.MINI_MUTUAL_FUND ? "/mini-mutual-fund":""}`} >
                     <Button
                         variant="game"
                         className="w-full flex-1"

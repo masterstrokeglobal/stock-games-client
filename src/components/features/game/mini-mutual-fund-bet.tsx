@@ -25,13 +25,14 @@ const MiniMutualFundBet = () => {
 
     const handlePlaceBet = () => {
         if (!selectedStock || isPlaceOver) return;
-        
+
         // Call the mutation to place the bet
         mutate({
             marketItemId: selectedStock.id,
             lobbyRoundId: lobbyRound.id,
-            amount: betAmount
+            amount: betAmount,
         }, {
+
             onSuccess: () => {
                 // Reset selected stock after successful bet
                 setSelectedStock(null);

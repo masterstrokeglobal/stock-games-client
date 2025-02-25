@@ -69,8 +69,8 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, gameType }: { 
 
                 let url = `/game/lobby/${lobbyCode}/play`;
 
-                if (gameType === LobbyGameType.MINI_MUTUAL_FUND) {
-                    url = `/game/lobby/${lobbyCode}/mini-mutual-fund`;
+                if (gameType == LobbyGameType.MINI_MUTUAL_FUND) {
+                    url = `/game/lobby/${lobbyCode}/play/mini-mutual-fund`;
                 }
 
                 router.push(url);
