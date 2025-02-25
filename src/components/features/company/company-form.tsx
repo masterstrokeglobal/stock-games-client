@@ -13,8 +13,6 @@ export const createCompanyInputSchema = z.object({
     contactPersonName: z.string().optional(),
     contactPersonEmail: z.string().email(),
     logo: z.string().optional(),
-    primaryColor: z.string().optional(),
-    secondaryColor: z.string().optional(),
     domain: z.string().optional(),
     paymentImage:z.string().url().optional()
 }).superRefine((data, ctx) => {
@@ -70,18 +68,6 @@ const CompanyForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 control={control}
                 name="logo"
                 label="Logo URL"
-            />
-            <FormInput
-                control={control}
-                type="color"
-                name="primaryColor"
-                label="Primary Color"
-            />
-            <FormInput
-                control={control}
-                name="secondaryColor"
-                type="color"
-                label="Secondary Color"
             />
             <FormInput
                 control={control}

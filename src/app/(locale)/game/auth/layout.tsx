@@ -1,13 +1,17 @@
+"use client";
+
+
 import LocaleSwitcher from "@/components/common/LocaleSwitcher";
-import { useTranslations } from "next-intl";
+import { useGetMyCompany } from "@/react-query/company-queries";
 import { PropsWithChildren } from "react";
 
 const AuthLayout: React.FC = ({ children }: PropsWithChildren) => {
-    const t = useTranslations("common");
+    const { data } = useGetMyCompany();
+
 
     return <div className="min-h-screen md:py-40 py-10 flex justify-center items-center  md:bg-[radial-gradient(69.35%_50%_at_50%_50%,_rgba(10,_22,_52,_0.6693)_0%,_rgba(10,_22,_52,_0.97)_100%)]  md:bg-primary/20 bg-primary-game">
         <nav className="items-center hidden uppercase md:flex fixed top-0 z-50 justify-center text-white font-semibold text-2xl w-full h-20 bg-primary-game ">
-            {t("app-name")}
+            {data?.name ?? "--"}
             <div className="absolute right-4">
                 <LocaleSwitcher />
             </div>

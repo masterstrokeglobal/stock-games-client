@@ -14,8 +14,7 @@ import {
     Banknote,
     Briefcase,
     Coins,
-    DollarSign,
-    HandCoins
+    DollarSign
 } from "lucide-react";
 import React, { useMemo } from "react";
 
@@ -33,7 +32,6 @@ const UserEarningsCard = ({ userId }: Props) => {
         totalBets,
         totalWinnings,
         totalWithdrawals,
-        totalplatformfees,
         netProfitOrLoss,
         wallet,
     } = useMemo(() => {

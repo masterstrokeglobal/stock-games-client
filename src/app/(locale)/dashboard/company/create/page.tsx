@@ -11,8 +11,6 @@ const defaultValues: CompanyFormValues = {
     contactPersonName: "",
     contactPersonEmail: "",
     logo: "",
-    primaryColor: "",
-    secondaryColor: "",
     domain: "",
 };
 

@@ -1,6 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { companyAPI } from "@/lib/axios/company-API"; // Adjust the path as needed
+import { COMPANYID } from "@/lib/utils";
+import Company from "@/models/company";
 
 export const useCreateCompany = () => {
     return useMutation({
@@ -28,6 +30,16 @@ export const useGetCompanyById = (companyId?: string) => {
          enabled: !!companyId,
     });
 };
+
+export const useGetMyCompany = () => {
+    return useQuery({
+        queryKey: ["company", "my",COMPANYID],
+        queryFn: async() => {
+            const company = await companyAPI.getCompanyById(COMPANYID.toString());
+            return new Company(company.data);
+        },
+    });
+}
 
 export const useUpdateCompanyById = () => {
     const queryClient = useQueryClient();
