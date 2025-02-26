@@ -103,7 +103,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                     size="lg"
                     onClick={() => googleAuth()}
                     variant="secondary"
-                    className="w-full bg-[#182B5A] border-[#EFF8FF17] text-white"
+                    className="w-full bg-tertiary border-[#EFF8FF17] text-white"
                 >
                     <img
                         className="mr-2 size-5"

@@ -1,5 +1,10 @@
 import { SchedulerType } from "./market-item";
 
+interface Theme {
+    primary: string;
+    secondary: string;
+    [key: string]: string; // Allows additional optional properties
+}
 export class Company {
     id?: number;
     name?: string;
@@ -7,10 +12,9 @@ export class Company {
     contactPersonName?: string;
     contactPersonEmail?: string;
     logo?: string;
-    primaryColor?: string;
-    secondaryColor?: string;
+    theme?: Theme;
     depositBonusPercentage?: string;
-    depositBonusPercentageEnabled?:boolean;
+    depositBonusPercentageEnabled?: boolean;
     paymentImage?: string;
     domain?: string;
     createdAt?: Date;
@@ -25,11 +29,10 @@ export class Company {
         this.contactPersonName = params.contactPersonName;
         this.contactPersonEmail = params.contactPersonEmail;
         this.logo = params.logo;
-        this.primaryColor = params.primaryColor;
         this.placementNotAllowed = params.placementNotAllowed || [];
         this.depositBonusPercentageEnabled = params.depositBonusPercentageEnabled;
-        this.secondaryColor = params.secondaryColor;
         this.domain = params.domain;
+        this.theme = params.theme;
         this.createdAt = params.createdAt;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;

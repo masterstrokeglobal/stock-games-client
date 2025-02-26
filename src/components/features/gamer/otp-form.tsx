@@ -58,7 +58,7 @@ const OTPForm = ({ defaultValues, onSubmit, isLoading, resendOTP }: Props) => {
                             {[0, 1, 2, 3].map((index) => (
                                 <InputOTPSlot
                                     key={index}
-                                    className="md:w-16 md:h-16 w-12 h-12 rounded-lg bg-[#182B5A] border-[#EFF8FF17] text-white text-2xl focus:border-[#55B0FF] focus:ring-[#55B0FF] focus:ring-opacity-50"
+                                    className="md:w-16 md:h-16 w-12 h-12 rounded-lg bg-tertiary border-[#EFF8FF17] text-white text-2xl focus:border-[#55B0FF] focus:ring-[#55B0FF] focus:ring-opacity-50"
                                     index={index}
                                 />
                             ))}

@@ -4,6 +4,7 @@ import { UserProvider } from "@/context/auth-context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
+import ThemeManager from "./dashboard/theme-manager";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -24,6 +25,7 @@ export default function RootLayout({
             <AudioProvider>
                 <UserProvider >
                     <QueryClientProvider client={queryClient}>
+                        <ThemeManager />
                         <Toaster toastOptions={{ duration: 1500 }} position="top-right" richColors />
                         {children}
                     </QueryClientProvider>

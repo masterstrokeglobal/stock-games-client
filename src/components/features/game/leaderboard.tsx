@@ -74,7 +74,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
     return (
         <section
             ref={sectionRef}
-            className="p-4 md:rounded-2xl h-full w-full bg-[#122146]"
+            className="p-4 md:rounded-2xl h-full w-full bg-secondary-game"
         >
             <h2 className="text-xl font-semibold mb-4 text-gray-200">
                 {t("leaderboard")}

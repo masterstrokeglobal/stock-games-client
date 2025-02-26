@@ -21,7 +21,7 @@ const RoundResult: React.FC<RoundResultProps> = ({ roundRecordId }) => {
 
     if (isLoading) {
         return (
-            <Card className="bg-[#122146] border-[#EFF8FF17]">
+            <Card className="bg-secondary-game border-[#EFF8FF17]">
                 <CardContent className="flex justify-center items-center py-8">
                     <Timer className="h-6 w-6 animate-spin text-gray-400" />
                 </CardContent>
@@ -31,7 +31,7 @@ const RoundResult: React.FC<RoundResultProps> = ({ roundRecordId }) => {
 
     if (isError || !resultData) {
         return (
-            <Card className="bg-[#122146] border-[#EFF8FF17]">
+            <Card className="bg-secondary-game border-[#EFF8FF17]">
                 <CardContent className="py-6 text-center text-red-400">
                     {t('errors.result-load-failed')}
                 </CardContent>
@@ -44,7 +44,7 @@ const RoundResult: React.FC<RoundResultProps> = ({ roundRecordId }) => {
     const profitLoss = netWinning - totalBetAmount;
 
     return (
-        <Card className="bg-[#122146] border-[#EFF8FF17]">
+        <Card className="bg-secondary-game border-[#EFF8FF17]">
             <CardHeader>
                 <CardTitle className="text-white text-lg sm:text-xl">
                     {t('result.title')}

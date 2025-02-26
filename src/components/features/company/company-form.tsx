@@ -14,7 +14,7 @@ export const createCompanyInputSchema = z.object({
     contactPersonEmail: z.string().email(),
     logo: z.string().optional(),
     domain: z.string().optional(),
-    paymentImage:z.string().url().optional()
+    paymentImage: z.string().url().optional()
 }).superRefine((data, ctx) => {
     if (!data.id && !data.logo) {
         ctx.addIssue({
@@ -64,11 +64,12 @@ const CompanyForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 name="contactPersonEmail"
                 label="Contact Person Email*"
             />
-            <FormInput
+            <FormImage
                 control={control}
                 name="logo"
                 label="Logo URL"
             />
+
             <FormInput
                 control={control}
                 name="domain"

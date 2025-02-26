@@ -19,8 +19,8 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:bg-transparent",
         link: "text-primary underline-offset-4 hover:underline",
-        "game-secondary":"bg-[#182B5A] text-white justify-start border border-[#EFF8FF17]",
-        game: "bg-gradient-to-b from-[#0D7FE1] h-14! via-[#4DAAFF] to-[#279BFF] border text-white border-[#55B0FF]"
+        "game-secondary": "bg-tertiary text-white justify-start border border-[#EFF8FF17]",
+        game: "bg-gradient-to-b from-[var(--bet-button-start)] via-[var(--bet-button-mid)] to-[var(--bet-button-end)] border border-[var(--bet-button-border)] text-white h-14"
       },
       size: {
         default: "h-9 px-4 py-2",

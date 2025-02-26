@@ -17,7 +17,7 @@ export const companyAPI = {
     },
 
     updateCompanyById: async (payload: CompanyFormValues) => {
-        const { id ,...rest} = payload;
+        const { id, ...rest } = payload;
         return api.patch(`/company/${id}`, rest);
     },
 

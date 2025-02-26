@@ -1,3 +1,4 @@
+import { DEFAULT } from "@react-three/fiber/dist/declarations/src/core/utils";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -10,7 +11,7 @@ const config: Config = {
 	],
 	theme: {
 		extend: {
-			fontFamily:{
+			fontFamily: {
 				jersey: ['var(--font-jersey-10)', 'sans-serif'],
 			},
 			boxShadow: {
@@ -30,12 +31,23 @@ const config: Config = {
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
 					foreground: 'hsl(var(--primary-foreground))',
-					game: '#0A1634'
+					game: 'var(--primary-game)'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))'
+					foreground: 'hsl(var(--secondary-foreground))',
+					game: 'var(--secondary-game)'
 				},
+				tertiary: {
+					DEFAULT: 'var(--tertiary)'
+				},
+				'bet-button': {
+					start: 'var(--bet-button-start)',
+					mid: 'var(--bet-button-mid)',
+					end: 'var(--bet-button-end)',
+					border: 'var(--bet-button-border)',
+				},
+
 				muted: {
 					DEFAULT: 'hsl(var(--muted))',
 					foreground: 'hsl(var(--muted-foreground))'

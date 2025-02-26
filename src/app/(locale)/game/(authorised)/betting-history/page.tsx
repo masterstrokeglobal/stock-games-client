@@ -67,14 +67,14 @@ const BettingHistoryPage = () => {
                             type="date"
                             value={filter.startDate}
                             onChange={(e) => setFilter({ ...filter, startDate: e.target.value })}
-                            className="h-12 text-white bg-[#122146] border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF]"
+                            className="h-12 text-white bg-secondary-game border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF]"
                         />
                         <span>{t('date-range.to')}</span>
                         <Input
                             type="date"
                             value={filter.endDate}
                             onChange={(e) => setFilter({ ...filter, endDate: e.target.value })}
-                            className="h-12 text-white bg-[#122146] border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF]"
+                            className="h-12 text-white bg-secondary-game border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF]"
                         />
                         <div className="sm:ml-auto sm:w-fit w-full flex sm:flex-row flex-col gap-2 sm:items-center">
                             <Label>
@@ -82,7 +82,7 @@ const BettingHistoryPage = () => {
                             </Label>
 
                             <Select value={pageSize.toString()} onValueChange={(val) => setPageSize(Number(val))}>
-                                <SelectTrigger className="h-12 text-white bg-[#122146] border border-[#EFF8FF17] focus:border-[#55B0FF] sm:w-[100px] w-full">
+                                <SelectTrigger className="h-12 text-white bg-secondary-game border border-[#EFF8FF17] focus:border-[#55B0FF] sm:w-[100px] w-full">
                                     <SelectValue placeholder={t('date-range.page-size')} />
                                 </SelectTrigger>
                                 <SelectContent>

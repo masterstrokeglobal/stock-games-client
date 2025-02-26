@@ -73,7 +73,7 @@ export default function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className={cn("text-white bg-[#122146] border border-[#EFF8FF17]  rounded-xl overflow-hidden  ", className)}>
+      <div className={cn("text-white bg-secondary-game border border-[#EFF8FF17]  rounded-xl overflow-hidden  ", className)}>
         <Table>
           {showHeader && (
             <TableHeader className="px-4">
@@ -145,7 +145,7 @@ export default function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
-        <div className="flex md:items-center flex-wrap border-t py-2 px-4 text-white bg-[#122146] border border-[#EFF8FF17]  w-full justify-between">
+        <div className="flex md:items-center flex-wrap border-t py-2 px-4 text-white bg-secondary-game border border-[#EFF8FF17]  w-full justify-between">
           <div className="py-1 min-h-[60px]   md:px-4 items-center flex flex-row w-fit  justify-between gap-2">
             <p className="text-gray-200">Showing</p>
             <div className="flex flex-col items-center gap-3">

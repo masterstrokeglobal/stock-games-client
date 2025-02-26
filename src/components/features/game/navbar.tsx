@@ -22,7 +22,7 @@ const Navbar = () => {
 
     const user = userDetails as User;
     return (
-        <nav className="items-center md:px-6 px-4 z-50  flex fixed top-0 justify-between text-white font-semibold w-full h-16 bg-primary-game ">
+        <nav className="items-center md:px-6 px-4 z-50  flex fixed top-0 justify-between text-white font-semibold w-full h-16 bg-secondary-game bg-opacity-50">
             <div className="">
                 <span className="md:text-xl text-sm font-semibold flex items-end">
                     <Logo />
@@ -32,7 +32,7 @@ const Navbar = () => {
             <div className="flex items-center space-x-4 ml-auto">
                 <MuteButton />
                 <LocaleSwitcher />
-                <div className="bg-[#112148] px-4 md:h-12 md:flex hidden items-center md:py-2 py-2   rounded-full">
+                <div className="bg-secondary-game px-4 md:h-12 md:flex hidden items-center md:py-2 py-2   rounded-full">
                     <div className="shadow-custom-glow mr-2 rounded-full" >
                         <img src="/coin.svg" alt="coin" className="md:w-auto w-5" />
                     </div>
@@ -47,7 +47,7 @@ const Navbar = () => {
                     </Link>
                 </div>
                 <Link href="/game/user-menu">
-                    <button className="bg-[#112148] md:px-4 md:h-12 h-10 justify-center  md:aspect-auto aspect-square space-x-3 flex items-center md:py-2 p-1 rounded-full">
+                    <button className="bg-secondary-game md:px-4 md:h-12 h-10 justify-center  md:aspect-auto aspect-square space-x-3 flex items-center md:py-2 p-1 rounded-full">
 
                         <Avatar className="size-6">
                             <AvatarFallback className="bg-primary-game">

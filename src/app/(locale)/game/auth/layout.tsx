@@ -16,7 +16,7 @@ const AuthLayout: React.FC = ({ children }: PropsWithChildren) => {
                 <LocaleSwitcher />
             </div>
         </nav>
-        <section className=" md:bg-[linear-gradient(180deg,_#0A1634_0%,_#10224F_100%)] px-4 w-full max-w-3xl md:border border-[#3799ED7A] md:rounded-3xl py-20 justify-center flex  h-auto bg-primary-game ">
+        <section className=" md:bg-secondary-game px-4 w-full max-w-3xl md:border border-primary-game md:rounded-3xl py-20 justify-center flex  h-auto bg-primary-game ">
             {children}
         </section>
     </div>;

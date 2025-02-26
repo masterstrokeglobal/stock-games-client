@@ -26,7 +26,7 @@ export default function LocaleSwitcherSelect({
   return (
     <div>
       <Select defaultValue={defaultValue} onValueChange={onChange} disabled={isPending}>
-        <SelectTrigger className="w-full text-white bg-[#122146] border border-[#EFF8FF17] h-11 rounded-full">
+        <SelectTrigger className="w-full text-white bg-secondary-game border border-[#EFF8FF17] h-11 rounded-full">
           {items.find((item) => item.value === defaultValue)?.label}
         </SelectTrigger>
         <SelectContent>

@@ -11,7 +11,7 @@ const WalletBalanceCard = ({ wallet }: Props) => {
     const t = useTranslations('wallet.balance');
 
     return (
-        <Card className="w-full bg-transparent border-none max-w-sm bg-[#182B5A] text-white justify-start border border-[#EFF8FF17]">
+        <Card className="w-full bg-transparent border-none max-w-sm bg-tertiary text-white justify-start border border-[#EFF8FF17]">
             <CardHeader className="pb-4">
                 <CardTitle className="text-lg font-semibold text-white">
                     {t('title')}

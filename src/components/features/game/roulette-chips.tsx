@@ -22,7 +22,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
 }) => {
     const t = useTranslations('game');
     return (
-        <div className="max-w-4xl mx-auto bg-[#1A2D58] p-4 rounded-2xl">
+        <div className="max-w-4xl mx-auto bg-tertiary  p-4 rounded-2xl">
             <div className="flex justify-center relative mb-2">
                 <div className="mr-2 absolute left-2 top-3 bottom-2 rounded-full">
                     <img src="/coin.svg" className='shadow-custom-glow rounded-full' alt="coin" />

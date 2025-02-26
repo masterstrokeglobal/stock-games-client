@@ -27,8 +27,6 @@ const EditCompanyPage = () => {
             logo: company.logo,
             depositBonusPercentage: company.depositBonusPercentage,
             depositBonusPercentageEnabled: company.depositBonusPercentageEnabled,
-            primaryColor: company.primaryColor,
-            secondaryColor: company.secondaryColor,
             domain: company.domain,
             paymentImage: company.paymentImage,
         };

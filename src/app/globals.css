@@ -60,7 +60,32 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+
+    --tertiary:#1A2D58;
+
+    --bet-button-start: #0D7FE1;
+    --bet-button-mid: #4DAAFF;
+    --bet-button-end: #279BFF;
+    --bet-button-border: #55B0FF;
+    
+     
+    --routelette-black-gradient-start: #083861;
+    --routelette-black-gradient-end: #2268A4;
+    --routelette-red-gradient-start: #0D7FE1;
+    --routelette-red-gradient-end: #279BFF;
+    --routelette-border-color: rgba(85, 176, 255, 0.31);
+    --routelette-inner-shadow-color: rgba(208, 232, 253, 0.05);
+    
+    /* Common properties */
+    --routelette-border: 1px solid var(--routelette-border-color);
+    --routelette-inner-shadow: 0px 0px 5.4px 6px var(--routelette-inner-shadow-color) inset;
+    
+    /* Gradients */
+    --routelette-black-gradient: linear-gradient(180deg, var(--routelette-black-gradient-start) 0%, var(--routelette-black-gradient-end) 100%);
+    --routelette-red-gradient: linear-gradient(180deg, var(--routelette-red-gradient-start) 0%, var(--routelette-red-gradient-end) 100%);
   }
+
+
 
   .dark {
     --background: 0 0% 3.9%;
@@ -99,20 +124,18 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     @apply bg-background text-foreground overflow-x-hidden;
   }
 }
-
+/* Applying the variables to the classes */
 .routelette-piece-black {
-  background: linear-gradient(180deg, #083861 0%, #2268A4 100%);
-  border: 1px solid rgba(85, 176, 255, 0.31);
-  box-shadow: 0px 0px 5.4px 6px rgba(208, 232, 253, 0.05) inset;
+  background: var(--routelette-black-gradient);
+  border: var(--routelette-border);
+  box-shadow: var(--routelette-inner-shadow);
 }
 
 .routelette-piece-red {
-  background: linear-gradient(180deg, #0D7FE1 0%, #279BFF 100%);
-  border: 1px solid rgba(85, 176, 255, 0.31);
-  box-shadow: 0px 0px 5.4px 6px rgba(208, 232, 253, 0.05) inset;
+  background: var(--routelette-red-gradient);
+  border: var(--routelette-border);
+  box-shadow: var(--routelette-inner-shadow);
 }
-
-
 .roulette-piece-black-select {
   background-color: rgba(8, 56, 97, 1);
   border: 1px solid rgba(85, 176, 255, 0.31);
@@ -126,9 +149,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .bet-button {
-  background: linear-gradient(180deg, #CD55FF 0%, #BE3AF5 100%);
-  border: 1px solid rgba(224, 151, 255, 1);
-  box-shadow: 0px 0px 5.4px 6px rgba(208, 232, 253, 0.19) inset;
+  background: linear-gradient(180deg, #B8860B 0%, #8B6508 100%);
+  border: 1px solid rgba(184, 134, 11, 1);
+  box-shadow: 0px 0px 5.4px 6px rgba(139, 101, 8, 0.19) inset;
   color: white;
   font-weight: bold;
   padding: 0.5rem 1.5rem;
@@ -136,6 +159,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   text-align: center;
   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
+
 
 .bet-button:hover {
   transform: scale(1.05);

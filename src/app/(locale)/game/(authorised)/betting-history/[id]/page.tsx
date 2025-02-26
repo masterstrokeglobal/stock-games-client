@@ -28,7 +28,7 @@ const BetCard: React.FC<{ bet: Bet }> = ({ bet }) => {
     const t = useTranslations('round-detail');
 
     return (
-        <Card className="bg-[#122146] border-[#EFF8FF17]">
+        <Card className="bg-secondary-game border-[#EFF8FF17]">
             <CardContent className="pt-6 px-3 sm:px-6">
                 <div className="grid gap-4 text-white text-sm sm:text-base">
                     <div className="flex justify-between items-center">
@@ -124,7 +124,7 @@ const RoundDetailPage = () => {
             </TopBar>
 
             <section className="container-main w-full max-w-6xl px-3 sm:px-4 md:px-6">
-                <Card className="bg-[#122146] border-[#EFF8FF17] mb-6 sm:mb-8">
+                <Card className="bg-secondary-game border-[#EFF8FF17] mb-6 sm:mb-8">
                     <CardHeader className="px-4 sm:px-6">
                         <CardTitle className="text-white text-lg sm:text-xl">{t('round.details')}</CardTitle>
                     </CardHeader>

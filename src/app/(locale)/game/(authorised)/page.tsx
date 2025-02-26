@@ -12,7 +12,7 @@ import { RoundRecord } from "@/models/round-record";
 import { useTranslations } from "next-intl";
 
 const borderStyle = {
-    borderColor: "#3799ED",
+    borderColor: "var(--primary-game)",
     borderWidth: "1px",
     borderStyle: "solid",
 };
@@ -41,7 +41,7 @@ const GamePage = () => {
                 </div>
                 <div
                     style={borderStyle}
-                    className="xl:col-span-7 col-span-8  row-span-3 rounded-2xl ">
+                    className="xl:col-span-7 col-span-8  row-span-3 rounded-2xl overflow-y-auto">
                     {roundRecord && <RouletteGame roundRecord={roundRecord} />}
                 </div>
                 <div

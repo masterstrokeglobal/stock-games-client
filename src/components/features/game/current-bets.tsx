@@ -39,7 +39,7 @@ const CurrentBets = ({ className, round }: Props) => {
     return (
         <section
             ref={sectionRef}
-            className={cn("p-4 rounded-2xl h-full w-full bg-[#122146]", className)}
+            className={cn("p-4 rounded-2xl h-full w-full bg-secondary-game", className)}
         >
             <h2 className="text-xl font-semibold mb-4 text-gray-200">
                 {t("current-bets")}
