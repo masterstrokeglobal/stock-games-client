@@ -149,8 +149,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .bet-button {
-  background: linear-gradient(180deg, #B8860B 0%, #8B6508 100%);
-  border: 1px solid rgba(184, 134, 11, 1);
+  background-image: linear-gradient(to bottom, var(--bet-button-start), var(--bet-button-mid), var(--bet-button-end));
+  border: 1px solid var(--bet-button-border);
   box-shadow: 0px 0px 5.4px 6px rgba(139, 101, 8, 0.19) inset;
   color: white;
   font-weight: bold;
