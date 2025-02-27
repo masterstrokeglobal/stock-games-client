@@ -89,7 +89,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
     };
 
     const ButtonChip = ({ amount }: { amount: number }) => (
-        <div className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 bg-yellow-500 text-black text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">
+        <div className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 bg-pink-500 text-black text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">
             {amount}
         </div>
     );
@@ -236,7 +236,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                     <div className="relative">
                                         <Button
                                             variant="game-secondary"
-                                            className="h-full w-10 flex items-center justify-center relative"
+                                            className="h-full w-10 flex items-center justify-center relative routelette-piece-red"
                                             onClick={() => handleSideBet(first8Numbers)}
                                         >
                                             <span className="rotate-text">1 to 8</span>
@@ -248,7 +248,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                     <div className="relative">
                                         <Button
                                             variant="game-secondary"
-                                            className="h-full w-10 flex items-center justify-center relative"
+                                            className="h-full w-10 flex items-center justify-center relative routelette-piece-red"
                                             onClick={() => handleSideBet(second8Numbers)}
                                         >
                                             <span className="rotate-text">9 to 16</span>
@@ -302,7 +302,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                 <div className="relative">
                                     <Button
                                         variant="game-secondary"
-                                        className="h-10 w-full"
+                                        className="h-10 w-full routelette-piece-black"
                                         onClick={() => handleSpecialBet(PlacementType.EVEN_ODD, evenNumbers)}
                                     >
                                         EVEN
@@ -340,7 +340,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                 <div className="relative">
                                     <Button
                                         variant="game-secondary"
-                                        className="h-10 w-full"
+                                        className="h-10 w-full routelette-piece-black"
                                         onClick={() => handleSpecialBet(PlacementType.EVEN_ODD, oddNumbers)}
                                     >
                                         ODD

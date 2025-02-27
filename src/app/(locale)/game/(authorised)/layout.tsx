@@ -21,7 +21,7 @@ const GameLayout = ({ children }: PropsWithChildren) => {
         return <LoadingScreen className="h-screen" />;
     }
 
-    return <div className="bg-primary-game">{children}</div>;
+    return <div className="bg-background-game">{children}</div>;
 };
 
 export default GameLayout;

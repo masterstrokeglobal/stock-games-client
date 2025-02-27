@@ -34,7 +34,7 @@ const WithdrawalFormPage = () => {
     };
 
     return (
-        <Container className="flex flex-col space-y-8 items-center min-h-screen pt-24">
+        <Container className="flex flex-col space-y-8 items-center  bg-secondary-game w-fit rounded-xl min-h-screen pt-24">
             <TopBar>
                 <h1 className="text-xl font-semibold">{t('page-title')}</h1>
             </TopBar>

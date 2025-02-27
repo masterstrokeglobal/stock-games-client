@@ -32,7 +32,7 @@ const UserMenu = () => {
                 {t('title')}
             </TopBar>
             <div className="flex-1 w-full mx-auto max-w-sm flex flex-col ">
-                <div className="mb-8 flex mt-8 gap-4 sm:flex-row flex-col">
+                <div className="mb-8 flex mt-8 gap-4 sm:flex-row flex-col bg-tertiary p-4 rounded-xl">
                     <div className='w-24 h-24 border-2 rounded-3xl border-[#EEC53C]'>
                         <img src={user?.profileImage} alt={t('profile-image-alt')} className="rounded-3xl h-full w-full object-cover" />
                     </div>

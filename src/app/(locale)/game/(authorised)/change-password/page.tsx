@@ -8,7 +8,7 @@ const UserProfilePage = () => {
     const t = useTranslations('password');
 
     return (
-        <Container className="bg-primary-game flex flex-col gap-12 pt-24 items-center min-h-screen">
+        <Container className="bg-secondary-game w-fit rounded-xl flex flex-col gap-12 pt-24 items-center min-h-screen">
             <TopBar>
                 <span>{t('title')}</span>
             </TopBar>

@@ -70,7 +70,7 @@ const BetCard: React.FC<{ bet: Bet }> = ({ bet }) => {
 };
 
 const LoadingState = () => (
-    <Container className="bg-primary-game relative flex flex-col pt-16 sm:pt-24 gap-6 items-center min-h-screen">
+    <Container className="bg-secondary-game w-fit rounded-xl relative flex flex-col pt-16 sm:pt-24 gap-6 items-center min-h-screen">
         <div className="flex justify-center py-8">
             <Timer className="h-6 w-6 animate-spin" />
         </div>
@@ -78,7 +78,7 @@ const LoadingState = () => (
 );
 
 const ErrorState = ({ message }: { message: string }) => (
-    <Container className="bg-primary-game relative flex flex-col pt-16 sm:pt-24 gap-6 items-center min-h-screen">
+    <Container className="bg-secondary-game w-fit rounded-xl relative flex flex-col pt-16 sm:pt-24 gap-6 items-center min-h-screen">
         <div className="text-center py-8 text-red-500 px-4">
             {message}
         </div>
@@ -118,7 +118,7 @@ const RoundDetailPage = () => {
     const bets = betsData.data;
 
     return (
-        <Container className="bg-primary-game relative flex flex-col pt-16 sm:pt-24 gap-4 sm:gap-6 items-center min-h-screen">
+        <Container className="bg-secondary-game w-fit rounded-xl relative flex flex-col pt-16 sm:pt-24 gap-4 sm:gap-6 items-center min-h-screen">
             <TopBar>
                 <h1 className="text-lg sm:text-xl font-semibold">{t('title', { roundId: round.id })}</h1>
             </TopBar>

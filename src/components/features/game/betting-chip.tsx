@@ -16,7 +16,7 @@ const BettingChips: React.FC<Props> = ({ chips,getBetPosition }) => {
         return (
           <div
             key={index}
-            className="absolute flex items-center justify-center w-6 h-6 rounded-full bg-yellow-500 text-black text-xs font-bold transform -translate-x-1/2 -translate-y-1/2"
+            className="absolute flex items-center justify-center w-6 h-6 rounded-full bg-pink-600 text-white text-xs font-bold transform -translate-x-1/2 -translate-y-1/2"
             style={{
               left: position.x,
               top: position.y,

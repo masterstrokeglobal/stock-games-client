@@ -27,7 +27,7 @@ type Props = {
     isLoading: boolean;
 };
 
-const DepositForm = ({ onSubmit,isLoading }: Props) => {
+const DepositForm = ({ onSubmit, isLoading }: Props) => {
     const t = useTranslations('deposit');
     const { userDetails } = useAuthStore();
     const form = useForm<DepositFormValues>({
@@ -42,7 +42,7 @@ const DepositForm = ({ onSubmit,isLoading }: Props) => {
     const paymentImage = userDetails?.company?.paymentImage;
 
     return (
-        <div className="w-full max-w-sm flex flex-col min-h-[calc(100vh-5rem)]">
+        <div className="w-full max-w-sm flex bg-seconda flex-col min-h-[calc(100vh-5rem)] bg-secondary-game p-4 rounded-lg">
             {/* QR Code Section */}
             <header>
                 <h2 className="text-2xl font-semibold text-center mb-2 text-white">

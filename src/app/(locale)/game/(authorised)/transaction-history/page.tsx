@@ -30,7 +30,7 @@ const TransactionHistoryPage = () => {
     }, [data, isSuccess]);
 
     return (
-        <Container className="bg-primary-game relative flex flex-col pt-24 gap-12 items-center min-h-screen overflow-hidden">
+        <Container className="bg-secondary-game w-fit rounded-xl relative flex flex-col pt-24 gap-12 items-center min-h-screen overflow-hidden">
             <img
                 src="/top-gradient.svg"
                 alt="Background gradient"

@@ -22,7 +22,7 @@ const Navbar = () => {
 
     const user = userDetails as User;
     return (
-        <nav className="items-center md:px-6 px-4 z-50  flex fixed top-0 justify-between text-white font-semibold w-full h-16 bg-secondary-game bg-opacity-50">
+    <nav className="items-center md:px-6 px-4 z-50  flex fixed top-0 justify-between text-white font-semibold w-full h-16 bg--game bg-primary-game">
             <div className="">
                 <span className="md:text-xl text-sm font-semibold flex items-end">
                     <Logo />

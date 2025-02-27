@@ -37,6 +37,10 @@ const ThemeManager = () => {
         document.documentElement.style.setProperty('--bet-button-end', theme["bet-button-end"]);
         document.documentElement.style.setProperty('--bet-button-border', theme["bet-button-border"]); 
 
+        // Set main theme variables
+        document.documentElement.style.setProperty('--background-game', theme["backgroundGame"]);
+        document.documentElement.style.setProperty('--game-text', theme["gameText"]);
+
         return () => {
             // Clean up main theme variables
             document.documentElement.style.removeProperty('--primary-game');

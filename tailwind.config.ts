@@ -18,7 +18,10 @@ const config: Config = {
 				'custom-glow': '0px 0px 26.55px 0px rgba(252, 210, 39, 0.56)',
 			},
 			colors: {
-				background: 'hsl(var(--background))',
+				background:{
+					DEFAULT: 'hsl(var(--background))',
+					game: 'var(--background-game)'
+				},
 				foreground: 'hsl(var(--foreground))',
 				card: {
 					DEFAULT: 'hsl(var(--card))',
@@ -41,12 +44,17 @@ const config: Config = {
 				tertiary: {
 					DEFAULT: 'var(--tertiary)'
 				},
+				game : {
+					DEFAULT: 'var(--game)',
+					text: 'var(--game-text)',
+				},
 				'bet-button': {
 					start: 'var(--bet-button-start)',
 					mid: 'var(--bet-button-mid)',
 					end: 'var(--bet-button-end)',
 					border: 'var(--bet-button-border)',
 				},
+
 
 				muted: {
 					DEFAULT: 'hsl(var(--muted))',

@@ -14,8 +14,8 @@ const TopBar = ({ children, rightContent }: TopBarProps) => {
         router.back();
     }
     return (
-        <section className="bg-secondary-game fixed top-0 w-full z-50  -mx-4 sm:-mx-8 xl:-mx-12">
-            <nav className="items-center flex relative justify-between text-white font-semibold w-full h-20 px-4">
+        <section className="bg-primary-game fixed top-0 w-full z-50  -mx-4 sm:-mx-8 xl:-mx-12">
+            <nav className="items-center flex relative justify-between text-game-text font-semibold w-full h-20 px-4">
                 <Button size="icon" variant="ghost" onClick={handleBack}>
                     <ArrowLeft size={24} />
                 </Button>
