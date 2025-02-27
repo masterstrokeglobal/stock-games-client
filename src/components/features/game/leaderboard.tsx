@@ -9,6 +9,7 @@ import { RoundRecord } from "@/models/round-record";
 import { useGetRoundRecordById } from "@/react-query/round-record-queries";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
+import LeaderboardHeader from "./leaderboard-header";
 
 // Enhanced interface for ranked market items
 type Props = {
@@ -76,9 +77,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
             ref={sectionRef}
             className="p-4 md:rounded-2xl h-full w-full bg-secondary-game"
         >
-            <h2 className="text-xl font-semibold mb-4 text-gray-200">
-                {t("leaderboard")}
-            </h2>
+           <LeaderboardHeader/>
             <ScrollArea
                 className="max-h-96 h-full"
                 style={{ height: `${scrollAreaHeight - 20}px` }}
@@ -170,8 +169,8 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                                     "p-2  text-right",
                                     !isGameOver ? getChangeColor(marketItem.change_percent) : "text-gray-300"
                                 )}>
-                                    {!isGameOver ?(parseFloat(marketItem.change_percent) > 0 ? '+' : ''): ''}
-                                    {!isGameOver?(marketItem.change_percent ?? 0):'--'}%
+                                    {!isGameOver ? (parseFloat(marketItem.change_percent) > 0 ? '+' : '') : ''}
+                                    {!isGameOver ? (marketItem.change_percent ?? 0) : '--'}%
                                 </td>
                             </tr>
                         ))}

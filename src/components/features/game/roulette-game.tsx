@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useGameState, useShowResults } from "@/hooks/use-current-game";
+import { useGameState, useIsPlaceOver, useShowResults } from "@/hooks/use-current-game";
 import { useGameType } from "@/hooks/use-game-type";
 import { useRouletteBetting } from "@/hooks/use-roulette-betting";
 import { cn, getPlacementString } from "@/lib/utils";
@@ -20,6 +20,7 @@ import GameResultDialog from "./result-dialog";
 import { useTranslations } from "next-intl";
 import { useAuthStore } from "@/context/auth-context";
 import User from "@/models/user";
+import UserWins from "./user-wins-toggle";
 
 enum PlacementType {
     SINGLE = "single",
@@ -44,6 +45,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const t = useTranslations("game");
     const [betAmount, setBetAmount] = useState<number>(10);
     const gameState = useGameState(roundRecord);
+    const isPlaceOver  = useIsPlaceOver(roundRecord);
     const isNSEAvailable = useNSEAvailable();
     const [tab, setTab] = useGameType();
     const { userDetails } = useAuthStore();
@@ -378,6 +380,8 @@ const RouletteGame = ({ roundRecord }: Props) => {
                 </div>
             </div>
             <GameResultDialog key={String(showResults)} open={showResults} roundRecordId={previousRoundId!} />
+            {!isPlaceOver && <UserWins className="fixed bottom-4 right-4  md:block hidden  " />}
+
         </>
 
 
