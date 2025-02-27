@@ -33,9 +33,6 @@ const CurrentBets = ({ className, round }: Props) => {
         }
     }, []);
 
-
-
-
     return (
         <section
             ref={sectionRef}

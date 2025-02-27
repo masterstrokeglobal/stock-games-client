@@ -1,8 +1,10 @@
 "use client";
 import { MobileHeader } from "@/components/features/game/common/mobile-components";
+import CurrentBetsMiniMutualFunds from "@/components/features/game/current-bets-mini-mutual-funds";
 import LeaderBoard from "@/components/features/game/leaderboard";
 import LobbyGameResultDialog from "@/components/features/game/lobby-result-dialog";
 import MiniMutualFundBet from "@/components/features/game/mini-mutual-fund-bet";
+import MiniMutualFundLeaderBoard from "@/components/features/game/mini-mutual-fund-leaderboard";
 import Navbar from "@/components/features/game/navbar";
 import PlacementBetsLobby from "@/components/features/game/placement-bets-lobby";
 import HorseRace from "@/components/features/horse-animation/horse";
@@ -88,26 +90,19 @@ const GamePage = () => {
                 <div
                     style={borderStyle}
                     className="xl:col-span-5 col-span-4 row-span-2 rounded-2xl">
-
+                        <CurrentBetsMiniMutualFunds />
                 </div>
                 <div
                     style={borderStyle}
                     className="xl:col-span-7 col-span-8 row-span-3 rounded-2xl">
                     {(storeLobbyRound && storeLobby) &&
-                        <MiniMutualFundBet
-                        />
+                        <MiniMutualFundBet />
                     }
                 </div>
                 <div
                     style={borderStyle}
                     className="xl:col-span-5 col-span-4 row-span-3 rounded-2xl">
-                    {roundRecord && filteredMarket &&
-                        <LeaderBoard
-                            roundRecord={roundRecord}
-                            filteredMarket={filteredMarket}
-                            result={resultData}
-                        />
-                    }
+                    {roundRecord && filteredMarket &&<MiniMutualFundLeaderBoard/>}
                 </div>
             </main>}
 
@@ -136,11 +131,7 @@ const GamePage = () => {
                         </main>
                     }
                     {(isPlaceOver && storeLobbyRound.roundRecord) &&
-                        <LeaderBoard
-                            roundRecord={storeLobbyRound.roundRecord}
-                            filteredMarket={filteredMarket}
-                            result={resultData}
-                        />
+                        <MiniMutualFundLeaderBoard/>
                     }
                     {isPlaceOver && storeLobbyRound && storeLobby &&
                         <PlacementBetsLobby

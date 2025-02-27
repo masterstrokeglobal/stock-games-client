@@ -3,13 +3,15 @@ import { CurrentGameState } from './contants';
 import { RoundRecord } from '@/models/round-record';
 import { useGameState } from '@/hooks/use-current-game';
 import { useTranslations } from 'next-intl';
+import { cn } from '@/lib/utils';
 
 interface GameHeaderProps {
     gameState: CurrentGameState;
+    className?: string;
 }
 
 
-export const GameHeader: React.FC<GameHeaderProps> = ({ gameState }) => {
+export const GameHeader: React.FC<GameHeaderProps> = ({ gameState,className }) => {
     const getMessage = () => {
         if (gameState.isGameOver) {
             return "Game Over";
@@ -27,7 +29,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({ gameState }) => {
     };
 
     return (
-        <header className='text-center hidden lg:block my-2 text-white'>
+        <header className={cn('text-center hidden lg:block my-2 text-white',className)}>
             <h2 className="text-lg font-semibold text-gray-">
                 {getMessage()}
             </h2>

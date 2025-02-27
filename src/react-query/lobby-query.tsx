@@ -107,7 +107,7 @@ export const useUnreadyToPlay = () => {
 
     return useMutation({
         mutationFn: lobbyAPI.unreadyLobby,
-       onSuccess: () => {
+        onSuccess: () => {
             queryClient.invalidateQueries({
                 predicate: (query) => query.queryKey[0] === "lobbies",
             });
@@ -145,7 +145,7 @@ export const useReadyToPlay = () => {
         mutationFn: lobbyAPI.readyToPlay,
         onSuccess: () => {
             queryClient.invalidateQueries({
-                predicate: (query) => query.queryKey[0] === "lobbies"|| query.queryKey[0] === "user" && query.queryKey[1] == 'wallet',
+                predicate: (query) => query.queryKey[0] === "lobbies" || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet',
             });
             toast.success("Ready to play");
         },
@@ -170,12 +170,36 @@ export const useGetCurrentLobbyRound = (lobbyId?: number) => {
 
 // lobby chat history
 export const useGetLobbyChat = (lobbyId: number) => {
-return useQuery({
-    queryKey: ["lobbies", "chat", lobbyId],
-    queryFn: async () => {
-        const response = await lobbyAPI.getLobbyChat(lobbyId);
-        return response;
-    },
-    enabled: Boolean(lobbyId),
-});
+    return useQuery({
+        queryKey: ["lobbies", "chat", lobbyId],
+        queryFn: async () => {
+            const response = await lobbyAPI.getLobbyChat(lobbyId);
+            return response;
+        },
+        enabled: Boolean(lobbyId),
+    });
+};
+
+// Get current round placements
+export const useGetMiniMutualFundCurrentRoundPlacements = (roundId: number) => {
+    return useQuery({
+        queryKey: ["lobbies", "mini-mutual-fund", "current-placement", roundId],
+        queryFn: async () => {
+            const response = await lobbyAPI.getMiniMutualFundCurrentPlacement(roundId);
+            return response;
+        },
+        enabled: Boolean(roundId),
+    });
+};
+
+// Get current user placements
+export const useGetMiniMutualFundCurrentUserPlacements = (roundId?: number) => {
+    return useQuery({
+        queryKey: ["lobbies", "mini-mutual-fund", "current-user-placement", roundId],
+        queryFn: async () => {
+            const response = await lobbyAPI.getMiniMutualFundCurrentUserPlacement(roundId!);
+            return response;
+        },
+        enabled: Boolean(roundId),
+    });
 };

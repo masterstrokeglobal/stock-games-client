@@ -1,6 +1,7 @@
 import Lobby, { LobbyGameType, LobbyType } from "@/models/lobby";
 import { SchedulerType } from "@/models/market-item";
 import api from "./instance";
+import { get } from "http";
 export enum LobbyStatus {
     OPEN = "OPEN",
     CLOSED = "CLOSED"
@@ -34,7 +35,7 @@ export const lobbyAPI = {
         return response.data;
     },
 
-    
+
     // Join an existing lobby
     joinLobby: async (data: JoinLobbyRequest) => {
         const response = await api.post<string>("/lobby/join-lobby", data);
@@ -60,6 +61,16 @@ export const lobbyAPI = {
     },
     readyToPlay: async (lobbyId: number) => {
         const response = await api.patch(`/lobby/ready/${lobbyId}`);
+        return response.data;
+    },
+
+    getMiniMutualFundCurrentPlacement: async (roundId: number) => {
+        const response = await api.get(`/lobby/mini-mutual-fund/current-placement/${roundId}`);
+        return response.data;
+    },
+
+    getMiniMutualFundCurrentUserPlacement: async (roundId: number) => {
+        const response = await api.get(`/lobby/mini-mutual-fund/current-user-placement/${roundId}`);
         return response.data;
     },
 
