@@ -3,6 +3,8 @@ import { toast } from "sonner";
 import { companyAPI } from "@/lib/axios/company-API"; // Adjust the path as needed
 import { COMPANYID } from "@/lib/utils";
 import Company from "@/models/company";
+import CompanyWallet from "@/models/company-wallet";
+import { AxiosError } from "axios";
 
 export const useCreateCompany = () => {
     return useMutation({
@@ -26,15 +28,15 @@ export const useGetAllCompanies = (filter: SearchFilters) => {
 export const useGetCompanyById = (companyId?: string) => {
     return useQuery({
         queryKey: ["company", companyId],
-        queryFn:companyId? () => companyAPI.getCompanyById(companyId):undefined,
-         enabled: !!companyId,
+        queryFn: companyId ? () => companyAPI.getCompanyById(companyId) : undefined,
+        enabled: !!companyId,
     });
 };
 
 export const useGetMyCompany = () => {
     return useQuery({
-        queryKey: ["company", "my",COMPANYID],
-        queryFn: async() => {
+        queryKey: ["company", "my", COMPANYID],
+        queryFn: async () => {
             const company = await companyAPI.getCompanyById(COMPANYID.toString());
             return new Company(company.data);
         },
@@ -165,6 +167,34 @@ export const useUpdateDepositBonusPercentageEnabled = () => {
         },
         onError: (error: any) => {
             toast.error(error.response?.data?.message ?? "Error updating deposit bonus percentage enabled");
+        },
+    });
+}
+
+export const useCompanyWalletByCompanyId = ({ companyId }: { companyId: string }) => {
+    return useQuery<CompanyWallet,AxiosError>({
+        queryKey: ["company", "wallet", companyId],
+        queryFn: async () => {
+            const company = await companyAPI.companyWalletByCompanyId(companyId);
+            return new CompanyWallet(company.data);
+        }
+    });
+}
+
+export const useCreateCompanyWallet = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: companyAPI.createCompanyWallet,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "company";
+                }
+            });
+            toast.success("Company wallet created successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error creating company wallet");
         },
     });
 }

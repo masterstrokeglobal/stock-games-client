@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Building, Clock, Contact2, DollarSign, Home, LucideIcon, Repeat1, Users } from 'lucide-react';
+import { Building, Clock, CoinsIcon, Contact2, DollarSign, Home, LucideIcon, Repeat1, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -74,6 +74,15 @@ const companyMenuItems: MenuItem[] = [
         name: 'Users',
         icon: Users,
         link: '/dashboard/users',
+    },
+    // company wallet
+    {
+        name: "Company Wallet",
+        icon: CoinsIcon,
+        subItems: [
+            { name: "View Wallet", link: "/dashboard/company-wallet" },
+            { name: "Request Chips", link: "/dashboard/company-wallet/create" }
+        ]
     },
     //agents
     {

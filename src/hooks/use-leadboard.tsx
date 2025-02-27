@@ -72,14 +72,14 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
         }
 
         // After round ends, maintain final values but stop updating
-        if (roundStatus === 'completed') {
+/*         if (roundStatus === 'completed') {
             const initialPrice = initialPricesRef.current.get(bitcode);
             return {
                 initialPrice: initialPrice || currentPrice,
                 changePercent: latestDataRef.current.find(s => s.bitcode === bitcode)?.change_percent || '0'
             };
         }
-
+ */
         return { initialPrice: currentPrice, changePercent: '0' };
     };
 

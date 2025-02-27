@@ -58,6 +58,32 @@ export const useGetTransactionById = (transactionId: string) => {
     });
 };
 
+export const useCreateCompanyDepositRequest = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: paymentAPI.createCompanyDepositRequest,
+        onSuccess: () => {
+            toast.success("Deposit request created successfully");
+            queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === "company" });
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error creating deposit request");
+        },
+    })
+};
+
+export const useDepositCoinsToCompanyWallet = () => {
+    return useMutation({
+        mutationFn: paymentAPI.depositCoinsToCompanyWallet,
+        onSuccess: () => {
+            toast.success("Coins deposited successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error depositing coins");
+        },
+    });
+}
+
 // Update Transaction by ID
 export const useUpdateTransactionById = () => {
     const queryClient = useQueryClient();

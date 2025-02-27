@@ -1,5 +1,6 @@
 "use client";
 
+import CompanyWalletCard from "@/columns/company-wallet-card";
 import DepositEnabledFormPercentage, { BonusPercentageFormValues } from "@/components/common/enabled-bonus-percentage";
 import LoadingScreen from "@/components/common/loading-screen";
 import CompanyCard from "@/components/features/company/company-card";
@@ -47,6 +48,7 @@ const ViewCompanyPage = () => {
     return (
         <section className="container-main min-h-[60vh]">
             <main className="mt-4 space-y-8">
+                <CompanyWalletCard companyId={id.toString()} />
                 {companyDetails && <CompanyCard company={companyDetails} showBonusPercentage={companyDetails.depositBonusPercentageEnabled} />}
                 {companyDetails && <CompanyPlacementManagement company={companyDetails} />}
                 {defaultValues && <DepositEnabledFormPercentage onSubmit={onChangeBonusPercentage} defaultValues={defaultValues} isLoading={isPending} />}

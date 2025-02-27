@@ -24,6 +24,7 @@ const GamePage = () => {
 
     return (
 
+
         <section className="bg-background-game pt-20 md:h-screen ">
             <Navbar />
             {!isMobile && <main className="grid grid-cols-12 grid-rows-5 gap-4 h-full p-4">

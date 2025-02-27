@@ -11,9 +11,16 @@ export const paymentAPI = {
     return api.post("/payment/deposit", data);
   },
 
+  createCompanyDepositRequest: async (data: any) => {
+    return api.post(`/payment/company-chips-deposit/`, data);
+  },
   // Create a withdrawal request for the user's wallet
   createWithdrawalRequest: async (data: any) => {
     return api.post("/payment/withdraw", data);
+  },
+
+  depositCoinsToCompanyWallet: async (data: any) => {
+    return api.post(`/admin/company-deposit/${data.companyWalletId}`, data);
   },
 
   // Get all transactions (only accessible by users with COMPANY_ADMIN role)

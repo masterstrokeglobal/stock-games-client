@@ -21,6 +21,15 @@ export const companyAPI = {
         return api.patch(`/company/${id}`, rest);
     },
 
+    companyWalletByCompanyId: async (companyId: string) => {
+        return api.get(`/admin/company-wallet/${companyId}`);
+    },
+
+    createCompanyWallet: async (companyId: string) => {
+        return api.post(`/admin/create-company-wallet`, {
+            companyId
+        });
+    },
     deleteCompanyById: async (companyId: string) => {
         return api.delete(`/company/${companyId}`);
     },

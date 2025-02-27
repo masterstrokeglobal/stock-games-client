@@ -23,7 +23,6 @@ const LeaderBoard = ({ roundRecord }: Props) => {
     const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
     const { isGameOver } = useGameState(roundRecord);
 
-
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord.id);
 
     useEffect(() => {
@@ -40,7 +39,6 @@ const LeaderBoard = ({ roundRecord }: Props) => {
     const winnerNumber = useMemo(() => {
         if (!isSuccess) return null;
         const winningId = data.data?.winningId;
-        console.log('winningId', winningId);
 
         if (!winningId) return 0;
 
@@ -167,8 +165,9 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                                 </td>
                                 <td className={cn(
                                     "p-2  text-right",
-                                    !isGameOver ? getChangeColor(marketItem.change_percent) : "text-gray-300"
+                                    getChangeColor(marketItem.change_percent) 
                                 )}>
+
                                     {!isGameOver ? (parseFloat(marketItem.change_percent) > 0 ? '+' : '') : ''}
                                     {!isGameOver ? (marketItem.change_percent ?? 0) : '--'}%
                                 </td>

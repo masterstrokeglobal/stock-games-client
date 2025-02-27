@@ -42,6 +42,7 @@ const DepositForm = ({ onSubmit, isLoading }: Props) => {
     const paymentImage = userDetails?.company?.paymentImage;
 
     return (
+
         <div className="w-full max-w-sm flex bg-seconda flex-col min-h-[calc(100vh-5rem)] bg-secondary-game p-4 rounded-lg">
             {/* QR Code Section */}
             <header>

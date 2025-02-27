@@ -3,7 +3,15 @@ import User from "./user";
 export enum TransactionType {
     DEPOSIT = "deposit",
     WITHDRAWAL = "withdrawal",
-}
+    PLACEMENT = "placement",
+    WINNING = "winning",
+    PLACEMENT_RETURNS = "placement_returns",
+    LOBBY_PLACEMENT = "lobby_placement",
+    LOBBY_WINNING = "lobby_winning",
+    LOBBY_REFUND = "lobby_refund",
+    ADMIN_DEPOSIT = "admin_deposit",
+    ADMIN_WITHDRAWAL = "admin_withdrawal",
+  }
 
 export enum TransactionStatus {
     PENDING = "pending",

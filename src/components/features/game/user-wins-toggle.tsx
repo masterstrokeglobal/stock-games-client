@@ -119,6 +119,7 @@ const UserWins = ({ className }: PropsWithClassName) => {
 
     return (
         <div className={cn(`relative transition-all z-50 duration-300 ${isOpen ? "w-64" : "w-10"}`, className)}>
+
             <div className="absolute inset-0  rounded-lg bg-transparent" />
             <div className="relative z-10 overflow-hidden rounded-lg border   ">
                 <AnimatePresence initial={false}>
@@ -128,6 +129,7 @@ const UserWins = ({ className }: PropsWithClassName) => {
                             animate="visible"
                             exit="hidden"
                             variants={contentVariants}
+
                             className=" backdrop-blur-sm"
                         >
                             <div className="divide-y divide-gray-700/30">
@@ -157,6 +159,7 @@ const UserWins = ({ className }: PropsWithClassName) => {
                         className="bg-primary-game p-1 rounded-full"
                         onClick={toggleLeaderboard}
                     >
+
                         <Trophy className="h-5 w-5 text-white" />
                     </Button>
                 </div>
