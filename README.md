@@ -1,14 +1,16 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
+
 First, run the development server:
+
 ```bash
 pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. 
+You can start editing the page by modifying `app/page.tsx`.
 The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
@@ -44,18 +46,31 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
   "bet-button-border": "#55B0FF"
 }
 ```
+
+
+```
 {
-    "primary": "#F0B940",
-    "tertiary": "#000614",
-    "secondary": "#000000",
-    "borderColor": "rgba(255, 215, 0, 0.31)",
-    "bet-button-start": "#FFD700",
-    "bet-button-mid": "#FFC72C",
-    "bet-button-end": "#FFEA80",
-    "bet-button-border": "#F0B940",
-    "redGradientStart": "#FFD700",
-    "redGradientEnd": "#FFEA80",
-    "blackGradientStart": "#1A1A1A",
-    "blackGradientEnd": "#3D3D3D",
-    "innerShadowColor": "rgba(255, 240, 180, 0.1)"
+"radius": "0.2rem;",
+"primary": "#000000",
+"gameText": "#010101",
+"tertiary": "#000614",
+"highlight": "#fafafa",
+"secondary": "#f9b800",
+"highlight2": "#00000",
+"borderColor": "rgba(0, 0, 0, 0.31)",
+"backgroundGame": "#FAFAFA",
+"bet-button-end": "#FFCC2A",
+"bet-button-mid": "#FFCC2A",
+"redGradientEnd": "#f9b900",
+"bet-button-start": "#FFCC2A",
+"blackGradientEnd": "#ffffff",
+"innerShadowColor": "rgba(255, 240, 180, 0.1)",
+"redGradientStart": "#f9b900",
+"bet-button-border": "#F0B940",
+"blackGradientStart": "#ffffff",
+"gameHeaderHighlight": "linear-gradient(to right, white, transparent)",
+"gameBoxGradient": "linear-gradient(to right, black, transparent)"
 }
+
+
+```

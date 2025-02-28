@@ -39,9 +39,9 @@ const CurrentBets = ({ className, round }: Props) => {
     return (
         <section
             ref={sectionRef}
-            className={cn("p-4 rounded-2xl h-full w-full bg-secondary-game", className)}
+            className={cn("p-4 md:rounded-2xl h-full w-full bg-secondary-game", className)}
         >
-            <h2 className="text-xl font-semibold mb-4 text-gray-200">
+            <h2 className="text-xl font-semibold mb-2 text-game-text game-header-highlight lg:pl-4 pl-2  lg:-ml-4 -ml-2 ">
                 {t("current-bets")}
             </h2>
             <ScrollArea className="max-h-96 w-full" style={{ height: `${scrollAreaHeight - 20}px` }} type="auto">
@@ -49,13 +49,13 @@ const CurrentBets = ({ className, round }: Props) => {
                     <table className="min-w-full">
                         <thead>
                             <tr className="flex">
-                                <th className="p-2 text-sm text-left text-gray-300 rounded-tl-lg flex-1">
+                                <th className="p-2 text-sm text-left text-game-text rounded-tl-lg flex-1">
                                     {t("placement")}
                                 </th>
-                                <th className="p-2 text-sm text-left text-gray-300 flex-1">
+                                <th className="p-2 text-sm text-left text-game-text flex-1">
                                     {t("username")}
                                 </th>
-                                <th className="p-2 text-sm text-right text-gray-300 rounded-tr-lg flex-1">
+                                <th className="p-2 text-sm text-right text-game-text rounded-tr-lg flex-1">
                                     {t("amount")}
                                 </th>
                             </tr>
@@ -67,13 +67,13 @@ const CurrentBets = ({ className, round }: Props) => {
                                     className="flex border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden"
                                     style={{ display: 'flex', flexDirection: 'row' }}
                                 >
-                                    <td className="p-2 text-sm text-gray-300 rounded-l-lg flex-1">
+                                    <td className="p-2 text-sm text-game-text rounded-l-lg flex-1">
                                         {getPlacementString(bet, round)}
                                     </td>
-                                    <td className="p-2 text-sm text-gray-300 flex-1">
+                                    <td className="p-2 text-sm text-game-text flex-1">
                                         {bet.user.username}
                                     </td>
-                                    <td className="p-2 text-sm text-right text-gray-300 rounded-r-lg flex-1">
+                                    <td className="p-2 text-sm text-right text-game-text rounded-r-lg flex-1">
                                         {bet.amount}
                                     </td>
                                 </tr>
@@ -81,7 +81,7 @@ const CurrentBets = ({ className, round }: Props) => {
                         </tbody>
                     </table>
                 ) : (
-                    <div className="text-center text-gray-300 py-4">
+                    <div className="text-center text-game-text py-4">
                         {t("no-bets")}
                     </div>
                 )}

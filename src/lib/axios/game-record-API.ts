@@ -24,5 +24,8 @@ export const gameRecordAPI = {
     return api.get("/round-records/history",{
       params: filter
     });
+  },
+  undoLastPlacement: async (roundId:string) => {
+    return api.post(`/game-records/undo/${roundId}`);
   }
 };

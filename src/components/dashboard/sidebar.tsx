@@ -40,6 +40,7 @@ const adminMenuItems: MenuItem[] = [
         subItems: [
             { name: 'View Companies', link: '/dashboard/company' },
             { name: 'Create Company', link: '/dashboard/company/create' },
+            { name: 'Company Wallet', link: '/dashboard/company-wallet' },
         ],
     },
     {

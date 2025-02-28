@@ -23,6 +23,13 @@ export const paymentAPI = {
     return api.post(`/admin/company-deposit/${data.companyWalletId}`, data);
   },
 
+  companyWalletTransactions: async (filter: any) => { 
+    return api.get("/payment/company-wallet-transactions", {
+      params: filter
+    });
+  },
+
+
   // Get all transactions (only accessible by users with COMPANY_ADMIN role)
   getTransactions: async (filter: any) => {
     return api.get("/payment/transaction", {

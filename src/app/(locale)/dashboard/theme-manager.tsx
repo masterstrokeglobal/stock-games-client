@@ -41,6 +41,15 @@ const ThemeManager = () => {
         document.documentElement.style.setProperty('--background-game', theme["backgroundGame"]);
         document.documentElement.style.setProperty('--game-text', theme["gameText"]);
 
+        // rounded-2xl
+        document.documentElement.style.setProperty('--radius', theme["radius"]);
+
+        //highlight
+        document.documentElement.style.setProperty('--game-header-highlight', theme["gameHeaderHighlight"]);
+        document.documentElement.style.setProperty('--game-box-gradient', theme["gameBoxGradient"]);
+
+        // Set 
+
         return () => {
             // Clean up main theme variables
             document.documentElement.style.removeProperty('--primary-game');

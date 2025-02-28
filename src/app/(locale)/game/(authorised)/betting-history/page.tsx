@@ -55,7 +55,7 @@ const BettingHistoryPage = () => {
     };
 
     return (
-        <Container className="bg-secondary-game w-fit rounded-xl relative flex flex-col pt-24 gap-6 items-center min-h-screen">
+        <Container className="bg-primary-game w-full  rounded-xl relative flex flex-col pt-24 gap-6 items-center min-h-screen">
             <TopBar>
                 <h1 className="text-xl font-semibold">{t('page-title')}</h1>
             </TopBar>

@@ -76,3 +76,25 @@ export const useGameRecordHistory = (params: any) => {
         queryFn: () => gameRecordAPI.getGameRecordHistory(params),
     });
 };
+
+// Undo Last Placement Hook
+
+export const useUndoLastPlacement = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: gameRecordAPI.undoLastPlacement,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) =>
+                    query.queryKey[0] === "winningGameRecord" ||
+                    query.queryKey[0] === "topPlacements" ||
+                    query.queryKey[0] === "myPlacements" ||
+                    query.queryKey[0] === "user" && query.queryKey[1] == 'wallet',
+            });
+            toast.success("Placement undone successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error undoing last placement");
+        },
+    });
+};

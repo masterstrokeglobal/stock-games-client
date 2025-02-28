@@ -61,10 +61,10 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord }: Roulett
                   transition-all duration-150
                 `}
                 >
-                    <span className="absolute inset-0 flex items-end ml-1 sm:text-[10px] text-[8px] justify-start text-white ">
+                    <span className="absolute inset-0 flex items-end ml-1 sm:text-[10px] text-[8px] justify-start text-game-text ">
                         {getCodeByIndex(number)}
                     </span>
-                    <span className="absolute inset-0 mx-1 flex items-start justify-end text-white text-2xl font-bold">
+                    <span className="absolute inset-0 mx-1 flex items-start justify-end text-game-text text-2xl font-bold">
                         {number}
                     </span>
                     {winnerNumber === number && <img className='z-40 relative' src='/crown.png' />}

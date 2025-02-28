@@ -120,7 +120,8 @@ const UserWins = ({ className }: PropsWithClassName) => {
     return (
         <div className={cn(`relative transition-all z-50 duration-300 ${isOpen ? "w-64" : "w-10"}`, className)}>
 
-            <div className="absolute inset-0  rounded-lg bg-transparent" />
+            <div className="absolute inset-0  rounded-lg bg-primary/50" />
+
             <div className="relative z-10 overflow-hidden rounded-lg border   ">
                 <AnimatePresence initial={false}>
                     {isOpen && (

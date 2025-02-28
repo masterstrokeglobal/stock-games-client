@@ -31,7 +31,7 @@ const AddBankDetailsPage = () => {
             <TopBar>
                 {t('page-title')}
             </TopBar>
-            <main className="mt-4 w-full mx-auto h-full max-w-xl  bg-secondary-game p-4 rounded-xl">
+            <main className="mt-4 w-full mx-auto h-full max-w-xl  bg-primary-game p-4 rounded-xl">
                 <BankAccountForm
                     onSubmit={handleSubmit}
                     isLoading={isPending}

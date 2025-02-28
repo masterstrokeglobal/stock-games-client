@@ -139,3 +139,10 @@ export const useGetUserProfitLoss = (userId: string) => {
         queryFn: () => paymentAPI.getUserProfitLoss(userId),
     });
 }
+
+export const useGetCompanyWalletTransactions = (filter: any) => {
+    return useQuery({
+        queryKey: ["company", "wallet", "transactions", filter],
+        queryFn: () => paymentAPI.companyWalletTransactions(filter),
+    });
+}

@@ -23,8 +23,6 @@ const GamePage = () => {
 
 
     return (
-
-
         <section className="bg-background-game pt-20 md:h-screen ">
             <Navbar />
             {!isMobile && <main className="grid grid-cols-12 grid-rows-5 gap-4 h-full p-4">
@@ -33,16 +31,13 @@ const GamePage = () => {
                     className="xl:col-span-7 col-span-8 row-span-2 rounded-2xl  overflow-hidden">
                     {roundRecord && <HorseRace roundRecord={roundRecord} />}
                 </div>
-                <div
-                    style={borderStyle}
-
+                <div style={borderStyle}
                     className="xl:col-span-5 col-span-4 row-span-2 rounded-2xl ">
                     {roundRecord && <CurrentBets round={roundRecord} />}
-
                 </div>
                 <div
                     style={borderStyle}
-                    className="xl:col-span-7 col-span-8  row-span-3 rounded-2xl overflow-y-auto">
+                    className="xl:col-span-7 col-span-8 bg-secondary-game row-span-3 rounded-2xl overflow-y-auto">
                     {roundRecord && <RouletteGame roundRecord={roundRecord} />}
                 </div>
                 <div
@@ -69,7 +64,7 @@ const TimeLeft = ({ roundRecord }: { roundRecord: RoundRecord }) => {
 const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
     const isPlaceOver = useIsPlaceOver(roundRecord);
 
-    return <section className="text-white">
+    return <section className="text-game-text">
         <MobileHeader roundRecord={roundRecord} />
         {!isPlaceOver && <main className="bg-[#0A1634]">
             <div className="px-2">
@@ -94,7 +89,7 @@ const MobileHeader = ({ roundRecord }: { roundRecord: RoundRecord }) => {
     </>
 
 
-    return <header className="bg-[#1E2E57] mx-auto flex justify-center flex-col text-center min-h-[20vh]" >
+    return <header className="bg-background-game mx-auto flex justify-center flex-col text-center min-h-[20vh]" >
         <h1>
             {t("round-starts-in")}
         </h1>

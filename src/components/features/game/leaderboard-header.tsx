@@ -120,13 +120,13 @@ const LeaderboardHeader = () => {
     }, [number, targetNumber]);
 
     return (
-        <div className='flex justify-between'>
-            <h2 className="text-xl font-semibold mb-4 text-gray-200">
+        <div className='flex justify-between  pr-3 '>
+            <h2 className="text-xl font-semibold mb-4 game-header-highlight mt-2 pl-2 b text-game-text">
                 {t("leaderboard")}
             </h2>
             <div className="flex justify-between items-center">
                 <AnimatedEyes />
-                <span className="text-md font-semibold text-gray-200 ml-2">
+                <span className="text-md font-semibold text-game-text ml-2">
                     {number} viewing
                 </span>
             </div>

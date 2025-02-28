@@ -65,7 +65,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
         const change = parseFloat(changePercent);
         if (change > 0) return "text-green-500";
         if (change < 0) return "text-red-500";
-        return "text-gray-300";
+        return "text-game-text";
     };
 
     const winnerMarketItem = leaderboardData.find((item) => item.horse === winnerNumber);
@@ -73,48 +73,48 @@ const LeaderBoard = ({ roundRecord }: Props) => {
     return (
         <section
             ref={sectionRef}
-            className="p-4 md:rounded-2xl h-full w-full bg-secondary-game"
+            className="md:rounded-2xl h-full bg-secondary-game overflow-hidden w-full "
         >
            <LeaderboardHeader/>
             <ScrollArea
-                className="max-h-96 h-full"
+                className="max-h-96  h-full"
                 style={{ height: `${scrollAreaHeight - 20}px` }}
                 type="auto"
             >
                 <table className="min-w-full">
-                    <thead>
-                        <tr className="text-[#8990A2] text-sm">
-                            <th className="p-2 text-left w-12">
+                    <thead className="bg-primary-game bg-opacity-50">
+                        <tr className="text-game-text text-sm">
+                            <th className="p-2 text-left w-12 text-white">
                                 {t("rank")}
                             </th>
-                            <th className="p-2 text-left">
+                            <th className="p-2 text-left text-white">
                                 {t("horse")}
                             </th>
-                            <th className="p-2 text-left">
+                            <th className="p-2 text-left text-white">
                                 {t("name")}
                             </th>
-                            <th className="p-2 text-right">
+                            <th className="p-2 text-right text-white">
                                 {t("price")}
                             </th>
-                            <th className="p-2 text-right whitespace-nowrap">
+                            <th className="p-2 text-right whitespace-nowrap text-white">
                                 {t("change")}
                             </th>
 
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="bg-background-game">
                         {winnerMarketItem && (
                             <tr className="border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden">
-                                <td className="p-2  text-gray-300">
+                                <td className="p-2  text-game-text">
                                     <img src="/rank-1.svg" alt="Rank 1" className="w-8 h-8" />
                                 </td>
-                                <td className="p-2  text-gray-300">
+                                <td className="p-2  text-game-text">
                                     {winnerMarketItem.horse}
                                 </td>
-                                <td className="p-2  text-gray-300">
+                                <td className="p-2  text-game-text">
                                     {winnerMarketItem.name}
                                 </td>
-                                <td className="p-2  text-right text-gray-300">
+                                <td className="p-2  text-right text-game-text">
                                     {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : "Rs."}
                                     {winnerMarketItem.price ? formatPrice(winnerMarketItem.price) : "-"}
                                 </td>
@@ -133,7 +133,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
 
                                 className={cn("border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden", (index === 0 && winnerNumber == 0) ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm")}
                             >
-                                <td className="p-2  text-gray-300">
+                                <td className="p-2  text-game-text">
 
                                     {(index === 0 && winnerNumber == 0 && !isGameOver) ? (
                                         <img
@@ -148,18 +148,18 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                                             className="size-8"
                                         />
                                     ) : (
-                                        <span className="text-[#8990A2]">
+                                        <span className="text-game-text">
                                             {(winnerNumber == 0 && !isGameOver) ? (index + 1) : "-"}
                                         </span>
                                     )}
                                 </td>
-                                <td className="p-2  text-gray-300">
+                                <td className="p-2  text-game-text">
                                     {marketItem.horse == 17 ? 0 : marketItem.horse}
                                 </td>
-                                <td className="p-2  text-gray-300">
+                                <td className="p-2  text-game-text">
                                     {marketItem.name}
                                 </td>
-                                <td className="p-2  text-right text-gray-300">
+                                <td className="p-2  text-right text-game-text">
                                     {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : "Rs."}
                                     {marketItem.price ? formatPrice(marketItem.price) : "-"}
                                 </td>

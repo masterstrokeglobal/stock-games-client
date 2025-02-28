@@ -6,6 +6,7 @@
         "title": "Stock Derby",
         "game-over": "Game Over",
         "bet": "Bet",
+        "undo": "Undo Bet",
         "game-ends-in": "Game ends in",
         "current-bets": "Current Bets",
         "leaderboard": "Leaderboard",

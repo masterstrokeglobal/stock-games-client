@@ -45,7 +45,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const t = useTranslations("game");
     const [betAmount, setBetAmount] = useState<number>(10);
     const gameState = useGameState(roundRecord);
-    const isPlaceOver  = useIsPlaceOver(roundRecord);
+    const isPlaceOver = useIsPlaceOver(roundRecord);
     const isNSEAvailable = useNSEAvailable();
     const [tab, setTab] = useGameType();
     const { userDetails } = useAuthStore();
@@ -91,7 +91,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
     };
 
     const ButtonChip = ({ amount }: { amount: number }) => (
-        <div className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 bg-pink-500 text-black text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">
+        <div className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">
             {amount}
         </div>
     );
@@ -100,17 +100,23 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const handleSideBet = (numbers: number[]) => {
         if (gameState.isPlaceOver) return;
 
-        const position = getBetPosition({
-            type: PlacementType.DOUBLE_STREET,
-            numbers,
+        const markets = numbers.map((number) => roundRecord.market[number - 1]?.id).filter((id) => id !== undefined);
+
+        mutate({
+            amount: betAmount,
+            round: roundRecord.id,
+            placementType: PlacementType.DOUBLE_STREET,
+            market: markets,
+            placedValues: getPlacementString({
+                market: markets as number[],
+                placementType: PlacementType.DOUBLE_STREET,
+            }, roundRecord),
+        }, {
+            onSuccess: () => {
+                setChips([]);
+            }
         });
 
-        setChips([{
-            type: PlacementType.DOUBLE_STREET,
-            numbers,
-            amount: betAmount,
-            position,
-        }]);
     };
 
     /*     // Handler for bottom bets using COLUMN type
@@ -133,17 +139,23 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const handleSpecialBet = (betType: PlacementType, numbers: number[]) => {
         if (gameState.isPlaceOver) return;
 
-        const position = getBetPosition({
-            type: betType,
-            numbers,
+        const markets = numbers.map((number) => roundRecord.market[number - 1]?.id).filter((id) => id !== undefined);
+
+        mutate({
+            amount: betAmount,
+            round: roundRecord.id,
+            placementType: betType,
+            market: markets,
+            placedValues: getPlacementString({
+                market: markets as number[],
+                placementType: betType,
+            }, roundRecord),
+        }, {
+            onSuccess: () => {
+                setChips([]);
+            }
         });
 
-        setChips([{
-            type: betType,
-            numbers,
-            amount: betAmount,
-            position,
-        }]);
     };
     const handlePlaceBet = () => {
         const chip = chips[0];
@@ -187,6 +199,25 @@ const RouletteGame = ({ roundRecord }: Props) => {
             amount: betAmount,
             position,
         }]);
+
+        const markets = bet.numbers.map((number) => roundRecord.market[number - 1]?.id).filter((id) => id !== undefined);
+
+        mutate({
+            amount: betAmount,
+            round: roundRecord.id,
+            placementType: bet.type,
+            market: markets,
+            placedValues: getPlacementString({
+                market: markets as number[],
+                placementType: bet.type,
+            }, roundRecord),
+        }, {
+            onSuccess: () => {
+                setChips([]);
+            }
+        });
+
+        handlePlaceBet();
     };
 
     const boardChips = gameState.isPlaceOver ? bettedChips : [...bettedChips, ...chips];
@@ -194,10 +225,10 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const isNotAllowedToPlaceBet = currentUser.isNotAllowedToPlaceOrder(roundRecord.type);
     return (
         <>
-            <div className="max-w-4xl mx-auto lg:px-4 px-2 py-2 bg-secondary-game h-full ">
+            <div className="max-w-4xl mx-auto lg:pr-4 pr-2 py-2 bg-secondary-game h-full ">
                 <div className="relative rounded-xl lg:flex-row flex-col flex gap-8 border-brown-800">
                     <div className='lg:w-6/12'>
-                        <h1 className='text-xl lg:text-left text-center mt-2 mb-4 leading-none text-white font-semibold'>
+                        <h1 className='text-xl lg:text-left text-center mt-2 mb-4 leading-none text-game-text font-semibold game-header-highlight lg:pl-4 pl-2   '>
                             {gameState.isPlaceOver ? t("betting-closed") : t("place-your-bets")}
                         </h1>
                         <Tabs
@@ -211,14 +242,14 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             </TabsList>
                         </Tabs>
 
-                        <div className={cn("relative w-full max-w-4xl mx-auto ", gameState.isPlaceOver || isNotAllowedToPlaceBet ? 'cursor-not-allowed opacity-100' : 'cursor-crosshair')}>
+                        <div className={cn("relative w-full game-box-background p-4 max-w-4xl mx-auto ", gameState.isPlaceOver || isNotAllowedToPlaceBet ? 'cursor-not-allowed opacity-100' : 'cursor-crosshair')}>
                             {isNotAllowedToPlaceBet && (<div className="absolute top-0 left-0 w-full text-center h-full z-40 bg-black bg-opacity-80">
                                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                                    <span className="text-white text-lg opacity-100  font-semibold">{t("betting-not-allowed")}</span>
+                                    <span className="text-game-text text-lg opacity-100  font-semibold">{t("betting-not-allowed")}</span>
                                 </div>
                             </div>)}
 
-                            <div className="flex w-full">
+                            <div className="flex w-full ">
                                 <div
                                     ref={boardRef}
                                     onClick={!(gameState.isPlaceOver || isNotAllowedToPlaceBet) ? handleBoardClick : undefined}
@@ -264,7 +295,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
                             <Button
                                 variant="game-secondary"
-                                className="col-span-1 justify-center gap-4 w-full mt-2 opacity-80"
+                                className="col-span-1 justify-center gap-4 w-full text-white mt-2 opacity-80"
                             >
                                 <span>
                                     0
@@ -272,34 +303,6 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                 {roundRecord.market[16]?.codeName}
                             </Button>
 
-
-                            {/*         <div className="grid grid-cols-2 gap-2 mt-2">
-                                <div className="relative">
-                                    <Button
-                                        variant="game-secondary"
-                                        className="col-span-1 justify-center w-full"
-                                        onClick={() => handleBottomBet(firstHigh)}
-                                    >
-                                        Column (1-14)
-                                    </Button>
-                                    {getBetForPosition(PlacementType.HIGH_LOW, firstHigh) && (
-                                        <ButtonChip amount={getBetForPosition(PlacementType.HIGH_LOW, firstHigh)!.amount} />
-                                    )}
-                                </div>
-                                <div className="relative">
-                                    <Button
-                                        variant="game-secondary"
-                                        className="col-span-1 justify-center w-full"
-                                        onClick={() => handleBottomBet(secondHigh)}
-                                    >
-                                        Column (3-16)
-                                    </Button>
-                                    {getBetForPosition(PlacementType.HIGH_LOW, secondHigh) && (
-                                        <ButtonChip amount={getBetForPosition(PlacementType.HIGH_LOW, secondHigh)!.amount} />
-                                    )}
-                                </div>
-                            </div>
- */}
                             <div className="grid grid-cols-2 gap-2 mt-4">
                                 <div className="relative">
                                     <Button
@@ -313,32 +316,6 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                         <ButtonChip amount={getBetForPosition(PlacementType.EVEN_ODD, evenNumbers)!.amount} />
                                     )}
                                 </div>
-                                {/*                                 <div className="relative">
-                                    <Button
-                                        variant="game-secondary"
-                                        className="roulette-piece-black-select h-10 w-full"
-                                        onClick={() => handleSpecialBet(PlacementType.COLOR, blackNumbers)}
-                                    >
-                                        Black
-                                    </Button>
-
-                                    {getBetForPosition(PlacementType.COLOR, blackNumbers) && (
-                                        <ButtonChip amount={getBetForPosition(PlacementType.COLOR, blackNumbers)!.amount} />
-                                    )}
-                                </div>
-                                <div className="relative">
-                                    <Button
-                                        variant="game-secondary"
-                                        className="roulette-piece-red-select h-10 w-full"
-                                        onClick={() => handleSpecialBet(PlacementType.COLOR, redNumbers)}
-                                    >
-                                        Red
-                                    </  Button>
-
-                                    {getBetForPosition(PlacementType.COLOR, redNumbers) && (
-                                        <ButtonChip amount={getBetForPosition(PlacementType.COLOR, redNumbers)!.amount} />
-                                    )}
-                                </div> */}
                                 <div className="relative">
                                     <Button
                                         variant="game-secondary"
@@ -361,7 +338,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             onValueChange={(value) => setTab(value as SchedulerType)}
                             className="w-full relative z-10"
                         >
-                            <TabsList className="w-full hidden lg:flex h-10 p-1 bg-tertiary ">
+                            <TabsList className="w-full hidden lg:flex  bg-tertiary ">
                                 <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && '!cursor-not-allowed')} value="nse">NSE</TabsTrigger>
                                 <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
                             </TabsList>
@@ -371,7 +348,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             <BettingControls
                                 isLoading={isPlacingBet}
                                 betAmount={betAmount}
-                                onPlaceBet={handlePlaceBet}
+                                roundId={roundRecord.id}
                                 setBetAmount={setBetAmount}
                                 isPlaceOver={gameState.isPlaceOver || isNotAllowedToPlaceBet}
                             />

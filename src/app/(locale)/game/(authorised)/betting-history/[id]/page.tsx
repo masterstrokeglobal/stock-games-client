@@ -118,13 +118,13 @@ const RoundDetailPage = () => {
     const bets = betsData.data;
 
     return (
-        <Container className="bg-secondary-game w-fit rounded-xl relative flex flex-col pt-16 sm:pt-24 gap-4 sm:gap-6 items-center min-h-screen">
+        <Container className="bg-primary-game w-fit rounded-xl relative flex flex-col pt-16 sm:pt-24 gap-4 sm:gap-6 items-center min-h-screen">
             <TopBar>
                 <h1 className="text-lg sm:text-xl font-semibold">{t('title', { roundId: round.id })}</h1>
             </TopBar>
 
             <section className="container-main w-full max-w-6xl px-3 sm:px-4 md:px-6">
-                <Card className="bg-secondary-game border-[#EFF8FF17] mb-6 sm:mb-8">
+                <Card className="bg-tertiary border-[#EFF8FF17] mb-6 sm:mb-8">
                     <CardHeader className="px-4 sm:px-6">
                         <CardTitle className="text-white text-lg sm:text-xl">{t('round.details')}</CardTitle>
                     </CardHeader>

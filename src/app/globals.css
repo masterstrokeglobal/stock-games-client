@@ -17,7 +17,7 @@ body {
 
 .jersey {
   font-family: 'Jersey', sans-serif;
-} 
+}
 
 input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
@@ -33,6 +33,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 input[type="date"]::-webkit-calendar-picker-indicator:hover {
   opacity: 1
 }
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -61,31 +62,38 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
 
-    --tertiary:#1A2D58;
+    --tertiary: #1A2D58;
 
     --bet-button-start: #0D7FE1;
     --bet-button-mid: #4DAAFF;
     --bet-button-end: #279BFF;
     --bet-button-border: #55B0FF;
-    
-     
+
+
     --routelette-black-gradient-start: #083861;
     --routelette-black-gradient-end: #2268A4;
     --routelette-red-gradient-start: #0D7FE1;
     --routelette-red-gradient-end: #279BFF;
     --routelette-border-color: rgba(85, 176, 255, 0.31);
     --routelette-inner-shadow-color: rgba(208, 232, 253, 0.05);
-    
+
     /* Common properties */
     --routelette-border: 1px solid var(--routelette-border-color);
     --routelette-inner-shadow: 0px 0px 5.4px 6px var(--routelette-inner-shadow-color) inset;
-    
+
     /* Gradients */
     --routelette-black-gradient: linear-gradient(180deg, var(--routelette-black-gradient-start) 0%, var(--routelette-black-gradient-end) 100%);
     --routelette-red-gradient: linear-gradient(180deg, var(--routelette-red-gradient-start) 0%, var(--routelette-red-gradient-end) 100%);
 
     --background-game: #1A2D58;
     --game-text: #FFFFFF;
+
+    /*     highlight
+ */
+
+    --game-header-highlight: linear-gradient(to right, white, transparent);
+    --game-box-gradient: linear-gradient(to right, black, transparent);
+
   }
 
 
@@ -127,18 +135,35 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     @apply bg-background text-foreground overflow-x-hidden;
   }
 }
+
+.game-box-background {
+  background: var(--game-box-gradient);
+  background-size: cover;
+  transform: translateX(-10px);
+
+  /* Adjust the value as needed */
+}
+
+.game-header-highlight{
+  background: var(--game-header-highlight);
+  padding: 5px;
+}
+
 /* Applying the variables to the classes */
 .routelette-piece-black {
   background: var(--routelette-black-gradient);
   border: var(--routelette-border);
   box-shadow: var(--routelette-inner-shadow);
+  color:var(--game-text);
 }
 
 .routelette-piece-red {
   background: var(--routelette-red-gradient);
   border: var(--routelette-border);
   box-shadow: var(--routelette-inner-shadow);
+  color:var(--game-text);
 }
+
 .roulette-piece-black-select {
   background-color: rgba(8, 56, 97, 1);
   border: 1px solid rgba(85, 176, 255, 0.31);
@@ -175,8 +200,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
   /* Add any additional button styling as required */
 }
+
 .rotate-text {
-  transform: rotate(90deg); /* Rotate the text */
-  transform-origin: center; /* Ensure the rotation is centered */
-  white-space: nowrap; /* Prevent text from breaking */
+  transform: rotate(90deg);
+  /* Rotate the text */
+  transform-origin: center;
+  /* Ensure the rotation is centered */
+  white-space: nowrap;
+  /* Prevent text from breaking */
 }
