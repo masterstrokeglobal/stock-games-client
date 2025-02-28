@@ -4,6 +4,7 @@ import CompanyWalletCard from "@/columns/company-wallet-card";
 import LoadingScreen from "@/components/common/loading-screen";
 import UpdateBonusPercentageForm, { BonusPercentageFormValues } from "@/components/common/update-bonus-percentage";
 import CompanyCard from "@/components/features/company/company-card";
+import CompanyEarningsCard from "@/components/features/company/company-earning";
 import { useAuthStore } from "@/context/auth-context";
 import Admin from "@/models/admin";
 import Company from "@/models/company";
@@ -54,6 +55,7 @@ const ViewCompanyPage = () => {
             <main className="mt-4 space-y-8">
                 <CompanyWalletCard companyId={companyId} />
                 {companyDetails && <CompanyCard company={companyDetails} />}
+                {<CompanyEarningsCard companyId={companyId} />}
                 {isAdmin && companyDetails?.depositBonusPercentageEnabled && defaultValues && <UpdateBonusPercentageForm onSubmit={onChangeBonusPercentage} defaultValues={defaultValues} />}
             </main>
         </section>

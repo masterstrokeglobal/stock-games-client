@@ -12,7 +12,7 @@ export enum TransactionType {
     LOBBY_REFUND = "lobby_refund",
     ADMIN_DEPOSIT = "admin_deposit",
     ADMIN_WITHDRAWAL = "admin_withdrawal",
-  }
+}
 
 export enum TransactionStatus {
     PENDING = "pending",
@@ -29,7 +29,8 @@ export class Transaction {
     walletId!: number; // Foreign key
     companyId!: number; // Foreign key
     companyWalletId!: number; // Foreign key
-    company?:Company;
+    company?: Company;
+
     createdAt!: Date;
     updatedAt!: Date;
     deletedAt?: Date;
@@ -38,7 +39,8 @@ export class Transaction {
 
     constructor(data: Partial<Transaction>) {
         Object.assign(this, data);
-        this.user = new User(data?.wallet?.user);
+        this.user = data?.wallet?.user ? new User(data?.wallet?.user) : undefined;
+
         this.company = data?.company ? new Company(data.company) : undefined;
     }
 }
