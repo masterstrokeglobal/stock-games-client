@@ -1,3 +1,4 @@
+import { TransactionStatus } from "@/models/transaction";
 import api from "./instance";
 
 export const paymentAPI = {
@@ -23,10 +24,13 @@ export const paymentAPI = {
     return api.post(`/admin/company-deposit/${data.companyWalletId}`, data);
   },
 
-  companyWalletTransactions: async (filter: any) => { 
+  companyWalletTransactions: async (filter: any) => {
     return api.get("/payment/company-wallet-transactions", {
       params: filter
     });
+  },
+  verifyCompanyDeposit: async (payload: { transactionId: string, status: TransactionStatus }) => {
+    return api.patch(`/payment/company-chips-deposit/${payload.transactionId}`,payload);
   },
 
 

@@ -13,7 +13,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"; // Import ShadCN Select components
 import { Transaction, TransactionStatus, TransactionType } from "@/models/transaction";
-import { useGetCompanyWalletTransactions } from "@/react-query/payment-queries";
+import { useGetTransactions } from "@/react-query/payment-queries";
 import { Search } from "lucide-react";
 import React, { useMemo, useState } from "react";
 
@@ -22,15 +22,18 @@ import React, { useMemo, useState } from "react";
 const TransactionTable = () => {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
-    const [type, setType] = useState<TransactionType>(TransactionType.ADMIN_DEPOSIT);
+    const [type, setType] = useState<TransactionType | "all">("all");
     const [status, setStatus] = useState<string | "">("");
 
+
+    const requestType = type === "all" ? [TransactionType.ADMIN_DEPOSIT, TransactionType.ADMIN_WITHDRAWAL, TransactionType.WITHDRAWAL, TransactionType.DEPOSIT].join(",") : type;
     // Fetch all transactions with pagination, search query, and filters
-    const { data, isSuccess, isFetching } = useGetCompanyWalletTransactions({
+
+    const { data, isSuccess, isFetching } = useGetTransactions({
         page: page,
         search: search,
-        type: type,
-        status: status === "all" ? "" : status,
+        type: requestType,
+        status: status === "all" ? undefined : status,
     });
 
     const transactions = useMemo(() => {
@@ -82,8 +85,11 @@ const TransactionTable = () => {
                         <SelectContent>
                             <SelectGroup>
                                 <SelectLabel>Types</SelectLabel>
-                                <SelectItem value={TransactionType.ADMIN_DEPOSIT}>Deposit</SelectItem>
-                                <SelectItem value={TransactionType.ADMIN_WITHDRAWAL}>Withdrawal</SelectItem>
+                                <SelectItem value={"all"}>All</SelectItem>
+                                <SelectItem value={TransactionType.ADMIN_DEPOSIT}>Admin Deposit</SelectItem>
+                                <SelectItem value={TransactionType.ADMIN_WITHDRAWAL}>Admin Withdrawal</SelectItem>
+                                <SelectItem value={TransactionType.DEPOSIT}>User Deposit</SelectItem>
+                                <SelectItem value={TransactionType.WITHDRAWAL}>User Withdrawal</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>

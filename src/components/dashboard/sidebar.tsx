@@ -81,7 +81,7 @@ const companyMenuItems: MenuItem[] = [
         name: "Company Wallet",
         icon: CoinsIcon,
         subItems: [
-            { name: "View Wallet", link: "/dashboard/company-wallet" },
+            { name: "View Wallet", link: "/dashboard/my-company-wallet" },
             { name: "Request Chips", link: "/dashboard/company-wallet/create" }
         ]
     },

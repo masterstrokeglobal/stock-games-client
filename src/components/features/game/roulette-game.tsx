@@ -64,11 +64,22 @@ const RouletteGame = ({ roundRecord }: Props) => {
             amount: record.amount,
             numbers: record.market.map((market) => roundRecord.market.findIndex((m) => m.id === market) + 1)
         }));
-        return chips;
+
+        // aggregate chips with the same type and numbers
+        const aggregatedChips: Chip[] = [];
+
+        chips.forEach((chip) => {
+            const existingChip = aggregatedChips.find((c) => c.type === chip.type && c.numbers.length === chip.numbers.length && c.numbers.every((num) => chip.numbers.includes(num)));
+            if (existingChip) {
+                existingChip.amount += chip.amount;
+            } else {
+                aggregatedChips.push(chip);
+            }
+        });
+        return aggregatedChips;
     }, [data]);
 
     const { previousRoundId, showResults } = useShowResults(roundRecord, bettedChips);
-
 
     const {
         chips,
@@ -81,7 +92,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     // Function to check if there's a bet on a specific type and numbers
     const getBetForPosition = (type: PlacementType, numbers: number[]) => {
-        const allChips = [...bettedChips, ...chips];
+        const allChips = [...bettedChips];
         const chip = allChips.find(chip =>
             chip.type === type &&
             chip.numbers.length === numbers.length &&
@@ -111,10 +122,6 @@ const RouletteGame = ({ roundRecord }: Props) => {
                 market: markets as number[],
                 placementType: PlacementType.DOUBLE_STREET,
             }, roundRecord),
-        }, {
-            onSuccess: () => {
-                setChips([]);
-            }
         });
 
     };

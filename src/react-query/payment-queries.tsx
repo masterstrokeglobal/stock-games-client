@@ -146,3 +146,17 @@ export const useGetCompanyWalletTransactions = (filter: any) => {
         queryFn: () => paymentAPI.companyWalletTransactions(filter),
     });
 }
+
+export const useVerifyCompanyDeposit = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: paymentAPI.verifyCompanyDeposit,
+        onSuccess: () => {
+            toast.success("Deposit verified successfully");
+            queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === "company" });
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error verifying deposit");
+        },
+    });
+}
