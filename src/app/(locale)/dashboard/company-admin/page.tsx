@@ -59,6 +59,7 @@ const ViewCompanyPage = () => {
                 {isAdmin && companyDetails?.depositBonusPercentageEnabled && defaultValues && <UpdateBonusPercentageForm onSubmit={onChangeBonusPercentage} defaultValues={defaultValues} />}
             </main>
         </section>
+        
     );
 };
 
