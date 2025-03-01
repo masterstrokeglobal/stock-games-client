@@ -22,11 +22,20 @@ const companyWalletTransactionColumns: ColumnDef<Transaction>[] = [
     {
         header: "Type",
         accessorKey: "type",
-        cell: ({ row }) => (
-            <Badge variant={row.original.type === TransactionType.DEPOSIT ? "success" : "destructive"}>
-                {row.original.type}
+        cell: ({ row }) => {
+            let type: string = row.original.type;
+            if (type === TransactionType.DEPOSIT) {
+                type = "User Deposit";
+            }
+
+            if (type === TransactionType.WITHDRAWAL) {
+                type = "User Withdrawl";
+            }
+
+            return <Badge variant={"secondary"}>
+                {type}
             </Badge>
-        ),
+        },
     },
     {
         header: "Amount",
