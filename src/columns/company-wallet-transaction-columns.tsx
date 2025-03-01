@@ -25,12 +25,15 @@ const companyWalletTransactionColumns: ColumnDef<Transaction>[] = [
         cell: ({ row }) => {
             let type: string = row.original.type;
             if (type === TransactionType.DEPOSIT) {
-                type = "User Deposit";
+                type = "User Withdrawl";
             }
 
             if (type === TransactionType.WITHDRAWAL) {
-                type = "User Withdrawl";
+
+                type = "User Deposit";
             }
+
+
 
             return <Badge variant={"secondary"}>
                 {type}
