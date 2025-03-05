@@ -1,7 +1,6 @@
 "use client";
 import { MobileHeader } from "@/components/features/game/common/mobile-components";
 import CurrentBetsMiniMutualFunds from "@/components/features/game/current-bets-mini-mutual-funds";
-import LeaderBoard from "@/components/features/game/leaderboard";
 import LobbyGameResultDialog from "@/components/features/game/lobby-result-dialog";
 import MiniMutualFundBet from "@/components/features/game/mini-mutual-fund-bet";
 import MiniMutualFundLeaderBoard from "@/components/features/game/mini-mutual-fund-leaderboard";

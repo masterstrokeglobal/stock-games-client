@@ -41,7 +41,7 @@ type UserBetSummary = {
 const CurrentBetsMiniMutualFunds = ({ className }: { className?: string }) => {
     const t = useTranslations("mutualFunds");
     const { lobbyRound } = useGameStore();
-    const { data, isSuccess } = useGetMiniMutualFundCurrentRoundPlacements(lobbyRound?.id!);
+    const { data, isSuccess } = useGetMiniMutualFundCurrentRoundPlacements(lobbyRound?.id??0);
 
     // Process placements to create user bet summaries
     const userBetSummaries = isSuccess ?

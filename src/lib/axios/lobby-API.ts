@@ -1,7 +1,6 @@
 import Lobby, { LobbyGameType, LobbyType } from "@/models/lobby";
 import { SchedulerType } from "@/models/market-item";
 import api from "./instance";
-import { get } from "http";
 export enum LobbyStatus {
     OPEN = "OPEN",
     CLOSED = "CLOSED"

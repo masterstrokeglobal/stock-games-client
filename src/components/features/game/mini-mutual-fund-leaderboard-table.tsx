@@ -4,16 +4,9 @@ import { useLeaderboardAggregation } from "@/hooks/use-mini-mutual-fund-aggrigat
 import { cn } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
 import MiniMutualFundPlacement from "@/models/mini-mutual-fund";
-import { useGetMiniMutualFundCurrentRoundPlacements, useGetMiniMutualFundCurrentUserPlacements } from "@/react-query/lobby-query";
+import { useGetMiniMutualFundCurrentRoundPlacements } from "@/react-query/lobby-query";
 import { useGameStore } from "@/store/game-store";
 import React, { useMemo } from 'react';
-
-interface LeaderboardItem {
-    horse: number;
-    name: string;
-    price: number;
-    change_percent: string;
-}
 
 interface LeaderboardTableProps {
     leaderboardData: RankedMarketItem[];
@@ -25,11 +18,10 @@ interface LeaderboardTableProps {
 const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
     leaderboardData,
     isGameOver = false,
-    roundType,
     height = 400
 }) => {
     const { lobbyRound } = useGameStore();
-    const { data, isSuccess } = useGetMiniMutualFundCurrentRoundPlacements(lobbyRound?.id!);
+    const { data, isSuccess } = useGetMiniMutualFundCurrentRoundPlacements(lobbyRound!.id!);
     const placements = useMemo<MiniMutualFundPlacement[]>(() => {
         return isSuccess ? data.placements : [];
     }, [isSuccess, data]);
@@ -42,12 +34,6 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
         }).format(price);
     };
 
-    const getChangeColor = (changePercent: string) => {
-        const change = parseFloat(changePercent);
-        if (change > 0) return "text-green-500";
-        if (change < 0) return "text-red-500";
-        return "text-gray-300";
-    };
 
     return (
         <ScrollArea

@@ -7,7 +7,7 @@ import { useGameStore } from "@/store/game-store";
 
 const BetInputForm = () => {
     const { lobbyRound } = useGameStore();
-    const { selectedStock, betAmount, isLoading, setBetAmount } = useStockBettingStore();
+    const { betAmount, isLoading, setBetAmount } = useStockBettingStore();
     const isPlaceOver = useIsPlaceOver(lobbyRound?.roundRecord ?? null);
 
     const { mutate } = useUndoLastPlacement();
