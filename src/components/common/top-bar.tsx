@@ -15,7 +15,7 @@ const TopBar = ({ children, rightContent }: TopBarProps) => {
     }
     return (
         <section className="bg-primary-game fixed top-0 w-full z-50  -mx-4 sm:-mx-8 xl:-mx-12">
-            <nav className="items-center flex relative justify-between text-secondary-game font-semibold w-full h-20 px-4">
+            <nav className="items-center flex relative justify-between text-top-bar-text font-semibold w-full h-20 px-4">
                 <Button size="icon" variant="ghost" onClick={handleBack}>
                     <ArrowLeft size={24} />
                 </Button>

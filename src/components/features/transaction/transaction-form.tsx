@@ -21,15 +21,14 @@ type TransactionEditProps = {
     transaction: Transaction;
     onSubmit: (data: TransactionFormValues) => void;
     isLoading?: boolean;
+    showEdit ?: boolean;
 };
 
-const TransactionEditForm = ({ transaction, onSubmit, isLoading }: TransactionEditProps) => {
+const TransactionEditForm = ({ transaction, onSubmit, isLoading ,showEdit=true}: TransactionEditProps) => {
     const form = useForm<TransactionFormValues>({
         resolver: zodResolver(transactionEditSchema),
-        defaultValues: { status: TransactionStatus.FAILED},
+        defaultValues: { status: TransactionStatus.FAILED },
     });
-
-
 
     const { control, handleSubmit } = form;
     const currentStatus = transaction.status
@@ -41,15 +40,15 @@ const TransactionEditForm = ({ transaction, onSubmit, isLoading }: TransactionEd
                     <CardTitle className="text-xl font-semibold">Transaction Details</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="space-y-4">
+                    <div className="space-y-4 capitalize">
                         {/* Read-only Transaction Details */}
-                        <p><strong>Type:</strong> {transaction.type}</p>
+                        <p><strong>Type:</strong> {transaction.type.replace("_", " ")}</p>
                         <p><strong>Amount:</strong> ₹{transaction.amount}</p>
                         <p><strong>PG ID:</strong> {transaction.pgId || "N/A"}</p>
                         <p><strong>Bonus Percentage:</strong> {transaction.bonusPercentage || 0}%</p>
                         <p><strong>Created At:</strong> {new Date(transaction.createdAt).toLocaleDateString()}</p>
                     </div>
-                    {currentStatus === TransactionStatus.PENDING && (
+                    {(currentStatus === TransactionStatus.PENDING && showEdit) && (
                         <FormProvider methods={form} onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
                             {/* Editable Status Field */}
                             <FormSelect

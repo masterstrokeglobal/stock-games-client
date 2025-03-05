@@ -85,7 +85,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     --routelette-black-gradient: linear-gradient(180deg, var(--routelette-black-gradient-start) 0%, var(--routelette-black-gradient-end) 100%);
     --routelette-red-gradient: linear-gradient(180deg, var(--routelette-red-gradient-start) 0%, var(--routelette-red-gradient-end) 100%);
 
-    --background-game: #1A2D58;
+    --background-game: #253e78;
     --game-text: #FFFFFF;
 
     /*     highlight
@@ -94,6 +94,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     --game-header-highlight: linear-gradient(to right, white, transparent);
     --game-box-gradient: linear-gradient(to right, black, transparent);
 
+    --top-bar-text: "#FFFFFF",
   }
 
 

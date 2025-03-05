@@ -1,26 +1,25 @@
 import { Button } from "@/components/ui/button";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useGameState, useIsPlaceOver, useShowResults } from "@/hooks/use-current-game";
+import { useAuthStore } from "@/context/auth-context";
+import { useGameState, useShowResults } from "@/hooks/use-current-game";
 import { useGameType } from "@/hooks/use-game-type";
+import useNSEAvailable from "@/hooks/use-nse-available";
 import { useRouletteBetting } from "@/hooks/use-roulette-betting";
 import { cn, getPlacementString } from "@/lib/utils";
 import GameRecord from "@/models/game-record";
 import { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
+import User from "@/models/user";
 import { useCreateGameRecord, useGetMyPlacements } from "@/react-query/game-record-queries";
 import { Tabs } from "@radix-ui/react-tabs";
+import { useTranslations } from "next-intl";
 import { useMemo, useRef, useState } from "react";
 import BettingChips from "./betting-chip";
 import { Bet, Chip } from "./contants";
+import GameResultDialog from "./result-dialog";
 import { BettingControls } from "./roulette-chips";
 import { RouletteBettingGrid } from "./roulette-grid";
 import { GameHeader } from "./roulette-header";
-import useNSEAvailable from "@/hooks/use-nse-available";
-import GameResultDialog from "./result-dialog";
-import { useTranslations } from "next-intl";
-import { useAuthStore } from "@/context/auth-context";
-import User from "@/models/user";
-import UserWins from "./user-wins-toggle";
 
 enum PlacementType {
     SINGLE = "single",
@@ -45,7 +44,6 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const t = useTranslations("game");
     const [betAmount, setBetAmount] = useState<number>(10);
     const gameState = useGameState(roundRecord);
-    const isPlaceOver = useIsPlaceOver(roundRecord);
     const isNSEAvailable = useNSEAvailable();
     const [tab, setTab] = useGameType();
     const { userDetails } = useAuthStore();
@@ -364,7 +362,6 @@ const RouletteGame = ({ roundRecord }: Props) => {
                 </div>
             </div>
             <GameResultDialog key={String(showResults)} open={showResults} roundRecordId={previousRoundId!} />
-            {!isPlaceOver && <UserWins className="fixed bottom-4 right-4  md:block hidden  " />}
 
         </>
 

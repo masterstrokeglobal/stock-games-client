@@ -4,6 +4,7 @@ import LeaderBoard from "@/components/features/game/leaderboard";
 import Navbar from "@/components/features/game/navbar";
 import RouletteGame from "@/components/features/game/roulette-game";
 import { MobileGameHeader } from "@/components/features/game/roulette-header";
+import UserWins from "@/components/features/game/user-wins-toggle";
 import HorseRace from "@/components/features/horse-animation/horse";
 import { useHorseRaceSound } from "@/context/audio-context";
 import { useCurrentGame, useGameState, useIsPlaceOver } from "@/hooks/use-current-game";
@@ -23,9 +24,10 @@ const GamePage = () => {
 
 
     return (
-        <section className="bg-background-game pt-20 md:h-screen ">
+        <section className="bg-background-game pt-14 md:min-h-screen ">
             <Navbar />
-            {!isMobile && <main className="grid grid-cols-12 grid-rows-5 gap-4 h-full p-4">
+            <UserWins />
+            {!isMobile && <main className="grid grid-cols-12 grid-rows-5 max-h-[690px] gap-x-2 gap-y-2 h-full px-4 pb-4">
                 <div
                     style={borderStyle}
                     className="xl:col-span-7 col-span-8 row-span-2 rounded-2xl  overflow-hidden">

@@ -1,3 +1,4 @@
+import { TransactionStatus } from "@/models/transaction";
 import api from "./instance";
 
 export const agentAPI = {
@@ -29,12 +30,11 @@ export const agentAPI = {
     updateAgent: async (agentId: string, updateData: any) => {
         return api.patch(`/agent/${agentId}`, updateData);
     },
-
     // Update agent password
     updateAgentPassword: async (agentId: string, password: string) => {
         return api.patch(`/agent/password/${agentId}`, { password });
     },
-    profitLoss: async (filter :{
+    profitLoss: async (filter: {
         agentId?: string,
         startDate?: Date;
         endDate?: Date;
@@ -42,6 +42,57 @@ export const agentAPI = {
         return api.get(`/agent/profit-loss/${filter.agentId}`, {
             params: filter
         });
-    }
+    },
 
+    // get Agent Transactions 
+    getTransactions: async (filter: any) => {
+        return api.get("/agent/transactions", {
+            params: filter
+        });
+    },
+    // Update agent chips deposit
+    updateAgentChipsDeposit: async (payload: { transactionId: string, status: TransactionStatus }) => {
+        return api.patch(`/payment/agent-chips-deposit/${payload.transactionId}`, payload);
+    },
+    // Update agent chips withdrawal
+    updateAgentChipsWithdrawal: async (payload: { transactionId: string, status: TransactionStatus }) => {
+        return api.patch(`/payment/agent-chips-withdraw/${payload.transactionId}`, payload);
+    },
+
+    // update user  deposit request status
+    updateUserDepositRequest: async (payload: { transactionId: string, status: TransactionStatus }) => {
+        return api.patch(`/agent/deposit-request-status/${payload.transactionId}`, payload);
+    },
+
+    // update user  withdraw request status
+    updateUserWihtdrawRequest: async (payload: { transactionId: string, status: TransactionStatus }) => {
+        return api.patch(`/agent/withdraw-request-status/${payload.transactionId}`, payload);
+    },
+
+
+    // Create agent chips deposit request
+    createAgentChipsDepositRequest: async (payload: any) => {
+        return api.post("/payment/agent-deposit-request", payload);
+    },
+
+    // Create agent chips withdrawal request
+    createAgentChipsWithdrawRequest: async (payload: any) => {
+        return api.post("/payment/agent-withdraw-request", payload);
+    },
+
+    // Deposit agent chips
+    depositAgentChips: async (payload: any) => {
+        return api.post("/agent-wallet-deposit", payload);
+    },
+    // Get agent chips deposit requests
+    getAgentChipsDepositRequests: async (filter: any) => {
+        return api.get("/agent-deposit-request", {
+            params: filter
+        });
+    },
+    // get agent wallet details
+    getAgentWallet: async (agentId: string) => {
+        return api.get(`/agent/wallet/${agentId}`);
+    },
 };
+

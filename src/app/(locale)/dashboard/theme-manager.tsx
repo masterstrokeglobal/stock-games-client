@@ -48,6 +48,9 @@ const ThemeManager = () => {
         document.documentElement.style.setProperty('--game-header-highlight', theme["gameHeaderHighlight"]);
         document.documentElement.style.setProperty('--game-box-gradient', theme["gameBoxGradient"]);
 
+        // top bar text 
+        document.documentElement.style.setProperty('--top-bar-text', theme["top-bar-text"]);
+
         // Set 
 
         return () => {

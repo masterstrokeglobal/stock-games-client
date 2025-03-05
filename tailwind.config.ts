@@ -14,11 +14,21 @@ const config: Config = {
 			fontFamily: {
 				jersey: ['var(--font-jersey-10)', 'sans-serif'],
 			},
+			animation: {
+				marquee: 'marquee 6s linear infinite',
+			},
+			keyframes: {
+				marquee: {
+					'0%': { transform: 'translateX(0%)' },
+					'100%': { transform: 'translateX(-50%)' },
+				}
+			}
+			,
 			boxShadow: {
 				'custom-glow': '0px 0px 26.55px 0px rgba(252, 210, 39, 0.56)',
 			},
 			colors: {
-				background:{
+				background: {
 					DEFAULT: 'hsl(var(--background))',
 					game: 'var(--background-game)'
 				},
@@ -41,10 +51,11 @@ const config: Config = {
 					foreground: 'hsl(var(--secondary-foreground))',
 					game: 'var(--secondary-game)'
 				},
+				"top-bar-text": "var(--top-bar-text)",
 				tertiary: {
 					DEFAULT: 'var(--tertiary)'
 				},
-				game : {
+				game: {
 					DEFAULT: 'var(--game)',
 					text: 'var(--game-text)',
 				},

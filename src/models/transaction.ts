@@ -1,3 +1,4 @@
+import Agent from "./agent";
 import Company from "./company";
 import User from "./user";
 
@@ -12,7 +13,9 @@ export enum TransactionType {
     LOBBY_REFUND = "lobby_refund",
     ADMIN_DEPOSIT = "admin_deposit",
     ADMIN_WITHDRAWAL = "admin_withdrawal",
-}
+    AGENT_DEPOSIT = "agent_deposit",
+    AGENT_WITHDRAWAL = "agent_withdrawal",
+  }
 
 export enum TransactionStatus {
     PENDING = "pending",
@@ -30,17 +33,22 @@ export class Transaction {
     companyId!: number; // Foreign key
     companyWalletId!: number; // Foreign key
     company?: Company;
-
+    agent?:Agent;
     createdAt!: Date;
     updatedAt!: Date;
     deletedAt?: Date;
     wallet: any;
-    user?: User;
+    user?: User; 
 
-    constructor(data: Partial<Transaction>) {
+
+    constructor(data: Partial<Transaction|any>) {
         Object.assign(this, data);
         this.user = data?.wallet?.user ? new User(data?.wallet?.user) : undefined;
+        this.agent = data?.agentWallet?.agent ? new Agent(data?.agentWallet?.agent) : undefined
 
         this.company = data?.company ? new Company(data.company) : undefined;
     }
+
+
 }
+

@@ -5,6 +5,7 @@ import UpdateAgentBonusPercentageForm from "@/components/common/update-agent-bon
 import AgentDetailsCard from "@/components/features/agent/agent-card";
 import AgentProfitLossCard from "@/components/features/agent/agent-profit-loss";
 import AgentPlacementManagement from "@/components/features/agent/agent-user-placement-bet";
+import AgentWalletCard from "@/components/features/agent/agent-wallet-card";
 import DatePicker from "@/components/ui/date-picker";
 import Agent from "@/models/agent"; // Agent model class
 import { useGetAgentById, useGetAgentProfitLoss } from "@/react-query/agent-queries"; // Replace with the actual agent query hook
@@ -56,6 +57,7 @@ const ViewAgentPage = () => {
     return (
         <section className="container-main min-h-[60vh]">
             <main className="mt-4 space-y-8">
+                {id && <AgentWalletCard agentId={id as string} />}
                 {agentDetails && <AgentDetailsCard agent={agentDetails} />}
                 {agentDetails && <AgentPlacementManagement user={agentDetails} />}
                 {(agentDetails && agentDetails?.company?.depositBonusPercentageEnabled) && <UpdateAgentBonusPercentageForm defaultValues={{ depositBonusPercentage: agentDetails.depositBonusPercentage ?? 0 }} onSubmit={onSubmit} isLoading={isPending} />}

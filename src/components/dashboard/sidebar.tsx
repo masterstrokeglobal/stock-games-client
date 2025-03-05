@@ -91,6 +91,7 @@ const companyMenuItems: MenuItem[] = [
         icon: Users,
         subItems: [
             { name: 'View Agents', link: '/dashboard/agents' },
+            { name: "View Wallet", link: "/dashboard/agents/wallet" },
             { name: 'Create Agent', link: '/dashboard/agents/create' },
         ],
     },
@@ -126,6 +127,15 @@ const agentMenuItems: MenuItem[] = [
         name: "Profit/Loss",
         icon: DollarSign,
         link: '/dashboard/agent-profit-loss'
+    },
+    {
+        name: "Wallet",
+        icon: CoinsIcon,
+        subItems: [
+            { name: "View Transactions", link: "/dashboard/agents/wallet/transactions" },
+            { name: "Request Chips", link: "/dashboard/agents/wallet/deposit" },
+            { name: "Withdraw Chips", link: "/dashboard/agents/wallet/withdrawl" }
+        ]
     }
 ];
 

@@ -21,7 +21,6 @@ const EditTransactionPage = () => {
     }, [data]);
 
     const onSubmit = (updatedData: any) => {
-
         mutate({
             transactionId,
             ...updatedData,

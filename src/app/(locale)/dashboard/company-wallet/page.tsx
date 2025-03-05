@@ -18,7 +18,6 @@ import { Search } from "lucide-react";
 import React, { useMemo, useState } from "react";
 
 
-
 const TransactionTable = () => {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");

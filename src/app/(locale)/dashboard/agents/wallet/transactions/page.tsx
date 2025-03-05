@@ -1,6 +1,6 @@
 "use client";
 
-import companyWalletColumns from "@/columns/company-wallet";
+import agentWalletTransactionColumns from "@/columns/agent-wallet-transaction-columns";
 import DataTable from "@/components/ui/data-table-server";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,22 +13,27 @@ import {
     SelectValue,
 } from "@/components/ui/select"; // Import ShadCN Select components
 import { Transaction, TransactionStatus, TransactionType } from "@/models/transaction";
-import { useGetAllTransactions } from "@/react-query/transactions-queries"; // You'll need to create this
+import { useGetAgentTransactions } from "@/react-query/agent-queries";
 import { Search } from "lucide-react";
 import React, { useMemo, useState } from "react";
+
+
 
 const TransactionTable = () => {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
-    const [type, setType] = useState<TransactionType>(TransactionType.ADMIN_DEPOSIT);
+    const [type, setType] = useState<TransactionType | "all">("all");
     const [status, setStatus] = useState<string | "">("");
 
+
+    const requestType = type === "all" ? [TransactionType.AGENT_DEPOSIT, TransactionType.AGENT_WITHDRAWAL, TransactionType.WITHDRAWAL, TransactionType.DEPOSIT].join(",") : type;
     // Fetch all transactions with pagination, search query, and filters
-    const { data, isSuccess, isFetching } = useGetAllTransactions({
+
+    const { data, isSuccess, isFetching } = useGetAgentTransactions({
         page: page,
         search: search,
-        type: type,
-        status: status === "all" ? "" : status,
+        type: requestType,
+        status: status === "all" ? undefined : status,
     });
 
     const transactions = useMemo(() => {
@@ -59,7 +64,7 @@ const TransactionTable = () => {
     return (
         <section className="container-main min-h-[60vh] my-12">
             <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between">
-                <h2 className="text-xl font-semibold">Company Wallet Transactions</h2>
+                <h2 className="text-xl font-semibold">Agent Wallet Transactions</h2>
                 <div className="flex gap-5 ">
                     <div className="relative min-w-60 flex-1">
                         <Search size={18} className="absolute top-2.5 left-2.5" />
@@ -80,8 +85,13 @@ const TransactionTable = () => {
                         <SelectContent>
                             <SelectGroup>
                                 <SelectLabel>Types</SelectLabel>
-                                <SelectItem value={TransactionType.ADMIN_DEPOSIT}>Deposit</SelectItem>
-                                <SelectItem value={TransactionType.ADMIN_WITHDRAWAL}>Withdrawal</SelectItem>
+                                <SelectItem value={"all"}>All</SelectItem>
+                                <SelectItem value={TransactionType.AGENT_WITHDRAWAL}>
+                                    Agent Withdrawal
+                                </SelectItem>
+                                <SelectItem value={TransactionType.AGENT_DEPOSIT}>
+                                    Agent Deposit
+                                </SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
@@ -110,7 +120,7 @@ const TransactionTable = () => {
                 <DataTable
                     page={page}
                     loading={isFetching}
-                    columns={companyWalletColumns}
+                    columns={agentWalletTransactionColumns}
                     data={transactions}
                     totalPage={totalPages}
                     changePage={changePage}

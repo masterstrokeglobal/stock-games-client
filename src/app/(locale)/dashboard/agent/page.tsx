@@ -6,6 +6,7 @@ import { useAuthStore } from "@/context/auth-context";
 import Admin from "@/models/admin";
 import { AdminRole } from "@/models/admin";
 import { User } from "lucide-react";
+import AgentWalletCard from "@/components/features/agent/agent-wallet-card";
 
 const AgentDashboard = () => {
     const { userDetails } = useAuthStore();
@@ -28,6 +29,8 @@ const AgentDashboard = () => {
             </div>
         );
     }
+
+
 
     return (
         <div className="space-y-6 p-6">
@@ -54,6 +57,8 @@ const AgentDashboard = () => {
                     No referral code available. Please contact support.
                 </Card>
             )}
+
+            {agent.id && <AgentWalletCard agentId={agent.id?.toString()} />}
         </div>
     );
 };

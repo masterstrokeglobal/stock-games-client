@@ -11,7 +11,7 @@ const WalletBalanceCard = ({ wallet }: Props) => {
     const t = useTranslations('wallet.balance');
 
     return (
-        <Card className="w-full bg-transparent border-none max-w-sm bg-tertiary text-white justify-start border border-[#EFF8FF17]">
+        <Card className="w-full border-none max-w-sm bg-tertiary text-white justify-start border border-[#EFF8FF17]">
             <CardHeader className="pb-4">
                 <CardTitle className="text-lg font-semibold text-white">
                     {t('title')}
@@ -28,7 +28,7 @@ const WalletBalanceCard = ({ wallet }: Props) => {
                             />
                         </div>
                         <span className="text-white text-xl font-bold">
-                            {wallet.totalBalance}
+                            {wallet.mainBalance}
                         </span>
                         <span className="text-white/70 text-sm">
                             {t('main.label')}

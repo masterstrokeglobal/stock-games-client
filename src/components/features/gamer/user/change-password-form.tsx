@@ -57,7 +57,7 @@ const PasswordChangeForm = () => {
     };
 
     return (
-        <div className="w-full max-w-xl flex-1 flex">
+        <div className="w-full max-w-3xl flex-1 flex">
             <FormProvider methods={form} onSubmit={handleSubmit(onSubmit)} className="space-y-4 flex-1 pb-4 flex justify-between flex-col w-full">
                 <div className="space-y-4">
                     <FormPassword

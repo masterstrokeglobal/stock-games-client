@@ -76,3 +76,45 @@ export const getPlacementString = (bet: { market: number[], placementType: Place
 }
 
 export const COMPANYID = Number(process.env.NEXT_PUBLIC_COMPANY_ID) ?? 4
+
+export const indianNames: string[] = [
+  // North Indian Names
+  "Aarav", "Advait", "Arjun", "Vihaan", "Ishaan", 
+  "Aditya", "Reyansh", "Krish", "Arnav", "Vivaan",
+  "Rohan", "Siddharth", "Rahul", "Vikram", "Amit",
+  "Karan", "Varun", "Rishabh", "Ayaan", "Shaurya",
+  
+  // South Indian Names
+  "Arun", "Krishna", "Karthik", "Naveen", "Srinivas", 
+  "Rajesh", "Suresh", "Dinesh", "Mahesh", "Ganesh",
+  "Pradeep", "Shankar", "Vijay", "Mohan", "Ravi",
+  "Anand", "Murali", "Prasad", "Ashok", "Sanjay",
+  
+  // West Indian Names
+  "Kunal", "Harsh", "Jay", "Yash", "Parth",
+  "Chirag", "Sachin", "Hitesh", "Nikhil", "Vishal",
+  
+  // East Indian Names
+  "Ananya", "Priya", "Shreya", "Aisha", "Myra",
+  "Sneha", "Divya", "Pooja", "Neha", "Deepa",
+  "Riya", "Sanya", "Trisha", "Meera", "Preeti",
+  
+  // North-East Indian Names
+  "Bikash", "Bhaskar", "Dipak", "Pranab", "Ratan",
+  
+  // Maharashtra and Gujarat Names
+  "Raj", "Sameer", "Mihir", "Jatin", "Chirag",
+  "Pooja", "Shruti", "Nisha", "Minal", "Anjali",
+  
+  // Bengali Names
+  "Sourav", "Subrata", "Debanjan", "Arpan", "Suman",
+  "Swapna", "Madhuri", "Rituparna", "Soma", "Tanusree",
+  
+  // Punjabi Names
+  "Gurpreet", "Mandeep", "Harpreet", "Jagdeep", "Sukhwinder",
+  "Simran", "Navpreet", "Jaspreet", "Amarjeet", "Parminder",
+  
+  // Unique and Modern Names
+  "Aadhya", "Zara", "Ishita", "Kabir", "Rehan",
+  "Alia", "Veer", "Isha", "Aryan", "Sia"
+];

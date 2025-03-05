@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Button } from '@/components/ui/button';
-import { Trophy } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, indianNames } from '@/lib/utils';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 // Define types for our data structures
 type WinnerData = {
@@ -11,44 +8,19 @@ type WinnerData = {
     amount: number;
 };
 
-type ContentVariants = {
-    hidden: {
-        height: number;
-        width: number;
-        opacity: number;
-        transition: {
-            duration: number;
-            ease: string;
-        };
-    };
-    visible: {
-        height: string;
-        width: string;
-        opacity: number;
-        transition: {
-            duration: number;
-            ease: string;
-        };
-    };
-};
+// Comprehensive list of Indian names
+
 
 // Generate usernames and amounts
 const generateLeaderboardData = (count = 100): WinnerData[] => {
-    const usernames: string[] = [
-        "PokerPro", "CardShark", "RoyalFlush", "AceKing", "HighRoller",
-        "BigStack", "LuckyDraw", "FullHouse", "TopDeck", "WildCard",
-        "JackpotWinner", "PokerFace", "AllIn", "ChipLeader", "TableKing",
-        "DeuceWild", "StraightDraw", "FlushHunter", "PotSplitter", "BluffMaster"
-    ];
-
     const generateUsername = (): string => {
-        const base = usernames[Math.floor(Math.random() * usernames.length)];
+        const firstName = indianNames[Math.floor(Math.random() * indianNames.length)];
         const suffix = Math.floor(Math.random() * 1000);
-        return `${base}${suffix}`;
+        return `${firstName}${suffix}`;
     };
 
     const generateAmount = (): number => {
-        return Math.floor(Math.random() * 9000) + 1000;
+        return Math.floor(Math.random() * 50000) + 1000;
     };
 
     const data: WinnerData[] = [];
@@ -63,107 +35,76 @@ const generateLeaderboardData = (count = 100): WinnerData[] => {
     return data.sort((a, b) => b.amount - a.amount);
 };
 
-
-const UserWins = ({ className }: PropsWithClassName) => {
-    const [isOpen, setIsOpen] = useState<boolean>(true);
-    const [allWinnings, setAllWinnings] = useState<WinnerData[]>([]);
+const UserWins = ({ className }: { className?: string }) => {
     const [displayWinnings, setDisplayWinnings] = useState<WinnerData[]>([]);
+    const allWinningsRef = useRef<WinnerData[]>([]);
 
+    // Initialize data on first render
     useEffect(() => {
         const data = generateLeaderboardData(100);
-        setAllWinnings(data);
-        setDisplayWinnings(data.slice(0, 5));
+        setDisplayWinnings(data);
+        allWinningsRef.current = data;
     }, []);
 
+    // Use useCallback to memoize the update function
+    const updateWinnings = useCallback(() => {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const currentTime = hours * 60 + minutes;
+
+        // Stock market timing checks
+        const marketCloseTime = 15 * 60 + 30; // 3:30 PM
+        const marketOpenTime = 9 * 60 + 15;   // 9:15 AM
+
+        const updatedWinnings = allWinningsRef.current.map(winner => {
+            let newAmount = winner.amount;
+
+            // Decrease amount after 3:30 PM
+            if (currentTime >= marketCloseTime) {
+                newAmount = Math.max(1000, Math.floor(winner.amount * (0.9 + Math.random() * 0.1)));
+            }
+            // Start rising after 9:15 AM
+            else if (currentTime >= marketOpenTime) {
+                newAmount = Math.floor(winner.amount * (1 + Math.random() * 0.1));
+            }
+
+            return { ...winner, amount: newAmount };
+        });
+
+        const sortedWinnings = [...updatedWinnings].sort((a, b) => b.amount - a.amount);
+        
+        // Update both state and ref
+        allWinningsRef.current = sortedWinnings;
+        setDisplayWinnings(sortedWinnings);
+    }, []); // Empty dependency array to prevent unnecessary re-creation
+
+    // Setup interval for updates
     useEffect(() => {
-        if (allWinnings.length === 0) return;
+        // Initial update
+        updateWinnings();
 
-        const interval = setInterval(() => {
-            const updatedWinnings = allWinnings.map(winner => ({
-                ...winner,
-                amount: Math.floor(winner.amount * (0.95 + Math.random() * 0.1))
-            }));
+        // Set up interval to update every 2 seconds
+        const interval = setInterval(updateWinnings, 10000);
 
-            const sortedWinnings = [...updatedWinnings].sort((a, b) => b.amount - a.amount);
-            setAllWinnings(sortedWinnings);
-            setDisplayWinnings(sortedWinnings.slice(0, 5));
-        }, 2000);
-
+        // Cleanup interval on component unmount
         return () => clearInterval(interval);
-    }, [allWinnings]);
-
-    const toggleLeaderboard = (): void => {
-        setIsOpen(!isOpen);
-    };
-
-    const contentVariants: ContentVariants = {
-        hidden: {
-            height: 0,
-            width: 0,
-            opacity: 0,
-            transition: {
-                duration: 0.3,
-                ease: "easeInOut"
-            }
-        },
-        visible: {
-            height: "auto",
-            width: "100%",
-            opacity: 1,
-            transition: {
-                duration: 0.3,
-                ease: "easeInOut"
-            }
-        }
-    };
+    }, [updateWinnings]);
 
     return (
-        <div className={cn(`relative transition-all z-50 duration-300 ${isOpen ? "w-64" : "w-10"}`, className)}>
-
-            <div className="absolute inset-0  rounded-lg bg-primary/50" />
-
-            <div className="relative z-10 overflow-hidden rounded-lg border   ">
-                <AnimatePresence initial={false}>
-                    {isOpen && (
-                        <motion.div
-                            initial="hidden"
-                            animate="visible"
-                            exit="hidden"
-                            variants={contentVariants}
-
-                            className=" backdrop-blur-sm"
-                        >
-                            <div className="divide-y divide-gray-700/30">
-                                {displayWinnings.map((winner) => (
-                                    <motion.div
-                                        key={winner.id}
-                                        className="flex items-center py-2 px-3"
-                                        initial={{ opacity: 0 }}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ duration: 0.3 }}
-                                    >
-                                        <span className="text-yellow-500 font-medium mr-3 w-20 text-right">
-                                            ₹{winner.amount.toLocaleString('en-IN')}
-                                        </span>
-                                        <span className="text-white opacity-90">{winner.username}</span>
-                                    </motion.div>
-                                ))}
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-
-                <div className="bg-secondary-game p-1 flex justify-end">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        className="bg-primary-game p-1 rounded-full"
-                        onClick={toggleLeaderboard}
+        <div className={cn("w-full overflow-hidden bg-black/80 text-white p-2 text-xs h-6", className)}>
+            <div className="flex animate-marquee space-x-8">
+                {[...displayWinnings, ...displayWinnings].map((winner, index) => (
+                    <div 
+                        key={`${winner.id}-${index}`} 
+                        className="flex items-center space-x-4 whitespace-nowrap"
                     >
-
-                        <Trophy className="h-5 w-5 text-white" />
-                    </Button>
-                </div>
+                        <span className="text-green-400 font-medium">
+                            ₹{winner.amount.toLocaleString('en-IN')}
+                        </span>
+                        <span className="text-white opacity-90">{winner.username}</span>
+                    </div>
+                ))}
             </div>
         </div>
     );
