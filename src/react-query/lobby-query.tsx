@@ -183,23 +183,41 @@ export const useGetLobbyChat = (lobbyId: number) => {
 // Get current round placements
 export const useGetMiniMutualFundCurrentRoundPlacements = (roundId: number) => {
     return useQuery({
-        queryKey: ["lobbies", "mini-mutual-fund", "current-placement", roundId],
+        queryKey: ["lobbies", "mini-mutual-fund-placements", "current-placement", roundId],
         queryFn: async () => {
             const response = await lobbyAPI.getMiniMutualFundCurrentPlacement(roundId);
             return response;
         },
-        enabled: Boolean(roundId),
+        enabled: !!roundId,
     });
 };
 
 // Get current user placements
 export const useGetMiniMutualFundCurrentUserPlacements = (roundId?: number) => {
     return useQuery({
-        queryKey: ["lobbies", "mini-mutual-fund", "current-user-placement", roundId],
+        queryKey: ["lobbies", "mini-mutual-fund-placements", "current-user-placement", roundId],
         queryFn: async () => {
             const response = await lobbyAPI.getMiniMutualFundCurrentUserPlacement(roundId!);
             return response;
         },
-        enabled: Boolean(roundId),
+        enabled: !!roundId,
+    });
+};
+
+// Undo last placement
+export const useUndoLastPlacement = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: lobbyAPI.undoLastPlacement,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "lobbies",
+            });
+            toast.success("Last placement undone");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error undoing last placement");
+        },
     });
 };

@@ -21,11 +21,12 @@ import { useParams } from 'next/navigation';
 
 const LobbyWithChat = () => {
   const lobbyCode = useParams().id!.toString();
-  const { data: lobby ,isFetching} = useGetLobbyByCode(lobbyCode);
+  const { data: lobby, isFetching } = useGetLobbyByCode(lobbyCode);
   const { data: lobbyRound } = useGetCurrentLobbyRound(lobby?.id);
   const { sendMessage } = useLobbyWebSocket({
     lobbyCode: lobbyCode,
-    lobbyId: lobby?.id
+    lobbyId: lobby?.id,
+    gameType: lobby?.gameType
   });
 
 

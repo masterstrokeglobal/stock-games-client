@@ -51,9 +51,7 @@ export const lobbyAPI = {
     unreadyLobby: async (lobbyId: number) => {
         const response = await api.patch<string>(`/lobby/unready/${lobbyId}`);
         return response.data;
-    }
-    ,
-
+    },
     // Start a round
     startRound: async (lobbyId: number) => {
         const response = await api.post(`/lobby/start-round/${lobbyId}`);
@@ -71,6 +69,11 @@ export const lobbyAPI = {
 
     getMiniMutualFundCurrentUserPlacement: async (roundId: number) => {
         const response = await api.get(`/lobby/mini-mutual-fund/current-user-placement/${roundId}`);
+        return response.data;
+    },
+
+    undoLastPlacement: async (lobbyRoundId: number) => {
+        const response = await api.patch(`/lobby/undo-last-placement/${lobbyRoundId}`);
         return response.data;
     },
 

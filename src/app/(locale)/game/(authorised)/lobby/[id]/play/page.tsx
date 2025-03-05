@@ -44,7 +44,7 @@ const GamePage = () => {
         }
         return [];
     }, [isSuccess, data, lobby?.gameType]);
-    const { showResults, resultData, sendMessage } = useLobbyWebSocket({ lobbyCode: lobbyCode, lobbyId: lobby?.id });
+    const { showResults, resultData, sendMessage } = useLobbyWebSocket({ lobbyCode: lobbyCode, lobbyId: lobby?.id ,gameType: lobby?.gameType});
 
     const roundRecord = lobbyRound ? lobbyRound.roundRecord : null;
     useHorseRaceSound(roundRecord);

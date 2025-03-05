@@ -1,40 +1,25 @@
-import React from 'react';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useGameStore } from "@/store/game-store";
+import { Input } from '@/components/ui/input';
 import { useIsPlaceOver } from '@/hooks/use-current-game';
-import { useCreateMiniMutualFundPlacementBet } from '@/react-query/game-record-queries';
+import { useUndoLastPlacement } from '@/react-query/lobby-query';
 import { useStockBettingStore } from '@/store/betting-store';
+import { useGameStore } from "@/store/game-store";
 
 const BetInputForm = () => {
     const { lobbyRound } = useGameStore();
-    const { selectedStock, betAmount, isLoading, setBetAmount, setSelectedStock, setIsLoading } = useStockBettingStore();
-    const { mutate } = useCreateMiniMutualFundPlacementBet();
+    const { selectedStock, betAmount, isLoading, setBetAmount } = useStockBettingStore();
     const isPlaceOver = useIsPlaceOver(lobbyRound?.roundRecord ?? null);
 
+    const { mutate } = useUndoLastPlacement();
+
+    const handleUndoBet = () => {
+        if (isPlaceOver) return;
+        if (lobbyRound?.id !== undefined) {
+            mutate(lobbyRound.id);
+        }
+    }
+
     if (!lobbyRound || !lobbyRound.roundRecord) return null;
-
-    const handlePlaceBet = () => {
-        if (!selectedStock || isPlaceOver) return;
-
-        setIsLoading(true);
-
-        // Call the mutation to place the bet
-        mutate({
-            marketItemId: selectedStock.id,
-            lobbyRoundId: lobbyRound.id,
-            amount: betAmount,
-        }, {
-            onSuccess: () => {
-                // Reset selected stock after successful bet
-                setSelectedStock(null);
-                setIsLoading(false);
-            },
-            onError: () => {
-                setIsLoading(false);
-            }
-        });
-    };
 
     return (
         <div className="max-w-4xl mx-auto bg-[#1A2D58] p-4 rounded-2xl">
@@ -48,7 +33,7 @@ const BetInputForm = () => {
                     value={betAmount}
                     onChange={(e) => setBetAmount(Number(e.target.value))}
                     className="bg-[#101F44] p-2 text-white rounded-2xl pl-14 h-14 text-xl"
-                    disabled={isPlaceOver || !selectedStock}
+                    disabled={isPlaceOver || isLoading}
                 />
             </div>
 
@@ -61,7 +46,7 @@ const BetInputForm = () => {
                             variant="game-secondary"
                             key={amount}
                             onClick={() => setBetAmount(amount)}
-                            disabled={isPlaceOver || !selectedStock}
+                            disabled={isPlaceOver || isLoading}
                         >
                             ₹{amount}
                         </Button>
@@ -69,13 +54,11 @@ const BetInputForm = () => {
                 </div>
             </div>
 
-            {/* Bet button */}
             <button
-                className={`bet-button w-full ${(isPlaceOver || isLoading || !selectedStock) ? 'opacity-50 cursor-not-allowed' : ''}`}
-                disabled={isPlaceOver || isLoading || !selectedStock}
-                onClick={handlePlaceBet}
+                className={`bet-button w-full ${(isPlaceOver || isLoading) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                onClick={handleUndoBet}
             >
-                {isPlaceOver ? "BETTING CLOSED" : isLoading ? "PLEASE WAIT" : "BET NOW"}
+                {isPlaceOver ? "BETTING CLOSED" : isLoading ? "PLEASE WAIT" : "UNDO LAST BET"}
             </button>
 
         </div>

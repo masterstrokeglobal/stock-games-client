@@ -181,6 +181,9 @@ const CreateLobbyForm = ({ onCreate, gameType }: Props) => {
                                 label="Round Time"
                                 options={[
                                     {
+                                        label: "2 min", value: "2"
+                                    },
+                                    {
                                         label: "5 min", value: "5"
                                     },
                                     {

@@ -20,13 +20,13 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, gameType }: { 
     const [resultData, setResultData] = useState<LobbyResult | undefined>(undefined);
     const { userDetails } = useAuthStore();
     const router = useRouter();
-    
+
     const handleAction = useCallback((message: WebSocketMessage) => {
         const code = lobbyCode;
         const queryKey = ['lobbies', 'code', code];
         const chatQueryKey = ["lobbies", "chat", lobbyId];
         const lobbyRoundQueryKey = ["lobbies", "round", lobbyId];
-        
+
         console.log('Game type:', gameType);
 
         switch (message.event) {
@@ -70,10 +70,10 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, gameType }: { 
 
                 let url = `/game/lobby/${lobbyCode}/play`;
 
-
                 if (gameType == LobbyGameType.MINI_MUTUAL_FUND) {
                     url = `/game/lobby/${lobbyCode}/play/mini-mutual-fund`;
                 }
+                console.log('Redirecting to:', url, gameType);
 
                 router.push(url);
                 break;

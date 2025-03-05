@@ -70,7 +70,8 @@ const GamePage = () => {
 
     const { showResults, resultData, sendMessage } = useLobbyWebSocket({
         lobbyCode: lobbyCode,
-        lobbyId: storeLobby?.id
+        lobbyId: storeLobby?.id,
+        gameType: storeLobby?.gameType
     });
 
     const roundRecord = storeLobbyRound ? storeLobbyRound.roundRecord : null;
@@ -90,7 +91,7 @@ const GamePage = () => {
                 <div
                     style={borderStyle}
                     className="xl:col-span-5 col-span-4 row-span-2 rounded-2xl">
-                        <CurrentBetsMiniMutualFunds />
+                    <CurrentBetsMiniMutualFunds />
                 </div>
                 <div
                     style={borderStyle}
@@ -102,7 +103,7 @@ const GamePage = () => {
                 <div
                     style={borderStyle}
                     className="xl:col-span-5 col-span-4 row-span-3 rounded-2xl">
-                    {roundRecord && filteredMarket &&<MiniMutualFundLeaderBoard/>}
+                    {roundRecord && filteredMarket && <MiniMutualFundLeaderBoard />}
                 </div>
             </main>}
 
@@ -118,7 +119,7 @@ const GamePage = () => {
                         <main className="bg-[#0A1634]">
                             <div className="px-2">
                                 {storeLobbyRound.roundRecord &&
-                                    <MiniMutualFundBet/>
+                                    <MiniMutualFundBet />
                                 }
                                 {storeLobbyRound && storeLobby &&
                                     <PlacementBetsLobby
@@ -131,7 +132,7 @@ const GamePage = () => {
                         </main>
                     }
                     {(isPlaceOver && storeLobbyRound.roundRecord) &&
-                        <MiniMutualFundLeaderBoard/>
+                        <MiniMutualFundLeaderBoard />
                     }
                     {isPlaceOver && storeLobbyRound && storeLobby &&
                         <PlacementBetsLobby

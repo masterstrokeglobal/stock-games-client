@@ -54,10 +54,9 @@ export const useCreateMiniMutualFundPlacementBet = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({
                 predicate: (query) =>
-                    query.queryKey[0] === "allPlacement" ||
-                    query.queryKey[0] === "currentPlacement" ||
-                    query.queryKey[0] === "winningGameRecord" ||
+                    query.queryKey[1] === "mini-mutual-fund-placements" ||
                     query.queryKey[0] === "user" && query.queryKey[1] == 'wallet',
+                    
             });
             toast.success("Bet placed successfully");
         },

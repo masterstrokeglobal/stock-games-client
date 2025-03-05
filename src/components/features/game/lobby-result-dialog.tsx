@@ -51,6 +51,7 @@ const LobbyGameResultDialog = ({ open, result, lobby }: GameResultDialogProps) =
   const router = useRouter();
   const { userDetails } = useAuthStore();
 
+  console.log(result);
   const resultData = useMemo(() => {
     if (result) {
       const winner = result.winners.find(winner => winner.id === userDetails?.id);

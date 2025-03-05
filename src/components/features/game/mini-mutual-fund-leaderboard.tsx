@@ -9,6 +9,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useGameStore } from "@/store/game-store";
 import { notFound } from "next/navigation";
 import BetInputForm from "./mini-mutual-fund-place";
+import LeaderboardTable from "./mini-mutual-fund-leaderboard-table";
 
 const MiniMutualFundLeaderBoard = () => {
     const t = useTranslations("game");
@@ -17,8 +18,8 @@ const MiniMutualFundLeaderBoard = () => {
 
     if (!roundRecord) return notFound();
 
-
     const { stocks: leaderboardData } = useLeaderboard(roundRecord);
+    console.log(leaderboardData);
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
     const { isGameOver } = useGameState(roundRecord);
@@ -76,80 +77,7 @@ const MiniMutualFundLeaderBoard = () => {
                 {t("leaderboard")}
             </h2>
 
-            {/* Scrollable Leaderboard Area */}
-            <ScrollArea
-                className="flex-grow"
-                style={{ height: `${scrollAreaHeight}px` }}
-                type="auto"
-            >
-                <table className="min-w-full">
-                    <thead>
-                        <tr className="text-[#8990A2] text-sm">
-                            <th className="p-2 text-left w-12">
-                                {t("rank")}
-                            </th>
-                            <th className="p-2 text-left">
-                                {t("horse")}
-                            </th>
-                            <th className="p-2 text-left">
-                                {t("name")}
-                            </th>
-                            <th className="p-2 text-right">
-                                {t("price")}
-                            </th>
-                            <th className="p-2 text-right whitespace-nowrap">
-                                {t("change")}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {leaderboardData.map((item, index) => (
-                            <tr
-                                key={index}
-                                className={cn(
-                                    "border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden",
-                                    (index === 0 && winnerNumber === 0 && !isGameOver) ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm"
-                                )}
-                            >
-                                <td className="p-2 text-gray-300">
-                                    {(index === 0 && winnerNumber === 0 && !isGameOver) ? (
-                                        <img src="/rank-1.svg" alt="Rank 1" className="w-8 h-8" />
-                                    ) : winnerNumber === item.horse ? (
-                                        <img src="/rank-1.svg" alt="Rank 1" className="size-8" />
-                                    ) : (
-                                        <span className="text-[#8990A2]">
-                                            {(winnerNumber === 0 && !isGameOver) ? (index + 1) : "-"}
-                                        </span>
-                                    )}
-                                </td>
-                                <td className="p-2 text-gray-300">
-                                    {item.horse === 17 ? 0 : item.horse}
-                                </td>
-                                <td className="p-2 text-gray-300">
-                                    {item.name}
-                                </td>
-                                <td className="p-2 text-right text-gray-300">
-                                    {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : "Rs."}
-                                    {item.price ? formatPrice(item.price) : "-"}
-                                </td>
-                                <td className={cn(
-                                    "p-2 text-right",
-                                    !isGameOver ? getChangeColor(item.change_percent) : "text-gray-300"
-                                )}>
-                                    {(!isGameOver) ? (
-                                        <>
-                                            {parseFloat(item.change_percent) > 0 ? '+' : ''}
-                                            {item.change_percent ?? 0}%
-                                        </>
-                                    ) : '--'}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-
+          <LeaderboardTable leaderboardData={leaderboardData} isGameOver={isGameOver} height={scrollAreaHeight} />
             {/* Fixed Betting Form at Bottom */}
             <div className="mt-4">
                 <BetInputForm />
