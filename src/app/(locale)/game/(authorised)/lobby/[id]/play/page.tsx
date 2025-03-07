@@ -17,7 +17,7 @@ import { RoundRecord } from "@/models/round-record";
 import { useGetAllPlacementForLobbyRound } from "@/react-query/game-record-queries";
 import { useGetCurrentLobbyRound, useGetLobbyByCode } from "@/react-query/lobby-query";
 import { useTranslations } from "next-intl";
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { useMemo } from "react";
 
 const borderStyle = {
@@ -44,12 +44,15 @@ const GamePage = () => {
         }
         return [];
     }, [isSuccess, data, lobby?.gameType]);
-    const { showResults, resultData, sendMessage } = useLobbyWebSocket({ lobbyCode: lobbyCode, lobbyId: lobby?.id ,gameType: lobby?.gameType});
+
+    const { showResults, resultData, sendMessage } = useLobbyWebSocket({ lobbyCode: lobbyCode, lobbyId: lobby?.id, gameType: lobby?.gameType });
 
     const roundRecord = lobbyRound ? lobbyRound.roundRecord : null;
     useHorseRaceSound(roundRecord);
     if (isLoading && lobbyRound == undefined) return <div>Loading...</div>
 
+
+    if (lobby?.gameType === LobbyGameType.MINI_MUTUAL_FUND) return notFound();
 
     return (
         <section className="bg-primary-game pt-20 md:h-screen ">
@@ -75,7 +78,6 @@ const GamePage = () => {
                     style={borderStyle}
                     className="xl:col-span-5 col-span-4 row-span-3 rounded-2xl ">
                     {roundRecord && filteredMarket && <LeaderBoard roundRecord={roundRecord} filteredMarket={filteredMarket} result={resultData} />}
-
                 </div>
             </main>}
             {(isMobile && lobbyRound && lobby) && <>

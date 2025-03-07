@@ -1,17 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
     Accordion,
     AccordionContent,
     AccordionItem,
     AccordionTrigger
 } from "@/components/ui/accordion";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useGetMiniMutualFundCurrentRoundPlacements } from "@/react-query/lobby-query";
 import { useGameStore } from "@/store/game-store";
-import { useTranslations } from "next-intl";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type Placement = {
     id: number;
@@ -39,33 +38,34 @@ type UserBetSummary = {
 };
 
 const CurrentBetsMiniMutualFunds = ({ className }: { className?: string }) => {
-    const t = useTranslations("mutualFunds");
     const { lobbyRound } = useGameStore();
-    const { data, isSuccess } = useGetMiniMutualFundCurrentRoundPlacements(lobbyRound?.id??0);
-
+    const { data, isSuccess } = useGetMiniMutualFundCurrentRoundPlacements(lobbyRound?.id);
     // Process placements to create user bet summaries
-    const userBetSummaries = isSuccess ?
-        data.placements.reduce((acc: Record<string, UserBetSummary>, placement: Placement) => {
-            const { username } = placement.user;
+    const userBetSummaries = useMemo(() => {
+        return isSuccess ?
+            data.placements.reduce((acc: Record<string, UserBetSummary>, placement: Placement) => {
+                const { username } = placement.user;
 
-            if (!acc[username]) {
-                acc[username] = {
-                    username,
-                    totalAmount: 0,
-                    marketItemsCount: 0,
-                    marketItems: {}
-                };
-            }
+                if (!acc[username]) {
+                    acc[username] = {
+                        username,
+                        totalAmount: 0,
+                        marketItemsCount: 0,
+                        marketItems: {}
+                    };
+                }
 
-            acc[username].totalAmount += placement.amount;
-            acc[username].marketItemsCount++;
+                acc[username].totalAmount += placement.amount;
+                acc[username].marketItemsCount++;
 
-            const marketName = placement.marketItem.name;
-            acc[username].marketItems[marketName] =
-                (acc[username].marketItems[marketName] || 0) + placement.amount;
+                const marketName = placement.marketItem.name;
+                acc[username].marketItems[marketName] =
+                    (acc[username].marketItems[marketName] || 0) + placement.amount;
 
-            return acc;
-        }, {}) : {};
+                return acc;
+            }, {}) : {};
+    }, [data, isSuccess]);
+
 
     const userBetList = Object.values(userBetSummaries);
 
@@ -75,16 +75,16 @@ const CurrentBetsMiniMutualFunds = ({ className }: { className?: string }) => {
     useEffect(() => {
         if (sectionRef.current) {
             const sectionHeight = sectionRef.current.offsetHeight;
-            setScrollAreaHeight(sectionHeight - 40);
+            setScrollAreaHeight(sectionHeight);
         }
     }, []);
 
     return (
         <section ref={sectionRef} className={cn("p-3 rounded-xl h-full overflow-hidden w-full bg-[#122146]", className)}>
             <h2 className="text-lg font-semibold mb-2 text-gray-200">
-                {t("current-bets")}
+                Current Bets
             </h2>
-            
+
             {/* Table Header */}
             <div className="flex w-full bg-[#0E1A37] text-gray-300 text-xs font-semibold py-2 px-2 rounded-t-lg">
                 <div className="flex-1 text-left">Username</div>
@@ -92,7 +92,7 @@ const CurrentBetsMiniMutualFunds = ({ className }: { className?: string }) => {
                 <div className="flex-1 text-right">Total Amount</div>
             </div>
 
-            <ScrollArea className="w-full" type="auto" style={{ height: `${scrollAreaHeight - 20}px` }}>
+            <ScrollArea className="w-full" type="auto" style={{ height: `${scrollAreaHeight - 100}px` }}>
                 {userBetList.length > 0 ? (
                     <Accordion type="single" collapsible className="w-full">
                         {userBetList.map((user: any, index) => (
@@ -141,7 +141,7 @@ const CurrentBetsMiniMutualFunds = ({ className }: { className?: string }) => {
                     </Accordion>
                 ) : (
                     <div className="text-center text-gray-300 py-4">
-                        {t("no-bets-available")}
+                        No Bets Available
                     </div>
                 )}
             </ScrollArea>

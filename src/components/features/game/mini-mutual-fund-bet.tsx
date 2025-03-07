@@ -1,13 +1,16 @@
-import React, { useMemo } from 'react';
-import { useGameStore } from "@/store/game-store";
-import { useStockBettingStore } from '@/store/betting-store';
+import { Button } from '@/components/ui/button';
+import { useGameState, useIsPlaceOver } from '@/hooks/use-current-game';
+import { useLeaderboard } from '@/hooks/use-leadboard';
+import { cn } from '@/lib/utils';
+import MarketItem, { SchedulerType } from '@/models/market-item';
+import MiniMutualFundPlacement from '@/models/mini-mutual-fund';
 import { useCreateMiniMutualFundPlacementBet } from '@/react-query/game-record-queries';
 import { useGetMiniMutualFundCurrentUserPlacements } from '@/react-query/lobby-query';
-import { useGameState, useIsPlaceOver } from '@/hooks/use-current-game';
-import MiniMutualFundPlacement from '@/models/mini-mutual-fund';
-import MarketItem from '@/models/market-item';
+import { useStockBettingStore } from '@/store/betting-store';
+import { useGameStore } from "@/store/game-store";
+import Link from 'next/link';
+import React, { useMemo } from 'react';
 import { CurrentGameState } from './contants';
-import { cn } from '@/lib/utils';
 
 const StockSelectionGrid: React.FC = () => {
   const { lobbyRound } = useGameStore();
@@ -18,13 +21,26 @@ const StockSelectionGrid: React.FC = () => {
   const { mutate } = useCreateMiniMutualFundPlacementBet();
   const { data, isSuccess } = useGetMiniMutualFundCurrentUserPlacements(lobbyRound?.id);
 
+  const { stocks } = useLeaderboard(lobbyRound!.roundRecord!);
+
+  const stocksToPriceMap = useMemo(() => {
+    const map = new Map<number, number>();
+    stocks.forEach(stock => {
+      console.log('stock', stock.id, stock.price);
+      if (stock.id && stock.price)
+        map.set(stock.id, stock.price);
+
+    });
+    return map;
+  }, [stocks]);
+
   const placements = useMemo<MiniMutualFundPlacement[]>(() => {
     return isSuccess ? data.placements : [];
   }, [isSuccess, data]);
 
   const moneyLeft = useMemo(() => {
     return isSuccess ? data?.totalMoneyLeft : "-";
-  }, [isSuccess,data?.totalMoneyLeft,]);
+  }, [isSuccess, data?.totalMoneyLeft,]);
 
 
   const { betAmount, setIsLoading } = useStockBettingStore();
@@ -59,14 +75,14 @@ const StockSelectionGrid: React.FC = () => {
     );
   };
 
-  // Render guard
+
   if (!lobbyRound?.roundRecord) return null;
 
   return (
     <div className="w-full mb-6">
       <GameHeader gameState={gameState} moneyLeft={moneyLeft} className='lg:flex items-center px-4 justify-between lg:flex-row' />
 
-      <div className="grid grid-cols-4 gap-4 p-4">
+      <div className="grid sm:grid-cols-4 grid-cols-2 gap-4 p-4">
         {marketItems.map((stock) => (
           <div
             key={stock.id}
@@ -78,11 +94,17 @@ const StockSelectionGrid: React.FC = () => {
             ${isPlaceOver ? 'opacity-70 cursor-not-allowed' : ''}
           `}
           >
-            <div className="text-white font-bold">{stock.name}</div>
-            <div className="text-sm text-gray-300">{stock.code}</div>
+            <div className="text-white sm:text-base text-sm whitespace-nowrap font-bold">{stock.name}</div>
+            <div className="text-sm text-gray-300">
+              {stock.id && stocksToPriceMap.get(stock.id) && <>
+                {lobbyRound.roundRecord?.type == SchedulerType.CRYPTO ? "USDT " : "Rs."}
+                {stocksToPriceMap.get(stock.id)}</>}
+            </div>
+
+
 
             {/* Total Bets Coin */}
-            <div
+            {(stock.id && calculateTotalBetsForMarket(stock.id) > 0) && <div
               className="
               absolute top-1/2 right-2  -translate-y-1/2
               w-8 h-8 rounded-full 
@@ -92,7 +114,7 @@ const StockSelectionGrid: React.FC = () => {
             "
             >
               {stock.id && calculateTotalBetsForMarket(stock.id)}
-            </div>
+            </div>}
           </div>
         ))}
       </div>
@@ -111,6 +133,8 @@ interface GameHeaderProps {
 
 
 export const GameHeader: React.FC<GameHeaderProps> = ({ gameState, moneyLeft, className }) => {
+
+  const { lobby } = useGameStore();
   const getMessage = () => {
     if (gameState.isGameOver) {
       return "Game Over";
@@ -138,9 +162,9 @@ export const GameHeader: React.FC<GameHeaderProps> = ({ gameState, moneyLeft, cl
         </p>
       </div>
 
-      <p className='text-7xl jersey leading-[5rem]'>
+      {!gameState.isGameOver ? <p className='text-7xl jersey leading-[5rem]'>
         {getTime()}
-      </p>
+      </p> : <Link href={`/game/lobby/${lobby?.joiningCode}`}><Button variant="game">Go to Lobby</Button></Link>}
     </header>
   );
 };

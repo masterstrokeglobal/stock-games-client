@@ -7,7 +7,6 @@ import {
 import { useAuthStore } from '@/context/auth-context';
 import { cn } from '@/lib/utils';
 import Lobby from '@/models/lobby';
-import MarketItem from '@/models/market-item';
 import { Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -21,29 +20,31 @@ interface PriceDifference {
   difference: number;
 }
 
-// Interface for winner data
-interface Winner {
-  id: number;
-  firstname: string;
-  lastname: string;
-  email: string;
-  username: string;
-  amount: number;
+// Interface for user results
+interface UserResult {
+  userId: number;
+  totalPlaced: number;
+  totalAdjusted: number;
+  remainingAmount: number;
+  finalTotal: number;
+  platformFeeAmount: number;
+  lobbyRoundId: number;
+  companyId: number;
+  rank: number;
 }
 
 // Main interface for the entire data structure
 export interface LobbyResult {
   priceDifferences: PriceDifference[];
-  winners: Winner[];
-  count: number;
-  winningItems?: PriceDifference[];
+  winners: {
+    users: UserResult[];
+  };
 }
 
 interface GameResultDialogProps {
   open: boolean;
   result: LobbyResult;
   lobby: Lobby;
-  filteredMarket?: MarketItem[];
 }
 
 const LobbyGameResultDialog = ({ open, result, lobby }: GameResultDialogProps) => {
@@ -51,15 +52,10 @@ const LobbyGameResultDialog = ({ open, result, lobby }: GameResultDialogProps) =
   const router = useRouter();
   const { userDetails } = useAuthStore();
 
-  console.log(result);
   const resultData = useMemo(() => {
-    if (result) {
-      const winner = result.winners.find(winner => winner.id === userDetails?.id);
-      const totalWinnings = winner ? winner.amount : 0;
-      return {
-        totalBetAmount: lobby.amount.toFixed(2),
-        profit: (totalWinnings - lobby.amount).toFixed(2)
-      };
+    if (result && result.winners && result.winners.users) {
+      const userResult = result.winners.users.find(user => user.userId === userDetails?.id);
+      return userResult || null;
     }
     return null;
   }, [result, userDetails]);
@@ -75,7 +71,7 @@ const LobbyGameResultDialog = ({ open, result, lobby }: GameResultDialogProps) =
     router.push(`/game/lobby/${lobby.joiningCode}`);
   };
 
-  const isWin = resultData && Number(resultData.profit) >= 0;
+  const isWin = resultData && resultData.finalTotal > resultData.totalPlaced;
 
   return (
     <Dialog open={showDialog}>
@@ -85,7 +81,7 @@ const LobbyGameResultDialog = ({ open, result, lobby }: GameResultDialogProps) =
         </DialogHeader>
 
         <div className="py-4">
-          {resultData == null ? (
+          {!result || !result.winners || !result.winners.users ? (
             <div className="flex flex-col items-center justify-center p-8 space-y-4">
               <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
               <p className="text-gray-600">Loading results...</p>
@@ -107,37 +103,39 @@ const LobbyGameResultDialog = ({ open, result, lobby }: GameResultDialogProps) =
                 </p>
               </div>
 
-
-
               {/* All Players Results */}
               <div className="space-y-2">
                 <h3 className="text-lg font-semibold text-left mb-2">All Players</h3>
                 <div className="max-h-40 overflow-y-auto">
-                  {result.winners.map((winner) => (
+                  {result.winners.users.map((user) => (
                     <div
-                      key={winner.id}
+                      key={user.userId}
                       className={cn(
                         "p-2 rounded-lg mb-2",
-                        winner.id === userDetails?.id ? "bg-blue-900/30 border-yellow-400 border" : "bg-gray-800/30"
+                        user.userId === userDetails?.id ? "bg-blue-900/30 border-yellow-400 border" : "bg-gray-800/30"
                       )}
                     >
                       <div className="flex justify-between items-center">
                         <div>
-                          <p className="font-medium text-sm">{winner.username}</p>
-                          <p className="text-sm text-gray-400">{winner.firstname} {winner.lastname}</p>
+                          <p className="font-medium text-sm">User ID: {user.userId}</p>
+                          <p className="text-sm text-gray-400">
+                            Placed: ₹{user.totalPlaced.toFixed(2)} | Remaining: ₹{user.remainingAmount.toFixed(2)}
+                          </p>
                         </div>
-                        <p className={cn(
-                          "font-semibold",
-                          winner.amount > 0 ? "text-green-500" : "text-red-500"
-                        )}>
-                          ₹{winner.amount.toFixed(2)}
-                        </p>
+                        <div className="text-right">
+                          <p className={cn(
+                            "font-semibold",
+                            user.finalTotal > user.totalPlaced ? "text-green-500" : "text-red-500"
+                          )}>
+                            ₹{user.finalTotal.toFixed(2)}
+                          </p>
+                          <p className="text-xs text-gray-400">Rank: #{user.rank}</p>
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-
 
               <button className="bet-button w-full" onClick={playAgain}>
                 Play Again

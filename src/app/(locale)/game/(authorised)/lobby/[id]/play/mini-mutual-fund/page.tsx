@@ -1,24 +1,20 @@
 "use client";
+import BackToLobbiesButton from "@/components/features/game/back-to-lobbies-button";
 import { MobileHeader } from "@/components/features/game/common/mobile-components";
 import CurrentBetsMiniMutualFunds from "@/components/features/game/current-bets-mini-mutual-funds";
-import LobbyGameResultDialog from "@/components/features/game/lobby-result-dialog";
+import LobbyGameResultDialog from "@/components/features/game/mmf-result-dialog";
 import MiniMutualFundBet from "@/components/features/game/mini-mutual-fund-bet";
 import MiniMutualFundLeaderBoard from "@/components/features/game/mini-mutual-fund-leaderboard";
 import Navbar from "@/components/features/game/navbar";
-import PlacementBetsLobby from "@/components/features/game/placement-bets-lobby";
-import HorseRace from "@/components/features/horse-animation/horse";
+import HorseRace from "@/components/features/horse-animation/mmf-horse";
 import useLobbyWebSocket from "@/components/features/lobby/lobby-websocket";
 import { useHorseRaceSound } from "@/context/audio-context";
 import { useIsPlaceOver } from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
-import { LobbyGameType } from "@/models/lobby";
-import LobbyPlacement from "@/models/lobby-placement";
-import MarketItem from "@/models/market-item";
-import { useGetAllPlacementForLobbyRound } from "@/react-query/game-record-queries";
 import { useGetCurrentLobbyRound, useGetLobbyByCode } from "@/react-query/lobby-query";
 import { useGameStore } from "@/store/game-store";
 import { useParams } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 
 const borderStyle = {
     borderColor: "#3799ED",
@@ -54,20 +50,10 @@ const GamePage = () => {
         setRoundLoading(isRoundLoading);
     }, [lobbyRound, isRoundLoading, setLobbyRound, setRoundLoading]);
 
-    const { data, isSuccess } = useGetAllPlacementForLobbyRound(storeLobbyRound?.id?.toString());
     const isPlaceOver = useIsPlaceOver(storeLobbyRound?.roundRecord || null);
 
-    const filteredMarket: MarketItem[] = useMemo(() => {
-        if (isSuccess) {
-            const lobbyPlacements: LobbyPlacement[] = data.data.placements;
-            const marketItems: MarketItem[] = lobbyPlacements.map((placement) => placement.marketItem!);
-            if (storeLobby?.gameType === LobbyGameType.GUESS_HIGHER) return marketItems;
-            return [];
-        }
-        return [];
-    }, [isSuccess, data, storeLobby?.gameType]);
 
-    const { showResults, resultData, sendMessage } = useLobbyWebSocket({
+    const { showResults, resultData } = useLobbyWebSocket({
         lobbyCode: lobbyCode,
         lobbyId: storeLobby?.id,
         gameType: storeLobby?.gameType
@@ -85,7 +71,7 @@ const GamePage = () => {
                 <div
                     style={borderStyle}
                     className="xl:col-span-7 col-span-8 row-span-2 rounded-2xl overflow-hidden">
-                    {roundRecord && <HorseRace roundRecord={roundRecord} filteredMarket={filteredMarket} />}
+                    {roundRecord && <HorseRace roundRecord={roundRecord} />}
                 </div>
                 <div
                     style={borderStyle}
@@ -102,7 +88,7 @@ const GamePage = () => {
                 <div
                     style={borderStyle}
                     className="xl:col-span-5 col-span-4 row-span-3 rounded-2xl">
-                    {roundRecord && filteredMarket && <MiniMutualFundLeaderBoard />}
+                    {roundRecord && <MiniMutualFundLeaderBoard />}
                 </div>
             </main>}
 
@@ -111,45 +97,36 @@ const GamePage = () => {
                     {storeLobbyRound.roundRecord &&
                         <MobileHeader
                             roundRecord={storeLobbyRound.roundRecord}
-                            filteredMarket={filteredMarket}
                         />
                     }
+
+                    {storeLobbyRound.roundRecord && <HorseRace roundRecord={storeLobbyRound.roundRecord} />}
+
+                    <BackToLobbiesButton />
+
                     {!isPlaceOver &&
                         <main className="bg-[#0A1634]">
                             <div className="px-2">
                                 {storeLobbyRound.roundRecord &&
                                     <MiniMutualFundBet />
                                 }
-                                {storeLobbyRound && storeLobby &&
-                                    <PlacementBetsLobby
-                                        lobbyRound={storeLobbyRound}
-                                        lobby={storeLobby}
-                                        sendMessage={sendMessage}
-                                    />
-                                }
                             </div>
                         </main>
                     }
-                    {(isPlaceOver && storeLobbyRound.roundRecord) &&
+                    {(storeLobbyRound.roundRecord) &&
                         <MiniMutualFundLeaderBoard />
                     }
                     {isPlaceOver && storeLobbyRound && storeLobby &&
-                        <PlacementBetsLobby
-                            className="my-6"
-                            lobbyRound={storeLobbyRound}
-                            lobby={storeLobby}
-                            sendMessage={sendMessage}
-                        />
+                        <CurrentBetsMiniMutualFunds />
                     }
                 </section>
             }
-
             {storeLobbyRound?.id && storeLobby && resultData &&
                 <LobbyGameResultDialog
                     lobby={storeLobby}
                     key={String(showResults)}
                     open={showResults}
-                    result={resultData}
+                    result={resultData as any}
                 />
             }
         </section>

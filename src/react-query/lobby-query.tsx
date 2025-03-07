@@ -181,10 +181,13 @@ export const useGetLobbyChat = (lobbyId: number) => {
 };
 
 // Get current round placements
-export const useGetMiniMutualFundCurrentRoundPlacements = (roundId: number) => {
+export const useGetMiniMutualFundCurrentRoundPlacements = (roundId?: number) => {
     return useQuery({
         queryKey: ["lobbies", "mini-mutual-fund-placements", "current-placement", roundId],
         queryFn: async () => {
+            if (!roundId) {
+                return;
+            }
             const response = await lobbyAPI.getMiniMutualFundCurrentPlacement(roundId);
             return response;
         },

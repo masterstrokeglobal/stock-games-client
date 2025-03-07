@@ -8,17 +8,17 @@ import MarketItem from "@/models/market-item";
 
 type Props = {
   roundRecord: RoundRecord;
-      filteredMarket?: MarketItem[];
+  filteredMarket?: MarketItem[];
 
 };
 
-export default function HorseRace({ roundRecord,filteredMarket }: Props) {
+export default function HorseRace({ roundRecord, filteredMarket }: Props) {
 
   const isPlaceOver = useIsPlaceOver(roundRecord);
 
   return isPlaceOver ? (
     <Canvas>
-      <HorseRaceEnvironment roundRecord={roundRecord}  filteredMarket={filteredMarket} />
+      <HorseRaceEnvironment roundRecord={roundRecord} filteredMarket={filteredMarket} />
     </Canvas>
   ) : (
     <RacePreparation />
