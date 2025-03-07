@@ -89,12 +89,12 @@ const StockSelectionGrid: React.FC = () => {
             onClick={() => handlePlaceBet(stock)}
             className={`
             relative flex flex-col items-center justify-center 
-            w-full h-12 bg-[#1A2D58] p-3 rounded-lg 
+            w-full h-14 bg-[#1A2D58] p-3 rounded-lg 
             cursor-pointer transition-all 
             ${isPlaceOver ? 'opacity-70 cursor-not-allowed' : ''}
           `}
           >
-            <div className="text-white sm:text-base text-sm whitespace-nowrap font-bold">{stock.name}</div>
+            <div className="text-white  text-sm  font-bold">{stock.name}</div>
             <div className="text-sm text-gray-300">
               {stock.id && stocksToPriceMap.get(stock.id) && <>
                 {lobbyRound.roundRecord?.type == SchedulerType.CRYPTO ? "USDT " : "Rs."}

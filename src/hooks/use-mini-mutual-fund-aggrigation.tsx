@@ -27,6 +27,7 @@ export function useLeaderboardAggregation(
         }
         return map;
     }, [placements]);
+
     return useMemo(() => {
         // First, create a map of market item IDs to their current leaderboard data
         const marketItemsMap = leaderboardData.reduce((map, item) => {

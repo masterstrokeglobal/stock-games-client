@@ -6,16 +6,29 @@ import { useGameStore } from "@/store/game-store";
 import { useFrame } from "@react-three/fiber";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import HorseModel from "./horse-model";
+import FerrariModel from "./ferrari-model";
 
 // Memoized horse colors
-const HORSE_COLORS = [
-    "#D94D4D", "#3F8B83", "#3B91A5", "#D86F56", "#6F9F96",
-    "#C89A3F", "#7F74B3", "#D066C6", "#59829E", "#C97A73",
-    "#66B78F", "#E0B870", "#9E83B4", "#699EC7", "#D68A4A",
-    "#4D8C7D", "#B7784D"
-] as const;
-
+const CAR_COLORS = [
+    "#FF0000", // Classic Red  
+    "#1C1C1C", // Jet Black  
+    "#2E86C1", // Deep Blue  
+    "#E67E22", // Sunset Orange  
+    "#F1C40F", // Bright Yellow  
+    "#16A085", // Teal Green  
+    "#7D3C98", // Royal Purple  
+    "#BDC3C7", // Silver  
+    "#8E44AD", // Metallic Violet  
+    "#2C3E50", // Midnight Blue  
+    "#E74C3C", // Sporty Scarlet  
+    "#34495E", // Graphite Gray  
+    "#D35400", // Burnt Orange  
+    "#95A5A6", // Light Gray  
+    "#27AE60", // Racing Green  
+    "#C0392B", // Ferrari Red  
+    "#ECF0F1"  // Pearl White  
+  ] as const;
+  
 const MAX_Z_POSITION = 60;
 const MIN_Z_POSITION = -60;
 
@@ -38,13 +51,13 @@ const HorseAnimation = React.memo(() => {
     const { stocks } = useLeaderboard(roundRecord);
 
     const { data, isSuccess } = useGetMiniMutualFundCurrentRoundPlacements(lobbyRound!.id!);
+    
     const placements = useMemo<MiniMutualFundPlacement[]>(() => {
         return isSuccess ? data.placements : [];
     }, [isSuccess, data]);
 
     const userPlacements = useLeaderboardAggregation(placements, stocks);
 
-    // Memoize initial positions to prevent unnecessary recalculations
     const initialPositions = useMemo(() =>
         [...Array(userPlacements.length)].map((_, index) => ({
             x: -15 + index * 4 + (Math.random() * 2 - 1),
@@ -52,14 +65,12 @@ const HorseAnimation = React.memo(() => {
         })),
         [userPlacements.length]);
 
-    // Generate positions based on user ranks instead of market
     const generateNewPositions = useMemo(() => {
         return userPlacements.map((user, index) => {
-            // Position based on user rank (higher rank = further ahead)
             const zBasedOnRank = user.currentRank ? -(user.currentRank * 8) + 60 : 0;
 
             return {
-                x: -15 + (index) * 4 + (Math.random() * 2 - 1), // Spread horses horizontally
+                x: -15 + (index) * 12 + (Math.random() * 2 - 1), // Spread horses horizontally
                 z: controlZPosition(zBasedOnRank), // Position based on rank
             };
         });
@@ -81,7 +92,6 @@ const HorseAnimation = React.memo(() => {
                 if (horse && currentPositions[index] && targetPositions[index]) {
                     const currentPos = currentPositions[index];
                     const targetPos = targetPositions[index];
-                    // Use lerp for smoother interpolation
                     horse.position.x = THREE.MathUtils.lerp(currentPos.x, targetPos.x, progress);
                     horse.position.z = THREE.MathUtils.lerp(currentPos.z, targetPos.z, progress);
                 }
@@ -95,7 +105,7 @@ const HorseAnimation = React.memo(() => {
         if (isTransitioning && animationProgressRef.current < 1) {
             // Use a constant transition time instead of delta-based
             animationProgressRef.current = Math.min(
-                animationProgressRef.current + 0.016 * .5, // Fixed timestep
+                animationProgressRef.current + 0.016 * .5, 
                 1
             );
             updateHorsePositions(animationProgressRef.current);
@@ -129,16 +139,19 @@ const HorseAnimation = React.memo(() => {
     return (
         <>
             {horses.map((horse, index) => (
-                <HorseModel
+                <FerrariModel
                     key={`user-${userPlacements[index].userId}`}
                     ref={(el) => {
                         horsesRef.current[index] = el as unknown as THREE.Object3D | null;
                     }}
-                    number={horse.horseNumber}
-                    color={HORSE_COLORS[index % HORSE_COLORS.length]}
                     position={horse.position as any}
-                    scale={horse.scale as any}
+                    bodyColor={CAR_COLORS[horse.horseNumber]}
+                    detailsColor="#000000"
                     speed={horse.speed}
+                    glassColor="#000000"
+                    scale={[5,5,5]}
+                    showShadow={true}
+
                 />
             ))}
         </>
