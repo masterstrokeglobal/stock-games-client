@@ -7,6 +7,7 @@ import MiniMutualFundPlacement from "@/models/mini-mutual-fund";
 import { useGetMiniMutualFundCurrentRoundPlacements } from "@/react-query/lobby-query";
 import { useGameStore } from "@/store/game-store";
 import React, { useMemo } from 'react';
+import { CAR_COLORS } from "../horse-animation/components/mmf-horse-animation";
 
 interface LeaderboardTableProps {
     leaderboardData: RankedMarketItem[];
@@ -44,7 +45,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                 <thead>
                     <tr className=" text-sm">
                         <th className="p-2 text-left w-12">Rank</th>
-                        <th className="p-2 text-left w-12">Horse</th>
+                        <th className="p-2 text-left w-12">Car</th>
                         <th className="p-2 text-left">Username</th>
                         <th className="p-2 text-left whitespace-nowrap">Betted Amount</th>
                         <th className="p-2 text-right whitespace-nowrap">Potential Return</th>
@@ -60,7 +61,9 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                         >
 
                             <td className="p-2 text-left w-12">{index + 1}</td>
-                            <td className="p-2 text-left">{item.horse}</td>
+                            <td className="p-2 text-left">
+                                <span className="w-5 h-5 rounded-full inline-block mr-2 border- border-white " style={{background:CAR_COLORS[item.horse]}} />
+                            </td>
                             <td className="p-2 text-left">{item.username}</td>
                             <td className="p-2 text-left">{formatPrice(item.bettedAmount)}</td>
                             <td className="p-2 text-right whitespace-nowrap">

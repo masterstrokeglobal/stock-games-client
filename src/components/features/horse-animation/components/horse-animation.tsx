@@ -47,7 +47,6 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
         })),
         [numberOfHorses]);
 
-    // Optimize position generation with memoization
     const generateNewPositions = useMemo(() => {
         const marketToRender = filteredMarket && filteredMarket.length > 0
             ? roundRecord.market.filter(stock =>

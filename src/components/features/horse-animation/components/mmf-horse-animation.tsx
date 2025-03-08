@@ -9,7 +9,7 @@ import * as THREE from "three";
 import FerrariModel from "./ferrari-model";
 
 // Memoized horse colors
-const CAR_COLORS = [
+export const CAR_COLORS = [
     "#FF0000", // Classic Red  
     "#1C1C1C", // Jet Black  
     "#2E86C1", // Deep Blue  
@@ -27,8 +27,8 @@ const CAR_COLORS = [
     "#27AE60", // Racing Green  
     "#C0392B", // Ferrari Red  
     "#ECF0F1"  // Pearl White  
-  ] as const;
-  
+] as const;
+
 const MAX_Z_POSITION = 60;
 const MIN_Z_POSITION = -60;
 
@@ -51,7 +51,7 @@ const HorseAnimation = React.memo(() => {
     const { stocks } = useLeaderboard(roundRecord);
 
     const { data, isSuccess } = useGetMiniMutualFundCurrentRoundPlacements(lobbyRound!.id!);
-    
+
     const placements = useMemo<MiniMutualFundPlacement[]>(() => {
         return isSuccess ? data.placements : [];
     }, [isSuccess, data]);
@@ -67,10 +67,10 @@ const HorseAnimation = React.memo(() => {
 
     const generateNewPositions = useMemo(() => {
         return userPlacements.map((user, index) => {
-            const zBasedOnRank = user.currentRank ? -(user.currentRank * 8) + 60 : 0;
+            const zBasedOnRank = user.currentRank ? -(user.currentRank * 20) + 60 : 0;
 
             return {
-                x: -15 + (index) * 12 + (Math.random() * 2 - 1), // Spread horses horizontally
+                x: -15 + (index) * 17 + (Math.random() * 2 - 1), // Spread horses horizontally
                 z: controlZPosition(zBasedOnRank), // Position based on rank
             };
         });
@@ -105,7 +105,7 @@ const HorseAnimation = React.memo(() => {
         if (isTransitioning && animationProgressRef.current < 1) {
             // Use a constant transition time instead of delta-based
             animationProgressRef.current = Math.min(
-                animationProgressRef.current + 0.016 * .5, 
+                animationProgressRef.current + 0.016 * .5,
                 1
             );
             updateHorsePositions(animationProgressRef.current);
@@ -149,7 +149,7 @@ const HorseAnimation = React.memo(() => {
                     detailsColor="#000000"
                     speed={horse.speed}
                     glassColor="#000000"
-                    scale={[5,5,5]}
+                    scale={[5, 5, 5]}
                     showShadow={true}
 
                 />

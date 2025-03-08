@@ -49,12 +49,20 @@ const createLobbySchema = z.object({
     maxCapacity: z.coerce.number()
         .min(2, { message: "Minimum 2 players required" })
         .max(50, { message: "Maximum 50 players allowed" }),
+    // should be multiple of 100
     prizePool: z.coerce.number()
         .min(100, { message: "Minimum prize pool is 100" })
         .max(2500, { message: "Maximum prize pool is 2500" }),
     type: z.nativeEnum(LobbyType),
     isPublic: z.boolean()
-});
+}).refine(data => {
+    // Prize pool should be multiple of 100
+    return data.prizePool % 100 === 0;
+}
+    , {
+        path: ["prizePool"],
+        message: "Prize pool should be multiple of 100"
+    });
 
 type CreateLobbyFormValues = z.infer<typeof createLobbySchema>;
 
@@ -159,18 +167,13 @@ const CreateLobbyForm = ({ onCreate, gameType }: Props) => {
                                 className="h-14 bg-gray-800 text-white border-gray-700"
                             />
 
-                            <FormGroupSelect
+                            <FormInput
                                 control={form.control}
                                 name="prizePool"
-                                labelClassName='text-white'
+                                type="number"
+                                className='text-white'
                                 label="Prize Pool"
-                                options={[
-                                    { label: "100 Coins", value: "100" },
-                                    { label: "500 Coins", value: "500" },
-                                    { label: "1000 Coins", value: "1000" },
-                                    { label: "2500 Coins", value: "2500" }
-                                ]}
-                                className="h-14 bg-gray-800 text-white border-gray-700"
+                                inputClassName="h-14 bg-gray-800 text-white border-gray-700"
                             />
                         </div>
                         {gameType === LobbyGameType.MINI_MUTUAL_FUND &&
@@ -190,7 +193,7 @@ const CreateLobbyForm = ({ onCreate, gameType }: Props) => {
                                         label: "10 min", value: "10"
                                     },
                                     {
-                                        label: "15 min", value: "15"
+                                        label: "15 min", value: "100"
                                     },
 
                                 ]}

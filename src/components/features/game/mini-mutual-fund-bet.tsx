@@ -26,7 +26,6 @@ const StockSelectionGrid: React.FC = () => {
   const stocksToPriceMap = useMemo(() => {
     const map = new Map<number, number>();
     stocks.forEach(stock => {
-      console.log('stock', stock.id, stock.price);
       if (stock.id && stock.price)
         map.set(stock.id, stock.price);
 
