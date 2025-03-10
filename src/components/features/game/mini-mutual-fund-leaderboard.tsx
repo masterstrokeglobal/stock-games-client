@@ -15,7 +15,7 @@ const MiniMutualFundLeaderBoard = () => {
     const { stocks: leaderboardData } = useLeaderboard(roundRecord!);
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
-    const { isGameOver } = useGameState(roundRecord);
+    const { isGameOver, isPlaceOver } = useGameState(roundRecord);
 
 
     useEffect(() => {
@@ -39,10 +39,9 @@ const MiniMutualFundLeaderBoard = () => {
             </h2>
 
             <LeaderboardTable leaderboardData={leaderboardData} isGameOver={isGameOver} height={scrollAreaHeight} />
-            {/* Fixed Betting Form at Bottom */}
-            <div className="mt-4">
+            {!isPlaceOver && <div className="mt-4">
                 <BetInputForm />
-            </div>
+            </div>}
         </section>
     );
 };

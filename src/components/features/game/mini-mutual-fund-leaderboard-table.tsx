@@ -34,6 +34,12 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
         }).format(price);
     };
 
+    const getColor = (profit: number) => {
+        if (profit > 0) return 'text-green-500';
+        if (profit < 0) return 'text-red-500';
+        return 'text-white';
+    };
+
 
     return (
         <ScrollArea
@@ -48,6 +54,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                         <th className="p-2 text-left w-12">Car</th>
                         <th className="p-2 text-left">Username</th>
                         <th className="p-2 text-left whitespace-nowrap">Betted Amount</th>
+                        <th className="p-2 text-left whitespace-nowrap">P/L</th>
                         <th className="p-2 text-right whitespace-nowrap">Potential Return</th>
                     </tr>
                 </thead>
@@ -62,10 +69,13 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
 
                             <td className="p-2 text-left w-12">{index + 1}</td>
                             <td className="p-2 text-left">
-                                <span className="w-5 h-5 rounded-full inline-block mr-2 border- border-white " style={{background:CAR_COLORS[item.horse]}} />
+                                <span className="w-5 h-5 rounded-full inline-block mr-2 border- border-white " style={{ background: CAR_COLORS[item.horse] }} />
                             </td>
                             <td className="p-2 text-left">{item.username}</td>
                             <td className="p-2 text-left">{formatPrice(item.bettedAmount)}</td>
+                            <td className={cn("p-2 text-left whitespace-nowrap", getColor(item.potentialReturn - item.bettedAmount))}>
+                                Rs. {formatPrice(item.potentialReturn - item.bettedAmount)}
+                            </td>
                             <td className="p-2 text-right whitespace-nowrap">
                                 {formatPrice(item.potentialReturn)} ({item.changePercent.toFixed(2)}%)
                             </td>

@@ -8,6 +8,7 @@ import { useCreateMiniMutualFundPlacementBet } from '@/react-query/game-record-q
 import { useGetMiniMutualFundCurrentUserPlacements } from '@/react-query/lobby-query';
 import { useStockBettingStore } from '@/store/betting-store';
 import { useGameStore } from "@/store/game-store";
+import { Triangle } from 'lucide-react';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
 import { CurrentGameState } from './contants';
@@ -28,7 +29,15 @@ const StockSelectionGrid: React.FC = () => {
     stocks.forEach(stock => {
       if (stock.id && stock.price)
         map.set(stock.id, stock.price);
+    });
+    return map;
+  }, [stocks]);
 
+  const stocksToChangePercentMap = useMemo(() => {
+    const map = new Map<number, number>();
+    stocks.forEach(stock => {
+      if (stock.id && stock.change_percent)
+        map.set(stock.id, Number(stock.change_percent)!);
     });
     return map;
   }, [stocks]);
@@ -52,6 +61,11 @@ const StockSelectionGrid: React.FC = () => {
       .reduce((total, placement) => total + (placement.amount ?? 0), 0);
   };
 
+  const changePercent = (marketItemId: number): number => {
+    const stock = stocks.find(stock => stock.id === marketItemId);
+    if (!stock) return 0;
+    return parseInt(stock.change_percent);
+  };
   // Handle bet placement
   const handlePlaceBet = (stock: MarketItem): void => {
     if (!stock || isPlaceOver) return;
@@ -87,11 +101,11 @@ const StockSelectionGrid: React.FC = () => {
             key={stock.id}
             onClick={() => handlePlaceBet(stock)}
             className={`
-            relative flex flex-col items-center justify-center 
-            w-full h-14 bg-[#1A2D58] p-3 rounded-lg 
-            cursor-pointer transition-all 
-            ${isPlaceOver ? 'opacity-70 cursor-not-allowed' : ''}
-          `}
+              relative flex flex-col items-center justify-center 
+              w-full h-14 bg-[#1A2D58] p-3 rounded-lg 
+              cursor-pointer transition-all 
+              ${isPlaceOver ? 'opacity-70 cursor-not-allowed' : ''}
+            `}
           >
             <div className="text-white  text-sm  font-bold">{stock.name}</div>
             <div className="text-sm text-gray-300">
@@ -99,21 +113,24 @@ const StockSelectionGrid: React.FC = () => {
                 {lobbyRound.roundRecord?.type == SchedulerType.CRYPTO ? "USDT " : "Rs."}
                 {stocksToPriceMap.get(stock.id)}</>}
             </div>
-
-
-
             {/* Total Bets Coin */}
             {(stock.id && calculateTotalBetsForMarket(stock.id) > 0) && <div
               className="
-              absolute top-1/2 right-2  -translate-y-1/2
-              w-8 h-8 rounded-full 
-              bg-red-600 text-white 
-              flex items-center justify-center 
-              text-xs font-bold
-            "
+                absolute top-1/2 right-2  -translate-y-1/2
+                w-8 h-8 rounded-full 
+                bg-red-600 text-white 
+                flex items-center justify-center 
+                text-xs font-bold
+              "
             >
               {stock.id && calculateTotalBetsForMarket(stock.id)}
             </div>}
+
+            {stock.id && <Triangle size={20} className='size-3 top-2 left-2 absolute' style={{
+              transform: `rotate(${stocksToChangePercentMap.get(stock.id)! > 0 ? '0deg' : '180deg'})`,
+              color: stocksToChangePercentMap.get(stock.id)! > 0 ? 'green' : 'red',
+              fill: stocksToChangePercentMap.get(stock.id)! > 0 ? 'green' : 'red'
+            }} />}
           </div>
         ))}
       </div>
