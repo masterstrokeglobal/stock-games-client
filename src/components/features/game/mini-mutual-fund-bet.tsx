@@ -60,12 +60,6 @@ const StockSelectionGrid: React.FC = () => {
       .filter(placement => placement.marketItem?.id === marketItemId)
       .reduce((total, placement) => total + (placement.amount ?? 0), 0);
   };
-
-  const changePercent = (marketItemId: number): number => {
-    const stock = stocks.find(stock => stock.id === marketItemId);
-    if (!stock) return 0;
-    return parseInt(stock.change_percent);
-  };
   // Handle bet placement
   const handlePlaceBet = (stock: MarketItem): void => {
     if (!stock || isPlaceOver) return;
