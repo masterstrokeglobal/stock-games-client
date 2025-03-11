@@ -19,10 +19,21 @@ export default function FcmTokenComp() {
         if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
             if (notificationPermissionStatus === 'granted') {
                 const messaging = getMessaging(firebaseApp);
-                const unsubscribe = onMessage(messaging, (payload) => console.log('Foreground push notification received:', payload));
-                return () => {
-                    unsubscribe(); // Unsubscribe from the onMessage event on cleanup
-                };
+                const unsubscribe = onMessage(messaging, (payload) => {
+                    console.log('Message received. ', payload);
+                    // Customize the notification here
+                    navigator.serviceWorker.ready.then(registration => registration.showNotification(
+                        payload.notification?.title ?? 'New Notification',
+                        {
+                            body: payload.notification?.body,
+                            icon: payload.notification?.icon,
+                        }
+                    ));
+                    return () => {
+                        unsubscribe(); // Unsubscribe from the onMessage event on cleanup
+                    };
+                });
+
             }
         }
     }, [notificationPermissionStatus]);
