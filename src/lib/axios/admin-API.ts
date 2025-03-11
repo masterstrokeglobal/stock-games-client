@@ -12,6 +12,9 @@ export const adminAPI = {
         });
     },
 
+    saveToken: async (token: string) => {
+        return api.post("/admin/save-token", { token });
+    },
     getAdminById: async (adminId: string) => {
         return api.get(`/admin/${adminId}`);
     },

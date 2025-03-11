@@ -14,10 +14,10 @@ export const useCreateAdmin = () => {
     });
 };
 
-export const useGetAllAdmins = (filter:SearchFilters) => {
+export const useGetAllAdmins = (filter: SearchFilters) => {
     return useQuery({
-        queryKey: ["admins",filter],
-        queryFn:  () => adminAPI.getAllAdmins(filter),
+        queryKey: ["admins", filter],
+        queryFn: () => adminAPI.getAllAdmins(filter),
     });
 };
 
@@ -65,3 +65,9 @@ export const useDeleteAdminById = () => {
         },
     });
 };
+
+export const useSaveToken = () => {
+    return useMutation({
+        mutationFn: adminAPI.saveToken,
+    });
+}
