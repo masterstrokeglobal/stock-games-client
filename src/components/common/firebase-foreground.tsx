@@ -4,6 +4,7 @@ import firebaseApp from '../../firebase';
 import { useEffect } from 'react';
 import useFcmToken from '@/hooks/use-fcm-hooks';
 import { useSaveToken } from '@/react-query/admin-queries';
+import { toast } from 'sonner';
 
 export default function FcmTokenComp() {
     const { fcmToken, notificationPermissionStatus } = useFcmToken();
@@ -21,7 +22,12 @@ export default function FcmTokenComp() {
                 const messaging = getMessaging(firebaseApp);
                 const unsubscribe = onMessage(messaging, (payload) => {
                     console.log('Message received. ', payload);
-                    // Customize the notification here
+
+                    toast.success(payload.notification?.title ?? 'New Notification', {
+                        description: payload.notification?.body,
+                        icon: payload.notification?.icon,
+                    });
+
                     navigator.serviceWorker.ready.then(registration => registration.showNotification(
                         payload.notification?.title ?? 'New Notification',
                         {
