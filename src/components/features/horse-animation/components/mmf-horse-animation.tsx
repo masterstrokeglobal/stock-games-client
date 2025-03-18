@@ -10,7 +10,7 @@ import FerrariModel from "./ferrari-model";
 
 // Memoized horse colors
 export const CAR_COLORS = [
-    "#FF0000", // Classic Red  
+    "#FF0000", // Classic Red           
     "#1C1C1C", // Jet Black  
     "#2E86C1", // Deep Blue  
     "#E67E22", // Sunset Orange  
@@ -37,17 +37,97 @@ const controlZPosition = (z: number) => {
     if (z < MIN_Z_POSITION) return MIN_Z_POSITION;
     return z;
 };
-
 const HorseAnimation = React.memo(() => {
-    const { lobbyRound } = useGameStore();
-    const roundRecord = lobbyRound!.roundRecord!;
     const animationProgressRef = useRef(0);
     const horsesRef = useRef<(THREE.Object3D | null)[]>([]);
+    const { userPlacements } = useCarAnimation();
 
     const [currentPositions, setCurrentPositions] = useState<{ x: number, z: number }[]>([]);
+    const [prevPositions, setPrevPositions] = useState<{ x: number, z: number }[]>([]);
     const [targetPositions, setTargetPositions] = useState<{ x: number, z: number }[]>([]);
     const [isTransitioning, setIsTransitioning] = useState(false);
 
+    // Generate new positions based on rank
+    const generateNewPositions = useCallback(() => {
+        return userPlacements.map((user, index) => ({
+            x: -15 + index * 17 + (Math.random() * 10 - 1),
+            z: controlZPosition(-(user.currentRank * 25
+                + (Math.random() * 10 - 1)
+            ) + 60),
+        }));
+    }, [userPlacements]);
+
+    // Initialize positions when component mounts
+    useEffect(() => {
+        if (currentPositions.length === 0) {
+            const initialPos = generateNewPositions();
+            setCurrentPositions(initialPos);
+            setPrevPositions(initialPos);
+            setTargetPositions(initialPos);
+        }
+    }, [generateNewPositions, currentPositions.length]);
+
+    // Trigger smooth transition when `userPlacements` change
+    useEffect(() => {
+        const newPositions = generateNewPositions();
+
+        // Ensure we smoothly transition from the **last rendered positions**, not the last state update
+        setPrevPositions(targetPositions);
+        setTargetPositions(newPositions);
+        setIsTransitioning(true);
+        animationProgressRef.current = 0;
+    }, [userPlacements]);
+
+    // Interpolating positions smoothly
+    const updateHorsePositions = useCallback((progress: number) => {
+        horsesRef.current.forEach((horse, index) => {
+            if (horse && prevPositions[index] && targetPositions[index]) {
+                const prevPos = prevPositions[index];
+                const targetPos = targetPositions[index];
+
+                horse.position.x = THREE.MathUtils.lerp(prevPos.x, targetPos.x, progress);
+                horse.position.z = THREE.MathUtils.lerp(prevPos.z, targetPos.z, progress);
+            }
+        });
+    }, [prevPositions, targetPositions]);
+
+    // Smooth transition on each frame
+    useFrame(() => {
+        if (isTransitioning && animationProgressRef.current < 1) {
+            animationProgressRef.current = Math.min(animationProgressRef.current + 0.02, 1);
+            updateHorsePositions(animationProgressRef.current);
+
+            if (animationProgressRef.current >= 1) {
+                setCurrentPositions(targetPositions);
+                setIsTransitioning(false);
+            }
+        }
+    });
+
+    return (
+        <>
+            {userPlacements.map((user, index) => (
+                <FerrariModel
+                    key={`user-${user.userId}`}
+                    ref={(el) => { horsesRef.current[index] = el as THREE.Object3D | null; }}
+                    position={[currentPositions[index]?.x || 0, 0, currentPositions[index]?.z || 0]}
+                    bodyColor={CAR_COLORS[user.horse]}
+                    detailsColor="#000000"
+                    speed={1.2}
+                    glassColor="#000000"
+                    scale={[5, 5, 5]}
+                    showShadow={true}
+                />
+            ))}
+        </>
+    );
+});
+
+HorseAnimation.displayName = "HorseAnimation";
+
+const useCarAnimation = () => {
+    const { lobbyRound } = useGameStore();
+    const roundRecord = lobbyRound!.roundRecord!;
     const { stocks } = useLeaderboard(roundRecord);
 
     const { data, isSuccess } = useGetMiniMutualFundCurrentRoundPlacements(lobbyRound!.id!);
@@ -58,105 +138,6 @@ const HorseAnimation = React.memo(() => {
 
     const userPlacements = useLeaderboardAggregation(placements, stocks);
 
-    const initialPositions = useMemo(() =>
-        [...Array(userPlacements.length)].map((_, index) => ({
-            x: -15 + index * 4 + (Math.random() * 2 - 1),
-            z: 0,
-        })),
-        [userPlacements.length]);
-
-    const generateNewPositions = useMemo(() => {
-        return userPlacements.map((user, index) => {
-            const zBasedOnRank = user.currentRank ? -(user.currentRank * 20) + 60 : 0;
-
-            return {
-                x: -15 + (index) * 17 + (Math.random() * 2 - 1), // Spread horses horizontally
-                z: controlZPosition(zBasedOnRank), // Position based on rank
-            };
-        });
-    }, [userPlacements]);
-
-    // Reduce effect dependencies and optimize transition logic
-    useEffect(() => {
-        const newPositions = generateNewPositions;
-        setCurrentPositions(prev => prev.length ? prev : initialPositions);
-        setTargetPositions(newPositions);
-        setIsTransitioning(true);
-        animationProgressRef.current = 0;
-    }, [generateNewPositions, initialPositions]);
-
-    // Optimize position interpolation
-    const updateHorsePositions = useCallback(
-        (progress: number) => {
-            horsesRef.current.forEach((horse, index) => {
-                if (horse && currentPositions[index] && targetPositions[index]) {
-                    const currentPos = currentPositions[index];
-                    const targetPos = targetPositions[index];
-                    horse.position.x = THREE.MathUtils.lerp(currentPos.x, targetPos.x, progress);
-                    horse.position.z = THREE.MathUtils.lerp(currentPos.z, targetPos.z, progress);
-                }
-            });
-        },
-        [currentPositions, targetPositions]
-    );
-
-    // Optimize frame updates
-    useFrame(() => {
-        if (isTransitioning && animationProgressRef.current < 1) {
-            // Use a constant transition time instead of delta-based
-            animationProgressRef.current = Math.min(
-                animationProgressRef.current + 0.016 * .5,
-                1
-            );
-            updateHorsePositions(animationProgressRef.current);
-
-            if (animationProgressRef.current >= .9) {
-                setCurrentPositions(targetPositions);
-                setIsTransitioning(false);
-            }
-        }
-    });
-
-    // Memoize horses rendering data based on users instead of stocks
-    const horses = useMemo(() => {
-        console.log("Rendering horses");
-        return userPlacements.map((user, index) => {
-            const initialPos = currentPositions[index] || initialPositions[index] || { x: 0, z: 0 };
-
-            const horseNumber = user.horse;
-            return {
-                position: [initialPos.x, 0, initialPos.z],
-                scale: [0.05, 0.05, 0.05],
-                speed: 1 + Math.random() * 0.2,
-                horseNumber: horseNumber,
-                rank: user.currentRank,
-                username: user.username
-            };
-        });
-    }, [userPlacements, currentPositions, initialPositions]);
-
-
-    return (
-        <>
-            {horses.map((horse, index) => (
-                <FerrariModel
-                    key={`user-${userPlacements[index].userId}`}
-                    ref={(el) => {
-                        horsesRef.current[index] = el as unknown as THREE.Object3D | null;
-                    }}
-                    position={horse.position as any}
-                    bodyColor={CAR_COLORS[horse.horseNumber]}
-                    detailsColor="#000000"
-                    speed={horse.speed}
-                    glassColor="#000000"
-                    scale={[5, 5, 5]}
-                    showShadow={true}
-
-                />
-            ))}
-        </>
-    );
-});
-
-HorseAnimation.displayName = "HorseAnimation";
+    return { userPlacements };
+};
 export default HorseAnimation;

@@ -75,8 +75,7 @@ export function useLeaderboardAggregation(
             }
         });
 
-        const sortedUsers = Object.values(userStatsMap)
-            .sort((a, b) => b.potentialReturn - a.potentialReturn);
+        const sortedUsers = Object.values(userStatsMap).sort((a, b) => b.userId - a.userId);
 
         sortedUsers.forEach((user, index) => {
             user.currentRank = index + 1;
