@@ -5,13 +5,18 @@ import { useRouter } from "next/navigation";
 
 interface TopBarProps extends PropsWithChildren {
     rightContent?: React.ReactNode;
+    onBack?: () => void;
 }
 
-const TopBar = ({ children, rightContent }: TopBarProps) => {
+const TopBar = ({ children, rightContent, onBack }: TopBarProps) => {
     const router = useRouter();
 
     const handleBack = () => {
-        router.back();
+        if (!onBack) {
+            router.back();
+        } else {
+            onBack();
+        }
     }
     return (
         <section className="bg-primary-game fixed top-0 w-full z-50  -mx-4 sm:-mx-8 xl:-mx-12">

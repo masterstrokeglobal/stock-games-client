@@ -227,6 +227,9 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     const boardChips = gameState.isPlaceOver ? bettedChips : [...bettedChips, ...chips];
 
+    const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
+    const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO);
+
     const isNotAllowedToPlaceBet = currentUser.isNotAllowedToPlaceOrder(roundRecord.type);
     return (
         <>
@@ -242,8 +245,13 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             className="w-full relative z-10 mb-6"
                         >
                             <TabsList className="w-full flex lg:hidden h-10 p-1 bg-tertiary">
-                                <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && 'cursor-not-allowed')} value="nse">NSE</TabsTrigger>
-                                <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
+
+                                {isNSEAllowed && (
+                                    <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && 'cursor-not-allowed')} value="nse">NSE</TabsTrigger>
+                                )}
+                                {isCryptoAllowed && (
+                                    <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
+                                )}
                             </TabsList>
                         </Tabs>
 
@@ -344,8 +352,12 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             className="w-full relative z-10"
                         >
                             <TabsList className="w-full hidden lg:flex  bg-tertiary ">
-                                <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && '!cursor-not-allowed')} value="nse">NSE</TabsTrigger>
-                                <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
+                                {isNSEAllowed && (
+                                    <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && '!cursor-not-allowed')} value="nse">NSE</TabsTrigger>
+                                )}
+                                {isCryptoAllowed && (
+                                    <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
+                                )}
                             </TabsList>
 
                             <GameHeader gameState={gameState} />

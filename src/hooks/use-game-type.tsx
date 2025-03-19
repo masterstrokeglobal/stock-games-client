@@ -4,17 +4,25 @@ import { SchedulerType } from "@/models/market-item";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import useNSEAvailable from "./use-nse-available";
+import { useAuthStore } from "@/context/auth-context";
+import User from "@/models/user";
 
 export function useGameType() {
+    const { userDetails } = useAuthStore();
     const searchParams = useSearchParams();
     const router = useRouter();
     const isNseAvailable = useNSEAvailable();
 
+    const user = userDetails as User;
+
     const getCurrentGameType = useCallback((): SchedulerType => {
         const gameTypeFromParams = searchParams.get("gameType") as SchedulerType | null;
-        const type =  gameTypeFromParams ??(isNseAvailable? SchedulerType.NSE : SchedulerType.CRYPTO);
+        let type =  gameTypeFromParams ??(isNseAvailable? SchedulerType.NSE : SchedulerType.CRYPTO);
+        if (user.isNotAllowedToPlaceOrder(type)) {
+            type = SchedulerType.NSE;
+        }
         return type;
-    }, [searchParams,isNseAvailable]);
+    }, [searchParams, isNseAvailable, user.isNotAllowedToPlaceOrder]);
 
     const [gameType, setGameType] = useState<SchedulerType>(getCurrentGameType);
 

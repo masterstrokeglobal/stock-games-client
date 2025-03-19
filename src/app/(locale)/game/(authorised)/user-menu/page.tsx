@@ -12,12 +12,13 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 import { PasswordIcon, ProfileIcon, TransactionIcon, WalletIcon } from './icons';
 import { useTranslations } from 'next-intl';
-
+import { useRouter } from 'next/navigation';
 const UserMenu = () => {
     const t = useTranslations('user-menu');
     const { userDetails } = useAuthStore();
     const { data, isLoading } = useGetWallet();
 
+    const router = useRouter();
     const { mutate } = useUserLogout();
 
     const wallet = useMemo(() => {
@@ -28,7 +29,7 @@ const UserMenu = () => {
 
     return (
         <Container className="flex flex-col items-center min-h-screen pt-24 ">
-            <TopBar>
+            <TopBar onBack={() => router.push('/game')}>
                 {t('title')}
             </TopBar>
             <div className="flex-1 w-full mx-auto max-w-sm flex flex-col ">

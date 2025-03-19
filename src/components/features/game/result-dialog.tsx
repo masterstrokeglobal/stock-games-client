@@ -35,7 +35,6 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
   }, [data]);
 
   useEffect(() => {
-    console.log('open', open);
     if (open) {
       setShowDialog(open);
     }

@@ -18,7 +18,6 @@ export class RoundRecord {
     initialValues: any | null;
 
     constructor(data: Partial<RoundRecord>) {
-        console.log(data.winningMarket)
         this.id = data.id || 0;
         this.startTime = data.startTime ? new Date(data.startTime) : new Date();
         this.companyId = data.companyId || 0;
