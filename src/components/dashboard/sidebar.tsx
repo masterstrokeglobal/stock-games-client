@@ -58,6 +58,11 @@ const adminMenuItems: MenuItem[] = [
         link: '/dashboard/holiday'
     },
     {
+        name: "Transactions",
+        icon: DollarSign,
+        link: '/dashboard/transactions'
+    },
+    {
         name: "Round Records",
         icon: Repeat1,
         link: '/dashboard/round-records'

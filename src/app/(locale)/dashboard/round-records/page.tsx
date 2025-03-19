@@ -28,8 +28,6 @@ dayjs.extend(timezone);
 
 // Filter Type Definition
 type Filter = {
-    startDate?: Date;
-    endDate?: Date;
     timeFrom: string;
     timeTo: string;
 };
@@ -72,7 +70,7 @@ const RoundRecordTable = () => {
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
             link.download = `winning-report-${type}-${dayjs
-                .utc(filter.startDate)
+                .utc(filter.timeFrom)
                 .format("YYYY-MM-DD")}.xlsx`;
             document.body.appendChild(link);
             link.click();

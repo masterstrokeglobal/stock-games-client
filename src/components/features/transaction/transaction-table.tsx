@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select"; // Import ShadCN Select components
 import { Transaction, TransactionStatus, TransactionType } from "@/models/transaction";
 import { useGetAllTransactions } from "@/react-query/transactions-queries"; // You'll need to create this
+import dayjs from "dayjs";
 import { Search } from "lucide-react";
 import React, { useMemo, useState } from "react";
 
@@ -22,11 +23,21 @@ type Props = {
     userId?: string;
 };
 
+// Filter Type Definition
+type Filter = {
+    timeFrom: string;
+    timeTo: string;
+};
+
 const TransactionTable = ({ userId }: Props) => {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
     const [type, setType] = useState<string | "">("");
     const [status, setStatus] = useState<string | "">("");
+    const [filter, setFilter] = useState<Filter>({
+        timeFrom: dayjs().startOf("day").toISOString(),
+        timeTo: dayjs().endOf("day").toISOString(),
+    });
 
     // Fetch all transactions with pagination, search query, and filters
     const { data, isSuccess, isFetching } = useGetAllTransactions({
@@ -35,6 +46,8 @@ const TransactionTable = ({ userId }: Props) => {
         type: type === "all" ? "" : type,
         userId: userId,
         status: status === "all" ? "" : status,
+        startDate: filter.timeFrom,
+        endDate: filter.timeTo,
     });
 
     const transactions = useMemo(() => {
@@ -64,10 +77,10 @@ const TransactionTable = ({ userId }: Props) => {
 
     return (
         <section className="container-main min-h-[60vh] my-12">
+                <h2 className="text-xl font-semibold mb-6">Transactions</h2>
             <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between">
-                <h2 className="text-xl font-semibold">Transactions</h2>
-                <div className="flex gap-5 ">
-                    <div className="relative min-w-60 flex-1">
+                <div className="flex gap-5 w-full items-center ">
+                    <div className="relative min-w-60 max-w-sm flex-1">
                         <Search size={18} className="absolute top-2.5 left-2.5" />
                         <Input
                             placeholder="Search"
@@ -75,12 +88,40 @@ const TransactionTable = ({ userId }: Props) => {
                             className="pl-10"
                         />
                     </div>
+
+                     {/* Time Filters */}
+                     <Input
+                        type="datetime-local"
+                        className="ml-auto w-fit"
+                        value={dayjs(filter.timeFrom).format("YYYY-MM-DDTHH:mm")}
+                        onChange={(e) => {
+                            setPage(1);
+                            setFilter({
+                                ...filter,
+                                timeFrom: dayjs(e.target.value).toISOString(), // Convert local time to UTC
+                            });
+                        }}
+                    />
+                    <span>to</span>
+                    <Input
+                        type="datetime-local"
+                        className="w-fit"
+                        value={dayjs(filter.timeTo).format("YYYY-MM-DDTHH:mm")}
+                        onChange={(e) => {
+                            setPage(1);
+                            setFilter({
+                                ...filter,
+                                timeTo: dayjs(e.target.value).toISOString(), // Convert local time to UTC
+                            });
+                        }}
+                    />
+
                     {/* ShadCN Select for Type Filter */}
                     <Select value={type} onValueChange={(val) =>{
                         setType(val as TransactionType)
                         setPage(1);
                     }} >
-                        <SelectTrigger>
+                        <SelectTrigger className="w-fit">
                             <SelectValue placeholder="All Types" />
                         </SelectTrigger>
                         <SelectContent>
@@ -98,7 +139,7 @@ const TransactionTable = ({ userId }: Props) => {
                         setStatus(val as TransactionStatus)
                         setPage(1);
                     }} >
-                        <SelectTrigger>
+                        <SelectTrigger className="w-fit">
                             <SelectValue placeholder="All Statuses" />
                         </SelectTrigger>
                         <SelectContent>
