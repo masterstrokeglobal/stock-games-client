@@ -5,25 +5,22 @@ import { useRouter } from "next/navigation";
 
 interface TopBarProps extends PropsWithChildren {
     rightContent?: React.ReactNode;
-    onBack?: () => void;
+    leftContent?: React.ReactNode;
 }
 
-const TopBar = ({ children, rightContent, onBack }: TopBarProps) => {
+const TopBar = ({ children, rightContent, leftContent }: TopBarProps) => {
     const router = useRouter();
-
+    
     const handleBack = () => {
-        if (!onBack) {
-            router.back();
-        } else {
-            onBack();
-        }
+        router.back();
     }
+
     return (
         <section className="bg-primary-game fixed top-0 w-full z-50  -mx-4 sm:-mx-8 xl:-mx-12">
             <nav className="items-center flex relative justify-between text-top-bar-text font-semibold w-full h-20 px-4">
-                <Button size="icon" variant="ghost" onClick={handleBack}>
+                {leftContent ? leftContent : (<Button size="icon" variant="ghost" onClick={handleBack}>
                     <ArrowLeft size={24} />
-                </Button>
+                </Button>)}
                 <div>
                     {children}
                 </div>

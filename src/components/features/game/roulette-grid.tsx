@@ -61,7 +61,7 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord }: Roulett
                   transition-all duration-150
                 `}
                 >
-                    <span className="absolute inset-0 flex items-end ml-1 sm:text-[10px] text-[8px] justify-start text-game-text ">
+                    <span className="absolute inset-0 flex items-end ml-1 font-semibold sm:text-[10px] text-[8px] justify-start text-game-text ">
                         {getCodeByIndex(number)}
                     </span>
                     <span className="absolute inset-0 mx-1 flex items-start justify-end text-game-text text-2xl font-bold">

@@ -7,12 +7,12 @@ import User from '@/models/user';
 import Wallet from '@/models/wallet';
 import { useUserLogout } from '@/react-query/admin-auth-queries';
 import { useGetWallet } from '@/react-query/payment-queries';
-import { Coins, HelpCircleIcon, LogOutIcon } from 'lucide-react';
+import { Coins, HelpCircleIcon, Home, LogOutIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { PasswordIcon, ProfileIcon, TransactionIcon, WalletIcon } from './icons';
-import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
 const UserMenu = () => {
     const t = useTranslations('user-menu');
     const { userDetails } = useAuthStore();
@@ -29,7 +29,9 @@ const UserMenu = () => {
 
     return (
         <Container className="flex flex-col items-center min-h-screen pt-24 ">
-            <TopBar onBack={() => router.push('/game')}>
+            <TopBar leftContent={<Button  variant="ghost"  className='flex gap-2 items-end' onClick={() => router.push('/game')}>
+                <Home size={20} /> Home
+            </Button>}>
                 {t('title')}
             </TopBar>
             <div className="flex-1 w-full mx-auto max-w-sm flex flex-col ">

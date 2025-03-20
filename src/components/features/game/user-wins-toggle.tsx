@@ -18,7 +18,7 @@ const UserWins = ({ className }: { className?: string }) => {
     // Generate usernames and amounts
     const generateLeaderboardData = useCallback((count = 100): WinnerData[] => {
         const isCrypto = type === SchedulerType.CRYPTO;
-        
+
         const generateUsername = (): string => {
             const firstName = indianNames[Math.floor(Math.random() * indianNames.length)];
             const suffix = Math.floor(Math.random() * 1000);
@@ -29,7 +29,7 @@ const UserWins = ({ className }: { className?: string }) => {
             if (isCrypto) {
                 // More even distribution for crypto
                 const rand = Math.random();
-                
+
                 if (rand < 0.2) {
                     // 0-20k (20%)
                     return Math.floor(Math.random() * 20000);
@@ -49,7 +49,7 @@ const UserWins = ({ className }: { className?: string }) => {
             } else {
                 // For NSE, completely revamped distribution
                 const rand = Math.random();
-                
+
                 if (rand < 0.5) {
                     // 50% chance to be between 100 and 5000
                     return Math.floor(Math.random() * 4900) + 100;
@@ -88,60 +88,26 @@ const UserWins = ({ className }: { className?: string }) => {
 
     const updateWinnings = useCallback(() => {
         const isCrypto = type === SchedulerType.CRYPTO;
-        const isNSE = type === SchedulerType.NSE;
-        
-        // Get current time in Indian Standard Time (IST)
-        const now = new Date();
-        // Create a formatter that will output time in IST
-        const formatter = new Intl.DateTimeFormat('en-US', {
-            timeZone: 'Asia/Kolkata',
-            hour: 'numeric',
-            minute: 'numeric',
-            hour12: false
-        });
-        
-        // Get time as HH:MM format in IST
-        const istTimeStr = formatter.format(now);
-        const [hoursStr, minutesStr] = istTimeStr.split(':');
-        const hours = parseInt(hoursStr, 10);
-        const minutes = parseInt(minutesStr, 10);
-        const currentTime = hours * 60 + minutes;
-
-        // Stock market timing checks (in IST)
-        const marketCloseTime = 15 * 60 + 30; // 3:30 PM IST
-        const marketOpenTime = 9 * 60 + 15;   // 9:15 AM IST
 
         const updatedWinnings = allWinningsRef.current.map(winner => {
             // NSE market closes at 3:30 PM - reset to 0-1000 range
-            if (isNSE && currentTime >= marketCloseTime) {
-                // Generate a completely new amount between 0 and 1000
-                return { ...winner, amount: Math.floor(Math.random() * 1001) };
+            // Different volatility approaches for different game types
+            if (isCrypto) {
+                // Crypto: 60% chance to increase, 40% chance to decrease
+                const changeDirection = Math.random() < 0.6 ? 1 : -1;
+                const changePercent = Math.random() * 0.15; // 0-15% change
+                const newAmount = Math.floor(winner.amount * (1 + changeDirection * changePercent));
+                return { ...winner, amount: Math.max(100, newAmount) }; // Minimum 100
+            } else {
+                // NSE: More conservative changes
+                const changeDirection = Math.random() < 0.55 ? 1 : -1; // Slightly bullish
+                const changePercent = Math.random() * 0.08; // 0-8% change
+                const newAmount = Math.floor(winner.amount * (1 + changeDirection * changePercent));
+                return { ...winner, amount: Math.max(100, newAmount) }; // Minimum 100
             }
 
-            // For normal market hours operations
-            else if (currentTime >= marketOpenTime) {
-                // Different volatility approaches for different game types
-                if (isCrypto) {
-                    // Crypto: 60% chance to increase, 40% chance to decrease
-                    const changeDirection = Math.random() < 0.6 ? 1 : -1;
-                    const changePercent = Math.random() * 0.15; // 0-15% change
-                    const newAmount = Math.floor(winner.amount * (1 + changeDirection * changePercent));
-                    return { ...winner, amount: Math.max(100, newAmount) }; // Minimum 100
-                } else {
-                    // NSE: More conservative changes
-                    const changeDirection = Math.random() < 0.55 ? 1 : -1; // Slightly bullish
-                    const changePercent = Math.random() * 0.08; // 0-8% change
-                    const newAmount = Math.floor(winner.amount * (1 + changeDirection * changePercent));
-                    return { ...winner, amount: Math.max(100, newAmount) }; // Minimum 100
-                }
-            }
-            
-            // Default case - keep same amount
-            return winner;
         });
 
-        
-        
         // Update both state and ref
         allWinningsRef.current = updatedWinnings;
         setDisplayWinnings(updatedWinnings);
@@ -163,8 +129,8 @@ const UserWins = ({ className }: { className?: string }) => {
         <div className={cn("w-full overflow-hidden bg-black/80 text-white p-2 text-xs h-6", className)}>
             <div className="flex animate-marquee space-x-8">
                 {[...displayWinnings, ...displayWinnings].map((winner, index) => (
-                    <div 
-                        key={`${winner.id}-${index}`} 
+                    <div
+                        key={`${winner.id}-${index}`}
                         className="flex items-center space-x-4 whitespace-nowrap"
                     >
                         <span className="text-green-400 font-medium">
