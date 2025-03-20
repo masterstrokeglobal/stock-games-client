@@ -8,16 +8,19 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 // Zod schema for deposit form
-const depositSchema = (t: any) => z.object({
+const depositSchema = (t: any,external:boolean) => z.object({
     pgId: z
         .string()
-        .min(1, t('validation.transaction-id-required'))
-        .max(50, t('validation.transaction-id-max')),
+        .min(0, t('validation.transaction-id-required'))
+        .max(50, t('validation.transaction-id-max')).optional(),
     amount: z
         .coerce.number({
             message: t('validation.amount-invalid')
         })
         .min(1, t('validation.amount-required'))
+}).refine((data) => external ? data.pgId === '' : data.pgId !== '', {
+    message: t('validation.transaction-id-required'),
+    path: ['pgId']
 });
 
 export type DepositFormValues = z.infer<ReturnType<typeof depositSchema>>;
@@ -25,13 +28,14 @@ export type DepositFormValues = z.infer<ReturnType<typeof depositSchema>>;
 type Props = {
     onSubmit: (data: DepositFormValues) => void;
     isLoading: boolean;
+    external: boolean;
 };
 
-const DepositForm = ({ onSubmit, isLoading }: Props) => {
+const DepositForm = ({ onSubmit, isLoading, external }: Props) => {
     const t = useTranslations('deposit');
     const { userDetails } = useAuthStore();
     const form = useForm<DepositFormValues>({
-        resolver: zodResolver(depositSchema(t)),
+        resolver: zodResolver(depositSchema(t, external)),
         defaultValues: {
             pgId: '',
             amount: 0,
@@ -41,9 +45,10 @@ const DepositForm = ({ onSubmit, isLoading }: Props) => {
     const { control, handleSubmit } = form;
     const paymentImage = userDetails?.company?.paymentImage;
 
+    console.log(form.formState.errors);
     return (
 
-        <div className="w-full max-w-sm flex flex-col min-h-[calc(100vh-5rem)] p-4 rounded-lg">
+        <div className="w-full max-w-sm flex flex-col min-h-[calc(100svh-5rem)] p-4 rounded-lg">
 
             {/* QR Code Section */}
             <header>
@@ -53,7 +58,7 @@ const DepositForm = ({ onSubmit, isLoading }: Props) => {
                 <p className="text-[#6A84C3] text-center text-sm">
                     {t('qr-description')}
                 </p>
-                {paymentImage && (
+                {!external && paymentImage && (
                     <div className="bg-white p-4 rounded-lg w-fit mx-auto mt-4">
                         <img src={paymentImage} alt="QR Code" />
                     </div>
@@ -66,14 +71,14 @@ const DepositForm = ({ onSubmit, isLoading }: Props) => {
                 className="space-y-4 flex-1 mt-8 flex flex-col"
             >
                 <div className="space-y-4 flex-1">
-                    <FormInput
+                    {!external && <FormInput
                         control={control}
                         game
                         name="pgId"
                         label={t('transaction-id-label')}
                         placeholder={t('transaction-id-placeholder')}
                         required
-                    />
+                    />}
                     <FormInput
                         control={control}
                         game

@@ -19,6 +19,8 @@ export class Company {
     domain?: string;
     createdAt?: Date;
     updatedAt?: Date;
+    externalPayIn!: boolean;
+    externalPayOut!: boolean;
     placementNotAllowed?: SchedulerType[];
     deletedAt?: Date;
 
@@ -33,6 +35,8 @@ export class Company {
         this.depositBonusPercentageEnabled = params.depositBonusPercentageEnabled;
         this.domain = params.domain;
         this.theme = params.theme;
+        this.externalPayIn = params.externalPayIn || false;
+        this.externalPayOut = params.externalPayOut || false;
         this.createdAt = params.createdAt;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;

@@ -7,9 +7,7 @@ import { useParams } from "next/navigation";
 const CoinsAddCompanyWallet = () => {
 
     const companyId = useParams().id as string;
-    const {
-        data,
-        isLoading } = useCompanyWalletByCompanyId({ companyId });
+    const {data,isLoading } = useCompanyWalletByCompanyId({ companyId });
 
     if (isLoading) {
         return <div>Loading...</div>;
