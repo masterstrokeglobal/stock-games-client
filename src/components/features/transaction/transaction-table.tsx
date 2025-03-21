@@ -12,12 +12,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"; // Import ShadCN Select components
+import { useAuthStore } from "@/context/auth-context";
 import { Transaction, TransactionStatus, TransactionType } from "@/models/transaction";
 import { useGetAllTransactions } from "@/react-query/transactions-queries"; // You'll need to create this
 import dayjs from "dayjs";
 import { Search } from "lucide-react";
 import React, { useMemo, useState } from "react";
-
+import CompanySelect from "./company-select";
+import Admin from "@/models/admin";
 
 type Props = {
     userId?: string;
@@ -31,19 +33,23 @@ type Filter = {
 
 const TransactionTable = ({ userId }: Props) => {
     const [page, setPage] = useState(1);
+    const { userDetails } = useAuthStore();
     const [search, setSearch] = useState("");
     const [type, setType] = useState<string | "">("");
     const [status, setStatus] = useState<string | "">("");
+    const [companyId, setCompanyId] = useState<string>("all");
     const [filter, setFilter] = useState<Filter>({
         timeFrom: dayjs().startOf("day").toISOString(),
         timeTo: dayjs().endOf("day").toISOString(),
     });
 
-    // Fetch all transactions with pagination, search query, and filters
+    
+    const user = userDetails as Admin;
     const { data, isSuccess, isFetching } = useGetAllTransactions({
         page: page,
         search: search,
         type: type === "all" ? "" : type,
+        companyId: companyId === "all" ? "" : companyId,
         userId: userId,
         status: status === "all" ? "" : status,
         startDate: filter.timeFrom,
@@ -77,7 +83,12 @@ const TransactionTable = ({ userId }: Props) => {
 
     return (
         <section className="container-main min-h-[60vh] my-12">
+            <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold mb-6">Transactions</h2>
+                {user.isSuperAdmin && (
+                    <CompanySelect setCompanyId={setCompanyId} companyId={companyId} />
+                )}
+            </div>
             <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between">
                 <div className="flex gap-5 w-full items-center ">
                     <div className="relative min-w-60 max-w-sm flex-1">
@@ -89,8 +100,8 @@ const TransactionTable = ({ userId }: Props) => {
                         />
                     </div>
 
-                     {/* Time Filters */}
-                     <Input
+                    {/* Time Filters */}
+                    <Input
                         type="datetime-local"
                         className="ml-auto w-fit"
                         value={dayjs(filter.timeFrom).format("YYYY-MM-DDTHH:mm")}
@@ -117,7 +128,7 @@ const TransactionTable = ({ userId }: Props) => {
                     />
 
                     {/* ShadCN Select for Type Filter */}
-                    <Select value={type} onValueChange={(val) =>{
+                    <Select value={type} onValueChange={(val) => {
                         setType(val as TransactionType)
                         setPage(1);
                     }} >

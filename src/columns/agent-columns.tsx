@@ -27,6 +27,7 @@ const agentColumns: ColumnDef<Agent>[] = [
         accessorKey: "company",
         cell: ({ row }) => <div className="text-[#6B7280] w-48 truncate">{row.original.company?.name || 'N/A'}</div>,
     },
+
     {
         header: "Placement Not Allowed",
         accessorKey: "placementAllowed",
@@ -40,6 +41,17 @@ const agentColumns: ColumnDef<Agent>[] = [
                 ))}
                 {row.original.placementNotAllowed.length === 0 && <span className="text-[#6B7280]">No Restriction</span>}
             </div>
+        )
+    },
+    {
+        header: "Transactions",
+        accessorKey: "transactions",
+        cell: ({ row }) => (
+            <Link href={`/dashboard/agents/wallet?agentId=${row.original.id}`}>
+                <Button variant="secondary" size='sm' aria-label="View Transactions">
+                    View Transactions
+                </Button>
+            </Link>
         )
     },
     {

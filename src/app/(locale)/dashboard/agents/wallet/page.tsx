@@ -16,7 +16,7 @@ import { Transaction, TransactionStatus, TransactionType } from "@/models/transa
 import { useGetTransactions } from "@/react-query/payment-queries";
 import { Search } from "lucide-react";
 import React, { useMemo, useState } from "react";
-
+import { useSearchParams } from "next/navigation";  
 
 
 const TransactionTable = () => {
@@ -25,14 +25,15 @@ const TransactionTable = () => {
     const [type, setType] = useState<TransactionType | "all">("all");
     const [status, setStatus] = useState<string | "">("");
 
+    const agentId = useSearchParams().get("agentId");
 
     const requestType = type === "all" ? [TransactionType.AGENT_DEPOSIT, TransactionType.AGENT_WITHDRAWAL].join(",") : type;
-    // Fetch all transactions with pagination, search query, and filters
 
     const { data, isSuccess, isFetching } = useGetTransactions({
         page: page,
         search: search,
         type: requestType,
+        agentId: agentId,
         status: status === "all" ? undefined : status,
     });
 
