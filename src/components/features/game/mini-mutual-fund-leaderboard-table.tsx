@@ -1,7 +1,7 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { RankedMarketItem } from '@/hooks/use-leadboard';
 import { useLeaderboardAggregation } from "@/hooks/use-mini-mutual-fund-aggrigation";
-import { cn } from "@/lib/utils";
+import { cn, LEVERAGE_MULTIPLIER } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
 import MiniMutualFundPlacement from "@/models/mini-mutual-fund";
 import { useGetMiniMutualFundCurrentRoundPlacements } from "@/react-query/lobby-query";
@@ -73,8 +73,8 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                             </td>
                             <td className="p-2 text-left">{item.username}</td>
                             <td className="p-2 text-left">{formatPrice(item.bettedAmount)}</td>
-                            <td className={cn("p-2 text-left whitespace-nowrap", getColor(item.potentialReturn - item.bettedAmount))}>
-                                Rs. {formatPrice(item.potentialReturn - item.bettedAmount)}
+                            <td className={cn("p-2 text-left whitespace-nowrap", getColor(item.potentialReturn - item.bettedAmount/LEVERAGE_MULTIPLIER))}>
+                                Rs. {formatPrice(item.potentialReturn - item.bettedAmount/LEVERAGE_MULTIPLIER)}
                             </td>
                             <td className="p-2 text-right whitespace-nowrap">
                                 {formatPrice(item.potentialReturn)} ({item.changePercent.toFixed(2)}%)

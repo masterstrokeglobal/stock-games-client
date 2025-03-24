@@ -1,6 +1,7 @@
 import MiniMutualFundPlacement from "@/models/mini-mutual-fund";
 import { useMemo } from "react";
 import { RankedMarketItem } from "./use-leadboard";
+import { LEVERAGE_MULTIPLIER } from "@/lib/utils";
 
 interface UserLeaderboardStats {
     userId: number;
@@ -64,21 +65,23 @@ export function useLeaderboardAggregation(
             userStatsMap[userId!].bettedAmount += amount;
 
             // Calculate this placement's potential return and add to user's total
-            const placementReturn = amount * (1 + (marketData.changePercent / 100));
+            const placementReturn = amount * (1 + (marketData.changePercent / 100)) / LEVERAGE_MULTIPLIER;
             userStatsMap[userId].potentialReturn += placementReturn;
         });
 
         Object.values(userStatsMap).forEach(user => {
             if (user.bettedAmount > 0) {
                 // This gives us the effective change percent across all investments
-                user.changePercent = ((user.potentialReturn / user.bettedAmount) - 1) * 100;
+                user.changePercent = ((user.potentialReturn / (user.bettedAmount / LEVERAGE_MULTIPLIER)) - 1) * 100;
             }
         });
 
         const sortedUsers = Object.values(userStatsMap).sort((a, b) => b.userId - a.userId);
 
-        sortedUsers.forEach((user, index) => {
-            user.currentRank = index + 1;
+        const sortedUsersByPotentialReturn = [...sortedUsers].sort((a, b) => b.potentialReturn - a.potentialReturn);
+
+        sortedUsers.forEach((user) => {
+            user.currentRank = sortedUsersByPotentialReturn.findIndex(u => u.userId === user.userId) + 1;
         });
 
         return sortedUsers;
