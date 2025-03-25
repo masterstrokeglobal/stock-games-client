@@ -54,8 +54,8 @@ function FormPassword<
                     {label && <FormLabel className={cn(game ? "text-white" : '')}>{label}</FormLabel>}
                     <FormControl >
                         <div className="relative text-white">
-                            <Input className={cn(game ? "h-12 text-white bg-secondary-game border border-[#EFF8FF17] focus:border-[#55B0FF]" : '')} {...props} {...field} type={inputType} />
-                            <Button onClick={toggleType} variant={'ghost'} type="button" size={'sm'} className={cn("absolute cursor-pointer ", game ? "top-2 right-1" : "right-1 top-0.5  ")}>
+                            <Input className={cn(game ? "h-12 text-white text-input-field bg-input-background border border-[#EFF8FF17] focus:border-[#55B0FF]" : '')} {...props} {...field} type={inputType} />
+                            <Button onClick={toggleType} variant={'ghost'} type="button" size={'sm'} className={cn("absolute text-input-field cursor-pointer ", game ? "top-2 right-1" : "right-1 top-0.5  ")}>
                                 {!(inputType === 'password') ? (
                                     <Eye size={20} className="text-current" />
                                 ) : (

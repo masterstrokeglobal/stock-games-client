@@ -100,7 +100,7 @@ const RegisterPage: React.FC = () => {
                 <OTPForm
                     resendOTP={handleResendOTP}
                     onSubmit={handleOTPSubmit}
-                    isLoading={isVerifyPending}
+                    isLoading={isVerifyPending || isPending}
                 />
             );
         case 3:

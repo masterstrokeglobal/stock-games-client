@@ -46,7 +46,7 @@ function FormInput<
           {label && <FormLabel className={cn(game ? "text-white" : '')}>{label}</FormLabel>}
           <FormControl>
             <div className={"relative"}>
-              <Input className={cn(inputClassName, game ? "h-12 text-white bg-tertiary border border-primary focus:border-secondary-game" : '')} {...props} {...field} />
+              <Input className={cn(inputClassName, game ? "h-12 text-white text-input-field bg-input-background border border-primary focus:border-secondary-game" : '')} {...props} {...field} />
               {children}
             </div>
           </FormControl>

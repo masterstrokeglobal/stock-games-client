@@ -23,6 +23,7 @@ export class Company {
     externalPayOut!: boolean;
     placementNotAllowed?: SchedulerType[];
     deletedAt?: Date;
+    otpIntegration?: boolean;
 
     constructor(params: Partial<Company> = {}) {
         this.id = params.id;
@@ -42,6 +43,7 @@ export class Company {
         this.deletedAt = params.deletedAt;
         this.paymentImage = params.paymentImage;
         this.depositBonusPercentage = params.depositBonusPercentage;
+        this.otpIntegration = params.otpIntegration || false;
     }
 }
 

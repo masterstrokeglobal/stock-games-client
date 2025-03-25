@@ -9,83 +9,92 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 const RegisterPage = () => {
-const { currentStep, nextStep } = useStepper();
-const params = useSearchParams();
-const referenceCode = params.get("refferal") ?? null;
-const [userId, setUserId] = useState<string | null>(null);
-const { userDetails } = useAuthStore();
-const router = useRouter();
+    const { currentStep, nextStep } = useStepper();
+    const params = useSearchParams();
+    const referenceCode = params.get("refferal") ?? null;
+    const [userId, setUserId] = useState<string | null>(null);
+    const { userDetails } = useAuthStore();
+    const router = useRouter();
 
-const { mutate, isPending } = useGameUserRegister();
-const { mutate: resendOTP } = useGameUserResendOTP();
+    const { mutate, isPending } = useGameUserRegister();
+    const { mutate: resendOTP } = useGameUserResendOTP();
 
-const { mutate: verifyUser, isPending: isLoading } = useGameUserVerify();
+    const { mutate: verifyUser, isPending: isLoading } = useGameUserVerify();
 
-const registerUser = (data: RegisterFormValues) => {
+    const registerUser = (data: RegisterFormValues) => {
 
-    const firstname = data.name.split(" ")[0];
-    const lastname = data.name.split(" ")[1];
+        const firstname = data.name.split(" ")[0];
+        const lastname = data.name.split(" ")[1];
 
-    mutate({
-        firstname,
-        lastname,
-        username: data.username,
-        email: data.email,
-        referenceCode: data.referenceCode,
-        password: data.password,
-        company: process.env.NEXT_PUBLIC_COMPANY_ID ?? 4,
-    }, {
-        onSuccess: (data) => {
-            const user = new User(data.data);
-            setUserId(user.id?.toString() ?? null);
-            if (!user.isVerified)
-                nextStep();
+        const isEmail = data.email.includes("@");
+
+        const payload: any = {
+            firstname,
+            lastname,
+            username: data.username,
+            referenceCode: data.referenceCode,
+            password: data.password,
+            company: process.env.NEXT_PUBLIC_COMPANY_ID ?? 4,
         }
-    });
-}
 
-const verifyOTP = (data: OTPFormValues) => {
-    verifyUser({
-        userId: userDetails?.id?.toString() ?? "",
-        verificationData: {
-            otp: data.otp
+        if (isEmail) {
+            payload.email = data.email;
+        } else {
+            payload.phone = data.email;
         }
-    }, {
-        onSuccess: () => {
-            router.push("/game/auth/login");
-        }
-    });
-}
 
-const resend = () => {
-    resendOTP({
-        userId: userId ?? ""
+        mutate(payload, {
+            onSuccess: (data) => {
+                const user = new User(data.data);
+                setUserId(user.id?.toString() ?? null);
+                if (!user.isVerified)
+                    nextStep();
+            }
+        });
     }
-    );
-};
+
+    const verifyOTP = (data: OTPFormValues) => {
+        verifyUser({
+            userId: userDetails?.id?.toString() ?? "",
+            verificationData: {
+                otp: data.otp
+            }
+        }, {
+            onSuccess: () => {
+                router.push("/game/auth/login");
+            }
+        });
+    }
+
+    const resend = () => {
+        resendOTP({
+            userId: userId ?? ""
+        }
+        );
+    };
 
 
-if (currentStep === 1) {
-    return <RegisterForm isLoading={isPending} onSubmit={registerUser} defaultValues={{
-        email: "",
-        name: "",
-        password: "",
-        referenceCode: referenceCode ?? "",
-        username: ""
-    }} />
-}
+    if (currentStep === 1) {
+        return <RegisterForm isLoading={isPending} onSubmit={registerUser} defaultValues={{
+            email: "",
+            name: "",
+            password: "",
+            referenceCode: referenceCode ?? "",
+            username: ""
+        }} />
+    }
 
-if (currentStep === 2) {
-    return <OTPForm resendOTP={resend} isLoading={isLoading} onSubmit={verifyOTP} />
-}
+    if (currentStep === 2) {
+        return <OTPForm resendOTP={resend} isLoading={isLoading} onSubmit={verifyOTP} />
+    }
 
 };
 
 
 const Stepper = () => {
-return <StepperProvider initialStep={1}>
-    <RegisterPage />
-</StepperProvider>
+    return <StepperProvider initialStep={1}>
+        <RegisterPage />
+    </StepperProvider>
 }
 
 

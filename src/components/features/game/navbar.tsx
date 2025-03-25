@@ -2,7 +2,7 @@
 import LocaleSwitcher from "@/components/common/LocaleSwitcher";
 import Logo from "@/components/common/logo";
 import { MuteButton } from "@/components/common/mute-button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
 import User from "@/models/user";
@@ -50,10 +50,10 @@ const Navbar = () => {
                     <button className="bg-secondary-game md:px-4 md:h-12 h-10 text-game-text justify-center  md:aspect-auto aspect-square space-x-3 flex items-center md:py-2 p-1 rounded-md">
                         <Avatar className="size-6">
                             <AvatarFallback className="bg-secondary-game">
-                                J
+                                {user.firstname?.charAt(0) ?? "A"}
                             </AvatarFallback>
+                            <AvatarImage src={user.profileImage} />
                         </Avatar>
-
                         <span className="text-sm md:block hidden" >
                             {user.firstname}
                         </span>

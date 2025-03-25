@@ -65,8 +65,6 @@ const config: Config = {
 					end: 'var(--bet-button-end)',
 					border: 'var(--bet-button-border)',
 				},
-
-
 				muted: {
 					DEFAULT: 'hsl(var(--muted))',
 					foreground: 'hsl(var(--muted-foreground))'
@@ -80,7 +78,11 @@ const config: Config = {
 					foreground: 'hsl(var(--destructive-foreground))'
 				},
 				border: 'hsl(var(--border))',
-				input: 'hsl(var(--input))',
+				input: {
+					DEFAULT: 'hsl(var(--input))',
+					field: 'var(--input-field)',
+					background: 'var(--input-field-background)',
+				},
 				ring: 'hsl(var(--ring))',
 				chart: {
 					'1': 'hsl(var(--chart-1))',

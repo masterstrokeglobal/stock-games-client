@@ -44,7 +44,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
 
             <div className="flex justify-between items-center mb-2">
                 <div className="flex justify-between gap-1 w-full xl:flex-nowrap flex-wrap" >
-                    {[100, 500, 1000, 2000, 3000].map((amount) => (
+                    {[100, 500, 1000, 2000].map((amount) => (
                         <Button
                             className='flex-1 text-game-text bg-secondary-game'
                             variant="game-secondary"

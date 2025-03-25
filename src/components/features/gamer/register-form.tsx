@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import FormInput from "@/components/ui/form/form-input";
 import FormProvider from "@/components/ui/form/form-provider";
@@ -10,16 +10,38 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import FormPassword from "@/components/ui/form/form-password";
 import { useTranslations } from "next-intl";
+import { useGetCompanyById } from "@/react-query/company-queries";
+import { COMPANYID } from "@/lib/utils";
+import Company from "@/models/company";
 
 // Zod schema for validating the registration form fields
-export const createRegisterSchema = (t: any) => z.object({
+export const createRegisterSchema = (t: any, isPhoneAllowed: boolean = false) => z.object({
     // Full name with first and last name
     name: z.string().min(3, { message: t('validation.name-length') }).max(100, { message: t('validation.name-max') }).refine((data) => data.split(" ").length > 1, {
         message: t('validation.name-full'),
     }),
 
-    // Email
-    email: z.string().email(t('validation.email-invalid')),
+    // Email or phone
+    email: z
+        .string()
+        .refine(
+            (value) => {
+
+                // Email regex pattern
+                const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+                if (isPhoneAllowed) {
+                    // Phone regex pattern (basic international format)
+                    const phonePattern = /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,4}[-\s.]?[0-9]{1,9}$/;
+                    return emailPattern.test(value) || phonePattern.test(value);
+                }
+
+                return emailPattern.test(value);
+            },
+            {
+                message: t('validation.email-invalid'),
+            }
+        ),
 
     // Optional reference code
     referenceCode: z.string().optional(),
@@ -46,10 +68,20 @@ type Props = {
 const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
     const t = useTranslations("register"); // Translation hook for register form
 
+    const { data, isSuccess } = useGetCompanyById(COMPANYID.toString());
+
+    const company = useMemo(() => {
+        if (isSuccess) {
+            return new Company(data?.data);
+        }
+    }, [isSuccess, data]);
+
+
     const form = useForm<RegisterFormValues>({
-        resolver: zodResolver(createRegisterSchema(t)),
+        resolver: zodResolver(createRegisterSchema(t, company?.otpIntegration)),
         defaultValues,
     });
+
 
     const { control, handleSubmit } = form;
     return (
@@ -77,7 +109,8 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                     control={control}
                     game
                     name="email"
-                    label={t('label-email')}
+                    description={company?.otpIntegration ? t('description-email-phone') : undefined}
+                    label={company?.otpIntegration ? t('label-email-phone') : t('label-email')}
                     required
                 />
                 {/* Reference Code Field */}

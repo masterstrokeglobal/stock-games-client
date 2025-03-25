@@ -1,22 +1,39 @@
-import React from 'react';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import React, { useMemo } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { Button } from "@/components/ui/button";
 import FormInput from "@/components/ui/form/form-input";
 import FormProvider from "@/components/ui/form/form-provider";
+import { COMPANYID } from '@/lib/utils';
+import { Company } from '@/models/company';
+import { useGetCompanyById } from '@/react-query/company-queries';
 import { useTranslations } from 'next-intl'; // Import for translations
 
-
 // Zod schema for validating the email input
-export const forgotPasswordSchema = (t: any) => z.object({
+export const forgotPasswordSchema = (t: any, phoneEnabled: boolean) => z.object({
     email: z
         .string()
-        .email(t('email.validation.invalid')) // Dynamic error message for invalid email
-        .nonempty(t('email.validation.required')) // Dynamic error message for required email
-});
+        .refine(
+            (value) => {
+                // Email regex pattern
+                const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
+                if (phoneEnabled) {
+                    // Phone regex pattern (basic international format)
+                    const phonePattern = /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,4}[-\s.]?[0-9]{1,9}$/;
+                    return emailPattern.test(value) || phonePattern.test(value);
+                }
+
+                return emailPattern.test(value);
+            },
+            {
+                message: phoneEnabled ? t('validation.email-phone-invalid') : t('validation.email-invalid'),
+            }
+        ),
+
+});
 
 
 export type ForgotPasswordFormValues = z.infer<ReturnType<typeof forgotPasswordSchema>>;
@@ -32,8 +49,14 @@ const ForgotPasswordEmailForm: React.FC<Props> = ({
 }) => {
     const t = useTranslations('forgotPassword');  // Use translation hook
 
+    const { data, isSuccess } = useGetCompanyById(COMPANYID.toString());
+    const company = useMemo(() => {
+        if (isSuccess) {
+            return new Company(data?.data);
+        }
+    }, [isSuccess, data]);
     const form = useForm<ForgotPasswordFormValues>({
-        resolver: zodResolver(forgotPasswordSchema(t)),
+        resolver: zodResolver(forgotPasswordSchema(t, company?.otpIntegration ?? false)),
         defaultValues: {
             email: ''
         }
@@ -60,9 +83,7 @@ const ForgotPasswordEmailForm: React.FC<Props> = ({
                     control={control}
                     game
                     name="email"
-                    label={t('email.label')}
-                    type="email"
-                    required
+                    label={company?.otpIntegration ? t('email-phone.label') : t('email.label')}
                 />
 
                 <Button

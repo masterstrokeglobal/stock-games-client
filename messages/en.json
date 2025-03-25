@@ -302,6 +302,7 @@
         },
         "labels": {
             "username-email": "Username or Email*",
+            "username-email-phone": "Username or Email or Phone*",
             "password": "Password*"
         },
         "validation": {
@@ -349,6 +350,8 @@
         "label-full-name": "Full Name",
         "label-username": "Username",
         "label-email": "Email",
+        "label-email-phone": "Email or Phone",
+        "description-email-phone": "Enter your email or phone number",
         "label-reference-code": "Reference Code",
         "label-password": "Password",
         "terms-message": "By continuing you agree with our terms of service",
@@ -392,6 +395,13 @@
                 "invalid": "Please enter a valid email address"
             }
         },
+        "email-phone": {
+            "label": "Email or Phone*",
+            "validation": {
+                "required": "Email or Phone is required",
+                "invalid": "Please enter a valid email address or phone number"
+            }
+        }, 
         "button": {
             "sendCode": "Send Verification Code",
             "sending": "Sending..."

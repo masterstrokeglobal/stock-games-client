@@ -50,7 +50,8 @@
       "username": "Kullanıcı Adı",
       "phone": "Telefon Numarası",
       "email": "E-posta*",
-      "reference-code": "Referans Kodu"
+      "reference-code": "Referans Kodu",
+      "description-email-phone": "Telefon numarası ülke kodunu içermelidir"
     },
     "validation": {
       "firstname-required": "Ad gereklidir",
@@ -214,7 +215,7 @@
       "ifsc-length": "IFSC kodu 11 karakter olmalıdır",
       "ifsc-format": "Geçersiz IFSC kodu formatı. Örnek: SBIN0012345",
       "upi-format": "Geçersiz UPI ID formatı. Örnek: example@bank",
-      "provide-one-method": "Lütfen ya banka bilgisi ya da bir UPI ID'si sağlayın, her ikisi değil"
+      "provide-one-method": "Ya banka detaylarını ya da UPI ID'sini girin, ikisini birden değil"
     }
   },
   "transaction-history": {
@@ -345,6 +346,7 @@
     "label-full-name": "Tam Ad",
     "label-username": "Kullanıcı Adı",
     "label-email": "E-posta",
+    "label-email-phone": "E-posta veya Telefon",
     "label-reference-code": "Referans Kodu",
     "label-password": "Şifre",
     "terms-message": "Devam ederek hizmet şartlarımızı kabul ediyorsunuz",
@@ -388,6 +390,13 @@
         "invalid": "Geçerli bir e-posta adresi girin"
       }
     },
+    "email-phone": {
+      "label": "E-posta veya Telefon*",
+      "validation": {
+        "required": "E-posta veya telefon gereklidir",
+        "invalid": "Geçerli bir e-posta adresi veya telefon numarası girin"
+      }
+    },
     "button": {
       "sendCode": "Doğrulama Kodu Gönder",
       "sending": "Gönderiliyor..."
@@ -411,5 +420,93 @@
       "message-min": "Сообщение должно содержать не менее 10 символов",
       "message-max": "Сообщение не может быть длиннее 500 символов"
     }
+  },
+  "validation": {
+    "withdrawal-method-required": "Lütfen bir çekim yöntemi seçin",
+    "amount-invalid": "Tutar bir sayı olmalıdır",
+    "amount-required": "Tutar gereklidir",
+    "amount-exceeds-balance": "Tutar mevcut bakiyeyi aşıyor",
+    "account-name-required": "Hesap sahibi adı gereklidir",
+    "account-number-length": "Hesap numarası 16 haneli olmalıdır",
+    "account-number-digits": "Hesap numarası sadece rakamlardan oluşmalıdır",
+    "ifsc-length": "IFSC kodu 11 karakter olmalıdır",
+    "ifsc-format": "Geçersiz IFSC kodu formatı. Örnek: SBIN0012345",
+    "upi-format": "Geçersiz UPI ID formatı. Örnek: example@bank",
+    "provide-one-method": "Ya banka detaylarını ya da UPI ID'sini girin, ikisini birden değil",
+    "transaction-id-required": "İşlem ID'si gereklidir",
+    "transaction-id-max": "İşlem ID'si 50 karakteri geçmemelidir"
+  },
+  "form": {
+    "labels": {
+      "upi-id": "UPI ID",
+      "upi-id-label": "UPI ID*",
+      "upi-id-placeholder": "example@bank",
+      "account-name-label": "Hesap Sahibi Adı*",
+      "account-number-label": "Hesap Numarası*",
+      "ifsc-code-label": "IFSC Kodu*",
+      "ifsc-code-placeholder": "SBIN0012345",
+      "withdrawal-amount-label": "Çekim Tutarı*",
+      "withdrawal-amount-placeholder": "Çekilecek tutarı girin",
+      "select-method-label": "Çekim Yöntemi Seçin*",
+      "transaction-id-label": "İşlem ID'si",
+      "transaction-id-placeholder": "İşlem ID'nizi girin",
+      "amount-label": "Tutar",
+      "amount-placeholder": "Yatırılacak tutarı girin"
+    }
+  },
+  "status": {
+    "loading-methods": "Çekim yöntemleri yükleniyor...",
+    "error-loading": "Çekim yöntemleri yüklenemedi",
+    "try-again": "Tekrar Dene",
+    "processing": "İşleniyor...",
+    "saving": "Kaydediliyor..."
+  },
+  "wallet": {
+    "total-balance": "Toplam Bakiye",
+    "enter-bet-amount": "Bahis tutarını girin",
+    "withdraw-funds": "Para Çek",
+    "save-method": "Ödeme Yöntemini Kaydet",
+    "scan-qr-code": "QR Kodu Tara",
+    "qr-description": "Para yatırmak için QR kodu tarayın",
+    "confirm-deposit": "Para Yatırmayı Onayla"
+  },
+  "table": {
+    "headers": {
+      "date-time": "Tarih/Saat",
+      "amount": "Tutar",
+      "status": "Durum"
+    }
+  },
+  "toast": {
+    "upload-success": "Resim başarıyla yüklendi",
+    "upload-error": "Resim yüklenemedi",
+    "invalid-file": "Lütfen geçerli bir resim dosyası yükleyin",
+    "image-removed": "Resim kaldırıldı"
+  },
+  "image": {
+    "preview-alt": "Yüklenen resmin önizlemesi",
+    "upload": {
+      "click-to-upload": "Yüklemek için tıklayın",
+      "select-image": "Resim seçin"
+    },
+    "status": {
+      "uploading": "Resim yükleniyor..."
+    }
+  },
+  "result": {
+    "title": "Sonuç",
+    "total-bet": "Toplam Bahis",
+    "total-winnings": "Toplam Kazanç",
+    "platform-fees": "Platform Ücretleri",
+    "net-winning": "Net Kazanç",
+    "profit-loss": "Kâr/Zarar",
+    "winning-bet": "Kazanan Bahis"
+  },
+  "navigation": {
+    "previous": "Önceki",
+    "next": "Sonraki"
+  },
+  "errors": {
+    "result-load-failed": "Sonuç yüklenemedi"
   }
 }

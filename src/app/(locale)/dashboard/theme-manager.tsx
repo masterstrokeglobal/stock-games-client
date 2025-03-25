@@ -51,7 +51,11 @@ const ThemeManager = () => {
         // top bar text 
         document.documentElement.style.setProperty('--top-bar-text', theme["top-bar-text"]);
 
-        // Set 
+        // Input Field
+
+        console.log(theme["input-field"], theme);
+        document.documentElement.style.setProperty('--input-field', theme["input-field"]);
+        document.documentElement.style.setProperty('--input-field-background', theme["input-field-background"]);
 
         return () => {
             // Clean up main theme variables

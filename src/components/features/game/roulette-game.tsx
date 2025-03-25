@@ -235,7 +235,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
         <>
             <div className="max-w-4xl mx-auto lg:pr-4 pr-2 py-2 bg-secondary-game h-full ">
                 <div className="relative rounded-xl lg:flex-row flex-col flex gap-8 border-brown-800">
-                    <div className='lg:w-6/12'>
+                    <div className='lg:w-7/12'>
                         <h1 className='text-xl lg:text-left text-center mt-2 mb-4 leading-none text-game-text font-semibold game-header-highlight lg:pl-4 pl-2   '>
                             {gameState.isPlaceOver ? t("betting-closed") : t("place-your-bets")}
                         </h1>
@@ -344,8 +344,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             </div>
                         </div>
                     </div>
-
-                    <div className='lg:w-6/12 flex justify-between flex-col '>
+                    <div className='lg:w-5/12 flex justify-between flex-col '>
                         <Tabs
                             value={tab}
                             onValueChange={(value) => setTab(value as SchedulerType)}
@@ -374,10 +373,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                 </div>
             </div>
             <GameResultDialog key={String(showResults)} open={showResults} roundRecordId={previousRoundId!} />
-
         </>
-
-
     );
 };
 

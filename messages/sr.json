@@ -52,7 +52,8 @@
             "username": "Korisničko ime",
             "phone": "Broj telefona",
             "email": "Email*",
-            "reference-code": "Referalni kod"
+            "reference-code": "Referalni kod",
+            "description-email-phone": "Broj telefona treba da sadrži pozivni broj zemlje"
         },
         "validation": {
             "firstname-required": "Ime je obavezno",
@@ -347,6 +348,7 @@
         "label-full-name": "Puno ime",
         "label-username": "Korisničko ime",
         "label-email": "Email",
+        "label-email-phone": "Email ili telefon",
         "label-reference-code": "Referalni kod",
         "label-password": "Lozinka",
         "terms-message": "Nastavljanjem slažete se sa našim uslovima korišćenja",
@@ -388,6 +390,13 @@
             "validation": {
                 "required": "Email je obavezan",
                 "invalid": "Unesite validnu email adresu"
+            }
+        },
+        "email-phone": {
+            "label": "Email ili telefon*",
+            "validation": {
+                "required": "Email ili telefon je obavezan",
+                "invalid": "Unesite validnu email adresu ili broj telefona"
             }
         },
         "button": {

@@ -21,7 +21,13 @@ const GameLayout = ({ children }: PropsWithChildren) => {
         return <LoadingScreen className="h-screen" />;
     }
 
-    return <div className="bg-background-game">{children}</div>;
+    return <>
+        <head>
+            <link rel="icon" href={userDetails?.company?.logo ?? "/logo.png"} />
+            <title>{userDetails?.company?.name ?? "--"}</title>
+        </head>
+        <div className="bg-background-game">{children}</div>
+    </>
 };
 
 export default GameLayout;

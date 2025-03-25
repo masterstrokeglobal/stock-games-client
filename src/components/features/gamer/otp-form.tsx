@@ -58,7 +58,7 @@ const OTPForm = ({ defaultValues, onSubmit, isLoading, resendOTP }: Props) => {
                             {[0, 1, 2, 3].map((index) => (
                                 <InputOTPSlot
                                     key={index}
-                                    className="md:w-16 md:h-16 w-12 h-12 rounded-lg bg-tertiary border-[#EFF8FF17] text-white text-2xl focus:border-[#55B0FF] focus:ring-[#55B0FF] focus:ring-opacity-50"
+                                    className="md:w-16 md:h-16 w-12 h-12 rounded-lg bg-input-background !text-input-field border-[#EFF8FF17] text-2xl focus:border-[#55B0FF] focus:ring-[#55B0FF] focus:ring-opacity-50"
                                     index={index}
                                 />
                             ))}
@@ -87,6 +87,7 @@ const OTPForm = ({ defaultValues, onSubmit, isLoading, resendOTP }: Props) => {
             <Button 
                 variant="ghost" 
                 onClick={resendOTP} 
+                disabled={isLoading}
                 className="w-full mt-8 text-white hover:bg-white/10 hover:text-white"
             >
                 {t('buttons.resend')}
