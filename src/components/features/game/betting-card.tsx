@@ -6,47 +6,47 @@ import { ArrowDownCircle, ArrowUpCircle } from "lucide-react";
 
 const BettingCard = ({ record }: { record: GameRecord }) => {
 
-/*     const getPlacementString = (bet: GameRecord) => {
-
-        const HorseNumbers = bet.market.map((number) => {
-            const horseNumber = bet.market.find((market) => market === number);
-            return horseNumber || 0;
-        }).sort((a, b) => a - b);
-
-        switch (bet.placementType) {
-
-            case PlacementType.SINGLE:
-                return `Single ${HorseNumbers[0]}`;
-            case PlacementType.SPLIT:
-                return `Split ${HorseNumbers[0]}-${HorseNumbers[1]}`;
-            case PlacementType.QUARTER:
-                return `Quarter ${HorseNumbers[0]} ${HorseNumbers[1]} ${HorseNumbers[2]} ${HorseNumbers[3]}`;
-            case PlacementType.STREET:
-                // first and last number of the street
-                return `Street ${HorseNumbers[0]}-${HorseNumbers[HorseNumbers.length - 1]}`;
-            case PlacementType.DOUBLE_STREET:
-                // first and last number of the street
-                return `DOUBLE STREET ${HorseNumbers[0]} - ${HorseNumbers[HorseNumbers.length - 1]}`;
-            case PlacementType.CORNER:
-                return `Corner ${HorseNumbers[0]} ${HorseNumbers[1]} ${HorseNumbers[2]} ${HorseNumbers[3]}`;
-            case PlacementType.COLUMN:
-                return `Column ${HorseNumbers[0]} ${HorseNumbers[HorseNumbers.length - 1]}`;
-            case PlacementType.COLOR:
-                // show color
-                return `${HorseNumbers[0] == 1 ? 'Red' : 'Black'}`;
-
-            case PlacementType.EVEN_ODD:
-                // calculate if even or odd
-                return `${HorseNumbers[0] % 2 === 0 ? 'Even' : 'Odd'}`;
-            case PlacementType.HIGH_LOW:
-                // first and last number of the high low
-                return `DOUBLE STREET ${HorseNumbers[0]} - ${HorseNumbers[HorseNumbers.length - 1]}`;
-
-            default:
-                return '-';
-
-        }
-    } */
+    /*     const getPlacementString = (bet: GameRecord) => {
+    
+            const HorseNumbers = bet.market.map((number) => {
+                const horseNumber = bet.market.find((market) => market === number);
+                return horseNumber || 0;
+            }).sort((a, b) => a - b);
+    
+            switch (bet.placementType) {
+    
+                case PlacementType.SINGLE:
+                    return `Single ${HorseNumbers[0]}`;
+                case PlacementType.SPLIT:
+                    return `Split ${HorseNumbers[0]}-${HorseNumbers[1]}`;
+                case PlacementType.QUARTER:
+                    return `Quarter ${HorseNumbers[0]} ${HorseNumbers[1]} ${HorseNumbers[2]} ${HorseNumbers[3]}`;
+                case PlacementType.STREET:
+                    // first and last number of the street
+                    return `Street ${HorseNumbers[0]}-${HorseNumbers[HorseNumbers.length - 1]}`;
+                case PlacementType.DOUBLE_STREET:
+                    // first and last number of the street
+                    return `DOUBLE STREET ${HorseNumbers[0]} - ${HorseNumbers[HorseNumbers.length - 1]}`;
+                case PlacementType.CORNER:
+                    return `Corner ${HorseNumbers[0]} ${HorseNumbers[1]} ${HorseNumbers[2]} ${HorseNumbers[3]}`;
+                case PlacementType.COLUMN:
+                    return `Column ${HorseNumbers[0]} ${HorseNumbers[HorseNumbers.length - 1]}`;
+                case PlacementType.COLOR:
+                    // show color
+                    return `${HorseNumbers[0] == 1 ? 'Red' : 'Black'}`;
+    
+                case PlacementType.EVEN_ODD:
+                    // calculate if even or odd
+                    return `${HorseNumbers[0] % 2 === 0 ? 'Even' : 'Odd'}`;
+                case PlacementType.HIGH_LOW:
+                    // first and last number of the high low
+                    return `DOUBLE STREET ${HorseNumbers[0]} - ${HorseNumbers[HorseNumbers.length - 1]}`;
+    
+                default:
+                    return '-';
+    
+            }
+        } */
     return (
         <Card className="w-full bg-gray-900 border-gray-800 text-white rounded-lg shadow-md ">
             <CardContent className="p-6 space-y-4">

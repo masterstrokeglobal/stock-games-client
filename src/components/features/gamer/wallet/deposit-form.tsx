@@ -45,7 +45,6 @@ const DepositForm = ({ onSubmit, isLoading, external }: Props) => {
     const { control, handleSubmit } = form;
     const paymentImage = userDetails?.company?.paymentImage;
 
-    console.log(form.formState.errors);
     return (
 
         <div className="w-full max-w-sm flex flex-col min-h-[calc(100svh-5rem)] p-4 rounded-lg">

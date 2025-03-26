@@ -39,7 +39,7 @@ const TransactionTable = ({ transactions }: Props) => {
                     {transactions.map((transaction, index) => (
                         <TableRow
                             key={index}
-                            className="hover:bg-blue-900/20 py-2 transition-colors odd:bg-[#14244C] duration-200 border-b-0"
+                            className="hover:bg-blue-900/20 py-2 transition-colors  duration-200 border-b-0"
                         >
                             <TableCell className="text-gray-300 rounded">
                                 {dayjs(transaction.createdAt).format('MMM D,')}

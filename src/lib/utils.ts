@@ -77,6 +77,8 @@ export const getPlacementString = (bet: { market: number[], placementType: Place
 
 export const COMPANYID = Number(process.env.NEXT_PUBLIC_COMPANY_ID) ?? 4
 
+export const HIGHLIGHT_APP_KEY = process.env.NEXT_PUBLIC_HIGHLIGHT_APP_KEY
+ 
 export const indianNames: string[] = [
   // North Indian Names
   "Aarav", "Advait", "Arjun", "Vihaan", "Ishaan", 
@@ -176,3 +178,14 @@ export const secondNames: string[] = [
   "Patel", "Singh", "Kumar", "Sharma", "Gupta",
   "Mishra", "Yadav", "Shah", "Jain", "Verma"
 ];
+
+
+export const INR = (rupees:string) =>{
+  // convert number into RUpees
+  const number = Number(rupees);
+
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR'
+  }).format(number);
+}
