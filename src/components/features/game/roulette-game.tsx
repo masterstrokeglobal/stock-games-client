@@ -107,7 +107,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     // Handler for side bets using DOUBLE_STREET type
     const handleSideBet = (numbers: number[]) => {
-        if (gameState.isPlaceOver) return;
+        if (gameState.isPlaceOver ||isPlacingBet) return;
 
         const markets = numbers.map((number) => roundRecord.market[number - 1]?.id).filter((id) => id !== undefined);
 
@@ -142,7 +142,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
         };
      */
     const handleSpecialBet = (betType: PlacementType, numbers: number[]) => {
-        if (gameState.isPlaceOver) return;
+        if (gameState.isPlaceOver ||isPlacingBet) return;
 
         const markets = numbers.map((number) => roundRecord.market[number - 1]?.id).filter((id) => id !== undefined);
 
@@ -163,6 +163,8 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     };
     const handlePlaceBet = () => {
+        if (gameState.isPlaceOver ||isPlacingBet) return;
+
         const chip = chips[0];
         if (!chip) return;
 
@@ -195,6 +197,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const oddNumbers = Array.from({ length: 8 }, (_, i) => (i * 2) + 1);
 
     const handleBoardClick = (e: React.MouseEvent) => {
+        if (gameState.isPlaceOver ||isPlacingBet) return;
         const bet = getBetTypeFromClick(e, boardRef);
         if (!bet) return;
 
