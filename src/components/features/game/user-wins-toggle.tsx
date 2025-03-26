@@ -1,5 +1,5 @@
 import { useGameType } from '@/hooks/use-game-type';
-import { cn, indianNames } from '@/lib/utils';
+import { cn, indianNames, secondNames } from '@/lib/utils';
 import { SchedulerType } from '@/models/market-item';
 import { useEffect, useState } from 'react';
 
@@ -16,11 +16,21 @@ const generateUniqueUsername = (used: Set<string>): string => {
 
   while (attempt < 20) {
     const baseName = indianNames[Math.floor(Math.random() * indianNames.length)];
-    const secondName = indianNames[Math.floor(Math.random() * indianNames.length)];
+    const secondName = secondNames[Math.floor(Math.random() * secondNames.length)];
     const suffixes = ['win', 'pro', 'king', 'zone', 'guru', 'champ', 'x'];
     const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
-    const variation = Math.floor(Math.random() * 10000);
+    const variation = Math.floor(Math.random());
     username = `${baseName}_${secondName}_${suffix}${variation}`;
+
+    //make it random  add seconda name suffix variation at random
+
+    if (variation === 1) {
+      username = `${baseName}_${secondName}_${suffix}${Math.floor(Math.random() * 10)}`;
+    } else {
+      username = `${baseName}_${secondName}_${suffix}`; 
+    }
+    
+
 
     if (!used.has(username)) {
       used.add(username);
@@ -72,18 +82,21 @@ const UserWins = ({ className }: { className?: string }) => {
   const [displayWinnings, setDisplayWinnings] = useState<WinnerData[]>([]);
 
   useEffect(() => {
-    const isCrypto = type === SchedulerType.CRYPTO;
-
+    
     const refreshData = () => {
-      const data = generateLeaderboardData(100, isCrypto);
+      const isCrypto = type === SchedulerType.CRYPTO;
+      const data = generateLeaderboardData(20, isCrypto);
+      console.log('Generated new leaderboard data:', data);
+
       setDisplayWinnings(data);
     };
 
     refreshData(); // Initial load
 
-    const interval = setInterval(refreshData, 5000); // Refresh every 5 seconds
+    const interval = setInterval(refreshData, 20000); // Refresh every 30 seconds
     return () => clearInterval(interval);
   }, [type]);
+
 
   return (
     <div className={cn("w-full overflow-hidden bg-black/80 text-white p-2 text-xs h-6", className)}>

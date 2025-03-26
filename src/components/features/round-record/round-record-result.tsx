@@ -39,7 +39,7 @@ const RoundResult: React.FC<RoundResultProps> = ({ roundRecordId }) => {
         );
     }
 
-    const { totalBetAmount, totalWinnings, winningId,netWinning,totalPlatformFeeAmount } = resultData.data;
+    const { totalBetAmount, totalWinnings, winningId, netWinning, totalPlatformFeeAmount } = resultData.data;
     const hasWon = winningId !== null;
     const profitLoss = netWinning - totalBetAmount;
 
@@ -54,21 +54,21 @@ const RoundResult: React.FC<RoundResultProps> = ({ roundRecordId }) => {
                 <div className="grid gap-4 text-white text-sm sm:text-base">
                     <div className="flex justify-between items-center">
                         <span className="text-gray-400">{t('result.total-bet')}</span>
-                        <span className="font-medium">${totalBetAmount.toFixed(2)}</span>
+                        <span className="font-medium">Rs.{totalBetAmount.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between items-center">
                         <span className="text-gray-400">{t('result.total-winnings')}</span>
-                        <span className="font-medium">${totalWinnings.toFixed(2)}</span>
+                        <span className="font-medium">Rs.{totalWinnings.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between items-center">
                         <span className="text-gray-400">{t('result.platform-fees')}</span>
                         <span className="font-medium">
-                            ${totalPlatformFeeAmount.toFixed(2)}
+                            Rs.{totalPlatformFeeAmount.toFixed(2)}
                         </span>
                     </div>
                     <div className="flex justify-between items-center">
                         <span className="text-gray-400">{t('result.net-winning')}</span>
-                        <span className="font-medium">${ netWinning.toFixed(2)}</span>
+                        <span className="font-medium">Rs.{netWinning.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between items-center">
                         <span className="text-gray-400">{t('result.profit-loss')}</span>
@@ -77,7 +77,7 @@ const RoundResult: React.FC<RoundResultProps> = ({ roundRecordId }) => {
                                 <ArrowUpCircle className="w-4 h-4 sm:w-5 sm:h-5" /> :
                                 <ArrowDownCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                             }
-                            ${Math.abs(profitLoss).toFixed(2)}
+                            Rs.{Math.abs(profitLoss).toFixed(2)}
                         </div>
                     </div>
                     {hasWon && (

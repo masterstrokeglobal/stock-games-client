@@ -51,7 +51,7 @@ const BetCard: React.FC<{ bet: Bet }> = ({ bet }) => {
                     </div>
                     <div className="flex justify-between items-center">
                         <span className="text-gray-400">{t('bet.amount')}</span>
-                        <span className="font-bold">${bet.amount.toFixed(2)}</span>
+                        <span className="font-bold">Rs. {bet.amount.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between items-center">
                         <span className="text-gray-400">{t('bet.status')}</span>

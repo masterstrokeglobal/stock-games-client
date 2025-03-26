@@ -88,7 +88,7 @@ const gameHistoryColumns: ColumnDef<GameRecord>[] = [
     header: () => <TranslatedHeader translationKey="headers.total-placed" />,
     cell: ({ row }) => (
       <span className="font-semibold">
-        ${row.original.totalPlaced.toFixed(2)}
+        Rs. {row.original.totalPlaced.toFixed(2)}
       </span>
     ),
   },
@@ -97,7 +97,7 @@ const gameHistoryColumns: ColumnDef<GameRecord>[] = [
     header: () => <TranslatedHeader translationKey="headers.total-winning" />,
     cell: ({ row }) => (
       <span className="font-semibold">
-        ${row.original.totalWinningAmount.toFixed(2)}
+        Rs. {row.original.totalWinningAmount.toFixed(2)}
       </span>
     ),
   },

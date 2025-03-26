@@ -118,3 +118,61 @@ export const indianNames: string[] = [
   "Aadhya", "Zara", "Ishita", "Kabir", "Rehan",
   "Alia", "Veer", "Isha", "Aryan", "Sia"
 ];
+
+export const secondNames: string[] = [
+  // North Indian Surnames
+  "Kumar", "Singh", "Patel", "Sharma", "Mishra", 
+  "Gupta", "Verma", "Yadav", "Shah", "Jain",
+  "Agarwal", "Mahajan", "Malhotra", "Chopra", "Batra", 
+  "Kapoor", "Mehra", "Saini", "Dhawan", "Khanna",
+  "Saxena", "Bakshi", "Mehta", "Nanda", "Gandhi",
+  "Desai", "Chaudhary", "Talwar", "Bedi", "Vohra",
+
+  // South Indian Surnames
+  "Naidu", "Reddy", "Rao", "Krishna", "Murthy", 
+  "Narayanan", "Pillai", "Iyer", "Nair", "Raman",
+  "Krishnamurthy", "Swaminathan", "Chandrasekhar", "Subramanian", "Venkatesh",
+  "Gopalan", "Srinivasan", "Mahadevan", "Shankar", "Prabhu",
+  "Natarajan", "Ramakrishnan", "Vasudevan", "Balasubramanian", "Padmanabhan",
+
+  // West Indian Surnames
+  "Parekh", "Doshi", "Thakkar", "Modi", "Desai", 
+  "Parikh", "Gandhi", "Merchant", "Kothari", "Vora",
+  "Trivedi", "Dave", "Panchal", "Joshi", "Prajapati",
+  "Suthar", "Chauhan", "Bhatt", "Raval", "Choksi",
+
+  // East Indian Surnames
+  "Banerjee", "Chatterjee", "Mukherjee", "Dutta", "Ghosh", 
+  "Roy", "Bose", "Sen", "Das", "Mondal",
+  "Sarkar", "Biswas", "Ganguly", "Majumdar", "Chakrabarti",
+  "Bhattacharya", "Kar", "Halder", "Pal", "Kundu",
+
+  // Northeast Indian Surnames
+  "Gogoi", "Saikia", "Baruah", "Borah", "Hazarika", 
+  "Phukan", "Bordoloi", "Kalita", "Deka", "Das",
+  "Chaliha", "Goswami", "Lahkar", "Medhi", "Bhattacharyya",
+
+  // Maharashtrian Surnames
+  "Patil", "Deshpande", "Kulkarni", "Joshi", "Deshmukh", 
+  "Kale", "Jadhav", "Chavan", "Bhosale", "Kardile",
+  "Sawant", "Shinde", "Salunkhe", "Nimbalkar", "Shirke",
+
+  // Regional Variations
+  "Rajput", "Chowdhury", "Kamble", "Rathore", "Soreng", 
+  "Minz", "Toppo", "Besra", "Hembram", "Kandulna",
+  "Ansari", "Qureshi", "Siddiqui", "Mansoori", "Saifi",
+
+  // Rare and Unique Surnames
+  "Ambedkar", "Chagla", "Dhebar", "Duggal", "Fazalbhoy",
+  "Gaitonde", "Kakkar", "Lele", "Nanavati", "Pasricha",
+  "Ramachandran", "Shenoy", "Tahiliani", "Vakil", "Wadia",
+
+  // Extended List for Diversity
+  "Abraham", "Jacob", "Thomas", "Samuel", "Benjamin",
+  "Emmanuel", "Daniel", "Joseph", "George", "John",
+  "Koshy", "Mathew", "Varghese", "Eapen", "Chacko",
+
+  // Repeat some common surnames to increase representation
+  "Patel", "Singh", "Kumar", "Sharma", "Gupta",
+  "Mishra", "Yadav", "Shah", "Jain", "Verma"
+];
