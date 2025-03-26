@@ -1,126 +1,107 @@
 import { useGameType } from '@/hooks/use-game-type';
 import { cn, indianNames } from '@/lib/utils';
 import { SchedulerType } from '@/models/market-item';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-// Define types for our data structures
 type WinnerData = {
-    id: number;
-    username: string;
-    amount: number;
+  id: number;
+  username: string;
+  amount: number;
+};
+
+// Generate a unique username with randomness and suffixes
+const generateUniqueUsername = (used: Set<string>): string => {
+  let attempt = 0;
+  let username = '';
+
+  while (attempt < 20) {
+    const baseName = indianNames[Math.floor(Math.random() * indianNames.length)];
+    const secondName = indianNames[Math.floor(Math.random() * indianNames.length)];
+    const suffixes = ['win', 'pro', 'king', 'zone', 'guru', 'champ', 'x'];
+    const suffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+    const variation = Math.floor(Math.random() * 10000);
+    username = `${baseName}_${secondName}_${suffix}${variation}`;
+
+    if (!used.has(username)) {
+      used.add(username);
+      return username;
+    }
+
+    attempt++;
+  }
+
+  // Fallback if all attempts failed
+  const fallback = `User_${Date.now().toString(36)}_${Math.floor(Math.random() * 9999)}`;
+  used.add(fallback);
+  return fallback;
+};
+
+// Generate amount based on game type
+const generateAmount = (isCrypto: boolean): number => {
+  const rand = Math.random();
+
+  if (isCrypto) {
+    return Math.floor(Math.random() * 20000) + Math.floor(rand * 5) * 20000;
+  } else {
+    if (rand < 0.5) return Math.floor(Math.random() * 4900) + 100;
+    if (rand < 0.8) return Math.floor(Math.random() * 15000) + 5000;
+    if (rand < 0.95) return Math.floor(Math.random() * 30000) + 20000;
+    return Math.floor(Math.random() * 40000) + 50000;
+  }
+};
+
+// Main function to create fake leaderboard
+const generateLeaderboardData = (count: number, isCrypto: boolean): WinnerData[] => {
+  const data: WinnerData[] = [];
+  const usedUsernames = new Set<string>();
+
+  while (data.length < count) {
+    const username = generateUniqueUsername(usedUsernames);
+    data.push({
+      id: data.length + 1,
+      username,
+      amount: generateAmount(isCrypto),
+    });
+  }
+
+  return data;
 };
 
 const UserWins = ({ className }: { className?: string }) => {
-    const [displayWinnings, setDisplayWinnings] = useState<WinnerData[]>([]);
-    const allWinningsRef = useRef<WinnerData[]>([]);
-    const [type] = useGameType();
+  const [type] = useGameType();
+  const [displayWinnings, setDisplayWinnings] = useState<WinnerData[]>([]);
 
-    // Generate usernames and amounts
-    const generateLeaderboardData = useCallback((count = 5): WinnerData[] => {
-        const isCrypto = type === SchedulerType.CRYPTO;
+  useEffect(() => {
+    const isCrypto = type === SchedulerType.CRYPTO;
 
-        const generateUsername = (): string => {
-            // Create a more random selection of names and suffixes
-            const firstName = indianNames[Math.floor(Math.random() * indianNames.length)];
-            const suffixTypes = [
-                () => Math.floor(Math.random() * 1000).toString().padStart(3, '0'), // Numeric suffix
-                () => String.fromCharCode(65 + Math.floor(Math.random() * 26)), // Random uppercase letter
-                () => `_${Math.random().toString(36).substring(2, 7)}` // Random alphanumeric string
-            ];
-            const suffixGenerator = suffixTypes[Math.floor(Math.random() * suffixTypes.length)];
-            return `${firstName}${suffixGenerator()}`;
-        };
+    const refreshData = () => {
+      const data = generateLeaderboardData(100, isCrypto);
+      setDisplayWinnings(data);
+    };
 
-        const generateAmount = (): number => {
-            if (isCrypto) {
-                // More even distribution for crypto
-                const rand = Math.random();
+    refreshData(); // Initial load
 
-                if (rand < 0.2) {
-                    // 0-20k (20%)
-                    return Math.floor(Math.random() * 20000);
-                } else if (rand < 0.4) {
-                    // 20k-40k (20%)
-                    return Math.floor(Math.random() * 20000) + 20000;
-                } else if (rand < 0.6) {
-                    // 40k-60k (20%)
-                    return Math.floor(Math.random() * 20000) + 40000;
-                } else if (rand < 0.8) {
-                    // 60k-80k (20%)
-                    return Math.floor(Math.random() * 20000) + 60000;
-                } else {
-                    // 80k-100k (20%)
-                    return Math.floor(Math.random() * 20000) + 80000;
-                }
-            } else {
-                // For NSE, completely revamped distribution
-                const rand = Math.random();
+    const interval = setInterval(refreshData, 5000); // Refresh every 5 seconds
+    return () => clearInterval(interval);
+  }, [type]);
 
-                if (rand < 0.5) {
-                    // 50% chance to be between 100 and 5000
-                    return Math.floor(Math.random() * 4900) + 100;
-                } else if (rand < 0.8) {
-                    // 30% chance to be between 5000 and 20000
-                    return Math.floor(Math.random() * 15000) + 5000;
-                } else if (rand < 0.95) {
-                    // 15% chance to be between 20000 and 50000
-                    return Math.floor(Math.random() * 30000) + 20000;
-                } else {
-                    // 5% chance to be between 50000 and 90000
-                    return Math.floor(Math.random() * 40000) + 50000;
-                }
-            }
-        };
-
-        const data: WinnerData[] = [];
-        const usedUsernames = new Set<string>();
-
-        while (data.length < count) {
-            const username = generateUsername();
-            
-            // Ensure unique usernames
-            if (!usedUsernames.has(username)) {
-                const amount = generateAmount();
-                data.push({
-                    id: data.length + 1,
-                    username,
-                    amount: amount
-                });
-                usedUsernames.add(username);
-            }
-        }
-
-        return data;
-    }, [type]);
-
-    // Rest of the component remains the same as in the original code...
-    
-    // Initialize data on first render or when type changes
-    useEffect(() => {
-        const data = generateLeaderboardData(100);
-        setDisplayWinnings(data);
-        allWinningsRef.current = data;
-    }, [generateLeaderboardData, type]);
-
-    // ... (rest of the code remains unchanged)
-
-    return (
-        <div className={cn("w-full overflow-hidden bg-black/80 text-white p-2 text-xs h-6", className)}>
-            <div className="flex animate-marquee space-x-8">
-                {[...displayWinnings, ...displayWinnings].map((winner, index) => (
-                    <div
-                        key={`${winner.id}-${index}`}
-                        className="flex items-center space-x-4 whitespace-nowrap"
-                    >
-                        <span className="text-green-400 font-medium">
-                            ₹{winner.amount.toLocaleString('en-IN')}
-                        </span>
-                        <span className="text-white opacity-90">{winner.username}</span>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
+  return (
+    <div className={cn("w-full overflow-hidden bg-black/80 text-white p-2 text-xs h-6", className)}>
+      <div className="flex animate-marquee space-x-8">
+        {[...displayWinnings, ...displayWinnings].map((winner, index) => (
+          <div
+            key={`${winner.username}-${index}`}
+            className="flex items-center space-x-4 whitespace-nowrap"
+          >
+            <span className="text-green-400 font-medium">
+              ₹{winner.amount.toLocaleString('en-IN')}
+            </span>
+            <span className="text-white opacity-90">{winner.username}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default UserWins;

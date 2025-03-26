@@ -5,6 +5,7 @@ import LoadingScreen from "@/components/common/loading-screen";
 import { useRouter } from "next/navigation";
 import User from "@/models/user";
 import useGameUserLogin from "@/hooks/use-game-user-login";
+import Head from "next/head";
 
 const GameLayout = ({ children }: PropsWithChildren) => {
     const { loading, userDetails } = useAuthStore();
@@ -22,10 +23,11 @@ const GameLayout = ({ children }: PropsWithChildren) => {
     }
 
     return <>
-        <head>
+        <Head>
             <link rel="icon" href={userDetails?.company?.logo ?? "/logo.png"} />
             <title>{userDetails?.company?.name ?? "--"}</title>
-        </head>
+        </Head>
+
         <div className="bg-background-game">{children}</div>
     </>
 };
