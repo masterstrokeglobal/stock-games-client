@@ -68,22 +68,22 @@
         }
     },
     "form-image": {
-        "default-label": "Загрузить изображение",
+        "default-label": "Upload image",
         "image": {
-            "preview-alt": "Предпросмотр загруженного изображения"
+            "preview-alt": "Preview of uploaded image"
         },
         "upload": {
-            "click-to-upload": "Нажмите для загрузки",
-            "select-image": "Выбрать изображение"
+            "click-to-upload": "Click to upload",
+            "select-image": "Select image"
         },
         "status": {
-            "uploading": "Загрузка изображения..."
+            "uploading": "Uploading image..."
         },
         "toast": {
-            "upload-success": "Изображение успешно загружено",
-            "upload-error": "Не удалось загрузить изображение",
-            "invalid-file": "Пожалуйста, загрузите допустимый файл изображения",
-            "image-removed": "Изображение удалено"
+            "upload-success": "Image uploaded successfully",
+            "upload-error": "Failed to upload image",
+            "invalid-file": "Please upload a valid image file",
+            "image-removed": "Image removed"
         }
     },
     "password": {

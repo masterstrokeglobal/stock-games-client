@@ -15,7 +15,7 @@ const updateProfileSchema = (t: any) => z.object({
     firstname: z.string().min(1, t('validation.firstname-required')).max(50, t('validation.firstname-max')),
     lastname: z.string().min(1, t('validation.lastname-required')).max(50, t('validation.lastname-max')),
     username: z.string().max(100, t('validation.username-max')),
-    phone: z.string(),
+    phone: z.string().optional(),
     email: z.string().email(t('validation.email-invalid')),
     referenceCode: z.string().optional(),
     profileImage: z.string().url().optional(),
