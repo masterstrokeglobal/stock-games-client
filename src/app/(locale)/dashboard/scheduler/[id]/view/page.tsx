@@ -73,11 +73,11 @@ const ViewSchedulerPage = () => {
                     </div>
                     <div>
                         <label className="block text-gray-600">Created At</label>
-                        <p>{dayjs(scheduler.createdAt).format("DD-MM-YYYY HH:mm A")}</p>
+                        <p>{dayjs(scheduler.createdAt).format("DD-MM-YYYY hh:mm A")}</p>
                     </div>
                     <div>
                         <label className="block text-gray-600">Updated At</label>
-                        <p>{dayjs(scheduler.updatedAt).format("DD-MM-YYYY HH:mm A")}</p>
+                        <p>{dayjs(scheduler.updatedAt).format("DD-MM-YYYY hh:mm A")}</p>
                     </div>
                 </CardContent>
             </Card>

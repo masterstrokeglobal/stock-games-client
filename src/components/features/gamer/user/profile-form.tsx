@@ -126,6 +126,7 @@ const ProfileUpdateForm = ({ showReferenceCode }: Props) => {
                     control={control}
                     game
                     name="phone"
+                    disabled
                     label={t('labels.phone')}
                 />
 

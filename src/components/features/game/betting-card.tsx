@@ -71,7 +71,7 @@ const BettingCard = ({ record }: { record: GameRecord }) => {
                 <div className="text-left flex gap-2">
                     <div className="flex items-center gap-2 justify-between w-full">
                         <span className="text-2xl font-bold">
-                            ${record.amount.toFixed(2)}
+                            Rs. {record.amount.toFixed(2)}
                         </span>
                     </div>
 

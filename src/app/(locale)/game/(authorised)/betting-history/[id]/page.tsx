@@ -28,7 +28,7 @@ const BetCard: React.FC<{ bet: Bet }> = ({ bet }) => {
     const t = useTranslations('round-detail');
 
     return (
-        <Card className="bg-secondary-game border-[#EFF8FF17]">
+        <Card className="bg-tertiary border-[#EFF8FF17]">
             <CardContent className="pt-6 px-3 sm:px-6">
                 <div className="grid gap-4 text-white text-sm sm:text-base">
                     <div className="flex justify-between items-center">
@@ -135,14 +135,14 @@ const RoundDetailPage = () => {
                                     <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                                     <div>
                                         <p className="text-gray-400 text-xs sm:text-sm">{t('round.start-time')}</p>
-                                        <p>{dayjs(round.startTime).format('DD MMM YYYY, HH:mm:ss')}</p>
+                                        <p>{dayjs(round.startTime).format('DD MMM YYYY, hh:mm A')}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-2 sm:gap-3">
                                     <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                                     <div>
                                         <p className="text-gray-400 text-xs sm:text-sm">{t('round.end-time')}</p>
-                                        <p>{dayjs(round.endTime).format('DD MMM YYYY, HH:mm:ss')}</p>
+                                        <p>{dayjs(round.endTime).format('DD MMM YYYY, hh:mm A')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -166,8 +166,8 @@ const RoundDetailPage = () => {
                     </CardContent>
                 </Card>
 
-                <RoundResult roundRecordId={Number(roundId)} />
-                <div className="space-y-4">
+                <RoundResult  roundRecordId={Number(roundId)} />
+                <div className="space-y-4 mt-4">
                     <h2 className="text-lg sm:text-xl font-semibold text-white mb-4 sm:mb-6 px-1">{t('bets.title')}</h2>
                     <div className="grid sm:grid-cols-2 gap-4">
                         {bets.map((bet: Bet) => (

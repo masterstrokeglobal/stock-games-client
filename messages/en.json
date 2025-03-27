@@ -438,7 +438,9 @@
             "total-bet": "Total Bet Amount",
             "total-winnings": "Total Winnings",
             "profit-loss": "Profit/Loss",
-            "winning-bet": "Winning Bet ID"
+            "winning-bet": "Winning Bet ID",
+            "platform-fees": "Platform Fees",
+            "net-winning": "Net Winning"
         }
     },
     "contact": {

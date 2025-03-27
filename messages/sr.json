@@ -422,5 +422,14 @@
             "message-min": "Порука мора имати најмање 10 карактера",
             "message-max": "Порука не може бити дужа од 500 карактера"
         }
+    },
+    "result": {
+        "title": "Rezultat",
+        "total-bet": "Ukupna opklada",
+        "total-winnings": "Ukupno dobijeno",
+        "platform-fees": "Naknade platforme",
+        "net-winning": "Neto dobijeno",
+        "profit-loss": "Profit/Gubitak",
+        "winning-bet": "Pobednička opklada"
     }
 }

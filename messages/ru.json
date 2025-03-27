@@ -153,7 +153,6 @@
         "amount-required": "Сумма обязательна"
     },
     "withdraw": {
-
         "total-balance": "Общий баланс",
         "enter-bet-amount": "Введите сумму ставки",
         "withdrawal-amount-label": "Сумма вывода*",
@@ -411,5 +410,14 @@
             "message-min": "Сообщение должно содержать не менее 10 символов",
             "message-max": "Сообщение не может быть длиннее 500 символов"
         }
+    },
+    "result": {
+        "title": "Результат",
+        "total-bet": "Общая ставка",
+        "total-winnings": "Общий выигрыш",
+        "platform-fees": "Комиссия платформы",
+        "net-winning": "Чистый выигрыш",
+        "profit-loss": "Прибыль/Убыток",
+        "winning-bet": "Выигрышная ставка"
     }
 }

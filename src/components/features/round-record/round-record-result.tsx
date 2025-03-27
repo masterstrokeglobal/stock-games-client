@@ -44,7 +44,7 @@ const RoundResult: React.FC<RoundResultProps> = ({ roundRecordId }) => {
     const profitLoss = netWinning - totalBetAmount;
 
     return (
-        <Card className="bg-secondary-game border-[#EFF8FF17]">
+        <Card className="bg-tertiary border-[#EFF8FF17]">
             <CardHeader>
                 <CardTitle className="text-white text-lg sm:text-xl">
                     {t('result.title')}

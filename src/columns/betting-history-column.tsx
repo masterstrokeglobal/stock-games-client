@@ -70,7 +70,7 @@ const gameHistoryColumns: ColumnDef<GameRecord>[] = [
     header: () => <TranslatedHeader translationKey="headers.start-time" />,
     cell: ({ row }) => (
       <span className="whitespace-nowrap">
-        {dayjs(row.original.startTime).format('DD MMM YYYY, HH:mm:ss')}
+        {dayjs(row.original.startTime).format('DD MMM YYYY, hh:mm A')}
       </span>
     ),
   },
@@ -79,7 +79,7 @@ const gameHistoryColumns: ColumnDef<GameRecord>[] = [
     header: () => <TranslatedHeader translationKey="headers.end-time" />,
     cell: ({ row }) => (
       <span className="whitespace-nowrap">
-        {dayjs(row.original.endTime).format('DD MMM YYYY, HH:mm:ss')}
+        {dayjs(row.original.endTime).format('DD MMM YYYY, hh:mm A')}
       </span>
     ),
   },
