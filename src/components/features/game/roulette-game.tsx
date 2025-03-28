@@ -303,7 +303,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                         className="col-span-1 w-10  justify-center gap-4 text-white ml-2 h-full opacity-80"
                                     >
                                         <span className="rotate-text">
-                                            0
+                                            0 &nbsp;
                                             {roundRecord.market[16]?.codeName}
                                         </span>
                                     </Button>

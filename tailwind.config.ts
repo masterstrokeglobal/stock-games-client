@@ -31,7 +31,8 @@ const config: Config = {
 				background: {
 					DEFAULT: 'hsl(var(--background))',
 					game: 'var(--background-game)',
-					secondary: 'var(--secondary-background)'
+					secondary: 'var(--secondary-background)',
+					"last-winner": 'var(--last-winner-bg)'
 				},
 				foreground: 'hsl(var(--foreground))',
 				card: {

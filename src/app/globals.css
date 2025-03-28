@@ -88,10 +88,10 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     --background-game: #253e78;
     --game-text: #FFFFFF;
 
-    /*     highlight
- */
+    /*   highlight */
 
     --game-header-highlight: linear-gradient(to right, white, transparent);
+    --game-box-gradient: linear-gradient(to right, var(--primary-game), transparent);
 
     --input-field: #000000;
     --input-field-background: #FFFFFF;
@@ -152,6 +152,10 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .game-header-highlight{
   background: var(--game-header-highlight);
   padding: 5px;
+}
+
+.game-box-gradient{
+  background: var(--game-box-gradient);
 }
 
 /* Applying the variables to the classes */

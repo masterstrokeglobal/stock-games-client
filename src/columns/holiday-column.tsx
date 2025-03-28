@@ -27,7 +27,7 @@ const holidayColumns: ColumnDef<Holiday>[] = [
         header: "Date",
         accessorKey: "date",
         cell: ({ row }) => (
-            <span>{dayjs(row.original.date).format("DD-MM-YYYY")}</span>
+            <span>{dayjs(row.original.startDate).format("DD-MM-YYYY")}</span>
         ),
     },
     {
@@ -60,7 +60,7 @@ const ActionCell = ({ row }: { row: Row<Holiday> }) => {
                 </Link>
                 <AlertDialogTrigger asChild>
                     <Button disabled={isPending} variant="ghost" aria-label="Delete Holiday">
-                      {isPending ? <Loader2 size={18} className="animate-spin" /> : <Trash size={18} />}
+                        {isPending ? <Loader2 size={18} className="animate-spin" /> : <Trash size={18} />}
                     </Button>
                 </AlertDialogTrigger>
             </div>

@@ -17,7 +17,7 @@ const LastWinners = () => {
             console.log(sectionHeight);
         }
     }, []);
-    return <section ref={sectionRef} className="bg-secondary-game w-full h-full ">
+    return <section ref={sectionRef} className="bg-background-last-winner relative w-full h-full ">
         <ScrollArea style={{ height: `${scrollAreaHeight}px` }} type="auto">
             <LastRoundWinner />
         </ScrollArea>
@@ -42,7 +42,7 @@ const LastRoundWinner = () => {
 
     return (
         <div>
-            <h2 className="text-md font-semibold mb-2 text-game-text game-header-highlight  w-full ">
+            <h2 className="text-md pl-2 text-white mt-2 py-1 font-semibold mb-2 text-game-text game-box-gradient  w-full ">
                 {t("title")}
             </h2>
             {rounds.length > 0 ? (

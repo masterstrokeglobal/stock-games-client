@@ -42,12 +42,14 @@ const ThemeManager = () => {
         document.documentElement.style.setProperty('--game-text', theme["gameText"]);
         document.documentElement.style.setProperty('--game-text-secondary', theme["gameTextSecondary"]);
 
+        // last winner bg
+        document.documentElement.style.setProperty('--last-winner-bg', theme["last-winner-bg"]);
+
         // rounded-2xl
         document.documentElement.style.setProperty('--radius', theme["radius"]);
 
         //highlight
         document.documentElement.style.setProperty('--game-header-highlight', theme["gameHeaderHighlight"]);
-        document.documentElement.style.setProperty('--game-box-gradient', theme["gameBoxGradient"]);
 
         // top bar text 
         document.documentElement.style.setProperty('--top-bar-text', theme["top-bar-text"]);
