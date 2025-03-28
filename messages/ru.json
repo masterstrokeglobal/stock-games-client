@@ -1,6 +1,7 @@
 {
     "common": {
-        "app-name": "Скачки Акций"
+        "app-name": "Скачки Акций",
+        "timings": "NSE работает с 9:30 до 15:00"
     },
     "game": {
         "title": "Stock Derby",
@@ -419,5 +420,13 @@
         "net-winning": "Чистый выигрыш",
         "profit-loss": "Прибыль/Убыток",
         "winning-bet": "Выигрышная ставка"
+    },
+    "last-round-winner": {
+        "title": "Победитель последнего раунда",
+        "round-type": "Тип раунда",
+        "date-time": "Дата и время",
+        "time": "Время",
+        "winner": "Победитель"
+
     }
 }

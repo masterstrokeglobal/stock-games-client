@@ -1,6 +1,7 @@
 {
   "common": {
-    "app-name": "Stock Derby"
+    "app-name": "Stock Derby",
+    "timings": "NSE 09:30'dan 15:00'a kadar çalışır"
   },
   "game": {
     "title": "Stock Derby",
@@ -508,5 +509,12 @@
   },
   "errors": {
     "result-load-failed": "Sonuç yüklenemedi"
+  },
+  "last-round-winner": {
+    "title": "Son Tur Kazananı",
+    "round-type": "Tur Tipi",
+    "date-time": "Tarih & Saat",
+    "time": "Saat",
+    "winner": "Kazanan"
   }
 }

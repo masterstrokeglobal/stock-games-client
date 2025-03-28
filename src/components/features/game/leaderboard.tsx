@@ -10,6 +10,8 @@ import { useGetRoundRecordById } from "@/react-query/round-record-queries";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
 import LeaderboardHeader from "./leaderboard-header";
+import useWindowSize from "@/hooks/use-window-size";
+
 
 // Enhanced interface for ranked market items
 type Props = {
@@ -22,6 +24,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
     const { isGameOver } = useGameState(roundRecord);
+    const { isMobile } = useWindowSize();
 
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord.id);
 
@@ -73,14 +76,14 @@ const LeaderBoard = ({ roundRecord }: Props) => {
     return (
         <section
             ref={sectionRef}
-            className="md:rounded-2xl h-full bg-secondary-game overflow-hidden w-full "
+            className="md:rounded-2xl h-full bg-background-secondary overflow-hidden w-full "
         >
            <LeaderboardHeader/>
             <ScrollArea
-                className="max-h-96  h-full"
-                style={{ height: `${scrollAreaHeight - 20}px` }}
+                className="h-full"
+                style={{ height: isMobile ? "fit-content" : `${scrollAreaHeight}px` }}
                 type="auto"
-            >
+            >   
                 <table className="min-w-full">
                     <thead className="bg-primary-game bg-opacity-50">
                         <tr className="text-game-text text-sm">
@@ -102,7 +105,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
 
                         </tr>
                     </thead>
-                    <tbody className="bg-background-game">
+                    <tbody className="bg-background">
                         {winnerMarketItem && (
                             <tr className="border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden">
                                 <td className="p-2  text-game-text">
@@ -159,7 +162,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                                 <td className="p-2  text-game-text">
                                     {marketItem.name}
                                 </td>
-                                <td className="p-2  text-right text-game-text">
+                                <td className="p-2  text-right whitespace-nowrap text-game-text">
                                     {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : "Rs."}
                                     {marketItem.price ? formatPrice(marketItem.price) : "-"}
                                 </td>

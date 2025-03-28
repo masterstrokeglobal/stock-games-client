@@ -86,7 +86,6 @@ const UserWins = ({ className }: { className?: string }) => {
     const refreshData = () => {
       const isCrypto = type === SchedulerType.CRYPTO;
       const data = generateLeaderboardData(20, isCrypto);
-      console.log('Generated new leaderboard data:', data);
 
       setDisplayWinnings(data);
     };

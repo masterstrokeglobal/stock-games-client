@@ -54,3 +54,22 @@ export const useUpdateHoliday = () => {
         },
     });
 };
+
+export const useDeleteHoliday = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: holidayAPI.deleteHoliday,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "holidays";
+                },
+            });
+            toast.success("Holiday deleted successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error deleting holiday");
+        },
+    });
+};

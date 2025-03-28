@@ -5,7 +5,7 @@ import { useGameState, useShowResults } from "@/hooks/use-current-game";
 import { useGameType } from "@/hooks/use-game-type";
 import useNSEAvailable from "@/hooks/use-nse-available";
 import { useRouletteBetting } from "@/hooks/use-roulette-betting";
-import { cn, getPlacementString } from "@/lib/utils";
+import { BLACK_NUMBERS, cn, getPlacementString, RED_NUMBERS } from "@/lib/utils";
 import GameRecord from "@/models/game-record";
 import { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
@@ -100,14 +100,14 @@ const RouletteGame = ({ roundRecord }: Props) => {
     };
 
     const ButtonChip = ({ amount }: { amount: number }) => (
-        <div className="absolute top-1/2 right-1/2 translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">
+        <div className="absolute top-1/2 right-4 translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">
             {amount}
         </div>
     );
 
     // Handler for side bets using DOUBLE_STREET type
     const handleSideBet = (numbers: number[]) => {
-        if (gameState.isPlaceOver ||isPlacingBet) return;
+        if (gameState.isPlaceOver || isPlacingBet) return;
 
         const markets = numbers.map((number) => roundRecord.market[number - 1]?.id).filter((id) => id !== undefined);
 
@@ -123,6 +123,23 @@ const RouletteGame = ({ roundRecord }: Props) => {
         });
 
     };
+
+    const handleColorBet = (numbers: number[]) => {
+        if (gameState.isPlaceOver || isPlacingBet) return;
+
+        const markets = numbers.map((number) => roundRecord.market[number - 1]?.id).filter((id) => id !== undefined);
+
+        mutate({
+            amount: betAmount,
+            round: roundRecord.id,
+            placementType: PlacementType.COLOR,
+            market: markets,
+            placedValues: getPlacementString({
+                market: markets as number[],
+                placementType: PlacementType.COLOR,
+            }, roundRecord),
+        });
+    }
 
     /*     // Handler for bottom bets using COLUMN type
         const handleBottomBet = (numbers: number[]) => {
@@ -142,7 +159,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
         };
      */
     const handleSpecialBet = (betType: PlacementType, numbers: number[]) => {
-        if (gameState.isPlaceOver ||isPlacingBet) return;
+        if (gameState.isPlaceOver || isPlacingBet) return;
 
         const markets = numbers.map((number) => roundRecord.market[number - 1]?.id).filter((id) => id !== undefined);
 
@@ -163,7 +180,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     };
     const handlePlaceBet = () => {
-        if (gameState.isPlaceOver ||isPlacingBet) return;
+        if (gameState.isPlaceOver || isPlacingBet) return;
 
         const chip = chips[0];
         if (!chip) return;
@@ -189,15 +206,12 @@ const RouletteGame = ({ roundRecord }: Props) => {
     // Get all numbers for specific sections and other bets
     const first8Numbers = Array.from({ length: 8 }, (_, i) => i + 1);
     const second8Numbers = Array.from({ length: 8 }, (_, i) => i + 1 + 8);
-    /*     const firstHigh = [1, 2, 5, 6, 9, 10, 13, 14];
-        const secondHigh = [3, 4, 7, 8, 11, 12, 15, 16]
-        const redNumbers = [1, 3, 5, 7, 9, 11, 13, 15];
-        const blackNumbers = [2, 4, 6, 8, 10, 12, 14, 16]; */
+
     const evenNumbers = Array.from({ length: 8 }, (_, i) => (i + 1) * 2);
     const oddNumbers = Array.from({ length: 8 }, (_, i) => (i * 2) + 1);
 
     const handleBoardClick = (e: React.MouseEvent) => {
-        if (gameState.isPlaceOver ||isPlacingBet) return;
+        if (gameState.isPlaceOver || isPlacingBet) return;
         const bet = getBetTypeFromClick(e, boardRef);
         if (!bet) return;
 
@@ -236,7 +250,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const isNotAllowedToPlaceBet = currentUser.isNotAllowedToPlaceOrder(roundRecord.type);
     return (
         <>
-            <div className="max-w-4xl mx-auto lg:pr-4 pr-2 py-2 bg-secondary-game h-full ">
+            <div className="max-w-4xl mx-auto lg:pr-4  py-2 bg-background-secondary h-full ">
                 <div className="relative rounded-xl lg:flex-row flex-col flex gap-8 border-brown-800">
                     <div className='lg:w-7/12'>
                         <h1 className='text-xl lg:text-left text-center mt-2 mb-4 leading-none text-game-text font-semibold game-header-highlight lg:pl-4 pl-2   '>
@@ -258,7 +272,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             </TabsList>
                         </Tabs>
 
-                        <div className={cn("relative w-full game-box-background p-4 max-w-4xl mx-auto ", gameState.isPlaceOver || isNotAllowedToPlaceBet ? 'cursor-not-allowed opacity-100' : 'cursor-crosshair')}>
+                        <div className={cn("relative w-full game-box-background p-4  ", gameState.isPlaceOver || isNotAllowedToPlaceBet ? 'cursor-not-allowed opacity-100' : 'cursor-crosshair')}>
                             {isNotAllowedToPlaceBet && (<div className="absolute top-0 left-0 w-full text-center h-full z-40 bg-black bg-opacity-80">
                                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                                     <span className="text-game-text text-lg opacity-100  font-semibold">{t("betting-not-allowed")}</span>
@@ -281,43 +295,73 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                     <BettingChips chips={boardChips} getBetPosition={getBetPosition} />
                                 </div>
 
-                                <div className="grid grid-rows-2 gap-2 ml-2">
-                                    <div className="relative">
-                                        <Button
-                                            variant="game-secondary"
-                                            className="h-full w-10 flex items-center justify-center relative routelette-piece-red"
-                                            onClick={() => handleSideBet(first8Numbers)}
-                                        >
-                                            <span className="rotate-text">1 to 8</span>
-                                        </Button>
-                                        {getBetForPosition(PlacementType.DOUBLE_STREET, first8Numbers) && (
-                                            <ButtonChip amount={getBetForPosition(PlacementType.DOUBLE_STREET, first8Numbers)!.amount} />
-                                        )}
-                                    </div>
-                                    <div className="relative">
-                                        <Button
-                                            variant="game-secondary"
-                                            className="h-full w-10 flex items-center justify-center relative routelette-piece-red"
-                                            onClick={() => handleSideBet(second8Numbers)}
-                                        >
-                                            <span className="rotate-text">9 to 16</span>
-                                        </Button>
-                                        {getBetForPosition(PlacementType.DOUBLE_STREET, second8Numbers) && (
-                                            <ButtonChip amount={getBetForPosition(PlacementType.DOUBLE_STREET, second8Numbers)!.amount} />
-                                        )}
-                                    </div>
+                                <div className="grid grid-rows-1 gap-2 ">
+
+
+                                    <Button
+                                        variant="game-secondary"
+                                        className="col-span-1 w-10  justify-center gap-4 text-white ml-2 h-full opacity-80"
+                                    >
+                                        <span className="rotate-text">
+                                            0
+                                            {roundRecord.market[16]?.codeName}
+                                        </span>
+                                    </Button>
                                 </div>
+
+
                             </div>
 
-                            <Button
-                                variant="game-secondary"
-                                className="col-span-1 justify-center gap-4 w-full text-white mt-2 opacity-80"
-                            >
-                                <span>
-                                    0
-                                </span>
-                                {roundRecord.market[16]?.codeName}
-                            </Button>
+                            <div className="grid grid-cols-4 gap-2 mt-2">
+                                <div className="relative">
+                                    <Button
+                                        variant="game-secondary"
+                                        className="h-full w-full flex items-center justify-center relative border  text-game-text  bg-secondary-game border-primary"
+                                        onClick={() => handleSideBet(first8Numbers)}
+                                    >
+                                        <span >1 to 8</span>
+                                    </Button>
+                                    {getBetForPosition(PlacementType.DOUBLE_STREET, first8Numbers) && (
+                                        <ButtonChip amount={getBetForPosition(PlacementType.DOUBLE_STREET, first8Numbers)!.amount} />
+                                    )}
+                                </div>
+                                <div className="relative">
+                                    <Button
+                                        variant="game-secondary"
+                                        className="h-full w-full flex items-center justify-center relative  border bg-secondary-game border-primary"
+                                        onClick={() => handleColorBet(RED_NUMBERS)}
+                                    >
+                                        <span className="size-5  bg-red-500 rotate-45" />
+                                    </Button>
+                                    {getBetForPosition(PlacementType.COLOR, RED_NUMBERS) && (
+                                        <ButtonChip amount={getBetForPosition(PlacementType.COLOR, RED_NUMBERS)!.amount} />
+                                    )}
+                                </div>
+                                <div className="relative">
+                                    <Button
+                                        variant="game-secondary"
+                                        className="h-full w-full flex items-center justify-center relative  border bg-secondary-game border-primary"
+                                        onClick={() => handleColorBet(BLACK_NUMBERS)}
+                                    >
+                                        <span className="size-5  bg-black rotate-45" />
+                                    </Button>
+                                    {getBetForPosition(PlacementType.COLOR, BLACK_NUMBERS) && (
+                                        <ButtonChip amount={getBetForPosition(PlacementType.COLOR, BLACK_NUMBERS)!.amount} />
+                                    )}
+                                </div>
+                                <div className="relative">
+                                    <Button
+                                        variant="game-secondary"
+                                        className="h-full w-full flex items-center justify-center relative  border  text-game-text bg-secondary-game border-primary"
+                                        onClick={() => handleSideBet(second8Numbers)}
+                                    >
+                                        <span >9 to 16</span>
+                                    </Button>
+                                    {getBetForPosition(PlacementType.DOUBLE_STREET, second8Numbers) && (
+                                        <ButtonChip amount={getBetForPosition(PlacementType.DOUBLE_STREET, second8Numbers)!.amount} />
+                                    )}
+                                </div>
+                            </div>
 
                             <div className="grid grid-cols-2 gap-2 mt-4">
                                 <div className="relative">

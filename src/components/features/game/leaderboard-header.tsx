@@ -106,11 +106,14 @@ const LeaderboardHeader = () => {
 
         const animationInterval = setInterval(() => {
             setNumber(current => {
-                // Move toward target by steps of 1
+                const randomStep = Math.floor(Math.random() * 5) + 1;
+                const direction = Math.random() < 0.5 ? -1 : 1;
+                const step = randomStep * direction;
+
                 if (current < targetNumber) {
-                    return current + 1;
+                    return current + step;
                 } else if (current > targetNumber) {
-                    return current - 1;
+                    return current - step;
                 }
                 return current;
             });

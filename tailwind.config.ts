@@ -30,7 +30,8 @@ const config: Config = {
 			colors: {
 				background: {
 					DEFAULT: 'hsl(var(--background))',
-					game: 'var(--background-game)'
+					game: 'var(--background-game)',
+					secondary: 'var(--secondary-background)'
 				},
 				foreground: 'hsl(var(--foreground))',
 				card: {
@@ -58,6 +59,7 @@ const config: Config = {
 				game: {
 					DEFAULT: 'var(--game)',
 					text: 'var(--game-text)',
+					secondary: 'var(--game-text-secondary)'
 				},
 				'bet-button': {
 					start: 'var(--bet-button-start)',

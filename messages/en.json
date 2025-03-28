@@ -1,6 +1,7 @@
 {
     "common": {
-        "app-name": "Stock Derby"
+        "app-name": "Stock Derby",
+        "timings": "NSE Starts from 9:30 AM to 3:00 PM "
     },
     "game": {
         "title": "Stock Derby",
@@ -28,6 +29,14 @@
         "round-starts-in": "Round starts in",
         "place-starts-in": "Place starts in",
         "place-ends-in": "Place ends in"
+    },
+    "last-round-winner": {
+        "title": "Last Round Winner",
+        "round-type": "Round Type",
+        "date-time": "Date & Time",
+        "time": "Time",
+        "winner": "Winner",
+        "no-bets": "No bets placed yet"
     },
     "user-menu": {
         "title": "User Menu",
@@ -401,7 +410,7 @@
                 "required": "Email or Phone is required",
                 "invalid": "Please enter a valid email address or phone number"
             }
-        }, 
+        },
         "button": {
             "sendCode": "Send Verification Code",
             "sending": "Sending..."

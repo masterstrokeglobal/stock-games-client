@@ -29,65 +29,66 @@ const CurrentBets = ({ className, round }: Props) => {
     useEffect(() => {
         if (sectionRef.current) {
             const sectionHeight = sectionRef.current.offsetHeight;
-            setScrollAreaHeight(sectionHeight - 40);
+            setScrollAreaHeight(sectionHeight - 0);
         }
     }, []);
-
-
-
 
     return (
         <section
             ref={sectionRef}
-            className={cn("p-4 md:rounded-2xl h-full w-full bg-secondary-game", className)}
+            className={cn("pr-4 py-4 md:rounded-2xl h-full w-full bg-background-secondary", className)}
         >
-            <h2 className="text-xl font-semibold mb-2 text-game-text game-header-highlight lg:pl-4 pl-2  lg:-ml-4 -ml-2 ">
-                {t("current-bets")}
-            </h2>
-            <ScrollArea className="max-h-96 w-full" style={{ height: `${scrollAreaHeight - 20}px` }} type="auto">
-                {currentBetsData.length > 0 ? (
-                    <table className="min-w-full">
-                        <thead>
-                            <tr className="flex">
-                                <th className="p-2 text-sm text-left text-game-text rounded-tl-lg flex-1">
-                                    {t("placement")}
-                                </th>
-                                <th className="p-2 text-sm text-left text-game-text flex-1">
-                                    {t("username")}
-                                </th>
-                                <th className="p-2 text-sm text-right text-game-text rounded-tr-lg flex-1">
-                                    {t("amount")}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentBetsData.map((bet: any, index: number) => (
-                                <tr
-                                    key={index}
-                                    className="flex border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden"
-                                    style={{ display: 'flex', flexDirection: 'row' }}
-                                >
-                                    <td className="p-2 text-sm text-game-text rounded-l-lg flex-1">
-                                        {getPlacementString(bet, round)}
-                                    </td>
-                                    <td className="p-2 text-sm text-game-text flex-1">
-                                        {bet.user.username}
-                                    </td>
-                                    <td className="p-2 text-sm text-right text-game-text rounded-r-lg flex-1">
-                                        {bet.amount}
-                                    </td>
+            <div className="flex gap-2 md:flex-row flex-col">
+                <ScrollArea className="max-h-96 w-full flex-[2]" style={{ height: `${scrollAreaHeight - 20}px` }} type="auto">
+                    <h2 className="text-md font-semibold mb-2 text-game-text  game-header-highlight lg:pl-4 pl-2 w-full ">
+                        {t("current-bets")}
+                    </h2>
+                    {currentBetsData.length > 0 ? (
+                        <table className="min-w-full pr-2">
+                            <thead>
+                                <tr className="flex">
+                                    <th className="p-2 text-sm  text-left text-game-secondary rounded-tl-lg flex-1">
+                                        {t("placement")}
+                                    </th>
+                                    <th className="p-2 text-sm text-left text-game-secondary flex-1">
+                                        {t("username")}
+                                    </th>
+                                    <th className="p-2 text-sm text-right text-game-secondary rounded-tr-lg flex-1">
+                                        {t("amount")}
+                                    </th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                ) : (
-                    <div className="text-center text-game-text py-4">
-                        {t("no-bets")}
-                    </div>
-                )}
-            </ScrollArea>
+                            </thead>
+                            <tbody>
+                                {currentBetsData.map((bet: any, index: number) => (
+                                    <tr
+                                        key={index}
+                                        className="flex border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden"
+                                        style={{ display: 'flex', flexDirection: 'row' }}
+                                    >
+                                        <td className="p-2 text-sm text-balance text-game-secondary rounded-l-lg flex-1">
+                                            {getPlacementString(bet, round)}
+                                        </td>
+                                        <td className="p-2 text-sm text-game-secondary flex-1">
+                                            {bet.user.username}
+                                        </td>
+                                        <td className="p-2 text-sm text-right text-game-secondary rounded-r-lg flex-1">
+                                            {bet.amount}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <div className=" text-game-secondary  py-4 text-center">
+                            {t("no-bets")}
+                        </div>
+                    )}
+                </ScrollArea>
+            </div>
         </section>
     );
 };
+
+
 
 export default CurrentBets;

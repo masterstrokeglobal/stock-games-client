@@ -78,44 +78,44 @@ export const getPlacementString = (bet: { market: number[], placementType: Place
 export const COMPANYID = Number(process.env.NEXT_PUBLIC_COMPANY_ID) ?? 4
 
 export const HIGHLIGHT_APP_KEY = process.env.NEXT_PUBLIC_HIGHLIGHT_APP_KEY
- 
+
 export const indianNames: string[] = [
   // North Indian Names
-  "Aarav", "Advait", "Arjun", "Vihaan", "Ishaan", 
+  "Aarav", "Advait", "Arjun", "Vihaan", "Ishaan",
   "Aditya", "Reyansh", "Krish", "Arnav", "Vivaan",
   "Rohan", "Siddharth", "Rahul", "Vikram", "Amit",
   "Karan", "Varun", "Rishabh", "Ayaan", "Shaurya",
-  
+
   // South Indian Names
-  "Arun", "Krishna", "Karthik", "Naveen", "Srinivas", 
+  "Arun", "Krishna", "Karthik", "Naveen", "Srinivas",
   "Rajesh", "Suresh", "Dinesh", "Mahesh", "Ganesh",
   "Pradeep", "Shankar", "Vijay", "Mohan", "Ravi",
   "Anand", "Murali", "Prasad", "Ashok", "Sanjay",
-  
+
   // West Indian Names
   "Kunal", "Harsh", "Jay", "Yash", "Parth",
   "Chirag", "Sachin", "Hitesh", "Nikhil", "Vishal",
-  
+
   // East Indian Names
   "Ananya", "Priya", "Shreya", "Aisha", "Myra",
   "Sneha", "Divya", "Pooja", "Neha", "Deepa",
   "Riya", "Sanya", "Trisha", "Meera", "Preeti",
-  
+
   // North-East Indian Names
   "Bikash", "Bhaskar", "Dipak", "Pranab", "Ratan",
-  
+
   // Maharashtra and Gujarat Names
   "Raj", "Sameer", "Mihir", "Jatin", "Chirag",
   "Pooja", "Shruti", "Nisha", "Minal", "Anjali",
-  
+
   // Bengali Names
   "Sourav", "Subrata", "Debanjan", "Arpan", "Suman",
   "Swapna", "Madhuri", "Rituparna", "Soma", "Tanusree",
-  
+
   // Punjabi Names
   "Gurpreet", "Mandeep", "Harpreet", "Jagdeep", "Sukhwinder",
   "Simran", "Navpreet", "Jaspreet", "Amarjeet", "Parminder",
-  
+
   // Unique and Modern Names
   "Aadhya", "Zara", "Ishita", "Kabir", "Rehan",
   "Alia", "Veer", "Isha", "Aryan", "Sia"
@@ -123,44 +123,44 @@ export const indianNames: string[] = [
 
 export const secondNames: string[] = [
   // North Indian Surnames
-  "Kumar", "Singh", "Patel", "Sharma", "Mishra", 
+  "Kumar", "Singh", "Patel", "Sharma", "Mishra",
   "Gupta", "Verma", "Yadav", "Shah", "Jain",
-  "Agarwal", "Mahajan", "Malhotra", "Chopra", "Batra", 
+  "Agarwal", "Mahajan", "Malhotra", "Chopra", "Batra",
   "Kapoor", "Mehra", "Saini", "Dhawan", "Khanna",
   "Saxena", "Bakshi", "Mehta", "Nanda", "Gandhi",
   "Desai", "Chaudhary", "Talwar", "Bedi", "Vohra",
 
   // South Indian Surnames
-  "Naidu", "Reddy", "Rao", "Krishna", "Murthy", 
+  "Naidu", "Reddy", "Rao", "Krishna", "Murthy",
   "Narayanan", "Pillai", "Iyer", "Nair", "Raman",
   "Krishnamurthy", "Swaminathan", "Chandrasekhar", "Subramanian", "Venkatesh",
   "Gopalan", "Srinivasan", "Mahadevan", "Shankar", "Prabhu",
   "Natarajan", "Ramakrishnan", "Vasudevan", "Balasubramanian", "Padmanabhan",
 
   // West Indian Surnames
-  "Parekh", "Doshi", "Thakkar", "Modi", "Desai", 
+  "Parekh", "Doshi", "Thakkar", "Modi", "Desai",
   "Parikh", "Gandhi", "Merchant", "Kothari", "Vora",
   "Trivedi", "Dave", "Panchal", "Joshi", "Prajapati",
   "Suthar", "Chauhan", "Bhatt", "Raval", "Choksi",
 
   // East Indian Surnames
-  "Banerjee", "Chatterjee", "Mukherjee", "Dutta", "Ghosh", 
+  "Banerjee", "Chatterjee", "Mukherjee", "Dutta", "Ghosh",
   "Roy", "Bose", "Sen", "Das", "Mondal",
   "Sarkar", "Biswas", "Ganguly", "Majumdar", "Chakrabarti",
   "Bhattacharya", "Kar", "Halder", "Pal", "Kundu",
 
   // Northeast Indian Surnames
-  "Gogoi", "Saikia", "Baruah", "Borah", "Hazarika", 
+  "Gogoi", "Saikia", "Baruah", "Borah", "Hazarika",
   "Phukan", "Bordoloi", "Kalita", "Deka", "Das",
   "Chaliha", "Goswami", "Lahkar", "Medhi", "Bhattacharyya",
 
   // Maharashtrian Surnames
-  "Patil", "Deshpande", "Kulkarni", "Joshi", "Deshmukh", 
+  "Patil", "Deshpande", "Kulkarni", "Joshi", "Deshmukh",
   "Kale", "Jadhav", "Chavan", "Bhosale", "Kardile",
   "Sawant", "Shinde", "Salunkhe", "Nimbalkar", "Shirke",
 
   // Regional Variations
-  "Rajput", "Chowdhury", "Kamble", "Rathore", "Soreng", 
+  "Rajput", "Chowdhury", "Kamble", "Rathore", "Soreng",
   "Minz", "Toppo", "Besra", "Hembram", "Kandulna",
   "Ansari", "Qureshi", "Siddiqui", "Mansoori", "Saifi",
 
@@ -180,7 +180,7 @@ export const secondNames: string[] = [
 ];
 
 
-export const INR = (rupees:string) =>{
+export const INR = (rupees: string) => {
   // convert number into RUpees
   const number = Number(rupees);
 
@@ -189,3 +189,13 @@ export const INR = (rupees:string) =>{
     currency: 'INR'
   }).format(number);
 }
+
+export const ROULETTE_NUMBERS = [
+  { number: 1, color: 'red' }, { number: 2, color: 'black' }, { number: 3, color: 'red' }, { number: 4, color: 'black' },
+  { number: 5, color: 'black' }, { number: 6, color: 'red' }, { number: 7, color: 'black' }, { number: 8, color: 'red' },
+  { number: 9, color: 'red' }, { number: 10, color: 'black' }, { number: 11, color: 'red' }, { number: 12, color: 'black' },
+  { number: 13, color: 'black' }, { number: 14, color: 'red' }, { number: 15, color: 'black' }, { number: 16, color: 'red' }
+];
+
+export const RED_NUMBERS = [1, 3, 6, 8, 9, 11, 14, 16];
+export const BLACK_NUMBERS = [2, 4, 5, 7, 10, 12, 13, 15];

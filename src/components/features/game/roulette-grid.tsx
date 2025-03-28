@@ -5,6 +5,7 @@ import { RoundRecord } from '@/models/round-record';
 import { Bet, Chip } from './contants';
 import { useGetRoundRecordById } from '@/react-query/round-record-queries';
 import { useEffect, useMemo } from 'react';
+import { ROULETTE_NUMBERS } from '@/lib/utils';
 
 interface RouletteBettingGridProps {
     hoveredCell: Bet | null;
@@ -13,10 +14,7 @@ interface RouletteBettingGridProps {
     previousRoundId?: string;
 }
 export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord }: RouletteBettingGridProps) => {
-    const ROULETTE_NUMBERS = Array.from({ length: 16 }, (_, i) => ({
-        number: i + 1,
-        color: (i + 1) % 2 === 0 ? 'black' : 'red'
-    }));
+
 
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord.id);
 
@@ -61,10 +59,10 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord }: Roulett
                   transition-all duration-150
                 `}
                 >
-                    <span className="absolute inset-0 flex items-end ml-1 font-semibold sm:text-[10px] text-[8px] justify-start text-game-text ">
+                    <span className="absolute inset-0 flex items-end ml-1 font-semibold sm:text-[10px] text-[8px] justify-start text-game-text-secondary ">
                         {getCodeByIndex(number)}
                     </span>
-                    <span className="absolute inset-0 mx-1 flex items-start justify-end text-game-text text-2xl font-bold">
+                    <span className="absolute inset-0 mx-1 flex items-start justify-end text-game-text-secondary text-2xl font-bold">
                         {number}
                     </span>
                     {winnerNumber === number && <img className='z-40 relative' src='/crown.png' />}

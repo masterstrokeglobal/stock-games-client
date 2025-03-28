@@ -11,7 +11,7 @@ interface GameHeaderProps {
 export const GameHeader: React.FC<GameHeaderProps> = ({ gameState }) => {
     const t = useTranslations('game');
     return (
-        <header className='text-center hidden lg:block my-2 text-game-text'>
+        <header className='text-center hidden lg:block my-2 text-game-secondary'>
             <h2>{gameState.isPlaceOver ? t("game-ends-in") : t("round-starts-in")}</h2>
             <p className='text-7xl jersey leading-[5rem]'>
                 {gameState.isPlaceOver ? gameState.gameTimeLeft.formatted : gameState.placeTimeLeft.formatted}

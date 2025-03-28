@@ -1,9 +1,8 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
- 
-First, run the development server:
 
+First, run the development server:
 
 ```bash
 pnpm dev
@@ -32,7 +31,7 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 ```{
-  "primary": "#0A1634",
+	  "primary": "#0A1634",
   "secondary": "#122148",
       "tertiary": "#1A2D58",
   "borderColor": "rgba(85, 176, 255, 0.31)",
@@ -47,7 +46,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
   "bet-button-border": "#55B0FF"
 }
 ```
-
 
 ```
 {

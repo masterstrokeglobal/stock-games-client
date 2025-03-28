@@ -1,6 +1,7 @@
 {
     "common": {
-        "app-name": "Stock Derby"
+        "app-name": "Stock Derby",
+        "timings": "NSE radi od 9:30 do 15:00"
     },
     "game": {
         "title": "Stock Derby",
@@ -431,5 +432,13 @@
         "net-winning": "Neto dobijeno",
         "profit-loss": "Profit/Gubitak",
         "winning-bet": "Pobednička opklada"
+    },
+    "last-round-winner": {
+        "title": "Pobednik poslednje runde",
+        "round-type": "Tip runde",
+        "date-time": "Datum & Vreme",
+        "time": "Vreme",
+        "winner": "Pobednik"
+
     }
 }

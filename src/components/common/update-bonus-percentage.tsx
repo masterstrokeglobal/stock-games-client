@@ -46,6 +46,7 @@ const UpdateBonusPercentageForm = ({ defaultValues, onSubmit, isLoading }: Props
                         name="depositBonusPercentage"
                         label="Deposit Bonus Percentage"
                     />
+                    
                     <FormSwitch
                         control={control}
                         name="updateAllUsers"

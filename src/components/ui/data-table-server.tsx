@@ -75,7 +75,7 @@ export default function DataTable<TData, TValue>({
   return (
     <div>
       <div className={cn("dark:bg-dark-primary border rounded-xl  bg-white", className)}>
-        <ScrollArea type="always">
+        <ScrollArea type="always" className="w-full">
           <Table>
             {showHeader && (
               <TableHeader className="px-4">

@@ -92,10 +92,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
  */
 
     --game-header-highlight: linear-gradient(to right, white, transparent);
-    --game-box-gradient: linear-gradient(to right, black, transparent);
 
     --input-field: #000000;
     --input-field-background: #FFFFFF;
+
+    /* game background */
+    --secondary-background: #0a0a0a;
 
     --top-bar-text: "#FFFFFF",
   }
@@ -143,7 +145,6 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 .game-box-background {
   background: var(--game-box-gradient);
   background-size: cover;
-  transform: translateX(-10px);
 
   /* Adjust the value as needed */
 }
@@ -158,14 +159,14 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   background: var(--routelette-black-gradient);
   border: var(--routelette-border);
   box-shadow: var(--routelette-inner-shadow);
-  color:var(--game-text);
+  color:var(--game-text-secondary);
 }
 
 .routelette-piece-red {
   background: var(--routelette-red-gradient);
   border: var(--routelette-border);
   box-shadow: var(--routelette-inner-shadow);
-  color:var(--game-text);
+  color:var(--game-text-secondary);
 }
 
 .roulette-piece-black-select {

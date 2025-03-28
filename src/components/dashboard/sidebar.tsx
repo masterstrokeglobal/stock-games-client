@@ -213,7 +213,7 @@ const Sidebar = ({ className }: PropsWithClassName) => {
     return (
         <div className={cn("flex  flex-col ", className)}>
             <div className="flex h-16 items-center  px-4">
-                <Logo />
+                <Logo dark={false} />
             </div>
             <nav className="flex-1 overflow-y-auto px-4 pt-8">
                 <Accordion type="multiple" className="w-full space-y-2">

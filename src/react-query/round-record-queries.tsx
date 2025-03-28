@@ -80,3 +80,14 @@ export const useRoundBets = (roundRecordId: string) => {
         queryFn: () => roundRecordsAPI.getRoundBets(roundRecordId),
     });
 }
+
+export const useLastRoundWinner = (type: SchedulerType) => {
+
+    const THREE_MINUTES = 1000 * 60 * 3;
+    return useQuery({
+        queryKey: ["last-round-winner", type],
+        queryFn: () => roundRecordsAPI.getLastRoundWinner(type),
+        staleTime: THREE_MINUTES
+    });
+}
+

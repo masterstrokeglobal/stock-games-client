@@ -21,14 +21,16 @@ const EditHolidayPage = () => {
 
         return {
             type: holiday.type,
-            date: holiday.date
+            date: holiday.startDate
         };
     }, [data, isSuccess]);
 
     const onSubmit = (data: HolidayFormValues) => {
         mutate({
             holidayId: id.toString(),
-            data,
+            data: {
+                date: data.date
+            }
         }, {
             onSuccess: () => {
                 router.push("/dashboard/holiday"); // Redirect after successful update

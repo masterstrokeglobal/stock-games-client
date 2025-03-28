@@ -89,7 +89,6 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
                         {children}
                     </main>
                     <ScrollBar orientation="vertical" />
-                    <ScrollBar orientation="horizontal" />
                 </ScrollArea>
             </div>
         </>

@@ -40,6 +40,7 @@ const ThemeManager = () => {
         // Set main theme variables
         document.documentElement.style.setProperty('--background-game', theme["backgroundGame"]);
         document.documentElement.style.setProperty('--game-text', theme["gameText"]);
+        document.documentElement.style.setProperty('--game-text-secondary', theme["gameTextSecondary"]);
 
         // rounded-2xl
         document.documentElement.style.setProperty('--radius', theme["radius"]);
@@ -53,9 +54,11 @@ const ThemeManager = () => {
 
         // Input Field
 
-        console.log(theme["input-field"], theme);
         document.documentElement.style.setProperty('--input-field', theme["input-field"]);
         document.documentElement.style.setProperty('--input-field-background', theme["input-field-background"]);
+
+        // secondary background
+        document.documentElement.style.setProperty('--secondary-background', theme["secondary-background"]);
 
         return () => {
             // Clean up main theme variables
@@ -76,6 +79,19 @@ const ThemeManager = () => {
             document.documentElement.style.removeProperty('--bet-button-mid');
             document.documentElement.style.removeProperty('--bet-button-end');
             document.documentElement.style.removeProperty('--bet-button-border');
+
+            // Clean up game background
+            document.documentElement.style.removeProperty('--background-game');
+            document.documentElement.style.removeProperty('--secondary-background');
+
+            // Clean up game header highlight
+            document.documentElement.style.removeProperty('--game-header-highlight');
+            document.documentElement.style.removeProperty('--game-box-gradient');
+
+            // Clean up top bar text
+            document.documentElement.style.removeProperty('--top-bar-text');
+            
+
         };
     }, [company]);
 

@@ -1,21 +1,21 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
+import FormImage from "@/components/ui/form/form-image";
 import FormInput from "@/components/ui/form/form-input";
 import FormProvider from "@/components/ui/form/form-provider";
+import { useAuthStore } from "@/context/auth-context";
+import { useGameUserProfile, useGameUserUpdateById } from "@/react-query/game-user-queries";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Loader2 } from "lucide-react";
-import { useGameUserProfile, useGameUserUpdateById } from "@/react-query/game-user-queries";
-import { useAuthStore } from "@/context/auth-context";
-import { zodResolver } from "@hookform/resolvers/zod";
-import FormImage from "@/components/ui/form/form-image";
-import { useTranslations } from "next-intl";
 // ProfileUpdateForm Component
 const updateProfileSchema = (t: any) => z.object({
     firstname: z.string().min(1, t('validation.firstname-required')).max(50, t('validation.firstname-max')),
     lastname: z.string().min(1, t('validation.lastname-required')).max(50, t('validation.lastname-max')),
     username: z.string().max(100, t('validation.username-max')),
-    phone: z.string().optional(),
+    phone: z.string().or(z.null()),
     email: z.string().email(t('validation.email-invalid')),
     referenceCode: z.string().optional(),
     profileImage: z.string().url().optional(),

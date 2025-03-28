@@ -18,5 +18,8 @@ export const holidayAPI = {
 
     updateHoliday: async (holidayId: string, data: any) => {
         return api.put(`/holiday/${holidayId}`, data);
+    },
+    deleteHoliday: async (holidayId: string) => {
+        return api.delete(`/holiday/${holidayId}`);
     }
 };

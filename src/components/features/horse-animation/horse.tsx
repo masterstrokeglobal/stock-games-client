@@ -27,15 +27,11 @@ function RacePreparation() {
   const t = useTranslations("game");
 
   return (
-    <div className="w-full  bg-secondary-game  text-game-text rounded-2xl h-full p-6 text-center shadow-2xl">
+    <div className="w-full  bg-secondary-game  relative text-game-text rounded-2xl h-full p-6 text-center shadow-2xl">
+      <video src="/images/loading.mp4" autoPlay muted loop className="w-full h-full absolute top-0 left-0 object-cover" />
       <div className="rounded-xl p-4">
         <p className="text-white text-xl mb-2">{t('race-begin')}
         </p>
-        <div className="flex justify-center space-x-2">
-          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse delay-200"></div>
-          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse delay-500"></div>
-        </div>
       </div>
     </div>
   );

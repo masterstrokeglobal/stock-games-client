@@ -1,3 +1,4 @@
+import { SchedulerType } from "@/models/market-item";
 import api from "./instance";
 
 export const roundRecordsAPI = {
@@ -35,4 +36,12 @@ export const roundRecordsAPI = {
     getRoundBets: async (id: string) => {
         return api.get(`/round-records/history/${id}`);
     },
+
+    getLastRoundWinner: async (type: SchedulerType) => {
+        return api.get(`/round-records/round-winners`, {
+            params: {
+                type
+            }
+        });
+    }
 };
