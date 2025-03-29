@@ -1,3 +1,4 @@
+import ParticlesContainer from "@/components/ui/particle";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGameType } from "@/hooks/use-game-type";
 import { cn } from "@/lib/utils";
@@ -18,6 +19,7 @@ const LastWinners = () => {
         }
     }, []);
     return <section ref={sectionRef} className="bg-background-last-winner relative w-full h-full ">
+        <ParticlesContainer className="w-full h-full" />
         <ScrollArea style={{ height: `${scrollAreaHeight}px` }} type="auto">
             <LastRoundWinner />
         </ScrollArea>
