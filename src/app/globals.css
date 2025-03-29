@@ -91,7 +91,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     /*   highlight */
 
     --game-header-highlight: linear-gradient(to right, white, transparent);
-    --game-box-gradient: linear-gradient(to right, var(--primary-game), transparent);
+    --game-box-gradient: linear-gradient(to right, var(--secondary-background), transparent);
 
     --input-field: #000000;
     --input-field-background: #FFFFFF;

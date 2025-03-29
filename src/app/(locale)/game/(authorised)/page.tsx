@@ -44,7 +44,7 @@ const GamePage = () => {
               
                 <div
                     style={borderStyle}
-                    className="xl:col-span-7 col-span-8 bg-secondary-game row-span-3 rounded-2xl overflow-y-auto">
+                    className="xl:col-span-7 col-span-8 bg-las row-span-3 bg-background-secondary rounded-2xl overflow-y-auto">
                     {roundRecord && <RouletteGame roundRecord={roundRecord} />}
                 </div>
                 <div style={borderStyle}

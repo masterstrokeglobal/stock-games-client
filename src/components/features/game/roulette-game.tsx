@@ -250,9 +250,9 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const isNotAllowedToPlaceBet = currentUser.isNotAllowedToPlaceOrder(roundRecord.type);
     return (
         <>
-            <div className="max-w-4xl mx-auto lg:pr-4  py-2 bg-background-secondary h-full ">
-                <div className="relative rounded-xl lg:flex-row flex-col flex gap-8 border-brown-800">
-                    <div className='lg:w-7/12'>
+            <div className="mx-auto  lg:pr-4  py-2 bg-background-secondary h-full ">
+                <div className="relative rounded-xl lg:flex-row w-full flex-col flex gap-8 border-brown-800">
+                    <div className='lg:w-7/12 max-w-2xl'>
                         <h1 className='text-xl lg:text-left text-center mt-2 mb-4 leading-none text-game-text font-semibold game-header-highlight lg:pl-4 pl-2   '>
                             {gameState.isPlaceOver ? t("betting-closed") : t("place-your-bets")}
                         </h1>

@@ -49,12 +49,12 @@ const LastRoundWinner = () => {
             </h2>
             {rounds.length > 0 ? (
                 <table className="min-w-full">
-                    <thead>
+                    <thead className="bg-game-text">
                         <tr className="flex">
-                            <th className="p-2 text-sm text-left text-game-text rounded-tl-lg flex-1">
+                            <th className="p-2 text-sm text-left text-game-secondary rounded-tl-lg flex-1">
                                 {t("time")}
                             </th>
-                            <th className="p-2 text-sm text-center text-game-text flex-1">
+                            <th className="p-2 text-sm text-center text-game-secondary flex-1">
                                 {t("winner")}
                             </th>
                         </tr>

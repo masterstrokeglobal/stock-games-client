@@ -13,7 +13,7 @@ export default function HorseRace({ roundRecord }: Props) {
 
   const isPlaceOver = useIsPlaceOver(roundRecord);
 
-  return isPlaceOver ? (
+  return !isPlaceOver ? (
     <Canvas>
       <HorseRaceEnvironment roundRecord={roundRecord} />
     </Canvas>
@@ -28,7 +28,7 @@ function RacePreparation() {
 
   return (
     <div className="w-full  bg-secondary-game  relative text-game-text rounded-2xl h-full p-6 text-center shadow-2xl">
-      <video src="/images/loading.mp4" autoPlay muted loop className="w-full h-full absolute top-0 left-0 object-cover" />
+      <video src="/images/loading.mp4" autoPlay muted loop className="w-full h-auto absolute -top-1/4 left-0 object-cover" />
       <div className="rounded-xl p-4">
         <p className="text-white text-xl mb-2">{t('race-begin')}
         </p>
