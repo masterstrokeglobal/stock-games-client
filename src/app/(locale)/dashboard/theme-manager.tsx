@@ -61,6 +61,7 @@ const ThemeManager = () => {
 
         // secondary background
         document.documentElement.style.setProperty('--secondary-background', theme["secondary-background"]);
+        document.documentElement.style.setProperty('--chip-color', theme["chip-color"]);
 
         return () => {
             // Clean up main theme variables
@@ -92,7 +93,7 @@ const ThemeManager = () => {
 
             // Clean up top bar text
             document.documentElement.style.removeProperty('--top-bar-text');
-            
+            document.documentElement.style.removeProperty('--chip-color');
 
         };
     }, [company]);

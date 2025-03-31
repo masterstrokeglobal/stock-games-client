@@ -28,6 +28,10 @@ const config: Config = {
 				'custom-glow': '0px 0px 26.55px 0px rgba(252, 210, 39, 0.56)',
 			},
 			colors: {
+
+				chip: {
+					DEFAULT: 'var(--chip-color)'
+				},
 				background: {
 					DEFAULT: 'hsl(var(--background))',
 					game: 'var(--background-game)',

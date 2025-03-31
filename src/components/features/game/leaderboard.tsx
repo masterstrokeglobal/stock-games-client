@@ -105,7 +105,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
 
                         </tr>
                     </thead>
-                    <tbody className="bg-background">
+                    <tbody className="bg-background-game">
                         {winnerMarketItem && (
                             <tr className="border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden">
                                 <td className="p-2  text-game-text">

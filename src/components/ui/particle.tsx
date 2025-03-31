@@ -16,7 +16,7 @@ const ParticlesContainer = ({
     return (
         <Particles
             className={cn("absolute translate-z-0", className)}
-            id="tsparticles"
+            id="tsparticles2"
             init={particlesInit}
             loaded={particlesLoaded}
             options={{

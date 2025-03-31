@@ -20,6 +20,7 @@ import GameResultDialog from "./result-dialog";
 import { BettingControls } from "./roulette-chips";
 import { RouletteBettingGrid } from "./roulette-grid";
 import { GameHeader } from "./roulette-header";
+import ParticlesContainer from "@/components/ui/solar-particle";
 
 enum PlacementType {
     SINGLE = "single",
@@ -100,7 +101,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
     };
 
     const ButtonChip = ({ amount }: { amount: number }) => (
-        <div className="absolute top-1/2 right-4 translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">
+        <div className="absolute top-1/2 right-4 translate-x-1/2 -translate-y-1/2 bg-chip text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">
             {amount}
         </div>
     );
@@ -250,6 +251,8 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const isNotAllowedToPlaceBet = currentUser.isNotAllowedToPlaceOrder(roundRecord.type);
     return (
         <>
+        
+            <ParticlesContainer />
             <div className="mx-auto  lg:pr-4  py-2 bg-background-secondary h-full ">
                 <div className="relative rounded-xl lg:flex-row w-full flex-col flex gap-8 border-brown-800">
                     <div className='lg:w-7/12 max-w-2xl'>
@@ -331,7 +334,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                         className="h-full w-full flex items-center justify-center relative  border bg-secondary-game border-primary"
                                         onClick={() => handleColorBet(RED_NUMBERS)}
                                     >
-                                        <span className="size-5  bg-red-500 rotate-45" />
+                                        <span className="size-5  routelette-piece-red !border-game-text border rotate-45" />
                                     </Button>
                                     {getBetForPosition(PlacementType.COLOR, RED_NUMBERS) && (
                                         <ButtonChip amount={getBetForPosition(PlacementType.COLOR, RED_NUMBERS)!.amount} />
@@ -343,7 +346,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                         className="h-full w-full flex items-center justify-center relative  border bg-secondary-game border-primary"
                                         onClick={() => handleColorBet(BLACK_NUMBERS)}
                                     >
-                                        <span className="size-5  bg-black rotate-45" />
+                                        <span className="size-5  routelette-piece-black rotate-45 !border-game-text border" />
                                     </Button>
                                     {getBetForPosition(PlacementType.COLOR, BLACK_NUMBERS) && (
                                         <ButtonChip amount={getBetForPosition(PlacementType.COLOR, BLACK_NUMBERS)!.amount} />
