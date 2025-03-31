@@ -13,7 +13,7 @@ export default function HorseRace({ roundRecord }: Props) {
 
   const isPlaceOver = useIsPlaceOver(roundRecord);
 
-  return !isPlaceOver ? (
+  return isPlaceOver ? (
     <Canvas>
       <HorseRaceEnvironment roundRecord={roundRecord} />
     </Canvas>
