@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-const LastWinners = () => {
+const LastWinners = ({className}:PropsWithClassName ) => {
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
 
@@ -18,7 +18,7 @@ const LastWinners = () => {
             console.log(sectionHeight);
         }
     }, []);
-    return <section ref={sectionRef} className="bg-background-last-winner relative w-full h-full ">
+    return <section ref={sectionRef} className={cn("bg-background-game rounded-2xl overflow-hidden relative", className)}>
         <ParticlesContainer className="w-full h-full" />
         <ScrollArea style={{ height: `${scrollAreaHeight}px` }} type="auto">
             <LastRoundWinner />

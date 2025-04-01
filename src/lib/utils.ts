@@ -197,5 +197,12 @@ export const ROULETTE_NUMBERS = [
   { number: 13, color: 'black' }, { number: 14, color: 'red' }, { number: 15, color: 'black' }, { number: 16, color: 'red' }
 ];
 
+export const googleAuth = () => {
+  window.open(
+      ` ${process.env.NEXT_PUBLIC_API_URL}auth/google?companyId=${process.env.NEXT_PUBLIC_COMPANY_ID}`,
+      "_self"
+  );
+};
+
 export const RED_NUMBERS = [1, 3, 6, 8, 9, 11, 14, 16];
 export const BLACK_NUMBERS = [2, 4, 5, 7, 10, 12, 13, 15];

@@ -11,7 +11,7 @@ import Link from "next/link";
 import FormPassword from "@/components/ui/form/form-password";
 import { useTranslations } from "next-intl";
 import { useGetCompanyById } from "@/react-query/company-queries";
-import { COMPANYID } from "@/lib/utils";
+import { COMPANYID, googleAuth } from "@/lib/utils";
 import Company from "@/models/company";
 
 // Zod schema for validating the registration form fields
@@ -142,7 +142,8 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                     <span>{t('or')}</span>
                     <Separator className="my-6 flex-1  bg-white/20" />
                 </div>
-                <Button size="lg" variant="secondary" className="w-full bg-tertiary border-[#EFF8FF17] text-white">
+            </FormProvider>
+                <Button type="button" size="lg" variant="secondary" className="w-full bg-tertiary border-[#EFF8FF17] text-white" onClick={() => googleAuth()}>
                     <img className="mr-2 size-5" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg" />
                     {t('button-google')}
                 </Button>
@@ -152,7 +153,6 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         {t('sign-in')}
                     </Link>
                 </Button>
-            </FormProvider>
         </div>
     );
 };

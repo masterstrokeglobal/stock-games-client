@@ -16,9 +16,10 @@ import useWindowSize from "@/hooks/use-window-size";
 // Enhanced interface for ranked market items
 type Props = {
     roundRecord: RoundRecord;
+    className?: string;
 }
 
-const LeaderBoard = ({ roundRecord }: Props) => {
+const LeaderBoard = ({ roundRecord, className }: Props) => {
     const t = useTranslations("game");
     const { stocks: leaderboardData } = useLeaderboard(roundRecord);
     const sectionRef = useRef<HTMLDivElement | null>(null);
@@ -76,14 +77,14 @@ const LeaderBoard = ({ roundRecord }: Props) => {
     return (
         <section
             ref={sectionRef}
-            className="md:rounded-2xl h-full bg-background-secondary overflow-hidden w-full "
+            className={cn("md:rounded-2xl h-full bg-background-secondary overflow-hidden w-full", className)}
         >
-           <LeaderboardHeader/>
+            <LeaderboardHeader />
             <ScrollArea
                 className="h-full"
                 style={{ height: isMobile ? "fit-content" : `${scrollAreaHeight}px` }}
                 type="auto"
-            >   
+            >
                 <table className="min-w-full">
                     <thead className="bg-primary-game bg-opacity-50">
                         <tr className="text-game-text text-sm">
@@ -168,7 +169,7 @@ const LeaderBoard = ({ roundRecord }: Props) => {
                                 </td>
                                 <td className={cn(
                                     "p-2  text-right",
-                                    getChangeColor(marketItem.change_percent) 
+                                    getChangeColor(marketItem.change_percent)
                                 )}>
 
                                     {!isGameOver ? (parseFloat(marketItem.change_percent) > 0 ? '+' : '') : ''}

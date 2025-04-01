@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
+import { googleAuth } from "@/lib/utils";
 
 export const createLoginSchema = (t: any) => z.object({
     username: z.string(),
@@ -37,12 +38,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
     });
 
     const { control, handleSubmit } = form;
-    const googleAuth = () => {
-        window.open(
-            ` ${process.env.NEXT_PUBLIC_API_URL}auth/google?companyId=${process.env.NEXT_PUBLIC_COMPANY_ID}`,
-            "_self"
-        );
-    };
+
     return (
         <div className="w-full max-w-sm">
             <h1 className="text-3xl text-center mb-10 font-semibold text-white">
