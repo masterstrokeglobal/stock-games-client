@@ -53,7 +53,7 @@ const GamePage = () => {
                 </div>
                 <div style={borderStyle}
                     className="xl:col-span-2 col-span-4 overflow-hidden row-span-3 rounded-2xl ">
-                    {roundRecord && <LastWinners />}
+                    {roundRecord && <LastWinners className="h-full" />}
                 </div>
 
             </main>}
