@@ -13,6 +13,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { PasswordIcon, ProfileIcon, TransactionIcon, WalletIcon } from './icons';
+import LocaleSwitcher from '@/components/common/LocaleSwitcher';
+import { MuteButton } from '@/components/common/mute-button';
 const UserMenu = () => {
     const t = useTranslations('user-menu');
     const { userDetails } = useAuthStore();
@@ -29,7 +31,7 @@ const UserMenu = () => {
 
     return (
         <Container className="flex flex-col items-center min-h-screen pt-24 ">
-            <TopBar leftContent={<Button  variant="ghost"  className='flex gap-2 items-end' onClick={() => router.push('/game')}>
+            <TopBar leftContent={<Button variant="ghost" className='flex gap-2 items-end' onClick={() => router.push('/game')}>
                 <Home size={20} /> Home
             </Button>}>
                 {t('title')}
@@ -96,6 +98,8 @@ const UserMenu = () => {
                             {t('contact-us')}
                         </Button>
                     </Link>
+                    <LocaleSwitcher className="w-full text-white" selectClassName="bg-primary text-white" />
+                    <MuteButton className="w-full bg-primary text-white" />
                 </nav>
             </div>
 

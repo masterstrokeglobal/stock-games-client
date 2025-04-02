@@ -29,7 +29,7 @@ const Navbar = () => {
 
     const user = userDetails as User;
     return (
-        <nav className="items-center md:px-6 px-4 z-50  flex fixed top-0 justify-between  font-semibold w-full h-14 bg--game bg-primary-game">
+        <nav className="items-center md:px-6 px-4 z-50  flex fixed top-0 justify-between font-semibold w-full h-14 bg--game bg-primary-game">
             <div className="flex items-center space-x-4 ">
                 <span className="md:text-xl text-sm font-semibold flex items-end">
                     <Logo />
@@ -40,16 +40,15 @@ const Navbar = () => {
                 </div>}
             </div>
             <div className="flex items-center space-x-4 ml-auto">
-                <MuteButton />
-                <LocaleSwitcher />
-                <div className="bg-secondary-game text-game-text px-4 md:h-12 md:flex hidden items-center md:py-2 py-2   rounded-md">
+                <MuteButton className="md:block hidden " />
+                <LocaleSwitcher className="md:block hidden " />
+                <div className="bg-secondary-game text-game-text px-4 md:h-12 flex items-center md:py-2 py-2   rounded-md">
                     <div className="shadow-custom-glow mr-2 rounded-md" >
                         <img src="/coin.svg" alt="coin" className="md:w-auto w-5" />
                     </div>
                     <span className=" md:text-xl">
                         {isLoading ? "..." : wallet.totalBalance}
                     </span>
-
                     <Link href="/game/wallet/deposit">
                         <Button size="icon" variant="ghost" className="ml-6 md:block hidden">
                             <img src="/plus-icon.svg" className="size-7" alt="arrow-down" />

@@ -4,15 +4,19 @@ import { Locale } from '@/i18n/config';
 import { setUserLocale } from '@/services/locale';
 import { useTransition } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '../ui/select';
-
+import { cn } from '@/lib/utils';
 type Props = {
   defaultValue: string;
   items: Array<{ value: string; label: string }>;
+  className?: string;
+  selectClassName?: string;
 };
 
 export default function LocaleSwitcherSelect({
   defaultValue,
   items,
+  className,
+  selectClassName
 }: Props) {
   const [isPending, startTransition] = useTransition();
 
@@ -24,9 +28,9 @@ export default function LocaleSwitcherSelect({
   }
 
   return (
-    <div>
+    <div className={className}>
       <Select defaultValue={defaultValue} onValueChange={onChange} disabled={isPending}>
-        <SelectTrigger className="w-full  bg-secondary-game border text-game-text border-[#EFF8FF17] h-11 rounded-md">
+        <SelectTrigger className={cn("w-full  bg-secondary-game border text-game-text border-[#EFF8FF17] h-11 rounded-md", selectClassName)}  >
           {items.find((item) => item.value === defaultValue)?.label}
         </SelectTrigger>
         <SelectContent>

@@ -18,13 +18,14 @@ export const useGetCurrentRoundRecord = (
 ) => {
     return useQuery({
         queryKey: ["current-round-record", type],
-        queryFn: () =>{ 
-           return roundRecordsAPI.getAllRoundRecords({
-            type: type,
-            limit: 1,
-            startTime: new Date(),
-            page: 1,
-        })},
+        queryFn: () => {
+            return roundRecordsAPI.getAllRoundRecords({
+                type: type,
+                limit: 1,
+                startTime: new Date(),
+                page: 1,
+            })
+        },
     });
 };
 /**
@@ -45,19 +46,19 @@ export const useGetRoundRecordById = (roundRecordId: number) => {
  */
 export const useGetMyRoundResult = (roundRecordId: number, show: boolean) => {
     return useQuery({
-      queryKey: ["my-round-result", roundRecordId],
-      queryFn: () => roundRecordsAPI.getMyResult(roundRecordId),
-      enabled: show,
-      retry: (failureCount) => {
-        // Retry 5 times with an interval of 1 second
-        return failureCount < 5;
-      },
-      retryDelay: () => {
-        // 1000 ms (1 second) delay between retries
-        return 1000;
-      }
+        queryKey: ["my-round-result", roundRecordId],
+        queryFn: () => roundRecordsAPI.getMyResult(roundRecordId),
+        enabled: show,
+        retry: (failureCount) => {
+            // Retry 5 times with an interval of 1 second
+            return failureCount < 5;
+        },
+        retryDelay: () => {
+            // 1000 ms (1 second) delay between retries
+            return 1000;
+        }
     });
-  };
+};
 
 
 export const useGetWinningReport = (filter: any) => {
@@ -83,11 +84,12 @@ export const useRoundBets = (roundRecordId: string) => {
 
 export const useLastRoundWinner = (type: SchedulerType) => {
 
-    const THREE_MINUTES = 1000 * 60 * 3;
+    const ONE_MINUTE = 1000 * 60 * 1;
     return useQuery({
         queryKey: ["last-round-winner", type],
         queryFn: () => roundRecordsAPI.getLastRoundWinner(type),
-        staleTime: THREE_MINUTES
+        staleTime: ONE_MINUTE,
+        refetchInterval: ONE_MINUTE
     });
 }
 

@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Building, Clock, CoinsIcon, Contact2, DollarSign, Home, LucideIcon, Repeat1, Users } from 'lucide-react';
+import { Building, Clock, CoinsIcon, Contact2, DollarSign, Home, ImageUpIcon, LucideIcon, Repeat1, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -118,6 +118,11 @@ const companyMenuItems: MenuItem[] = [
         name: "Contact Queries",
         icon: Contact2,
         link: '/dashboard/contact'
+    },
+    {
+        name: "Advertisment",
+        icon: ImageUpIcon,
+        link: '/dashboard/advertisment'
     }
 ];
 

@@ -30,7 +30,7 @@ const marketItemColumns: ColumnDef<MarketItem>[] = [
         cell: ({ row }) => <div className="text-[#6B7280]">{row.original.oddsMultiplier}</div>,
     },
     {
-    header: "ZERO POSITION",
+        header: "ZERO POSITION",
         accessorKey: "placementAllowed",
         cell: ({ row }) => <TogglePlacementSwitch marketItem={row.original} />,
     },
