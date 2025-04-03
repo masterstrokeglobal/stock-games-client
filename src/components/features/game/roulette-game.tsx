@@ -104,16 +104,17 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const verifyBetAmount = useCallback((amount: number) => {
         const minAmount = currentUser.company?.minPlacement;
         const maxAmount = currentUser.company?.maxPlacement;
-        if (minAmount && amount < minAmount) {
+        const totalBetAmount = bettedChips.reduce((acc, chip) => acc + chip.amount, 0);
+        if (minAmount && totalBetAmount + amount < minAmount) {
             toast.error("Minimum bet amount is " + minAmount);
             return false;
         }
-        if (maxAmount && amount > maxAmount) {
+        if (maxAmount && totalBetAmount + amount > maxAmount) {
             toast.error("Maximum bet amount is " + maxAmount);
             return false;
         }
         return true;
-    }, [currentUser]);
+    }, [currentUser, bettedChips]);
 
     const ButtonChip = ({ amount }: { amount: number }) => (
         <div className="absolute top-1/2 right-4 translate-x-1/2 -translate-y-1/2 bg-chip text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">

@@ -41,7 +41,7 @@ function FormTextArea<
           {label && <FormLabel className={game ? "text-white" : ''}
           >{label}</FormLabel>}
           <FormControl>
-            <Textarea className={cn(inputClassName, game ? "h-52 text-white bg-secondary-game border border-[#EFF8FF17] focus:border-[#55B0FF]" : '')} {...props} {...field} />
+            <Textarea className={cn(inputClassName, game ? "h-52  border border-[#EFF8FF17] focus:border-[#55B0FF]" : '')} {...props} {...field} />
 
           </FormControl>
           {description && <FormDescription>{description}</FormDescription>}

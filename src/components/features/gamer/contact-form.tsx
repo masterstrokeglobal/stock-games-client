@@ -38,7 +38,7 @@ const ContactForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
     const { control, handleSubmit } = form;
 
     return (
-        <div className="w-full max-w-lg  bg-secondary-game p-4 rounded-xl">
+        <div className="w-full max-w-lg  bg-primary-game p-4 rounded-xl">
             <h1 className="text-3xl text-center mb-10 font-semibold text-white">
                 {t('titles.contact-us')}
             </h1>

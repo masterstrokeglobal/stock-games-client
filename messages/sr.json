@@ -1,7 +1,7 @@
 {
     "common": {
         "app-name": "Stock Derby",
-        "timings": "NSE radi od 9:30 do 15:00"
+        "timings": "NSE radi od 9:30 do 15:25"
     },
     "game": {
         "title": "Stock Derby",

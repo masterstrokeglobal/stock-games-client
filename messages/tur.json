@@ -1,7 +1,7 @@
 {
   "common": {
     "app-name": "Stock Derby",
-    "timings": "NSE 09:30'dan 15:00'a kadar çalışır"
+    "timings": "NSE operates from 9:30 AM to 3:25 PM"
   },
   "game": {
     "title": "Stock Derby",

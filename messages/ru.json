@@ -1,7 +1,7 @@
 {
     "common": {
         "app-name": "Скачки Акций",
-        "timings": "NSE работает с 9:30 до 15:00"
+        "timings": "NSE работает с 9:30 до 15:25"
     },
     "game": {
         "title": "Stock Derby",

@@ -36,7 +36,7 @@ const Navbar = () => {
                 </span>
 
                 {isNSE && <div className="items-center hidden md:flex space-x-4 ml-auto">
-                    <span className="text-sm text-game-text">{t("timings")}</span>
+                    <span className="text-sm text-game-secondary">{t("timings")}</span>
                 </div>}
             </div>
             <div className="flex items-center space-x-4 ml-auto">
