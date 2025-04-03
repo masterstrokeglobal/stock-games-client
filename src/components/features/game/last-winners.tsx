@@ -44,12 +44,12 @@ const LastRoundWinner = () => {
     }, [isSuccess, data]);
 
     useEffect(() => {
-        const ONE_MINUTE = 1000 * 60 * 1;
+        const FIFTEEN_SECONDS = 1000 * 15 * 1;
         const interval = setInterval(() => {
             if (isSuccess) {
                 refetch();
             }
-        }, ONE_MINUTE);
+        }, FIFTEEN_SECONDS);
         return () => clearInterval(interval);
     }, [isSuccess, data]);
 
