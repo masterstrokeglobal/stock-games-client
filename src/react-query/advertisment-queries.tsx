@@ -17,7 +17,7 @@ export const useCreateAdvertisement = () => {
 export const useGetAdvertisements = (filter?: SearchFilters) => {
     return useQuery({
         queryKey: ["advertisements", filter],
-        queryFn: () => advertisementAPI.getAdvertisements(filter),
+        queryFn: () => advertisementAPI.getAdvertisement(filter),
     });
 };
 
@@ -65,3 +65,18 @@ export const useUpdateStatus = () => {
         },
     });
 };
+
+export const useDeleteAdvertisementById = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: advertisementAPI.deleteAdvertisementById,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "advertisements";
+                }
+            });
+        }
+    })
+}

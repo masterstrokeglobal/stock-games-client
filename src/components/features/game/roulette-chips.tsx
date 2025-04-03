@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useTranslations } from 'next-intl';
 import { useUndoLastPlacement } from '@/react-query/game-record-queries';
+import { useAuthStore } from '@/context/auth-context';
 
 interface BettingControlsProps {
     betAmount: number;
@@ -21,6 +22,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
     isLoading,
 }) => {
     const t = useTranslations('game');
+    const { userDetails } = useAuthStore();
 
     const { mutate, isPending } = useUndoLastPlacement();
 
@@ -34,6 +36,8 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                     <img src="/coin.svg" className='shadow-custom-glow rounded-full' alt="coin" />
                 </div>
                 <Input
+                    min={userDetails?.company?.minPlacement}
+                    max={userDetails?.company?.maxPlacement}
                     placeholder="Enter bet amount"
                     value={betAmount}
                     onChange={(e) => setBetAmount(Number(e.target.value))}

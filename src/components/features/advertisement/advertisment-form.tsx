@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
-import FormImage from "@/components/ui/form/form-image";
+import FormImage from "@/components/ui/form/form-image-compact";
 import FormInput from "@/components/ui/form/form-input";
 import FormProvider from "@/components/ui/form/form-provider";
+import FormSwitch from "@/components/ui/form/form-switch";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -12,6 +13,7 @@ const advertismentSchema = z.object({
     description: z.string().min(1),
     image: z.string().min(1),
     link: z.string().min(1),
+    active: z.boolean().default(true),
 })
 
 export type AdvertismentFormSchema = z.infer<typeof advertismentSchema>
@@ -30,7 +32,7 @@ export const AdvertismentForm = ({ defaultValues, onSubmit, className, isLoading
     })
 
     return (
-        <FormProvider methods={form} onSubmit={form.handleSubmit(onSubmit)} className={cn(className)}>
+        <FormProvider  methods={form} onSubmit={form.handleSubmit(onSubmit)} className={cn("space-y-5",className)}>
             <FormInput
                 control={form.control}
                 name="name"
@@ -47,12 +49,19 @@ export const AdvertismentForm = ({ defaultValues, onSubmit, className, isLoading
                 control={form.control}
                 name="image"
                 label="Image"
+                className="w"
             />
             <FormInput
                 control={form.control}
                 name="link"
                 label="Link"
                 placeholder="Link"
+            />
+
+            <FormSwitch
+                control={form.control}
+                name="active"
+                label="Active"
             />
             <Button type="submit" disabled={isLoading}>{isLoading ? "Submitting..." : "Submit"}</Button>
         </FormProvider>

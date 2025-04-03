@@ -14,7 +14,9 @@ export const createCompanyInputSchema = z.object({
     contactPersonEmail: z.string().email(),
     logo: z.string().optional(),
     domain: z.string().optional(),
-    paymentImage: z.string().url().optional()
+    paymentImage: z.string().url().optional(),
+    minPlacement: z.number().optional(),
+    maxPlacement: z.number().optional(),
 }).superRefine((data, ctx) => {
     if (!data.id && !data.logo) {
         ctx.addIssue({
@@ -75,6 +77,17 @@ const CompanyForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 name="domain"
                 label="Domain"
             />
+            <FormInput
+                control={control}
+                name="minPlacement"
+                label="Minimum Placement"
+            />
+            <FormInput
+                control={control}
+                name="maxPlacement"
+                label="Maximum Placement"
+            />
+
             <FormImage
                 control={control}
                 name="paymentImage"

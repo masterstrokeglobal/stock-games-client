@@ -13,7 +13,7 @@ import User from "@/models/user";
 import { useCreateGameRecord, useGetMyPlacements } from "@/react-query/game-record-queries";
 import { Tabs } from "@radix-ui/react-tabs";
 import { useTranslations } from "next-intl";
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import BettingChips from "./betting-chip";
 import { Bet, Chip } from "./contants";
 import GameResultDialog from "./result-dialog";
@@ -21,6 +21,7 @@ import { BettingControls } from "./roulette-chips";
 import { RouletteBettingGrid } from "./roulette-grid";
 import { GameHeader } from "./roulette-header";
 import ParticlesContainer from "@/components/ui/solar-particle";
+import { toast } from "sonner";
 
 enum PlacementType {
     SINGLE = "single",
@@ -43,7 +44,7 @@ type Props = {
 const RouletteGame = ({ roundRecord }: Props) => {
 
     const t = useTranslations("game");
-    const [betAmount, setBetAmount] = useState<number>(10);
+    const [betAmount, setBetAmount] = useState<number>(100);
     const gameState = useGameState(roundRecord);
     const isNSEAvailable = useNSEAvailable();
     const [tab, setTab] = useGameType();
@@ -100,6 +101,20 @@ const RouletteGame = ({ roundRecord }: Props) => {
         return chip;
     };
 
+    const verifyBetAmount = useCallback((amount: number) => {
+        const minAmount = currentUser.company?.minPlacement;
+        const maxAmount = currentUser.company?.maxPlacement;
+        if (minAmount && amount < minAmount) {
+            toast.error("Minimum bet amount is " + minAmount);
+            return false;
+        }
+        if (maxAmount && amount > maxAmount) {
+            toast.error("Maximum bet amount is " + maxAmount);
+            return false;
+        }
+        return true;
+    }, [currentUser]);
+
     const ButtonChip = ({ amount }: { amount: number }) => (
         <div className="absolute top-1/2 right-4 translate-x-1/2 -translate-y-1/2 bg-chip text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">
             {amount}
@@ -109,6 +124,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
     // Handler for side bets using DOUBLE_STREET type
     const handleSideBet = (numbers: number[]) => {
         if (gameState.isPlaceOver || isPlacingBet) return;
+        if (!verifyBetAmount(betAmount)) return;
 
         const markets = numbers.map((number) => roundRecord.market[number - 1]?.id).filter((id) => id !== undefined);
 
@@ -127,6 +143,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     const handleColorBet = (numbers: number[]) => {
         if (gameState.isPlaceOver || isPlacingBet) return;
+        if (!verifyBetAmount(betAmount)) return;
 
         const markets = numbers.map((number) => roundRecord.market[number - 1]?.id).filter((id) => id !== undefined);
 
@@ -142,25 +159,9 @@ const RouletteGame = ({ roundRecord }: Props) => {
         });
     }
 
-    /*     // Handler for bottom bets using COLUMN type
-        const handleBottomBet = (numbers: number[]) => {
-            if (gameState.isPlaceOver) return;
-    
-            const position = getBetPosition({
-                type: PlacementType.HIGH_LOW,
-                numbers,
-            });
-    
-            setChips([{
-                type: PlacementType.HIGH_LOW,
-                numbers,
-                amount: betAmount,
-                position,
-            }]);
-        };
-     */
     const handleSpecialBet = (betType: PlacementType, numbers: number[]) => {
         if (gameState.isPlaceOver || isPlacingBet) return;
+        if (!verifyBetAmount(betAmount)) return;
 
         const markets = numbers.map((number) => roundRecord.market[number - 1]?.id).filter((id) => id !== undefined);
 
@@ -180,29 +181,31 @@ const RouletteGame = ({ roundRecord }: Props) => {
         });
 
     };
-    const handlePlaceBet = () => {
-        if (gameState.isPlaceOver || isPlacingBet) return;
 
-        const chip = chips[0];
-        if (!chip) return;
+    // const handlePlaceBet = () => {
+    //     if (gameState.isPlaceOver || isPlacingBet) return;
+    //     if (!verifyBetAmount(betAmount)) return;
 
-        const markets = chip.numbers.map((number) => roundRecord.market[number - 1]?.id).filter((id) => id !== undefined);
+    //     const chip = chips[0];
+    //     if (!chip) return;
 
-        mutate({
-            amount: chip.amount,
-            round: roundRecord.id,
-            placementType: chip.type,
-            market: markets,
-            placedValues: getPlacementString({
-                market: markets as number[],
-                placementType: chip.type,
-            }, roundRecord),
-        }, {
-            onSuccess: () => {
-                setChips([]);
-            }
-        });
-    };
+    //     const markets = chip.numbers.map((number) => roundRecord.market[number - 1]?.id).filter((id) => id !== undefined);
+
+    //     mutate({
+    //         amount: chip.amount,
+    //         round: roundRecord.id,
+    //         placementType: chip.type,
+    //         market: markets,
+    //         placedValues: getPlacementString({
+    //             market: markets as number[],
+    //             placementType: chip.type,
+    //         }, roundRecord),
+    //     }, {
+    //         onSuccess: () => {
+    //             setChips([]);
+    //         }
+    //     });
+    // };
 
     // Get all numbers for specific sections and other bets
     const first8Numbers = Array.from({ length: 8 }, (_, i) => i + 1);
@@ -213,6 +216,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     const handleBoardClick = (e: React.MouseEvent) => {
         if (gameState.isPlaceOver || isPlacingBet) return;
+        if (!verifyBetAmount(betAmount)) return;
         const bet = getBetTypeFromClick(e, boardRef);
         if (!bet) return;
 
@@ -239,8 +243,6 @@ const RouletteGame = ({ roundRecord }: Props) => {
                 setChips([]);
             }
         });
-
-        handlePlaceBet();
     };
 
     const boardChips = gameState.isPlaceOver ? bettedChips : [...bettedChips, ...chips];
@@ -251,11 +253,11 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const isNotAllowedToPlaceBet = currentUser.isNotAllowedToPlaceOrder(roundRecord.type);
     return (
         <>
-        
+
             <ParticlesContainer />
             <div className="mx-auto  lg:pr-4  py-2 bg-background-secondary h-full ">
                 <div className="relative rounded-xl lg:flex-row w-full flex-col flex gap-8 border-brown-800">
-                    <div className='lg:w-7/12 max-w-2xl'>
+                    <div className='lg:w-7/12 max-w-2xl mx-auto w-full'>
                         <h1 className='text-xl lg:text-left text-center mt-2 mb-4 leading-none text-game-text font-semibold game-header-highlight lg:pl-4 pl-2   '>
                             {gameState.isPlaceOver ? t("betting-closed") : t("place-your-bets")}
                         </h1>

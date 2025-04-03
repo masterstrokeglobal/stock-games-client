@@ -29,6 +29,8 @@ const EditCompanyPage = () => {
             depositBonusPercentageEnabled: company.depositBonusPercentageEnabled,
             domain: company.domain,
             paymentImage: company.paymentImage,
+            minPlacement: company.minPlacement,
+            maxPlacement: company.maxPlacement,
         };
     }, [data, isSuccess]);
 

@@ -23,6 +23,8 @@ export class Company {
     externalPayOut!: boolean;
     placementNotAllowed?: SchedulerType[];
     deletedAt?: Date;
+    minPlacement?: number;
+    maxPlacement?: number;
     otpIntegration?: boolean;
 
     constructor(params: Partial<Company> = {}) {
@@ -44,6 +46,8 @@ export class Company {
         this.paymentImage = params.paymentImage;
         this.depositBonusPercentage = params.depositBonusPercentage;
         this.otpIntegration = params.otpIntegration || false;
+        this.minPlacement = params.minPlacement;
+        this.maxPlacement = params.maxPlacement;
     }
 }
 

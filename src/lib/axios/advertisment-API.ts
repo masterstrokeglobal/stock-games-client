@@ -1,12 +1,12 @@
 import api from "./instance";
-import { AdvertismentFormSchema } from "@/components/features/advertisment/advertisment-form";
+import { AdvertismentFormSchema } from "@/components/features/advertisement/advertisment-form";
 
 export const advertisementAPI = {
     createAdvertisement: async (payload: AdvertismentFormSchema) => {
-        return api.post("/advertisements", payload);
+        return api.post("/company-banner", payload);
     },
 
-    getAdvertisements: async (filter?: SearchFilters) => {
+    getAdvertisement: async (filter?: SearchFilters) => {
         const sanitizedFilter: any = {};
 
         Object.entries(filter ?? {}).forEach(([key, value]) => {
@@ -14,19 +14,23 @@ export const advertisementAPI = {
                 sanitizedFilter[key] = value;
             }
         });
-        return api.get("/advertisements", { params: sanitizedFilter });
+        return api.get("/company-banner", { params: sanitizedFilter });
     },
 
     updateStatus: async (id: string) => {
-        return api.patch(`/advertisements/status/${id}`);
+        return api.patch(`/company-banner/status/${id}`);
     },
 
     getAdvertisementById: async (id: string) => {
-        return api.get(`/advertisements/${id}`);
+        return api.get(`/company-banner/${id}`);
     },
 
     updateAdvertisementById: async (payload: Partial<AdvertismentFormSchema & { id: string }>) => {
         const { id, ...data } = payload;
-        return api.patch(`/advertisements/${id}`, data);
+        return api.patch(`/company-banner/${id}`, data);
     },
+
+    deleteAdvertisementById: async (id: string) => {
+        return api.delete(`/company-banner/${id}`);
+    },  
 };

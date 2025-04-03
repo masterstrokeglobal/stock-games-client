@@ -122,7 +122,7 @@ const companyMenuItems: MenuItem[] = [
     {
         name: "Advertisment",
         icon: ImageUpIcon,
-        link: '/dashboard/advertisment'
+        link: '/dashboard/advertisements'
     }
 ];
 
