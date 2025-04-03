@@ -6,6 +6,7 @@
   "game": {
     "title": "Stock Derby",
     "game-over": "Oyun Bitti",
+    "demoLogin": "Demo Giriş",
     "bet": "Bahis",
     "game-ends-in": "Oyun bitiyor",
     "current-bets": "Mevcut Bahisler",

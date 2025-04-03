@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import ParticlesContainer from "@/components/ui/solar-particle";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuthStore } from "@/context/auth-context";
 import { useGameState, useShowResults } from "@/hooks/use-current-game";
@@ -14,14 +15,13 @@ import { useCreateGameRecord, useGetMyPlacements } from "@/react-query/game-reco
 import { Tabs } from "@radix-ui/react-tabs";
 import { useTranslations } from "next-intl";
 import { useCallback, useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 import BettingChips from "./betting-chip";
 import { Bet, Chip } from "./contants";
 import GameResultDialog from "./result-dialog";
 import { BettingControls } from "./roulette-chips";
 import { RouletteBettingGrid } from "./roulette-grid";
 import { GameHeader } from "./roulette-header";
-import ParticlesContainer from "@/components/ui/solar-particle";
-import { toast } from "sonner";
 
 enum PlacementType {
     SINGLE = "single",
@@ -116,8 +116,8 @@ const RouletteGame = ({ roundRecord }: Props) => {
         return true;
     }, [currentUser, bettedChips]);
 
-    const ButtonChip = ({ amount }: { amount: number }) => (
-        <div className="absolute top-1/2 right-4 translate-x-1/2 -translate-y-1/2 bg-chip text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold">
+    const ButtonChip = ({ amount, className }: { amount: number, className?: string }) => (
+        <div className={cn("absolute top-1/2 right-4 translate-x-1/2 -translate-y-1/2 bg-chip text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold", className)}>
             {amount}
         </div>
     );
@@ -183,30 +183,21 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     };
 
-    // const handlePlaceBet = () => {
-    //     if (gameState.isPlaceOver || isPlacingBet) return;
-    //     if (!verifyBetAmount(betAmount)) return;
+  
+    const handleZeroBet = () => {
+        if (gameState.isPlaceOver || isPlacingBet) return;
+        if (!verifyBetAmount(betAmount)) return;
 
-    //     const chip = chips[0];
-    //     if (!chip) return;
-
-    //     const markets = chip.numbers.map((number) => roundRecord.market[number - 1]?.id).filter((id) => id !== undefined);
-
-    //     mutate({
-    //         amount: chip.amount,
-    //         round: roundRecord.id,
-    //         placementType: chip.type,
-    //         market: markets,
-    //         placedValues: getPlacementString({
-    //             market: markets as number[],
-    //             placementType: chip.type,
-    //         }, roundRecord),
-    //     }, {
-    //         onSuccess: () => {
-    //             setChips([]);
-    //         }
-    //     });
-    // };
+        const marketId = roundRecord.market[roundRecord.market.length - 1]?.id;
+        if (!marketId) return;
+        mutate({
+            amount: betAmount,
+            round: roundRecord.id,
+            placementType: PlacementType.SINGLE,
+            market: [marketId],
+            placedValues: getPlacementString({ market: [marketId], placementType: PlacementType.SINGLE }, roundRecord),
+        });
+    }
 
     // Get all numbers for specific sections and other bets
     const first8Numbers = Array.from({ length: 8 }, (_, i) => i + 1);
@@ -252,6 +243,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO);
 
     const isNotAllowedToPlaceBet = currentUser.isNotAllowedToPlaceOrder(roundRecord.type);
+
     return (
         <>
 
@@ -298,20 +290,22 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                         chips={chips as unknown as Chip[]}
                                         previousRoundId={previousRoundId?.toString()}
                                     />
-                                    <BettingChips chips={boardChips} getBetPosition={getBetPosition} />
+                                    <BettingChips chips={boardChips} getBetPosition={getBetPosition} roundRecord={roundRecord} />
                                 </div>
 
                                 <div className="grid grid-rows-1 gap-2 ">
-
-
                                     <Button
+                                        onClick={handleZeroBet}
                                         variant="game-secondary"
-                                        className="col-span-1 w-10  justify-center gap-4 text-white ml-2 h-full opacity-80"
+                                        className="col-span-1 w-10 relative  bg-emerald-600 justify-center gap-4 text-white ml-2 h-full "
                                     >
                                         <span className="rotate-text">
                                             0 &nbsp;
                                             {roundRecord.market[16]?.codeName}
                                         </span>
+                                        {getBetForPosition(PlacementType.SINGLE, [17]) && (
+                                            <ButtonChip className=" top-4 right-1/2 translate-x-1/2 -translate-y-1/2" amount={getBetForPosition(PlacementType.SINGLE, [17])!.amount} />
+                                        )}
                                     </Button>
                                 </div>
 

@@ -1,14 +1,28 @@
+import { PlacementType } from "@/models/game-record";
 import { Chip } from "./contants";
-
+import { RoundRecord } from "@/models/round-record";
+import { useMemo } from "react";
 type Props = {
   chips: Chip[];
+  roundRecord: RoundRecord;
   getBetPosition: (bet: any) => { x: number; y: number };
 }
 
-const BettingChips: React.FC<Props> = ({ chips, getBetPosition }) => {
+const BettingChips: React.FC<Props> = ({ chips, getBetPosition, roundRecord }) => {
+
+  const filteredChips = useMemo(() => {
+    return chips.filter((chip) => {
+      // remove single bet on zeroth position
+      if (chip.type === PlacementType.SINGLE && chip.numbers.includes(17)) {
+        return false;
+      }
+      return true;
+    });
+  }, [chips, roundRecord]);
+
   return (
     <div className="absolute inset-0 pointer-events-none">
-      {chips.map((chip, index) => {
+      {filteredChips.map((chip, index) => {
         const position = getBetPosition(chip as any);
         if (position.x == 0 && position.y == 0) {
           return null;

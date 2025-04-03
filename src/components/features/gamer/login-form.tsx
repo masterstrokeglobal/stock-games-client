@@ -5,12 +5,11 @@ import FormPassword from "@/components/ui/form/form-password";
 import FormProvider from "@/components/ui/form/form-provider";
 import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useTranslations } from "next-intl";
-import { googleAuth } from "@/lib/utils";
-
+import GoogleLoginButton from "./google-login-button";
 export const createLoginSchema = (t: any) => z.object({
     username: z.string(),
     password: z
@@ -88,35 +87,24 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                     </Button>
                 </footer>
 
-                <div className="flex items-center justify-center gap-3 text-white">
-                    <Separator className="my-6 flex-1 bg-white/20" />
-                    <span>{t('common.or')}</span>
-                    <Separator className="my-6 flex-1 bg-white/20" />
-                </div>
+            </FormProvider>
 
-                <Button
-                    type="button"
-                    size="lg"
-                    onClick={() => googleAuth()}
-                    variant="secondary"
-                    className="w-full bg-tertiary border-[#EFF8FF17] text-white"
-                >
-                    <img
-                        className="mr-2 size-5"
-                        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg"
-                        alt={t('alt.google-logo')}
-                    />
-                    {t('buttons.continue-with-google')}
-                </Button>
+            <div className="flex items-center justify-center gap-3 text-white">
+                <Separator className="my-6 flex-1 bg-white/20" />
+                <span>{t('common.or')}</span>
+                <Separator className="my-6 flex-1 bg-white/20" />
+            </div>
 
-                <div className="mt-8">
+            <GoogleLoginButton />
+{/*             <DemoUserLogin className="mt-4" />
+ */}
+            <div className="mt-8">
                     <Link href="/game/auth/register" className="text-white">
                         <Button variant="ghost" fullWidth>
                             {t('buttons.create-account')}
                         </Button>
                     </Link>
                 </div>
-            </FormProvider>
         </div>
     );
 };

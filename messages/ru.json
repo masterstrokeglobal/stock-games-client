@@ -6,6 +6,7 @@
     "game": {
         "title": "Stock Derby",
         "game-over": "Игра окончена",
+        "demoLogin": "Демо вход",
         "bet": "Ставка",
         "game-ends-in": "Игра заканчивается через",
         "current-bets": "Текущие ставки",

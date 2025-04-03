@@ -40,6 +40,13 @@ export const gameUserAPI = {
         return api.post("/auth/user-login", { ...payload, companyId: COMPANYID });
     },
 
+    googleCreateLogin: async (payload: any) => {
+        return api.post("/auth/google", payload);
+    },
+
+    demoLogin: async () => {
+        return api.post("/auth/create-demo-user", { companyId: COMPANYID });
+    },
     myProfile: async () => {
         return api.get("/user/profile");
     },

@@ -6,6 +6,7 @@
     "game": {
         "title": "Stock Derby",
         "game-over": "Game Over",
+        "demoLogin": "🚀 Demo Login",
         "bet": "Bet",
         "undo": "Undo Bet",
         "game-ends-in": "Game ends in",

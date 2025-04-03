@@ -1,18 +1,19 @@
 "use client";
-import React, { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import FormInput from "@/components/ui/form/form-input";
-import FormProvider from "@/components/ui/form/form-provider";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Separator } from "@/components/ui/separator";
-import Link from "next/link";
 import FormPassword from "@/components/ui/form/form-password";
-import { useTranslations } from "next-intl";
-import { useGetCompanyById } from "@/react-query/company-queries";
-import { COMPANYID, googleAuth } from "@/lib/utils";
+import FormProvider from "@/components/ui/form/form-provider";
+import { Separator } from "@/components/ui/separator";
+import { COMPANYID } from "@/lib/utils";
 import Company from "@/models/company";
+import { useGetCompanyById } from "@/react-query/company-queries";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import GoogleLoginButton from "./google-login-button";
 
 // Zod schema for validating the registration form fields
 export const createRegisterSchema = (t: any, isPhoneAllowed: boolean = false) => z.object({
@@ -143,10 +144,7 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                     <Separator className="my-6 flex-1  bg-white/20" />
                 </div>
             </FormProvider>
-                <Button type="button" size="lg" variant="secondary" className="w-full bg-tertiary border-[#EFF8FF17] text-white" onClick={() => googleAuth()}>
-                    <img className="mr-2 size-5" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg" />
-                    {t('button-google')}
-                </Button>
+                <GoogleLoginButton />
                 <Button variant="ghost" className="text-[#F9F9F9B2] hover:bg-transparent flex mt-8" fullWidth>
                     {t('have-account')}
                     <Link href="/game/auth/login" className="text-white">

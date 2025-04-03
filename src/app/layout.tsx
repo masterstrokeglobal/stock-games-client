@@ -2,6 +2,7 @@ import { HighlightInit } from '@highlight-run/next/client';
 import { NextIntlClientProvider } from 'next-intl';
 import { Poppins } from 'next/font/google';
 import "./globals.css";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
 import { HIGHLIGHT_APP_KEY } from '@/lib/utils';
@@ -32,6 +33,8 @@ export default async function RootLayout({
           urlBlocklist: [],
         }}
       />
+          <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID!}>
+
       <html lang={locale}>
         <head>
           <meta charSet="UTF-8" />
@@ -48,6 +51,7 @@ export default async function RootLayout({
 
         </body>
       </html>
+      </GoogleOAuthProvider>
     </>
   );
 }

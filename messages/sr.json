@@ -6,6 +6,7 @@
     "game": {
         "title": "Stock Derby",
         "game-over": "Kraj igre",
+        "demoLogin": "Demo prijava",
         "bet": "Opklada",
         "undo": "Poništi opkladu",
         "game-ends-in": "Igra se završava za",

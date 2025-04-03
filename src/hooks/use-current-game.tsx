@@ -70,7 +70,7 @@ export const useCurrentGame = (): {
         const timeToPlace = new Date(roundRecord.placementEndTime).getTime() - new Date().getTime() + 4000;
 
         // adding 2 seconds delay for round creation
-        const timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 13000;
+        const timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 8000;
 
         const gameEnd = setTimeout(() => {
             queryClient.invalidateQueries({

@@ -59,7 +59,6 @@ const GamePage = () => {
 
             </main>}
             <AdvertismentDialog />
-
             {isMobile && roundRecord && <MobileGame roundRecord={roundRecord} />}
         </section>
     );

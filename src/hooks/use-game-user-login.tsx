@@ -11,12 +11,12 @@ const useGameUserLogin = () => {
     useEffect(() => {
         if (isSuccess) {
             const user = new User(data?.data);
-            
-            if (user?.username){
+
+            if (user?.username) {
                 H.identify(user.username, {
-                    "name":user.name,
-                    "companyId":user.company?.id??"",
-                    "companyName":user.company?.name??"N/A",
+                    "name": user.name,
+                    "companyId": user.company?.id ?? "",
+                    "companyName": user.company?.name ?? "N/A",
                 });
             }
             setUser(user);
