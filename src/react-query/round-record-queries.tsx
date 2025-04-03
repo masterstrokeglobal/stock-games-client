@@ -89,7 +89,7 @@ export const useLastRoundWinner = (type: SchedulerType) => {
         queryKey: ["last-round-winner", type],
         queryFn: () => roundRecordsAPI.getLastRoundWinner(type),
         staleTime: ONE_MINUTE,
-        refetchInterval: ONE_MINUTE
+        refetchInterval: ONE_MINUTE,
     });
 }
 

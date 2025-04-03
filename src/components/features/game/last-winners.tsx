@@ -34,13 +34,23 @@ export default LastWinners;
 const LastRoundWinner = () => {
     const t = useTranslations("last-round-winner");
     const [gameType] = useGameType();
-    const { data, isSuccess } = useLastRoundWinner(gameType);
+    const { data, isSuccess, refetch } = useLastRoundWinner(gameType);
 
     const rounds: any[] = useMemo(() => {
         if (isSuccess) {
             return Array.from(data.data);
         }
         return [];
+    }, [isSuccess, data]);
+
+    useEffect(() => {
+        const ONE_MINUTE = 1000 * 60 * 1;
+        const interval = setInterval(() => {
+            if (isSuccess) {
+                refetch();
+            }
+        }, 1000);
+        return () => clearInterval(interval);
     }, [isSuccess, data]);
 
 
