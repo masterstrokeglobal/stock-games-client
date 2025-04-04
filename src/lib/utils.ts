@@ -43,7 +43,7 @@ export const getPlacementString = (bet: { market: number[], placementType: Place
   switch (bet.placementType) {
 
     case PlacementType.SINGLE:
-      return `Single ${HorseNumbers[0]}`;
+      return `Single ${HorseNumbers[0] == 17? '0' : HorseNumbers[0]}`;
     case PlacementType.SPLIT:
       return `Split ${HorseNumbers[0]}-${HorseNumbers[1]}`;
     case PlacementType.QUARTER:
