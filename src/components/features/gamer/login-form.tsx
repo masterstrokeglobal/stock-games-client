@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import GoogleLoginButton from "./google-login-button";
+import DemoUserLogin from "./demo-user-login";
 export const createLoginSchema = (t: any) => z.object({
     username: z.string(),
     password: z
@@ -96,15 +97,14 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
             </div>
 
             <GoogleLoginButton />
-{/*             <DemoUserLogin className="mt-4" />
- */}
+            <DemoUserLogin className="mt-4" />
             <div className="mt-8">
-                    <Link href="/game/auth/register" className="text-white">
-                        <Button variant="ghost" fullWidth>
-                            {t('buttons.create-account')}
-                        </Button>
-                    </Link>
-                </div>
+                <Link href="/game/auth/register" className="text-white">
+                    <Button variant="ghost" fullWidth>
+                        {t('buttons.create-account')}
+                    </Button>
+                </Link>
+            </div>
         </div>
     );
 };
