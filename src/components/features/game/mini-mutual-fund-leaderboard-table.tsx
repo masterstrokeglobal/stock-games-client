@@ -41,6 +41,15 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
     };
 
 
+    const sortedUserPlacements = useMemo(() => {
+        return [...userPlacements].sort((a, b) => {
+            const aProfit = a.potentialReturn - a.bettedAmount / LEVERAGE_MULTIPLIER;
+            const bProfit = b.potentialReturn - b.bettedAmount / LEVERAGE_MULTIPLIER;
+            return bProfit - aProfit; // Sort in descending order
+        });
+    }
+    , [userPlacements]);
+
     return (
         <ScrollArea
             className="flex-grow text-white  !h-fit"
@@ -59,7 +68,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                     </tr>
                 </thead>
                 <tbody>
-                    {userPlacements.map((item, index) => (
+                    {sortedUserPlacements.map((item, index) => (
                         <tr
                             key={index}
                             className={cn(
@@ -67,7 +76,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                             )}
                         >
 
-                            <td className="p-2 text-left w-12">{index + 1}</td>
+                            <td className="p-2 text-left w-12">{item.currentRank}</td>
                             <td className="p-2 text-left">
                                 <span className="w-5 h-5 rounded-full inline-block mr-2 border- border-white " style={{ background: CAR_COLORS[item.horse] }} />
                             </td>
