@@ -1,14 +1,15 @@
 {
     "common": {
-        "app-name": "Stock Derby"
+        "app-name": "Stock Derby",
+        "timings": "NSE operates from 9:30 AM to 3:25 PM"
     },
     "game": {
         "title": "Stock Derby",
         "game-over": "Game Over",
+        "demoLogin": "🚀 Demo Login",
         "bet": "Bet",
+        "undo": "Undo Bet",
         "game-ends-in": "Game ends in",
-        "time": "Time",
-        "total-pool": "Total Pool",
         "current-bets": "Current Bets",
         "leaderboard": "Leaderboard",
         "rank": "Rank",
@@ -29,6 +30,14 @@
         "round-starts-in": "Round starts in",
         "place-starts-in": "Place starts in",
         "place-ends-in": "Place ends in"
+    },
+    "last-round-winner": {
+        "title": "Last Round Winner",
+        "round-type": "Round Type",
+        "date-time": "Date & Time",
+        "time": "Time",
+        "winner": "Winner",
+        "no-bets": "No bets placed yet"
     },
     "user-menu": {
         "title": "User Menu",
@@ -69,22 +78,22 @@
         }
     },
     "form-image": {
-        "default-label": "Загрузить изображение",
+        "default-label": "Upload image",
         "image": {
-            "preview-alt": "Предпросмотр загруженного изображения"
+            "preview-alt": "Preview of uploaded image"
         },
         "upload": {
-            "click-to-upload": "Нажмите для загрузки",
-            "select-image": "Выбрать изображение"
+            "click-to-upload": "Click to upload",
+            "select-image": "Select image"
         },
         "status": {
-            "uploading": "Загрузка изображения..."
+            "uploading": "Uploading image..."
         },
         "toast": {
-            "upload-success": "Изображение успешно загружено",
-            "upload-error": "Не удалось загрузить изображение",
-            "invalid-file": "Пожалуйста, загрузите допустимый файл изображения",
-            "image-removed": "Изображение удалено"
+            "upload-success": "Image uploaded successfully",
+            "upload-error": "Failed to upload image",
+            "invalid-file": "Please upload a valid image file",
+            "image-removed": "Image removed"
         }
     },
     "password": {
@@ -303,6 +312,7 @@
         },
         "labels": {
             "username-email": "Username or Email*",
+            "username-email-phone": "Username or Email or Phone*",
             "password": "Password*"
         },
         "validation": {
@@ -350,6 +360,8 @@
         "label-full-name": "Full Name",
         "label-username": "Username",
         "label-email": "Email",
+        "label-email-phone": "Email or Phone",
+        "description-email-phone": "Enter your email or phone number",
         "label-reference-code": "Reference Code",
         "label-password": "Password",
         "terms-message": "By continuing you agree with our terms of service",
@@ -393,6 +405,13 @@
                 "invalid": "Please enter a valid email address"
             }
         },
+        "email-phone": {
+            "label": "Email or Phone*",
+            "validation": {
+                "required": "Email or Phone is required",
+                "invalid": "Please enter a valid email address or phone number"
+            }
+        },
         "button": {
             "sendCode": "Send Verification Code",
             "sending": "Sending..."
@@ -429,7 +448,9 @@
             "total-bet": "Total Bet Amount",
             "total-winnings": "Total Winnings",
             "profit-loss": "Profit/Loss",
-            "winning-bet": "Winning Bet ID"
+            "winning-bet": "Winning Bet ID",
+            "platform-fees": "Platform Fees",
+            "net-winning": "Net Winning"
         }
     },
     "contact": {

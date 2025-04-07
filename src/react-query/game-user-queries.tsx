@@ -174,3 +174,22 @@ export const useGoogleLoginCallback = () => {
         },
     });
 };
+
+export const useDemoLogin = () => {
+    const queryClient = useQueryClient();
+    const { setUser } = useAuthStore();
+    return useMutation({
+        mutationFn: gameUserAPI.demoLogin,
+        onSuccess: (data) => {
+            const user = new User(data.data);
+            setUser(user);
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "gameUser"
+            });
+            toast.success("Demo login successful");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error logging in with Google");
+        },
+    });
+};

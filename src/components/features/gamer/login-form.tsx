@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
+import DemoUserLogin from "@/components/auth/demo-user-login";
 
 export const createLoginSchema = (t: any) => z.object({
     username: z.string(),
@@ -92,26 +93,6 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                     </Button>
                 </footer>
 
-                <div className="flex items-center justify-center gap-3 text-white">
-                    <Separator className="my-6 flex-1 bg-white/20" />
-                    <span>{t('common.or')}</span>
-                    <Separator className="my-6 flex-1 bg-white/20" />
-                </div>
-
-                <Button
-                    type="button"
-                    size="lg"
-                    onClick={() => googleAuth()}
-                    variant="secondary"
-                    className="w-full bg-[#182B5A] border-[#EFF8FF17] text-white"
-                >
-                    <img
-                        className="mr-2 size-5"
-                        src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg"
-                        alt={t('alt.google-logo')}
-                    />
-                    {t('buttons.continue-with-google')}
-                </Button>
 
                 <div className="mt-8">
                     <Link href="/game/auth/register" className="text-white">
@@ -121,6 +102,29 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                     </Link>
                 </div>
             </FormProvider>
+
+            <div className="flex items-center justify-center gap-3 text-white">
+                <Separator className="my-6 flex-1 bg-white/20" />
+                <span>{t('common.or')}</span>
+                <Separator className="my-6 flex-1 bg-white/20" />
+            </div>
+
+            <Button
+                type="button"
+                size="lg"
+                onClick={() => googleAuth()}
+                variant="secondary"
+                className="w-full bg-[#182B5A] border-[#EFF8FF17] text-white"
+            >
+                <img
+                    className="mr-2 size-5"
+                    src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg"
+                    alt={t('alt.google-logo')}
+                />
+                {t('buttons.continue-with-google')}
+            </Button>
+
+            <DemoUserLogin />
         </div>
     );
 };
