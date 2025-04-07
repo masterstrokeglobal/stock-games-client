@@ -129,7 +129,7 @@ const LeaderboardHeader = () => {
             </h2>
             <div className="flex justify-between items-center">
                 <AnimatedEyes />
-                <span className="text-md font-semibold text-game-text ml-2">
+                <span className="text-md font-semibold text-game-secondary ml-2">
                     {number} viewing
                 </span>
             </div>

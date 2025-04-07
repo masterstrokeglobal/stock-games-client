@@ -54,7 +54,7 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
     useEffect(() => {
         if (sectionRef.current) {
             const sectionHeight = sectionRef.current.offsetHeight;
-            setScrollAreaHeight(sectionHeight - 40);
+            setScrollAreaHeight(sectionHeight);
         }
     }, []);
 
@@ -85,7 +85,7 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                 style={{ height: isMobile ? "fit-content" : `${scrollAreaHeight}px` }}
                 type="auto"
             >
-                <table className="min-w-full">
+                <table className="min-w-full mb-12  ">
                     <thead className="bg-primary-game bg-opacity-50">
                         <tr className="text-game-text text-sm">
                             <th className="p-2 text-left w-12 text-white">
@@ -179,6 +179,8 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                         ))}
                     </tbody>
                 </table>
+
+                <div className="h-8" />
                 <ScrollBar orientation="horizontal" />
             </ScrollArea>
         </section>
