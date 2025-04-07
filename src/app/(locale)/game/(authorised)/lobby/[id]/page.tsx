@@ -29,9 +29,6 @@ const LobbyWithChat = () => {
     gameType: lobby?.gameType
   });
 
-
-
-
   if (isFetching) return <LoadingScreen className='bg-primary-game text-white  min-h-screen' />;
 
   return (

@@ -41,6 +41,7 @@
     "cmdk": "1.0.0",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
+    "framer-motion": "^12.6.3",
     "howler": "^2.2.4",
     "input-otp": "^1.2.4",
     "lucide-react": "^0.447.0",
