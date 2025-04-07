@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useGameState, useIsPlaceOver } from '@/hooks/use-current-game';
 import { useLeaderboard } from '@/hooks/use-leadboard';
 import { cn } from '@/lib/utils';
@@ -60,6 +61,7 @@ const StockSelectionGrid: React.FC = () => {
       .filter(placement => placement.marketItem?.id === marketItemId)
       .reduce((total, placement) => total + (placement.amount ?? 0), 0);
   };
+
   // Handle bet placement
   const handlePlaceBet = (stock: MarketItem): void => {
     if (!stock || isPlaceOver) return;
@@ -86,48 +88,53 @@ const StockSelectionGrid: React.FC = () => {
   if (!lobbyRound?.roundRecord) return null;
 
   return (
-    <div className="w-full mb-6">
-      <GameHeader gameState={gameState} moneyLeft={moneyLeft} className='lg:flex items-center px-4 justify-between lg:flex-row' />
+    <div className="w-full flex-1 mb-6 h-full ">
+      <ScrollArea
+        type="auto" 
+        className="h-full w-full"
+      >
+        <GameHeader gameState={gameState} moneyLeft={moneyLeft} className='lg:flex items-center px-4 justify-between lg:flex-row' />
 
-      <div className="grid sm:grid-cols-4 grid-cols-2 gap-4 p-4">
-        {marketItems.map((stock) => (
-          <div
-            key={stock.id}
-            onClick={() => handlePlaceBet(stock)}
-            className={`
+        <div className="grid sm:grid-cols-4 grid-cols-2 gap-4 p-4">
+          {marketItems.map((stock) => (
+            <div
+              key={stock.id}
+              onClick={() => handlePlaceBet(stock)}
+              className={`
               relative flex flex-col items-center justify-center 
               w-full h-14 bg-[#1A2D58] p-3 rounded-lg 
               cursor-pointer transition-all 
               ${isPlaceOver ? 'opacity-70 cursor-not-allowed' : ''}
             `}
-          >
-            <div className="text-white  text-sm  font-bold">{stock.name}</div>
-            <div className="text-sm text-gray-300">
-              {stock.id && stocksToPriceMap.get(stock.id) && <>
-                {lobbyRound.roundRecord?.type == SchedulerType.CRYPTO ? "USDT " : "Rs."}
-                {stocksToPriceMap.get(stock.id)}</>}
-            </div>
-            {/* Total Bets Coin */}
-            {(stock.id && calculateTotalBetsForMarket(stock.id) > 0) && <div
-              className="
+            >
+              <div className="text-white  text-sm  font-bold">{stock.name}</div>
+              <div className="text-sm text-gray-300">
+                {stock.id && stocksToPriceMap.get(stock.id) && <>
+                  {lobbyRound.roundRecord?.type == SchedulerType.CRYPTO ? "USDT " : "Rs."}
+                  {stocksToPriceMap.get(stock.id)}</>}
+              </div>
+              {/* Total Bets Coin */}
+              {(stock.id && calculateTotalBetsForMarket(stock.id) > 0) && <div
+                className="
                 absolute top-1/2 right-2  -translate-y-1/2
                 w-8 h-8 rounded-full 
                 bg-red-600 text-white 
                 flex items-center justify-center 
                 text-xs font-bold
               "
-            >
-              {stock.id && calculateTotalBetsForMarket(stock.id)}
-            </div>}
+              >
+                {stock.id && calculateTotalBetsForMarket(stock.id)}
+              </div>}
 
-            {stock.id && <Triangle size={20} className='size-3 top-2 left-2 absolute' style={{
-              transform: `rotate(${stocksToChangePercentMap.get(stock.id)! > 0 ? '0deg' : '180deg'})`,
-              color: stocksToChangePercentMap.get(stock.id)! > 0 ? 'green' : 'red',
-              fill: stocksToChangePercentMap.get(stock.id)! > 0 ? 'green' : 'red'
-            }} />}
-          </div>
-        ))}
-      </div>
+              {stock.id && <Triangle size={20} className='size-3 top-2 left-2 absolute' style={{
+                transform: `rotate(${stocksToChangePercentMap.get(stock.id)! > 0 ? '0deg' : '180deg'})`,
+                color: stocksToChangePercentMap.get(stock.id)! > 0 ? 'green' : 'red',
+                fill: stocksToChangePercentMap.get(stock.id)! > 0 ? 'green' : 'red'
+              }} />}
+            </div>
+          ))}
+        </div>
+      </ScrollArea>
     </div>
   );
 };

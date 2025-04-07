@@ -14,7 +14,7 @@ interface WebSocketMessage {
 }
 
 
-function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, gameType }: { lobbyId?: number, lobbyCode?: string, gameType?: LobbyGameType }) {
+function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, gameType }: { lobbyId?: number, lobbyCode?: string, gameType?: LobbyGameType, }) {
     const queryClient = useQueryClient();
     const [showResults, setShowResult] = useState<boolean>(false);
     const [resultData, setResultData] = useState<LobbyResult | undefined>(undefined);

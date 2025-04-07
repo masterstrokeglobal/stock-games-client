@@ -10,6 +10,8 @@
         "bet": "Bet",
         "undo": "Undo Bet",
         "game-ends-in": "Game ends in",
+        "game-starts-in": "Game starts in",
+        "game-loops-in": "Game loops in",
         "current-bets": "Current Bets",
         "leaderboard": "Leaderboard",
         "rank": "Rank",
