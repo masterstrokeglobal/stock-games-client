@@ -26,7 +26,7 @@ const LobbyPlayers = ({ lobby }: Props) => {
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {lobby?.lobbyUsers?.map((player) => (
-                <Card key={player.id} className={cn(userId === player.user?.id ? 'border-blue-500' : 'border-gray-600',"bg-primary-game border-2")}>
+                <Card key={player.id} className={cn(userId === player.user?.id ? 'border-blue-500' : 'border-gray-600', "bg-primary-game border-2")}>
                     <CardContent className="flex items-center justify-between p-4">
                         <div className="flex items-center gap-3">
                             <div className="relative">

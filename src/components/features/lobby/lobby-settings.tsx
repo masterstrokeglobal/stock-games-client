@@ -37,17 +37,6 @@ const LobbySettings = ({ lobby }: Props) => {
 
     return (
         <div className="flex gap-4 flex-col">
-            {isParticipant && !isReady && (
-                <Button
-                    variant="game"
-                    className="w-full flex-1"
-                    onClick={handleReadyToPlay}
-                    disabled={isReadyLoading}
-                >
-                    {isReadyLoading ? "Getting Ready..." : "Ready to Play"}
-                </Button>
-            )}
-
 
             {(!isParticipant && !lobby.isClosed) && (
                 <Button
@@ -61,7 +50,7 @@ const LobbySettings = ({ lobby }: Props) => {
             )}
             {/* Play Button */}
             {lobby.isStarted && (
-                <Link href={`/game/lobby/${lobby.joiningCode}/play/${lobby.gameType == LobbyGameType.MINI_MUTUAL_FUND ? "/mini-mutual-fund":""}`} >
+                <Link href={`/game/lobby/${lobby.joiningCode}/play/${lobby.gameType == LobbyGameType.MINI_MUTUAL_FUND ? "/mini-mutual-fund" : ""}`} >
                     <Button
                         variant="game"
                         className="w-full flex-1"
@@ -71,7 +60,7 @@ const LobbySettings = ({ lobby }: Props) => {
                 </Link>
             )}
 
-            {(isLeader && isReady && !lobby.isStarted) && (
+            {(isLeader && !lobby.isStarted) && (
                 <Button
                     variant="game"
                     className="w-full flex-1"
@@ -82,16 +71,7 @@ const LobbySettings = ({ lobby }: Props) => {
                 </Button>
             )}
 
-            {isReady && !lobby.isStarted && (
-                <Button
-                    variant="destructive"
-                    className="w-full flex-1"
-                    onClick={() => unreadyToPlay(lobby.id!)}
-                    disabled={isUnreadyLoading}
-                >
-                    {isUnreadyLoading ? "Unready..." : "Unready to Play"}
-                </Button>
-            )}
+
 
 
             {/* Leave Button */}
