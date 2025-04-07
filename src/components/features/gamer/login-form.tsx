@@ -124,7 +124,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 {t('buttons.continue-with-google')}
             </Button>
 
-            <DemoUserLogin />
+            <DemoUserLogin className="mt-4" />
         </div>
     );
 };
