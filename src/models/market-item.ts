@@ -2,6 +2,7 @@
 export enum SchedulerType {
     NSE = "nse",
     CRYPTO = "crypto",
+    USA_MARKET = "usa_market",
 }
 
 export class MarketItem {

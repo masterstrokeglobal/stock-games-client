@@ -122,7 +122,7 @@ const MultiplayerRouletteGame = ({ lobbyRound, lobby, result }: Props) => {
                                     result={result}
                                     previousRoundId={roundRecord.id.toString()}
                                 />
-                                <BettingChips chips={boardChips} getBetPosition={getBetPosition} />
+                                <BettingChips roundRecord={roundRecord} chips={boardChips} getBetPosition={getBetPosition} />
                             </div>
 
                         </div>

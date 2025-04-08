@@ -3,6 +3,7 @@ import { Bet, Chip } from './contants';
 import { useGetRoundRecordById } from '@/react-query/round-record-queries';
 import { useEffect, useMemo } from 'react';
 import { ROULETTE_NUMBERS } from '@/lib/utils';
+import { LobbyResult } from './lobby-result-dialog';
 
 interface RouletteBettingGridProps {
     hoveredCell: Bet | null;
@@ -11,7 +12,7 @@ interface RouletteBettingGridProps {
     previousRoundId?: string;
     result?: LobbyResult;
 }
-export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord }: RouletteBettingGridProps) => {
+export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord ,result}: RouletteBettingGridProps) => {
 
 
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord.id);

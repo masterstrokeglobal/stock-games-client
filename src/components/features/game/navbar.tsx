@@ -27,7 +27,8 @@ const Navbar = () => {
         return new Wallet(data?.data?.wallet);
     }, [data])
 
-    const user = userDetails as User;
+    const user = userDetails as User | null;
+    const isLoggedIn = user !== null;
     return (
         <nav className="items-center md:px-6 px-4 z-50  flex fixed top-0 justify-between font-semibold w-full h-14 bg--game bg-primary-game">
             <div className="flex items-center space-x-4 ">
@@ -42,7 +43,7 @@ const Navbar = () => {
             <div className="flex items-center space-x-4 ml-auto">
                 <MuteButton className="md:block hidden " />
                 <LocaleSwitcher className="md:block hidden " />
-                <div className="bg-secondary-game text-game-text px-4 md:h-12 flex items-center md:py-2 py-2   rounded-md">
+                {isLoggedIn && <div className="bg-secondary-game text-game-text px-4 md:h-12 flex items-center md:py-2 py-2   rounded-md">
                     <div className="shadow-custom-glow mr-2 rounded-md" >
                         <img src="/coin.svg" alt="coin" className="md:w-auto w-5" />
                     </div>
@@ -54,20 +55,25 @@ const Navbar = () => {
                             <img src="/plus-icon.svg" className="size-7" alt="arrow-down" />
                         </Button>
                     </Link>
-                </div>
-                <Link href="/game/user-menu">
+                </div>}
+                {isLoggedIn && <Link href="/game/user-menu">
                     <button className="bg-secondary-game md:px-4 md:h-12 h-10 text-game-text justify-center  md:aspect-auto aspect-square space-x-3 flex items-center md:py-2 p-1 rounded-md">
                         <Avatar className="size-6">
                             <AvatarFallback className="bg-secondary-game">
-                                {user.firstname?.charAt(0) ?? "A"}
+                                {user?.firstname?.charAt(0) ?? "A"}
                             </AvatarFallback>
-                            <AvatarImage src={user.profileImage} />
+                            <AvatarImage src={user?.profileImage ?? ""} />
                         </Avatar>
                         <span className="text-sm md:block hidden" >
-                            {user.firstname}
+                            {user?.firstname}
                         </span>
                     </button>
-                </Link>
+                </Link>}
+                {!isLoggedIn && <Link href="/game/auth/login">
+                    <Button className="bg-secondary-game text-game-text px-4 md:h-12 flex items-center md:py-2 py-2   rounded-md">
+                        Login
+                    </Button>
+                </Link>}
             </div>
             <div className="h-0.5 bottom-0 absolute w-full md:-mx-12 -mx-4" style={{ background: "radial-gradient(51.91% 51.91% at 48.09% 91.82%, #2397FA 0%, rgba(35, 151, 250, 0) 100%)" }} />
         </nav>

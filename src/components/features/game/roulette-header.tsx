@@ -3,6 +3,7 @@ import { RoundRecord } from '@/models/round-record';
 import { useTranslations } from 'next-intl';
 import React from 'react';
 import { CurrentGameState } from './contants';
+import { cn } from '@/lib/utils';
 
 interface GameHeaderProps {
     gameState: CurrentGameState;
@@ -23,7 +24,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({ gameState, className }) 
     };
 
     return (
-        <header className='text-center hidden lg:block my-2 text-game-secondary'>
+        <header className={cn('text-center hidden lg:block my-2 text-game-secondary', className)}>
             <h2>{gameState.isPlaceOver ? t("game-ends-in") : t("round-starts-in")}</h2>
             <p className='text-7xl jersey leading-[5rem]'>
                 {getTime()}

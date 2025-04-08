@@ -77,7 +77,7 @@ const GamePage = () => {
                 <div
                     style={borderStyle}
                     className="xl:col-span-5 col-span-4 row-span-3 rounded-2xl ">
-                    {roundRecord && filteredMarket && <LeaderBoard roundRecord={roundRecord} filteredMarket={filteredMarket} result={resultData} />}
+                    {roundRecord && filteredMarket && <LeaderBoard roundRecord={roundRecord}  />}
                 </div>
             </main>}
             {(isMobile && lobbyRound && lobby) && <>
@@ -89,7 +89,7 @@ const GamePage = () => {
                             {lobbyRound && lobby && <PlacementBetsLobby lobbyRound={lobbyRound} lobby={lobby} sendMessage={sendMessage} />}
                         </div>
                     </main>}
-                    {(isPlaceOver && lobbyRound.roundRecord) && <LeaderBoard roundRecord={lobbyRound.roundRecord} filteredMarket={filteredMarket} result={resultData} />}
+                    {(isPlaceOver && lobbyRound.roundRecord) && <LeaderBoard roundRecord={lobbyRound.roundRecord} />}
                     {isPlaceOver && lobbyRound && lobby && <PlacementBetsLobby className="my-6" lobbyRound={lobbyRound} lobby={lobby} sendMessage={sendMessage} />}
                 </section>
             </>}
