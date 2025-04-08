@@ -12,7 +12,7 @@ const GoogleLoginButton = () => {
             googleSignIn({ googleToken: token, companyId: COMPANYID }, {
                 
                 onSuccess: () => {
-                    router.push("/game");
+                    router.push("/game/platform");
                 }
             });
         }

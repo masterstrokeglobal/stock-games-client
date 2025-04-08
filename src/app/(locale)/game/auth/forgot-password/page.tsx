@@ -67,7 +67,7 @@ const RegisterPage: React.FC = () => {
             userId: user.toString()
         }, {
             onSuccess: () => {
-                router.push("/game");
+                router.push("/game/platform");
             }
         });
     };

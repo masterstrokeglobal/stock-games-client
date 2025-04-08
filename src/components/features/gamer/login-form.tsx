@@ -9,8 +9,9 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import GoogleLoginButton from "./google-login-button";
 import DemoUserLogin from "./demo-user-login";
+import GoogleLoginButton from "./google-login-button";
+
 export const createLoginSchema = (t: any) => z.object({
     username: z.string(),
     password: z

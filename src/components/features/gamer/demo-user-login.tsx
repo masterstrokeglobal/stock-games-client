@@ -16,7 +16,7 @@ const DemoUserLogin = ({ className }: DemoUserLoginProps) => {
     const handleDemoLogin = () => {
         demoLogin(undefined, {
             onSuccess: () => {
-                router.push("/game");
+                router.push("/game/platform");
             }
         });
     }

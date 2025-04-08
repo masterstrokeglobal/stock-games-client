@@ -13,7 +13,7 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: '/game',
+        destination: '/game/platform',
         permanent: true,
       },
       {
