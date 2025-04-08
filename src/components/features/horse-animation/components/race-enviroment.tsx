@@ -8,21 +8,25 @@ import { Physics } from "@react-three/rapier";
 import { Ground } from "./Ground";
 import FenceRow from "./fence-row";
 import HorseAnimation from "./horse-animation";
+import MarketItem from "@/models/market-item";
 
 type Props = {
     roundRecord: RoundRecord;
+    filteredMarket?: MarketItem[];
+
 };
 const HorseRaceEnvironment = ({
-    roundRecord
+    roundRecord,
+    filteredMarket
 }: Props) => {
     return (
         <>
-            <PerspectiveCamera makeDefault fov={70} zoom={13} position={[-250, 200, 250]} />
+            <PerspectiveCamera makeDefault fov={70} zoom={13} position={[-220, 320, 20]} />
             <color attach="background" args={[0xf0f0f0]} />
             <Sky sunPosition={[100, 20, 100]} />
             <ambientLight intensity={0.3} />
             <OrbitControls enableRotate={true}
-                maxPolarAngle={Math.PI / 2 - 0.1 -.02}
+                maxPolarAngle={Math.PI / 2 - 0.1 - .02}
                 minPolarAngle={Math.PI / 2 - 0.1}
                 maxDistance={1000}
             />
@@ -31,7 +35,7 @@ const HorseRaceEnvironment = ({
                 <Ground />
                 <FenceRow x={-35} count={1000} spacing={16} />
                 <FenceRow x={85} count={1000} spacing={16} />
-                <HorseAnimation roundRecord={roundRecord} />
+                <HorseAnimation roundRecord={roundRecord} filteredMarket={filteredMarket} />
             </Physics>
         </>
     );

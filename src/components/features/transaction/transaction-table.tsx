@@ -68,7 +68,7 @@ const TransactionTable = ({ userId }: Props) => {
     // Calculate total pages based on data count
     const totalPages = useMemo(() => {
         return Math.ceil(data?.data?.count / 10) || 1;
-    }, [data, isSuccess]);
+    }, [data]);
 
     // Handle search input change
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -4,18 +4,21 @@ import { RoundRecord } from "@/models/round-record";
 import { Canvas } from "@react-three/fiber";
 import HorseRaceEnvironment from "./components/race-enviroment";
 import { useTranslations } from "next-intl";
+import MarketItem from "@/models/market-item";
 
 type Props = {
   roundRecord: RoundRecord;
+  filteredMarket?: MarketItem[];
+
 };
 
-export default function HorseRace({ roundRecord }: Props) {
+export default function HorseRace({ roundRecord, filteredMarket }: Props) {
 
   const isPlaceOver = useIsPlaceOver(roundRecord);
 
   return isPlaceOver ? (
     <Canvas>
-      <HorseRaceEnvironment roundRecord={roundRecord} />
+      <HorseRaceEnvironment roundRecord={roundRecord} filteredMarket={filteredMarket} />
     </Canvas>
   ) : (
     <RacePreparation />

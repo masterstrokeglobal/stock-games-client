@@ -1,3 +1,4 @@
+
 "use client";
 import Container from '@/components/common/container';
 import TopBar from '@/components/common/top-bar';
@@ -100,6 +101,11 @@ const UserMenu = () => {
                     </Link>
                     <LocaleSwitcher className="w-full text-white" selectClassName="bg-primary text-white" />
                     <MuteButton className="w-full bg-primary text-white" />
+                    <Link href="/game/lobby" passHref>
+                        <Button variant="game-secondary" className="w-full gap-2 h-14">
+                            <img width="24" height="24" className="mr-2" src="https://img.icons8.com/external-filled-line-andi-nur-abdillah/64/external-Multiplayer-gaming-(filled-line)-filled-line-andi-nur-abdillah.png" alt="external-Multiplayer-gaming-(filled-line)-filled-line-andi-nur-abdillah" />
+                            Play with Friends                                   </Button>
+                    </Link>
                 </nav>
             </div>
 

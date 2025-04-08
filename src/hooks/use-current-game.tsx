@@ -105,9 +105,11 @@ export const useCurrentGame = (): {
 
 export const useGameState = (roundRecord: RoundRecord | null) => {
     const [gameState, setGameState] = useState({
+        placeStartTimeLeft: formatTime(0),
         placeTimeLeft: formatTime(0),
         gameTimeLeft: formatTime(0),
         isPlaceOver: false,
+        isPlaceStarted: false,
         isGameOver: false,
     });
 
@@ -118,11 +120,16 @@ export const useGameState = (roundRecord: RoundRecord | null) => {
             const now = new Date().getTime();
             const placeEnd = new Date(roundRecord.placementEndTime).getTime();
             const gameEnd = new Date(roundRecord.endTime).getTime();
+            const placeStart = new Date(roundRecord.placementStartTime).getTime();
+            const isPlaceStarted = now >= placeStart;
+            
 
             setGameState({
                 placeTimeLeft: formatTime(Math.max(0, placeEnd - now)),
                 gameTimeLeft: formatTime(Math.max(0, gameEnd - now)),
+                placeStartTimeLeft: formatTime(Math.max(0, placeStart - now)),
                 isPlaceOver: now >= placeEnd,
+                isPlaceStarted: isPlaceStarted,
                 isGameOver: now >= gameEnd,
             });
         };

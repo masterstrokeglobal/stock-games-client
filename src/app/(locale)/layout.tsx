@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { Toaster } from "sonner";
 import ThemeManager from "./dashboard/theme-manager";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -28,6 +30,7 @@ export default function RootLayout({
                         <ThemeManager />
                         <Toaster toastOptions={{ duration: 1500 }} position="top-right" richColors />
                         {children}
+                        <ReactQueryDevtools initialIsOpen={false} />
                     </QueryClientProvider>
                 </UserProvider>
             </AudioProvider>

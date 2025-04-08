@@ -75,7 +75,6 @@ export const getPlacementString = (bet: { market: number[], placementType: Place
   }
 }
 
-export const COMPANYID = Number(process.env.NEXT_PUBLIC_COMPANY_ID) ?? 4
 
 export const HIGHLIGHT_APP_KEY = process.env.NEXT_PUBLIC_HIGHLIGHT_APP_KEY
 
@@ -206,3 +205,14 @@ export const googleAuth = () => {
 
 export const RED_NUMBERS = [1, 3, 6, 8, 9, 11, 14, 16];
 export const BLACK_NUMBERS = [2, 4, 5, 7, 10, 12, 13, 15];
+export const  deepClone = (obj: any) => {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+export const COMPANYID = Number(process.env.NEXT_PUBLIC_COMPANY_ID) ?? 4;
+
+export const PLATFORMFEES = 4
+
+export const LOBBY_PLATFORM_FEES = 10
+
+export const LEVERAGE_MULTIPLIER = 10;

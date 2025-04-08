@@ -26,7 +26,7 @@ type LoginFormValues = z.infer<typeof loginFormSchema>;
 const defaultValues: LoginFormValues = {
     email: "",
     password: "",
-    loginAs: AdminRole.SUPER_ADMIN,
+    loginAs: AdminRole.COMPANY_ADMIN,
 };
 
 const LoginForm = () => {

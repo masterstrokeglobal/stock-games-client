@@ -1,10 +1,8 @@
-"use client";
-
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useGameState } from "@/hooks/use-current-game";
 import { useLeaderboard } from "@/hooks/use-leadboard";
 import { cn } from "@/lib/utils";
-import { SchedulerType } from "@/models/market-item";
+import MarketItem, { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { useGetRoundRecordById } from "@/react-query/round-record-queries";
 import { useTranslations } from "next-intl";
@@ -13,7 +11,6 @@ import LeaderboardHeader from "./leaderboard-header";
 import useWindowSize from "@/hooks/use-window-size";
 
 
-// Enhanced interface for ranked market items
 type Props = {
     roundRecord: RoundRecord;
     className?: string;
@@ -21,7 +18,7 @@ type Props = {
 
 const LeaderBoard = ({ roundRecord, className }: Props) => {
     const t = useTranslations("game");
-    const { stocks: leaderboardData } = useLeaderboard(roundRecord);
+    const { stocks: unfilteredleaderboardData } = useLeaderboard(roundRecord);
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
     const { isGameOver } = useGameState(roundRecord);
@@ -30,26 +27,23 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord.id);
 
     useEffect(() => {
-        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 4000;
-
-        const timer = setTimeout(() => {
-            console.log('refetching');
-            refetch();
-        }, resultFetchTime);
-
-        return () => clearTimeout(timer);
-    }, [roundRecord, refetch]);
+        if (!result) {
+            const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 4000;
+            const timer = setTimeout(() => {
+                refetch();
+            }, resultFetchTime);
+            return () => clearTimeout(timer);
+        }
+    }, [roundRecord, refetch, result]);
 
     const winnerNumber = useMemo(() => {
+        if (result) return null;
         if (!isSuccess) return null;
         const winningId = data.data?.winningId;
-
         if (!winningId) return 0;
-
         const winningNumber = roundRecord.market.find((item) => item.id === winningId);
-        if (!winningNumber) return null;
-        return winningNumber.horse;
-    }, [data, isSuccess]);
+        return winningNumber ? winningNumber.horse : null;
+    }, [data, isSuccess, result]);
 
     useEffect(() => {
         if (sectionRef.current) {
@@ -71,8 +65,6 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
         if (change < 0) return "text-red-500";
         return "text-game-text";
     };
-
-    const winnerMarketItem = leaderboardData.find((item) => item.horse === winnerNumber);
 
     return (
         <section
@@ -103,7 +95,6 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                             <th className="p-2 text-right whitespace-nowrap text-white">
                                 {t("change")}
                             </th>
-
                         </tr>
                     </thead>
                     <tbody className="bg-background-game">
@@ -134,8 +125,10 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                         {leaderboardData.filter((item) => item.horse !== winnerNumber).map((marketItem, index) => (
                             <tr
                                 key={index}
-
-                                className={cn("border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden", (index === 0 && winnerNumber == 0) ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm")}
+                                className={cn(
+                                    "border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden",
+                                    (index === 0 && winnerNumber === 0 && !isGameOver) ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm"
+                                )}
                             >
                                 <td className="p-2  text-game-text">
 
@@ -167,6 +160,11 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                                     {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : "Rs."}
                                     {marketItem.price ? formatPrice(marketItem.price) : "-"}
                                 </td>
+                                {result && (
+                                    <td className="p-2 text-right text-gray-300">
+                                        {formatPrice(item.initialPrice ?? 0)}
+                                    </td>
+                                )}
                                 <td className={cn(
                                     "p-2  text-right",
                                     getChangeColor(marketItem.change_percent)

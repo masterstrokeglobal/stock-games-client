@@ -1,25 +1,36 @@
+import { useGameState } from '@/hooks/use-current-game';
+import { RoundRecord } from '@/models/round-record';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import { CurrentGameState } from './contants';
-import { RoundRecord } from '@/models/round-record';
-import { useGameState } from '@/hooks/use-current-game';
-import { useTranslations } from 'next-intl';
 
 interface GameHeaderProps {
     gameState: CurrentGameState;
+    className?: string;
 }
 
-export const GameHeader: React.FC<GameHeaderProps> = ({ gameState }) => {
+
+export const GameHeader: React.FC<GameHeaderProps> = ({ gameState, className }) => {
+
     const t = useTranslations('game');
+    const getTime = () => {
+        if (gameState.isGameOver) {
+            return "00:00";
+        }
+        return gameState.isPlaceOver
+            ? gameState.gameTimeLeft.formatted
+            : gameState.placeTimeLeft.formatted;
+    };
+
     return (
         <header className='text-center hidden lg:block my-2 text-game-secondary'>
             <h2>{gameState.isPlaceOver ? t("game-ends-in") : t("round-starts-in")}</h2>
             <p className='text-7xl jersey leading-[5rem]'>
-                {gameState.isPlaceOver ? gameState.gameTimeLeft.formatted : gameState.placeTimeLeft.formatted}
+                {getTime()}
             </p>
         </header>
     );
 };
-
 type Props = {
     roundRecord: RoundRecord;
 }

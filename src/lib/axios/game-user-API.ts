@@ -57,4 +57,8 @@ export const gameUserAPI = {
     googleLoginCallback: async () => {
         return api.get("/auth/google/callback");
     },
+
+    demoLogin: async () => {
+        return api.post("/auth/create-demo-user", { companyId: COMPANYID });
+    },
 };

@@ -32,7 +32,7 @@ const BettingHistoryFilter = ({ onFilterChange }: { onFilterChange: (startTime: 
         }
 
         onFilterChange(startTime, endTime);
-    }, [timeRange]);
+    }, [timeRange,onFilterChange]);
 
     return (
         <div className="w-full mb-4">

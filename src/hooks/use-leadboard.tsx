@@ -2,12 +2,13 @@ import MarketItem, { NSEMarketItem, SchedulerType } from '@/models/market-item';
 import { RoundRecord } from '@/models/round-record';
 import { useEffect, useRef, useState } from 'react';
 
-interface RankedMarketItem extends MarketItem {
+export interface RankedMarketItem extends MarketItem {
     change_percent: string;
     rank: number;
     price: number;
     initialPrice?: number;
 }
+
 
 export const useLeaderboard = (roundRecord: RoundRecord) => {
     const [stocks, setStocks] = useState<RankedMarketItem[]>(roundRecord.market as RankedMarketItem[]);
@@ -55,13 +56,12 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
         const key = roundRecord.type === SchedulerType.CRYPTO ? bitcode.toLocaleLowerCase() : bitcode.toUpperCase();
 
         // Set initial price exactly at placementEndTime
-        if (roundStatus === 'tracking' && roundRecord.initialValues[key] === undefined) {
+        if (roundStatus === 'tracking' && roundRecord.initialValues != null && roundRecord.initialValues[key] === undefined) {
             initialPricesRef.current.set(bitcode, currentPrice);
             return { initialPrice: currentPrice, changePercent: '0' };
         }
-
         // Calculate changes during tracking period
-        if (roundStatus === 'tracking' && roundRecord.initialValues[key]) {
+        if (roundStatus === 'tracking' && roundRecord.initialValues !== null && roundRecord.initialValues[key]) {
             const initialPrice = roundRecord.initialValues ? roundRecord.initialValues[key] : console.log('No initial values found');
             if (initialPrice === undefined) {
                 console.log('No initial price found for', key);
@@ -94,7 +94,6 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
 
             try {
                 setConnectionStatus('connecting');
-                console.log('Connecting to WebSocket', roundRecord.type);
 
                 if (roundRecord.type === SchedulerType.CRYPTO) {
                     socketRef.current = new WebSocket(process.env.NEXT_PUBLIC_CRYPTO_WEBSOCKET_URL as string);
@@ -116,6 +115,7 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
 
                                 latestDataRef.current = latestDataRef.current.map(stock => {
                                     if (stock.bitcode === streamData.s) {
+
                                         return {
                                             ...stock,
                                             price: currentPrice,
@@ -135,7 +135,7 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                                 }
                             }
                         } catch (error) {
-                            console.error('Error processing WebSocket message:', error);
+                            console.log('Error parsing crypto data', error);
                         }
                     };
                 }
@@ -185,14 +185,13 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                                     latestDataRef.current = calculateRanks(latestDataRef.current);
                                 }
                             });
-
                         } catch (error) {
-                            console.error('Error processing WebSocket message:', error);
+                            console.log('Error parsing NSE data', error);
                         }
                     };
                 }
             } catch (error) {
-                console.error('Error creating WebSocket connection:', error);
+                console.log(error)
                 setConnectionStatus('disconnected');
             }
 
@@ -213,8 +212,7 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                 }, 3000);
             };
 
-            socketRef.current.onerror = (error) => {
-                console.error('WebSocket error:', error);
+            socketRef.current.onerror = () => {
                 setConnectionStatus('disconnected');
             };
 

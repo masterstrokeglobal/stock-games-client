@@ -15,7 +15,7 @@ type HorseModelProps = {
 const HorseModel = forwardRef<THREE.Group, HorseModelProps>(
   ({ position, scale, speed, color, number }, ref) => {
     const group = useRef<THREE.Group | null>(null);
-    const { scene, animations } = useLoader(GLTFLoader, "./horse.glb");
+    const { scene, animations } = useLoader(GLTFLoader, "/horse.glb");
     const mixer = useRef<THREE.AnimationMixer | null>(null);
     const horseNumberRef = useRef<any>(null);
 

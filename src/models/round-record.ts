@@ -1,6 +1,12 @@
 import MarketItem, { SchedulerType } from "./market-item";
 
 
+
+export enum RoundRecordGameType {
+    DERBY = "derby",
+    LOBBY = "lobby",
+}
+
 export class RoundRecord {
     id: number;
     startTime: Date;
@@ -10,6 +16,7 @@ export class RoundRecord {
     placementEndTime: Date;
     market: MarketItem[];
     type: SchedulerType;
+    roundRecordGameType: RoundRecordGameType;
     winningId?: number;
     createdAt: Date;
     winningMarket?: MarketItem;
@@ -28,6 +35,7 @@ export class RoundRecord {
         this.type = data.type || SchedulerType.NSE;
         this.winningMarket = data.winningMarket;
         this.winningId = data.winningId;
+        this.roundRecordGameType = data.roundRecordGameType || RoundRecordGameType.DERBY;
         this.createdAt = data.createdAt ? new Date(data.createdAt) : new Date();
         this.updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
         this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : undefined;
@@ -40,6 +48,11 @@ export class RoundRecord {
 
     get winnerHorse(): number {
         return this.market.find(item => item.id === this.winningId)?.horse || 0;
+    }
+
+    // find market number by id 
+    getMarketNumberById(id: number): number {
+        return this.market.find(item => item.id === id)?.horse || 0;
     }
 
     // Helper method to serialize the instance to a plain object
@@ -59,6 +72,8 @@ export class RoundRecord {
             deletedAt: this.deletedAt?.toISOString()
         };
     }
+
+
 
     // Static method to create instance from API response
     static fromAPI(data: any): RoundRecord {
