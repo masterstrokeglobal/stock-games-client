@@ -10,6 +10,7 @@ const defaultValues: CompanyFormValues = {
     address: "",
     contactPersonName: "",
     contactPersonEmail: "",
+    coinValues: [100, 500, 1000, 2000],
     logo: "",
     domain: "",
 };

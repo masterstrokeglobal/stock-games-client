@@ -24,6 +24,8 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
     const t = useTranslations('game');
     const { userDetails } = useAuthStore();
 
+    const coinValues = userDetails?.company?.coinValues;
+
     const { mutate, isPending } = useUndoLastPlacement();
 
     const handleUndo = () => {
@@ -48,7 +50,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
 
             <div className="flex justify-between items-center mb-2">
                 <div className="flex justify-between gap-1 w-full xl:flex-nowrap flex-wrap" >
-                    {[100, 500, 1000, 2000].map((amount) => (
+                    {coinValues?.map((amount) => (
                         <Button
                             className='flex-1 text-game-text bg-secondary-game'
                             variant="game-secondary"

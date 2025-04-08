@@ -1,7 +1,9 @@
 import React from 'react';
 import { Separator } from '@/components/ui/separator';
-import { Building, Mail, User, Globe, Calendar, Coins } from 'lucide-react'; // Import icons for better visual presentation
+import { Building, Mail, User, Globe, Calendar, Coins, Pencil } from 'lucide-react'; // Import icons for better visual presentation
 import Company from '@/models/company'; // Adjust the path as needed
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 interface CompanyCardProps {
     company: Company;
@@ -11,7 +13,16 @@ interface CompanyCardProps {
 const CompanyCard: React.FC<CompanyCardProps> = ({ company, showBonusPercentage=false }) => {
     return (
         <div className="bg-white border rounded-lg p-6 flex flex-col">
+            <header>
+
             <h2 className="text-xl font-semibold mb-4">Company Details</h2>
+            <Link href={`/dashboard/company/${company.id}`} className="text-sm text-gray-500 hover:text-gray-700">
+            <Button>
+                <Pencil className="w-4 h-4 mr-2" />
+                Edit
+            </Button>
+            </Link>
+            </header>
             <div className="flex items-center mb-2">
                 <Building className="w-5 h-5 text-gray-700 mr-2" />
                 <span className="font-medium">Name:</span>

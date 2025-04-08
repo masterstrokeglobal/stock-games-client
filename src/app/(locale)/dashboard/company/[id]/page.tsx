@@ -5,6 +5,8 @@ import LoadingScreen from "@/components/common/loading-screen";
 import CompanyForm, { CompanyFormValues } from "@/components/features/company/company-form"; // Adjust the import
 import { useGetCompanyById, useUpdateCompanyById } from "@/react-query/company-queries"; // Import hooks for fetching and updating company
 import { useParams, useRouter } from "next/navigation";
+import { useAuthStore } from "@/context/auth-context";
+import Admin from "@/models/admin";
 
 const EditCompanyPage = () => {
     const params = useParams();
@@ -12,6 +14,8 @@ const EditCompanyPage = () => {
     const { data, isLoading, isSuccess } = useGetCompanyById(id.toString()); // Fetch the company data by ID
     const { mutate, isPending } = useUpdateCompanyById(); // Hook for updating a company
     const router = useRouter();
+
+    const { userDetails } = useAuthStore();
 
     const defaultValues: CompanyFormValues | null = useMemo(() => {
         if (!isSuccess) return null;
@@ -31,13 +35,20 @@ const EditCompanyPage = () => {
             paymentImage: company.paymentImage,
             minPlacement: company.minPlacement,
             maxPlacement: company.maxPlacement,
+            coinValues: company.coinValues,
         };
     }, [data, isSuccess]);
 
     const onSubmit = (data: CompanyFormValues) => {
+
+        const user = userDetails as Admin;
         mutate(data, {
             onSuccess: () => {
-                router.push("/dashboard/company"); // Redirect after updating
+                if (user.isCompanyAdmin) {
+                    router.push("/dashboard/company-admin");
+                } else {
+                    router.push("/dashboard/company");
+                }
             },
         });
     };

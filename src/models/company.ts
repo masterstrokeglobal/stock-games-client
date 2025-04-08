@@ -26,6 +26,7 @@ export class Company {
     minPlacement?: number;
     maxPlacement?: number;
     otpIntegration?: boolean;
+    coinValues?: number[];
 
     constructor(params: Partial<Company> = {}) {
         this.id = params.id;
@@ -48,6 +49,7 @@ export class Company {
         this.otpIntegration = params.otpIntegration || false;
         this.minPlacement = params.minPlacement;
         this.maxPlacement = params.maxPlacement;
+        this.coinValues = params.coinValues;
     }
 }
 
