@@ -8,6 +8,11 @@ const redirects = [
     destination: '/dashboard',
     permanent: true,
   },
+  {
+    source: '/',
+    destination: '/game',
+    permanent: true,
+  },
 ];
 
 
