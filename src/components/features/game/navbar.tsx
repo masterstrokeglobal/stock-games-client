@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
 import { useGameType } from "@/hooks/use-game-type";
+import { cn } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
 import User from "@/models/user";
 import Wallet from "@/models/wallet";
@@ -14,7 +15,7 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useMemo } from "react";
 
-const Navbar = () => {
+const Navbar = ({ className }: PropsWithClassName) => {
     const { userDetails } = useAuthStore();
     const { data, isLoading } = useGetWallet();
     const t = useTranslations("common");
@@ -30,7 +31,7 @@ const Navbar = () => {
     const user = userDetails as User | null;
     const isLoggedIn = user !== null;
     return (
-        <nav className="items-center md:px-6 px-4 z-50  flex fixed top-0 justify-between font-semibold w-full h-14 bg--game bg-primary-game">
+        <nav className={cn("items-center md:px-6 px-4 z-50  flex fixed top-0 justify-between font-semibold w-full h-14 bg-primary-game", className)}>
             <div className="flex items-center space-x-4 ">
                 <span className="md:text-xl text-sm font-semibold flex items-end">
                     <Logo />

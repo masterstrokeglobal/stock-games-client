@@ -1,19 +1,19 @@
 import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Game } from "@/lib/constants"
 import Image from "next/image"
+import Link from "next/link";
 
 interface GameCardProps {
-    title: string
-    image: string
-    players: string
-    category: string
+    game: Game
 }
 
-export default function GameCard({ title, image, players, category }: GameCardProps) {
+export default function GameCard({ game }: GameCardProps) {
+    const { title, image, description } = game;
     return (
-        <Card className="overflow-hidden bg-background text-game-text border-2 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-            <div className="relative h-40 w-full">
-                <Image
+        <Link href={game.link} className="w-full">
+            <Card className="overflow-hidden relative  h-72 from-white to-primary-game text-game-text border-none hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                <div className=" h-full absolute w-full">
+                    <Image
                     src={image || "/placeholder.svg"}
                     alt={title}
                     fill
@@ -21,16 +21,15 @@ export default function GameCard({ title, image, players, category }: GameCardPr
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                 />
             </div>
-            <CardContent className="p-4 bg-primary-game">
-                <h3 className="font-bold text-lg mb-1 text-game-secondary">{title}</h3>
-                <div className="flex justify-between text-xs text-game-secondary mb-3">
-                    <span>{players}</span>
-                    <span>{category}</span>
+            <div className="absolute bottom-0 w-full h-full bg-gradient-to-t from-primary-game to-transparent"></div>
+            <CardContent className="px-0 z-10  bottom-0 absolute w-full ">
+                <h3 className="font-bold text-lg mb-2 text-game-text px-4 bg-white">{title}</h3>
+                <div className="flex px-4 justify-between text-xs text-game-secondary">
+                    <span>{description}</span>
                 </div>
-                <Button className="w-full bg-gradient-to-r from-bet-button-start via-bet-button-mid to-bet-button-end text-white border border-bet-button-border hover:opacity-90">
-                    Play Now
-                </Button>
+
             </CardContent>
         </Card>
+        </Link>
     )
 }

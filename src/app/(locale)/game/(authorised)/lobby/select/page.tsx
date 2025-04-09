@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { LOBBY_GAMES } from '@/lib/constants';
 import { ChevronRight, Info, Timer } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 
 const GameDescriptionPage = () => {
@@ -63,7 +64,7 @@ const GameDescriptionPage = () => {
                     bg-gradient-to-r ${game.color}`}
                     >
                       <div className="text-white transition-transform duration-300 group-hover:rotate-12">
-                        {game.icon}
+                        <Image src={game.image} alt={game.title} width={64} height={64} />
                       </div>
                     </div>
                     <CardTitle className="text-2xl font-bold mb-3">

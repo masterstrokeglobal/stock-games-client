@@ -1,5 +1,5 @@
 "use client";
-import LeaderBoard from "@/components/features/game/leaderboard";
+import LeaderBoard from "@/components/features/game/leaderboard-lobby";
 import LobbyGameResultDialog from "@/components/features/game/lobby-result-dialog";
 import MultiplayerRouletteGame from "@/components/features/game/multiplayer-roulette-board";
 import Navbar from "@/components/features/game/navbar";
@@ -77,7 +77,7 @@ const GamePage = () => {
                 <div
                     style={borderStyle}
                     className="xl:col-span-5 col-span-4 row-span-3 rounded-2xl ">
-                    {roundRecord && filteredMarket && <LeaderBoard roundRecord={roundRecord}  />}
+                    {roundRecord && filteredMarket && <LeaderBoard roundRecord={roundRecord} filteredMarket={filteredMarket} />}
                 </div>
             </main>}
             {(isMobile && lobbyRound && lobby) && <>
