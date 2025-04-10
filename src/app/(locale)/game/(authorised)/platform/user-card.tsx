@@ -1,72 +1,104 @@
-import { Badge } from "@/components/ui/badge";
-import { useAuthStore } from "@/context/auth-context";
-import { cn } from "@/lib/utils";
-import User from "@/models/user";
-import Wallet from "@/models/wallet";
-import { useGetWallet } from "@/react-query/payment-queries";
-import { Star } from "lucide-react";
-import { useMemo } from "react";
+import { useAuthStore } from '@/context/auth-context';
+import { cn } from '@/lib/utils';
+import User from '@/models/user';
+import Wallet from '@/models/wallet';
+import { useGetWallet } from '@/react-query/payment-queries';
+import { Star } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
-const UserProfile = ({ className }: PropsWithClassName) => {
+
+const UserProfileCard = ({ className }: PropsWithClassName) => {
+  const [progress] = useState(50);
+
   const { userDetails } = useAuthStore();
+
+  const user = userDetails as User || { username: 'Test', email: 'test123@gmail.com' };
+
   const { data, isLoading } = useGetWallet();
-  
+
   const wallet = useMemo(() => {
-    if (isLoading) return new Wallet();
+    if (isLoading) return null;
     return new Wallet(data?.data?.wallet);
   }, [data]);
   
-  const user = userDetails as User;
-  
-  // Inline styles for the circular gradient
-
   return (
-    <section
-      className={cn(
-        "relative overflow-hidden mt-20 bg-primary-game border  bg-gradient-to-br from-blue-800 to-blue-950  border-white/20  bg-blue-950 mb-6 w-full max-w-md mx-auto ",
-        "rounded-xl p-4 sm:p-6",
-        className
-      )}
-    >
-      {/* Main background with deep blue gradient */}
-      <div className="absolute inset-0 -z-20 bg-gradient-to-b from-blue-900 to-blue-950"></div>
-      
-      {/* Stitched border effect */}
-      <div className="absolute inset-0 -z-10 rounded-xl border-2 border-white/20 m-1">
-        <div className="absolute inset-0 border-2 border-dashed border-white/30"></div>
-      </div>
-      
-      
-      {/* Inner shadow for depth */}
-      <div className="absolute inset-0 shadow-inner shadow-black/30 -z-10"></div>
-      
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
-        <div>
-          <h2 className="text-lg md:text-xl font-bold mb-1 text-white">{user?.username}</h2>
-          <p className="text-xs md:text-sm text-blue-200">{user?.email}</p>
+    <div className={cn("w-full", className)}>
+      <div className="relative  overflow-hidden bg-gradient-to-br from-blue-800 to-blue-950 rounded-xl w-full  border border-white/20">
+        {/* Content container */}
+        <div className="relative z-10 flex space-y-4 p-4">
+          {/* Top row with user info and member status */}
+          <div className='flex-1'>
+
+          <div className="flex justify-between items-center mb-2">
+            <div>
+              <h2 className="text-lg font-bold text-white">{user.username || 'Test'}</h2>
+              <p className="text-xs text-blue-200">{user.email || 'test123@gmail.com'}</p>
+            </div>
+          </div>
+
+          {/* Coin badge */}
+          <div className="mt-2 flex-1">
+            {/*silver*/}
+          
+            <div className="inline-flex items-center bg-gradient-to-r from-yellow-400 to-yellow-300 text-black px-3 py-1 rounded-full font-bold">
+              <img src="/coin.svg" alt="coin" className="md:w-auto w-5" />
+              <span className="text-base">{wallet?.totalBalance}</span>
+            </div>
+          </div>
+
+          </div>
+          {/* Bottom section with circle progress and next tier */}
+          <div className="flex justify-between flex-1 flex-col items-center mt-6 space">
+            {/* Empty space to balance layout */}
+            <div className="flex-1">
+            <div className='flex items-center gap-2'>
+              <Star className='w-5 h-5 fill-[#c0c0c0] stroke-[#c0c0c0]' />
+              <span className='text-xs text-gray-300'>Silver Member</span>
+            </div>
+            </div>
+
+            {/* Progress circle */}
+            <div className="relative size-32">
+              {/* Progress circle with SVG */}
+              <svg className="absolute inset-0" viewBox="0 0 100 100">
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  fill="none"
+                  stroke="#1e3a8a"
+                  strokeWidth="8"
+                />
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  fill="none"
+                  stroke="#ffd700"
+                  strokeWidth="8"
+                  strokeDasharray={`${2 * Math.PI * 40}`}
+                  strokeDashoffset={`${2 * Math.PI * 40 * (1 - progress / 100)}`}
+                  transform="rotate(-90 50 50)"
+                />
+              </svg>
+
+              {/* Percentage text */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-xl font-bold text-white">50%</span>
+                <span className="text-xs text-blue-200">Completed</span>
+              </div>
+            </div>
+
+            {/* Next tier info */}
+            <div className="flex-1 text-center">
+              <p className="text-white text-sm">Next Tier: <Star className="inline w-4 h-4 fill-yellow-400 stroke-yellow-500" /> Gold</p>
+              <p className="text-xs text-gray-300 mt-1">Play 10 more games to upgrade</p>
+            </div>
+          </div>
         </div>
-        <Badge className="bg-gradient-to-r text-base md:text-xl from-amber-500 to-amber-300 text-black px-2 sm:px-3 py-1 flex items-center">
-          <img src="/coin.svg" alt="coin" className="size-5 md:size-7 mr-1 md:mr-2" />
-          {wallet?.totalBalance}
-        </Badge>
       </div>
-      
-       {/* Custom style for radial gradient since Tailwind doesn't have built-in radial gradients */}
-       <style jsx>{`
-          .radial-gradient {
-            background: radial-gradient(circle at center, #1e40af 0%, #172554 100%);
-            width: 100%;
-            height: 100%;
-          }
-        `}</style>
-      <div className="flex mt-3 md:mt-4 space-x-1">
-        <Star className="w-5 h-5 md:w-6 md:h-6 fill-yellow-500 stroke-yellow-600" /> 
-        <p className="ml-2">
-          <span className="font-bold">Gold Member</span> 
-        </p>
-      </div>
-    </section>
+    </div>
   );
 };
 
-export default UserProfile;
+export default UserProfileCard;

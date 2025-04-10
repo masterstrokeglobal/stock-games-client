@@ -454,6 +454,10 @@
         }
     },
     "contact": {
+        "page-title": "Contact Us",
+        "need-assistance": "Need assistance ?",
+        "support-team-available": "Our friendly support team is available 24/7 to help you!",
+        "contact-support": "Contact Support",
         "titles": {
             "contact-us": "Contact Us"
         },
@@ -471,5 +475,6 @@
             "message-min": "Message must be at least 10 characters",
             "message-max": "Message cannot exceed 500 characters"
         }
+
     }
 }
