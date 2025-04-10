@@ -16,7 +16,7 @@ const GameLobby = () => {
     const [activeTab, setActiveTab] = React.useState('join');
 
     const handleBack = () => {
-        router.push('/game/lobby/select');
+        router.push('/game/platform');
     };
 
     if (gameType === null) return handleBack();

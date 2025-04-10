@@ -45,7 +45,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
         return [...userPlacements].sort((a, b) => {
             const aProfit = a.potentialReturn - a.bettedAmount / LEVERAGE_MULTIPLIER;
             const bProfit = b.potentialReturn - b.bettedAmount / LEVERAGE_MULTIPLIER;
-            return bProfit - aProfit; // Sort in descending order
+            return bProfit - aProfit;
         });
     }
     , [userPlacements]);

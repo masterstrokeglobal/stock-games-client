@@ -96,7 +96,7 @@ const CreateLobbyForm = ({ onCreate, gameType }: Props) => {
             return [
                 { label: "NSE", value: SchedulerType.NSE },
                 { label: "Crypto", value: SchedulerType.CRYPTO },
-                { label: "Crypto", value: SchedulerType.USA_MARKET },
+                { label: "US Market", value: SchedulerType.USA_MARKET },
             ];
         }
         return [

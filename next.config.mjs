@@ -10,7 +10,7 @@ const redirects = [
   },
   {
     source: '/',
-    destination: '/game',
+    destination: '/game/platform',
     permanent: true,
   },
 ];
