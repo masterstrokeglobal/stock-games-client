@@ -45,7 +45,15 @@ export default function LocaleSwitcher( {className, selectClassName}: {className
         {
           value: 'kn',
           label: "Kannada"
-        }
+        },
+        {
+          value: 'mr',
+          label: "Marathi"
+        },
+        {
+          value: 'gu',
+          label: "Gujarati"
+        }        
       ]}
     />
   );
