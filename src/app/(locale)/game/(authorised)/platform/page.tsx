@@ -24,14 +24,14 @@ export default function GamingAppInterface() {
             <div className="max-w-4xl mx-auto w-full flex gap-4 mb-4 ">
 
                 <Link href="/game/wallet/deposit" passHref className="w-full">
-                    <Button variant="game-secondary" className="w-full gap-x-2 h-14">
+                    <Button variant="game-secondary" className="w-full flex items-center justify-center gap-x-2 h-14">
                         <MoneyIcon />
                         {t('menu.deposit')}
                     </Button>
                 </Link>
 
                 <Link href="/game/wallet/withdrawl" passHref className="w-full">
-                    <Button variant="game" className="w-full gap-x-2 h-14">
+                    <Button variant="game" className="w-full flex items-center justify-center gap-x-2 h-14">
                         <WithdrawIcon />
                         {t('menu.withdraw')}
                     </Button>
@@ -55,7 +55,7 @@ export default function GamingAppInterface() {
 
                 {/* Coming Soon Card */}
                 <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
-                    <Image src="/images/ad1.jpg" alt="coming-soon" className="w-full h-full  object-cover" width={500} height={500} />
+                    <Image src="/images/ad1.png" alt="coming-soon" className="w-full h-full  object-cover" width={500} height={500} />
                     <div className="absolute bottom-0 left-0 w-full h-fit bg-gradient-to-b pt-4 from-transparent to-black text-white p-4">
                         <h3 className="md:text-2xl text-sm font-bold text-center">Coming Soon</h3>
                     </div>
