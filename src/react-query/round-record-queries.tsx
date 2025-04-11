@@ -1,5 +1,6 @@
 import { roundRecordsAPI } from "@/lib/axios/round-record-API";
 import { SchedulerType } from "@/models/market-item";
+import { RoundRecordGameType } from "@/models/round-record";
 import { useQuery } from "@tanstack/react-query";
 
 /**
@@ -14,7 +15,8 @@ export const useGetAllRoundRecords = (filter: any) => {
 };
 
 export const useGetCurrentRoundRecord = (
-    type: SchedulerType
+    type: SchedulerType,
+    roundRecordGameType?: RoundRecordGameType
 ) => {
     return useQuery({
         queryKey: ["current-round-record", type],
@@ -24,6 +26,7 @@ export const useGetCurrentRoundRecord = (
                 limit: 1,
                 startTime: new Date(),
                 page: 1,
+                roundRecordGameType: roundRecordGameType
             })
         },
     });

@@ -56,7 +56,7 @@ export const useCreateMiniMutualFundPlacementBet = () => {
                 predicate: (query) =>
                     query.queryKey[1] === "mini-mutual-fund-placements" ||
                     query.queryKey[0] === "user" && query.queryKey[1] == 'wallet',
-                    
+
             });
             toast.success("Bet placed successfully");
         },
@@ -157,5 +157,43 @@ export const useUndoLastPlacement = () => {
         onError: (error: any) => {
             toast.error(error.response?.data.message ?? "Error undoing last placement");
         },
+    });
+};
+
+//single player roulette betting
+
+export const useCreateSinglePlayerRouletteBet = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: gameRecordAPI.createSinglePlayerRouletteBet,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) =>
+                    query.queryKey[0] === "singlePlayerMyCurrentPlacement" ||
+                    query.queryKey[0] === "singlePlayerRoundPlacements",
+            });
+            toast.success("Bet placed successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error creating game record");
+        },
+    });
+};
+
+// single player roulette betting placement
+
+export const useGetMyCurrentPlacement = (roundId: string) => {
+    return useQuery({
+        queryKey: ["singlePlayerMyCurrentPlacement", roundId],
+        queryFn: () => gameRecordAPI.getMyCurrentPlacement(roundId),
+    });
+};
+
+
+// Get Current Round Placements Hook
+export const useGetCurrentRoundPlacements = (roundId: string) => {
+    return useQuery({
+        queryKey: ["singlePlayerRoundPlacements", roundId],
+        queryFn: () => gameRecordAPI.getCurrentRoundPlacements(roundId),
     });
 };

@@ -16,6 +16,7 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
 
   const isPlaceOver = useIsPlaceOver(roundRecord);
 
+  console.log("horse race rendered");
   return isPlaceOver ? (
     <Canvas>
       <HorseRaceEnvironment roundRecord={roundRecord} filteredMarket={filteredMarket} />

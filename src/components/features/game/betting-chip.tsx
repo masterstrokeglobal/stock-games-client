@@ -21,7 +21,7 @@ const BettingChips: React.FC<Props> = ({ chips, getBetPosition, roundRecord }) =
   }, [chips, roundRecord]);
 
   return (
-    <div className="absolute inset-0 pointer-events-none">
+    <div className="absolute inset-0 pointer-events-none chips-overlay">
       {filteredChips.map((chip, index) => {
         const position = getBetPosition(chip as any);
         if (position.x == 0 && position.y == 0) {

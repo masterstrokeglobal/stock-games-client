@@ -5,6 +5,11 @@ import MarketItem, { SchedulerType } from "./market-item";
 export enum RoundRecordGameType {
     DERBY = "derby",
     LOBBY = "lobby",
+    GUESS_FIRST_FOUR = "guess_first_four",
+    GUESS_LAST_FOUR = "guess_last_four",
+    GUESS_FIRST_EIGHT = "guess_first_eight",
+    GUESS_LAST_EIGHT = "guess_last_eight",
+    MINI_MUTUAL_FUND = "mini_mutual_fund",
 }
 
 export class RoundRecord {

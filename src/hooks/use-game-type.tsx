@@ -6,6 +6,7 @@ import { useState, useEffect, useCallback } from "react";
 import useNSEAvailable from "./use-nse-available";
 import { useAuthStore } from "@/context/auth-context";
 import User from "@/models/user";
+import { RoundRecordGameType } from "@/models/round-record";
 
 export function useGameType() {
     const { userDetails } = useAuthStore();
@@ -52,5 +53,38 @@ export function useGameType() {
     );
 
 
+    return [gameType, setGameTypeAndSync] as const;
+}
+
+
+export function useRoundRecordGameType() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+
+    const gameTypeFromParams = searchParams.get("roundRecordGameType") as RoundRecordGameType | null;
+    const type = gameTypeFromParams ?? RoundRecordGameType.GUESS_FIRST_FOUR ;
+
+    const [gameType, setGameType] = useState<RoundRecordGameType>(type);
+
+    const updateUrl = useCallback(
+        (newGameType: RoundRecordGameType) => {
+            const newParams = new URLSearchParams(searchParams.toString());
+            newParams.set("roundRecordGameType", newGameType);
+            router.replace(`?${newParams.toString()}`);
+        },
+        [searchParams, router]
+    );
+
+
+    // Synchronize state and update URL when gameType changes
+    const setGameTypeAndSync = useCallback(
+        (newGameType: RoundRecordGameType) => { 
+            setGameType(newGameType);
+            updateUrl(newGameType);
+        },
+        [updateUrl]
+    );
+
+    
     return [gameType, setGameTypeAndSync] as const;
 }

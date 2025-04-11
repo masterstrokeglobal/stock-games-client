@@ -1,5 +1,5 @@
 import { PlacementType } from '@/models/game-record';
-import { RoundRecord } from '@/models/round-record';
+import { RoundRecord, RoundRecordGameType } from '@/models/round-record';
 import { useGetCurrentRoundRecord } from '@/react-query/round-record-queries';
 import { useQueryClient, UseQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
@@ -37,7 +37,7 @@ const formatTime = (ms: number): FormattedTime => {
     };
 };
 
-export const useCurrentGame = (): {
+export const useCurrentGame = (roundRecordGameType: RoundRecordGameType = RoundRecordGameType.DERBY): {
     roundRecord: RoundRecord | null;
     isLoading: boolean;
 } => {
@@ -47,7 +47,7 @@ export const useCurrentGame = (): {
         data,
         isLoading,
         isSuccess,
-    }: UseQueryResult<RoundRecordResponse, unknown> = useGetCurrentRoundRecord(type);
+    }: UseQueryResult<RoundRecordResponse, unknown> = useGetCurrentRoundRecord(type, roundRecordGameType);
 
     const roundRecord = useMemo(() => {
         // Only compute when data is successfully loaded
@@ -122,7 +122,7 @@ export const useGameState = (roundRecord: RoundRecord | null) => {
             const gameEnd = new Date(roundRecord.endTime).getTime();
             const placeStart = new Date(roundRecord.placementStartTime).getTime();
             const isPlaceStarted = now >= placeStart;
-            
+
 
             setGameState({
                 placeTimeLeft: formatTime(Math.max(0, placeEnd - now)),
@@ -144,6 +144,7 @@ export const useGameState = (roundRecord: RoundRecord | null) => {
 
     return gameState;
 };
+
 
 export const useIsPlaceOver = (roundRecord: RoundRecord | null) => {
     const [isPlaceOver, setIsPlaceOver] = useState(false);
@@ -237,7 +238,7 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: {
         return () => {
             clearInterval(intervalId);
         };
-    }, [roundRecord, currentRoundId]); // Re-run when `roundRecord` or `currentRoundId` changes
+    }, [roundRecord, currentRoundId]);
 
     return { showResults, currentRoundId, previousRoundId };
 };

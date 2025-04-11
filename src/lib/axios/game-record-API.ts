@@ -41,5 +41,17 @@ export const gameRecordAPI = {
   },
   undoLastPlacement: async (roundId:string) => {
     return api.post(`/game-records/undo/${roundId}`);
+  },
+  // single game betting placement 
+  createSinglePlayerRouletteBet: async (data: any) => {
+    return api.post("/singleplayer-game-placements", data);
+  } 
+  ,
+
+  getMyCurrentPlacement: async (roundId: string) => {
+    return api.get(`/singleplayer-game-placements/my-current-placement/${roundId}`);
+  },
+  getCurrentRoundPlacements: async (roundId: string) => {
+    return api.get(`/singleplayer-game-placements/current-round-placements/${roundId}`);
   }
 };
