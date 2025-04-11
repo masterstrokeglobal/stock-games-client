@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuthStore } from "@/context/auth-context";
 import { useGameState, useShowResults } from "@/hooks/use-current-game";
@@ -15,7 +16,6 @@ import { useTranslations } from "next-intl";
 import { useMemo, useRef, useState } from "react";
 import BettingChips from "./betting-chip";
 import { Bet, Chip } from "./contants";
-import { LobbyResult } from "./lobby-result-dialog";
 import GameResultDialog from "./result-dialog";
 import { BettingControls } from "./roulette-chips";
 import { RouletteBettingGrid } from "./roulette-grid";
@@ -23,10 +23,9 @@ import { GameHeader } from "./roulette-header";
 type Props = {
     roundRecord: RoundRecord;
     previousRoundId?: string;
-    result?: LobbyResult;
 };
 
-const SinglePlayerRouletteGame = ({ roundRecord, result }: Props) => {
+const SinglePlayerRouletteGame = ({ roundRecord }: Props) => {
     const t = useTranslations("game");
     const [betAmount, setBetAmount] = useState<number>(100);
     const gameState = useGameState(roundRecord);
@@ -64,6 +63,18 @@ const SinglePlayerRouletteGame = ({ roundRecord, result }: Props) => {
         getBetTypeFromClick
     } = useRouletteBetting({ container: boardRef, onlySingleBet: true });
 
+    // Function to check if there's a bet on a specific type and numbers
+    const getBetForPosition = (type: PlacementType, numbers: number[]) => {
+        const allChips = [...bettedChips];
+        const chip = allChips.find(chip =>
+            chip.type === type &&
+            chip.numbers.length === numbers.length &&
+            chip.numbers.every(num => numbers.includes(num))
+        );
+        return chip;
+    };
+
+
     const handleBoardClick = (e: React.MouseEvent) => {
         const bet = getBetTypeFromClick(e, boardRef);
         if (!bet) return;
@@ -82,8 +93,23 @@ const SinglePlayerRouletteGame = ({ roundRecord, result }: Props) => {
     const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
     const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO);
     const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
-
     const isNotAllowedToPlaceBet = currentUser.isNotAllowedToPlaceOrder(roundRecord.type);
+
+
+    const handleZeroBet = () => {
+        mutate({
+            roundId: roundRecord.id,
+            amount: betAmount,
+            market: 17,
+        });
+    }
+
+    
+    const ButtonChip = ({ amount, className }: { amount: number, className?: string }) => (
+        <div className={cn("absolute top-1/2 right-4 translate-x-1/2 -translate-y-1/2 bg-chip text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold", className)}>
+            {amount}
+        </div>
+    );
 
     return (
         <div className="max-w-4xl mx-auto lg:px-4 px-2 py-2  ">
@@ -92,6 +118,10 @@ const SinglePlayerRouletteGame = ({ roundRecord, result }: Props) => {
                     <h1 className='text-xl lg:text-left text-center mt-2 mb-4 leading-none text-white font-semibold'>
                         {gameState.isPlaceOver ? t("betting-closed") : t("place-your-bets")}
                     </h1>
+
+                    <h2 className="text-white font-semibold mb-6">
+                        {roundRecord.roundGameName}
+                    </h2>
                     <div className="flex flex-wrap justify-between">
 
                         <div className={cn("relative w-full max-w-4xl mx-auto ", gameState.isPlaceOver ? 'cursor-not-allowed opacity-100' : 'cursor-crosshair')}>
@@ -108,12 +138,27 @@ const SinglePlayerRouletteGame = ({ roundRecord, result }: Props) => {
                                         roundRecord={roundRecord}
                                         hoveredCell={hoveredCell as unknown as Bet}
                                         chips={chips as unknown as Chip[]}
-                                        result={result}
                                         previousRoundId={roundRecord.id.toString()}
                                     />
                                     <BettingChips roundRecord={roundRecord} chips={boardChips} getBetPosition={getBetPosition} />
                                 </div>
 
+                            </div>
+                            <div className="grid grid-rows-1 gap-2 ">
+                                <Button
+                                    onClick={handleZeroBet}
+                                    variant="game-secondary"
+                                    className="col-span-1 w-full relative  bg-emerald-600 justify-center gap-4 text-white  mt-2 h-full "
+                                >
+                                    <span>
+                                        0 &nbsp;
+                                        {roundRecord.market[16]?.codeName}
+                                    </span>
+                                    {getBetForPosition(PlacementType.SINGLE, [17]) && (
+                                        <ButtonChip className=" top-4 right-1/2 translate-x-1/2 -translate-y-1/2" amount={getBetForPosition(PlacementType.SINGLE, [17])!.amount} />
+                                    )}
+                                    {gameState.isPlaceOver && roundRecord.winningId?.includes(17) && <img src="/crown.png" alt="Winner" className="size-16 absolute top-1/2 left-4 -translate-x-1/2 -translate-y-1/2" />}
+                                </Button>
                             </div>
 
                         </div>
@@ -152,7 +197,7 @@ const SinglePlayerRouletteGame = ({ roundRecord, result }: Props) => {
                     </div>
                 </div>
             </div>
-            {previousRoundId && <GameResultDialog roundRecordId={previousRoundId} open={showResults} />}
+            {previousRoundId && <GameResultDialog key={String(showResults)} open={showResults} roundRecordId={previousRoundId} />}
         </div>
     );
 };

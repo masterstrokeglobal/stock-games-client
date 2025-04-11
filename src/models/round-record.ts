@@ -22,7 +22,7 @@ export class RoundRecord {
     market: MarketItem[];
     type: SchedulerType;
     roundRecordGameType: RoundRecordGameType;
-    winningId?: number;
+    winningId?:  number[];
     createdAt: Date;
     winningMarket?: MarketItem;
     updatedAt: Date;
@@ -48,11 +48,11 @@ export class RoundRecord {
     }
 
     get winnerName(): string {
-        return this.market.find(item => item.id === this.winningId)?.name || "-";
+        return this.market.find(item => item.id === this.winningId?.[0])?.name || "-";
     }
 
     get winnerHorse(): number {
-        return this.market.find(item => item.id === this.winningId)?.horse || 0;
+        return this.market.find(item => item.id === this.winningId?.[0])?.horse || 0;
     }
 
     // find market number by id 
@@ -83,5 +83,13 @@ export class RoundRecord {
     // Static method to create instance from API response
     static fromAPI(data: any): RoundRecord {
         return new RoundRecord(data);
+    }
+
+    get roundGameName(): string {
+        return this.roundRecordGameType === RoundRecordGameType.GUESS_FIRST_FOUR ? "Guess First Four" :
+            this.roundRecordGameType === RoundRecordGameType.GUESS_LAST_FOUR ? "Guess Last Four" :
+                this.roundRecordGameType === RoundRecordGameType.GUESS_FIRST_EIGHT ? "Guess First Eight" :
+                    this.roundRecordGameType === RoundRecordGameType.GUESS_LAST_EIGHT ? "Guess Last Eight" :
+                        this.roundRecordGameType === RoundRecordGameType.MINI_MUTUAL_FUND ? "Mini Mutual Fund" : "";
     }
 }

@@ -192,10 +192,9 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: {
     const [currentRoundId, setCurrentRoundId] = useState<number | null>(null);
     const [previousRoundId, setPreviousRoundId] = useState<number | null>(null);
 
-
     useEffect(() => {
         // Retrieve previous round ID from localStorage when the component mounts
-        const storedPreviousRoundId = sessionStorage.getItem('previousRoundId');
+        const storedPreviousRoundId = sessionStorage.getItem(`game-previous-Round-${roundRecord?.roundRecordGameType}`);
         if (storedPreviousRoundId) {
             setPreviousRoundId(parseInt(storedPreviousRoundId, 10));
         }
@@ -208,7 +207,7 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: {
         if (roundRecord.id !== currentRoundId) {
             // Update the previous round ID
             if (currentRoundId) {
-                sessionStorage.setItem('previousRoundId', currentRoundId.toString());
+                sessionStorage.setItem(`game-previous-Round-${roundRecord.roundRecordGameType}`, currentRoundId.toString());
                 setPreviousRoundId(currentRoundId);
             }
 

@@ -18,7 +18,7 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord ,result}: 
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord.id);
 
     useEffect(() => {
-        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 4000;
+        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 3000;
 
         const timer = setTimeout(() => {
             refetch();
@@ -27,22 +27,26 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord ,result}: 
         return () => clearTimeout(timer);
     }, [roundRecord, refetch]);
 
-    const winningNumbers = useMemo(() => {
+    const winningNumbers: number[] = useMemo(() => {
+        console.log(result, "result");
         if (result) {
             return result.winningItems?.map(item => {
                 // Find the market item that matches the winning item code
                 const marketItem = roundRecord.market.find(market => {
                     return market.bitcode?.toUpperCase() === item.code?.toUpperCase();
                 });
-
                 return marketItem?.horse || null;
             }).filter(Boolean) ?? [];
-        } else if (isSuccess && data.data?.winningId && roundRecord.roundRecordGameType === RoundRecordGameType.DERBY) {
+        } else if (isSuccess && data.data?.winningId && roundRecord.roundRecordGameType !== RoundRecordGameType.LOBBY) {
             // If no result but we have successful data fetch with winningId
-            const winningNumber = roundRecord.market.find(
-                (item) => item.id === data.data?.winningId
-            )?.horse;
-            return winningNumber ? [winningNumber] : [];
+            const winningIds = data.data?.winningId;
+            const winningNumbers = winningIds?.map((id: number) => {
+                const marketItem = roundRecord.market.find(market => {
+                    return market.id === id;
+                });
+                return marketItem?.horse || null;
+            }).filter(Boolean) ?? [];
+            return winningNumbers;
         }
         return [];
     }, [data, isSuccess, result, roundRecord.market]);
@@ -51,6 +55,7 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord ,result}: 
         return `${roundRecord.market[index - 1]?.codeName}`;
     }
 
+    console.log(winningNumbers, "winningNumbers");
     return (
         <div className="grid grid-cols-4 flex-1 gap-2 p-px">
             {ROULETTE_NUMBERS.map(({ number, color }) => (

@@ -1,5 +1,5 @@
 "use client";
-import LeaderBoard from "@/components/features/game/leaderboard-lobby";
+import LeaderBoard from "@/components/features/game/leaderboard";
 import Navbar from "@/components/features/game/navbar";
 import PlacementBetsSingleGame from "@/components/features/game/placement-bet-single-game";
 import { MobileGameHeader } from "@/components/features/game/roulette-header";
