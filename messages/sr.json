@@ -11,11 +11,11 @@
         "undo": "Poništi opkladu",
         "game-ends-in": "Igra se završava za",
         "current-bets": "Trenutne opklade",
+        "top-bets": "Najbolje opklade",
         "leaderboard": "Tabela",
         "rank": "Rang",
         "horse": "Konj",
-
-  "betting-not-allowed": "Klađenje nije dozvoljeno",
+        "betting-not-allowed": "Klađenje nije dozvoljeno",
         "price": "Cena",
         "name": "Ime",
         "change": "Promena za 2 minuta",
@@ -474,6 +474,5 @@
         "date-time": "Datum & Vreme",
         "time": "Vreme",
         "winner": "Pobednik"
-
     }
 }

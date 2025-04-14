@@ -22,6 +22,7 @@
         "username": "username",
         "amount": "Amount",
         "placement": "Placement",
+        "top-bets": "Top Bets",
         "race-begin": "Race is about to begin",
         "no-bets": "No bets placed yet",
         "betting-closed": "Betting Closed",

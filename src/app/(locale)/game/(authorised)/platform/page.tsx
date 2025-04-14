@@ -52,7 +52,7 @@ export default function GamingAppInterface() {
 
                 {/* Coming Soon Card */}
                 <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
-                    <Image src="/images/ad1.png" alt="coming-soon" className="w-full h-full  object-top  object-cover " width={500} height={500} />
+                    <Image src="/images/ad1.png" alt="coming-soon" className="w-full h-full object-cover " width={500} height={500} />
                     <div className="absolute bottom-0 left-0 w-full h-fit bg-gradient-to-b pt-4 from-transparent to-black text-white p-4">
                         <h3 className="md:text-2xl text-sm font-bold text-center">Coming Soon</h3>
                     </div>
@@ -66,10 +66,10 @@ export default function GamingAppInterface() {
                 </div>
 
                 <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
+                    <Image src="/images/ad3.jpg" alt="coming-soon" className="w-full h-auto -translate-y-[10%] object-contain  " width={500} height={500} />
                     <div className="absolute bottom-0 left-0 w-full h-fit bg-gradient-to-b pt-4 from-transparent to-black text-white p-4">
                         <h3 className="md:text-2xl text-sm font-bold text-center">Coming Soon</h3>
                     </div>
-                    <Image src="/images/ad3.jpg" alt="coming-soon" className="w-full h-full object-cover object-[0%_0]" width={500} height={500} />
                 </div>
             </div>
 

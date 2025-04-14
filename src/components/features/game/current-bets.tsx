@@ -85,7 +85,7 @@ const CurrentBets = ({ className, round }: Props) => {
                         </div>
                     )}
                     <h2 className="text-md font-semibold mb-2 text-game-text  game-header-highlight lg:pl-4 pl-2 w-full ">
-                        Other Bets
+                        {t("top-bets")}
                     </h2>
                     <table className="min-w-full pr-2">
                         <thead>
