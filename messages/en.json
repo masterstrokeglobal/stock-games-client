@@ -43,6 +43,7 @@
         "title": "User Menu",
         "profile-image-alt": "Profile Image",
         "coin-image-alt": "Coin Icon",
+        "rules": "Rules",
         "add-funds-alt": "Add Funds",
         "loading": "...",
         "your-info": "Your Info",
@@ -51,7 +52,43 @@
         "your-wallet": "Your Wallet",
         "transaction-history": "Transaction History",
         "betting-history": "Betting History",
-        "logout": "Log Out"
+        "game-history": "Game History",
+        "faq": "Frequently Asked Questions",
+        "terms-and-conditions": "Terms & Conditions",
+         "logout": "Log Out"
+    },
+    "game-rules": {
+        "title": "Game Rules",
+        "video-title": "Watch video tutorial",
+        "description": "We have a total of 17 numbers in the table. Players can place the following types of bets:",
+        "betting-options": "Betting Options",
+        "winning-odds": "Winning Odds",
+        "straight-bet": "A particular number",
+        "straight-bet-description": "Select any single number on the table for the highest payout.",
+        "between-two-numbers": "Between two numbers",
+        "between-two-numbers-description": "Place a bet on two adjacent numbers either horizontally or vertically.",
+        "even-odd": "Even/Odd",
+        "even-odd-description": "Lower risk, consistent returns",
+        "high-low": "High/Low",
+        "high-low-description": "Bet on numbers 19-36 or 1-18",
+        "column-bet": "Column Bet",
+        "column-bet-description": "Bet on all numbers of a specific column.",
+        "red-black-colors": "Red/Black colors",
+        "red-black-colors-description": "Bet on all numbers of a specific color (red or black).",
+        "row-of-four-numbers": "Row of four numbers",
+        "row-of-four-numbers-description": "Bet on an entire row of four numbers for a more balanced risk.",
+        "single-number": "Single Number",
+        "single-number-description": "Highest risk, highest reward",
+        "single-number-odds": "16x",
+        "between-two-numbers-odds": "8x",
+        "row-of-four-numbers-odds": "4x",
+        "even-odd-odds": "2x",
+        "high-low-odds": "2x",
+        "column-bet-odds": "2x",
+        "red-black-colors-odds": "2x",
+        "street-bet-odds": "2x",
+        "corner-bet-odds": "2x",
+        "split-bet-odds": "2x"
     },
     "profile": {
         "page-title": "Your Info",
@@ -307,18 +344,24 @@
         "next": "Next"
     },
     "auth": {
+        "common":{
+            "loading": "Loading...",
+            "or": "Or"
+        },
         "titles": {
             "welcome-back": "Welcome Back"
         },
         "labels": {
             "username-email": "Username or Email*",
             "username-email-phone": "Username or Email or Phone*",
-            "password": "Password*"
+            "password": "Password*",
+            "captcha": "Enter Captcha"
         },
         "validation": {
             "password-min": "Password must be at least 6 characters",
             "password-max": "Password must be less than 20 characters",
-            "password-required": "Password is required"
+            "password-required": "Password is required",
+            "captcha-required": "Captcha is required"
         },
         "links": {
             "forgot-password": "Forgot Password?"
@@ -329,12 +372,14 @@
             "continue-with-google": "Continue with Google",
             "create-account": "Create an Account"
         },
-        "common": {
-            "or": "Or"
-        },
         "alt": {
             "google-logo": "Google logo"
-        }
+        },
+        "terms-and-conditions": {
+            "title": "Terms and Conditions",
+            "description": "By continuing you agree with our terms of service"
+        },
+        "refresh-captcha": "Refresh Captcha"
     },
     "reset-password": {
         "title": "Forgot Password",

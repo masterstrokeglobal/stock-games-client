@@ -206,3 +206,14 @@ export const googleAuth = () => {
 
 export const RED_NUMBERS = [1, 3, 6, 8, 9, 11, 14, 16];
 export const BLACK_NUMBERS = [2, 4, 5, 7, 10, 12, 13, 15];
+
+export const randomUsername = () => {
+  return indianNames[Math.floor(Math.random() * indianNames.length)] + " " + secondNames[Math.floor(Math.random() * secondNames.length)];
+}
+
+
+export const randomNumber = (min: number, max: number, multiple: number) => {
+  //multiple of 100
+  return Math.floor(Math.random() * (max - min + 1)) * multiple;
+}
+

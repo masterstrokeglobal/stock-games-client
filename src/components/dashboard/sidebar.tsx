@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Building, Clock, CoinsIcon, Contact2, DollarSign, Home, ImageUpIcon, LucideIcon, Repeat1, Users } from 'lucide-react';
+import { Building, Clock, CoinsIcon, Contact2, DollarSign, GiftIcon, Home, ImageUpIcon, LucideIcon, Repeat1, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -66,7 +66,8 @@ const adminMenuItems: MenuItem[] = [
         name: "Round Records",
         icon: Repeat1,
         link: '/dashboard/round-records'
-    }
+    },
+
 ];
 
 const companyMenuItems: MenuItem[] = [
@@ -123,7 +124,12 @@ const companyMenuItems: MenuItem[] = [
         name: "Advertisment",
         icon: ImageUpIcon,
         link: '/dashboard/advertisements'
-    }
+    },
+ /*    {
+        name: "Affiliate",
+        icon: Users,
+        link: '/dashboard/affiliate'
+    } */
 ];
 
 const agentMenuItems: MenuItem[] = [
@@ -150,6 +156,19 @@ const agentMenuItems: MenuItem[] = [
 ];
 
 
+const affiliateMenuItems: MenuItem[] = [
+    {
+        name: "Users",
+        icon: Users,
+        link: '/dashboard/affiliate/users'
+    },
+    {
+        name: "Sub Affiliates",
+        icon: GiftIcon, 
+        link: '/dashboard/affiliate/sub-affiliates'
+    },
+];
+
 
 const Sidebar = ({ className }: PropsWithClassName) => {
     let { userDetails } = useAuthStore();
@@ -159,6 +178,10 @@ const Sidebar = ({ className }: PropsWithClassName) => {
     let menus = userDetails?.isSuperAdmin ? adminMenuItems : companyMenuItems;
     if (userDetails.role === AdminRole.AGENT) {
         menus = agentMenuItems;
+    }
+
+    if (userDetails.isAffiliate) {
+        menus = affiliateMenuItems;
     }
 
     const renderMenuItem = (item: MenuItem) => {

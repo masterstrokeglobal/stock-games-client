@@ -20,23 +20,20 @@ export default function GamingAppInterface() {
             {/* User profile card */}
             <UserProfile className="mt-20  mx-auto w-full max-w-4xl mb-4" />
 
-
-            <div className="max-w-4xl mx-auto w-full flex gap-4 mb-4 ">
-
+            <div className="max-w-4xl mx-auto w-full flex flex-col md:flex-row gap-4 mb-4 ">
                 <Link href="/game/wallet/deposit" passHref className="w-full">
-                    <Button variant="game-secondary" className="w-full flex items-center justify-center gap-x-2 h-14">
+                    <Button variant="game-secondary" className="w-full flex items-center !bg-green-500 hover:!bg-green-700 justify-center gap-x-2 h-14">
                         <MoneyIcon />
                         {t('menu.deposit')}
                     </Button>
                 </Link>
 
                 <Link href="/game/wallet/withdrawl" passHref className="w-full">
-                    <Button variant="game" className="w-full flex items-center justify-center gap-x-2 h-14">
+                    <Button variant="game-secondary" className="w-full  flex items-center bg-blue-700 hover:bg-blue-800 justify-center gap-x-2 h-14">
                         <WithdrawIcon />
                         {t('menu.withdraw')}
                     </Button>
                 </Link>
-
             </div>
 
             {/* Game cards */}
@@ -55,14 +52,14 @@ export default function GamingAppInterface() {
 
                 {/* Coming Soon Card */}
                 <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
-                    <Image src="/images/ad1.png" alt="coming-soon" className="w-full h-full  object-cover" width={500} height={500} />
+                    <Image src="/images/ad1.png" alt="coming-soon" className="w-full h-full  object-top  object-cover " width={500} height={500} />
                     <div className="absolute bottom-0 left-0 w-full h-fit bg-gradient-to-b pt-4 from-transparent to-black text-white p-4">
                         <h3 className="md:text-2xl text-sm font-bold text-center">Coming Soon</h3>
                     </div>
                 </div>
 
                 <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
-                    <Image src="/images/ad2.jpg" alt="coming-soon" className="w-full h-full  object-cover" width={500} height={500} />
+                    <Image src="/images/ad2.jpg" alt="coming-soon" className="w-full h-full object-top " width={500} height={500} />
                     <div className="absolute bottom-0 left-0 w-full h-fit bg-gradient-to-b pt-4 from-transparent to-black text-white p-4">
                         <h3 className="md:text-2xl text-sm font-bold text-center">Coming Soon</h3>
                     </div>
@@ -72,7 +69,7 @@ export default function GamingAppInterface() {
                     <div className="absolute bottom-0 left-0 w-full h-fit bg-gradient-to-b pt-4 from-transparent to-black text-white p-4">
                         <h3 className="md:text-2xl text-sm font-bold text-center">Coming Soon</h3>
                     </div>
-                    <Image src="/images/ad3.jpg" alt="coming-soon" className="w-full h-full  object-cover" width={500} height={500} />
+                    <Image src="/images/ad3.jpg" alt="coming-soon" className="w-full h-full object-cover object-[0%_0]" width={500} height={500} />
                 </div>
             </div>
 
@@ -93,6 +90,13 @@ export default function GamingAppInterface() {
                         {tcontact('contact-support')}
                     </Button>
                 </Link>
+
+                <div className="flex items-center justify-center gap-4 mt-4  mb-2">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="youtube" className="w-5 h-5 text-[#FF0000]" />
+                    <img src="/images/instagram.png" alt="instagram" className="w-5 h-5 text-[#FF0000]" />
+                    <img src="/images/twitter.png" alt="facebook" className="w-5 h-5 bg-white rounded-full p-0.5" />
+                    <img src="/images/facebook.png" alt="twitter" className="w-5 h-5 bg-white rounded-full text-[#FF0000]" />
+                </div>
             </div>
         </div>
     )

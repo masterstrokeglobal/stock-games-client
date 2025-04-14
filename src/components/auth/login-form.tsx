@@ -73,6 +73,7 @@ const LoginForm = () => {
                 options={[
                     { label: "Admin", value: AdminRole.SUPER_ADMIN },
                     { label: "Agent", value: AdminRole.AGENT },
+                    { label: "Affiliate", value: AdminRole.AFFILIATE },
                 ]}
             />
             <div className="space-y-2 pt-2">

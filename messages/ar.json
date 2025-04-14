@@ -34,15 +34,49 @@
         "title": "قائمة المستخدم",
         "profile-image-alt": "صورة الملف الشخصي",
         "coin-image-alt": "أيقونة العملة",
+        "rules": "القواعد",
         "add-funds-alt": "إضافة أموال",
         "loading": "...",
-        "contact-us": " اتصل بنا",
         "your-info": "معلوماتك",
         "change-password": "تغيير كلمة المرور",
+        "contact-us": "اتصل بنا",
         "your-wallet": "محفظتك",
         "transaction-history": "سجل المعاملات",
         "betting-history": "سجل الرهانات",
-        "logout": "تسجيل خروج"
+        "logout": "تسجيل الخروج"
+    },
+    "game-rules": {
+        "title": "قواعد اللعبة",
+        "video-title": "شاهد الفيديو التعليمي",
+        "description": "يوجد في الجدول 17 رقماً. يمكن للاعبين وضع الأنواع التالية من الرهانات:",
+        "betting-options": "خيارات الرهان",
+        "winning-odds": "احتمالات الفوز",
+        "straight-bet": "رقم محدد",
+        "straight-bet-description": "اختر أي رقم واحد في الجدول للحصول على أعلى مكافأة.",
+        "between-two-numbers": "بين رقمين",
+        "between-two-numbers-description": "ضع رهاناً على رقمين متجاورين أفقياً أو عمودياً.",
+        "even-odd": "زوجي/فردي",
+        "even-odd-description": "مخاطرة منخفضة، عائد ثابت",
+        "high-low": "مرتفع/منخفض",
+        "high-low-description": "رهان على الأرقام 19-36 أو 1-18",
+        "column-bet": "رهان العمود",
+        "column-bet-description": "رهان على جميع أرقام عمود معين.",
+        "red-black-colors": "ألوان أحمر/أسود",
+        "red-black-colors-description": "رهان على جميع أرقام لون معين (أحمر أو أسود).",
+        "row-of-four-numbers": "صف من أربعة أرقام",
+        "row-of-four-numbers-description": "رهان على صف كامل من أربعة أرقام لمخاطرة أكثر توازناً.",
+        "single-number": "رقم واحد",
+        "single-number-description": "أعلى مخاطرة، أعلى مكافأة",
+        "single-number-odds": "16x",
+        "between-two-numbers-odds": "8x",
+        "row-of-four-numbers-odds": "4x",
+        "even-odd-odds": "2x",
+        "high-low-odds": "2x",
+        "column-bet-odds": "2x",
+        "red-black-colors-odds": "2x",
+        "street-bet-odds": "2x",
+        "corner-bet-odds": "2x",
+        "split-bet-odds": "2x"
     },
     "profile": {
         "page-title": "معلوماتك",
@@ -440,6 +474,5 @@
         "date-time": "التاريخ والوقت",
         "time": "الوقت",
         "winner": "الفائز"
-
     }
 }

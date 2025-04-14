@@ -1,6 +1,6 @@
 "use client";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn, getPlacementString } from "@/lib/utils";
+import { cn, getPlacementString, randomNumber, randomUsername } from "@/lib/utils";
 import GameRecord from "@/models/game-record";
 import { RoundRecord } from "@/models/round-record";
 import { useGetTopPlacements } from "@/react-query/game-record-queries";
@@ -11,6 +11,7 @@ type Props = {
     className?: string;
     round: RoundRecord;
 };
+
 
 const CurrentBets = ({ className, round }: Props) => {
     const t = useTranslations("game");
@@ -83,6 +84,43 @@ const CurrentBets = ({ className, round }: Props) => {
                             {t("no-bets")}
                         </div>
                     )}
+                    <h2 className="text-md font-semibold mb-2 text-game-text  game-header-highlight lg:pl-4 pl-2 w-full ">
+                        Other Bets
+                    </h2>
+                    <table className="min-w-full pr-2">
+                        <thead>
+                            <tr className="flex">
+                                <th className="p-2 text-sm  text-left text-game-secondary rounded-tl-lg flex-1">
+                                    {t("placement")}
+                                </th>
+                                <th className="p-2 text-sm text-left text-game-secondary flex-1">
+                                    {t("username")}
+                                </th>
+                                <th className="p-2 text-sm text-right text-game-secondary rounded-tr-lg flex-1">
+                                    {t("amount")}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {Array.from({ length: 10 }).map((_, index: number) => (
+                                <tr
+                                    key={index}
+                                    className="flex border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden"
+                                    style={{ display: 'flex', flexDirection: 'row' }}
+                                >
+                                    <td className="p-2 text-sm text-balance text-game-secondary rounded-l-lg flex-1">
+                                        {randomNumber(1, 15,1) + " Single" }
+                                    </td>
+                                    <td className="p-2 text-sm text-game-secondary flex-1">
+                                        {randomUsername()}
+                                    </td>
+                                    <td className="p-2 text-sm text-right text-game-secondary rounded-r-lg flex-1">
+                                        {randomNumber(100, 1000,100)}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </ScrollArea>
             </div>
         </section>
