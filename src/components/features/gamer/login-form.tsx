@@ -103,7 +103,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
           <div className="space-y-2">
             <p className="text-white">{t("labels.captcha")}</p>
             <div
-              className="border rounded bg-white p-2"
+              className="border rounded bg-gray-950 p-2"
               dangerouslySetInnerHTML={{ __html: captchaSvg }}
             />
             <div className="flex items-center gap-2">

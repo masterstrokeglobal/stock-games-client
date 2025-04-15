@@ -125,11 +125,11 @@ const companyMenuItems: MenuItem[] = [
         icon: ImageUpIcon,
         link: '/dashboard/advertisements'
     },
- /*    {
+    {
         name: "Affiliate",
         icon: Users,
         link: '/dashboard/affiliate'
-    } */
+    }
 ];
 
 const agentMenuItems: MenuItem[] = [
@@ -164,7 +164,7 @@ const affiliateMenuItems: MenuItem[] = [
     },
     {
         name: "Sub Affiliates",
-        icon: GiftIcon, 
+        icon: GiftIcon,
         link: '/dashboard/affiliate/sub-affiliates'
     },
 ];

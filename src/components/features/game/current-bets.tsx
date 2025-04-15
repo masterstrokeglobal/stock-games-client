@@ -3,7 +3,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn, getPlacementString, randomNumber, randomUsername } from "@/lib/utils";
 import GameRecord from "@/models/game-record";
 import { RoundRecord } from "@/models/round-record";
-import { useGetTopPlacements } from "@/react-query/game-record-queries";
+import { useGetMyPlacements } from "@/react-query/game-record-queries";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -15,7 +15,7 @@ type Props = {
 
 const CurrentBets = ({ className, round }: Props) => {
     const t = useTranslations("game");
-    const { data, isSuccess } = useGetTopPlacements(round.id.toString());
+    const { data, isSuccess } = useGetMyPlacements({ roundId: round.id.toString() });
 
     const currentBetsData: GameRecord[] = useMemo(() => {
         if (isSuccess) {
@@ -109,13 +109,13 @@ const CurrentBets = ({ className, round }: Props) => {
                                     style={{ display: 'flex', flexDirection: 'row' }}
                                 >
                                     <td className="p-2 text-sm text-balance text-game-secondary rounded-l-lg flex-1">
-                                        {randomNumber(1, 15,1) + " Single" }
+                                        {randomNumber(1, 15, 1) + " Single"}
                                     </td>
                                     <td className="p-2 text-sm text-game-secondary flex-1">
                                         {randomUsername()}
                                     </td>
                                     <td className="p-2 text-sm text-right text-game-secondary rounded-r-lg flex-1">
-                                        {randomNumber(100, 1000,100)}
+                                        {randomNumber(100, 1000, 100)}
                                     </td>
                                 </tr>
                             ))}
