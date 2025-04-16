@@ -218,3 +218,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   white-space: nowrap;
   /* Prevent text from breaking */
 }
+
+.widget-visible{
+  display: block;
+}
+

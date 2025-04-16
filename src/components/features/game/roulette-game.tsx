@@ -250,7 +250,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
             <ParticlesContainer />
             <div className="mx-auto  lg:pr-4  py-2 bg-background-secondary h-full ">
                 <div className="relative rounded-xl lg:flex-row w-full flex-col flex gap-8 border-brown-800">
-                    <div className='lg:w-7/12 max-w-2xl mx-auto w-full'>
+                    <div className='lg:w-8/12 max-w-2xl mx-auto w-full'>
                         <h1 className='text-xl lg:text-left text-center mt-2 mb-4 leading-none text-game-text font-semibold game-header-highlight lg:pl-4 pl-2   '>
                             {gameState.isPlaceOver ? t("betting-closed") : t("place-your-bets")}
                         </h1>
@@ -304,7 +304,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                             {roundRecord.market[16]?.codeName}
                                         </span>
                                         {getBetForPosition(PlacementType.SINGLE, [17]) && (
-                                            <ButtonChip className=" top-4 right-1/2 translate-x-1/2 -translate-y-1/2" amount={getBetForPosition(PlacementType.SINGLE, [17])!.amount} />
+                                            <ButtonChip className=" top/1/2 right-1/2 translate-x-1/2 -translate-y-1/2" amount={getBetForPosition(PlacementType.SINGLE, [17])!.amount} />
                                         )}
                                     </Button>
                                 </div>

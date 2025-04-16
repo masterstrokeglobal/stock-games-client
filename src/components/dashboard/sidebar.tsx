@@ -158,14 +158,14 @@ const agentMenuItems: MenuItem[] = [
 
 const affiliateMenuItems: MenuItem[] = [
     {
-        name: "Users",
-        icon: Users,
-        link: '/dashboard/affiliate/users'
+        name: "Dashboard",
+        icon: Home,
+        link: '/dashboard/affiliate/profile'
     },
     {
-        name: "Sub Affiliates",
-        icon: GiftIcon,
-        link: '/dashboard/affiliate/sub-affiliates'
+        name: "Direct Users",
+        icon: Users,
+        link: '/dashboard/affiliate/users'
     },
 ];
 
@@ -181,7 +181,15 @@ const Sidebar = ({ className }: PropsWithClassName) => {
     }
 
     if (userDetails.isAffiliate) {
-        menus = affiliateMenuItems;
+        if (userDetails.role === AdminRole.AFFILIATE) {
+            menus = [...affiliateMenuItems, {
+                name: "Sub Affiliates",
+                icon: GiftIcon,
+                link: '/dashboard/affiliate'
+            }];
+        } else if (userDetails.role === AdminRole.SUB_AFFILIATE) {
+            menus = affiliateMenuItems;
+        }
     }
 
     const renderMenuItem = (item: MenuItem) => {

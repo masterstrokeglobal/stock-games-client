@@ -26,6 +26,14 @@ function HomePage() {
             if (currentUser.role === AdminRole.COMPANY_ADMIN) {
                 router.push('/dashboard/users');
             }
+
+            if (currentUser.role === AdminRole.AFFILIATE) {
+                router.push('/dashboard/affiliate/profile');
+            }
+
+            if (currentUser.role === AdminRole.SUB_AFFILIATE) {
+                router.push('/dashboard/affiliate/profile');
+            }
         }
     }, [userDetails, router]);
     return (

@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import FormInput from "@/components/ui/form/form-input";
 import FormPassword from '@/components/ui/form/form-password';
 import FormProvider from "@/components/ui/form/form-provider";
-import FormSelect from '@/components/ui/form/form-select';
 import FormSwitch from '@/components/ui/form/form-switch';
 import { AffiliateRole } from '@/models/affiliate';
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,12 +13,13 @@ const passwordValidation = z.string().min(8);
 export const createAffiliateInputSchema = z.object({
     id: z.string().optional(),
     name: z.string().max(100).optional(),
-    username: z.string().min(1),
+    username: z.string().min(1).email(),
     password: passwordValidation.optional(),
+    comission: z.coerce.number().min(0).nonnegative(),
     companyId: z.string().optional(),
     referralBonus: z.coerce.number().min(0).nonnegative(),
-    role: z.nativeEnum(AffiliateRole),
     isPercentage: z.boolean().default(false),
+    role: z.nativeEnum(AffiliateRole),
 }).superRefine((data, ctx) => {
     if (!data.id && !data.password) {
         ctx.addIssue({
@@ -46,14 +46,11 @@ type Props = {
     defaultValues?: AffiliateFormValues;
     onSubmit: (data: AffiliateFormValues) => void;
     isLoading?: boolean;
+    subAffiliate?: boolean;
 };
 
-const affiliateRoles = Object.values(AffiliateRole).map(role => ({
-    value: role.toLowerCase(),
-    label: role.split("_").join(" ").toLowerCase()
-}));
 
-const AffiliateForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
+const AffiliateForm = ({ defaultValues, onSubmit, isLoading, subAffiliate }: Props) => {
     const form = useForm<AffiliateFormValues>({
         resolver: zodResolver(createAffiliateInputSchema),
         defaultValues: {
@@ -63,10 +60,7 @@ const AffiliateForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
         },
     });
 
-    // Watch the isPercentage field to provide conditional validation
     const isPercentage = form.watch('isPercentage');
-
-
 
     const handleSubmit = (data: AffiliateFormValues) => {
         onSubmit(data);
@@ -84,7 +78,7 @@ const AffiliateForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 <FormInput
                     control={form.control}
                     name="username"
-                    label="Username*"
+                    label="Email*"
                 />
                 <FormPassword
                     control={form.control}
@@ -92,24 +86,27 @@ const AffiliateForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                     type="password"
                     label="Password*"
                 />
-
-                <FormSelect
-                    control={form.control}
-                    name="role"
-                    label="Role"
-                    options={affiliateRoles}
-                />
+                {!subAffiliate && (
+                    <>
+                        <FormInput
+                            control={form.control}
+                            name="referralBonus"
+                            type="number"
+                            label={`Referral Bonus${isPercentage ? ' (%)' : ''}`}
+                        />
+                        <FormSwitch
+                            control={form.control}
+                            name="isPercentage"
+                            label="Is Percentage"
+                        />
+                    </>
+                )}
 
                 <FormInput
                     control={form.control}
-                    name="referralBonus"
+                    name="comission"
                     type="number"
-                    label={`Referral Bonus${isPercentage ? ' (%)' : ''}`}
-                />
-                <FormSwitch
-                    control={form.control}
-                    name="isPercentage"
-                    label="Is Percentage"
+                    label="Comission"
                 />
             </div>
 

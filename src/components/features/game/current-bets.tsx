@@ -34,6 +34,9 @@ const CurrentBets = ({ className, round }: Props) => {
         }
     }, []);
 
+    const totalAmount = useMemo(() => {
+        return currentBetsData.reduce((acc, bet) => acc + bet.amount, 0);
+    }, [currentBetsData]);
     return (
         <section
             ref={sectionRef}
@@ -41,8 +44,13 @@ const CurrentBets = ({ className, round }: Props) => {
         >
             <div className="flex gap-2 md:flex-row flex-col">
                 <ScrollArea className="max-h-96 w-full flex-[2]" style={{ height: `${scrollAreaHeight - 20}px` }} type="auto">
-                    <h2 className="text-md font-semibold mb-2 text-game-text  game-header-highlight lg:pl-4 pl-2 w-full ">
-                        {t("current-bets")}
+                    <h2 className="text-md font-semibold mb-2 text-game-text flex justify-between  game-header-highlight lg:pl-4 pl-2 w-full ">
+                        <span>
+                            {t("current-bets")}
+                        </span>
+                        <span className="ml-auto text-game-secondary">
+                            Rs. {totalAmount}
+                        </span>
                     </h2>
                     {currentBetsData.length > 0 ? (
                         <table className="min-w-full pr-2">
@@ -93,11 +101,11 @@ const CurrentBets = ({ className, round }: Props) => {
                                 <th className="p-2 text-sm  text-left text-game-secondary rounded-tl-lg flex-1">
                                     {t("placement")}
                                 </th>
-                                <th className="p-2 text-sm text-left text-game-secondary flex-1">
+                                <th className="p-2 text-sm text-left capitalize text-game-secondary flex-1">
                                     {t("username")}
                                 </th>
                                 <th className="p-2 text-sm text-right text-game-secondary rounded-tr-lg flex-1">
-                                    {t("amount")}
+                                Rs. {t("amount")}
                                 </th>
                             </tr>
                         </thead>
@@ -111,7 +119,7 @@ const CurrentBets = ({ className, round }: Props) => {
                                     <td className="p-2 text-sm text-balance text-game-secondary rounded-l-lg flex-1">
                                         {randomNumber(1, 15, 1) + " Single"}
                                     </td>
-                                    <td className="p-2 text-sm text-game-secondary flex-1">
+                                    <td className="p-2 text-sm text-game-secondary capitalize flex-1">
                                         {randomUsername()}
                                     </td>
                                     <td className="p-2 text-sm text-right text-game-secondary rounded-r-lg flex-1">

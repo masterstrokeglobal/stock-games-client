@@ -65,7 +65,6 @@ const GamePage = () => {
             </main>}
             <AdvertismentDialog />
             <TawkMessengerReact
-
                 propertyId="/67fcabcc5de05719072dd2b9"
                 widgetId="1iopfu6mp"
                 onLoad={() => console.log('Tawk loaded')}

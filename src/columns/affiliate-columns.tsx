@@ -58,10 +58,16 @@ const affiliateColumns: ColumnDef<Affiliate>[] = [
         header: "USERS",
         accessorKey: "users",
         cell: ({ row }) => (
-            <div className="flex items-center">
-                <Users className="h-4 w-4 mr-2" />
-                <span>{row.original.users?.length || 0}</span>
-            </div>
+            <Link href={`/dashboard/affiliate/users?affiliateId=${row.original.id}`} className="flex items-center">
+                <Button>
+                    <Users className="h-4 w-4 mr-2" />
+
+                    <span className="text-xs font-semibold ">
+                        Check &nbsp;
+                        {row.original.userCount || 0}
+                        &nbsp;Users</span>
+                </Button>
+            </Link>
         ),
     },
     {

@@ -43,3 +43,11 @@ export const useDeleteAffiliate = () => {
 };
 
 
+
+export const useGetAffiliateUsers = (filter: any) => {
+    return useQuery({
+        queryKey: ["affiliate", filter],
+        queryFn: () => affiliateAPI.getAffiliateUsers(filter),
+    });
+};
+

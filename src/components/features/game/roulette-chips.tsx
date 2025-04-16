@@ -64,13 +64,23 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                     ))}
                 </div>
             </div>
-            <Button
-                className={`bg-primary-game w-full ${isPlaceOver || isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                disabled={isPlaceOver || isLoading || isPending}
-                onClick={handleUndo}
-            >
-                {isPlaceOver ? t('betting-closed').toUpperCase() : isLoading ? t('please-wait').toUpperCase() : t('undo').toUpperCase()}
-            </Button>
+            <div className='flex justify-between items-center flex-wrap md:flex-row mb-2 gap-2'>
+                <Button
+                    className={`bg-primary-game w-full ${isPlaceOver || isLoading ? 'opacity-50      cursor-not-allowed' : ''}`}
+                    disabled={isPlaceOver || isLoading || isPending}
+                    onClick={handleUndo}
+                >
+                    {isPlaceOver ? t('betting-closed').toUpperCase() : isLoading ? t('please-wait').toUpperCase() : t('clear-all').toUpperCase()}
+                </Button>
+
+                <Button
+                    className={`bg-primary-game w-full ${isPlaceOver || isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    disabled={isPlaceOver || isLoading || isPending}
+                    onClick={handleUndo}
+                >
+                    {isPlaceOver ? t('betting-closed').toUpperCase() : isLoading ? t('please-wait').toUpperCase() : t('repeat-bet').toUpperCase()}
+                </Button>
+            </div>
         </div>
     );
 };

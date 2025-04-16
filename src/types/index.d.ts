@@ -70,6 +70,7 @@ declare module "@splidejs/react-splide" {
 
 type TawkMessengerReactProps = {
   propertyId: string;
+  customStyle?: any;
   widgetId: string;
   onLoad?: () => void;
 }

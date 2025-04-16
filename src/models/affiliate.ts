@@ -17,6 +17,7 @@ class Affiliate {
     referenceCode?: string;
     parentAffiliate?: Affiliate;
     company?: Company;
+    userCount?: number;
     users?: User[];
     placementNotAllowed: SchedulerType[];
     referralBonus: number;
@@ -34,6 +35,8 @@ class Affiliate {
         this.referenceCode = params.referenceCode;
         this.referralBonus = params.referralBonus || 0;
         this.isPercentage = params.isPercentage !== undefined ? params.isPercentage : true;
+
+        this.userCount = params.userCount || 0;
 
         if (params.parentAffiliate) {
             this.parentAffiliate = new Affiliate(params.parentAffiliate);

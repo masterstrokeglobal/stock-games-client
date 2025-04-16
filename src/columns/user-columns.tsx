@@ -54,6 +54,7 @@ const userColumns: ColumnDef<User>[] = [
     {
         header: "CREATED ON",
         accessorKey: "createdAt",
+
         cell: ({ row }) => (
             <span className="text-[#6B7280]">
                 {dayjs(row.original.createdAt).format("DD-MM-YYYY")}
@@ -131,3 +132,7 @@ const ActionColumn = ({ user }: { user: User }) => {
 };
 
 export default userColumns;
+
+const restrictedColumns = ["bonusPercentage", "placementAllowed", "actions"];
+
+export const affiliateUserColumns = userColumns.filter((column: any) => !restrictedColumns.includes(column.accessorKey));
