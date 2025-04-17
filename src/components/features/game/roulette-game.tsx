@@ -132,6 +132,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
         mutate({
             amount: betAmount,
             round: roundRecord.id,
+            horseNumbers: numbers,
             placementType: PlacementType.DOUBLE_STREET,
             market: markets,
             placedValues: getPlacementString({
@@ -151,6 +152,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
         mutate({
             amount: betAmount,
             round: roundRecord.id,
+            horseNumbers: numbers,
             placementType: PlacementType.COLOR,
             market: markets,
             placedValues: getPlacementString({
@@ -171,6 +173,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
             round: roundRecord.id,
             placementType: betType,
             market: markets,
+            horseNumbers: numbers,
             placedValues: getPlacementString({
                 market: markets as number[],
                 placementType: betType,
@@ -183,7 +186,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     };
 
-  
+
     const handleZeroBet = () => {
         if (gameState.isPlaceOver || isPlacingBet) return;
         if (!verifyBetAmount(betAmount)) return;
@@ -194,6 +197,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
             amount: betAmount,
             round: roundRecord.id,
             placementType: PlacementType.SINGLE,
+            horseNumbers: [17],
             market: [marketId],
             placedValues: getPlacementString({ market: [marketId], placementType: PlacementType.SINGLE }, roundRecord),
         });
@@ -226,6 +230,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
             round: roundRecord.id,
             placementType: bet.type,
             market: markets,
+            horseNumbers: bet.numbers,
             placedValues: getPlacementString({
                 market: markets as number[],
                 placementType: bet.type,
@@ -249,8 +254,8 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
             <ParticlesContainer />
             <div className="mx-auto  lg:pr-4  py-2 bg-background-secondary h-full ">
-                <div className="relative rounded-xl lg:flex-row w-full flex-col flex gap-8 border-brown-800">
-                    <div className='lg:w-8/12 max-w-2xl mx-auto w-full'>
+                <div className="relative rounded-xl lg:flex-row w-full flex-col flex border-brown-800">
+                    <div className='lg:w-7/12 max-w-2xl mx-auto w-full'>
                         <h1 className='text-xl lg:text-left text-center mt-2 mb-4 leading-none text-game-text font-semibold game-header-highlight lg:pl-4 pl-2   '>
                             {gameState.isPlaceOver ? t("betting-closed") : t("place-your-bets")}
                         </h1>
@@ -391,11 +396,11 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             </div>
                         </div>
                     </div>
-                    <div className='lg:w-5/12 flex justify-between flex-col '>
+                    <div className='lg:w-5/12  justify-between flex-col '>
                         <Tabs
                             value={tab}
                             onValueChange={(value) => setTab(value as SchedulerType)}
-                            className="w-full relative z-10"
+                            className="w-full relative z-10 mt-2"
                         >
                             <TabsList className="w-full hidden lg:flex  bg-tertiary ">
                                 {isNSEAllowed && (

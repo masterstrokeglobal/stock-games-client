@@ -9,23 +9,31 @@ export const gameRecordAPI = {
     return api.get("/game-records/winning");
   },
 
-  getTopPlacements: async (roundId:string) => {
-    return api.get("/game-records/top-placements",{
-      params: { roundId } 
+  getTopPlacements: async (roundId: string) => {
+    return api.get("/game-records/top-placements", {
+      params: { roundId }
     });
   },
 
-  getMyPlacements: async (filter:any) => {
-    return api.get("/game-records/my-placements",{
+  getMyPlacements: async (filter: any) => {
+    return api.get("/game-records/my-placements", {
       params: filter
     });
   },
-  getGameRecordHistory: async (filter:any) => {
-    return api.get("/round-records/history",{
+  getGameRecordHistory: async (filter: any) => {
+    return api.get("/round-records/history", {
       params: filter
     });
   },
-  undoLastPlacement: async (roundId:string) => {
+  undoLastPlacement: async (roundId: string) => {
     return api.post(`/game-records/undo/${roundId}`);
+  }
+  ,
+  repeatPlacement: async (roundId: string) => {
+    return api.post(`/game-records/repeat/${roundId}`);
+  }
+  ,
+  clearPlacement: async (roundId: string) => {
+    return api.post(`/game-records/clear/${roundId}`);
   }
 };
