@@ -1,10 +1,10 @@
 
 // components/BettingControls.tsx
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useTranslations } from 'next-intl';
-import { useRepeatPlacement, useClearPlacement, useUndoLastPlacement } from '@/react-query/game-record-queries';
+import { Input } from '@/components/ui/input';
 import { useAuthStore } from '@/context/auth-context';
+import { useClearPlacement, useRepeatPlacement } from '@/react-query/game-record-queries';
+import { useTranslations } from 'next-intl';
 
 interface BettingControlsProps {
     betAmount: number;
@@ -69,7 +69,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                     ))}
                 </div>
             </div>
-            <div className='flex justify-between items-center  md:flex-row  mb-2 gap-2'>
+            <div className='flex justify-between items-center  md:flex-row mb-2 gap-2'>
                 <Button
                     className={`bg-primary-game w-full ${isPlaceOver || isLoading ? 'opacity-50      cursor-not-allowed' : ''}`}
                     disabled={isPlaceOver || isLoading || isClearPlacementPending}

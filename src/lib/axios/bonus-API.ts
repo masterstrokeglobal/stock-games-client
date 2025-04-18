@@ -26,6 +26,11 @@ const bonusAPI = {
     deleteBonusById: async (id: string) => {
         const response = await api.delete(`/bonus/${id}`);
         return response.data;
+    },
+
+    getActiveBonus: async () => {
+        const response = await api.get(`/bonus/active`);
+        return response.data;
     }
 }
 

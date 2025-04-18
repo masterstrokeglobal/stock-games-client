@@ -82,7 +82,7 @@ class Bonus {
     }
 
     calculateBonusAmount(baseAmount: number): number {
-        const bonusAmount = this.amount;
+        const bonusAmount = this.percentage ? (baseAmount * this.amount) / 100 : this.amount;
 
         // If there's a max amount cap, ensure bonus doesn't exceed it
         if (this.maxAmount && bonusAmount > this.maxAmount) {

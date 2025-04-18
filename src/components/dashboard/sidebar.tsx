@@ -82,6 +82,12 @@ const companyMenuItems: MenuItem[] = [
         icon: Users,
         link: '/dashboard/users',
     },
+
+    {
+        name: "User Reports",
+        icon: Users,
+        link: '/dashboard/affiliate/users'
+    },
     // company wallet
     {
         name: "Company Wallet",

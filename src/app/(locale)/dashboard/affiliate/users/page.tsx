@@ -1,41 +1,43 @@
 "use client";
-import { affiliateUserColumns } from "@/columns/user-columns";
+import { AffiliateUser, affiliateUserColumns } from "@/columns/user-columns";
 import AffiliateBreadcrumb from "@/components/features/affiliate/affiliate-breadcrumb";
+import { Button } from "@/components/ui/button";
 import DataTable from "@/components/ui/data-table-server";
 import { Input } from "@/components/ui/input";
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
-} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import User from "@/models/user";
-import { useGetAffiliateUsers } from "@/react-query/affiliate-queries";
-import { Search } from "lucide-react";
+import { useGetAffiliateUsers, useGetAffiliateUsersDownload } from "@/react-query/affiliate-queries";
+import { Download, Search } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import React, { useMemo, useState } from "react";
 const UserTable = () => {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
-    const [orderByField, setOrderByField] = useState("createdAt");
-    const [orderBy, setOrderBy] = useState("DESC");
+
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setEndDate] = useState<Date | null>(null);
     const searchParams = useSearchParams();
     const affiliateId = searchParams.get("affiliateId");
 
     const { data, isSuccess, isFetching } = useGetAffiliateUsers({
         page,
         search,
-        orderByField,
-        orderBy,
+        startDate,
+        endDate,
+        limit: 10,
         affiliateId: affiliateId ? parseInt(affiliateId) : undefined,
     });
 
-    const users = useMemo(() => {
-        if (isSuccess && data?.data?.users) {
-            return Array.from(data.data.users).map((user: any) => new User(user));
+    const { mutate: downloadUsers } = useGetAffiliateUsersDownload({
+        page,
+        search,
+        startDate,
+        endDate,
+        affiliateId: affiliateId ? parseInt(affiliateId) : undefined,
+    });
+
+    const users: AffiliateUser[] = useMemo(() => {
+        if (isSuccess && data?.data?.data) {
+            return Array.from(data.data.data);
         }
         return [];
     }, [data, isSuccess]);
@@ -53,14 +55,8 @@ const UserTable = () => {
         setPage(newPage);
     };
 
-    const handleFieldChange = (value: string) => {
-        setOrderByField(value);
-        setPage(1);
-    };
-
-    const handleOrderChange = (value: string) => {
-        setOrderBy(value);
-        setPage(1);
+    const handleDownload = () => {
+        downloadUsers();
     };
 
     return (
@@ -82,37 +78,15 @@ const UserTable = () => {
                         />
                     </div>
 
-                    <div className="flex gap-2">
-                        <Select
-                            value={orderByField}
-                            onValueChange={handleFieldChange}
-                        >
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="Sort by field" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectItem value="createdAt">Created Date</SelectItem>
-                                    <SelectItem value="firstname"> Name</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-
-                        <Select
-                            value={orderBy}
-                            onValueChange={handleOrderChange}
-                        >
-                            <SelectTrigger className="w-[140px]">
-                                <SelectValue placeholder="Sort order" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectItem value="ASC">Ascending</SelectItem>
-                                    <SelectItem value="DESC">Descending</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
+                    <div className="flex gap-2 items-center">
+                        <Input type="date" onChange={(e) => setStartDate(new Date(e.target.value))} />
+                        <span>to</span>
+                        <Input type="date" onChange={(e) => setEndDate(new Date(e.target.value))} />
                     </div>
+                    <Button onClick={handleDownload}>
+                        <Download size={18} className="mr-2" />
+                        Download
+                    </Button>
                 </div>
             </header>
 

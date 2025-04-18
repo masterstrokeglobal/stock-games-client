@@ -60,3 +60,11 @@ export const useDeleteBonusById = () => {
     });
 };
 
+
+export const useGetActiveBonus = () => {
+    return useQuery({
+        queryKey: ["bonus", "active"],
+        queryFn: () => bonusAPI.getActiveBonus(),
+    });
+};
+

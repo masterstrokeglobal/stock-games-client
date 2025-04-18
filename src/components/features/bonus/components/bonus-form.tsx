@@ -1,14 +1,14 @@
 import { Button } from "@/components/ui/button";
+import FormDatePicker from "@/components/ui/form/form-date-picker";
+import FormImage from "@/components/ui/form/form-image-compact";
 import FormInput from "@/components/ui/form/form-input";
+import FormProvider from "@/components/ui/form/form-provider";
 import FormSelect from "@/components/ui/form/form-select";
 import FormSwitch from '@/components/ui/form/form-switch';
-import FormDatePicker from "@/components/ui/form/form-date-picker";
-import FormProvider from "@/components/ui/form/form-provider";
+import { BonusCategory, BonusFrequency } from "@/models/bonus";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { BonusCategory, BonusFrequency } from "@/models/bonus";
-import FormImage from "@/components/ui/form/form-image-compact";
 
 // Define the schema for bonus input
 export const bonusFormSchema = z.object({
@@ -68,7 +68,7 @@ const frequencyOptions = Object.values(BonusFrequency).map((frequency) => ({
     value: frequency,
 }));
 
-const BonusForm = ({ defaultValues, onSubmit, isLoading, companyId }: Props) => {
+const BonusForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
     const form = useForm<BonusFormValues>({
         resolver: zodResolver(bonusFormSchema),
         defaultValues: {
@@ -142,14 +142,14 @@ const BonusForm = ({ defaultValues, onSubmit, isLoading, companyId }: Props) => 
                         control={form.control}
                         name="minAmount"
                         type="number"
-                        label="Minimum Amount"
+                        label="Minimum Deposit Amount"
                     />
 
                     <FormInput
                         control={form.control}
                         name="maxAmount"
                         type="number"
-                        label="Maximum Amount"
+                        label="Maximum  Bonus Amount"
                     />
                 </div>
 
@@ -171,7 +171,7 @@ const BonusForm = ({ defaultValues, onSubmit, isLoading, companyId }: Props) => 
                     <FormSelect
                         control={form.control}
                         name="frequency"
-                        label="Frequency"
+                        label="Frequency of Deposit"
                         options={frequencyOptions}
                     />
 

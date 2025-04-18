@@ -12,10 +12,15 @@ import React, { useMemo, useState } from "react";
 const AffiliateTable = () => {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+
 
     const { data, isSuccess, isFetching } = useGetAllAffiliate({
         page: page,
         search: search,
+        startDate: startDate,
+        endDate: endDate,
     });
 
     const affiliates = useMemo(() => {
@@ -51,6 +56,18 @@ const AffiliateTable = () => {
                             placeholder="Search"
                             onChange={handleSearch}
                             className="pl-10"
+                        />
+                    </div>
+
+                    <div className="flex gap-2">
+                       <Input
+                            placeholder="Start Date"
+                            onChange={(e) => setStartDate(e.target.value)}
+                        />
+                        <span className="text-gray-500">to</span>
+                        <Input
+                            placeholder="End Date"
+                            onChange={(e) => setEndDate(e.target.value)}
                         />
                     </div>
                     <Link href="/dashboard/affiliate/create">

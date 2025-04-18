@@ -20,6 +20,10 @@ const affiliateAPI = {
     getAffiliateUsers: async (filter: any) => {
         return api.get(`/affiliate/users`, { params: filter });
     },
+
+    getAffiliateUsersDownload: async (filter: any) => {
+        return api.get(`/affiliate/users/download`, { params: filter, responseType: 'arraybuffer' });
+    }
 };
 
 export default affiliateAPI;

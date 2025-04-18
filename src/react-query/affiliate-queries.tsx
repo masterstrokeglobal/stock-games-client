@@ -51,3 +51,22 @@ export const useGetAffiliateUsers = (filter: any) => {
     });
 };
 
+
+export const useGetAffiliateUsersDownload = (filter: any) => {
+    return useMutation({
+        mutationFn: () => affiliateAPI.getAffiliateUsersDownload(filter),
+        onSuccess: (data) => {
+            const blob = new Blob([data.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "affiliate-users.xlsx";
+            a.click();
+            window.URL.revokeObjectURL(url);
+        },
+        onError: (error) => {
+            toast.error(error.message);
+        },
+    });
+};
+
