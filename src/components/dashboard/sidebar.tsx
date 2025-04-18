@@ -129,6 +129,11 @@ const companyMenuItems: MenuItem[] = [
         name: "Affiliate",
         icon: Users,
         link: '/dashboard/affiliate'
+    },
+    {
+        name: "Bonus",
+        icon: GiftIcon,
+        link: '/dashboard/bonus'
     }
 ];
 

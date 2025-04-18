@@ -246,6 +246,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
     const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO);
+    const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
 
     const isNotAllowedToPlaceBet = currentUser.isNotAllowedToPlaceOrder(roundRecord.type);
 
@@ -271,6 +272,9 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                 )}
                                 {isCryptoAllowed && (
                                     <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
+                                )}
+                                {isUSAMarketAllowed && (
+                                    <TabsTrigger className="flex-1 h-8" value="usa_market">USA Market</TabsTrigger>
                                 )}
                             </TabsList>
                         </Tabs>
@@ -408,6 +412,9 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                 )}
                                 {isCryptoAllowed && (
                                     <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
+                                )}
+                                {isUSAMarketAllowed && (
+                                    <TabsTrigger className="flex-1 h-8" value="usa_market">USA Market</TabsTrigger>
                                 )}
                             </TabsList>
 
