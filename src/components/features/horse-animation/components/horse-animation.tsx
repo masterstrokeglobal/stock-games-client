@@ -99,7 +99,7 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
             const initialPos = currentPositions[index] || initialPositions[index];
             return {
                 position: [initialPos.x, 0, initialPos.z],
-                scale: [0.5, 0.5, 0.5],
+                scale: [0.05, 0.05, 0.05],
                 speed: 1 + Math.random() * 0.2,
                 horseNumber: stock.horse,
             };
