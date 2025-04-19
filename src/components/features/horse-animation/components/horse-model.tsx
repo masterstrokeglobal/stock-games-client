@@ -3,6 +3,7 @@ import { useFrame, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { GLTFLoader } from "./GLTFLoader";
 import HorseNumber from "./horse-number";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 
 type HorseModelProps = {
   position: [number, number, number];
@@ -15,7 +16,11 @@ type HorseModelProps = {
 const HorseModel = forwardRef<THREE.Group, HorseModelProps>(
   ({ position, scale, speed, color, number }, ref) => {
     const group = useRef<THREE.Group | null>(null);
-    const { scene, animations } = useLoader(GLTFLoader, "./horse.glb");
+    const { scene, animations } = useLoader(GLTFLoader, "./horse2.glb", (loader) => {
+      const dracoLoader = new DRACOLoader();
+      dracoLoader.setDecoderPath('https://raw.githubusercontent.com/mrdoob/three.js/refs/heads/master/examples/jsm/libs/draco/gltf/'); // use a full url path
+      loader.setDRACOLoader(dracoLoader);
+    });
     const mixer = useRef<THREE.AnimationMixer | null>(null);
     const horseNumberRef = useRef<any>(null);
 
@@ -59,6 +64,7 @@ const HorseModel = forwardRef<THREE.Group, HorseModelProps>(
       mixer.current = new THREE.AnimationMixer(coloredScene);
 
       if (animations.length) {
+        console.log(animations[0], "animations[0]");
         const action = mixer.current.clipAction(animations[0]);
         action.setDuration(1 / speed);
         action.play();
