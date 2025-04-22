@@ -39,7 +39,7 @@ export class RoundRecord {
         this.market = data.market?.map((item: any, index) => new MarketItem({ ...item, horse: index + 1 })) || [];
         this.type = data.type || SchedulerType.NSE;
         this.winningMarket = data.winningMarket;
-        this.winningId = data.winningId;
+        this.winningId = data.winningId || [42];
         this.roundRecordGameType = data.roundRecordGameType || RoundRecordGameType.DERBY;
         this.createdAt = data.createdAt ? new Date(data.createdAt) : new Date();
         this.updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
@@ -83,6 +83,18 @@ export class RoundRecord {
     // Static method to create instance from API response
     static fromAPI(data: any): RoundRecord {
         return new RoundRecord(data);
+    }
+
+    getMarketByHorseNumber(horseNumber: number): MarketItem | undefined {
+        return this.market.find(item => item.horse === horseNumber);
+    }
+
+    isHorseWinning(horseNumber: number): boolean {
+        const market = this.getMarketByHorseNumber(horseNumber);
+        console.log(market, this.winningId);
+        const isWinning = this.winningId?.includes(market?.id!);
+        console.log(isWinning);
+        return isWinning || false;
     }
 
     get roundGameName(): string {

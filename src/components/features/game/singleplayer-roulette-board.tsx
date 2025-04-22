@@ -157,7 +157,7 @@ const SinglePlayerRouletteGame = ({ roundRecord }: Props) => {
                                     {getBetForPosition(PlacementType.SINGLE, [17]) && (
                                         <ButtonChip className=" top-4 right-1/2 translate-x-1/2 -translate-y-1/2" amount={getBetForPosition(PlacementType.SINGLE, [17])!.amount} />
                                     )}
-                                    {gameState.isPlaceOver && roundRecord.winningId?.includes(17) && <img src="/crown.png" alt="Winner" className="size-16 absolute top-1/2 left-4 -translate-x-1/2 -translate-y-1/2" />}
+                                    {gameState.isPlaceOver && roundRecord.isHorseWinning(17) && <img src="/crown.png" alt="Winner" className="size-16 absolute top-2/3 left-1/2 -translate-x-1/2 -translate-y-1/2" />}
                                 </Button>
                             </div>
 
