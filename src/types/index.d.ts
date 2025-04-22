@@ -75,6 +75,34 @@ type TawkMessengerReactProps = {
   onLoad?: () => void;
 }
 
+
+
+ type Market = "NSE" | "Crypto" | "US Stocks"
+ type BetDirection = "up" | "down"
+ type BetType = "single-digit" | "double-digit"
+
+ interface Asset {
+  id: string
+  name: string
+  symbol: string
+  price: string
+  change: string
+  isPositive: boolean
+  market: Market
+}
+
+ interface BetSlipItem {
+  id: string
+  assetName: string
+  assetSymbol: string
+  betType?: BetType
+  predictedDigits?: string
+  direction: BetDirection
+  odds: number
+  betAmount: number
+  potentialWin: number
+}
+
 declare module '@tawk.to/tawk-messenger-react' {
 
   export type TawkMessengerReactComponent<T = any> = React.ComponentType<T>
