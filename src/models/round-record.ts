@@ -91,9 +91,9 @@ export class RoundRecord {
 
     isHorseWinning(horseNumber: number): boolean {
         const market = this.getMarketByHorseNumber(horseNumber);
-        console.log(market, this.winningId);
-        const isWinning = this.winningId?.includes(market?.id!);
-        console.log(isWinning);
+        const marketId = market?.id;
+        if (!marketId) return false;
+        const isWinning = this.winningId?.includes(marketId);
         return isWinning || false;
     }
 
