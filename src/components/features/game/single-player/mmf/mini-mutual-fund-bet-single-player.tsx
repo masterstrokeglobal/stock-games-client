@@ -2,15 +2,14 @@ import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuthStore } from '@/context/auth-context';
-import { useGameState, useIsPlaceOver } from '@/hooks/use-current-game';
+import { useGameState, useIsPlaceOver, useShowResults } from '@/hooks/use-current-game';
 import { useGameType } from '@/hooks/use-game-type';
 import { useLeaderboard } from '@/hooks/use-leadboard';
 import { cn } from '@/lib/utils';
 import MarketItem, { SchedulerType } from '@/models/market-item';
 import MiniMutualFundPlacement from '@/models/mini-mutual-fund';
 import User from '@/models/user';
-import { useCreateSinglePlayerRouletteBet } from '@/react-query/game-record-queries';
-import { useGetMiniMutualFundCurrentUserPlacements } from '@/react-query/lobby-query';
+import { useCreateSinglePlayerRouletteBet, useGetCurrentRoundPlacements } from '@/react-query/game-record-queries';
 import { useStockBettingStore } from '@/store/betting-store';
 import { useGameStore } from "@/store/game-store";
 import { useSinglePlayerGameStore } from '@/store/single-player-game-store';
@@ -18,6 +17,7 @@ import { Triangle } from 'lucide-react';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
 import { CurrentGameState } from '../../contants';
+import GameResultDialog from '../../result-dialog';
 
 const StockSelectionGridSinglePlayer: React.FC = () => {
   const [tab, setTab] = useGameType();
@@ -32,7 +32,7 @@ const StockSelectionGridSinglePlayer: React.FC = () => {
 
 
   const { mutate, isPending: isPlacingBet } = useCreateSinglePlayerRouletteBet();
-  const { data, isSuccess } = useGetMiniMutualFundCurrentUserPlacements(roundRecord?.id);
+  const { data, isSuccess } = useGetCurrentRoundPlacements(roundRecord?.id!.toString());
   const { stocks } = useLeaderboard(roundRecord!);
 
   const stocksToPriceMap = useMemo(() => {
@@ -54,12 +54,8 @@ const StockSelectionGridSinglePlayer: React.FC = () => {
   }, [stocks]);
 
   const placements = useMemo<MiniMutualFundPlacement[]>(() => {
-    return isSuccess ? data.placements : [];
+    return isSuccess ? data?.data.placements : [];
   }, [isSuccess, data]);
-
-  const moneyLeft = useMemo(() => {
-    return isSuccess ? data?.totalMoneyLeft : "-";
-  }, [isSuccess, data?.totalMoneyLeft,]);
 
 
   const { betAmount, setIsLoading } = useStockBettingStore();
@@ -74,7 +70,7 @@ const StockSelectionGridSinglePlayer: React.FC = () => {
 
   // Handle bet placement
   const handlePlaceBet = (stock: MarketItem): void => {
-    if (!stock || isPlaceOver || !roundRecord) return;
+    if (!stock || isPlaceOver || !roundRecord || isPlacingBet) return;
 
     setIsLoading(true);
     mutate(
@@ -100,6 +96,7 @@ const StockSelectionGridSinglePlayer: React.FC = () => {
   const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO);
   const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
   const isNotAllowedToPlaceBet = currentUser.isNotAllowedToPlaceOrder(roundRecord?.type ?? SchedulerType.NSE);
+  const { previousRoundId, showResults } = useShowResults(roundRecord, placements as any);
 
 
   if (!roundRecord) return null;
@@ -110,7 +107,7 @@ const StockSelectionGridSinglePlayer: React.FC = () => {
         type="auto"
         className="h-full w-full"
       >
-        <GameHeader gameState={gameState} moneyLeft={moneyLeft} className='lg:flex items-center px-4 justify-between lg:flex-row' />
+        <GameHeader gameState={gameState} className='lg:flex items-center px-4 justify-between lg:flex-row' />
         <Tabs
           value={tab}
           onValueChange={(value) => setTab(value as SchedulerType)}
@@ -168,6 +165,7 @@ const StockSelectionGridSinglePlayer: React.FC = () => {
           ))}
         </div>
       </ScrollArea>
+      {previousRoundId && <GameResultDialog key={String(showResults)} open={showResults} roundRecordId={previousRoundId} />}
     </div>
   );
 };
@@ -178,11 +176,10 @@ export default StockSelectionGridSinglePlayer;
 interface GameHeaderProps {
   gameState: CurrentGameState;
   className?: string;
-  moneyLeft: string;
 }
 
 
-export const GameHeader: React.FC<GameHeaderProps> = ({ gameState, moneyLeft, className }) => {
+export const GameHeader: React.FC<GameHeaderProps> = ({ gameState, className }) => {
 
   const { lobby } = useGameStore();
   const getMessage = () => {

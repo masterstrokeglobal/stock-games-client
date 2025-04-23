@@ -191,9 +191,10 @@ export const useGetMyCurrentPlacement = (roundId: string) => {
 
 
 // Get Current Round Placements Hook
-export const useGetCurrentRoundPlacements = (roundId: string) => {
+export const useGetCurrentRoundPlacements = (roundId?: string) => {
     return useQuery({
         queryKey: ["singlePlayerRoundPlacements", roundId],
-        queryFn: () => gameRecordAPI.getCurrentRoundPlacements(roundId),
+        queryFn: () => roundId ? gameRecordAPI.getCurrentRoundPlacements(roundId) : undefined,
+        enabled: !!roundId,
     });
 };

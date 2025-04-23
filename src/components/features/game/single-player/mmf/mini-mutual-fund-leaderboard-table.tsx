@@ -8,6 +8,7 @@ import { useGetMiniMutualFundCurrentRoundPlacements } from "@/react-query/lobby-
 import { useSinglePlayerGameStore } from "@/store/single-player-game-store";
 import React, { useMemo } from 'react';
 import { CAR_COLORS } from "../../../horse-animation/components/mmf-horse-animation";
+import { useGetCurrentRoundPlacements } from "@/react-query/game-record-queries";
 interface LeaderboardTableProps {
     leaderboardData: RankedMarketItem[];
     roundType?: SchedulerType;
@@ -20,9 +21,9 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
     height = 400
 }) => {
     const { roundRecord } = useSinglePlayerGameStore();
-    const { data, isSuccess } = useGetMiniMutualFundCurrentRoundPlacements(roundRecord!.id!);
+    const { data, isSuccess } = useGetCurrentRoundPlacements(roundRecord?.id.toString());
     const placements = useMemo<MiniMutualFundPlacement[]>(() => {
-        return isSuccess ? data.placements : [];
+        return isSuccess ? data?.data.placements : [];
     }, [isSuccess, data]);
 
     const userPlacements = useLeaderboardAggregation(placements, leaderboardData);
@@ -59,7 +60,6 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                 <thead>
                     <tr className=" text-sm">
                         <th className="p-2 text-left w-12">Rank</th>
-                        <th className="p-2 text-left w-12">Car</th>
                         <th className="p-2 text-left">Username</th>
                         <th className="p-2 text-left whitespace-nowrap">Betted Amount</th>
                         <th className="p-2 text-left whitespace-nowrap">P/L</th>
@@ -76,9 +76,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
                         >
 
                             <td className="p-2 text-left w-12">{item.currentRank}</td>
-                            <td className="p-2 text-left">
-                                <span className="w-5 h-5 rounded-full inline-block mr-2 border- border-white " style={{ background: CAR_COLORS[item.horse] }} />
-                            </td>
+
                             <td className="p-2 text-left">{item.username}</td>
                             <td className="p-2 text-left">{formatPrice(item.bettedAmount)}</td>
                             <td className={cn("p-2 text-left whitespace-nowrap", getColor(item.potentialReturn - item.bettedAmount/LEVERAGE_MULTIPLIER))}>

@@ -17,12 +17,10 @@ const MiniMutualFundLeaderBoard = () => {
     const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
     const { isGameOver, isPlaceOver } = useGameState(roundRecord);
 
-
     useEffect(() => {
         if (sectionRef.current) {
             const sectionHeight = sectionRef.current.offsetHeight;
-            // Adjust for the height of the BetInputForm
-            setScrollAreaHeight(sectionHeight - 320); // Adjust based on your BetInputForm height
+            setScrollAreaHeight(sectionHeight - 320); 
         }
     }, []);
 

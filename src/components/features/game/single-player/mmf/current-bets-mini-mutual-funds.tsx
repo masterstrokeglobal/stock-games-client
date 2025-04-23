@@ -8,8 +8,8 @@ import {
 } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { useGetMiniMutualFundCurrentRoundPlacements } from "@/react-query/lobby-query";
-import { useGameStore } from "@/store/game-store";
+import { useGetCurrentRoundPlacements } from "@/react-query/game-record-queries";
+import { useSinglePlayerGameStore } from "@/store/single-player-game-store";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 type Placement = {
@@ -38,12 +38,12 @@ type UserBetSummary = {
 };
 
 const CurrentBetsMiniMutualFunds = ({ className }: { className?: string }) => {
-    const { lobbyRound } = useGameStore();
-    const { data, isSuccess } = useGetMiniMutualFundCurrentRoundPlacements(lobbyRound?.id);
+    const { roundRecord } = useSinglePlayerGameStore();
+    const { data, isSuccess } = useGetCurrentRoundPlacements(roundRecord?.id.toString());
     // Process placements to create user bet summaries
     const userBetSummaries = useMemo(() => {
         return isSuccess ?
-            data.placements.reduce((acc: Record<string, UserBetSummary>, placement: Placement) => {
+            data?.data.placements.reduce((acc: Record<string, UserBetSummary>, placement: Placement) => {
                 const { username } = placement.user;
 
                 if (!acc[username]) {
