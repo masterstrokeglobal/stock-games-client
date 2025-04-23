@@ -1,7 +1,7 @@
 "use client";
 
 import { SchedulerType } from "@/models/market-item";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import useNSEAvailable from "./use-nse-available";
 import { useAuthStore } from "@/context/auth-context";
@@ -60,21 +60,29 @@ export function useGameType() {
 export function useRoundRecordGameType() {
     const searchParams = useSearchParams();
     const router = useRouter();
+    const pathname = usePathname();
 
     const gameTypeFromParams = searchParams.get("roundRecordGameType") as RoundRecordGameType | null;
-    const type = gameTypeFromParams ?? RoundRecordGameType.GUESS_FIRST_FOUR ;
+    let type = gameTypeFromParams ?? RoundRecordGameType.GUESS_FIRST_FOUR ;
+
+    if(pathname.includes("mini-mutual-fund")){
+        type = RoundRecordGameType.MINI_MUTUAL_FUND;
+    }
 
     const [gameType, setGameType] = useState<RoundRecordGameType>(type);
 
     const updateUrl = useCallback(
         (newGameType: RoundRecordGameType) => {
+            if(pathname.includes("mini-mutual-fund")){
+                router.replace(`/game/single-player/mini-mutual-fund`);
+                return;
+            }
             const newParams = new URLSearchParams(searchParams.toString());
             newParams.set("roundRecordGameType", newGameType);
             router.replace(`?${newParams.toString()}`);
         },
         [searchParams, router]
     );
-
 
     // Synchronize state and update URL when gameType changes
     const setGameTypeAndSync = useCallback(

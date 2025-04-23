@@ -157,7 +157,7 @@ export const SinglePlayerGames = [
     },
     {
         title: "Mini Mutual Fund",
-        link: `/game/single-player?roundRecordGameType=${LobbyGameType.MINI_MUTUAL_FUND}`,
+        link: `/game/single-player/mini-mutual-fund`,
         image: "/images/games/mini-mutual-fund.png",
         description: "Create a small portfolio and compete with other players",
     },

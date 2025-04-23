@@ -1,17 +1,17 @@
 "use client";
 import BackToLobbiesButton from "@/components/features/game/back-to-lobbies-button";
 import { MobileHeader } from "@/components/features/game/common/mobile-components";
-import CurrentBetsMiniMutualFunds from "@/components/features/game/current-bets-mini-mutual-funds";
-import MiniMutualFundBet from "@/components/features/game/mini-mutual-fund-bet";
-import MiniMutualFundLeaderBoard from "@/components/features/game/mini-mutual-fund-leaderboard";
+import StockSelectionGridSinglePlayer from "@/components/features/game/single-player/mmf/mini-mutual-fund-bet-single-player";
 import Navbar from "@/components/features/game/navbar";
-import HorseRace from "@/components/features/horse-animation/mmf-horse";
 import { useHorseRaceSound } from "@/context/audio-context";
 import { useCurrentGame, useIsPlaceOver } from "@/hooks/use-current-game";
 import { useRoundRecordGameType } from "@/hooks/use-game-type";
 import useWindowSize from "@/hooks/use-window-size";
 import { useSinglePlayerGameStore } from "@/store/single-player-game-store";
 import { useEffect } from "react";
+import MiniMutualFundLeaderBoard from "@/components/features/game/single-player/mmf/mini-mutual-fund-leaderboard";
+import CurrentBetsMiniMutualFunds from "@/components/features/game/single-player/mmf/current-bets-mini-mutual-funds";
+import HorseRace from "@/components/features/horse-animation/horse";
 
 const borderStyle = {
     borderColor: "#3799ED",
@@ -21,7 +21,6 @@ const borderStyle = {
 
 const GamePage = () => {
     const { isMobile } = useWindowSize();
-
     const [roundRecordGameType] = useRoundRecordGameType();
     const { roundRecord: roundRecordData, isLoading: isRoundLoading } = useCurrentGame(roundRecordGameType);
     useHorseRaceSound(roundRecordData);
@@ -43,9 +42,7 @@ const GamePage = () => {
     const roundRecord = storeRoundRecord ? storeRoundRecord : null;
     useHorseRaceSound(roundRecord);
 
-    if (isRoundLoading) return <div>Loading...</div>;
-
-
+    if (isRoundLoading || !storeRoundRecord) return <div>Loading...</div>;
 
     return (
         <section className="bg-primary-game pt-20 md:h-screen">
@@ -65,7 +62,7 @@ const GamePage = () => {
                     style={borderStyle}
                     className="xl:col-span-7 col-span-8 row-span-3 rounded-2xl">
                     {roundRecord &&
-                        <MiniMutualFundBet />
+                        <StockSelectionGridSinglePlayer />
                     }
                 </div>
                 <div
@@ -91,7 +88,7 @@ const GamePage = () => {
                         <main className="bg-[#0A1634]">
                             <div className="px-2">
                                 {roundRecord &&
-                                    <MiniMutualFundBet />
+                                    <StockSelectionGridSinglePlayer />
                                 }
                             </div>
                         </main>

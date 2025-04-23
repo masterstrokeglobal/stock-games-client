@@ -125,8 +125,6 @@ const SinglePlayerRouletteGame = ({ roundRecord }: Props) => {
                     <div className="flex flex-wrap justify-between">
 
                         <div className={cn("relative w-full max-w-4xl mx-auto ", gameState.isPlaceOver ? 'cursor-not-allowed opacity-100' : 'cursor-crosshair')}>
-
-
                             <div className="flex w-full">
                                 <div
                                     ref={boardRef}
