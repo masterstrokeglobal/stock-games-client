@@ -52,13 +52,12 @@ export function BettingCard({ asset, betSlip, globalBetAmount, onAddBet }: Betti
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center">
             <div
-              className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                asset.market === "NSE"
+              className={`w-10 h-10 rounded-full flex items-center justify-center ${asset.market === "NSE"
                   ? "bg-blue-900/30"
                   : asset.market === "Crypto"
                     ? "bg-yellow-900/30"
                     : "bg-green-900/30"
-              }`}
+                }`}
             >
               {asset.market === "NSE" && <TrendingUpIcon className="w-5 h-5 text-blue-400" />}
               {asset.market === "Crypto" && (
@@ -98,6 +97,9 @@ export function BettingCard({ asset, betSlip, globalBetAmount, onAddBet }: Betti
               {asset.change}
             </div>
           </div>
+
+
+
           <div className="flex flex-col items-end">
             <div className="text-xl font-bold text-amber-500 glow">
               {selectedBetType === "single-digit" ? lastDigit : lastTwoDigits}
@@ -105,43 +107,52 @@ export function BettingCard({ asset, betSlip, globalBetAmount, onAddBet }: Betti
           </div>
         </div>
 
+        <div className="text-center text-xs text-gray-400 mb-2">Drag or tap to select your prediction</div>
+
         <Tabs
           defaultValue="single-digit"
-          className="w-full"
+          className="w-full flex"
           onValueChange={(value) => handleBetTypeChange(value as BetType)}
         >
-          <TabsList className="w-full bg-[#0F1221] border border-[#2A2F42] p-1 mb-3">
-            <TabsTrigger value="single-digit" className="flex-1 data-[state=active]:bg-[#2A2F42]">
-              Last Digit
-            </TabsTrigger>
-            <TabsTrigger value="double-digit" className="flex-1 data-[state=active]:bg-[#2A2F42]">
-              Last 2 Digits
-            </TabsTrigger>
-          </TabsList>
+          <div className="flex-1">
+            <TabsList className="w-full  h-fit  flex-col gap-3.5  p-1 mb-3">
+              <TabsTrigger value="single-digit" className="h-12 w-full data-[state=active]:bg-[#2A2F42]">
+                Last Digit
+              </TabsTrigger>
+              <TabsTrigger value="double-digit" className="h-12 w-full data-[state=active]:bg-[#2A2F42]">
+                Last 2 Digits
+              </TabsTrigger>
+              <TabsTrigger value="third-digit" className="h-12 w-full data-[state=active]:bg-[#2A2F42]">
+                10'th Digit
+              </TabsTrigger>
+            </TabsList>
+            <div className="mt-6">
+              <Button
+                className={`w-full py-3 text-lg font-bold ${isSelected
+                    ? "bg-amber-500 hover:bg-amber-600 text-black"
+                    : "bg-[#2A2F42] hover:bg-[#3A3F52] text-amber-500 border border-amber-500/50"
+                  }`}
+                onClick={handlePlaceBet}
+              >
+                {isSelected ? "REMOVE BET" : `BET ON ${predictedDigits}`}
+              </Button>
+            </div>
+          </div>
 
-          <TabsContent value="single-digit" className="mt-0">
-            <div className="text-center text-xs text-gray-400 mb-2">Drag or tap to select your prediction</div>
+
+          <TabsContent value="single-digit" className="mt-0 flex-1">
             <DigitPicker betType="single-digit" onChange={setPredictedDigits} value={predictedDigits} />
           </TabsContent>
 
-          <TabsContent value="double-digit" className="mt-0">
-            <div className="text-center text-xs text-gray-400 mb-2">Drag or tap to select your prediction</div>
+          <TabsContent value="double-digit" className="mt-0 flex-1  ">
             <DigitPicker betType="double-digit" onChange={setPredictedDigits} value={predictedDigits} />
+          </TabsContent>
+          <TabsContent value="third-digit" className="mt-0 flex-1">
+            <DigitPicker betType="single-digit" onChange={setPredictedDigits} value={predictedDigits} />
           </TabsContent>
         </Tabs>
 
-        <div className="mt-6">
-          <Button
-            className={`w-full py-3 text-lg font-bold ${
-              isSelected
-                ? "bg-amber-500 hover:bg-amber-600 text-black"
-                : "bg-[#2A2F42] hover:bg-[#3A3F52] text-amber-500 border border-amber-500/50"
-            }`}
-            onClick={handlePlaceBet}
-          >
-            {isSelected ? "REMOVE BET" : `BET ON ${predictedDigits}`}
-          </Button>
-        </div>
+
       </div>
     </Card>
   )
