@@ -1,10 +1,10 @@
-import React, { useRef, useEffect, forwardRef, useMemo } from "react";
-import { useFrame, useLoader } from "@react-three/fiber";
+import { useAnimations, useGLTF, useTexture } from "@react-three/drei";
+import { forwardRef, useEffect, useRef, useMemo } from "react";
 import * as THREE from "three";
-import { GLTFLoader } from "./GLTFLoader";
+import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import HorseNumber from "./horse-number";
 
-type HorseModelProps = {
+type BullModelProps = {
   position: [number, number, number];
   scale: [number, number, number];
   speed: number;
@@ -12,109 +12,82 @@ type HorseModelProps = {
   number: number;
 };
 
-const HorseModel = forwardRef<THREE.Group, HorseModelProps>(
+const BullModel = forwardRef<THREE.Group, BullModelProps>(
   ({ position, scale, speed, color, number }, ref) => {
-    const group = useRef<THREE.Group | null>(null);
-    const { scene, animations } = useLoader(GLTFLoader, "./horse.glb");
-    const mixer = useRef<THREE.AnimationMixer | null>(null);
-    const horseNumberRef = useRef<any>(null);
+    const group = useRef<THREE.Group>(null);
+    const { scene, animations } = useGLTF("./animation-bull.gltf");
 
-    // Memoize the cloned and colored scene
-    const coloredScene = useMemo(() => {
-      const model = scene.clone();
-      model.traverse(
-        (object: {
-          castShadow: boolean;
-          receiveShadow: boolean;
-          material: THREE.MeshStandardMaterial;
-        }) => {
-          if (object instanceof THREE.Mesh) {
-            object.castShadow = true;
-            object.receiveShadow = true;
+    const texture = useTexture(
+      color === "red"
+        ? "./texture-red.jpg"
+        : color === "green"
+          ? "./texture-golden.png"
+          : "./texture-black.png"
+    );
 
-            // Apply color to the mesh
-            if (object.material instanceof THREE.MeshStandardMaterial) {
-              const clonedMaterial = object.material.clone();
-              clonedMaterial.color.set(new THREE.Color(color));
-              object.material = clonedMaterial;
-            }
-          }
-        }
-      );
-      return model;
-    }, [scene, color]);
+    const clonedScene = useMemo(() => clone(scene), [scene]);
+    const { actions } = useAnimations(animations, clonedScene);
 
+    // Assign ref
     useEffect(() => {
-      if (!group.current) return;
-
-      // Clear any existing children
-      while (group.current.children.length > 0) {
-        group.current.remove(group.current.children[0]);
+      if (ref && group.current) {
+        if (typeof ref === "function") ref(group.current);
+        else ref.current = group.current;
       }
+    }, [ref]);
 
-      // Add the colored scene to the group
-      group.current.add(coloredScene);
+    // Apply texture and material updates
+    useEffect(() => {
+      if (!texture) return;
 
-      // Setup animation mixer
-      mixer.current = new THREE.AnimationMixer(coloredScene);
+      texture.flipY = false;
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.needsUpdate = true;
 
-      if (animations.length) {
-        const action = mixer.current.clipAction(animations[0]);
-        action.setDuration(1 / speed);
-        action.play();
-      }
+      clonedScene.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh;
+          mesh.castShadow = true;
+          mesh.receiveShadow = true;
 
-      // Set initial position and scale
-      group.current.position.set(...position);
-      group.current.scale.set(...scale);
+          const originalMaterial = mesh.material as THREE.MeshStandardMaterial;
+          const newMaterial = originalMaterial.clone();
 
-      return () => {
-        if (mixer.current) {
-          mixer.current.stopAllAction();
+          newMaterial.map = texture;
+          newMaterial.map.colorSpace = THREE.SRGBColorSpace;
+          newMaterial.roughness = 1;
+          newMaterial.metalness = 0;
+          newMaterial.needsUpdate = true;
+
+          mesh.material = newMaterial;
         }
-      };
-    }, [coloredScene, animations, position, scale, speed]);
+      });
+    }, [texture, clonedScene]);
 
-    useFrame((_, delta) => {
-      if (mixer.current) {
-        mixer.current.update(delta);
+    // Play animation
+    useEffect(() => {
+      if (actions) {
+        Object.values(actions).forEach((action) => {
+          action?.reset().play();
+        });
       }
-
-      if (group.current) {
-        // Move the horse forward along the positive z-axis
-        group.current.position.z += speed * delta * 0.5;
-
-        // Update HorseNumber's position to follow the horse
-        if (horseNumberRef.current) {
-          horseNumberRef.current.position.set(
-            group.current.position.x,
-            group.current.position.y + 3,
-            group.current.position.z
-          );
-        }
-      }
-    });
+    }, [actions]);
 
     return (
-      <>
-        <group
-          ref={(el: any) => {
-            group.current = el;
-            if (typeof ref === "function") ref(el);
-            else if (ref) ref.current = el;
-          }}
-        />
+      <group ref={group} position={position} scale={scale}>
+        <primitive object={clonedScene} />
         <HorseNumber
-          ref={horseNumberRef}
-          position={position}
-          color={color}
           number={number}
+          color={color}
+          position={[0, 1, 1]}
         />
-      </>
+      </group>
     );
   }
 );
 
-HorseModel.displayName = "HorseModel";
+BullModel.displayName = "BullModel";
 
-export default HorseModel;
+useGLTF.preload("./animation-bull.gltf");
+
+export default BullModel;

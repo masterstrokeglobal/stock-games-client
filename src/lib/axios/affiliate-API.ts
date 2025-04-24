@@ -17,6 +17,13 @@ const affiliateAPI = {
     deleteAffiliate: async (id: string) => {
         return api.delete(`/affiliate/${id}`);
     },
+    getAffiliateUsers: async (filter: any) => {
+        return api.get(`/affiliate/users`, { params: filter });
+    },
+
+    getAffiliateUsersDownload: async (filter: any) => {
+        return api.get(`/affiliate/users/download`, { params: filter, responseType: 'arraybuffer' });
+    }
 };
 
 export default affiliateAPI;

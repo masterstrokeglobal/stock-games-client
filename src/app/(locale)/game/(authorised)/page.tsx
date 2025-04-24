@@ -13,8 +13,8 @@ import { useCurrentGame, useGameState, useIsPlaceOver } from "@/hooks/use-curren
 import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
-import { useTranslations } from "next-intl";
 import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
+import { useTranslations } from "next-intl";
 
 declare global {
     interface Window {
@@ -65,7 +65,6 @@ const GamePage = () => {
             </main>}
             <AdvertismentDialog />
             <TawkMessengerReact
-
                 propertyId="/67fcabcc5de05719072dd2b9"
                 widgetId="1iopfu6mp"
                 onLoad={() => console.log('Tawk loaded')}

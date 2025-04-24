@@ -23,11 +23,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
   border-radius: 4px;
   margin-right: 2px;
-  opacity: 0.6;
-  color-scheme: dark;
+  opacity: 1;
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
+  transition-delay: 0ms;
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator:hover {
@@ -217,4 +217,68 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   /* Ensure the rotation is centered */
   white-space: nowrap;
   /* Prevent text from breaking */
+}
+
+.widget-visible{
+  display: block;
+}
+
+
+.animate-gradient-bg {
+  background: linear-gradient(
+    -45deg,
+    #001f3f,
+    #003366,
+    #004c99,
+    #005ce6,
+    #007bff,
+    #3399ff,
+    #66b2ff,
+    #80d4ff,
+    #66b2ff,
+    #3399ff,
+    #007bff,
+    #005ce6,
+    #004c99,
+    #003366,
+    #001f3f
+  );
+  background-size: 600% 600%;
+  animation: gradientBG 6s ease-in-out infinite, pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 50% 100%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  75% {
+    background-position: 50% 0%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.2);
+  }
+}
+
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  border-radius: 4px;
+  margin-right: 2px;
+  color: black;
+  opacity: 0.6;
 }

@@ -54,6 +54,7 @@ const userColumns: ColumnDef<User>[] = [
     {
         header: "CREATED ON",
         accessorKey: "createdAt",
+
         cell: ({ row }) => (
             <span className="text-[#6B7280]">
                 {dayjs(row.original.createdAt).format("DD-MM-YYYY")}
@@ -131,3 +132,80 @@ const ActionColumn = ({ user }: { user: User }) => {
 };
 
 export default userColumns;
+
+export type AffiliateUser = {
+    username: string;
+    email: string;
+    phone: string;
+    signupDate: string;
+    ftdDate: string;
+    lastDepositDate: string;
+    affiliate: string;
+    subAffiliate: string;
+    lifetimeDepositCount: number;
+    lifetimeDepositAmount: number;
+    lifetimeWithdrawalCount: number;
+    lifetimeWithdrawalAmount: number;
+    balance: number;
+}
+
+export const affiliateUserColumns: ColumnDef<AffiliateUser>[] = [
+    {
+        header: "USERNAME",
+        accessorKey: "username",
+    },
+    {
+        header: "EMAIL",
+        accessorKey: "email",
+    },
+    {
+        header: "PHONE",
+        accessorKey: "phone",
+        cell: ({ row }) => <div className="text-[#6B7280]">{row.original.phone || 'N/A'}</div>,
+    },
+    {
+        header: "SIGNUP DATE",
+        accessorKey: "signupDate",
+        cell: ({ row }) => <div className="text-[#6B7280]">{dayjs(row.original.signupDate).format("DD-MM-YYYY")}</div>,
+    },
+    {
+        header: "FTD DATE",
+        accessorKey: "ftdDate",
+        cell: ({ row }) => <div className="text-[#6B7280] text-nowrap">{row.original.ftdDate ? dayjs(row.original.ftdDate).format("DD-MM-YYYY") : 'N/A'}</div>,
+    },
+    {
+        header: "LAST DEPOSIT DATE",
+        accessorKey: "lastDepositDate",
+        cell: ({ row }) => <div className="text-[#6B7280] text-nowrap">{row.original.lastDepositDate ? dayjs(row.original.lastDepositDate).format("DD-MM-YYYY") : 'N/A'}</div>,
+    },
+    {
+        header: "AFFILIATE",
+        accessorKey: "affiliate",
+        cell: ({ row }) => <div className="text-[#6B7280]">{row.original.affiliate || 'N/A'}</div>,
+    },
+    {
+        header: "LIFETIME DEPOSIT COUNT",
+        accessorKey: "lifetimeDepositCount",
+        cell: ({ row }) => <div className="text-[#6B7280]">{row.original.lifetimeDepositCount || 'N/A'}</div>,
+    },
+    {
+        header: "LIFETIME DEPOSIT AMOUNT",
+        accessorKey: "lifetimeDepositAmount",
+        cell: ({ row }) => <div className="text-[#6B7280]">{row.original.lifetimeDepositAmount || 'N/A'}</div>,
+    },
+    {
+        header: "LIFETIME WITHDRAWAL COUNT",
+        accessorKey: "lifetimeWithdrawalCount",
+        cell: ({ row }) => <div className="text-[#6B7280]">{row.original.lifetimeWithdrawalCount || 'N/A'}</div>,
+    },
+    {
+        header: "LIFETIME WITHDRAWAL AMOUNT",
+        accessorKey: "lifetimeWithdrawalAmount",
+        cell: ({ row }) => <div className="text-[#6B7280]">{row.original.lifetimeWithdrawalAmount || 'N/A'}</div>,
+    },
+    {
+        header: "BALANCE",
+        accessorKey: "balance",
+        cell: ({ row }) => <div className="text-[#6B7280]">{row.original.balance || 'N/A'}</div>,
+    }
+]

@@ -12,7 +12,6 @@ import React, { useMemo, useState } from "react";
 const AffiliateTable = () => {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
-
     const { data, isSuccess, isFetching } = useGetAllAffiliate({
         page: page,
         search: search,

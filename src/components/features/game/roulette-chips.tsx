@@ -1,10 +1,10 @@
 
 // components/BettingControls.tsx
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useTranslations } from 'next-intl';
-import { useUndoLastPlacement } from '@/react-query/game-record-queries';
+import { Input } from '@/components/ui/input';
 import { useAuthStore } from '@/context/auth-context';
+import { useClearPlacement, useRepeatPlacement } from '@/react-query/game-record-queries';
+import { useTranslations } from 'next-intl';
 
 interface BettingControlsProps {
     betAmount: number;
@@ -26,10 +26,15 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
 
     const coinValues = userDetails?.company?.coinValues;
 
-    const { mutate, isPending } = useUndoLastPlacement();
+    const { mutate: clearPlacement, isPending: isClearPlacementPending } = useClearPlacement();
+    const { mutate: repeatPlacement, isPending: isRepeatPlacementPending } = useRepeatPlacement();
 
-    const handleUndo = () => {
-        mutate(roundId.toString());
+    const handleClearPlacement = () => {
+        clearPlacement(roundId.toString());
+    }
+
+    const handleRepeatPlacement = () => {
+        repeatPlacement(roundId.toString());
     }
     return (
         <div className="max-w-4xl mx-auto bg- text-game-text p-4 rounded-2xl">
@@ -49,7 +54,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
             </div>
 
             <div className="flex justify-between items-center mb-2">
-                <div className="flex justify-between gap-1 w-full xl:flex-nowrap flex-wrap" >
+                <div className="flex justify-between gap-1 w-full xl:flex-wrap flex-wrap" >
                     {coinValues?.map((amount) => (
                         <Button
                             className='flex-1 text-game-text bg-secondary-game'
@@ -64,13 +69,23 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                     ))}
                 </div>
             </div>
-            <Button
-                className={`bg-primary-game w-full ${isPlaceOver || isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                disabled={isPlaceOver || isLoading || isPending}
-                onClick={handleUndo}
-            >
-                {isPlaceOver ? t('betting-closed').toUpperCase() : isLoading ? t('please-wait').toUpperCase() : t('undo').toUpperCase()}
-            </Button>
+            <div className='flex justify-between items-center  md:flex-row mb-2 gap-2'>
+                <Button
+                    className={`bg-primary-game w-full ${isPlaceOver || isLoading ? 'opacity-50      cursor-not-allowed' : ''}`}
+                    disabled={isPlaceOver || isLoading || isClearPlacementPending}
+                    onClick={handleClearPlacement}
+                >
+                    {isPlaceOver ? t('betting-closed').toUpperCase() : isLoading ? t('please-wait').toUpperCase() : t('clear-all').toUpperCase()}
+                </Button>
+
+                <Button
+                    className={`bg-primary-game w-full ${isPlaceOver || isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    disabled={isPlaceOver || isLoading || isRepeatPlacementPending}
+                    onClick={handleRepeatPlacement}
+                >
+                    {isPlaceOver ? t('betting-closed').toUpperCase() : isLoading ? t('please-wait').toUpperCase() : t('repeat-bet').toUpperCase()}
+                </Button>
+            </div>
         </div>
     );
 };

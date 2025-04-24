@@ -5,23 +5,40 @@ import { Separator } from "@/components/ui/separator";
 import { useRouter } from "next/navigation";
 import { useCreateAffiliate } from "@/react-query/affiliate-queries";
 import { AffiliateRole } from "@/models/affiliate";
+import { useAuthStore } from "@/context/auth-context";
+import Admin, { AdminRole } from "@/models/admin";
 
 const defaultValues: AffiliateFormValues = {
     name: "",
     username: "",
     password: "",
-    companyId: "", 
+    companyId: "",
     referralBonus: 0,
     isPercentage: false,
     role: AffiliateRole.MASTER_AFFILIATE,
+    comission: 0,
+    minAmount: 0,
+    maxAmount: 100,
+    provideMaxAmount: false,
 };
 
 const CreateAffiliatePage = () => {
     const router = useRouter();
     const { mutate, isPending } = useCreateAffiliate();
+    const { userDetails } = useAuthStore();
 
+    const isSubAffiliate = (userDetails as Admin)?.role === AdminRole.AFFILIATE;
     const onSubmit = (data: AffiliateFormValues) => {
-        mutate(data, {
+        let payload = data;
+
+        if (!data.provideMaxAmount) {
+            payload = {
+                ...data,
+                maxAmount: undefined,
+            };
+        }
+
+        mutate(payload, {
             onSuccess: () => {
                 router.push("/dashboard/affiliate");
             },
@@ -38,7 +55,8 @@ const CreateAffiliatePage = () => {
                 <AffiliateForm
                     defaultValues={defaultValues}
                     onSubmit={onSubmit}
-                    isLoading={isPending} // Loading state to show while creating
+                    isLoading={isPending}
+                    subAffiliate={isSubAffiliate}
                 />
             </main>
         </section>

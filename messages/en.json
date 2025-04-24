@@ -30,7 +30,9 @@
         "round-ends-in": "Round ends in",
         "round-starts-in": "Round starts in",
         "place-starts-in": "Place starts in",
-        "place-ends-in": "Place ends in"
+        "place-ends-in": "Place ends in",
+        "clear-all": "Clear All",
+        "repeat-bet": "Repeat Bet"
     },
     "last-round-winner": {
         "title": "Last Round Winner",

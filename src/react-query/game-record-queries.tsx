@@ -37,7 +37,7 @@ export const useGetTopPlacements = (roundId: string) => {
     return useQuery({
         queryKey: ["topPlacements", roundId],
         queryFn: () => gameRecordAPI.getTopPlacements(roundId),
-        staleTime:  THREE_SECOND,
+        staleTime: THREE_SECOND,
     });
 };
 
@@ -95,6 +95,48 @@ export const useUndoLastPlacement = () => {
         },
         onError: (error: any) => {
             toast.error(error.response?.data.message ?? "Error undoing last placement");
+        },
+    });
+};
+
+// Clear Placement Hook
+
+export const useClearPlacement = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: gameRecordAPI.clearPlacement,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "winningGameRecord" ||
+                        query.queryKey[0] === "topPlacements" ||
+                        query.queryKey[0] === "myPlacements" ||
+                        query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
+                }
+
+            });
+            toast.success("Placement cleared successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error clearing placement");
+        },
+    });
+};
+
+// Repeat Placement Hook
+
+export const useRepeatPlacement = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: gameRecordAPI.repeatPlacement,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "myPlacements",
+            });
+            toast.success("Placement repeated successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error repeating placement");
         },
     });
 };
