@@ -1,5 +1,4 @@
 import { useLeaderboard } from "@/hooks/use-leadboard";
-import { ROULETTE_COLORS } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
 import { useFrame } from "@react-three/fiber";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
