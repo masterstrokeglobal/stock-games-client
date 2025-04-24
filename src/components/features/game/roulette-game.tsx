@@ -304,17 +304,16 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
                                 <div className="grid grid-rows-1 gap-2 ">
                                     <Button
-                                        onClick={handleZeroBet}
                                         variant="game-secondary"
-                                        className="col-span-1 w-10 relative  bg-emerald-600 justify-center gap-4 text-white ml-2 h-full "
+                                        className="col-span-1 w-10 relative cursor-not-allowed  bg-emerald-600 justify-center gap-4 text-white ml-2 h-full "
                                     >
                                         <span className="rotate-text">
                                             0 &nbsp;
                                             {roundRecord.market[16]?.codeName}
                                         </span>
-                                        {getBetForPosition(PlacementType.SINGLE, [17]) && (
+                              {/*           {getBetForPosition(PlacementType.SINGLE, [17]) && (
                                             <ButtonChip className=" top/1/2 right-1/2 translate-x-1/2 -translate-y-1/2" amount={getBetForPosition(PlacementType.SINGLE, [17])!.amount} />
-                                        )}
+                                        )} */}
                                     </Button>
                                 </div>
 
