@@ -13,7 +13,7 @@ type BullModelProps = {
 };
 
 const BullModel = forwardRef<THREE.Group, BullModelProps>(
-  ({ position, scale, speed, color, number }, ref) => {
+  ({ position, scale, color, number }, ref) => {
     const group = useRef<THREE.Group>(null);
     const { scene, animations } = useGLTF("./animation-bull.gltf");
 
