@@ -28,9 +28,7 @@ const HorseRaceEnvironment = ({
             />
             <directionalLight
                 color={0xffffff}
-                intensity={1} // Increased intensity for more light
                 position={[100, 200, 100]} // Moved position to make sure it shines on the models
-                castShadow
                 shadow-mapSize-width={1024}
                 shadow-mapSize-height={1024}
             />            <Physics gravity={[0, -30, 0]}>
