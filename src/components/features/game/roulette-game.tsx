@@ -187,21 +187,21 @@ const RouletteGame = ({ roundRecord }: Props) => {
     };
 
 
-    const handleZeroBet = () => {
-        if (gameState.isPlaceOver || isPlacingBet) return;
-        if (!verifyBetAmount(betAmount)) return;
+    // const handleZeroBet = () => {
+    //     if (gameState.isPlaceOver || isPlacingBet) return;
+    //     if (!verifyBetAmount(betAmount)) return;
 
-        const marketId = roundRecord.market[roundRecord.market.length - 1]?.id;
-        if (!marketId) return;
-        mutate({
-            amount: betAmount,
-            round: roundRecord.id,
-            placementType: PlacementType.SINGLE,
-            horseNumbers: [17],
-            market: [marketId],
-            placedValues: getPlacementString({ market: [marketId], placementType: PlacementType.SINGLE }, roundRecord),
-        });
-    }
+    //     const marketId = roundRecord.market[roundRecord.market.length - 1]?.id;
+    //     if (!marketId) return;
+    //     mutate({
+    //         amount: betAmount,
+    //         round: roundRecord.id,
+    //         placementType: PlacementType.SINGLE,
+    //         horseNumbers: [17],
+    //         market: [marketId],
+    //         placedValues: getPlacementString({ market: [marketId], placementType: PlacementType.SINGLE }, roundRecord),
+    //     });
+    // }
 
     // Get all numbers for specific sections and other bets
     const first8Numbers = Array.from({ length: 8 }, (_, i) => i + 1);
