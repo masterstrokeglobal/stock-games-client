@@ -6,13 +6,12 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import * as THREE from "three";
 import HorseModel from "./horse-model";
 
-// Memoize color array to prevent recreation
-// const HORSE_COLORS = [
-//     "#D94D4D", "#3F8B83", "#3B91A5", "#D86F56", "#6F9F96",
-//     "#C89A3F", "#7F74B3", "#D066C6", "#59829E", "#C97A73",
-//     "#66B78F", "#E0B870", "#9E83B4", "#699EC7", "#D68A4A",
-//     "#4D8C7D", "#B7784D"
-// ] as const;
+const HORSE_COLORS = [
+    "#D94D4D", "#3F8B83", "#3B91A5", "#D86F56", "#6F9F96",
+    "#C89A3F", "#7F74B3", "#D066C6", "#59829E", "#C97A73",
+    "#66B78F", "#E0B870", "#9E83B4", "#699EC7", "#D68A4A",
+    "#4D8C7D", "#B7784D"
+] as const;
 
 
 type Props = {
@@ -116,7 +115,7 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
                         horsesRef.current[index] = el as unknown as THREE.Object3D | null;
                     }}
                     number={horse.horseNumber == 17 ? 0 : horse.horseNumber!}
-                    color={ROULETTE_COLORS[index].color}
+                    color={HORSE_COLORS[index % HORSE_COLORS.length]}
                     position={horse.position as any}
                     scale={horse.scale as any}
                     speed={horse.speed}
