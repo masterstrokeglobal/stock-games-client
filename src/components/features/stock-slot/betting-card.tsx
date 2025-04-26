@@ -1,9 +1,8 @@
 "use client"
 
+import { Card } from "@/components/ui/card"
 import { ArrowDownIcon, ArrowUpIcon, TrendingUpIcon } from "lucide-react"
 import Image from "next/image"
-import { Card } from "@/components/ui/card"
-import type { Asset, BetDirection, BetSlipItem } from "@/types"
 
 interface BettingCardProps {
   asset: Asset
@@ -12,7 +11,7 @@ interface BettingCardProps {
   onAddToBetSlip: (asset: Asset, direction: BetDirection) => void
 }
 
-export function BettingCard({ asset, betSlip, globalBetAmount, onAddToBetSlip }: BettingCardProps) {
+export function BettingCard({ asset, betSlip, onAddToBetSlip }: BettingCardProps) {
   const isUpSelected = betSlip.some((bet) => bet.id === asset.id && bet.direction === "up")
   const isDownSelected = betSlip.some((bet) => bet.id === asset.id && bet.direction === "down")
 

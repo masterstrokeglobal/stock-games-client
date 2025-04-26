@@ -2,18 +2,16 @@
 
 import { useState } from "react"
 
-import { Input } from "@/components/ui/input"
-import { Header } from "@/components/features/slot-jackpot/Header"
-import { MarketList } from "@/components/features/slot-jackpot/MarketList"
-import { BetSlip } from "@/components/features/slot-jackpot/BetSlip"
-import { nseAssets, cryptoAssets, usStockAssets } from "./data"
-import { CreditCard, SearchIcon } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import Navbar from "@/components/features/game/navbar"
+import { BetSlip } from "@/components/features/slot-jackpot/BetSlip"
+import { MarketList } from "@/components/features/slot-jackpot/MarketList"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { CreditCard } from "lucide-react"
+import { cryptoAssets, nseAssets, usStockAssets } from "./data"
 
 export default function Home() {
     // State for bet slip
-    const [searchQuery, setSearchQuery] = useState("")
     const [betSlip, setBetSlip] = useState<BetSlipItem[]>([])
     const [betSlipOpen, setBetSlipOpen] = useState(false)
     const [globalBetAmount, setGlobalBetAmount] = useState(100)
@@ -77,9 +75,6 @@ export default function Home() {
         )
     }
 
-    const clearSearch = () => {
-        setSearchQuery("")
-    }
 
     return (
         <div className="flex flex-col min-h-screen bg-[#0F1221] text-white">

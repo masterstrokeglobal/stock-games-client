@@ -5,13 +5,13 @@ import { useState } from "react"
 import Navbar from "@/components/features/game/navbar"
 import { BetSlip } from "@/components/features/stock-slot/bet-slip"
 import { BettingCard } from "@/components/features/stock-slot/betting-card"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { ArrowRightIcon, SearchIcon, TrendingUpIcon, CreditCard, DollarSign, Wallet, ZapOffIcon, ZapIcon } from "lucide-react"
+import { ArrowRightIcon, CreditCard, SearchIcon, TrendingUpIcon, ZapIcon, ZapOffIcon } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { cryptoAssets, nseAssets, usStockAssets } from "./data"
-import { Button } from "@/components/ui/button"
 
 export default function Home() {
   // State for bet slip

@@ -3,7 +3,6 @@
 import { ArrowDownIcon, ArrowUpIcon, XIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import type { BetSlipItem, BetDirection } from "@/types"
 
 interface BetSlipProps {
   betSlip: BetSlipItem[]

@@ -15,7 +15,7 @@ interface BettingCardProps {
   onAddBet: (asset: Asset, betType: BetType, predictedDigits: string) => void
 }
 
-export function BettingCard({ asset, betSlip, globalBetAmount, onAddBet }: BettingCardProps) {
+export function BettingCard({ asset, betSlip, onAddBet }: BettingCardProps) {
   const [selectedBetType, setSelectedBetType] = useState<BetType>("single-digit")
   const [predictedDigits, setPredictedDigits] = useState<string>(selectedBetType === "single-digit" ? "0" : "00")
 
@@ -123,7 +123,7 @@ export function BettingCard({ asset, betSlip, globalBetAmount, onAddBet }: Betti
                 Last 2 Digits
               </TabsTrigger>
               <TabsTrigger value="third-digit" className="h-12 w-full data-[state=active]:bg-[#2A2F42]">
-                10'th Digit
+                10th Digit
               </TabsTrigger>
             </TabsList>
             <div className="mt-6">
