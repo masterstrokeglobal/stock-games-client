@@ -248,7 +248,8 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const boardChips = gameState.isPlaceOver ? bettedChips : [...bettedChips, ...chips];
 
     const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
-    const isCryptoAllowed = currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO);
+    const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO);
+
     const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
  
     const isNotAllowedToPlaceBet = currentUser.isNotAllowedToPlaceOrder(roundRecord.type);
