@@ -21,6 +21,7 @@ const Navbar = () => {
     const [gameType] = useGameType();
 
     const isNSE = gameType === SchedulerType.NSE;
+    const isUSAMarket = gameType === SchedulerType.USA_MARKET;
 
     const wallet = useMemo(() => {
         if (isLoading) return new Wallet();
@@ -37,6 +38,9 @@ const Navbar = () => {
 
                 {isNSE && <div className="items-center hidden md:flex space-x-4 ml-auto">
                     <span className="text-sm text-game-secondary">{t("timings")}</span>
+                </div>}
+                {isUSAMarket && <div className="items-center hidden md:flex space-x-4 ml-auto">
+                    <span className="text-sm text-game-secondary">{t("usa-timings")}</span>
                 </div>}
             </div>
             <div className="flex items-center space-x-4 ml-auto">

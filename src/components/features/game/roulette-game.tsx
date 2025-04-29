@@ -22,6 +22,7 @@ import GameResultDialog from "./result-dialog";
 import { BettingControls } from "./roulette-chips";
 import { RouletteBettingGrid } from "./roulette-grid";
 import { GameHeader } from "./roulette-header";
+import useUSAMarketAvailable from "@/hooks/use-usa-available";
 
 enum PlacementType {
     SINGLE = "single",
@@ -47,10 +48,12 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const [betAmount, setBetAmount] = useState<number>(100);
     const gameState = useGameState(roundRecord);
     const isNSEAvailable = useNSEAvailable();
+    const isUSAMarketAvailable = useUSAMarketAvailable();
     const [tab, setTab] = useGameType();
     const { userDetails } = useAuthStore();
     const currentUser = userDetails as User;
     const { mutate, isPending: isPlacingBet } = useCreateGameRecord();
+    
 
     const boardRef = useRef<HTMLDivElement>(null);
 
@@ -245,9 +248,9 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const boardChips = gameState.isPlaceOver ? bettedChips : [...bettedChips, ...chips];
 
     const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
-    const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO);
-/*     const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
- */
+    const isCryptoAllowed = currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO);
+    const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
+ 
     const isNotAllowedToPlaceBet = currentUser.isNotAllowedToPlaceOrder(roundRecord.type);
 
     return (
@@ -267,15 +270,15 @@ const RouletteGame = ({ roundRecord }: Props) => {
                         >
                             <TabsList className="w-full flex lg:hidden h-10 p-1 bg-tertiary">
 
-                                {isNSEAllowed && (
+                                {isNSEAllowed  && (
                                     <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && 'cursor-not-allowed')} value="nse">NSE</TabsTrigger>
                                 )}
                                 {isCryptoAllowed && (
                                     <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
                                 )}
-                             {/*    {isUSAMarketAllowed && (
-                                    <TabsTrigger className="flex-1 h-8" value="usa_market">USA Market</TabsTrigger>
-                                )} */}
+                                {isUSAMarketAllowed && isUSAMarketAvailable && (
+                                    <TabsTrigger disabled={!isUSAMarketAvailable} className={cn("flex-1 h-8", !isUSAMarketAvailable && 'cursor-not-allowed')} value="usa_market">USA Market</TabsTrigger>
+                                )}
                             </TabsList>
                         </Tabs>
 
@@ -406,15 +409,15 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             className="w-full relative z-10 mt-2"
                         >
                             <TabsList className="w-full hidden lg:flex  bg-tertiary ">
-                                {isNSEAllowed && (
+                            {isNSEAllowed  && (
                                     <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && '!cursor-not-allowed')} value="nse">NSE</TabsTrigger>
                                 )}
                                 {isCryptoAllowed && (
                                     <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
                                 )}
-                               {/*  {isUSAMarketAllowed && (
-                                    <TabsTrigger className="flex-1 h-8" value="usa_market">USA Market</TabsTrigger>
-                                )} */}
+                                 {isUSAMarketAllowed  && (
+                                    <TabsTrigger disabled={!isUSAMarketAvailable} className={cn("flex-1 h-8", !isUSAMarketAvailable && '!cursor-not-allowed')} value="usa_market">USA Market</TabsTrigger>
+                                )} 
                             </TabsList>
 
                             <GameHeader gameState={gameState} />
