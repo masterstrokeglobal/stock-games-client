@@ -9,10 +9,10 @@ import { Button } from "@/components/ui/button"
 import { DigitPicker } from "./DigitPicker"
 
 interface BettingCardProps {
-  asset: Asset
-  betSlip: BetSlipItem[]
+  asset: any
+  betSlip: any[]
   globalBetAmount: number
-  onAddBet: (asset: Asset, betType: BetType, predictedDigits: string) => void
+  onAddBet: (asset: any, betType: BetType, predictedDigits: string) => void
 }
 
 export function BettingCard({ asset, betSlip, onAddBet }: BettingCardProps) {

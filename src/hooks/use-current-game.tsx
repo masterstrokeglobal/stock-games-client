@@ -1,5 +1,5 @@
 import { PlacementType } from '@/models/game-record';
-import { RoundRecord } from '@/models/round-record';
+import { RoundRecord, RoundRecordGameType } from '@/models/round-record';
 import { useGetCurrentRoundRecord } from '@/react-query/round-record-queries';
 import { useQueryClient, UseQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
@@ -37,7 +37,7 @@ const formatTime = (ms: number): FormattedTime => {
     };
 };
 
-export const useCurrentGame = (): {
+export const useCurrentGame = (roundRecordGameType: RoundRecordGameType = RoundRecordGameType.DERBY): {
     roundRecord: RoundRecord | null;
     isLoading: boolean;
 } => {
@@ -47,7 +47,7 @@ export const useCurrentGame = (): {
         data,
         isLoading,
         isSuccess,
-    }: UseQueryResult<RoundRecordResponse, unknown> = useGetCurrentRoundRecord(type);
+    }: UseQueryResult<RoundRecordResponse, unknown> = useGetCurrentRoundRecord(type, roundRecordGameType);
 
     const roundRecord = useMemo(() => {
         // Only compute when data is successfully loaded
@@ -105,9 +105,11 @@ export const useCurrentGame = (): {
 
 export const useGameState = (roundRecord: RoundRecord | null) => {
     const [gameState, setGameState] = useState({
+        placeStartTimeLeft: formatTime(0),
         placeTimeLeft: formatTime(0),
         gameTimeLeft: formatTime(0),
         isPlaceOver: false,
+        isPlaceStarted: false,
         isGameOver: false,
     });
 
@@ -118,11 +120,16 @@ export const useGameState = (roundRecord: RoundRecord | null) => {
             const now = new Date().getTime();
             const placeEnd = new Date(roundRecord.placementEndTime).getTime();
             const gameEnd = new Date(roundRecord.endTime).getTime();
+            const placeStart = new Date(roundRecord.placementStartTime).getTime();
+            const isPlaceStarted = now >= placeStart;
+
 
             setGameState({
                 placeTimeLeft: formatTime(Math.max(0, placeEnd - now)),
                 gameTimeLeft: formatTime(Math.max(0, gameEnd - now)),
+                placeStartTimeLeft: formatTime(Math.max(0, placeStart - now)),
                 isPlaceOver: now >= placeEnd,
+                isPlaceStarted: isPlaceStarted,
                 isGameOver: now >= gameEnd,
             });
         };
@@ -137,6 +144,7 @@ export const useGameState = (roundRecord: RoundRecord | null) => {
 
     return gameState;
 };
+
 
 export const useIsPlaceOver = (roundRecord: RoundRecord | null) => {
     const [isPlaceOver, setIsPlaceOver] = useState(false);
@@ -184,10 +192,9 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: {
     const [currentRoundId, setCurrentRoundId] = useState<number | null>(null);
     const [previousRoundId, setPreviousRoundId] = useState<number | null>(null);
 
-
     useEffect(() => {
         // Retrieve previous round ID from localStorage when the component mounts
-        const storedPreviousRoundId = sessionStorage.getItem('previousRoundId');
+        const storedPreviousRoundId = sessionStorage.getItem(`game-previous-Round-${roundRecord?.roundRecordGameType}`);
         if (storedPreviousRoundId) {
             setPreviousRoundId(parseInt(storedPreviousRoundId, 10));
         }
@@ -200,7 +207,7 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: {
         if (roundRecord.id !== currentRoundId) {
             // Update the previous round ID
             if (currentRoundId) {
-                sessionStorage.setItem('previousRoundId', currentRoundId.toString());
+                sessionStorage.setItem(`game-previous-Round-${roundRecord.roundRecordGameType}`, currentRoundId.toString());
                 setPreviousRoundId(currentRoundId);
             }
 
@@ -230,9 +237,8 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: {
         return () => {
             clearInterval(intervalId);
         };
-    }, [roundRecord, currentRoundId]); // Re-run when `roundRecord` or `currentRoundId` changes
+    }, [roundRecord, currentRoundId]);
 
     return { showResults, currentRoundId, previousRoundId };
 };
-
 

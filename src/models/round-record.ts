@@ -1,6 +1,17 @@
 import MarketItem, { SchedulerType } from "./market-item";
 
 
+export enum RoundRecordGameType {
+    DERBY = "derby",
+    LOBBY = "lobby",
+    MINI_MUTUAL_FUND = "mini_mutual_fund",
+    GUESS_FIRST_FOUR = "guess_first_four",
+    GUESS_LAST_FOUR = "guess_last_four",
+    GUESS_FIRST_EIGHT = "guess_first_eight",
+    GUESS_LAST_EIGHT = "guess_last_eight",
+    STOCK_SLOTS = "stock_slots",
+  }
+  
 export class RoundRecord {
     id: number;
     startTime: Date;
@@ -12,6 +23,7 @@ export class RoundRecord {
     type: SchedulerType;
     winningId?: number;
     createdAt: Date;
+    roundRecordGameType: RoundRecordGameType;
     winningMarket?: MarketItem;
     updatedAt: Date;
     deletedAt?: Date;
@@ -28,10 +40,12 @@ export class RoundRecord {
         this.type = data.type || SchedulerType.NSE;
         this.winningMarket = data.winningMarket;
         this.winningId = data.winningId;
+        this.roundRecordGameType = data.roundRecordGameType || RoundRecordGameType.DERBY;
         this.createdAt = data.createdAt ? new Date(data.createdAt) : new Date();
         this.updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
         this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : undefined;
         this.initialValues = data.initialValues || null;
+
     }
 
     get winnerName(): string {

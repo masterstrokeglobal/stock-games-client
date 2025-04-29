@@ -1,6 +1,7 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient, UseQueryResult } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { gameRecordAPI } from "@/lib/axios/game-record-API"; // Adjust the path as needed
+import { StockSlotPlacement } from "@/models/stock-slot-placement";
 
 // Create Game Record Hook with Predicate-based Invalidation
 export const useCreateGameRecord = () => {
@@ -137,6 +138,48 @@ export const useRepeatPlacement = () => {
         },
         onError: (error: any) => {
             toast.error(error.response?.data.message ?? "Error repeating placement");
+        },
+    });
+};
+
+// Stock Slot Game Record Hook
+
+export const useGetStockSlotGameRecord = (roundId: string): UseQueryResult<StockSlotPlacement[]> => {
+    return useQuery({
+        queryKey: ["stockSlotGameRecord", roundId],
+        queryFn: async () => {
+            const { data } = await gameRecordAPI.getStockSlotGameRecord(roundId);
+            return data.data.map((item: any) => new StockSlotPlacement(item));
+        }
+    });
+};
+
+export const useGetMyStockSlotGameRecord = (roundId: string): UseQueryResult<StockSlotPlacement[]> => {
+    return useQuery({
+        queryKey: ["myStockSlotGameRecord", roundId],
+        queryFn: async () => {
+            const { data } = await gameRecordAPI.getMyStockSlotGameRecord(roundId);
+            console.log(data);
+            return data.data.map((item: any) => new StockSlotPlacement(item));
+        }
+    });
+};
+
+
+// Create Stock Slot Game Record Hook
+
+export const useCreateStockSlotGameRecord = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: gameRecordAPI.createStockSlotGameRecord,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "stockSlotGameRecord" || query.queryKey[0] === "myStockSlotGameRecord",
+            });
+            toast.success("Stock slot game record created successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error creating stock slot game record");
         },
     });
 };

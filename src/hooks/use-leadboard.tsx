@@ -2,7 +2,7 @@ import MarketItem, { NSEMarketItem, SchedulerType } from '@/models/market-item';
 import { RoundRecord } from '@/models/round-record';
 import { useEffect, useRef, useState } from 'react';
 
-interface RankedMarketItem extends MarketItem {
+export interface RankedMarketItem extends MarketItem {
     change_percent: string;
     rank: number;
     price: number;
@@ -43,8 +43,14 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                 rank: index + 1,
                 stream: item.stream,
                 bitcode: item.bitcode,
-                codeName: item.codeName
-            }));
+                codeName: item.codeName,
+                currency: item.currency,
+                horse: item.horse,
+                type: item.type,
+                active: item.active,
+                name: item.name,
+                id: item.id
+            })) as RankedMarketItem[]
 
         return rankedMarketItem;
 
@@ -122,6 +128,7 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                                             change_percent: changePercent,
                                             initialPrice: initialPrice,
                                             rank: stock.rank,
+                                            currency: stock.currency,
                                             stream: stock.stream,
                                             bitcode: stock.bitcode,
                                             codeName: stock.codeName // Ensure codeName is included
@@ -129,7 +136,6 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                                     }
                                     return stock;
                                 });
-
                                 if (getRoundStatus() === 'tracking') {
                                     latestDataRef.current = calculateRanks(latestDataRef.current);
                                 }
@@ -175,8 +181,14 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                                             rank: stock.rank,
                                             stream: stock.stream,
                                             bitcode: stock.bitcode,
-                                            codeName: stock.codeName // Ensure codeName is included
-                                        };
+                                            codeName: stock.codeName,
+                                            currency: stock.currency,
+                                            horse: stock.horse,
+                                            type: stock.type,
+                                            active: stock.active,
+                                            name: stock.name,
+                                            id: stock.id
+                                        } 
                                     }
                                     return stock;
                                 });
@@ -226,8 +238,14 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                                             rank: stock.rank,
                                             stream: stock.stream,
                                             bitcode: stock.bitcode,
-                                            codeName: stock.codeName // Ensure codeName is included
-                                        };
+                                            codeName: stock.codeName,
+                                            currency: stock.currency,
+                                            horse: stock.horse,
+                                            type: stock.type,
+                                            active: stock.active,
+                                            name: stock.name,
+                                            id: stock.id
+                                        } 
                                     }
                                     return stock;
                                 });

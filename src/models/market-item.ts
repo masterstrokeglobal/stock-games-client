@@ -45,6 +45,17 @@ export class MarketItem {
     get bitcode() {
         return this.code?.toUpperCase()
     }
+
+    get currency() {    
+        switch(this.type) {
+            case SchedulerType.NSE:
+                return "Rs.";
+            case SchedulerType.CRYPTO:
+                return "USDT";
+            case SchedulerType.USA_MARKET:
+                return "$";
+        }
+    }
 }
 
 export default MarketItem;

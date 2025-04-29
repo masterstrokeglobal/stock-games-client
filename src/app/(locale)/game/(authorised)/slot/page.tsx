@@ -7,86 +7,34 @@ import { BetSlip } from "@/components/features/stock-slot/bet-slip"
 import { BettingCard } from "@/components/features/stock-slot/betting-card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { ArrowRightIcon, CreditCard, SearchIcon, TrendingUpIcon, ZapIcon, ZapOffIcon } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import { cryptoAssets, nseAssets, usStockAssets } from "./data"
+import { useLeaderboard } from "@/hooks/use-leadboard"
+import { SchedulerType } from "@/models/market-item"
+import { RoundRecord, RoundRecordGameType } from "@/models/round-record"
+import { useGetCurrentRoundRecord } from "@/react-query/round-record-queries"
+import { CreditCard, SearchIcon, ZapIcon, ZapOffIcon } from "lucide-react"
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 export default function Home() {
   // State for bet slip
-  const [betSlip, setBetSlip] = useState<BetSlipItem[]>([])
   const [betSlipOpen, setBetSlipOpen] = useState(false)
   const [globalBetAmount, setGlobalBetAmount] = useState(100)
   const [searchQuery, setSearchQuery] = useState("")
   const [quickBetEnabled, setQuickBetEnabled] = useState(false)
 
-  // Filter assets based on search query
-  const filterAssets = (assets: Asset[]) => {
-    if (!searchQuery) return assets
-    return assets.filter(
-      (asset) =>
-        asset.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        asset.symbol.toLowerCase().includes(searchQuery.toLowerCase()),
-    )
-  }
+  const { data: nseRoundRecordData, isLoading: nseRoundRecordLoading } = useGetCurrentRoundRecord(SchedulerType.NSE, RoundRecordGameType.STOCK_SLOTS);
+  const { data: cryptoRoundRecordData, isLoading: cryptoRoundRecordLoading } = useGetCurrentRoundRecord(SchedulerType.CRYPTO, RoundRecordGameType.STOCK_SLOTS);
+  const { data: usStockRoundRecordData, isLoading: usStockRoundRecordLoading } = useGetCurrentRoundRecord(SchedulerType.USA_MARKET, RoundRecordGameType.STOCK_SLOTS);
 
-  // Function to add bet to slip
-  const addToBetSlip = (asset: Asset, direction: BetDirection) => {
-    const existingBetIndex = betSlip.findIndex((bet) => bet.id === asset.id && bet.direction === direction)
+  const nseRoundRecord = nseRoundRecordData?.data.roundRecords[0] ? new RoundRecord(nseRoundRecordData?.data.roundRecords[0]) : null;
+  const cryptoRoundRecord = cryptoRoundRecordData?.data.roundRecords[0] ? new RoundRecord(cryptoRoundRecordData?.data.roundRecords[0]) : null;
+  const usStockRoundRecord = usStockRoundRecordData?.data.roundRecords[0] ? new RoundRecord(usStockRoundRecordData?.data.roundRecords[0]) : null;
 
-    if (existingBetIndex !== -1) {
-      // If bet already exists, toggle it off (remove it)
-      const newBetSlip = [...betSlip]
-      newBetSlip.splice(existingBetIndex, 1)
-      setBetSlip(newBetSlip)
-    } else {
-      // Add new bet to slip
-      const newBet: BetSlipItem = {
-        id: asset.id,
-        assetName: asset.name,
-        assetSymbol: asset.symbol,
-        direction,
-        odds: 1.96,
-        betAmount: globalBetAmount, // Use global bet amount
-        potentialWin: globalBetAmount * 1.96, // 1.96 * globalBetAmount
-      }
-      setBetSlip([...betSlip, newBet])
+  const isLoading = nseRoundRecordLoading || cryptoRoundRecordLoading || usStockRoundRecordLoading
 
-      // If quick bet is enabled, open bet slip
-      if (quickBetEnabled) {
-        setBetSlipOpen(true)
-      }
-    }
-  }
-
-  // Function to update bet amount
-  const updateBetAmount = (id: string, direction: BetDirection, amount: number) => {
-    setBetSlip(
-      betSlip.map((bet) =>
-        bet.id === id && bet.direction === direction
-          ? { ...bet, betAmount: amount, potentialWin: amount * bet.odds }
-          : bet,
-      ),
-    )
-  }
-
-  // Function to remove bet from slip
-  const removeFromBetSlip = (id: string, direction: BetDirection) => {
-    setBetSlip(betSlip.filter((bet) => !(bet.id === id && bet.direction === direction)))
-  }
 
   // Function to update global bet amount
   const handleGlobalBetAmountChange = (amount: number) => {
     setGlobalBetAmount(amount)
-    // Update all existing bets with the new amount
-    setBetSlip(
-      betSlip.map((bet) => ({
-        ...bet,
-        betAmount: amount,
-        potentialWin: amount * bet.odds,
-      })),
-    )
   }
 
   // Function to clear search
@@ -94,49 +42,11 @@ export default function Home() {
     setSearchQuery("")
   }
 
-  const renderAssetSection = (title: string, assets: Asset[], icon: React.ReactNode, linkColor: string) => {
-    const filteredAssets = filterAssets(assets)
-
-    return (
-      <>
-        <div className="flex items-center mt-12 justify-between mb-4">
-          <h2 className="text-lg font-bold flex items-center">
-            {icon}
-            {title}
-          </h2>
-          <Link href="#" className={`text-sm ${linkColor} flex items-center hover:underline`}>
-            View All <ArrowRightIcon className="w-4 h-4 ml-1" />
-          </Link>
-        </div>
-
-        {filteredAssets.length === 0 ? (
-          <div className="text-center py-8 text-gray-400 bg-primary/5 rounded-lg border border-primary/10">
-            No markets found matching your search.
-          </div>
-        ) : (
-          <ScrollArea className="w-full whitespace-nowrap pb-4">
-            <div className="flex space-x-4">
-              {filteredAssets.map((asset) => (
-                <BettingCard
-                  key={asset.id}
-                  asset={asset}
-                  betSlip={betSlip}
-                  globalBetAmount={globalBetAmount}
-                  onAddToBetSlip={addToBetSlip}
-                />
-              ))}
-            </div>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
-        )}
-      </>
-    )
-  }
 
   return (
     <div className="flex flex-col min-h-screen bg-background-secondary text-white p-4 mx-auto">
       <Navbar />
-      <main className="flex-1 px-4 mt-20 py-6 max-w-7xl mx-auto w-full">
+      <Tabs className="flex-1 px-4 mt-20 py-6 max-w-7xl mx-auto w-full">
         {/* Global Bet Amount and Search Section */}
         <div className="w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -166,9 +76,14 @@ export default function Home() {
               </div>
               {searchQuery && (
                 <div className="text-xs text-gray-400 mt-2 ml-3">
-                  {filterAssets([...nseAssets, ...cryptoAssets, ...usStockAssets]).length} results found
+                  {isLoading ? "Loading..." : "Search for stocks, crypto, markets..."}
                 </div>
               )}
+                 <TabsList className="w-full mt-6 rounded-sm">
+                  <TabsTrigger value="nse" className="w-full">NSE</TabsTrigger>
+                  <TabsTrigger value="crypto" className="w-full">Crypto</TabsTrigger>
+                  <TabsTrigger value="us-stock" className="w-full">US Stock</TabsTrigger>
+                </TabsList>
             </div>
 
             {/* Global Bet Amount with improved UI */}
@@ -232,52 +147,88 @@ export default function Home() {
           </div>
 
           {/* Bet slip counter badge */}
-          {betSlip.length > 0 && (
-            <div className="flex items-center justify-center mb-6">
-              <button
-                onClick={() => setBetSlipOpen(true)}
-                className="bg-primary hover:bg-primary/80 text-white rounded-full py-2 px-6 flex items-center space-x-2 transition-all duration-200 shadow-lg shadow-primary/20"
-              >
-                <CreditCard className="w-4 h-4" />
-                <span>Open Bet Slip</span>
-                <span className="bg-white text-primary rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
-                  {betSlip.length}
-                </span>
-              </button>
-            </div>
-          )}
+          <div className="flex items-center justify-center mb-6">
+            <button
+              onClick={() => setBetSlipOpen(true)}
+              className="bg-primary hover:bg-primary/80 text-white rounded-full py-2 px-6 flex items-center space-x-2 transition-all duration-200 shadow-lg shadow-primary/20"
+            >
+              <CreditCard className="w-4 h-4" />
+              <span>Open Bet Slip</span>
+            </button>
+          </div>
         </div>
 
-        {/* Market Sections */}
-        {renderAssetSection(
-          "NSE Markets",
-          nseAssets,
-          <TrendingUpIcon className="w-5 h-5 mr-2 text-blue-400" />,
-          "text-blue-400"
-        )}
+        <TabsContent value="nse">
+          {nseRoundRecord && <MarketSection
+            title="NSE Markets"
+            type={SchedulerType.NSE}
+            searchQuery={searchQuery}
+            globalBetAmount={globalBetAmount}
+          />}
+        </TabsContent>
 
-        {renderAssetSection(
-          "Crypto Markets",
-          cryptoAssets,
-          <Image src="/placeholder.svg?height=20&width=20" width={20} height={20} alt="Crypto" className="mr-2" />,
-          "text-yellow-400"
-        )}
+        <TabsContent value="crypto">
+          {cryptoRoundRecord && <MarketSection
+            title="Crypto Markets"
+            type={SchedulerType.CRYPTO}
+            searchQuery={searchQuery}
+            globalBetAmount={globalBetAmount}
+          />}
+        </TabsContent>
 
-        {renderAssetSection(
-          "US Stock Markets",
-          usStockAssets,
-          <Image src="/placeholder.svg?height=20&width=20" width={20} height={20} alt="US Stocks" className="mr-2" />,
-          "text-green-400"
-        )}
-      </main>
+        <TabsContent value="us-stock">
+          {usStockRoundRecord && <MarketSection
+            title="US Stock Markets"
+            type={SchedulerType.USA_MARKET}
+            searchQuery={searchQuery}
+            globalBetAmount={globalBetAmount}
+          />}
+        </TabsContent>
+      </Tabs>
 
-      <BetSlip
-        betSlip={betSlip}
+      {cryptoRoundRecord && <BetSlip
+        roundRecord={cryptoRoundRecord}
         open={betSlipOpen}
         setOpen={setBetSlipOpen}
-        removeFromBetSlip={removeFromBetSlip}
-        updateBetAmount={updateBetAmount}
-      />
+      />}
     </div>
+  )
+}
+
+
+
+const MarketSection = ({ title, type, searchQuery, globalBetAmount }: { title: string, type: SchedulerType, searchQuery: string, globalBetAmount: number }) => {
+  const { data: roundRecordData } = useGetCurrentRoundRecord(type, RoundRecordGameType.STOCK_SLOTS);
+  const roundRecord = roundRecordData?.data.roundRecords[0] ? new RoundRecord(roundRecordData?.data.roundRecords[0]) : null;
+ 
+  if (!roundRecord) return <div className="text-center py-8 text-gray-400 bg-primary/5 rounded-lg border border-primary/10">No markets found matching your search.</div>
+  const { stocks: marketItems } = useLeaderboard(roundRecord);
+  const filteredMarketItems = marketItems.filter((marketItem) => (marketItem.name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) || (marketItem.code?.toLowerCase() || '').includes(searchQuery.toLowerCase())).sort((a, b) => (a.id || 0) - (b.id || 0))
+
+  return (
+    <>
+      <div className="flex items-center mt-12 justify-between mb-4">
+        <h2 className="text-lg font-bold flex items-center">
+          {title}
+        </h2>
+      </div>
+
+      {filteredMarketItems.length === 0 ? (
+        <div className="text-center py-8 text-gray-400 bg-primary/5 rounded-lg border border-primary/10">
+          No markets found matching your search.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+          {filteredMarketItems.map((marketItem) => (
+            <BettingCard
+              key={marketItem.id}
+              roundRecord={roundRecord}
+              globalBetAmount={globalBetAmount}
+              marketItem={marketItem}
+            />
+          ))}
+        </div>
+      )}
+    </>
   )
 }
