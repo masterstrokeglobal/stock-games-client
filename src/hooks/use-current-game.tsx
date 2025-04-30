@@ -218,7 +218,7 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: {
             const now = new Date().getTime();
             const gameEnd = new Date(roundRecord.endTime).getTime();
             const adjustedEndTime = gameEnd + 3000;
-            const EMD_TIME = roundRecord.roundRecordGameType === RoundRecordGameType.STOCK_SLOTS ? 10000 : 30000;
+            const EMD_TIME = 30000;
 
             if (now >= adjustedEndTime - EMD_TIME) {
                 setShowResults(false);

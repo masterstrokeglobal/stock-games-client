@@ -160,7 +160,6 @@ export const useGetMyStockSlotGameRecord = (roundId?: number): UseQueryResult<St
         enabled: !!roundId,
         queryFn: roundId ? async () => {
             const { data } = await gameRecordAPI.getMyStockSlotGameRecord(roundId);
-            console.log(data);
             return data.data.map((item: any) => new StockSlotPlacement(item));
         } : undefined
     });

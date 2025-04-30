@@ -190,14 +190,11 @@ export default function Home() {
 }
 
 
-
 const MarketSection = ({ title, type, globalBetAmount, betSlipOpen, setBetSlipOpen }: { title: string, type: SchedulerType, searchQuery: string, globalBetAmount: number, betSlipOpen: boolean, setBetSlipOpen: Dispatch<SetStateAction<boolean>> }) => {
   const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
   const { data: stockSlotPlacements } = useGetMyStockSlotGameRecord(roundRecord?.id);
-  console.log(stockSlotPlacements, "stockSlotPlacements");
-  const { showResults } = useShowResults(roundRecord, stockSlotPlacements as any);
+  const { showResults, previousRoundId } = useShowResults(roundRecord, stockSlotPlacements as any);
 
-  console.log(showResults, "showResults");
   // const { stocks: marketItems } = useLeaderboard(roundRecord);
   // const filteredMarketItems = marketItems.filter((marketItem) => (marketItem.name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) || (marketItem.code?.toLowerCase() || '').includes(searchQuery.toLowerCase())).sort((a, b) => (a.id || 0) - (b.id || 0))
   if (!roundRecord) return <div className="text-center py-8 text-gray-400 bg-primary/5 rounded-lg border border-primary/10">No markets found matching your search.</div>
@@ -227,11 +224,16 @@ const MarketSection = ({ title, type, globalBetAmount, betSlipOpen, setBetSlipOp
         </div>
       )}
 
-      <SlotResultDialog
-        key={showResults?.toString()}
-        open={showResults}
-        roundRecordId={roundRecord.id}
-      />
+      {
+        previousRoundId && (
+          <SlotResultDialog
+            key={showResults?.toString()}
+            open={showResults}
+            roundRecordId={previousRoundId}
+          />
+        )
+      }
+
       <BetSlip
         roundRecord={roundRecord}
         open={betSlipOpen}

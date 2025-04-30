@@ -13,7 +13,7 @@ interface BetSlipProps {
 }
 
 export function BetSlip({ roundRecord, open, setOpen }: BetSlipProps) {
-    const {data: stockSlotPlacements } = useGetMyStockSlotGameRecord(roundRecord.id.toString())
+    const {data: stockSlotPlacements } = useGetMyStockSlotGameRecord(roundRecord.id)
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent side="right" className="w-full sm:max-w-md bg-[#1A1E2E] border-l border-[#2A2F42] p-0">
