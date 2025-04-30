@@ -19,7 +19,7 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
 
   const { data: stockSlotPlacements } = useGetMyStockSlotGameRecord(roundRecord.id.toString());
 
-  const { mutate: createStockSlotGameRecord } = useCreateStockSlotGameRecord();
+  const { mutate: createStockSlotGameRecord, isPending: isPlacingBet } = useCreateStockSlotGameRecord();
 
   const [isUpPlaced, isDownPlaced] = useMemo(() => {
     const isUpPlaced = stockSlotPlacements?.findIndex((placement) => placement.placement === "high" && placement.round.id === roundRecord.id && placement.marketItem.id === marketItem.id) !== -1
@@ -27,7 +27,7 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
     return [isUpPlaced, isDownPlaced]
   }, [stockSlotPlacements, roundRecord.id, marketItem.id])
 
-  const {gameTimeLeft,isPlaceOver,placeTimeLeft} = useGameState(roundRecord)
+
   const onAddToBetSlip = useCallback((direction: StockSlotPlacementType) => {
     if (isUpPlaced && direction === "high") return;
     if (isDownPlaced && direction === "low") return;
@@ -51,17 +51,12 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
             </div>
           </div>
 
-          <div className="text-sm text-gray-400">
-            <span> 
-              {isPlaceOver ? "Place Over" : "Place Now"}
-            </span>
-            {isPlaceOver ? ` ${placeTimeLeft.minutes}:${placeTimeLeft.seconds} ` : ` ${gameTimeLeft.minutes}:${gameTimeLeft.seconds} `}
-          </div>
+          <TimeDisplay roundRecord={roundRecord} />
         </div>
 
         <div className="flex justify-between items-center mb-3">
           <div>
-             <div className="text-lg font-bold">
+            <div className="text-lg font-bold">
               {marketItem.currency} &nbsp;
               <span className="text-xs text-gray-400">
                 {marketItem.price}
@@ -69,9 +64,9 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
             </div>
           </div>
           <div className={`text-xs ${parseFloat(marketItem.change_percent) > 0 ? "text-green-400" : "text-red-400"}`}>
-              {parseFloat(marketItem.change_percent) > 0 ? "+" : "-"}
-              {marketItem.change_percent}
-            </div>
+            {parseFloat(marketItem.change_percent) > 0 ? "+" : "-"}
+            {marketItem.change_percent}
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-2 mb-3">
@@ -93,18 +88,24 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
 
         <div className="grid grid-cols-2 gap-2">
           <button
+            disabled={isPlacingBet}
             className={`flex items-center justify-center rounded-md py-2 ${isUpPlaced ? "bg-green-500 text-white" : "bg-green-900/30 text-green-400 hover:bg-green-900/50"
               }`}
             onClick={() => onAddToBetSlip("high")}
           >
-            <span className="font-bold text-sm">BET UP</span>
+            <span className="font-bold text-sm">
+              {isPlacingBet ? "Placing..." : "BET UP"}
+            </span>
           </button>
           <button
+            disabled={isPlacingBet}
             className={`flex items-center justify-center rounded-md py-2 ${isDownPlaced ? "bg-red-500 text-white" : "bg-red-900/30 text-red-400 hover:bg-red-900/50"
               }`}
             onClick={() => onAddToBetSlip("low")}
           >
-            <span className="font-bold text-sm">BET DOWN</span>
+            <span className="font-bold text-sm">
+              {isPlacingBet ? "Placing..." : "BET DOWN"}
+            </span>
           </button>
         </div>
       </div>
@@ -112,3 +113,17 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
   )
 }
 
+
+
+const TimeDisplay = ({ roundRecord }: { roundRecord: RoundRecord }) => {
+  const { gameTimeLeft, isPlaceOver, placeTimeLeft } = useGameState(roundRecord)
+
+  return (
+    <div className="text-sm text-gray-400">
+      <span>
+        {isPlaceOver ? "Place Over" : "Place Now"}
+      </span>
+      {isPlaceOver ? ` ${placeTimeLeft.minutes}:${placeTimeLeft.seconds} ` : ` ${gameTimeLeft.minutes}:${gameTimeLeft.seconds} `}
+    </div>
+  )
+}

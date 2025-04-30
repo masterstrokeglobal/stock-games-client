@@ -141,7 +141,7 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                                 }
                             }
                         } catch (error) {
-                            console.error('Error processing WebSocket message:', error);
+                            // console.error('Error processing WebSocket message:', error);
                         }
                     };
                 }
@@ -261,7 +261,7 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                     };
                 }
             } catch (error) {
-                console.error('Error creating WebSocket connection:', error);
+                // console.error('Error creating WebSocket connection:', error);
                 setConnectionStatus('disconnected');
             }
 

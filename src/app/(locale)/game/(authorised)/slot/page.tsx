@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 
 import Navbar from "@/components/features/game/navbar"
 import { BetSlip } from "@/components/features/stock-slot/bet-slip"
@@ -21,15 +21,6 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("")
   const [quickBetEnabled, setQuickBetEnabled] = useState(false)
 
-  const { data: nseRoundRecordData, isLoading: nseRoundRecordLoading } = useGetCurrentRoundRecord(SchedulerType.NSE, RoundRecordGameType.STOCK_SLOTS);
-  const { data: cryptoRoundRecordData, isLoading: cryptoRoundRecordLoading } = useGetCurrentRoundRecord(SchedulerType.CRYPTO, RoundRecordGameType.STOCK_SLOTS);
-  const { data: usStockRoundRecordData, isLoading: usStockRoundRecordLoading } = useGetCurrentRoundRecord(SchedulerType.USA_MARKET, RoundRecordGameType.STOCK_SLOTS);
-
-  const nseRoundRecord = nseRoundRecordData?.data.roundRecords[0] ? new RoundRecord(nseRoundRecordData?.data.roundRecords[0]) : null;
-  const cryptoRoundRecord = cryptoRoundRecordData?.data.roundRecords[0] ? new RoundRecord(cryptoRoundRecordData?.data.roundRecords[0]) : null;
-  const usStockRoundRecord = usStockRoundRecordData?.data.roundRecords[0] ? new RoundRecord(usStockRoundRecordData?.data.roundRecords[0]) : null;
-
-  const isLoading = nseRoundRecordLoading || cryptoRoundRecordLoading || usStockRoundRecordLoading
 
 
   // Function to update global bet amount
@@ -46,7 +37,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background-secondary text-white p-4 mx-auto">
       <Navbar />
-      <Tabs className="flex-1 px-4 mt-20 py-6 max-w-7xl mx-auto w-full">
+      <Tabs className="flex-1 px-4 mt-20 py-6 max-w-7xl mx-auto w-full" defaultValue={SchedulerType.NSE}>
         {/* Global Bet Amount and Search Section */}
         <div className="w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -74,15 +65,11 @@ export default function Home() {
                   </button>
                 )}
               </div>
-              {searchQuery && (
-                <div className="text-xs text-gray-400 mt-2 ml-3">
-                  {isLoading ? "Loading..." : "Search for stocks, crypto, markets..."}
-                </div>
-              )}
-                 <TabsList className="w-full mt-6 rounded-sm">
-                  <TabsTrigger value="nse" className="w-full">NSE</TabsTrigger>
-                  <TabsTrigger value="crypto" className="w-full">Crypto</TabsTrigger>
-                  <TabsTrigger value="us-stock" className="w-full">US Stock</TabsTrigger>
+            
+                 <TabsList className="w-full mt-6 rounded-sm" defaultValue={SchedulerType.NSE}>
+                  <TabsTrigger value={SchedulerType.NSE} className="w-full">NSE</TabsTrigger>
+                  <TabsTrigger value={SchedulerType.CRYPTO} className="w-full">Crypto</TabsTrigger>
+                  <TabsTrigger value={SchedulerType.USA_MARKET} className="w-full">US Stock</TabsTrigger>
                 </TabsList>
             </div>
 
@@ -158,52 +145,56 @@ export default function Home() {
           </div>
         </div>
 
-        <TabsContent value="nse">
-          {nseRoundRecord && <MarketSection
+        <TabsContent value={SchedulerType.NSE}>
+           <MarketSection
             title="NSE Markets"
             type={SchedulerType.NSE}
             searchQuery={searchQuery}
             globalBetAmount={globalBetAmount}
-          />}
+            betSlipOpen={betSlipOpen}
+            setBetSlipOpen={setBetSlipOpen}
+            />
         </TabsContent>
 
-        <TabsContent value="crypto">
-          {cryptoRoundRecord && <MarketSection
+        <TabsContent value={SchedulerType.CRYPTO}>
+          <MarketSection
             title="Crypto Markets"
             type={SchedulerType.CRYPTO}
             searchQuery={searchQuery}
             globalBetAmount={globalBetAmount}
-          />}
+            betSlipOpen={betSlipOpen}
+            setBetSlipOpen={setBetSlipOpen}
+          />
         </TabsContent>
 
-        <TabsContent value="us-stock">
-          {usStockRoundRecord && <MarketSection
+        <TabsContent value={SchedulerType.USA_MARKET}>
+          <MarketSection
             title="US Stock Markets"
             type={SchedulerType.USA_MARKET}
             searchQuery={searchQuery}
             globalBetAmount={globalBetAmount}
-          />}
+            betSlipOpen={betSlipOpen}
+            setBetSlipOpen={setBetSlipOpen}
+          />
+   
         </TabsContent>
       </Tabs>
 
-      {cryptoRoundRecord && <BetSlip
-        roundRecord={cryptoRoundRecord}
-        open={betSlipOpen}
-        setOpen={setBetSlipOpen}
-      />}
+   
     </div>
   )
 }
 
 
 
-const MarketSection = ({ title, type, searchQuery, globalBetAmount }: { title: string, type: SchedulerType, searchQuery: string, globalBetAmount: number }) => {
+const MarketSection = ({ title, type, searchQuery, globalBetAmount,betSlipOpen,setBetSlipOpen }: { title: string, type: SchedulerType, searchQuery: string, globalBetAmount: number,betSlipOpen:boolean,setBetSlipOpen:Dispatch<SetStateAction<boolean>> }) => {
   const { data: roundRecordData } = useGetCurrentRoundRecord(type, RoundRecordGameType.STOCK_SLOTS);
   const roundRecord = roundRecordData?.data.roundRecords[0] ? new RoundRecord(roundRecordData?.data.roundRecords[0]) : null;
  
+  console.log(roundRecord)
   if (!roundRecord) return <div className="text-center py-8 text-gray-400 bg-primary/5 rounded-lg border border-primary/10">No markets found matching your search.</div>
-  const { stocks: marketItems } = useLeaderboard(roundRecord);
-  const filteredMarketItems = marketItems.filter((marketItem) => (marketItem.name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) || (marketItem.code?.toLowerCase() || '').includes(searchQuery.toLowerCase())).sort((a, b) => (a.id || 0) - (b.id || 0))
+  // const { stocks: marketItems } = useLeaderboard(roundRecord);
+  // const filteredMarketItems = marketItems.filter((marketItem) => (marketItem.name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) || (marketItem.code?.toLowerCase() || '').includes(searchQuery.toLowerCase())).sort((a, b) => (a.id || 0) - (b.id || 0))
 
   return (
     <>
@@ -213,13 +204,13 @@ const MarketSection = ({ title, type, searchQuery, globalBetAmount }: { title: s
         </h2>
       </div>
 
-      {filteredMarketItems.length === 0 ? (
+      {roundRecord.market.length === 0 ? (
         <div className="text-center py-8 text-gray-400 bg-primary/5 rounded-lg border border-primary/10">
           No markets found matching your search.
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-          {filteredMarketItems.map((marketItem) => (
+          {roundRecord.market.map((marketItem: any) => (
             <BettingCard
               key={marketItem.id}
               roundRecord={roundRecord}
@@ -229,6 +220,12 @@ const MarketSection = ({ title, type, searchQuery, globalBetAmount }: { title: s
           ))}
         </div>
       )}
+
+      <BetSlip
+        roundRecord={roundRecord}
+        open={betSlipOpen}
+        setOpen={setBetSlipOpen}
+      />
     </>
   )
 }

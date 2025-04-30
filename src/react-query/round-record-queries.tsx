@@ -20,6 +20,7 @@ export const useGetCurrentRoundRecord = (
 ) => {
     return useQuery({
         queryKey: ["current-round-record", type],
+        staleTime: 1000 * 60 * 60 * 24,
         queryFn: () => {
             return roundRecordsAPI.getAllRoundRecords({
                 type: type,
