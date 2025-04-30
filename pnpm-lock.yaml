@@ -14,6 +14,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.9.0
         version: 3.9.1(react-hook-form@7.53.1(react@18.3.1))
+      '@lottiefiles/dotlottie-react':
+        specifier: ^0.13.5
+        version: 0.13.5(react@18.3.1)
       '@next/third-parties':
         specifier: ^15.3.0
         version: 15.3.0(next@14.2.14(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
@@ -161,6 +164,9 @@ importers:
       react-hook-form:
         specifier: ^7.53.0
         version: 7.53.1(react@18.3.1)
+      react-howler:
+        specifier: ^5.2.0
+        version: 5.2.0
       react-intersection-observer:
         specifier: ^9.14.1
         version: 9.14.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -562,6 +568,14 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@lottiefiles/dotlottie-react@0.13.5':
+    resolution: {integrity: sha512-4U5okwjRqDPkjB572hfZtLXJ/LGfCo6vDwUB2KIPEUoSgqbIlw+UrbnaqVp3GS+dRvhMD27F2JObpHpYRlpF0Q==}
+    peerDependencies:
+      react: ^17 || ^18 || ^19
+
+  '@lottiefiles/dotlottie-web@0.44.0':
+    resolution: {integrity: sha512-IUWKVciDJI/BMWDWnh7j0Ngd0N8q9ySRAwm84aDqIE07qpmdZ7x1rkIpBaU1yHSNqNYHeh1Rxsl+LC3CY4f0KA==}
 
   '@mediapipe/tasks-vision@0.10.17':
     resolution: {integrity: sha512-CZWV/q6TTe8ta61cZXjfnnHsfWIdFhms03M9T7Cnd5y2mdpylJM0rF1qRq+wsQVRMLz1OYPVEBU9ph2Bx8cxrg==}
@@ -3201,6 +3215,9 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17 || ^18 || ^19
 
+  react-howler@5.2.0:
+    resolution: {integrity: sha512-oDK+zML0MHf3nVNM4lMxh+re87NDa7fHowea2WK8197yqnMiZfPVHoMXtfb/PtuoOsWLO06vmEAtovwTRWpTFg==}
+
   react-intersection-observer@9.14.1:
     resolution: {integrity: sha512-k1xIUn3sCQi3ugNeF64FJb3zwve5mcetvAUR9JazXeOmtap4IP2evN8rs+yf6SQ7F1QydsOGiqTmt+lySKZ9uA==}
     peerDependencies:
@@ -4466,6 +4483,13 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@lottiefiles/dotlottie-react@0.13.5(react@18.3.1)':
+    dependencies:
+      '@lottiefiles/dotlottie-web': 0.44.0
+      react: 18.3.1
+
+  '@lottiefiles/dotlottie-web@0.44.0': {}
 
   '@mediapipe/tasks-vision@0.10.17': {}
 
@@ -7229,6 +7253,11 @@ snapshots:
   react-hook-form@7.53.1(react@18.3.1):
     dependencies:
       react: 18.3.1
+
+  react-howler@5.2.0:
+    dependencies:
+      howler: 2.2.4
+      prop-types: 15.8.1
 
   react-intersection-observer@9.14.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:

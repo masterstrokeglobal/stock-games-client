@@ -174,7 +174,8 @@ export const useCreateStockSlotGameRecord = () => {
         mutationFn: gameRecordAPI.createStockSlotGameRecord,
         onSuccess: () => {
             queryClient.invalidateQueries({
-                predicate: (query) => query.queryKey[0] === "stockSlotGameRecord" || query.queryKey[0] === "myStockSlotGameRecord",
+                predicate: (query) => query.queryKey[0] === "stockSlotGameRecord" || query.queryKey[0] === "myStockSlotGameRecord" || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet'
+
             });
             toast.success("Stock slot game record created successfully");
         },

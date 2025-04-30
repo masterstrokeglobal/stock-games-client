@@ -190,13 +190,13 @@ export default function Home() {
 }
 
 
-const MarketSection = ({ title, type, globalBetAmount, betSlipOpen, setBetSlipOpen }: { title: string, type: SchedulerType, searchQuery: string, globalBetAmount: number, betSlipOpen: boolean, setBetSlipOpen: Dispatch<SetStateAction<boolean>> }) => {
+const MarketSection = ({ title, type, globalBetAmount, betSlipOpen, searchQuery, setBetSlipOpen }: { title: string, type: SchedulerType, searchQuery: string, globalBetAmount: number, betSlipOpen: boolean, setBetSlipOpen: Dispatch<SetStateAction<boolean>> }) => {
   const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
   const { data: stockSlotPlacements } = useGetMyStockSlotGameRecord(roundRecord?.id);
   const { showResults, previousRoundId } = useShowResults(roundRecord, stockSlotPlacements as any);
 
-  // const { stocks: marketItems } = useLeaderboard(roundRecord);
-  // const filteredMarketItems = marketItems.filter((marketItem) => (marketItem.name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) || (marketItem.code?.toLowerCase() || '').includes(searchQuery.toLowerCase())).sort((a, b) => (a.id || 0) - (b.id || 0))
+   const { stocks: marketItems } = useLeaderboard(roundRecord);
+   const filteredMarketItems = marketItems.filter((marketItem) => (marketItem.name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) || (marketItem.code?.toLowerCase() || '').includes(searchQuery.toLowerCase())).sort((a, b) => (a.id || 0) - (b.id || 0))
   if (!roundRecord) return <div className="text-center py-8 text-gray-400 bg-primary/5 rounded-lg border border-primary/10">No markets found matching your search.</div>
 
   return (
@@ -213,7 +213,7 @@ const MarketSection = ({ title, type, globalBetAmount, betSlipOpen, setBetSlipOp
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-          {roundRecord.market.map((marketItem: any) => (
+          {filteredMarketItems.map((marketItem: any) => (
             <BettingCard
               key={marketItem.id}
               roundRecord={roundRecord}
