@@ -61,8 +61,8 @@ export function BetSlip({ roundRecord, open, setOpen }: BetSlipProps) {
                   <div className="flex items-center"> 
                     <div className="flex-1 ml-3">
                       <label className="text-xs text-gray-400 mb-1 block">Potential Win</label>
-                      <div className="bg-[#2A2F42] border border-[#3A3F52] rounded p-2 text-white">
-                        {(stockSlotPlacement.amount * 1.96).toFixed(2)}
+                      <div className="bg-[#2A2F42] border border-[#3A3F52] rounded p-2 capitalize text-white">
+                     from {stockSlotPlacement.amount} to {(stockSlotPlacement.amount * 1.96).toFixed(2)}
                       </div>
                     </div>
                   </div>

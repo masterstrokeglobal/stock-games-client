@@ -9,19 +9,20 @@ export interface RankedMarketItem extends MarketItem {
     initialPrice?: number;
 }
 
-export const useLeaderboard = (roundRecord: RoundRecord) => {
-    const [stocks, setStocks] = useState<RankedMarketItem[]>(roundRecord.market as RankedMarketItem[]);
+export const useLeaderboard = (roundRecord: RoundRecord | null) => {
+    const [stocks, setStocks] = useState<RankedMarketItem[]>(roundRecord?.market as RankedMarketItem[] || []);
     const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected'>('disconnected');
     const socketRef = useRef<WebSocket | null>(null);
-    const latestDataRef = useRef<RankedMarketItem[]>(roundRecord.market as RankedMarketItem[]);
+    const latestDataRef = useRef<RankedMarketItem[]>(roundRecord?.market as RankedMarketItem[] || []);
     const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
     const initialPricesRef = useRef<Map<string, number>>(new Map());
     const roundEndCheckRef = useRef<NodeJS.Timeout>();
 
 
     const getRoundStatus = () => {
+        if (!roundRecord) return 'pre-tracking';
         const now = new Date();
-        if (now < roundRecord.placementEndTime) {
+        if (now < roundRecord .placementEndTime) {
             return 'pre-tracking';
         } else if (now >= roundRecord.placementEndTime && now <= roundRecord.endTime) {
             return 'tracking';
@@ -57,6 +58,7 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
     };
 
     const processPrice = (bitcode: string, currentPrice: number) => {
+        if (!roundRecord) return { initialPrice: currentPrice, changePercent: '0' };
         const roundStatus = getRoundStatus();
         const key = roundRecord.type === SchedulerType.CRYPTO ? bitcode.toLocaleLowerCase() : bitcode.toUpperCase();
 
@@ -90,8 +92,9 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
     };
 
     useEffect(() => {
+        if (!roundRecord) return;
         const connectSocket = () => {
-            if (roundRecord.market.length === 0) return;
+            if (roundRecord?.market.length === 0) return;
 
             if (socketRef.current) {
                 socketRef.current.close();
@@ -100,9 +103,9 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
 
             try {
                 setConnectionStatus('connecting');
-                console.log('Connecting to WebSocket', roundRecord.type);
+                console.log('Connecting to WebSocket', roundRecord?.type);
 
-                if (roundRecord.type === SchedulerType.CRYPTO) {
+                if (roundRecord?.type === SchedulerType.CRYPTO) {
                     socketRef.current = new WebSocket(process.env.NEXT_PUBLIC_CRYPTO_WEBSOCKET_URL as string);
                     socketRef.current.onopen = () => {
                         setConnectionStatus('connected');
@@ -334,6 +337,7 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
 
     //update stocks on roundRecord change
     useEffect(() => {
+        if (!roundRecord) return;
         setStocks(roundRecord.market as RankedMarketItem[]);
         latestDataRef.current = roundRecord.market as RankedMarketItem[];
     }, [roundRecord]);

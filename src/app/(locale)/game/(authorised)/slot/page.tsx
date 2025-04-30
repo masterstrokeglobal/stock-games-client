@@ -14,13 +14,17 @@ import { useGetCurrentRoundRecord } from "@/react-query/round-record-queries"
 import { CreditCard, SearchIcon, ZapIcon, ZapOffIcon } from "lucide-react"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useCurrentGame, useShowResults } from "@/hooks/use-current-game"
+import { useGameType } from "@/hooks/use-game-type"
+import { useGetMyStockSlotGameRecord } from "@/react-query/game-record-queries"
+import SlotResultDialog from "@/components/features/game/slot-result-dialog"
 export default function Home() {
   // State for bet slip
   const [betSlipOpen, setBetSlipOpen] = useState(false)
   const [globalBetAmount, setGlobalBetAmount] = useState(100)
   const [searchQuery, setSearchQuery] = useState("")
   const [quickBetEnabled, setQuickBetEnabled] = useState(false)
-
+  const [tab, setTab] = useGameType();
 
 
   // Function to update global bet amount
@@ -37,7 +41,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-background-secondary text-white p-4 mx-auto">
       <Navbar />
-      <Tabs className="flex-1 px-4 mt-20 py-6 max-w-7xl mx-auto w-full" defaultValue={SchedulerType.NSE}>
+      <Tabs className="flex-1 px-4 mt-20 py-6 max-w-7xl mx-auto w-full" value={tab} onValueChange={(value) => setTab(value as SchedulerType)}>
         {/* Global Bet Amount and Search Section */}
         <div className="w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -65,12 +69,12 @@ export default function Home() {
                   </button>
                 )}
               </div>
-            
-                 <TabsList className="w-full mt-6 rounded-sm" defaultValue={SchedulerType.NSE}>
-                  <TabsTrigger value={SchedulerType.NSE} className="w-full">NSE</TabsTrigger>
-                  <TabsTrigger value={SchedulerType.CRYPTO} className="w-full">Crypto</TabsTrigger>
-                  <TabsTrigger value={SchedulerType.USA_MARKET} className="w-full">US Stock</TabsTrigger>
-                </TabsList>
+
+              <TabsList className="w-full mt-6 rounded-sm" >
+                <TabsTrigger value={SchedulerType.NSE} className="w-full">NSE</TabsTrigger>
+                <TabsTrigger value={SchedulerType.CRYPTO} className="w-full">Crypto</TabsTrigger>
+                <TabsTrigger value={SchedulerType.USA_MARKET} className="w-full">US Stock</TabsTrigger>
+              </TabsList>
             </div>
 
             {/* Global Bet Amount with improved UI */}
@@ -146,14 +150,14 @@ export default function Home() {
         </div>
 
         <TabsContent value={SchedulerType.NSE}>
-           <MarketSection
+          <MarketSection
             title="NSE Markets"
             type={SchedulerType.NSE}
             searchQuery={searchQuery}
             globalBetAmount={globalBetAmount}
             betSlipOpen={betSlipOpen}
             setBetSlipOpen={setBetSlipOpen}
-            />
+          />
         </TabsContent>
 
         <TabsContent value={SchedulerType.CRYPTO}>
@@ -176,25 +180,27 @@ export default function Home() {
             betSlipOpen={betSlipOpen}
             setBetSlipOpen={setBetSlipOpen}
           />
-   
+
         </TabsContent>
       </Tabs>
 
-   
+
     </div>
   )
 }
 
 
 
-const MarketSection = ({ title, type, searchQuery, globalBetAmount,betSlipOpen,setBetSlipOpen }: { title: string, type: SchedulerType, searchQuery: string, globalBetAmount: number,betSlipOpen:boolean,setBetSlipOpen:Dispatch<SetStateAction<boolean>> }) => {
-  const { data: roundRecordData } = useGetCurrentRoundRecord(type, RoundRecordGameType.STOCK_SLOTS);
-  const roundRecord = roundRecordData?.data.roundRecords[0] ? new RoundRecord(roundRecordData?.data.roundRecords[0]) : null;
- 
-  console.log(roundRecord)
-  if (!roundRecord) return <div className="text-center py-8 text-gray-400 bg-primary/5 rounded-lg border border-primary/10">No markets found matching your search.</div>
+const MarketSection = ({ title, type, globalBetAmount, betSlipOpen, setBetSlipOpen }: { title: string, type: SchedulerType, searchQuery: string, globalBetAmount: number, betSlipOpen: boolean, setBetSlipOpen: Dispatch<SetStateAction<boolean>> }) => {
+  const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
+  const { data: stockSlotPlacements } = useGetMyStockSlotGameRecord(roundRecord?.id);
+  console.log(stockSlotPlacements, "stockSlotPlacements");
+  const { showResults } = useShowResults(roundRecord, stockSlotPlacements as any);
+
+  console.log(showResults, "showResults");
   // const { stocks: marketItems } = useLeaderboard(roundRecord);
   // const filteredMarketItems = marketItems.filter((marketItem) => (marketItem.name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) || (marketItem.code?.toLowerCase() || '').includes(searchQuery.toLowerCase())).sort((a, b) => (a.id || 0) - (b.id || 0))
+  if (!roundRecord) return <div className="text-center py-8 text-gray-400 bg-primary/5 rounded-lg border border-primary/10">No markets found matching your search.</div>
 
   return (
     <>
@@ -221,6 +227,11 @@ const MarketSection = ({ title, type, searchQuery, globalBetAmount,betSlipOpen,s
         </div>
       )}
 
+      <SlotResultDialog
+        key={showResults?.toString()}
+        open={showResults}
+        roundRecordId={roundRecord.id}
+      />
       <BetSlip
         roundRecord={roundRecord}
         open={betSlipOpen}

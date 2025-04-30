@@ -17,7 +17,7 @@ interface BettingCardProps {
 
 export function BettingCard({ marketItem, globalBetAmount, roundRecord }: BettingCardProps) {
 
-  const { data: stockSlotPlacements } = useGetMyStockSlotGameRecord(roundRecord.id.toString());
+  const { data: stockSlotPlacements } = useGetMyStockSlotGameRecord(roundRecord.id);
 
   const { mutate: createStockSlotGameRecord, isPending: isPlacingBet } = useCreateStockSlotGameRecord();
 
@@ -26,7 +26,6 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
     const isDownPlaced = stockSlotPlacements?.findIndex((placement) => placement.placement === "low" && placement.round.id === roundRecord.id && placement.marketItem.id === marketItem.id) !== -1
     return [isUpPlaced, isDownPlaced]
   }, [stockSlotPlacements, roundRecord.id, marketItem.id])
-
 
   const onAddToBetSlip = useCallback((direction: StockSlotPlacementType) => {
     if (isUpPlaced && direction === "high") return;
@@ -76,6 +75,7 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
               <span>UP</span>
               <span className="ml-auto font-bold">1.96</span>
             </div>
+              <span className="text-xs">  { marketItem.currency} &nbsp;{marketItem.slotValues?.upperValue.toFixed(2)}</span>
           </div>
           <div className={`rounded-md p-2 ${isDownPlaced ? "bg-red-500 text-white" : "bg-red-900/30 text-red-400"}`}>
             <div className="flex items-center text-xs mb-1 ">
@@ -83,6 +83,7 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
               <span>DOWN</span>
               <span className="ml-auto font-bold">1.96</span>
             </div>
+              <span className="text-xs">  { marketItem.currency} &nbsp;{marketItem.slotValues?.lowerValue.toFixed(2)}</span>
           </div>
         </div>
 
@@ -116,14 +117,14 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
 
 
 const TimeDisplay = ({ roundRecord }: { roundRecord: RoundRecord }) => {
-  const { gameTimeLeft, isPlaceOver, placeTimeLeft } = useGameState(roundRecord)
 
+  const { gameTimeLeft, isPlaceOver, placeTimeLeft } = useGameState(roundRecord)
   return (
     <div className="text-sm text-gray-400">
       <span>
         {isPlaceOver ? "Place Over" : "Place Now"}
       </span>
-      {isPlaceOver ? ` ${placeTimeLeft.minutes}:${placeTimeLeft.seconds} ` : ` ${gameTimeLeft.minutes}:${gameTimeLeft.seconds} `}
+      {!isPlaceOver ? ` ${placeTimeLeft.minutes}:${placeTimeLeft.seconds} ` : ` ${gameTimeLeft.minutes}:${gameTimeLeft.seconds} `}
     </div>
   )
 }

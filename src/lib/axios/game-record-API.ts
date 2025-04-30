@@ -37,13 +37,16 @@ export const gameRecordAPI = {
     return api.post(`/game-records/clear/${roundId}`);
   },
   // stock slot 
-  getStockSlotGameRecord: async (roundId: string) => {
+  getStockSlotGameRecord: async (roundId: number) => {
     return api.get(`/stock-slot-placement/current-round-placements/${roundId}`);
   },
-  getMyStockSlotGameRecord: async (roundId: string) => {
+  getMyStockSlotGameRecord: async (roundId: number) => {
     return api.get(`/stock-slot-placement/my-current-placement/${roundId}`);
   },
   createStockSlotGameRecord: async (data: { roundId: string, marketItem: number, placement: StockSlotPlacementType, amount: number }) => {
     return api.post(`/stock-slot-placement`, data);
+  },
+  getStockSlotRoundResult: async (roundId: string) => {
+    return api.get(`/stock-slot-placement/result/${roundId}`);
   }
 };

@@ -16,6 +16,7 @@ export class MarketItem {
     placementAllowed?: boolean;
     updatedAt?: Date;
     deletedAt?: Date;
+    slotValues?: { upperValue: number; lowerValue: number } | null;
     horse?: number;
 
     constructor(params: Partial<MarketItem> = {}) {
@@ -30,6 +31,7 @@ export class MarketItem {
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;
         this.horse = params.horse;
+        this.slotValues = params.slotValues;
     }
 
     get codeName() {

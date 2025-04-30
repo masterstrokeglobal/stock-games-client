@@ -144,7 +144,7 @@ export const useRepeatPlacement = () => {
 
 // Stock Slot Game Record Hook
 
-export const useGetStockSlotGameRecord = (roundId: string): UseQueryResult<StockSlotPlacement[]> => {
+export const useGetStockSlotGameRecord = (roundId: number): UseQueryResult<StockSlotPlacement[]> => {
     return useQuery({
         queryKey: ["stockSlotGameRecord", roundId],
         queryFn: async () => {
@@ -154,14 +154,15 @@ export const useGetStockSlotGameRecord = (roundId: string): UseQueryResult<Stock
     });
 };
 
-export const useGetMyStockSlotGameRecord = (roundId: string): UseQueryResult<StockSlotPlacement[]> => {
+export const useGetMyStockSlotGameRecord = (roundId?: number): UseQueryResult<StockSlotPlacement[]> => {
     return useQuery({
         queryKey: ["myStockSlotGameRecord", roundId],
-        queryFn: async () => {
+        enabled: !!roundId,
+        queryFn: roundId ? async () => {
             const { data } = await gameRecordAPI.getMyStockSlotGameRecord(roundId);
             console.log(data);
             return data.data.map((item: any) => new StockSlotPlacement(item));
-        }
+        } : undefined
     });
 };
 
@@ -183,3 +184,26 @@ export const useCreateStockSlotGameRecord = () => {
         },
     });
 };
+
+
+// Get Stock Slot Round Result Hook
+
+type StockSlotRoundResult = {
+    amountWon: number;
+    grossWinning: number;
+    netProfitLoss: number;
+    netWinning: number;
+    platformFeeAmount: number;
+    totalPlaced: number;
+}
+export const useGetStockSlotRoundResult = (roundId: number): UseQueryResult<StockSlotRoundResult> => {
+    return useQuery({
+        queryKey: ["stockSlotRoundResult", roundId],
+        queryFn: async () => {
+            const { data } = await gameRecordAPI.getStockSlotRoundResult(roundId.toString());
+            return data.data as StockSlotRoundResult;
+        }
+    });
+};
+
+
