@@ -71,7 +71,7 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
 
         <div className="flex justify-between items-center mb-3">
           <div>
-            <div className="text-lg font-bold">
+            <div className="text-xs font-bold">
               {marketItem.currency} &nbsp;
               <span className="text-xs text-gray-400">
                 {marketItem.price}
@@ -155,7 +155,7 @@ const TimeDisplay = ({ roundRecord }: { roundRecord: RoundRecord }) => {
   return (
     <div className="text-sm text-gray-400">
       <span>
-        {isPlaceOver ? "Place Over" : "Place Now"}
+        {isPlaceOver ? "Betting Closed" : "Betting Start"}
       </span>
       {!isPlaceOver ? ` ${placeTimeLeft.minutes}:${placeTimeLeft.seconds} ` : ` ${gameTimeLeft.minutes}:${gameTimeLeft.seconds} `}
     </div>
