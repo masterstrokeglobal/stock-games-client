@@ -55,34 +55,40 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
     })
   }, [roundRecord.id, marketItem.id, globalBetAmount, createStockSlotGameRecord, isUpPlaced, isDownPlaced])
 
+
+  const initialPrice = roundRecord.initialValues?.[marketItem.bitcode?.toLowerCase() ?? ""]
   return (
-    <Card className="min-w-[280px] max-w-[280px] bg-primary border-primary text-white">
+    <Card className="min-w-[280px]  bg-primary border-primary text-white">
       <div className="p-4">
         <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center">
-            <div>
+
               <div className="font-medium text-sm">{marketItem.name}</div>
               <div className="text-xs text-gray-400">{marketItem.codeName}</div>
-            </div>
-          </div>
-        
-          <TimeDisplay roundRecord={roundRecord} />
-        </div>
+      </div>
 
         <div className="flex justify-between items-center mb-3">
           <div>
             <div className="text-xs font-bold">
               {marketItem.currency} &nbsp;
               <span className="text-xs text-gray-400">
-                {marketItem.price}
+                {marketItem.price ?? initialPrice}
               </span>
             </div>
           </div>
           <div className={`text-xs ${parseFloat(marketItem.change_percent) > 0 ? "text-green-400" : "text-red-400"}`}>
             {parseFloat(marketItem.change_percent) > 0 ? "+" : ""}
-            {marketItem.change_percent}
+            {marketItem.change_percent??0}
           </div>
         </div>
+        <div className="text-sm text-center font-semibold my-2 flex items-center justify-between">
+          <span className="text-gray-400">
+            Betting Price
+          </span>
+            <span className="text-xs text-gray-400">
+              {marketItem.currency} &nbsp;{initialPrice?.toFixed(2)}
+            </span>
+        </div>
+
 
         <div className="grid grid-cols-2 gap-2 mb-3">
           <div className={`rounded-md p-2 ${isUpPlaced ? "bg-green-500 text-white" : "bg-green-900/30 text-green-400"}`}>
@@ -91,7 +97,6 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
               <span>UP</span>
               <span className="ml-auto font-bold">1.96</span>
             </div>
-            <span className="text-xs">  {marketItem.currency} &nbsp;{marketItem.slotValues?.upperValue.toFixed(2)}</span>
           </div>
           <div className={`rounded-md p-2 ${isDownPlaced ? "bg-red-500 text-white" : "bg-red-900/30 text-red-400"}`}>
             <div className="flex items-center text-xs mb-1 ">
@@ -99,7 +104,6 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
               <span>DOWN</span>
               <span className="ml-auto font-bold">1.96</span>
             </div>
-            <span className="text-xs">  {marketItem.currency} &nbsp;{marketItem.slotValues?.lowerValue.toFixed(2)}</span>
           </div>
         </div>
 
@@ -149,15 +153,3 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
   )
 }
 
-const TimeDisplay = ({ roundRecord }: { roundRecord: RoundRecord }) => {
-
-  const { gameTimeLeft, isPlaceOver, placeTimeLeft } = useGameState(roundRecord)
-  return (
-    <div className="text-sm text-gray-400">
-      <span>
-        {isPlaceOver ? "Betting Closed" : "Betting Start"}
-      </span>
-      {!isPlaceOver ? ` ${placeTimeLeft.minutes}:${placeTimeLeft.seconds} ` : ` ${gameTimeLeft.minutes}:${gameTimeLeft.seconds} `}
-    </div>
-  )
-}

@@ -28,7 +28,7 @@ export class RoundRecord {
     updatedAt: Date;
     slotValues:  { [code: string]: { upperValue: number; lowerValue: number } } | null;
     deletedAt?: Date;
-    initialValues: any | null;
+    initialValues:  Record<string, number> | null;
 
     constructor(data: Partial<RoundRecord>) {
         this.id = data.id || 0;

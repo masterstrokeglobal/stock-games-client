@@ -225,25 +225,10 @@ const MarketSection = ({ title, globalBetAmount, betSlipOpen, searchQuery, setBe
   )
 }
 
-
 export const TimeDisplay = ({ roundRecord }: { roundRecord: RoundRecord }) => {
   const { gameTimeLeft, isPlaceOver, placeTimeLeft } = useGameState(roundRecord)
-
-  // Determine if we're in the danger zone (last 3 seconds)
-  console.log(gameTimeLeft, placeTimeLeft)
-  const isDanger = isPlaceOver
-    ? gameTimeLeft.minutes === 0 && gameTimeLeft.seconds <= 3
-    : placeTimeLeft.minutes === 0 && placeTimeLeft.seconds <= 3
-
-  // Current time to display
-  const currentTime = isPlaceOver
-    ? `${gameTimeLeft.minutes}:${String(gameTimeLeft.seconds).padStart(2, '0')}`
-    : `${placeTimeLeft.minutes}:${String(placeTimeLeft.seconds).padStart(2, '0')}`
-
-  // Status text
   const statusText = isPlaceOver ? "Betting Closed" : "Betting Open"
 
- 
   return (
     <motion.div
       className="relative w-full h-[150px] bg-gray-900 rounded-xl mt-4 overflow-hidden border-2 border-primary-game"
@@ -251,28 +236,9 @@ export const TimeDisplay = ({ roundRecord }: { roundRecord: RoundRecord }) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Scanline effect */}
       <div className="absolute inset-0 pointer-events-none bg-scanline opacity-10 z-10"></div>
 
-      {/* Danger overlay */}
-      {isDanger && (
-        <motion.div
-          className="absolute inset-0 bg-red-900/20"
-          initial={{ opacity: 0 }}
-          animate={{
-            opacity: [0.1, 0.3, 0.1],
-            x: [0, -2, 2, -2, 0],
-          }}
-          transition={{
-            repeat: Number.POSITIVE_INFINITY,
-            duration: 0.8,
-            repeatType: "reverse",
-          }}
-        />
-      )}
-
       <div className="flex flex-col items-center justify-center h-full p-6">
-        {/* Status indicator */}
         <AnimatePresence mode="wait">
           <motion.div
             key={`status-${statusText}`}
@@ -280,25 +246,24 @@ export const TimeDisplay = ({ roundRecord }: { roundRecord: RoundRecord }) => {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.3 }}
           >
             <motion.div
-              animate={{ rotate: isDanger ? [0, 15, -15, 0] : 0 }}
+              animate={{ rotate: [-15, 0, 15] }}
               transition={{
-                repeat: isDanger ? Number.POSITIVE_INFINITY : 0,
-                duration: 0.5,
-                repeatType: "reverse",
+                duration: 1,
+                repeat: Infinity,
+                ease: "linear"
               }}
             >
               {isPlaceOver ? (
-                <Timer className={`w-5 h-5 ${isDanger ? "text-red-400" : "text-amber-300"}`} />
+                <Timer className="w-5 h-5 text-amber-300" />
               ) : (
                 <Clock className="w-5 h-5 text-cyan-300" />
               )}
             </motion.div>
             <span
-              className={`text-sm font-medium uppercase tracking-wider ${isDanger ? "text-red-400" : isPlaceOver ? "text-amber-300" : "text-cyan-300"
-                }`}
+              className="text-sm font-medium uppercase tracking-wider text-cyan-300"
               style={{ textShadow: "0 0 3px currentColor" }}
             >
               {statusText}
@@ -306,69 +271,39 @@ export const TimeDisplay = ({ roundRecord }: { roundRecord: RoundRecord }) => {
           </motion.div>
         </AnimatePresence>
 
-        {/* Time display */}
         <AnimatePresence mode="wait">
           <motion.div
-            key={`time-${currentTime}-${roundRecord.id}`}
+            key={`time-${isPlaceOver ? gameTimeLeft.shortFormat : placeTimeLeft.shortFormat}`}
             className="relative"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ 
               opacity: 1,
-              scale: isDanger ? [1, 1.05, 1] : 1,
+              scale: [0.95, 1, 0.95],
+              transition: {
+                scale: {
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }
+              }
             }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{
-              duration: 0.4,
-              scale: {
-                repeat: isDanger ? Number.POSITIVE_INFINITY : 0,
-                duration: 0.5,
-                repeatType: "reverse",
-              },
-            }}
+            exit={{ opacity: 0, scale: 0.8 }}
           >
-            {/* Warning icon for danger state */}
-            {isDanger && (
-              <motion.div
-                className="absolute -left-10 top-1/2 -translate-y-1/2"
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <AlertTriangle className="w-8 h-8 text-red-500" />
-              </motion.div>
-            )}
-
-            <div
-              className={`font-mono text-6xl font-bold ${isDanger ? "text-red-500" : isPlaceOver ? "text-amber-300" : "text-cyan-300"
-                } pixel-text`}
-            >
-              {currentTime}
+            <div className="font-mono text-6xl font-bold text-cyan-300 pixel-text">
+              {isPlaceOver ? gameTimeLeft.shortFormat : placeTimeLeft.shortFormat}
             </div>
-
-            {/* Warning icon for danger state */}
-            {isDanger && (
-              <motion.div
-                className="absolute -right-10 top-1/2 -translate-y-1/2"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <AlertTriangle className="w-8 h-8 text-red-500" />
-              </motion.div>
-            )}
           </motion.div>
         </AnimatePresence>
 
-        {/* Phase indicator */}
         <motion.div
           className="mt-4 text-xs text-gray-500 uppercase tracking-widest"
           animate={{
-            opacity: isDanger ? [0.5, 1] : 1,
+            opacity: [0.5, 1, 0.5]
           }}
           transition={{
-            repeat: isDanger ? Number.POSITIVE_INFINITY : 0,
-            duration: 0.5,
-            repeatType: "reverse",
+            duration: 2,
+            repeat: Infinity,
+            ease: "linear"
           }}
         >
           {isPlaceOver ? "Game in Progress" : "Place Your Bets"}
