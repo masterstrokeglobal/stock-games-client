@@ -4,7 +4,12 @@ import { RoundRecord } from "./round-record";
 import User from "./user";
 
 
-export type StockSlotJackpotPlacementType = "zeroth" | "tenth" | "both";
+export enum StockSlotJackpotPlacementType {
+    ZEROTH = "zeroth",
+    TENTH = "tenth",
+    BOTH = "both"
+}
+
 
 export class StockSlotJackpot {
     id!: number;
@@ -15,6 +20,7 @@ export class StockSlotJackpot {
     gameType!: RoundRecordGameType;
     marketItem!: MarketItem;
     placement!: StockSlotJackpotPlacementType;
+    placedNumber!: number;
     createdAt!: Date;
     updatedAt!: Date;
     deletedAt?: Date;
@@ -28,6 +34,7 @@ export class StockSlotJackpot {
         this.gameType = params.gameType;
         this.marketItem = params.marketItem;
         this.placement = params.placement;
+        this.placedNumber = params.placedNumber;
         this.createdAt = params.createdAt ? new Date(params.createdAt) : new Date();
         this.updatedAt = params.updatedAt ? new Date(params.updatedAt) : new Date();
         this.deletedAt = params.deletedAt ? new Date(params.deletedAt) : undefined;

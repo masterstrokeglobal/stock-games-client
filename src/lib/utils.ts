@@ -217,3 +217,11 @@ export const randomNumber = (min: number, max: number, multiple: number) => {
   return Math.floor(Math.random() * (max - min + 1)) * multiple;
 }
 
+
+export const formatRupee = (rupees: number) => {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR'
+  }).format(rupees);
+}
+

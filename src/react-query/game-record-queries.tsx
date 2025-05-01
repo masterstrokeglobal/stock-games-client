@@ -253,6 +253,20 @@ export const useCreateStockSlotJackpotGameRecord = () => {
 
 
 
+// Get Stock Slot Jackpot Round Result Hook
+
+export const useGetStockSlotJackpotRoundResult = (roundId: number): UseQueryResult<StockSlotRoundResult> => {
+    return useQuery({
+        queryKey: ["stockSlotJackpotRoundResult", roundId],
+        queryFn: async () => {
+            const { data } = await gameRecordAPI.getStockJackpotRoundResult(roundId);
+            return data.data as StockSlotRoundResult;   
+        },
+        enabled: !!roundId,
+    });
+};
+
+
 
 
 

@@ -4,14 +4,15 @@ import type React from "react"
 import { useState, useEffect, useRef } from "react"
 import { motion, type PanInfo } from "framer-motion"
 import { Input } from "@/components/ui/input"
+import { StockSlotJackpotPlacementType } from "@/models/stock-slot-jackpot"
 interface DigitPickerProps {
-  betType: BetType
+  betType: StockSlotJackpotPlacementType
   onChange: (digits: string) => void
   value?: string
 }
 
-export function DigitPicker({ betType, onChange, value = betType === "single-digit" ? "0" : "00" }: DigitPickerProps) {
-  const digitCount = betType === "single-digit" ? 1 : 2
+export function DigitPicker({ betType, onChange, value = betType === "both" ? "00" : "0" }: DigitPickerProps) {
+  const digitCount = betType === "both" ? 2 : 1
 
   // Store the previous value to compare
   const prevValueRef = useRef(value)
@@ -77,7 +78,7 @@ export function DigitPicker({ betType, onChange, value = betType === "single-dig
   const handleInputBlur = () => {
     // If input is empty when blurred, reset to default value
     if (inputValue === "") {
-      const defaultValue = betType === "single-digit" ? "0" : "00"
+      const defaultValue = betType === "zeroth" ? "0" : "00"
       setInputValue(defaultValue)
       setSelectedDigits(parseValue(defaultValue))
       prevValueRef.current = defaultValue
@@ -120,7 +121,7 @@ export function DigitPicker({ betType, onChange, value = betType === "single-dig
           onBlur={handleInputBlur}
           onFocus={handleInputFocus}
           className="w-full bg-[#2A2F42] border border-[#3A3F52] rounded-md px-3 py-2 text-center text-white text-xl font-semibold focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
-          placeholder={betType === "single-digit" ? "0-9" : "00-99"}
+          placeholder={betType === "zeroth" ? "0-9" : "00-99"}
           inputMode="numeric"
           maxLength={digitCount}
         />

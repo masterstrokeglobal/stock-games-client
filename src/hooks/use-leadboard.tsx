@@ -63,16 +63,18 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
         const key = roundRecord.type === SchedulerType.CRYPTO ? bitcode.toLocaleLowerCase() : bitcode.toUpperCase();
 
         // Set initial price exactly at placementEndTime
-        if (roundStatus === 'tracking' && roundRecord.initialValues[key] === undefined) {
+        if (roundStatus === 'tracking' && roundRecord.initialValues && roundRecord.initialValues[key] === undefined) {
             initialPricesRef.current.set(bitcode, currentPrice);
             return { initialPrice: currentPrice, changePercent: '0' };
         }
 
         // Calculate changes during tracking period
-        if (roundStatus === 'tracking' && roundRecord.initialValues[key]) {
-            const initialPrice = roundRecord.initialValues ? roundRecord.initialValues[key] : console.log('No initial values found');
+        if (roundStatus === 'tracking' && roundRecord.initialValues && roundRecord.initialValues[key]) {
+            const   initialPrice = roundRecord.initialValues ? roundRecord.initialValues[key] : undefined;
+         
             if (initialPrice === undefined) {
                 console.log('No initial price found for', key);
+                return { initialPrice: currentPrice, changePercent: '0' };
             }
 
             const changePercent = ((currentPrice - initialPrice) / initialPrice * 100).toFixed(5);
@@ -144,7 +146,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                                 }
                             }
                         } catch (error) {
-                            // console.error('Error processing WebSocket message:', error);
+                            console.error('Error processing WebSocket message:', error);
                         }
                     };
                 }
@@ -264,7 +266,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                     };
                 }
             } catch (error) {
-                // console.error('Error creating WebSocket connection:', error);
+                console.error('Error creating WebSocket connection:', error);
                 setConnectionStatus('disconnected');
             }
 

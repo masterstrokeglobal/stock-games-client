@@ -9,7 +9,7 @@ import { StockSlotJackpotPlacementType } from "@/models/stock-slot-jackpot"
 import { useCreateStockSlotJackpotGameRecord, useGetMyStockSlotJackpotGameRecord } from "@/react-query/game-record-queries"
 import { useEffect, useState } from "react"
 import { DigitPicker } from "./DigitPicker"
-
+import { useIsPlaceOver } from "@/hooks/use-current-game"
 interface BettingCardProps {
   globalBetAmount: number,
   roundRecord: RoundRecord,
@@ -20,19 +20,21 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
   const { data: myStockSlotJackpotGameRecord, isPending: isPendingMyStockSlotJackpotGameRecord } = useGetMyStockSlotJackpotGameRecord(roundRecord.id)
   const { mutate: createStockSlotJackpotGameRecord } = useCreateStockSlotJackpotGameRecord()
 
-  const [selectedBetType, setSelectedBetType] = useState<StockSlotJackpotPlacementType>("zeroth")
-  const [predictedDigits, setPredictedDigits] = useState<string>(selectedBetType === "zeroth" ? "0" : "00");
+  const [selectedBetType, setSelectedBetType] = useState<StockSlotJackpotPlacementType>(  StockSlotJackpotPlacementType.ZEROTH)
+  const [predictedDigits, setPredictedDigits] = useState<string>(selectedBetType === StockSlotJackpotPlacementType.ZEROTH ? "0" : "00");
 
   const isSelected = myStockSlotJackpotGameRecord?.some(record => record.placement === selectedBetType && record.marketItem.id === marketItem.id)
 
   // Reset predicted digits when bet type changes
   useEffect(() => {
-    setPredictedDigits(selectedBetType === "zeroth" ? "0" : "00")
+    setPredictedDigits(selectedBetType === StockSlotJackpotPlacementType.ZEROTH ? "0" : "00")
   }, [selectedBetType])
+
+  const isPlaceOver = useIsPlaceOver(roundRecord);
 
 
   // Extract the last digits from the price for display
-  const price = marketItem.price?.toString().replace(/,/g, "")
+  const price = marketItem.price?.toString().replace(/,/g, "") ?? roundRecord.initialValues?.[marketItem.bitcode!];
   const lastDigit = price?.slice(-1)
   const lastTwoDigits = price?.slice(-2).padStart(2, "0");
 
@@ -42,7 +44,8 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
       roundId: roundRecord.id,
       marketItem: marketItem.id,
       placement: selectedBetType,
-      amount: globalBetAmount
+      amount: globalBetAmount,
+      placedNumber: parseInt(predictedDigits)
     })
   }
 
@@ -70,45 +73,45 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
         <div className="text-center text-xs text-gray-400 mb-2">Drag or tap to select your prediction</div>
 
         <Tabs
-          defaultValue="single-digit"
+          defaultValue={selectedBetType}
           className="w-full flex gap-2"
           onValueChange={(value) => setSelectedBetType(value as StockSlotJackpotPlacementType)}
         >
           <div className="flex-1">
             <TabsList className="w-full  h-fit  flex-col gap-3.5  p-1 mb-3">
-              <TabsTrigger value="single-digit" className="h-12 w-full data-[state=active]:bg-[#2A2F42]">
+              <TabsTrigger value="zeroth" className="h-12 w-full data-[state=active]:bg-[#2A2F42]">
                 Last Digit
               </TabsTrigger>
-              <TabsTrigger value="double-digit" className="h-12 w-full data-[state=active]:bg-[#2A2F42]">
-                Last 2 Digits
-              </TabsTrigger>
-              <TabsTrigger value="third-digit" className="h-12 w-full data-[state=active]:bg-[#2A2F42]">
+              <TabsTrigger value="tenth" className="h-12 w-full data-[state=active]:bg-[#2A2F42]">
                 10th Digit
+              </TabsTrigger>
+              <TabsTrigger value="both" className="h-12 w-full data-[state=active]:bg-[#2A2F42]">
+                Both
               </TabsTrigger>
             </TabsList>
             <div className="mt-6">
               <Button
-                disabled={isPendingMyStockSlotJackpotGameRecord}
+                disabled={isPendingMyStockSlotJackpotGameRecord || isPlaceOver}
                 className={`w-full py-3 text-lg font-bold ${isSelected
                   ? "bg-amber-500 hover:bg-amber-600 text-black"
                   : "bg-[#2A2F42] hover:bg-[#3A3F52] text-amber-500 border border-amber-500/50"
                   }`}
                 onClick={handlePlaceBet}
               >
-                {isPendingMyStockSlotJackpotGameRecord ? "Placing bet..." : isSelected ? "REMOVE BET" : `BET ON ${predictedDigits}`}
+                {isPendingMyStockSlotJackpotGameRecord ? "Placing bet..." : isSelected ? "Bet Placed" : `BET ON ${predictedDigits}`}
               </Button>
             </div>
           </div>
 
-          <TabsContent value="single-digit" className="mt-0 flex-1">
-            <DigitPicker betType="single-digit" onChange={setPredictedDigits} value={predictedDigits} />
+          <TabsContent value="zeroth" className="mt-0 flex-1">
+            <DigitPicker betType={StockSlotJackpotPlacementType.ZEROTH} onChange={setPredictedDigits} value={predictedDigits} />
           </TabsContent>
 
-          <TabsContent value="double-digit" className="mt-0 flex-1">
-            <DigitPicker betType="double-digit" onChange={setPredictedDigits} value={predictedDigits} />
+          <TabsContent value="tenth" className="mt-0 flex-1">
+            <DigitPicker betType={StockSlotJackpotPlacementType.TENTH} onChange={setPredictedDigits} value={predictedDigits} />
           </TabsContent>
-          <TabsContent value="third-digit" className="mt-0 flex-1">
-            <DigitPicker betType="single-digit" onChange={setPredictedDigits} value={predictedDigits} />
+          <TabsContent value="both" className="mt-0 flex-1">
+            <DigitPicker betType={StockSlotJackpotPlacementType.BOTH} onChange={setPredictedDigits} value={predictedDigits} />
           </TabsContent>
         </Tabs>
       </div>

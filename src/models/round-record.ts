@@ -10,6 +10,7 @@ export enum RoundRecordGameType {
     GUESS_FIRST_EIGHT = "guess_first_eight",
     GUESS_LAST_EIGHT = "guess_last_eight",
     STOCK_SLOTS = "stock_slots",
+    STOCK_JACKPOT = "stock_jackpot",
   }
   
 export class RoundRecord {

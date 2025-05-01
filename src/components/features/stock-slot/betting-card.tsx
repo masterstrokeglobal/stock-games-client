@@ -1,7 +1,7 @@
 "use client"
 
 import { Card } from "@/components/ui/card"
-import { useGameState } from "@/hooks/use-current-game"
+import { useIsPlaceOver } from "@/hooks/use-current-game"
 import { RankedMarketItem } from "@/hooks/use-leadboard"
 import { RoundRecord } from "@/models/round-record"
 import { StockSlotPlacementType } from "@/models/stock-slot-placement"
@@ -20,6 +20,7 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
   // Add state to track animation visibility
   const [playUpAnimation, setPlayUpAnimation] = useState(false);
   const [playDownAnimation, setPlayDownAnimation] = useState(false);
+  const isPlaceOver = useIsPlaceOver(roundRecord);
 
   const { data: stockSlotPlacements } = useGetMyStockSlotGameRecord(roundRecord.id);
 
@@ -110,13 +111,13 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
         <div className="grid grid-cols-2 gap-2">
           <div className="relative">
             <button
-              disabled={isPlacingBet}
+              disabled={isPlacingBet || isPlaceOver}
               className={`flex items-center justify-center rounded-md py-2 w-full ${isUpPlaced ? "bg-green-500 text-white" : "bg-green-900/30 text-green-400 hover:bg-green-900/50"
                 }`}
               onClick={() => onAddToBetSlip("high")}
             >
               <span className="font-bold text-sm">
-                {isPlacingBet ? "Placing..." : "BET UP"}
+                {isPlacingBet ? "Placing..." : isPlaceOver ? "Place Over" : "BET UP"}
               </span>
             </button>
             {playUpAnimation && (
@@ -130,13 +131,13 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
           
           <div className="relative">
             <button
-              disabled={isPlacingBet}
+              disabled={isPlacingBet || isPlaceOver}
               className={`flex items-center justify-center rounded-md py-2 w-full ${isDownPlaced ? "bg-red-500 text-white" : "bg-red-900/30 text-red-400 hover:bg-red-900/50"
                 }`}
               onClick={() => onAddToBetSlip("low")}
             >
               <span className="font-bold text-sm">
-                {isPlacingBet ? "Placing..." : "BET DOWN"}
+                {isPlacingBet ? "Placing..." : isPlaceOver ? "Place Over" : "BET DOWN"}
               </span>
             </button>
             {playDownAnimation && (

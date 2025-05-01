@@ -1,10 +1,9 @@
 "use client"
 
-import { ArrowDownIcon, ArrowUpIcon, XIcon } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { RoundRecord } from "@/models/round-record"
 import { useGetMyStockSlotGameRecord } from "@/react-query/game-record-queries"
+import { ArrowDownIcon, ArrowUpIcon } from "lucide-react"
 
 interface BetSlipProps {
   open: boolean

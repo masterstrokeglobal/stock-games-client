@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { cn, formatRupee } from '@/lib/utils';
-import { useGetStockSlotRoundResult } from '@/react-query/game-record-queries';
+import { useGetStockSlotJackpotRoundResult } from '@/react-query/game-record-queries';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -17,9 +17,9 @@ interface GameResultDialogProps {
   roundRecordId: number;
 }
 
-const SlotResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
+const SlotJackpotResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
   const [showDialog, setShowDialog] = useState(open);
-  const { data, isLoading, isError } = useGetStockSlotRoundResult(roundRecordId);
+  const { data, isLoading, isError } = useGetStockSlotJackpotRoundResult(roundRecordId);
 
   useEffect(() => {
     if (open) {
@@ -78,7 +78,7 @@ const SlotResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
 
               <div className="text-center  flex justify-between  rounded-lg">
                 <p className="">Total Bet Amount</p>
-                <p className="text-xl ">{formatRupee(data.totalPlaced)}</p>
+                <p className="text-xl "> {formatRupee(data.totalPlaced)}</p>
               </div>
 
               <div className="text-center  flex justify-between  rounded-lg">
@@ -99,7 +99,7 @@ const SlotResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
               <div className="text-center  flex justify-between  rounded-lg">
                 <p className="">Profit/Loss</p>
                 <p className={`text-xl  ${isWin ? 'text-green-600' : 'text-red-600'}`}>
-                  {formatRupee(data.netProfitLoss)}
+                    {formatRupee(data.netProfitLoss)}
                 </p>
               </div>
 
@@ -123,4 +123,4 @@ const SlotResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
   );
 };
 
-export default SlotResultDialog;
+export default SlotJackpotResultDialog;
