@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useEffect, useRef } from "react"
 import { motion, type PanInfo } from "framer-motion"
-
+import { Input } from "@/components/ui/input"
 interface DigitPickerProps {
   betType: BetType
   onChange: (digits: string) => void
@@ -99,7 +99,7 @@ export function DigitPicker({ betType, onChange, value = betType === "single-dig
   }
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col h-full justify-between  items-center">
       <div className="flex justify-center items-center mb-4">
         {Array(digitCount)
           .fill(0)
@@ -113,13 +113,13 @@ export function DigitPicker({ betType, onChange, value = betType === "single-dig
       </div>
 
       <div className="w-full mt-2">
-        <input
+        <Input
           type="text"
           value={inputValue}
           onChange={handleInputChange}
           onBlur={handleInputBlur}
           onFocus={handleInputFocus}
-          className="w-full bg-[#2A2F42] border border-[#3A3F52] rounded-md p-3 text-center text-white text-xl font-semibold focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+          className="w-full bg-[#2A2F42] border border-[#3A3F52] rounded-md px-3 py-2 text-center text-white text-xl font-semibold focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
           placeholder={betType === "single-digit" ? "0-9" : "00-99"}
           inputMode="numeric"
           maxLength={digitCount}

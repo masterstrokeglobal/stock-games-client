@@ -1,5 +1,7 @@
 import api from "./instance";
 import { StockSlotPlacementType } from "../../models/stock-slot-placement";
+import { StockSlotJackpotPlacementType } from "../../models/stock-slot-jackpot";
+
 export const gameRecordAPI = {
   createGameRecord: async (data: any) => {
     return api.post("/game-records", data);
@@ -48,5 +50,15 @@ export const gameRecordAPI = {
   },
   getStockSlotRoundResult: async (roundId: string) => {
     return api.get(`/stock-slot-placement/result/${roundId}`);
+  },
+  // slot jackpot
+  getSlotJackpotGameRecord: async (roundId: number) => {
+    return api.get(`/stock-jackpot-placement/current-round-placements/${roundId}`);
+  },
+  getMySlotJackpotGameRecord: async (roundId: number) => {
+    return api.get(`/stock-jackpot-placement/my-current-placement/${roundId}`);
+  },
+  createStockJackpotGameRecord: async (data: { roundId: number, marketItem: number, placement: StockSlotJackpotPlacementType, amount: number }) => {
+    return api.post(`/stock-jackpot-placement`, data);
   }
 };

@@ -2,6 +2,7 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient, UseQueryResult
 import { toast } from "sonner";
 import { gameRecordAPI } from "@/lib/axios/game-record-API"; // Adjust the path as needed
 import { StockSlotPlacement } from "@/models/stock-slot-placement";
+import { StockSlotJackpot } from "@/models/stock-slot-jackpot";
 
 // Create Game Record Hook with Predicate-based Invalidation
 export const useCreateGameRecord = () => {
@@ -205,5 +206,54 @@ export const useGetStockSlotRoundResult = (roundId: number): UseQueryResult<Stoc
         }
     });
 };
+
+
+// Stock Slot Jackpot Game Record Hook
+
+export const useGetStockSlotJackpotGameRecord = (roundId: number): UseQueryResult<StockSlotJackpot[]> => {
+    return useQuery({
+        queryKey: ["stockSlotJackpotGameRecord", roundId],
+        queryFn: async () => {
+            const { data } = await gameRecordAPI.getSlotJackpotGameRecord(roundId);
+            return data.data.map((item: any) => new StockSlotJackpot(item));
+        }
+    });
+};
+
+
+export const useGetMyStockSlotJackpotGameRecord = (roundId?: number): UseQueryResult<StockSlotJackpot[]> => {
+    return useQuery({
+        queryKey: ["myStockSlotJackpotGameRecord", roundId],
+        enabled: !!roundId,
+        queryFn: roundId ? async () => {
+            const { data } = await gameRecordAPI.getMySlotJackpotGameRecord(roundId);
+            return data.data.map((item: any) => new StockSlotJackpot(item));
+        } : undefined
+    });
+};
+
+
+// Create Stock Slot Jackpot Game Record Hook
+
+export const useCreateStockSlotJackpotGameRecord = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: gameRecordAPI.createStockJackpotGameRecord,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "stockSlotJackpotGameRecord" || query.queryKey[0] === "myStockSlotJackpotGameRecord" || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet'
+            });
+            toast.success("Stock slot jackpot game record created successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error creating stock slot jackpot game record");
+        },
+    });
+};
+
+
+
+
+
 
 
