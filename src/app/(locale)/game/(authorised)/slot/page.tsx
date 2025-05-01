@@ -1,6 +1,6 @@
 "use client"
 
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useState, useEffect } from "react"
 
 import Navbar from "@/components/features/game/navbar"
 import { BetSlip } from "@/components/features/stock-slot/bet-slip"
@@ -10,14 +10,17 @@ import { Input } from "@/components/ui/input"
 import { useLeaderboard } from "@/hooks/use-leadboard"
 import { SchedulerType } from "@/models/market-item"
 import { RoundRecord, RoundRecordGameType } from "@/models/round-record"
-import { useGetCurrentRoundRecord } from "@/react-query/round-record-queries"
 import { CreditCard, SearchIcon, ZapIcon, ZapOffIcon } from "lucide-react"
 
+import SlotResultDialog from "@/components/features/game/slot-result-dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useCurrentGame, useShowResults } from "@/hooks/use-current-game"
+import { useCurrentGame, useGameState, useShowResults } from "@/hooks/use-current-game"
 import { useGameType } from "@/hooks/use-game-type"
 import { useGetMyStockSlotGameRecord } from "@/react-query/game-record-queries"
-import SlotResultDialog from "@/components/features/game/slot-result-dialog"
+import { motion, AnimatePresence } from "framer-motion"
+import { Timer, Clock, AlertTriangle } from "lucide-react"
+import { FormattedTime } from "@/components/features/game/contants"
+
 export default function Home() {
   // State for bet slip
   const [betSlipOpen, setBetSlipOpen] = useState(false)
@@ -26,6 +29,7 @@ export default function Home() {
   const [quickBetEnabled, setQuickBetEnabled] = useState(false)
   const [tab, setTab] = useGameType();
 
+  const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
 
   // Function to update global bet amount
   const handleGlobalBetAmountChange = (amount: number) => {
@@ -75,6 +79,8 @@ export default function Home() {
                 <TabsTrigger value={SchedulerType.CRYPTO} className="w-full">Crypto</TabsTrigger>
                 <TabsTrigger value={SchedulerType.USA_MARKET} className="w-full">US Stock</TabsTrigger>
               </TabsList>
+
+              {roundRecord && <TimeDisplay roundRecord={roundRecord} />}
             </div>
 
             {/* Global Bet Amount with improved UI */}
@@ -149,39 +155,15 @@ export default function Home() {
           </div>
         </div>
 
-        <TabsContent value={SchedulerType.NSE}>
-          <MarketSection
-            title="NSE Markets"
-            type={SchedulerType.NSE}
-            searchQuery={searchQuery}
-            globalBetAmount={globalBetAmount}
-            betSlipOpen={betSlipOpen}
-            setBetSlipOpen={setBetSlipOpen}
-          />
-        </TabsContent>
+        <MarketSection
+          title={`${tab.split('-')[0].toUpperCase()} Markets`}
+          searchQuery={searchQuery}
+          globalBetAmount={globalBetAmount}
+          betSlipOpen={betSlipOpen}
+          setBetSlipOpen={setBetSlipOpen}
+        />
 
-        <TabsContent value={SchedulerType.CRYPTO}>
-          <MarketSection
-            title="Crypto Markets"
-            type={SchedulerType.CRYPTO}
-            searchQuery={searchQuery}
-            globalBetAmount={globalBetAmount}
-            betSlipOpen={betSlipOpen}
-            setBetSlipOpen={setBetSlipOpen}
-          />
-        </TabsContent>
 
-        <TabsContent value={SchedulerType.USA_MARKET}>
-          <MarketSection
-            title="US Stock Markets"
-            type={SchedulerType.USA_MARKET}
-            searchQuery={searchQuery}
-            globalBetAmount={globalBetAmount}
-            betSlipOpen={betSlipOpen}
-            setBetSlipOpen={setBetSlipOpen}
-          />
-
-        </TabsContent>
       </Tabs>
 
 
@@ -190,13 +172,13 @@ export default function Home() {
 }
 
 
-const MarketSection = ({ title, type, globalBetAmount, betSlipOpen, searchQuery, setBetSlipOpen }: { title: string, type: SchedulerType, searchQuery: string, globalBetAmount: number, betSlipOpen: boolean, setBetSlipOpen: Dispatch<SetStateAction<boolean>> }) => {
+const MarketSection = ({ title, globalBetAmount, betSlipOpen, searchQuery, setBetSlipOpen }: { title: string, searchQuery: string, globalBetAmount: number, betSlipOpen: boolean, setBetSlipOpen: Dispatch<SetStateAction<boolean>> }) => {
   const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
   const { data: stockSlotPlacements } = useGetMyStockSlotGameRecord(roundRecord?.id);
   const { showResults, previousRoundId } = useShowResults(roundRecord, stockSlotPlacements as any);
 
-   const { stocks: marketItems } = useLeaderboard(roundRecord);
-   const filteredMarketItems = marketItems.filter((marketItem) => (marketItem.name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) || (marketItem.code?.toLowerCase() || '').includes(searchQuery.toLowerCase())).sort((a, b) => (a.id || 0) - (b.id || 0))
+  const { stocks: marketItems } = useLeaderboard(roundRecord);
+  const filteredMarketItems = marketItems.filter((marketItem) => (marketItem.name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) || (marketItem.code?.toLowerCase() || '').includes(searchQuery.toLowerCase())).sort((a, b) => (a.id || 0) - (b.id || 0))
   if (!roundRecord) return <div className="text-center py-8 text-gray-400 bg-primary/5 rounded-lg border border-primary/10">No markets found matching your search.</div>
 
   return (
@@ -240,5 +222,158 @@ const MarketSection = ({ title, type, globalBetAmount, betSlipOpen, searchQuery,
         setOpen={setBetSlipOpen}
       />
     </>
+  )
+}
+
+
+export const TimeDisplay = ({ roundRecord }: { roundRecord: RoundRecord }) => {
+  const { gameTimeLeft, isPlaceOver, placeTimeLeft } = useGameState(roundRecord)
+
+  // Determine if we're in the danger zone (last 3 seconds)
+  console.log(gameTimeLeft, placeTimeLeft)
+  const isDanger = isPlaceOver
+    ? gameTimeLeft.minutes === 0 && gameTimeLeft.seconds <= 3
+    : placeTimeLeft.minutes === 0 && placeTimeLeft.seconds <= 3
+
+  // Current time to display
+  const currentTime = isPlaceOver
+    ? `${gameTimeLeft.minutes}:${String(gameTimeLeft.seconds).padStart(2, '0')}`
+    : `${placeTimeLeft.minutes}:${String(placeTimeLeft.seconds).padStart(2, '0')}`
+
+  // Status text
+  const statusText = isPlaceOver ? "Betting Closed" : "Betting Open"
+
+ 
+  return (
+    <motion.div
+      className="relative w-full h-[150px] bg-gray-900 rounded-xl mt-4 overflow-hidden border-2 border-primary-game"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Scanline effect */}
+      <div className="absolute inset-0 pointer-events-none bg-scanline opacity-10 z-10"></div>
+
+      {/* Danger overlay */}
+      {isDanger && (
+        <motion.div
+          className="absolute inset-0 bg-red-900/20"
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: [0.1, 0.3, 0.1],
+            x: [0, -2, 2, -2, 0],
+          }}
+          transition={{
+            repeat: Number.POSITIVE_INFINITY,
+            duration: 0.8,
+            repeatType: "reverse",
+          }}
+        />
+      )}
+
+      <div className="flex flex-col items-center justify-center h-full p-6">
+        {/* Status indicator */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`status-${statusText}`}
+            className="flex items-center mb-4 space-x-2"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.4 }}
+          >
+            <motion.div
+              animate={{ rotate: isDanger ? [0, 15, -15, 0] : 0 }}
+              transition={{
+                repeat: isDanger ? Number.POSITIVE_INFINITY : 0,
+                duration: 0.5,
+                repeatType: "reverse",
+              }}
+            >
+              {isPlaceOver ? (
+                <Timer className={`w-5 h-5 ${isDanger ? "text-red-400" : "text-amber-300"}`} />
+              ) : (
+                <Clock className="w-5 h-5 text-cyan-300" />
+              )}
+            </motion.div>
+            <span
+              className={`text-sm font-medium uppercase tracking-wider ${isDanger ? "text-red-400" : isPlaceOver ? "text-amber-300" : "text-cyan-300"
+                }`}
+              style={{ textShadow: "0 0 3px currentColor" }}
+            >
+              {statusText}
+            </span>
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Time display */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`time-${currentTime}-${roundRecord.id}`}
+            className="relative"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{
+              opacity: 1,
+              scale: isDanger ? [1, 1.05, 1] : 1,
+            }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{
+              duration: 0.4,
+              scale: {
+                repeat: isDanger ? Number.POSITIVE_INFINITY : 0,
+                duration: 0.5,
+                repeatType: "reverse",
+              },
+            }}
+          >
+            {/* Warning icon for danger state */}
+            {isDanger && (
+              <motion.div
+                className="absolute -left-10 top-1/2 -translate-y-1/2"
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <AlertTriangle className="w-8 h-8 text-red-500" />
+              </motion.div>
+            )}
+
+            <div
+              className={`font-mono text-6xl font-bold ${isDanger ? "text-red-500" : isPlaceOver ? "text-amber-300" : "text-cyan-300"
+                } pixel-text`}
+            >
+              {currentTime}
+            </div>
+
+            {/* Warning icon for danger state */}
+            {isDanger && (
+              <motion.div
+                className="absolute -right-10 top-1/2 -translate-y-1/2"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <AlertTriangle className="w-8 h-8 text-red-500" />
+              </motion.div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Phase indicator */}
+        <motion.div
+          className="mt-4 text-xs text-gray-500 uppercase tracking-widest"
+          animate={{
+            opacity: isDanger ? [0.5, 1] : 1,
+          }}
+          transition={{
+            repeat: isDanger ? Number.POSITIVE_INFINITY : 0,
+            duration: 0.5,
+            repeatType: "reverse",
+          }}
+        >
+          {isPlaceOver ? "Game in Progress" : "Place Your Bets"}
+        </motion.div>
+      </div>
+    </motion.div>
   )
 }
