@@ -90,6 +90,7 @@ export class RoundRecord {
         // case insensitive both ways 
         const codeLower = bitcode.toLowerCase();
         const codeUpper = bitcode.toUpperCase();
-        return this.initialValues?.[codeLower] || this.initialValues?.[codeUpper] || 0;
+        const initialPrice = this.initialValues?.[codeLower] || this.initialValues?.[codeUpper] || 0;
+        return initialPrice;
     }
 }

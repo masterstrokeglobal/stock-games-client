@@ -5,13 +5,15 @@ import { useState, useEffect, useRef } from "react"
 import { motion, type PanInfo } from "framer-motion"
 import { Input } from "@/components/ui/input"
 import { StockSlotJackpotPlacementType } from "@/models/stock-slot-jackpot"
+import { cn } from "@/lib/utils"
 interface DigitPickerProps {
   betType: StockSlotJackpotPlacementType
   onChange: (digits: string) => void
+  disabled?: boolean
   value?: string
 }
 
-export function DigitPicker({ betType, onChange, value = betType === "both" ? "00" : "0" }: DigitPickerProps) {
+export function DigitPicker({ betType, onChange, value = betType === "both" ? "00" : "0", disabled = false }: DigitPickerProps) {
   const digitCount = betType === "both" ? 2 : 1
 
   // Store the previous value to compare
@@ -109,6 +111,7 @@ export function DigitPicker({ betType, onChange, value = betType === "both" ? "0
               key={index}
               selectedDigit={selectedDigits[index] || 0}
               onChange={(digit) => handleDigitChange(index, digit)}
+              disabled={disabled}
             />
           ))}
       </div>
@@ -116,6 +119,7 @@ export function DigitPicker({ betType, onChange, value = betType === "both" ? "0
       <div className="w-full mt-2">
         <Input
           type="text"
+          disabled={disabled}
           value={inputValue}
           onChange={handleInputChange}
           onBlur={handleInputBlur}
@@ -131,7 +135,7 @@ export function DigitPicker({ betType, onChange, value = betType === "both" ? "0
 }
 
 // Separate component for each digit reel
-function DigitReel({ selectedDigit, onChange }: { selectedDigit: number; onChange: (digit: number) => void }) {
+function DigitReel({ selectedDigit, onChange, disabled }: { selectedDigit: number; onChange: (digit: number) => void , disabled: boolean}) {
   const [isDragging, setIsDragging] = useState(false)
   const reelRef = useRef<HTMLDivElement>(null)
 
@@ -141,16 +145,19 @@ function DigitReel({ selectedDigit, onChange }: { selectedDigit: number; onChang
 
   // Handle click on a specific digit
   const handleDigitClick = (digit: number) => {
+    if (disabled) return;
     onChange(digit)
   }
 
   // Handle drag start
   const handleDragStart = () => {
+    if (disabled) return;
     setIsDragging(true)
   }
 
   // Handle drag end
   const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    if (disabled) return;
     setIsDragging(false)
 
     // Calculate which digit was dragged to based on the drag distance
@@ -174,7 +181,7 @@ function DigitReel({ selectedDigit, onChange }: { selectedDigit: number; onChang
 
   return (
     <div
-      className="relative w-16 h-[180px] overflow-hidden bg-[#0F1221] border border-[#3A3F52] rounded-md mx-1"
+      className={cn("relative w-16 h-[180px] overflow-hidden bg-[#0F1221] border border-[#3A3F52] rounded-md mx-1", disabled && "opacity-50")}
       ref={reelRef}
     >
       {/* Highlight for the selected digit */}

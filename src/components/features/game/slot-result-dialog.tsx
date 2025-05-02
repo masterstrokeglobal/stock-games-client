@@ -28,7 +28,7 @@ const SlotResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
   }, [open]);
 
   // Check if the result is a win or loss
-  const isWin = data && Number(data.amountWon) >= 0;
+  const isWin = data && Number(data.netProfitLoss) >= 0;
 
   return (  
     <Dialog open={showDialog}>
@@ -83,7 +83,7 @@ const SlotResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
 
               <div className="text-center  flex justify-between  rounded-lg">
                 <p className="">Total Winnings</p>
-                <p className="text-xl ">{formatRupee(data.grossWinning)}</p>
+                <p className="text-xl ">{formatRupee(data.amountWon)}</p>
               </div>
 
               <div className="text-center  flex justify-between  rounded-lg">

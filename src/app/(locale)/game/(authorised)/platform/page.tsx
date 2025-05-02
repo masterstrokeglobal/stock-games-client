@@ -63,15 +63,15 @@ export default function GamingAppInterface() {
                 </Link>
 
                 {/* Coming Soon Card */}
-                <Link href={`/game/slot`}>
+                <Link href={`/game/jackpot`}>
                     <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
                         <Image src="/images/ad1.png" alt="coming-soon" className="w-full h-full object-cover " width={500} height={500} />
                     </div>
                 </Link>
 
-                <Link href={`/game/jackpot`}>
+                <Link href={`/game/slot`}>
                     <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
-                        <Image src="/images/ad3.jpg" alt="coming-soon" className="w-full h-full object-top " width={500} height={500} />
+                        <Image src="/images/ad3.jpg" alt="coming-soon" className="w-full h-auto object-top -translate-y-[10%]" width={500} height={500} />
                     </div>
                 </Link>
             </div>
