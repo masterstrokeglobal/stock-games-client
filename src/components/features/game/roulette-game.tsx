@@ -190,21 +190,21 @@ const RouletteGame = ({ roundRecord }: Props) => {
     };
 
 
-    // const handleZeroBet = () => {
-    //     if (gameState.isPlaceOver || isPlacingBet) return;
-    //     if (!verifyBetAmount(betAmount)) return;
+    const handleZeroBet = () => {
+        if (gameState.isPlaceOver || isPlacingBet) return;
+        if (!verifyBetAmount(betAmount)) return;
 
-    //     const marketId = roundRecord.market[roundRecord.market.length - 1]?.id;
-    //     if (!marketId) return;
-    //     mutate({
-    //         amount: betAmount,
-    //         round: roundRecord.id,
-    //         placementType: PlacementType.SINGLE,
-    //         horseNumbers: [17],
-    //         market: [marketId],
-    //         placedValues: getPlacementString({ market: [marketId], placementType: PlacementType.SINGLE }, roundRecord),
-    //     });
-    // }
+        const marketId = roundRecord.market[roundRecord.market.length - 1]?.id;
+        if (!marketId) return;
+        mutate({
+            amount: betAmount,
+            round: roundRecord.id,
+            placementType: PlacementType.SINGLE,
+            horseNumbers: [17],
+            market: [marketId],
+            placedValues: getPlacementString({ market: [marketId], placementType: PlacementType.SINGLE }, roundRecord),
+        });
+    }
 
     // Get all numbers for specific sections and other bets
     const first8Numbers = Array.from({ length: 8 }, (_, i) => i + 1);
@@ -308,16 +308,18 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
                                 <div className="grid grid-rows-1 gap-2 ">
                                     <Button
+                                        disabled={gameState.isPlaceOver || isNotAllowedToPlaceBet}
+                                        onClick={handleZeroBet}
                                         variant="game-secondary"
-                                        className="col-span-1 w-10 relative cursor-not-allowed  bg-emerald-600 justify-center gap-4 text-white ml-2 h-full "
+                                        className="col-span-1 w-10 relative  bg-yellow-600 justify-center gap-4 text-white ml-2 h-full "
                                     >
                                         <span className="rotate-text">
                                             0 &nbsp;
                                             {roundRecord.market[16]?.codeName}
                                         </span>
-                              {/*           {getBetForPosition(PlacementType.SINGLE, [17]) && (
-                                            <ButtonChip className=" top/1/2 right-1/2 translate-x-1/2 -translate-y-1/2" amount={getBetForPosition(PlacementType.SINGLE, [17])!.amount} />
-                                        )} */}
+                                      {getBetForPosition(PlacementType.SINGLE, [17]) && (
+                                            <ButtonChip className=" top/1/2 bg-red-600 right-1/2 translate-x-1/2 -translate-y-1/2" amount={getBetForPosition(PlacementType.SINGLE, [17])!.amount} />
+                                        )} 
                                     </Button>
                                 </div>
 
