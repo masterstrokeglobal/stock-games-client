@@ -5,8 +5,8 @@ export enum BonusCategory {
     JOINING = "joining",
     SIGNUP = "signup",
     REFERRAL = "referral",
-    DEPOSIT = "deposit",
     LOSEBACK = "loseback",
+    DEPOSIT = "deposit",
 }
 
 export enum BonusFrequency {

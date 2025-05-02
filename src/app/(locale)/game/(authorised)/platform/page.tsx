@@ -7,6 +7,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { MoneyIcon, WithdrawIcon } from "../user-menu/icons"
 import UserProfile from "./user-card"
+import { SchedulerType } from "@/models/market-item"
 
 
 export default function GamingAppInterface() {
@@ -38,7 +39,7 @@ export default function GamingAppInterface() {
 
             {/* Game cards */}
             <div className="grid grid-cols-2 max-w-4xl mx-auto w-full gap-4 mb-6">
-                <Link href="/game">
+                <Link href={`/game?gameType=${SchedulerType.NSE}`}>
                     <div className="rounded-xl overflow-hidden border border-yellow-600 relative shadow-lg shadow-green-900/30">
                         <Image src="/images/stock-roulette.png" alt="stock-roulette" width={500} height={500} />
                         <div className="md:p-2 w-full absolute bottom-0 bg-gradient-to-b from-transparent to-black text-game-text text-center">
@@ -49,28 +50,30 @@ export default function GamingAppInterface() {
                         </div>
                     </div>
                 </Link>
+                <Link href={`/game?gameType=${SchedulerType.USA_MARKET}`}>
+                    <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
+                        <Image src="/images/ad2.jpg" alt="coming-soon" className="w-full h-auto object-contain  " width={500} height={500} />
+                        <div className="md:p-2 w-full absolute bottom-0 bg-gradient-to-b from-transparent to-black text-game-text text-center">
+                            <h3 className="font-bold text-sm md:text-xl text-secondary-game">USA STOCKS ROULETTE</h3>
+                            <Button variant="game" className="mt-2 w-full text-sm py-2.5 font-semibold shadow-sm hover:shadow-md transition-all duration-200 gap-2">
+                                Play Now
+                            </Button>
+                        </div>
+                    </div>
+                </Link>
 
                 {/* Coming Soon Card */}
-                <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
-                    <Image src="/images/ad1.png" alt="coming-soon" className="w-full h-full object-cover " width={500} height={500} />
-                    <div className="absolute bottom-0 left-0 w-full h-fit bg-gradient-to-b pt-4 from-transparent to-black text-white p-4">
-                        <h3 className="md:text-2xl text-sm font-bold text-center">Coming Soon</h3>
+                <Link href={`/game/slot`}>
+                    <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
+                        <Image src="/images/ad1.png" alt="coming-soon" className="w-full h-full object-cover " width={500} height={500} />
                     </div>
-                </div>
+                </Link>
 
-                <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
-                    <Image src="/images/ad2.jpg" alt="coming-soon" className="w-full h-full object-top " width={500} height={500} />
-                    <div className="absolute bottom-0 left-0 w-full h-fit bg-gradient-to-b pt-4 from-transparent to-black text-white p-4">
-                        <h3 className="md:text-2xl text-sm font-bold text-center">Coming Soon</h3>
+                <Link href={`/game/jackpot`}>
+                    <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
+                        <Image src="/images/ad3.jpg" alt="coming-soon" className="w-full h-full object-top " width={500} height={500} />
                     </div>
-                </div>
-
-                <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
-                    <Image src="/images/ad3.jpg" alt="coming-soon" className="w-full h-auto -translate-y-[10%] object-contain  " width={500} height={500} />
-                    <div className="absolute bottom-0 left-0 w-full h-fit bg-gradient-to-b pt-4 from-transparent to-black text-white p-4">
-                        <h3 className="md:text-2xl text-sm font-bold text-center">Coming Soon</h3>
-                    </div>
-                </div>
+                </Link>
             </div>
 
 

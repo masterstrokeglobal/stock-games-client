@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Calendar, Clock, Coins, Info, Percent, Sparkles, Zap } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -12,7 +13,6 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
 import Bonus, { BonusCategory, BonusFrequency } from '@/models/bonus';
 import dayjs from 'dayjs';
 import { cn } from '@/lib/utils';

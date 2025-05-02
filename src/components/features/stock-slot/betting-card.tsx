@@ -57,12 +57,11 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
   }, [roundRecord.id, marketItem.id, globalBetAmount, createStockSlotGameRecord, isUpPlaced, isDownPlaced])
 
 
-  const initialPrice = roundRecord.initialValues?.[marketItem.bitcode?.toLowerCase() ?? ""]
+  const initialPrice = roundRecord.getInitialPrice(marketItem.bitcode ?? "")
   return (
     <Card className="min-w-[280px]  bg-primary border-primary text-white">
       <div className="p-4">
         <div className="flex items-center justify-between mb-3">
-
               <div className="font-medium text-sm">{marketItem.name}</div>
               <div className="text-xs text-gray-400">{marketItem.codeName}</div>
       </div>

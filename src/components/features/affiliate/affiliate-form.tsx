@@ -19,6 +19,9 @@ export const createAffiliateInputSchema = z.object({
     companyId: z.string().optional(),
     referralBonus: z.coerce.number().min(0).nonnegative(),
     isPercentage: z.boolean().default(false),
+    minAmount: z.coerce.number().min(0).nonnegative(),
+    maxAmount: z.coerce.number().min(0).nonnegative().optional(),
+    provideMaxAmount: z.boolean().default(false),
     role: z.nativeEnum(AffiliateRole),
 }).superRefine((data, ctx) => {
     if (!data.id && !data.password) {
@@ -101,12 +104,39 @@ const AffiliateForm = ({ defaultValues, onSubmit, isLoading, subAffiliate }: Pro
                         />
                     </>
                 )}
+                <div className="flex gap-4">
+                    <FormInput
+                        control={form.control}
+                        name="minAmount"
+                        type="number"
+                        label="Min Amount"
+                    />
+
+                </div>
+
+                <div className="flex gap-4">
+                    <FormInput
+                        control={form.control}
+                        name="maxAmount"
+                        type="number"
+                        disabled={!form.watch('provideMaxAmount')}
+                        label="Max Amount"
+                    />
+
+                    <FormSwitch
+                        control={form.control}
+                        name="provideMaxAmount"
+                        label="Provide Max Amount"
+                        className="flex-1"
+                    />
+
+                </div>
 
                 <FormInput
                     control={form.control}
                     name="comission"
                     type="number"
-                    label="Comission"
+                    label="Comission (%) "
                 />
             </div>
 

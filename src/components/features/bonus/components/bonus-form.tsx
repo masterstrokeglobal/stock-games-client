@@ -88,12 +88,19 @@ const BonusForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
         },
     });
 
+<<<<<<< HEAD
+=======
+    const values = form.watch();
+>>>>>>> main
     const handleSubmit = (data: BonusFormValues) => {
         onSubmit(data);
     };
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> main
     return (
         <FormProvider onSubmit={form.handleSubmit(handleSubmit)} methods={form}>
             <div className="space-y-4">
@@ -166,6 +173,7 @@ const BonusForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         label="End Date"
                     />
                 </div>
+<<<<<<< HEAD
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormSelect
@@ -182,6 +190,26 @@ const BonusForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         label="Max Count"
                     />
                 </div>
+=======
+                {values.category === BonusCategory.DEPOSIT && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormSelect
+                            control={form.control}
+                            name="frequency"
+                            label="Frequency of Deposit"
+                            options={frequencyOptions}
+                        />
+
+                        <FormInput
+                            control={form.control}
+                            name="maxCount"
+                            type="number"
+                            label="Max Count"
+                            description="The maximum number of times the bonus can be claimed by a user"
+                        />
+                    </div>
+                )}
+>>>>>>> main
 
                 <FormSwitch
                     control={form.control}

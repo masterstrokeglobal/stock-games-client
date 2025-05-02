@@ -85,4 +85,11 @@ export class RoundRecord {
     static fromAPI(data: any): RoundRecord {
         return new RoundRecord(data);
     }
+
+    getInitialPrice(bitcode: string): number {
+        // case insensitive both ways 
+        const codeLower = bitcode.toLowerCase();
+        const codeUpper = bitcode.toUpperCase();
+        return this.initialValues?.[codeLower] || this.initialValues?.[codeUpper] || 0;
+    }
 }

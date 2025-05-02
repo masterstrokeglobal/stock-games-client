@@ -35,7 +35,7 @@ const FaqPage = () => {
         {
             question: "Is there a withdrawal fee?",
             answer: "No, there is no withdrawal fee."
-        }
+        },
     ];
 
     return (

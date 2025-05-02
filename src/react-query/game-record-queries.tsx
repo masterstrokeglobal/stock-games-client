@@ -265,9 +265,3 @@ export const useGetStockSlotJackpotRoundResult = (roundId: number): UseQueryResu
         enabled: !!roundId,
     });
 };
-
-
-
-
-
-
