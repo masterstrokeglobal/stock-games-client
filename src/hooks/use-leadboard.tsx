@@ -190,6 +190,56 @@ export const useLeaderboard = (roundRecord: RoundRecord) => {
                         }
                     };
                 }
+                if (roundRecord.type === SchedulerType.USA_MARKET) {
+                    socketRef.current = new WebSocket(process.env.NEXT_PUBLIC_USA_WEBSOCKET_URL as string);
+                    socketRef.current.onopen = () => {
+                        setConnectionStatus('connected');
+                        // Connection established - subscription messages can be sent here if needed
+                    };
+
+                    socketRef.current.onmessage = (message) => {
+                        try {
+                            const changes = JSON.parse(message.data as string) as any[];
+                            if (Array.isArray(changes) && changes.length === 0) return;
+
+                            const changedStocks = changes.map(change => new NSEMarketItem(change));
+
+                            changedStocks.map(changeStock => {
+                                // Skip stocks that are not in the initial list
+                                if (!latestDataRef.current.some(stock => stock.bitcode === changeStock.code)) {
+                                    return;
+                                }
+                                const currentPrice = parseFloat(changeStock.price.toString());
+                                const { initialPrice, changePercent } = processPrice(
+                                    changeStock.code,
+                                    currentPrice
+                                );
+
+                                latestDataRef.current = latestDataRef.current.map(stock => {
+                                    if (stock.bitcode === changeStock.code) {
+                                        return {
+                                            ...stock,
+                                            price: currentPrice,
+                                            change_percent: changePercent,
+                                            initialPrice: initialPrice,
+                                            rank: stock.rank,
+                                            stream: stock.stream,
+                                            bitcode: stock.bitcode,
+                                            codeName: stock.codeName // Ensure codeName is included
+                                        };
+                                    }
+                                    return stock;
+                                });
+
+                                if (getRoundStatus() === 'tracking') {
+                                    latestDataRef.current = calculateRanks(latestDataRef.current);
+                                }
+                            });
+                        } catch (error) {
+                            console.log('Error parsing NSE data', error);
+                        }
+                    };
+                }
             } catch (error) {
                 console.log(error)
                 setConnectionStatus('disconnected');
