@@ -52,7 +52,7 @@ export function BetSlip({ roundRecord, open, setOpen }: BetSlipProps) {
                     }
                     {stockJackpotPlacement.placement === StockSlotJackpotPlacementType.TENTH && (
                       <>
-                        <span>10th Digit</span>
+                        <span>First Digit</span>
                         <span className="ml-auto font-bold">{stockJackpotPlacement.placedNumber}</span>
                       </>
                     )}

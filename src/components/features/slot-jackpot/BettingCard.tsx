@@ -90,7 +90,7 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
                 Last Digit
               </TabsTrigger>
               <TabsTrigger value="tenth" className="h-12 w-full data-[state=active]:bg-[#2A2F42]">
-                10th Digit
+                First Digit
               </TabsTrigger>
               <TabsTrigger value="both" className="h-12 w-full data-[state=active]:bg-[#2A2F42]">
                 Both

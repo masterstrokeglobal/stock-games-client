@@ -1,22 +1,23 @@
 import { useGameState } from "@/hooks/use-current-game"
+import { cn } from "@/lib/utils"
 import { RoundRecord } from "@/models/round-record"
 import { motion, AnimatePresence } from "framer-motion"
 import { Clock, Timer } from "lucide-react"
 
-const TimeDisplay = ({ roundRecord }: { roundRecord: RoundRecord }) => {
+const TimeDisplay = ({ roundRecord,className }: { roundRecord: RoundRecord ,className?:string }) => {
     const { gameTimeLeft, isPlaceOver, placeTimeLeft } = useGameState(roundRecord)
     const statusText = isPlaceOver ? "Betting Closed" : "Betting Open"
   
     return (
       <motion.div
-        className="relative w-full h-[150px] bg-gray-900 rounded-xl mt-4 overflow-hidden border-2 border-primary-game"
+        className={cn(`relative w-full h-fit  bg-gray-900 rounded-xl mt-4 overflow-hidden border-2 border-primary-game`,className)}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
         <div className="absolute inset-0 pointer-events-none bg-scanline opacity-10 z-10"></div>
   
-        <div className="flex flex-col items-center justify-center h-full p-6">
+        <div className="flex items-center max-w-3xl mx-auto w-full justify-between h-full p-6">
           <AnimatePresence mode="wait">
             <motion.div
               key={`status-${statusText}`}
@@ -67,14 +68,14 @@ const TimeDisplay = ({ roundRecord }: { roundRecord: RoundRecord }) => {
               }}
               exit={{ opacity: 0, scale: 0.8 }}
             >
-              <div className="font-mono text-6xl font-bold text-cyan-300 pixel-text">
+              <div className="font-mono md:text-6xl text-2xl font-bold text-nowrap text-cyan-300 pixel-text">
                 {isPlaceOver ? gameTimeLeft.shortFormat : placeTimeLeft.shortFormat}
               </div>
             </motion.div>
           </AnimatePresence>
   
           <motion.div
-            className="mt-4 text-xs text-gray-500 uppercase tracking-widest"
+            className="text-xs text-gray-500 uppercase tracking-widest"
             animate={{
               opacity: [0.5, 1, 0.5]
             }}

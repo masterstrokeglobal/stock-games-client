@@ -40,9 +40,9 @@ export default function Home() {
 
 
   return (
-    <div className="flex flex-col min-h-screen bg-background-secondary text-white p-4 mx-auto">
+    <div className="flex flex-col min-h-screen bg-background-secondary text-white py-4 mx-auto">
       <Navbar />
-      <Tabs className="flex-1 px-4 mt-20 py-6 max-w-7xl mx-auto w-full" value={tab} onValueChange={(value) => setTab(value as SchedulerType)}>
+      <Tabs className="flex-1 px-4 mt-48 py-6 max-w-7xl mx-auto w-full" value={tab} onValueChange={(value) => setTab(value as SchedulerType)}>
         {/* Global Bet Amount and Search Section */}
         <div className="w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -77,7 +77,7 @@ export default function Home() {
                 <TabsTrigger value={SchedulerType.USA_MARKET} className="w-full">US Stock</TabsTrigger>
               </TabsList>
 
-              {roundRecord && <TimeDisplay roundRecord={roundRecord} />}
+              {roundRecord && <TimeDisplay className="fixed rounded-none top-10 z-50 left-0 w-full" roundRecord={roundRecord} />}
             </div>
 
             {/* Global Bet Amount with improved UI */}

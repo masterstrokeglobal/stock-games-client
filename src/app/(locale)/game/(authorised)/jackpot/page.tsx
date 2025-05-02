@@ -46,7 +46,7 @@ export default function Home() {
         <div className="w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             {/* Search Markets with improved UI */}
-            <div className="relative group">
+            <div className=" group">
               <div className="relative">
                 <Input
                   type="text"
@@ -76,7 +76,7 @@ export default function Home() {
                 <TabsTrigger value={SchedulerType.USA_MARKET} className="w-full">US Stock</TabsTrigger>
               </TabsList>
 
-              {roundRecord && <TimeDisplay roundRecord={roundRecord} />}
+              {roundRecord && <TimeDisplay className="fixed top-0 left-0 w-full" roundRecord={roundRecord} />}
             </div>
 
             {/* Global Bet Amount with improved UI */}
