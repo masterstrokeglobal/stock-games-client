@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Building, Clock, CoinsIcon, Contact2, DollarSign, GiftIcon, Home, ImageUpIcon, LucideIcon, Repeat1, Users } from 'lucide-react';
+import { Building, Clock, CoinsIcon, Contact2, DollarSign, GamepadIcon, GiftIcon, Home, ImageUpIcon, LucideIcon, Repeat1, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -67,6 +67,11 @@ const adminMenuItems: MenuItem[] = [
         icon: Repeat1,
         link: '/dashboard/round-records'
     },
+    {
+        name: "Casino Games",
+        icon: GamepadIcon,
+        link: '/dashboard/casino-games'
+    }
 
 ];
 

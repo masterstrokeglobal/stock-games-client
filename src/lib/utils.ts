@@ -224,3 +224,8 @@ export const randomNumber = (min: number, max: number, multiple: number) => {
   return Math.floor(Math.random() * (max - min + 1)) * multiple;
 }
 
+
+export const checkCasinoAllowed = (companyId: number) => {
+  return companyId === 21;
+}
+

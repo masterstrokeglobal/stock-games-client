@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Navbar from "@/components/features/game/navbar"
 import { Button } from "@/components/ui/button"
 import { HelpCircle, MessageCircle } from "lucide-react"
@@ -8,11 +8,16 @@ import Link from "next/link"
 import { MoneyIcon, WithdrawIcon } from "../user-menu/icons"
 import UserProfile from "./user-card"
 import { SchedulerType } from "@/models/market-item"
-
+import { useAuthStore } from "@/context/auth-context"
+import { checkCasinoAllowed } from "@/lib/utils"
 
 export default function GamingAppInterface() {
     const t = useTranslations('wallet');
     const tcontact = useTranslations('contact');
+
+    const { userDetails } = useAuthStore();
+
+    const isCasinoAllowed = checkCasinoAllowed(userDetails?.company?.id ?? 0);
 
 
     return (
@@ -50,6 +55,15 @@ export default function GamingAppInterface() {
                         </div>
                     </div>
                 </Link>
+                {
+                    isCasinoAllowed && (
+                        <Link href="/game/casino">
+                            <div className="rounded-xl overflow-hidden border border-yellow-600 relative shadow-lg shadow-green-900/30">
+                                <Image src="/images/casino-games.png" alt="stock-roulette" width={500} height={500} />
+                            </div>
+                        </Link>
+                    )
+                }
                 <Link href={`/game?gameType=${SchedulerType.USA_MARKET}`}>
                     <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
                         <Image src="/images/ad2.jpg" alt="coming-soon" className="w-full h-auto object-contain  " width={500} height={500} />
@@ -77,8 +91,6 @@ export default function GamingAppInterface() {
                     </div>
                 </div>
             </div>
-
-
 
             <div className="mt-auto rounded-lg bg-background/40 p-6 text-center border max-w-4xl mx-auto w-full border-purple-200/20 shadow-md">
                 <div className="flex items-center justify-center gap-2 mb-2">

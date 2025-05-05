@@ -10,11 +10,16 @@ import { SchedulerType } from "@/models/market-item";
 import User from "@/models/user";
 import Wallet from "@/models/wallet";
 import { useGetWallet } from "@/react-query/payment-queries";
+import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useMemo } from "react";
 
-const Navbar = () => {
+type NavbarProps = {
+    isCasino?: boolean;
+}
+
+const Navbar = ({ isCasino = false }: NavbarProps) => {
     const { userDetails } = useAuthStore();
     const { data, isLoading } = useGetWallet();
     const t = useTranslations("common");
@@ -32,10 +37,25 @@ const Navbar = () => {
     return (
         <nav className="items-center md:px-6 px-4 z-50  flex fixed top-0 justify-between font-semibold w-full h-14 bg--game bg-primary-game">
             <div className="flex items-center space-x-4 ">
-                <span className="md:text-xl text-sm font-semibold flex items-end">
-                    <Logo />
-                </span>
+                {isCasino && (
+                    <Link href="/game/casino">
+                        <Button variant="ghost" size="icon" className="md:hidden">
+                            <ArrowLeft className="mr-2" />
+                            <span>Back</span>
+                        </Button>
+                    </Link>
+                )}
 
+                {!isCasino && (
+                    <>
+                        <span className="md:text-xl text-sm font-semibold flex items-end">
+                            <Logo />
+                        </span>
+                        {isNSE && <div className="items-center hidden md:flex space-x-4 ml-auto">
+                            <span className="text-sm text-game-secondary">{t("timings")}</span>
+                        </div>}
+                    </>
+                )}
                 {isNSE && <div className="items-center hidden md:flex space-x-4 ml-auto">
                     <span className="text-sm text-game-secondary">{t("timings")}</span>
                 </div>}
