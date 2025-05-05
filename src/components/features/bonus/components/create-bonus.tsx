@@ -24,9 +24,6 @@ const CreateBonus = () => {
     const { mutate: createBonus, isPending } = useCreateBonus();
 
     const handleSubmit = (data: BonusFormValues) => {
-<<<<<<< HEAD
-        createBonus(data, {
-=======
         let payload = data;
         if (data.category === BonusCategory.SIGNUP) {
             payload = {
@@ -36,7 +33,6 @@ const CreateBonus = () => {
             };
         }
         createBonus(payload, {
->>>>>>> main
             onSuccess: () => {
                 router.push("/dashboard/bonus");
             }
