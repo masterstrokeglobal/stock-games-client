@@ -24,7 +24,7 @@ const CreateBonus = () => {
     const { mutate: createBonus, isPending } = useCreateBonus();
 
     const handleSubmit = (data: BonusFormValues) => {
-        let payload = data;
+        let payload:any = data;
         if (data.category === BonusCategory.SIGNUP) {
             payload = {
                 ...data,

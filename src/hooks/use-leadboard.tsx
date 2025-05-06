@@ -299,6 +299,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                                             initialPrice: initialPrice,
                                             rank: stock.rank,
                                             stream: stock.stream,
+                                            currency: stock.currency,
                                             bitcode: stock.bitcode,
                                             codeName: stock.codeName // Ensure codeName is included
                                         };

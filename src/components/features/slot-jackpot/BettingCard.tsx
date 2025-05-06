@@ -35,9 +35,16 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
 
 
   // Extract the last digits from the price for display
-  const price = marketItem.price?.toString() ?? roundRecord.getInitialPrice(marketItem.bitcode ?? "").toString();
+  let price:any = marketItem.price ?? roundRecord.getInitialPrice(marketItem.bitcode ?? "");
+  
+  price = parseFloat(price);
+  
+  
+  // two prices after decimal point;
+  price = price.toFixed(2);
+  console.log(price, "price");
   const lastDigit = price?.slice(-1)
-  const lastTwoDigits = price?.slice(-2).padStart(2, "0");
+  const lastTwoDigits = price?.slice(-2);
 
   const handlePlaceBet = () => {
     if (!roundRecord.id || !marketItem.id) return;
@@ -67,7 +74,7 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
         <div className="flex justify-between items-center mb-3">
           <div>
             <div className="text-lg font-bold">
-              {marketItem.currency} &nbsp;{marketItem.price}
+              {marketItem.currency} &nbsp;{price}
             </div>
           </div>
           <div className="flex flex-col items-end">
