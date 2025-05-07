@@ -47,7 +47,10 @@ const PlatformPage = () => {
                     <p className="text-gray-400 mt-3">
                         Stock Games is a game that allows you to bet on the stock market. You can bet on the stock market by predicting the direction of the stock market.
                     </p>
+                    <Link href="/game/platform/stock-games">
                     <Button variant="game" className="mt-4 w-full">Play Now</Button>
+                    </Link>
+
                 </div>
 
                 <div>

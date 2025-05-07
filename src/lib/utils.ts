@@ -227,7 +227,7 @@ export const randomNumber = (min: number, max: number, multiple: number) => {
 
 export const checkCasinoAllowed = (companyId: number) => {
   console.log(companyId)
-  return companyId === 4;
+  return companyId === 21;
 }
 
 // Generate current time in 12-hour format (HH:MM AM/PM)
