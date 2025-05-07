@@ -7,14 +7,18 @@ import GameCard from "@/components/features/casino-games/game-card"
 import type { GameCategory } from "@/models/casino-games"
 
 interface CategoryCarouselProps {
-    categoryId: GameCategory
+    categoryId?: GameCategory,
+    popular?: boolean,
+    new?: boolean,
     title: string
 }
 
-export default function CategoryCarousel({ categoryId, title }: CategoryCarouselProps) {
+export default function CategoryCarousel({ categoryId, title, popular, new: isNew }: CategoryCarouselProps) {
     const { data, isLoading, refetch } = useGetCasinoGames({
         category: categoryId,
         limit: 10,
+        popular,
+        new: isNew
     })
 
     // Fetch games when component mounts

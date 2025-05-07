@@ -67,11 +67,7 @@ const adminMenuItems: MenuItem[] = [
         icon: Repeat1,
         link: '/dashboard/round-records'
     },
-    {
-        name: "Casino Games",
-        icon: GamepadIcon,
-        link: '/dashboard/casino-games'
-    }
+   
 
 ];
 
@@ -145,6 +141,11 @@ const companyMenuItems: MenuItem[] = [
         name: "Bonus",
         icon: GiftIcon,
         link: '/dashboard/bonus'
+    },
+    {
+        name: "Casino Games",
+        icon: GamepadIcon,
+        link: '/dashboard/casino-games'
     }
 ];
 

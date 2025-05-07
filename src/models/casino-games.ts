@@ -39,6 +39,8 @@ class CasinoGames {
     subProviderName!: string;
     category!: GameCategory;
     status!: GameStatus;
+    popular!: boolean;
+    new!: boolean;  
     code!: string;
     gameId!: number;
     createdAt!: Date;
@@ -55,6 +57,8 @@ class CasinoGames {
         this.status = params.status;
         this.code = params.code;
         this.gameId = params.gameId;
+        this.popular = params.popular;
+        this.new = params.new;
         this.createdAt = params.createdAt;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;

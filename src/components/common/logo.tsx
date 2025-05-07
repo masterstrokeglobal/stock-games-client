@@ -14,7 +14,7 @@ const Logo = ({ className, dark = true }: LogoProps) => {
 
     return (
         <div className={cn("h-24 w-auto flex gap-4 items-center py-4", className)}>
-            {data?.logo ? <img src={data?.logo} alt="logo" className="h-full w-auto" /> : <Avatar className="bg-transparent">
+            {data?.logo ? <img src={data?.logo} alt="logo" className="h-full w-auto max-h-12" /> : <Avatar className="bg-transparent">
                 <AvatarFallback className="bg-transparent text-white text-lg">
                     {initials}
                 </AvatarFallback>   

@@ -15,7 +15,8 @@ import Bonus, { BonusCategory, BonusFrequency } from '@/models/bonus';
 import dayjs from 'dayjs';
 import { Calendar, Clock, Coins, Info, Percent, Sparkles } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
 interface BonusCardProps {
     bonus: Bonus;
     className?: string;
@@ -53,6 +54,33 @@ const getFrequencyText = (frequency?: BonusFrequency) => {
 
 const BonusCard = ({ bonus, className }: BonusCardProps) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [timeLeft, setTimeLeft] = useState<string>('');
+
+    useEffect(() => {
+        const calculateTimeLeft = () => {
+            if (!bonus.endDate) return '';
+            
+            const end = dayjs(bonus.endDate);
+            const now = dayjs();
+            const diff = end.diff(now);
+
+            if (diff <= 0) return 'Expired';
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+            return `${days}d ${hours}h ${minutes}m`;
+        };
+
+        setTimeLeft(calculateTimeLeft());
+
+        const timer = setInterval(() => {
+            setTimeLeft(calculateTimeLeft());
+        }, 60000); // Update every minute
+
+        return () => clearInterval(timer);
+    }, [bonus.endDate]);
 
     const isActive = bonus.isActive();
     const formattedAmount = bonus.percentage ? `${bonus.amount}%` : `Rs. ${bonus.amount}`;
@@ -129,6 +157,14 @@ const BonusCard = ({ bonus, className }: BonusCardProps) => {
                             </div>
                         )}
 
+                        {/* Time left counter */}
+                        {timeLeft && (
+                            <div className="flex items-center space-x-2 text-gray-300">
+                                <Clock className="w-4 h-4 text-red-400" />
+                                <span className="text-sm font-medium">Ends in: {timeLeft}</span>
+                            </div>
+                        )}
+
                         {/* Dates if available */}
                         {(bonus.startDate || bonus.endDate) && (
                             <div className="flex items-center space-x-2 text-gray-300">
@@ -151,47 +187,81 @@ const BonusCard = ({ bonus, className }: BonusCardProps) => {
                                     Know More
                                 </Button>
                             </DialogTrigger>
-                            <DialogContent className="bg-gray-900 text-white border-gray-700">
+                            <DialogContent className="bg-gray-900/95 backdrop-blur-xl text-white border border-gray-700/50 max-w-2xl">
                                 <DialogHeader>
-                                    <DialogTitle className="text-xl">{bonus.name || `${categoryLabel} Bonus`}</DialogTitle>
-                                </DialogHeader>
-                                <DialogDescription className="text-gray-300">
-                                    {bonus.description || "No description available for this bonus."}
-                                </DialogDescription>
-                                <div className="mt-4 space-y-3">
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-400">Amount:</span>
-                                        <span className="font-medium">{formattedAmount}</span>
+                                    <div className="flex items-center justify-between">
+                                        <DialogTitle className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                                            {bonus.name || `${categoryLabel} Bonus`}
+                                        </DialogTitle>
+                                        {isActive && (
+                                            <Badge variant="success" className="px-3 py-1 text-sm">
+                                                Active
+                                            </Badge>
+                                        )}
                                     </div>
-                                    {formattedLimits && (
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-400">Limits:</span>
-                                            <span className="font-medium">{formattedLimits}</span>
-                                        </div>
-                                    )}
-                                    {frequencyText && (
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-400">Frequency:</span>
-                                            <span className="font-medium">{frequencyText}</span>
-                                        </div>
-                                    )}
-                                    {bonus.maxCount && (
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-400">Max Claims:</span>
-                                            <span className="font-medium">{bonus.maxCount}</span>
-                                        </div>
-                                    )}
-                                    {(bonus.startDate || bonus.endDate) && (
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-400">Valid Period:</span>
-                                            <span className="font-medium">
-                                                {bonus.startDate ? dayjs(bonus.startDate).format("MMM DD, YYYY") : "Always"}
-                                                {" to "}
-                                                {bonus.endDate ? dayjs(bonus.endDate).format("MMM DD, YYYY") : "No end"}
+                                    
+                                 
+                                </DialogHeader>
+
+                                <div className="mt-6 space-y-6">
+                                    {/* Bonus Amount Section */}
+                                    <div className="flex items-center justify-center p-6 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-xl border border-gray-700/50">
+                                        <div className="text-center">
+                                            <span className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                                                {formattedAmount}
                                             </span>
+                                            <p className="text-gray-400 mt-2">{categoryLabel} Bonus</p>
+                                        </div>
+                                    </div>
+
+                                    {timeLeft && (
+                                        <div className="mt-4 px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-lg inline-flex items-center gap-2 w-full">
+                                            <Clock className="w-5 h-5 text-red-400 animate-pulse" />
+                                            <span className="text-base font-medium text-red-400">Ends in: {timeLeft}</span>
                                         </div>
                                     )}
+                                 
+                                    {/* Details Grid */}
+                                    <div className="grid grid-cols-2 gap-4 bg-gray-800/30 p-6 rounded-xl border border-gray-700/50">
+                                        {formattedLimits && (
+                                            <div className="space-y-1">
+                                                <span className="text-sm text-gray-400">Limits</span>
+                                                <p className="font-medium text-white">{formattedLimits}</p>
+                                            </div>
+                                        )}
+                                        
+                                        {frequencyText && (
+                                            <div className="space-y-1">
+                                                <span className="text-sm text-gray-400">Frequency</span>
+                                                <p className="font-medium text-white">{frequencyText}</p>
+                                            </div>
+                                        )}
+                                        
+                                        {bonus.maxCount && (
+                                            <div className="space-y-1">
+                                                <span className="text-sm text-gray-400">Max Claims</span>
+                                                <p className="font-medium text-white">{bonus.maxCount}</p>
+                                            </div>
+                                        )}
+                                        
+                                        {(bonus.startDate || bonus.endDate) && (
+                                            <div className="space-y-1">
+                                                <span className="text-sm text-gray-400">Valid Period</span>
+                                                <p className="font-medium text-white">
+                                                    {bonus.startDate ? dayjs(bonus.startDate).format("MMM DD, YYYY") : "Always"}
+                                                    {" to "}
+                                                    {bonus.endDate ? dayjs(bonus.endDate).format("MMM DD, YYYY") : "No end"}
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
+                                   {/* Description */}
+                                   <DialogDescription className="text-gray-300 text-base leading-relaxed">
+                                        <h2 className='text-white font-semibold tracking-wider'>Description</h2>
+                                        {bonus.description || "No description available for this bonus."}
+                                    </DialogDescription>
+
                             </DialogContent>
                         </Dialog>
                     </div>

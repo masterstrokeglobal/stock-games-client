@@ -7,16 +7,23 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-
+import { AdvertisementType } from "@/models/advertisment";
+import FormSelect from "@/components/ui/form/form-select";
 const advertismentSchema = z.object({
     name: z.string().min(1),
     description: z.string().min(1),
     image: z.string().min(1),
-    link: z.string().min(1),
+    type: z.nativeEnum(AdvertisementType),
+    link: z.union([z.string().url(), z.literal("")]),
     active: z.boolean().default(true),
 })
 
 export type AdvertismentFormSchema = z.infer<typeof advertismentSchema>
+
+const advertismentTypeOptions = [
+    { label: "Banner", value: AdvertisementType.BANNER },
+    { label: "Slider", value: AdvertisementType.SLIDER },
+]
 
 type Props = {
     onSubmit: (data: AdvertismentFormSchema) => void,
@@ -32,7 +39,7 @@ export const AdvertismentForm = ({ defaultValues, onSubmit, className, isLoading
     })
 
     return (
-        <FormProvider  methods={form} onSubmit={form.handleSubmit(onSubmit)} className={cn("space-y-5",className)}>
+        <FormProvider methods={form} onSubmit={form.handleSubmit(onSubmit)} className={cn("space-y-5", className)}>
             <FormInput
                 control={form.control}
                 name="name"
@@ -50,6 +57,13 @@ export const AdvertismentForm = ({ defaultValues, onSubmit, className, isLoading
                 name="image"
                 label="Image"
                 className="w"
+            />
+
+            <FormSelect
+                control={form.control}
+                name="type"
+                label="Type"
+                options={advertismentTypeOptions}
             />
             <FormInput
                 control={form.control}

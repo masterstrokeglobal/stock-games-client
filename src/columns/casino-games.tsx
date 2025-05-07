@@ -3,6 +3,9 @@ import CasinoGames, { GameStatus } from "@/models/casino-games";
 import { useUpdateGame } from "@/react-query/casino-games-queries";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { EditIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const casinoGamesColumns: ColumnDef<CasinoGames>[] = [
     {
@@ -35,12 +38,39 @@ const casinoGamesColumns: ColumnDef<CasinoGames>[] = [
             </Badge>
         }
     },
+    {
+        header: "Popular",
+        accessorKey: "popular",
+        cell: ({ row }) => {
+            return <PopularColumn row={row.original} />
+        }
+    },
+    {
+        header: "New",
+        accessorKey: "new",
+        cell: ({ row }) => {
+            return <NewColumn row={row.original} />
+        }
+    },
+    {
+        header: "Active",
+        accessorKey: "active",
+        cell: ({ row }) => {
+            return <StatusColumn row={row.original} />
+        }
+    },
 
     {
         header: "Action",
         accessorKey: "action",
         cell: ({ row }) => {
-            return <StatusColumn row={row.original} />
+            return <div className="flex items-center gap-2">
+                <Link href={`/dashboard/casino-games/${row.original.id}`}>
+                    <Button variant="outline" size="icon">
+                        <EditIcon />
+                    </Button>
+                </Link>
+            </div>
         }
     }
 ]
@@ -58,4 +88,20 @@ const StatusColumn = ({ row }: { row: CasinoGames }) => {
             onCheckedChange={() => updateGame({ id: row.id, status: row.status === "active" ? GameStatus.IN_ACTIVE : GameStatus.ACTIVE })}
         />
     </div>
+}
+
+const PopularColumn = ({ row }: { row: CasinoGames }) => {
+    const { mutate: updateGame } = useUpdateGame();
+    return <Switch
+        checked={row.popular}
+        onCheckedChange={() => updateGame({ id: row.id, popular: !row.popular })}
+    />
+}
+
+const NewColumn = ({ row }: { row: CasinoGames }) => {
+    const { mutate: updateGame } = useUpdateGame();
+    return <Switch
+        checked={row.new}
+        onCheckedChange={() => updateGame({ id: row.id, new: !row.new })}
+    />
 }

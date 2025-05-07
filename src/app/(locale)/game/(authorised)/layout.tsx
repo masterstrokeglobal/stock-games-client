@@ -10,13 +10,13 @@ import Head from "next/head";
 const GameLayout = ({ children }: PropsWithChildren) => {
     const { loading, userDetails } = useAuthStore();
     const router = useRouter();
-
     useGameUserLogin();
+
     useEffect(() => {
         if (!loading && !(userDetails instanceof User)) {
             router.push("/game/auth/login");
         }
-    }, [userDetails, loading, router]);
+    }, [userDetails, loading]);
 
     if (loading || !(userDetails instanceof User)) {
         return <LoadingScreen className="h-screen" />;

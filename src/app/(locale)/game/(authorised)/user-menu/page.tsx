@@ -32,7 +32,7 @@ const UserMenu = () => {
     return (
         <>
             <Container className="flex flex-col items-center min-h-screen pt-24 ">
-                <TopBar leftContent={<Button variant="ghost" className='flex gap-2 items-end' onClick={() => router.push('/game')}>
+                <TopBar leftContent={<Button variant="ghost" className='flex gap-2 items-end' onClick={() => router.push('/game/platform')}>
                     <Home size={20} /> Home
                 </Button>}>
                     {t('title')}

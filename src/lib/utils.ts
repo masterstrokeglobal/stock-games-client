@@ -226,6 +226,39 @@ export const randomNumber = (min: number, max: number, multiple: number) => {
 
 
 export const checkCasinoAllowed = (companyId: number) => {
-  return companyId === 21;
+  console.log(companyId)
+  return companyId === 4;
 }
 
+// Generate current time in 12-hour format (HH:MM AM/PM)
+const getCurrentTime = () => {
+  const now = new Date()
+  let hours = now.getHours()
+  const minutes = now.getMinutes().toString().padStart(2, "0")
+  const ampm = hours >= 12 ? "PM" : "AM"
+  hours = hours % 12
+  hours = hours ? hours : 12 // the hour '0' should be '12'
+  return `${hours}:${minutes} ${ampm}`
+}
+
+// Generate random data
+export const generateData = (count: number) => {
+  const data = []
+
+  for (let i = 0; i < count; i++) {
+    const isHidden = Math.random() > 0.7
+    const user = isHidden ? "Hidden" : randomUsername()
+    const time = getCurrentTime()
+    const amount = randomNumber(50, 5000, 10).toString()
+
+    data.push({
+      id: Date.now() + i,
+      user,
+      time,
+      amount,
+      isHidden,
+    })
+  }
+
+  return data
+}
