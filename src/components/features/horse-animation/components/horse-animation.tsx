@@ -5,6 +5,7 @@ import { useFrame } from "@react-three/fiber";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import HorseModel from "./horse-model";
+import useWindowSize from "@/hooks/use-window-size";
 
 // Memoize color array to prevent recreation
 // const HORSE_COLORS = [
@@ -23,6 +24,8 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
     const numberOfHorses = roundRecord.market.length;
     const animationProgressRef = useRef(0);
     const horsesRef = useRef<(THREE.Object3D | null)[]>([]);
+
+    const {isMobile} = useWindowSize();
 
     const [currentPositions, setCurrentPositions] = useState<{ x: number, z: number }[]>([]);
     const [targetPositions, setTargetPositions] = useState<{ x: number, z: number }[]>([]);
@@ -76,18 +79,24 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
         },
         [currentPositions, targetPositions]
     );
-
-    // Optimize frame updates
+    // Optimize frame updates with fixed timestep and completion check
     useFrame(() => {
         if (isTransitioning && animationProgressRef.current < 1) {
-            // Use a constant transition time instead of delta-based
+            // Use a larger fixed timestep for mobile
+            const timestep = 0.016;
+            const speed = 0.8; // Increased animation speed
+            
             animationProgressRef.current = Math.min(
-                animationProgressRef.current + 0.016 * .5, // Fixed timestep
+                animationProgressRef.current + timestep * speed, 
                 1
             );
+
             updateHorsePositions(animationProgressRef.current);
 
-            if (animationProgressRef.current >= .9) {
+            const animationProgress = isMobile ? 0.7 : 0.9;
+            if (animationProgressRef.current >= animationProgress) {
+                animationProgressRef.current = 1;
+                updateHorsePositions(1);
                 setCurrentPositions(targetPositions);
                 setIsTransitioning(false);
             }

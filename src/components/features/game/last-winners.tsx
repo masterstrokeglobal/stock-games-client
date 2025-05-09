@@ -16,7 +16,6 @@ const LastWinners = ({ className }: PropsWithClassName) => {
         if (sectionRef.current) {
             const sectionHeight = sectionRef.current.offsetHeight;
             setScrollAreaHeight(sectionHeight);
-            console.log(sectionHeight);
         }
     }, []);
     return <section ref={sectionRef} className={cn("bg-background-last-winner relative w-full h-full ", className)}>

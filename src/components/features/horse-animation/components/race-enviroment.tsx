@@ -17,7 +17,11 @@ const HorseRaceEnvironment = ({
 }: Props) => {
     return (
         <>
-            <PerspectiveCamera makeDefault fov={70} zoom={13} position={[-250, 200, 250]} />
+            <PerspectiveCamera makeDefault  fov={70} zoom={13} position={[
+                    -380,
+                    46,
+                    39
+                ]}  />
             <color attach="background" args={[0xf0f0f0]} />
             <Sky sunPosition={[100, 20, 100]} />
             <ambientLight intensity={1} />
@@ -25,10 +29,13 @@ const HorseRaceEnvironment = ({
                 maxPolarAngle={Math.PI / 2 - 0.1 - .02}
                 minPolarAngle={Math.PI / 2 - 0.1}
                 maxDistance={1000}
+                onChange={ e=>{
+                    console.log("camera updated",e?.target.object.position,e?.target.object.rotation,e?.target.object.up, e?.target.object.lookAt);
+                }}
             />
             <directionalLight
                 color={0xffffff}
-                position={[100, 200, 100]} // Moved position to make sure it shines on the models
+                position={[100, 200, 100]} 
                 shadow-mapSize-width={1024}
                 shadow-mapSize-height={1024}
             />            <Physics gravity={[0, -30, 0]}>

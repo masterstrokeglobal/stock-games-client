@@ -106,7 +106,7 @@ const PlatformPage = () => {
                                         className="rounded-lg overflow-hidden object-cover object-top"
                                     />
                                     <div className="absolute rounded-lg flex flex-col items-center justify-end bottom-0 left-0 z-10 right-0 bg-gradient-to-t from-black/80 to-transparent h-1/2 text-white p-2">
-                                        <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                                        <h2 className="sm:text-xl font-bold text-white flex items-center gap-2">
                                             <card.icon className="h-6 w-6 text-white" stroke={1.5} />
                                             {card.title}</h2>
                                     </div>

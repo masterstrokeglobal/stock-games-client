@@ -20,22 +20,16 @@ export default function GamingAppInterface() {
                     <div className="rounded-xl overflow-hidden border border-yellow-600 relative shadow-lg shadow-green-900/30">
                         <Image src="/images/stock-roulette.png" alt="stock-roulette" className="w-full h-auto object-contain" width={500} height={500} />
                         <div className="md:p-2 w-full absolute bottom-0 bg-gradient-to-b from-transparent to-black text-game-text text-center">
-                            <h3 className="font-bold text-sm md:text-xl text-secondary-game">NSE STOCKS ROULETTE</h3>
-                            <Button variant="game" className="mt-2 w-full text-sm py-2.5 font-semibold shadow-sm hover:shadow-md transition-all duration-200 gap-2">
-                                Play Now
-                            </Button>
+                            <h3 className="font-semibold mb-2 text-sm md:text-xl text-white">NSE STOCKS ROULETTE</h3>
                         </div>
                     </div>
                 </Link>
 
-                <Link href={`/game?gameType=${SchedulerType.USA_MARKET}`} className="w-full">
+                <Link href={`/game?gameType=${SchedulerType.CRYPTO}`} className="w-full">
                     <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
                         <Image src="/images/ad2.jpg" alt="coming-soon" className="w-full h-auto object-contain  " width={500} height={500} />
                         <div className="md:p-2 w-full absolute bottom-0 bg-gradient-to-b from-transparent to-black text-game-text text-center">
-                            <h3 className="font-bold text-sm md:text-xl text-secondary-game">USA STOCKS ROULETTE</h3>
-                            <Button variant="game" className="mt-2 w-full text-sm py-2.5 font-semibold shadow-sm hover:shadow-md transition-all duration-200 gap-2">
-                                Play Now
-                            </Button>
+                            <h3 className="font-semibold mb-2 text-sm md:text-xl text-white">USA STOCKS ROULETTE</h3>
                         </div>
                     </div>
                 </Link>
