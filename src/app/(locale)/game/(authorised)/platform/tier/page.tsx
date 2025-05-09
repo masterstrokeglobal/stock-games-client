@@ -10,6 +10,7 @@ import { useGetTiers } from "@/react-query/tier-queries"
 import { useGetUserTier } from "@/react-query/game-user-queries"
 import Image from "next/image"
 import { Tier } from "@/models/tier"
+import LoadingScreen from "@/components/common/loading-screen"
 
 interface Step {
     number: string;
@@ -22,9 +23,9 @@ export default function TiersProgram(): JSX.Element {
     const scrollAreaRef = useRef<HTMLDivElement | null>(null)
     const tierRefs = useRef<Array<RefObject<HTMLButtonElement>>>([])
 
-    const { data: userTier } = useGetUserTier()
+    const { data: userTier, isLoading: isUserTierLoading } = useGetUserTier()
 
-    const { data: tiers } = useGetTiers({
+    const { data: tiers, isLoading: isTiersLoading } = useGetTiers({
         page: 1,
         limit: 100,
         search: "",
@@ -32,8 +33,6 @@ export default function TiersProgram(): JSX.Element {
         orderByField: "DESC"
     })
 
-
-    console.log(userTier)
 
     const tierList = tiers?.tiers || [];
     // Initialize refs array when component mounts
@@ -108,6 +107,10 @@ export default function TiersProgram(): JSX.Element {
         return <div>No tiers found</div>
     }
 
+    if (isUserTierLoading || isTiersLoading) {
+        return <LoadingScreen className="min-h-[80svh]" />
+    }
+
     return (
         <>
             <div className="my-6 sm:my-12 md:my-20 px-2 sm:px-4">
@@ -159,9 +162,9 @@ export default function TiersProgram(): JSX.Element {
                                         ? "bg-white text-black"
                                         : "text-white"
                                 )}>
-                                    <img src={tier.imageUrl} alt={tier.name} className="w-6 h-6" />
+                                    <img src={tier?.imageUrl} alt={tier?.name} className="w-6 h-6" />
                                 </span>
-                                {tier.name}
+                                {tier?.name}
                             </Button>
                         ))}
                     </div>
@@ -210,6 +213,10 @@ const ActiveTierCard = ({ tier, myTier, tierList }: { tier: Tier, myTier: { tier
     const currentTierIndex = tierList.findIndex((t) => t?.id === tier?.id);
 
     const nextTier = tierList[currentTierIndex + 1];
+
+    if (!tier) {
+        return <LoadingScreen className="min-h-[200px]" />
+    }
     return (
         <Card className={cn("bg-background-secondary  mb-8 overflow-hidden rounded-xl", isMyTier ? "border-2 border-yellow-500 rounded-xl" : "border-2 border-primary-game")}>
             <div className="relative">
@@ -217,13 +224,13 @@ const ActiveTierCard = ({ tier, myTier, tierList }: { tier: Tier, myTier: { tier
                     {/* Tier Badge Placeholder */}
                     <div className="flex flex-col h-full  aspect-square items-center mb-10 md:items-start">
                         <div className="relative flex items-center flex-col  justify-center">
-                            <Image src={tier.imageUrl} alt={tier.name} className="w-28 ml-4 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40  z-10 relative" width={1020} height={1020} />
+                            <Image src={tier?.imageUrl} alt={tier?.name} className="w-28 ml-4 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40  z-10 relative" width={1020} height={1020} />
                             <div className="absolute inset-0 aspect-square object-cover  scale-150" style={{ animationDuration: `10s` }}>
                                 <img src="/images/banner/tiers_program_bg.webp" alt="tiers_program_bg" className="w-full h-full animate-spin" style={{ animationDuration: `20s` }} />
                             </div>
                             <h3 className="text-xl sm:text-2xl text-center flex-1 md:flex-col flex  md:text-left pl-4  font-semibold tracking-wider text-white mb-2 uppercase " >
                                 <span className="text-white/70 text-lg ">
-                                    {tier.name}
+                                    {tier?.name}
                                 </span>
                                 {isMyTier && <span className=" text-yellow-500 text-sm text-center">My Tier</span>}
                             </h3>
