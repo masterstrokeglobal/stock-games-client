@@ -15,21 +15,21 @@ const GAME_CARDS = [
         icon: IconCoins,
         image: "/images/stock-roulette.png",
         href: "/game/platform/stock-games",
-        buttonText: "Enter"
+        buttonText: "Start Playing"
     },
     {
         title: "Casino Games",
         icon: IconGift,
         image: "/images/casino-games.png",
         href: "/game/platform/casino",
-        buttonText: "Enter"
+        buttonText: "Start Playing"
     },
     {
         title: "Sports Book",
         icon: IconCricket,
         image: "/images/sports-book.png",
         href: `/game/casino/${SPORTS_BOOK_GAMEID}`,
-        buttonText: "Play Now"
+        buttonText: "Start Playing"
     }
 ];
 
@@ -97,7 +97,7 @@ const PlatformPage = () => {
                     <CarouselContent>
                         {GAME_CARDS.map((card, index) => (
                             <CarouselItem key={index} className="basis-1/2 ">
-                                <div className="flex flex-col items-center relative rounded-lg">
+                                <Link href={card.href} className="flex flex-col items-center relative rounded-lg">
                                     <Image
                                         src={card.image}
                                         alt={card.title.toLowerCase()}
@@ -110,7 +110,7 @@ const PlatformPage = () => {
                                             <card.icon className="h-6 w-6 text-white" stroke={1.5} />
                                             {card.title}</h2>
                                     </div>
-                                </div>
+                                </Link>
                             </CarouselItem>
                         ))}
                     </CarouselContent>
