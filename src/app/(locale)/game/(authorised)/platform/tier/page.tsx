@@ -46,7 +46,7 @@ export default function TiersProgram(): JSX.Element {
 
     useEffect(() => {
         if (userTier) {
-            setActiveTier(tierList.findIndex((tier) => tier.id === userTier.tierId))
+            setActiveTier(tierList?.findIndex((tier) => tier.id === userTier.tierId))
         }
     }, [userTier])
     // Scroll to the active tier when it changes
@@ -205,9 +205,10 @@ export default function TiersProgram(): JSX.Element {
 
 const ActiveTierCard = ({ tier, myTier, tierList }: { tier: Tier, myTier: { tierId: string, gamesPlayed: number, totalPoints: number, pointsRedeemed: number }, tierList: Tier[] }) => {
 
-    const isMyTier = myTier?.tierId?.toString() === tier.id.toString();
+    const isMyTier = myTier?.tierId?.toString() === tier?.id?.toString();
 
-    const currentTierIndex = tierList.findIndex((t) => t.id === tier.id);
+    const currentTierIndex = tierList.findIndex((t) => t?.id === tier?.id);
+
     const nextTier = tierList[currentTierIndex + 1];
     return (
         <Card className={cn("bg-background-secondary  mb-8 overflow-hidden rounded-xl", isMyTier ? "border-2 border-yellow-500 rounded-xl" : "border-2 border-primary-game")}>
@@ -274,12 +275,13 @@ const ActiveTierCard = ({ tier, myTier, tierList }: { tier: Tier, myTier: { tier
                         </div>
                     </div>
                 </div>
-                <div className="flex items-center md:items-start p-4 justify-between">
-                 
+                {nextTier && <div className="flex items-center md:items-start p-4 justify-between">
+
                     <div className="flex flex-col gap-4 flex-[3]">
-                    <header className="flex items-center gap-2 text-white font-semibold text-md">
-                    <img src={nextTier?.imageUrl} alt={nextTier?.name} className="size-8" /> To Reach Next {nextTier?.name} Tier 
-                    </header>   
+                        <header className="flex items-center gap-2 text-white font-semibold text-md">
+                            <img src={nextTier?.imageUrl} alt={nextTier?.name} className="size-8" /> To Reach Next {nextTier?.name} Tier
+                        </header>
+
                         {nextTier?.minPoints > 0 && <div className="flex flex-col gap-2">
                             <div className="flex flex-col gap-2">
                                 <div className="flex items-center justify-between">
@@ -308,7 +310,8 @@ const ActiveTierCard = ({ tier, myTier, tierList }: { tier: Tier, myTier: { tier
                             </div>
                         </div>}
                     </div>
-                </div>
+                </div>}
+
             </div>
         </Card>
     )
