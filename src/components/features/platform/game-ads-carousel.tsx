@@ -110,20 +110,39 @@ export function GameAdsCarousel({ autoPlayInterval = 5000, className }: HeroCaro
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
-      <CarouselContent className="h-[250px] -ml-2 md:-ml-4">
+      <CarouselContent className="-ml-2 md:-ml-4">
         {advertisements.map((ad) => (
           <CarouselItem
             key={ad.id}
-            className="pl-2 md:pl-4 sm:basis-1/2 lg:basis-1/3 h-[250px]"
+            className="pl-2 md:pl-4 sm:basis-1/2 lg:basis-1/3"
           >
-            <div
-              className="relative w-full h-full rounded-lg overflow-hidden"
-              style={{
-                backgroundImage: ad.image ? `url(${ad.image})` : undefined,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            >
+            <div className="relative w-full rounded-lg overflow-hidden">
+              {/* Desktop Image - 16:6 aspect ratio */}
+              <div 
+                className="hidden md:block w-full aspect-[16/9]"
+              >
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    backgroundImage: ad.image ? `url(${ad.image})` : undefined,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                />
+              </div>
+
+              <div 
+                className="block md:hidden w-full aspect-[5/4]"
+              >
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    backgroundImage: ad.mobileImage ? `url(${ad.mobileImage})` : `url(${ad.image})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                />
+              </div>
             </div>
           </CarouselItem>
         ))}
@@ -137,7 +156,7 @@ export function GameAdsCarousel({ autoPlayInterval = 5000, className }: HeroCaro
       />
 
       {/* Indicators */}
-      <div className=" mt-4 mx-auto space-x-2 flex justify-center">
+      <div className="mt-4 mx-auto space-x-2 flex justify-center">
         {advertisements.map((_, index) => (
           <button
             key={`indicator-${index}`}

@@ -6,7 +6,8 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { cn } from "@/lib/utils"
+import useWindowSize from "@/hooks/use-window-size"
+import { cn, SPORTS_BOOK_GAMEID } from "@/lib/utils"
 import { GameCategory } from "@/models/casino-games"
 import {
     IconCoins,
@@ -22,11 +23,12 @@ import {
 } from "@tabler/icons-react"
 import { SidebarCloseIcon, SidebarOpenIcon } from "lucide-react"
 import { usePathname } from "next/navigation"
+import { useRouter } from "next/navigation";
 
 const navItems = [
     { icon: IconHome, label: "Home", href: "/game/platform" },
     { icon:  IconCoins, label: "Stock Market", href: `/game/platform/stock-games` },
-    { icon: IconCricket, label: "Sports Book", href: `/game/platform/casino/${GameCategory.SPORTS}` },
+    { icon: IconCricket, label: "Sports Book", href: `/game/casino/${SPORTS_BOOK_GAMEID}` },
     { icon: IconDice, label: "Casino Games", href: "/game/platform/casino" },
     { icon: IconLayoutGrid, label: "Table Games", href: `/game/platform/casino/${GameCategory.TABLE_GAMES}` },
     { icon: IconVideo, label: "Live Casino", href: `/game/platform/casino/${GameCategory.LIVE}` },
@@ -44,18 +46,20 @@ interface SidebarProps {
 
 const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
     const pathname = usePathname()
+    const { isMobile } = useWindowSize();
+    const router = useRouter();
 
     return (
         <aside
             className={cn(
-                "fixed left-0 top-0 h-screen bg-primary-game border-r border-gray-800 transition-all duration-300 ease-in-out z-40",
-                sidebarOpen ? "md:w-64" : "md:w-20",
+                "fixed left-0 top-0 h-screen  bg-background-secondary border-r-2 border-gray-600 transition-all duration-300 ease-in-out z-40",
+                sidebarOpen ? "md:w-64 w-full" : "md:w-20 w-0",
                 !sidebarOpen && "w-0 md:w-20",
                 className
             )}
         >
             <div className="flex h-full flex-col">
-                <div className="hidden md:flex justify-end p-2 sticky top-0 bg-primary-game z-10">
+                <div className="hidden md:flex justify-end p-2 sticky top-0  z-10">
                     <Button 
                         onClick={toggleSidebar}
                         variant="ghost"
@@ -72,12 +76,20 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
                                 return (
                                     <Tooltip key={index}>
                                         <TooltipTrigger asChild>
-                                            <a
-                                                href={item.href}
+                                            <button
                                                 className={cn(
-                                                    "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-[#1a2942] hover:text-secondary-game group",
+                                                    "flex items-center cursor-pointer w-full gap-3 rounded-md px-3 py-2 text-sm font-medium text-white hover:bg-[#1a2942] hover:text-secondary-game group",
                                                     isActive && "bg-[#1a2942] text-secondary-game"
                                                 )}
+                                                onClick={() => {
+                                                
+                                                    if(isMobile){
+                                                        setTimeout(() => {
+                                                            toggleSidebar();
+                                                        }, 500);                                                    }
+                                                    router.push(item.href);
+                                                    
+                                                }}
                                             >
                                                 <item.icon
                                                     className={cn(
@@ -98,7 +110,7 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
                                                         </span>
                                                     )
                                                 }
-                                            </a>
+                                            </button>
                                         </TooltipTrigger>
                                         {!sidebarOpen && (
                                             <TooltipContent side="right">

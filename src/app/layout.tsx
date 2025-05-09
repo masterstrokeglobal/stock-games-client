@@ -1,12 +1,10 @@
-import { HighlightInit } from '@highlight-run/next/client';
+import { GoogleAnalytics } from '@next/third-parties/google';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import { Analytics } from "@vercel/analytics/react";
 import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getMessages } from "next-intl/server";
 import { Poppins } from 'next/font/google';
 import "./globals.css";
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import { Analytics } from "@vercel/analytics/react"
-import { GoogleAnalytics } from '@next/third-parties/google'
-import { HIGHLIGHT_APP_KEY } from '@/lib/utils';
-import { getLocale, getMessages } from "next-intl/server";
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'], // Include all weights
@@ -26,16 +24,16 @@ export default async function RootLayout({
     <>
       <Analytics />
       {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID} />}
-      <HighlightInit
+      {/* <HighlightInit
         projectId={HIGHLIGHT_APP_KEY}
         serviceName="my-nextjs-frontend"
         tracingOrigins
         networkRecording={{
-          enabled: true,
+          enabled: false,
           recordHeadersAndBody: true,
           urlBlocklist: [],
         }}
-      />
+      /> */}
       <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID!}>
 
         <html lang={locale}>

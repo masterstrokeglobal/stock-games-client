@@ -13,16 +13,17 @@ import { useGetWallet } from "@/react-query/payment-queries";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useMemo } from "react";
-
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
     const { userDetails } = useAuthStore();
     const { data, isLoading } = useGetWallet();
     const t = useTranslations("common");
     const [gameType] = useGameType();
+    const pathname = usePathname();
 
-    const isNSE = gameType === SchedulerType.NSE;
-    const isUSAMarket = gameType === SchedulerType.USA_MARKET;
+    const isNSE = gameType === SchedulerType.NSE && pathname == "/game";
+    const isUSAMarket = gameType === SchedulerType.USA_MARKET && pathname == "/game";
 
     const wallet = useMemo(() => {
         if (isLoading) return new Wallet();
@@ -46,9 +47,9 @@ const Navbar = () => {
                 </div>}
             </div>
             <div className="flex items-center space-x-4 ml-auto">
-                <MuteButton className="md:block hidden " />
-                <LocaleSwitcher className="md:block hidden " />
-                <div className="bg-secondary-game text-game-text px-4 md:h-12 flex items-center md:py-2 py-2   rounded-md">
+                <MuteButton className="md:block hidden play-button" />
+                <LocaleSwitcher className="md:block hidden play-button " selectClassName="play-button" />
+                <div className="gold-button  text-game-text px-4 md:h-12 flex items-center md:py-2 py-2   rounded-md">
                     <div className="shadow-custom-glow mr-2 rounded-md" >
                         <img src="/coin.svg" alt="coin" className="md:w-auto w-5" />
                     </div>
@@ -62,7 +63,7 @@ const Navbar = () => {
                     </Link>
                 </div>
                 <Link href="/game/user-menu">
-                    <button className="bg-secondary-game md:px-4 md:h-12 h-10 text-game-text justify-center  md:aspect-auto aspect-square space-x-3 flex items-center md:py-2 p-1 rounded-md">
+                    <button className="options-button  md:px-4 md:h-12 h-10 text-game-text justify-center  md:aspect-auto aspect-square space-x-3 flex items-center md:py-2 p-1 rounded-md">
                         <Avatar className="size-6">
                             <AvatarFallback className="bg-secondary-game">
                                 {user.firstname?.charAt(0) ?? "A"}

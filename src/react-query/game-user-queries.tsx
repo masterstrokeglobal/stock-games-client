@@ -232,3 +232,15 @@ export const useCaptcha = () => {
     refetchOnMount: false, // Prevent refetch on mount unless needed
   });
 };
+
+
+// Get User Tier Hook
+export const useGetUserTier = () => {
+  return useQuery({
+    queryKey: ["userTier"],
+    queryFn: async () => {
+      const response = await gameUserAPI.getTier();
+      return response.data;
+    },
+  });
+};

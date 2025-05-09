@@ -1,18 +1,50 @@
 "use client";
 import Navbar from "@/components/features/game/navbar";
 import { Button } from "@/components/ui/button";
-import { HelpCircle, MegaphoneIcon, MenuIcon, MessageCircle, UserIcon } from "lucide-react";
+import { GiftIcon, HelpCircle, MenuIcon, MessageCircle, SearchIcon, UserIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
+import Sidebar from "@/components/features/platform/sidebar";
+import { cn } from "@/lib/utils";
+import useWindowSize from "@/hooks/use-window-size";
+import { usePathname } from "next/navigation";
 
+const menuItems = [
+    {
+        label: "Promotions",
+        icon: GiftIcon,
+        href: "/game/platform/promotion"
+    },
+    {
+        label: "Search",
+        icon: SearchIcon,
+        href: "/game/platform/casino"
+    },  
+
+    {
+        label: "Account",
+        icon: UserIcon,
+        href: "/game/platform/user-menu"
+    }
+]
 export default function GamingAppInterface({ children }: PropsWithChildren) {
     const tcontact = useTranslations('contact');
+    const pathname = usePathname()
 
-    const [sidebarOpen, setSidebarOpen] = useState(false)
+    const { isMobile } = useWindowSize();
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    useEffect(() => {
+        setSidebarOpen(!isMobile)
+    }, [isMobile])
 
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen)
+    }
+
+    const checkActive = (path: string) => {
+        return pathname === path
     }
 
     return (
@@ -22,29 +54,26 @@ export default function GamingAppInterface({ children }: PropsWithChildren) {
             {/* platform menu and account */}
             <div className="fixed bottom-0 left-0 right-0 bg-primary-game border-t border-gray-800 md:hidden flex justify-around py-2 z-50">
                 <div className="flex items-center justify-center gap-2">
-                    <Button variant="ghost" aria-label="Collapse sidebar" onClick={toggleSidebar}>
+                    <Button variant="ghost" aria-label="Collapse sidebar" className="flex flex-col gap-2 h-fit" onClick={toggleSidebar}>
                         <MenuIcon className="w-5 h-5" />
+                        <span>Menu</span>
                     </Button>
                 </div>
-                <div className="flex items-center justify-center gap-2">
-                    <Link href="/game/platform/promotions">
-                        <Button variant="ghost" aria-label="Collapse sidebar">
-                            <MegaphoneIcon className="w-5 h-5" />
-                        </Button>
-                    </Link>
-                </div>
-                <div className="flex items-center justify-center gap-2">
-                    <Link href="/game/user-menu">
-                        <Button variant="ghost" aria-label="Collapse sidebar">
-                            <UserIcon className="w-5 h-5" />
-                        </Button>
-                    </Link>
-                </div>
+                {menuItems.map((item) => (  
+                    <div key={item.href} className="flex items-center justify-center gap-2">
+                        <Link href={item.href} className={cn(checkActive(item.href) ? "active-menu-button text-white rounded-md" : "text-gray-400")}>
+                            <Button variant="ghost" aria-label="Collapse sidebar" className="flex flex-col gap-2 h-fit">
+                                <item.icon className="w-5 h-5" />
+                                <span>{item.label}</span>
+                            </Button>
+                        </Link>
+                    </div>
+                ))}
             </div>
-            <div className={cn("flex-1 mt-14 pt-5 transition-all duration-300 ease-in-out", sidebarOpen ? "md:pl-64" : "md:pl-20")}>
-                <main className="w-full px-12">
+            <div className={cn("flex-1 mt-14  pt-5 transition-all duration-300 ease-in-out", sidebarOpen ? "md:pl-64" : "md:pl-20")}>
+                <main className="w-full md:px-12 px-4">
                     {children}
-                    <div className="flex-1 overflow-auto transition-all duration-300 ease-in-out">
+                    <div className="flex-1 overflow-auto transition-all duration-300 ease-in-out md:mb-4 mb-20">
                         <div className="mt-auto rounded-lg  p-6 text-center   mx-auto w-full border-purple-200/20 shadow-md">
                             <div className="flex items-center justify-center gap-2 mb-2">
                                 <HelpCircle className="w-5 h-5 " />
@@ -75,6 +104,5 @@ export default function GamingAppInterface({ children }: PropsWithChildren) {
 
 
 
-import Sidebar from "@/components/features/platform/sidebar";
-import { cn } from "@/lib/utils";
+
 

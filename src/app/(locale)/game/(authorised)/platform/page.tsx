@@ -1,29 +1,48 @@
 "use client";
-import { GameAdsCarousel } from "@/components/features/platform/carousel";
 import { FinancialTable } from "@/components/features/platform/finantial-table";
+import { GameAdsCarousel } from "@/components/features/platform/game-ads-carousel";
 import { Button } from "@/components/ui/button";
-import { generateData } from "@/lib/utils";
-import { GameCategory } from "@/models/casino-games";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { generateData, SPORTS_BOOK_GAMEID } from "@/lib/utils";
 import { IconCoins, IconCricket, IconGift } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-
+const GAME_CARDS = [
+    {
+        title: "Stock Games",
+        icon: IconCoins,
+        image: "/images/stock-roulette.png",
+        href: "/game/platform/stock-games",
+        buttonText: "Enter"
+    },
+    {
+        title: "Casino Games",
+        icon: IconGift,
+        image: "/images/casino-games.png",
+        href: "/game/platform/casino",
+        buttonText: "Enter"
+    },
+    {
+        title: "Sports Book",
+        icon: IconCricket,
+        image: "/images/sports-book.png",
+        href: `/game/casino/${SPORTS_BOOK_GAMEID}`,
+        buttonText: "Play Now"
+    }
+];
 
 const PlatformPage = () => {
     const [data, setData] = useState<any[]>([])
 
-    // Initialize data
     useEffect(() => {
         setData(generateData(10))
 
-        // Update data every 3 seconds with a new entry
         const interval = setInterval(() => {
             setData((prevData) => {
                 const newEntry = generateData(1)[0]
                 const updatedData = [newEntry, ...prevData]
-                // Keep only 10 items
                 if (updatedData.length > 10) {
                     return updatedData.slice(0, 10)
                 }
@@ -36,51 +55,76 @@ const PlatformPage = () => {
 
     return (
         <>
-            <GameAdsCarousel  />
-            <div className="grid grid-cols-1 my-20 md:grid-cols-3 gap-6">
-                <div>
-                    <div className="flex items-center gap-2 mb-4">
-                        <IconCoins className="h-6 w-6 text-white" stroke={1.5} />
-                        <h2 className="text-xl font-bold text-white">Stock Games</h2>
+            <GameAdsCarousel />
+            {/* Desktop View */}
+            <div className="hidden md:grid grid-cols-3 my-20 gap-6">
+                {GAME_CARDS.map((card, index) => (
+                    <div key={index}>
+                        <div className="flex items-center gap-2 mb-4">
+                            <card.icon className="h-6 w-6 text-white" stroke={1.5} />
+                            <h2 className="font-bold text-white">{card.title}</h2>
+                        </div>
+                        <Image
+                            src={card.image}
+                            alt={card.title.toLowerCase()}
+                            width={500}
+                            height={500}
+                            className="rounded-lg overflow-hidden object-cover object-top"
+                        />
+                        <Link href={card.href}>
+                            <Button variant="game" className="mt-4 w-full">{card.buttonText}</Button>
+                        </Link>
                     </div>
-                    <Image src="/images/stock-roulette.png" alt="stock-roulette" width={500} height={500} className="rounded-lg overflow-hidden  object-cover object-top" />
-                    <p className="text-gray-400 mt-3">
-                        Stock Games is a game that allows you to bet on the stock market. You can bet on the stock market by predicting the direction of the stock market.
-                    </p>
-                    <Link href="/game/platform/stock-games">
-                    <Button variant="game" className="mt-4 w-full">Play Now</Button>
-                    </Link>
-
-                </div>
-
-                <div>
-                    <div className="flex items-center gap-2 mb-4">
-                        <IconGift className="h-6 w-6 text-white" stroke={1.5} />
-                        <h2 className="text-xl font-bold text-white">Casino Games</h2>
-                    </div>
-                    <Image src="/images/casino-games.png" alt="casino-games" width={500} height={500} className="rounded-lg overflow-hidden  object-cover object-top" />
-                    <p className="text-gray-400 mt-3">Casino Games is a game that allows you to bet on the casino games. You can bet on the casino games by predicting the direction of the casino games.</p>
-                    <Link href="/game/platform/casino">
-                        <Button variant="game" className="mt-4 w-full">Play Now</Button>
-                    </Link>
-                </div>
-
-                <div>
-                    <div className="flex items-center gap-2 mb-4">
-                        <IconCricket className="h-6 w-6 text-white" stroke={1.5} />
-                        <h2 className="text-xl font-bold text-white">Sports Book</h2>
-                    </div>
-                    <Image src="/images/sports-book.png" alt="sports-book" width={500} height={500} className="rounded-lg overflow-hidden  object-cover object-top" />
-                    <p className="text-gray-400 mt-3">Sports Book is a game that allows you to bet on the Current Sports Matches. You can bet on the Current Sports Matches by predicting the direction of the Current Sports Matches.</p>
-                    <Link href={`/game/platform/casino/${GameCategory.SPORTS}`}>
-                        <Button variant="game" className="mt-4 w-full">Play Now</Button>
-                    </Link>
-                </div>
+                ))}
             </div>
-            <header className="flex items-center mb-3 pl-1 justify-between">
-                <h2 className="text-xl font-semibold text-white"> Winning Reports </h2>
+
+
+            {/* Mobile View */}
+            <div className="md:hidden my-10">
+
+
+                <Carousel className="w-full" opts={{
+                    align: "start",
+                    containScroll: "trimSnaps"
+                }}>
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-xl font-bold text-white">Our Games</h2>
+                        <div className="flex gap-2">
+                            <CarouselPrevious className="static translate-y-0" />
+                            <CarouselNext className="static translate-y-0" />
+                        </div>
+                    </div>
+                    <CarouselContent>
+                        {GAME_CARDS.map((card, index) => (
+                            <CarouselItem key={index} className="basis-1/2 ">
+                                <div className="flex flex-col items-center relative rounded-lg">
+                                    <Image
+                                        src={card.image}
+                                        alt={card.title.toLowerCase()}
+                                        width={500}
+                                        height={500}
+                                        className="rounded-lg overflow-hidden object-cover object-top"
+                                    />
+                                    <div className="absolute rounded-lg flex flex-col items-center justify-end bottom-0 left-0 z-10 right-0 bg-gradient-to-t from-black/80 to-transparent h-1/2 text-white p-2">
+                                        <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                                            <card.icon className="h-6 w-6 text-white" stroke={1.5} />
+                                            {card.title}</h2>
+                                    </div>
+                                </div>
+                            </CarouselItem>
+                        ))}
+                    </CarouselContent>
+                </Carousel>
+            </div>
+
+            <div className="container-main space-y-6 mb-12">
+                <img src="/images/banner/1.avif" alt="stock-roulette" className="rounded-lg w-full h-auto" />
+                <img src="/images/banner/2.avif" alt="stock-roulette" className="rounded-lg w-full h-auto" />
+            </div>
+            <header className="items-center mb-3 pl-1 justify-between md:flex hidden">
+                <h2 className="font-semibold text-white">Winning Reports</h2>
             </header>
-            <FinancialTable data={data} className="w-full mb-10" />
+            <FinancialTable data={data} className="w-full md:flex hidden mb-10" />
         </>
     )
 }

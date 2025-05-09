@@ -15,14 +15,14 @@ type BullModelProps = {
 const BullModel = forwardRef<THREE.Group, BullModelProps>(
   ({ position, scale, color, number }, ref) => {
     const group = useRef<THREE.Group>(null);
-    const { scene, animations } = useGLTF("./animation-bull.gltf");
+    const { scene, animations } = useGLTF("./bull-anim.glb");
 
     const texture = useTexture(
       color === "red"
-        ? "./texture-red.jpg"
+        ? "./texture-red.png"
         : color === "green"
           ? "./texture-golden.png"
-          : "./texture-black.png"
+          : "./texture-black2.png"
     );
 
     const clonedScene = useMemo(() => clone(scene), [scene]);
@@ -68,7 +68,10 @@ const BullModel = forwardRef<THREE.Group, BullModelProps>(
     useEffect(() => {
       if (actions) {
         Object.values(actions).forEach((action) => {
-          action?.reset().play();
+          // add a delay based on the number of the horse
+          setTimeout(() => {
+            action?.reset().play();
+          }, number * 100);
         });
       }
     }, [actions]);
@@ -79,7 +82,7 @@ const BullModel = forwardRef<THREE.Group, BullModelProps>(
         <HorseNumber
           number={number}
           color={color}
-          position={[0, 1, 1]}
+          position={[0, 60,0]}
         />
       </group>
     );

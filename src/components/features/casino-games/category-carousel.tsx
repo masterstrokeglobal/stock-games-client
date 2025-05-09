@@ -29,7 +29,7 @@ export default function CategoryCarousel({ categoryId, title, popular, new: isNe
     if (isLoading) {
         return (
             <div className="space-y-4">
-                <h2 className="text-2xl font-bold">{title}</h2>
+                <h2 className="md:text-2xl text- font-bold">{title}</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                     {[...Array(5)].map((_, i) => (
                         <div key={i} className="aspect-[6/4] rounded-xl bg-background/20 animate-pulse" />
@@ -48,7 +48,7 @@ export default function CategoryCarousel({ categoryId, title, popular, new: isNe
         <Carousel className="w-full">
             <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-bold">{title}</h2>
+                    <h2 className="md:text-2xl text-base font-bold">{title}</h2>
                     <div className="flex gap-2">
                         <CarouselPrevious className="static translate-y-0 bg-background/20 hover:bg-background/40" />
                         <CarouselNext className="static translate-y-0 bg-background/20 hover:bg-background/40" />
@@ -56,7 +56,7 @@ export default function CategoryCarousel({ categoryId, title, popular, new: isNe
                 </div>
                 <CarouselContent>
                     {data.games.map((game) => (
-                        <CarouselItem key={game.id} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 pl-4">
+                        <CarouselItem key={game.id} className="basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 pl-4">
                             <GameCard game={game} />
                         </CarouselItem>
                     ))}

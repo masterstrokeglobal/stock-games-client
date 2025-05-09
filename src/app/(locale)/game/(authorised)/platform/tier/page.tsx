@@ -6,13 +6,10 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-
-interface Tier {
-    name: string;
-    xpRange: string;
-    color: string;
-    icon: string;
-}
+import { useGetTiers } from "@/react-query/tier-queries"
+import { useGetUserTier } from "@/react-query/game-user-queries"
+import Image from "next/image"
+import { Tier } from "@/models/tier"
 
 interface Step {
     number: string;
@@ -25,21 +22,33 @@ export default function TiersProgram(): JSX.Element {
     const scrollAreaRef = useRef<HTMLDivElement | null>(null)
     const tierRefs = useRef<Array<RefObject<HTMLButtonElement>>>([])
 
-    const tiers: Tier[] = [
-        { name: "BRONZE ", xpRange: "0 - 50 XP", color: "bg-amber-600/80", icon: "🥉" },
-        { name: "SILVER ", xpRange: "151 - 250 XP", color: "bg-gray-300/80", icon: "🥈" },
-        { name: "GOLD ", xpRange: "451 - 600 XP", color: "bg-yellow-400/80", icon: "🥇" },
-        { name: "PLATINUM ", xpRange: "901 - 1100 XP", color: "bg-cyan-400/80", icon: "💠" },
-        { name: "DIAMOND ", xpRange: "1501 - 1800 XP", color: "bg-blue-400/80", icon: "💎" },
-    ]
+    const { data: userTier } = useGetUserTier()
 
+    const { data: tiers } = useGetTiers({
+        page: 1,
+        limit: 100,
+        search: "",
+        orderBy: "createdAt",
+        orderByField: "DESC"
+    })
+
+
+    console.log(userTier)
+
+    const tierList = tiers?.tiers || [];
     // Initialize refs array when component mounts
     useEffect(() => {
-        tierRefs.current = Array(tiers.length)
+        tierRefs.current = Array(tierList?.length ?? 0)
             .fill(null)
             .map((_, i) => tierRefs.current[i] || createRef<HTMLButtonElement>())
-    }, [tiers.length])
+    }, [tierList?.length])
 
+
+    useEffect(() => {
+        if (userTier) {
+            setActiveTier(tierList.findIndex((tier) => tier.id === userTier.tierId))
+        }
+    }, [userTier])
     // Scroll to the active tier when it changes
     useEffect(() => {
         if (tierRefs.current[activeTier]?.current && scrollAreaRef.current) {
@@ -87,14 +96,17 @@ export default function TiersProgram(): JSX.Element {
     ]
 
     const handlePrevious = (): void => {
-        setActiveTier((prev) => (prev === 0 ? tiers.length - 1 : prev - 1))
+        setActiveTier((prev) => (prev === 0 ? tierList.length - 1 : prev - 1))
     }
 
     const handleNext = (): void => {
-        setActiveTier((prev) => (prev === tiers.length - 1 ? 0 : prev + 1))
+        setActiveTier((prev) => (prev === tierList.length - 1 ? 0 : prev + 1))
     }
 
 
+    if (tierList.length === 0) {
+        return <div>No tiers found</div>
+    }
 
     return (
         <>
@@ -127,9 +139,9 @@ export default function TiersProgram(): JSX.Element {
                 </div>
 
                 {/* Tier Tabs */}
-                <ScrollArea ref={scrollAreaRef} className="w-fit mb-6 py-1.5 px-2 rounded-full bg-secondary-game">
+                <ScrollArea ref={scrollAreaRef} className="w-full md:w-[80%] mb-6 py-1.5 px-2 rounded-full bg-secondary-game">
                     <div className="flex gap-1">
-                        {tiers.map((tier, index) => (
+                        {tierList.map((tier, index) => (
                             <Button
                                 key={tier.name}
                                 ref={tierRefs.current[index]}
@@ -147,7 +159,7 @@ export default function TiersProgram(): JSX.Element {
                                         ? "bg-white text-black"
                                         : "text-white"
                                 )}>
-                                    {tier.icon}
+                                    <img src={tier.imageUrl} alt={tier.name} className="w-6 h-6" />
                                 </span>
                                 {tier.name}
                             </Button>
@@ -157,49 +169,8 @@ export default function TiersProgram(): JSX.Element {
                 </ScrollArea>
 
                 {/* Active Tier Card */}
-                <Card className="bg-background-secondary border-primary-game mb-8 overflow-hidden">
-                    <div className="relative">
-                        <div className="absolute inset-0 bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-background-secondary/50 to-primary-game z-0"></div>
-                        <div className="p-4 sm:p-6 md:p-8 flex flex-col md:flex-row items-center gap-4 md:gap-8 relative z-10">
-                            {/* Tier Badge Placeholder */}
-                            <div className="relative w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 flex items-center justify-center">
-                                <div className="absolute inset-0 bg-[radial-gradient(circle,_var(--tw-gradient-stops))] from-background-secondary/30 to-transparent"></div>
-                                <div className={`w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 ${tiers[activeTier].color} clip-hexagon relative`}>
-                                    <div className="absolute bottom-0 w-full h-1/6 bg-amber-600"></div>
-                                </div>
-                            </div>
 
-                            <div className="flex flex-col items-center md:items-start">
-                                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{tiers[activeTier].name}</h3>
-                                <p className="text-secondary font-bold mb-4 md:mb-6">{tiers[activeTier].xpRange}</p>
-                            </div>
-
-                            <div className="w-full md:w-auto p-3 sm:p-4 ml-auto rounded-lg backdrop-blur-sm">
-                                <h4 className="text-base sm:text-lg font-semibold mb-2 text-white">Cashback</h4>
-                                <div className="space-y-2 sm:space-y-3">
-                                    <div className="flex items-center gap-2 sm:gap-3">
-                                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 flex items-center justify-center">
-                                            <span className="text-lg sm:text-xl">🎰</span>
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <span className="text-white font-medium">Casino</span>
-                                            <span className="text-secondary text-xs sm:text-sm">4% cashback on casino net losses</span>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center gap-2 sm:gap-3">
-                                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 flex items-center justify-center">
-                                            <span className="text-lg sm:text-xl">⚽</span>
-                                        </div>
-                                        <div className="flex flex-col">
-                                            <span className="text-white font-medium">Sport</span>
-                                            <span className="text-secondary text-xs sm:text-sm">4% cashback on sport net losses</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </Card>
+                <ActiveTierCard tier={tierList[activeTier]} myTier={userTier} tierList={tierList} />
 
                 {/* How it Works Section */}
                 <div>
@@ -228,5 +199,117 @@ export default function TiersProgram(): JSX.Element {
                 </div>
             </div>
         </>
+    )
+}
+
+
+const ActiveTierCard = ({ tier, myTier, tierList }: { tier: Tier, myTier: { tierId: string, gamesPlayed: number, totalPoints: number, pointsRedeemed: number }, tierList: Tier[] }) => {
+
+    const isMyTier = myTier?.tierId?.toString() === tier.id.toString();
+
+    const currentTierIndex = tierList.findIndex((t) => t.id === tier.id);
+    const nextTier = tierList[currentTierIndex + 1];
+    return (
+        <Card className={cn("bg-background-secondary  mb-8 overflow-hidden rounded-xl", isMyTier ? "border-2 border-yellow-500 rounded-xl" : "border-2 border-primary-game")}>
+            <div className="relative">
+                <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 relative z-10">
+                    {/* Tier Badge Placeholder */}
+                    <div className="flex flex-col h-full  aspect-square items-center mb-10 md:items-start">
+                        <div className="relative flex items-center flex-col  justify-center">
+                            <Image src={tier.imageUrl} alt={tier.name} className="w-28 ml-4 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40  z-10 relative" width={1020} height={1020} />
+                            <div className="absolute inset-0 aspect-square object-cover  scale-150" style={{ animationDuration: `10s` }}>
+                                <img src="/images/banner/tiers_program_bg.webp" alt="tiers_program_bg" className="w-full h-full animate-spin" style={{ animationDuration: `20s` }} />
+                            </div>
+                            <h3 className="text-xl sm:text-2xl text-center flex-1 md:flex-col flex  md:text-left pl-4  font-semibold tracking-wider text-white mb-2 uppercase " >
+                                <span className="text-white/70 text-lg ">
+                                    {tier.name}
+                                </span>
+                                {isMyTier && <span className=" text-yellow-500 text-sm text-center">My Tier</span>}
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div className="w-full md:w-auto p-3  sm:p-6 md:p-8 ml-auto rounded-lg backdrop-blur-sm">
+                        <div className="space-y-2 sm:space-y-3 grid grid-cols-1 sm:grid-cols-2 gap-2  md:gridro md:gap-3">
+                            {tier.loginPoints > 0 && <div className="flex items-center gap-2 sm:gap-3">
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 flex items-center justify-center">
+                                    <span className="text-lg sm:text-xl">🎰</span>
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-white font-medium">Login Points</span>
+                                    <span className="text-secondary text-xs sm:text-sm">{tier.loginPoints} points received for login days</span>
+                                </div>
+                            </div>}
+                            {tier.firstGamePoints > 0 && <div className="flex items-center gap-2 sm:gap-3">
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 flex items-center justify-center">
+                                    <span className="text-lg sm:text-xl">⚽</span>
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-white font-medium">First Game Points</span>
+                                    <span className="text-secondary text-xs sm:text-sm">{tier.firstGamePoints} points received for first game</span>
+                                </div>
+                            </div>}
+                            {tier.pointsPerHundredRupees > 0 && <div className="flex items-center gap-2 sm:gap-3">
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 flex items-center justify-center">
+                                    <span className="text-lg sm:text-xl">
+                                        🪙
+                                    </span>
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-white font-medium">Game Points</span>
+                                    <span className="text-secondary text-xs sm:text-sm">{tier.pointsPerHundredRupees} points received for every 100 rupees deposited</span>
+                                </div>
+                            </div>}
+                            {tier.redeemablePoints > 0 && <div className="flex items-center gap-2 sm:gap-3">
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white/10 flex items-center justify-center">
+                                    <span className="text-lg sm:text-xl">
+                                        🎫
+                                    </span>
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-white font-medium">Reedeem Points</span>
+                                    <span className="text-secondary text-xs sm:text-sm">{tier.redeemablePoints} points received for redeeming</span>
+                                </div>
+                            </div>}
+                        </div>
+                    </div>
+                </div>
+                <div className="flex items-center md:items-start p-4 justify-between">
+                 
+                    <div className="flex flex-col gap-4 flex-[3]">
+                    <header className="flex items-center gap-2 text-white font-semibold text-md">
+                    <img src={nextTier?.imageUrl} alt={nextTier?.name} className="size-8" /> To Reach Next {nextTier?.name} Tier 
+                    </header>   
+                        {nextTier?.minPoints > 0 && <div className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-2">
+                                <div className="flex items-center justify-between">
+                                    <p className="text-secondary text-sm">Points Progress</p>
+                                    <p className="text-secondary text-sm">{myTier?.totalPoints || 0}/{nextTier?.minPoints} points</p>
+                                </div>
+                                <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+                                        style={{
+                                            width: `${Math.min(((myTier?.totalPoints || 0) / nextTier?.minPoints) * 100, 100)}%`
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>}
+                        {nextTier?.gamesRequired > 0 && <div className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-2">
+                                <div className="flex items-center justify-between">
+                                    <p className="text-secondary text-sm">Games Progress</p>
+                                    <p className="text-secondary text-sm">{myTier?.gamesPlayed || 0}/{nextTier?.gamesRequired} games</p>
+                                </div>
+                                <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                                    <div className="h-full bg-gradient-to-r from-blue-500 to-cyan-500" style={{ width: `${Math.min(((myTier?.gamesPlayed || 0) / nextTier?.gamesRequired) * 100, 100)}%` }} />
+                                </div>
+                            </div>
+                        </div>}
+                    </div>
+                </div>
+            </div>
+        </Card>
     )
 }

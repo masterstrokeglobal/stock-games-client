@@ -214,6 +214,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const oddNumbers = Array.from({ length: 8 }, (_, i) => (i * 2) + 1);
 
     const handleBoardClick = (e: React.MouseEvent) => {
+        console.log("handleBoardClick", gameState.isPlaceOver, isPlacingBet);
         if (gameState.isPlaceOver || isPlacingBet) return;
         if (!verifyBetAmount(betAmount)) return;
         const bet = getBetTypeFromClick(e, boardRef);
@@ -320,6 +321,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                       {getBetForPosition(PlacementType.SINGLE, [17]) && (
                                             <ButtonChip className=" top/1/2 bg-red-600 right-1/2 translate-x-1/2 -translate-y-1/2" amount={getBetForPosition(PlacementType.SINGLE, [17])!.amount} />
                                         )} 
+                                        {roundRecord.winningId === roundRecord.market[16]?.id && <img className='z-40 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-auto md:h-7 h-6 animate-pulse  duration-500 ' src='/images/crown.png' />}
                                     </Button>
                                 </div>
 

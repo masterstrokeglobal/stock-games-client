@@ -282,3 +282,52 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   color: black;
   opacity: 0.6;
 }
+
+.gold-button {
+  background: linear-gradient(145deg, #ff3c3c, #ff7a00); /* Reversed gradient */
+  color: white;
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+ 
+}
+
+.options-button {
+  background: linear-gradient(145deg, #007cf0, #00dfd8);
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.play-button {
+  background: linear-gradient(145deg, #00e676, #1de9b6);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.active-menu-button {
+  background: linear-gradient(145deg, #007cf0, #00dfd8);
+  color: white;
+  border: none;
+}
+
+.play-button:hover {
+  transform: scale(1.05);
+}
+
+

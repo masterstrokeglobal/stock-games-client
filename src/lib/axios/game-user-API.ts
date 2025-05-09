@@ -71,6 +71,10 @@ export const gameUserAPI = {
     return api.post("/auth/google", payload);
   },
 
+  getTier: async () => {
+    return api.get("/user/my-tier");
+  }, 
+
   demoLogin: async () => {
     return api.post("/auth/create-demo-user", { companyId: COMPANYID });
   },

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import Container from '@/components/common/container';
 import TopBar from '@/components/common/top-bar';
-import { CardIcons, MoneyIcon, WithdrawIcon } from '../../user-menu/icons';
+import { CardIcons, MoneyIcon, WithdrawIcon } from '../../../../../../components/features/user-menu/icons';
 import useWallet from '@/hooks/use-wallet';
 import WalletBalanceCard from '@/components/features/gamer/wallet/wallet-balance';
 import { useTranslations } from 'next-intl';

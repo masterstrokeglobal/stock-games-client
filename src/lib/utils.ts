@@ -226,7 +226,6 @@ export const randomNumber = (min: number, max: number, multiple: number) => {
 
 
 export const checkCasinoAllowed = (companyId: number) => {
-  console.log(companyId)
   return companyId === 21;
 }
 
@@ -246,8 +245,7 @@ export const generateData = (count: number) => {
   const data = []
 
   for (let i = 0; i < count; i++) {
-    const isHidden = Math.random() > 0.7
-    const user = isHidden ? "Hidden" : randomUsername()
+    const user = randomUsername()
     const time = getCurrentTime()
     const amount = randomNumber(50, 5000, 10).toString()
 
@@ -256,9 +254,10 @@ export const generateData = (count: number) => {
       user,
       time,
       amount,
-      isHidden,
     })
   }
 
   return data
 }
+
+export const SPORTS_BOOK_GAMEID = process.env.NEXT_PUBLIC_SPORTS_BOOK_GAMEID

@@ -13,6 +13,8 @@ interface FormImageProps<TFieldValues extends FieldValues = FieldValues> {
     label?: string
     description?: string
     className?: string
+    aspectRatio?: number ,
+    aspectRatioDescription?: string
 }
 
 const FormImage = <TFieldValues extends FieldValues>({
@@ -20,6 +22,8 @@ const FormImage = <TFieldValues extends FieldValues>({
     label,
     description,
     className,
+    aspectRatio,
+    aspectRatioDescription,
 }: FormImageProps<TFieldValues>) => {
     const { setValue, getFieldState, getValues } = useFormContext()
     const [previewUrl, setPreviewUrl] = useState<string | null>(null)
@@ -36,7 +40,32 @@ const FormImage = <TFieldValues extends FieldValues>({
         }
     }, [previewUrlValue]);
 
-    const handleUpload = useCallback((file: File) => {
+    const validateImageDimensions = (file: File): Promise<boolean> => {
+        return new Promise((resolve) => {
+            if (!aspectRatio) {
+                resolve(true);
+                return;
+            }
+
+            const img = new Image();
+            img.onload = () => {
+                const imageRatio = img.width / img.height;
+                const isValidRatio = Math.abs(imageRatio - aspectRatio) < 0.4;
+                resolve(isValidRatio);
+            };
+            img.src = URL.createObjectURL(file);
+        });
+    };
+
+    const handleUpload = useCallback(async (file: File) => {
+        if (aspectRatio) {
+            const isValidDimensions = await validateImageDimensions(file);
+            if (!isValidDimensions) {
+                toast.error(`Image must have an aspect ratio of ${aspectRatioDescription}`);
+                return;
+            }
+        }
+
         const formData = new FormData()
         formData.append('image', file)
 
@@ -55,7 +84,7 @@ const FormImage = <TFieldValues extends FieldValues>({
                 toast.error("Failed to upload image")
             }
         })
-    }, [name, setValue, uploadImageMutation])
+    }, [name, setValue, uploadImageMutation, aspectRatio, aspectRatioDescription])
 
     const handleDrop = useCallback((event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();
@@ -93,7 +122,7 @@ const FormImage = <TFieldValues extends FieldValues>({
     return (
         <FormItem className={cn("space-y-2", className)}>
             {label && <FormLabel>{label}</FormLabel>}
-            {description && <FormDescription>{description}</FormDescription>}
+          
             
             <FormControl>
                 <div 
@@ -146,6 +175,8 @@ const FormImage = <TFieldValues extends FieldValues>({
                     )}
                 </div>
             </FormControl>
+            {description && <FormDescription>{description}</FormDescription>}
+
 
             {isUploading && (
                 <div className="text-sm text-muted-foreground text-center">

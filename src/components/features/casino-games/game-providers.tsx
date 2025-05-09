@@ -1,35 +1,42 @@
+import Link from "next/link";
 import React from "react";
+import { ProviderEnum } from "@/models/casino-games";
 
 const providers = [
-  { alt: "EVOLUTION", src: "https://www.pinkybet.co/static/media/evolution_img.456aa2bf.svg" },
-  { alt: "EZUGI", src: "https://www.pinkybet.co/static/media/ezugi_img.fbd64fa7.svg" },
-  { alt: "SPRIBE", src: "https://www.pinkybet.co/static/media/spribe_img.442b2a12.svg" },
-  { alt: "SMARTSOFT GAMING", src: "https://www.pinkybet.co/static/media/smartsoft_img.e13d7f85.svg" },
-  { alt: "PLAYTECH", src: "https://www.pinkybet.co/static/media/playtech_img.371b4597.svg" },
-  { alt: "BetGames_TV", src: "https://www.pinkybet.co/static/media/betgames_img.03eabe21.svg" },
-  { alt: "Evoplay", src: "https://www.pinkybet.co/static/media/evoplay_img.60dec60c.svg" },
-  { alt: "TURBO", src: "https://www.pinkybet.co/static/media/turbo_img.de10d05e.svg" },
-  { alt: "GAMZIX", src: "https://www.pinkybet.co/static/media/gamezix_img.b750d7dd.svg" },
-  { alt: "JILI", src: "https://www.pinkybet.co/static/media/jili_img.da065a68.svg" },
-  { alt: "VIVO", src: "https://www.pinkybet.co/static/media/vivo_img.a6560fa2.svg" },
-  { alt: "AE Sexy", src: "https://www.pinkybet.co/static/media/AE%20SEXY.29690a7e.svg" }, // Note: encoded space
+  { alt: ProviderEnum.EVOLUTION_GAMING, src: "/images/companies/evolution.svg" },
+  { alt: ProviderEnum.EZUGI, src: "/images/companies/ezugi.svg" },
+  { alt: ProviderEnum.SPRIBE, src: "/images/companies/spribe.svg" },
+  { alt: ProviderEnum.SMARTSOFT_GAMING, src: "/images/companies/smartsoft.png" },
+  { alt: ProviderEnum.PLAYTECH, src: "/images/companies/playtech.svg" },
+  { alt: ProviderEnum.BETGAMES, src: "/images/companies/betgames.png" },
+  { alt: ProviderEnum.EVOPLAY_ENTERTAINMENT, src: "/images/companies/evoplay.svg" },
+  { alt: ProviderEnum.TURBO, src: "/images/companies/turbo.svg" },
+  { alt: ProviderEnum.GAMZIX, src: "/images/companies/gamzix.png" },
+  { alt: ProviderEnum.JILI, src: "/images/companies/jili.png" },
+  { alt: ProviderEnum.VIVOGAMING, src: "/images/companies/vivo.png" },
+  { alt: ProviderEnum.SEXYBCRT, src: "/images/companies/ae-sexy.png" },
 ];
-
 const CasinoProviders = () => {
   return (
     <section className="mt-10">
       <h2 className="text-2xl font-semibold mb-4">Game Providers</h2>
-      <div className="casino-provider-ctn grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 ">
+      <div className="casino-provider-ctn grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
         {providers.map((provider, index) => (
-          <img
+          <Link
             key={index}
-              className="home-casino-img object-contain"
+            href={`/game/platform/casino?provider=${provider.alt}`}
+            className="bg-background-secondary rounded-lg p-4 flex items-center justify-center h-24"
+          >
+            {/* new game will have a rotated tag */}
+           
+            <img
+              className="home-casino-img object-contain w-full h-full"
               src={provider.src}
               alt={provider.alt}
-              loading="lazy"
             />
-      ))}
-    </div>
+          </Link>
+        ))}
+      </div>
     </section>
   );
 };

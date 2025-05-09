@@ -1,7 +1,7 @@
 "use client"
 
 import GameGrid from "@/components/features/casino-games/game-grid"
-import { GameAdsCarousel } from "@/components/features/platform/carousel"
+import { GameAdsCarousel } from "@/components/features/platform/game-ads-carousel"
 import { Input } from "@/components/ui/input"
 import { useAuthStore } from "@/context/auth-context"
 import { checkCasinoAllowed } from "@/lib/utils"

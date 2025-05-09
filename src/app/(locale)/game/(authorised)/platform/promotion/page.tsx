@@ -19,7 +19,9 @@ const PromotionPage = () => {
 
     return (
         <section className="flex flex-col min-h-screen bg-primary-game text-white p-4 mx-auto">
-            <main className="flex flex-col gap-4 mt-20  w-full mx-auto">
+            <main className="flex flex-col gap-4 md:mt-20 mt-10 
+            
+            w-full mx-auto">
                 <header>
                     <h1 className="text-2xl font-bold text-left">
                         <span className="text-2xl mr-2">🎉</span>
@@ -30,7 +32,7 @@ const PromotionPage = () => {
                 {isLoading ? (
                     <BonusSkeletonLoader />
                 ) : activeBonus && activeBonus.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {activeBonus.map((bonus: Bonus) => (
                             <BonusCard className="w-full" key={bonus.id} bonus={bonus} />
                         ))}

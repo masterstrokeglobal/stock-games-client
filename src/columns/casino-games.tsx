@@ -26,7 +26,15 @@ const casinoGamesColumns: ColumnDef<CasinoGames>[] = [
         header: "Game Type",
         accessorKey: "gameType",
         cell: ({ row }) => {
-            return <div className="w-48 truncate">{row.original.category}</div>
+            return <Badge variant="outline"  className="w-fit truncate">{row.original.category.split("_").join(" ")}</Badge>
+        }
+    },
+
+    {
+        header: "Game Provider",
+        accessorKey: "gameProvider",
+        cell: ({ row }) => {
+            return <div className="w-fit truncate uppercase font-semibold ">{row.original.subProviderName.split("_").join(" ")}</div>
         }
     },
     {
