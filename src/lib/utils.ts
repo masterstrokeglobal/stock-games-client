@@ -260,4 +260,5 @@ export const generateData = (count: number) => {
   return data
 }
 
-export const SPORTS_BOOK_GAMEID = process.env.NEXT_PUBLIC_SPORTS_BOOK_GAMEID
+export const SPORTS_BOOK_GAMEID = process.env.NEXT_PUBLIC_SPORTS_BOOK_GAMEID ?? 8653;
+
