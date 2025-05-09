@@ -1,6 +1,5 @@
 "use client";
 import { GameAdsCarousel } from "@/components/features/platform/game-ads-carousel";
-import { Button } from "@/components/ui/button";
 import { SchedulerType } from "@/models/market-item";
 import Image from "next/image";
 import Link from "next/link";
