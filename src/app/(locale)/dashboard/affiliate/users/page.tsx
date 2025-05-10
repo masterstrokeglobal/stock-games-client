@@ -4,6 +4,7 @@ import AffiliateBreadcrumb from "@/components/features/affiliate/affiliate-bread
 import { Button } from "@/components/ui/button";
 import DataTable from "@/components/ui/data-table-server";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue   } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useGetAffiliateUsers, useGetAffiliateUsersDownload } from "@/react-query/affiliate-queries";
 import { Download, Search } from "lucide-react";
@@ -12,6 +13,7 @@ import React, { useMemo, useState } from "react";
 const UserTable = () => {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
+    const [limit, setLimit] = useState(10); 
 
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
@@ -23,7 +25,7 @@ const UserTable = () => {
         search,
         startDate,
         endDate,
-        limit: 10,
+        limit,
         affiliateId: affiliateId ? parseInt(affiliateId) : undefined,
     });
 
@@ -43,8 +45,8 @@ const UserTable = () => {
     }, [data, isSuccess]);
 
     const totalPages = useMemo(() => {
-        return Math.ceil(data?.data?.count / 10) || 1;
-    }, [data, isSuccess]);
+        return Math.ceil(data?.data?.count / limit) || 1;
+    }, [data, isSuccess, limit]);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);
@@ -87,6 +89,21 @@ const UserTable = () => {
                         <Download size={18} className="mr-2" />
                         Download
                     </Button>
+
+                    <Select
+                        value={limit.toString()}
+                        onValueChange={(value) => setLimit(parseInt(value))}
+                    >
+                        <SelectTrigger className="w-fit">
+                            <SelectValue placeholder="Select a limit" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="10">10</SelectItem>
+                            <SelectItem value="20">20</SelectItem>
+                            <SelectItem value="50">50</SelectItem>
+                            <SelectItem value="100">100</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
             </header>
 

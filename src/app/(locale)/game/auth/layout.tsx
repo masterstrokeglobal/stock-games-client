@@ -11,7 +11,6 @@ import { PropsWithChildren } from "react";
 const AuthLayout: React.FC = ({ children }: PropsWithChildren) => {
     const router = useRouter();
 
-
     return <div className="min-h-screen md:py-40 py-10 flex text-game-text justify-center items-center  bg-background-game">
         <nav className="items-center hidden uppercase md:flex fixed top-0 z-50 justify-center  font-semibold text-2xl w-full h-20 bg-primary-game ">
             <Button variant={'ghost'} className="absolute left-4" onClick={() => router.back()}  >

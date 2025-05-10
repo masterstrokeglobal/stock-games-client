@@ -5,6 +5,8 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from "next-intl/server";
 import { Poppins } from 'next/font/google';
 import "./globals.css";
+import { HighlightInit } from '@highlight-run/next/client';
+import { HIGHLIGHT_APP_KEY } from '@/lib/utils';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'], // Include all weights
@@ -24,7 +26,7 @@ export default async function RootLayout({
     <>
       <Analytics />
       {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID} />}
-      {/* <HighlightInit
+       <HighlightInit
         projectId={HIGHLIGHT_APP_KEY}
         serviceName="my-nextjs-frontend"
         tracingOrigins
@@ -33,15 +35,16 @@ export default async function RootLayout({
           recordHeadersAndBody: true,
           urlBlocklist: [],
         }}
-      /> */}
+      />  
       <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID!}>
 
         <html lang={locale}>
           <head>
             <meta charSet="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>Stock </title>
+            <title>Stock Games </title>
             <link rel="preconnect" href="https://fonts.gstatic.com" />
+            <link rel="icon" href="/favicon.ico" />
           </head>
           <body
             className={`${poppins.className} antialiased`}

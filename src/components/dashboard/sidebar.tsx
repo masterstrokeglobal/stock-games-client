@@ -13,6 +13,7 @@ import {
 import { useAuthStore } from '@/context/auth-context';
 import Admin, { AdminRole } from '@/models/admin';
 import Logo from '../common/logo';
+import { ScrollArea } from "../ui/scroll-area";
 
 interface SubMenuItem {
     name: string;
@@ -270,14 +271,16 @@ const Sidebar = ({ className }: PropsWithClassName) => {
 
     return (
         <div className={cn("flex  flex-col ", className)}>
-            <div className="flex h-16 items-center  px-4">
-                <Logo dark={false} />
+                <ScrollArea className="h-full">
+                <div className="flex h-16 items-center  px-4">
+                    <Logo dark={false} />
             </div>
             <nav className="flex-1 overflow-y-auto px-4 pt-8">
                 <Accordion type="multiple" className="w-full space-y-2">
                     {menus.map(renderMenuItem)}
                 </Accordion>
             </nav>
+        </ScrollArea>
         </div>
     );
 };

@@ -24,7 +24,7 @@ export default function GamingAppInterface() {
                     </div>
                 </Link>
 
-                <Link href={`/game?gameType=${SchedulerType.CRYPTO}`} className="w-full">
+                <Link href={`/game?gameType=${SchedulerType.USA_MARKET}`} className="w-full">
                     <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
                         <Image src="/images/ad2.jpg" alt="coming-soon" className="w-full h-auto object-contain  " width={500} height={500} />
                         <div className="md:p-2 w-full absolute bottom-0 bg-gradient-to-b from-transparent to-black text-game-text text-center">

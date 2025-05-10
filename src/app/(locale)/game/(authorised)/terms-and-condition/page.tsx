@@ -1,24 +1,25 @@
 "use client"
 import Container from '@/components/common/container';
 import TopBar from '@/components/common/top-bar';
-import React from 'react';
+import { useGetMyCompany } from '@/react-query/company-queries';
 function TermsAndConditions() {
+    const { data } = useGetMyCompany();
+
+    const name = data?.name;
+
     return (
         <div className="max-w-4xl mx-auto p-6 bg-white">
             <div className="prose prose-slate max-w-none">
                 <h1 className="text-3xl font-bold text-center text-blue-800 mb-8">INTRODUCTION - WHO WE ARE AND WHAT WE DO?</h1>
-                <p className="mb-4">We are the flagship brand of Stock Roulette, offering Our Platform to You and an opportunity for You to participate in Contests spanning across a broad range of market events (&quot;Services&quot;). An illustrative list of such market events is mentioned below as maybe modified from time to time (&quot;Markets&quot;):</p>
+                <p className="mb-4">We are the flagship brand of {name}, offering Our Platform to You and an opportunity for You to participate in Contests spanning across a broad range of market events (&quot;Services&quot;). An illustrative list of such market events is mentioned below as maybe modified from time to time (&quot;Markets&quot;):</p>
 
                 <ul className="list-disc pl-6 mb-6">
                     <li>US Stocks</li>
-                    <li>International Stocks</li>
-                    <li>Commodities</li>
-                    <li>Forex</li>
-                    <li>Indices</li>
+                    <li>Indian Stocks</li>
                     <li>Cryptocurrencies</li>
                 </ul>
 
-                <p className="mb-6">Any person using, accessing and/or participating in any stock-related free-to-play online contests (&quot;Practice Contest&quot;) and/or pay-to-play online contests (&quot;Paid Contest&quot;) on Our Platform is a user (&quot;User&quot;). All references to &quot;You/Your&quot; relate to the User. All references to &quot;We/Us/Our&quot; relate to &quot;Stock Roulette&quot; which denotes a collective reference to the Stock Roulette mobile application and the Stock Roulette website (hereinafter collectively referred to as &quot;Platform&quot;). Practice Contest and Paid Contest are hereinafter collectively referred to as &quot;Contests&quot;.</p>
+                <p className="mb-6">Any person using, accessing and/or participating in any stock-related free-to-play online contests (&quot;Practice Contest&quot;) and/or pay-to-play online contests (&quot;Paid Contest&quot;) on Our Platform is a user (&quot;User&quot;). All references to &quot;You/Your&quot; relate to the User. All references to &quot;We/Us/Our&quot; relate to &quot;{ name}&quot; which denotes a collective reference to the { name} mobile application and the { name} website (hereinafter collectively referred to as &quot;Platform&quot;). Practice Contest and Paid Contest are hereinafter collectively referred to as &quot;Contests&quot;.</p>
 
                 <h2 className="text-2xl font-semibold text-blue-700 mt-8 mb-4">ACCEPTANCE OF OUR TERMS AND CONDITIONS</h2>
 
@@ -77,7 +78,7 @@ function TermsAndConditions() {
 
                 <p className="mb-4">In participating in Contests, You agree to strictly comply with the Terms, including additional rules published by Us, such as:</p>
                 <ul className="list-disc pl-6 mb-6">
-                    <li>&quot;Stock Roulette Rules&quot; (available on our website); and</li>
+                    <li>&quot;{ name} Rules&quot; (available on our website); and</li>
                     <li>any other rules and regulations (including without limitation in relation to payments made to participate in any Contest)</li>
                 </ul>
 
@@ -101,6 +102,10 @@ function TermsAndConditions() {
                     <li>You set a limit on the number of Users joining the Private Contest, which can range from 2-20,000 users;</li>
                     <li>You will have the right to select whether Your Contest will be a Flexible Contest or a Non-Flexible Contest.</li>
                     <li>Pay the Pre-Designated Amount to join the Private Contest.</li>
+                    <li> The Tier Update will happen every 2 hours a day</li>
+                    <li> The Login Points and First Game Played Points will be given based on the tier according to the UTC time every day</li>
+                    <li> The Shuffle of market items will happen randomly every 2 minutes</li>
+                    <li> In case the round is abandoned or cancelled, the  Points will be refunded</li>
                 </ul>
 
                 <p className="mb-6">After You create a Private Contest, We will provide a unique identification code for the Private Contest that You can share with other Users for participating in the Private Contest (&quot;Contest Code&quot;).</p>
@@ -193,7 +198,7 @@ function TermsAndConditions() {
                     <li>You will be prompted to provide certain documents for processing your payments and verification purposes at the time of your first withdrawal.</li>
                     <li>The name mentioned on the identification document as provided by You in the app should correspond with the name of the Bank Account holder of the Bank or linked to the UPI ID provided by You at the time of bank account or UPI verification at the time of withdrawal or bank account change request.</li>
                     <li>We will process your withdrawal after verifying your bank account details and/or UPI ID (as applicable). Upon verification, we will debit the amount from your Winning Account and transfer it online to your bank account at the earliest.</li>
-                    <li>{`The minimum amount that can be withdrawn via single transaction shall be communicated on the Stock Roulette app's withdrawal page.`}</li>
+                    <li>{`The minimum amount that can be withdrawn via single transaction shall be communicated on the { name} app's withdrawal page.`}</li>
                     <li>We may charge any processing fee for the online transfer of funds from your Winning Account to Your bank account</li>
                     <li>We depend on banks and third parties to process transactions on Our Platform. Thus, we may take up to 24 hours to process any payments to Your bank account. You agree not to hold Us responsible or liable for any delay in processing any payments.</li>
                     <li>A transaction, once confirmed, is final, and no cancellation is permissible.</li>

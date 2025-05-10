@@ -27,6 +27,7 @@ export default function GamingAppInterface() {
     const category = searchParams.get("category") || "all";
     const provider = searchParams.get("provider") || "all";
 
+
     const [filter, setFilter] = useState<Filter>({
         search: search,
         category: category,

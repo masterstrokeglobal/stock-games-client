@@ -21,26 +21,47 @@ providerOptions.unshift({
 })
 
 
+const CategoryOptions = Object.values(GameCategory).map((category) => ({
+    label: category.split("_").join(" ").charAt(0).toUpperCase() + category.split("_").join(" ").slice(1),
+    value: category.toLowerCase()
+})).sort((a, b) => a.label.localeCompare(b.label));
+
+CategoryOptions.unshift({
+    label: "All",
+    value: "all"
+})
+
+
+
 const CasinoGames = () => {
-    const [page, setPage] = useState(1);
-    const [search, setSearch] = useState("");
-    const [provider, setProvider] = useState<string>("all");
+
+    const [filter, setFilter] = useState<{
+        search: string;
+        provider: string;
+        category: string;
+        page: number;
+    }>({
+        search: "",
+        provider: "all",
+        category: "all",
+        page: 1
+    });
 
 
     const { data, isFetching } = useGetCasinoGames({
-        page: page,
-        search: search,
+        page: filter.page,
+        search: filter.search,
         limit: 10,
-        category: provider === "all" ? undefined : provider as GameCategory
+        provider: filter.provider === "all" ? undefined : filter.provider as ProviderEnum,
+        category: filter.category === "all" ? undefined : filter.category as GameCategory
     });
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearch(e.target.value);
-        setPage(1); 
+        setFilter({ ...filter, search: e.target.value });
     };
 
     const changePage = (newPage: number) => {
-        setPage(newPage);
+        setFilter({ ...filter, page: newPage });
     };
 
     const totalPage = Math.ceil(data?.count ? data.count / 10 : 1);
@@ -59,13 +80,22 @@ const CasinoGames = () => {
                         />
                     </div>
 
-                    <ComboboxSelect 
+                    <ComboboxSelect
                         options={providerOptions}
-                        defaultValue={provider?.toString()}
+                        defaultValue={filter.provider?.toString()}
                         placeholder="Select Provider"
-                        value={provider?.toString()}
+                        value={filter.provider?.toString()}
                         className="w-40"
-                        onValueChange={(value) => setProvider(value as ProviderEnum) }
+                        onValueChange={(value) => setFilter({ ...filter, provider: value as ProviderEnum })}
+                    />
+
+                    <ComboboxSelect
+                        options={CategoryOptions}
+                        defaultValue={filter.category?.toString()}
+                        placeholder="Select Category"
+                        value={filter.category?.toString()}
+                        onValueChange={(value) => setFilter({ ...filter, category: value as GameCategory })}
+                        className="w-40"
                     />
 
 
@@ -73,7 +103,7 @@ const CasinoGames = () => {
             </header>
             <main className="mt-4">
                 <DataTable
-                    page={page}
+                    page={filter.page}
                     loading={isFetching}
                     columns={casinoGamesColumns}
                     data={data?.games || []}

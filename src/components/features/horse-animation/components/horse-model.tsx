@@ -19,10 +19,10 @@ const BullModel = forwardRef<THREE.Group, BullModelProps>(
 
     const texture = useTexture(
       color === "red"
-        ? "./texture-red.png"
+        ? "./texture-red.jpg"
         : color === "green"
-          ? "./texture-golden.png"
-          : "./texture-black2.png"
+          ? "./texture-golden.jpg"
+          : "./texture-black.png"
     );
 
     const clonedScene = useMemo(() => clone(scene), [scene]);
@@ -69,9 +69,10 @@ const BullModel = forwardRef<THREE.Group, BullModelProps>(
       if (actions) {
         Object.values(actions).forEach((action) => {
           // add a delay based on the number of the horse
+          action?.setDuration(2.5);
           setTimeout(() => {
             action?.reset().play();
-          }, number * 100);
+          }, number * 200);
         });
       }
     }, [actions]);

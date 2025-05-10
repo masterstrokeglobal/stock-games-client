@@ -262,3 +262,13 @@ export const generateData = (count: number) => {
 
 export const SPORTS_BOOK_GAMEID = process.env.NEXT_PUBLIC_SPORTS_BOOK_GAMEID ?? 8653;
 
+export const generateNewCameraPosition = (currentPosition: [number, number, number]) => {
+  const [x, y, z] = currentPosition;
+
+  // rotate around the y axis
+  const newX = x * Math.cos(Math.PI / 4) - z * Math.sin(Math.PI / 4);
+  const newZ = x * Math.sin(Math.PI / 4) + z * Math.cos(Math.PI / 4);
+
+  return [newX, y, newZ];
+}
+
