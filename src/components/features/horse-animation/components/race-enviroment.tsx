@@ -8,6 +8,7 @@ import { Physics } from "@react-three/rapier";
 import { Ground } from "./Ground";
 import FenceRow from "./fence-row";
 import HorseAnimation from "./horse-animation";
+import PeopleModel from "./people-model";
 type Props = {
     roundRecord: RoundRecord;
 };
@@ -33,7 +34,7 @@ const HorseRaceEnvironment = ({
                 shadow-mapSize-height={1024}
             />            <Physics gravity={[0, -30, 0]}>
                 <Ground />
-                {/* <PeopleModel position={[0, 10, 0]} rotation={[0,40.1, 0]} scale={[10, 10, 10]} /> */}
+                <PeopleModel position={[120, -2, 0]} rotation={[0,40.8, 0]} scale={[15, 15, 15]} />
                 <FenceRow x={-35} count={1000} spacing={16} />
                 <FenceRow x={85} count={1000} spacing={16} />
                 <HorseAnimation roundRecord={roundRecord} />

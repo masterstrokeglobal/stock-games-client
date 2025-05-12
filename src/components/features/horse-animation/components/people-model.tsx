@@ -10,8 +10,8 @@ type PeopleModelProps = {
     scale: [number, number, number];
 };
 
-const PeopleModel: React.FC<PeopleModelProps> = ({ position, rotation, scale }) => {
-    const { scene } = useGLTF("/people.glb");
+const PeopleModel: React.FC<PeopleModelProps> = ({position, rotation, scale }) => {
+    const { scene } = useGLTF("/people3.glb");
     const modelRef = useRef<THREE.Group>(null);
 
 
