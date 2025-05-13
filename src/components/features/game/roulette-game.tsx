@@ -23,7 +23,7 @@ import { BettingControls } from "./roulette-chips";
 import { RouletteBettingGrid } from "./roulette-grid";
 import { GameHeader } from "./roulette-header";
 import useUSAMarketAvailable from "@/hooks/use-usa-available";
-
+import useWindowSize from "@/hooks/use-window-size";
 enum PlacementType {
     SINGLE = "single",
     SPLIT = "split",
@@ -45,6 +45,7 @@ type Props = {
 const RouletteGame = ({ roundRecord }: Props) => {
 
     const t = useTranslations("game");
+    const { isMobile } = useWindowSize();
     const [betAmount, setBetAmount] = useState<number>(100);
     const gameState = useGameState(roundRecord);
     const isNSEAvailable = useNSEAvailable();
@@ -53,7 +54,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const { userDetails } = useAuthStore();
     const currentUser = userDetails as User;
     const { mutate, isPending: isPlacingBet } = useCreateGameRecord();
-    
+
 
     const boardRef = useRef<HTMLDivElement>(null);
 
@@ -252,13 +253,12 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO);
 
     const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
- 
+
     const isNotAllowedToPlaceBet = currentUser.isNotAllowedToPlaceOrder(roundRecord.type);
 
     return (
         <>
-
-            <ParticlesContainer />
+            {!isMobile && <ParticlesContainer />}
             <div className="mx-auto  lg:pr-4  py-2 bg-background-secondary h-full ">
                 <div className="relative rounded-xl lg:flex-row w-full flex-col flex border-brown-800">
                     <div className='lg:w-7/12 max-w-2xl mx-auto w-full'>
@@ -272,7 +272,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                         >
                             <TabsList className="w-full flex lg:hidden h-10 p-1 bg-tertiary">
 
-                                {isNSEAllowed  && (
+                                {isNSEAllowed && (
                                     <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && 'cursor-not-allowed')} value="nse">NSE</TabsTrigger>
                                 )}
                                 {isCryptoAllowed && (
@@ -318,9 +318,9 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                             0 &nbsp;
                                             {roundRecord.market[16]?.codeName}
                                         </span>
-                                      {getBetForPosition(PlacementType.SINGLE, [17]) && (
+                                        {getBetForPosition(PlacementType.SINGLE, [17]) && (
                                             <ButtonChip className=" top/1/2 bg-red-600 right-1/2 translate-x-1/2 -translate-y-1/2" amount={getBetForPosition(PlacementType.SINGLE, [17])!.amount} />
-                                        )} 
+                                        )}
                                         {roundRecord.winningId === roundRecord.market[16]?.id && <img className='z-40 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-auto md:h-7 h-6 animate-pulse  duration-500 ' src='/images/crown.png' />}
                                     </Button>
                                 </div>
@@ -414,15 +414,15 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             className="w-full relative z-10 mt-2"
                         >
                             <TabsList className="w-full hidden lg:flex  bg-tertiary ">
-                            {isNSEAllowed  && (
+                                {isNSEAllowed && (
                                     <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && '!cursor-not-allowed')} value="nse">NSE</TabsTrigger>
                                 )}
                                 {isCryptoAllowed && (
                                     <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
                                 )}
-                                 {isUSAMarketAllowed  && (
+                                {isUSAMarketAllowed && (
                                     <TabsTrigger disabled={!isUSAMarketAvailable} className={cn("flex-1 h-8", !isUSAMarketAvailable && '!cursor-not-allowed')} value="usa_market">USA Market</TabsTrigger>
-                                )} 
+                                )}
                             </TabsList>
 
                             <GameHeader gameState={gameState} />

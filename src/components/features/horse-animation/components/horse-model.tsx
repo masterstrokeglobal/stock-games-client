@@ -3,6 +3,7 @@ import { forwardRef, useEffect, useRef, useMemo } from "react";
 import * as THREE from "three";
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import HorseNumber from "./horse-number";
+import useWindowSize from "@/hooks/use-window-size";
 
 type BullModelProps = {
   position: [number, number, number];
@@ -16,13 +17,14 @@ const BullModel = forwardRef<THREE.Group, BullModelProps>(
   ({ position, scale, color, number }, ref) => {
     const group = useRef<THREE.Group>(null);
     const { scene, animations } = useGLTF("./bull-anim.glb");
+    const { isMobile } = useWindowSize();
 
     const texture = useTexture(
-      color === "red"
+       color === "red"
         ? "./texture-red.jpg"
         : color === "green"
-          ? "./texture-golden.jpg"
-          : "./texture-black.png"
+        ? "./texture-golden.jpg"
+        : "./texture-black.png"
     );
 
     const clonedScene = useMemo(() => clone(scene), [scene]);
@@ -36,39 +38,31 @@ const BullModel = forwardRef<THREE.Group, BullModelProps>(
       }
     }, [ref]);
 
-    // Apply texture and material updates
+    // Apply texture/material
     useEffect(() => {
-      if (!texture) return;
-
-      texture.flipY = false;
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.needsUpdate = true;
-
       clonedScene.traverse((child) => {
         if ((child as THREE.Mesh).isMesh) {
           const mesh = child as THREE.Mesh;
-          mesh.castShadow = true;
-          mesh.receiveShadow = true;
+          mesh.castShadow = !isMobile;
+          mesh.receiveShadow = !isMobile;
 
-          const originalMaterial = mesh.material as THREE.MeshStandardMaterial;
-          const newMaterial = originalMaterial.clone();
+          const basicMaterial = new THREE.MeshBasicMaterial();
+            texture.flipY = false;
+            texture.colorSpace = THREE.SRGBColorSpace;
+            texture.needsUpdate = true;
 
-          newMaterial.map = texture;
-          newMaterial.map.colorSpace = THREE.SRGBColorSpace;
-          newMaterial.roughness = 1;
-          newMaterial.metalness = 0;
-          newMaterial.needsUpdate = true;
+            basicMaterial.map = texture;
+            basicMaterial.map.colorSpace = THREE.SRGBColorSpace;
 
-          mesh.material = newMaterial;
+          mesh.material = basicMaterial;
         }
       });
-    }, [texture, clonedScene]);
+    }, [texture, clonedScene, isMobile]);
 
     // Play animation
     useEffect(() => {
       if (actions) {
         Object.values(actions).forEach((action) => {
-          // add a delay based on the number of the horse
           action?.setDuration(2.5);
           setTimeout(() => {
             action?.reset().play();
@@ -80,17 +74,12 @@ const BullModel = forwardRef<THREE.Group, BullModelProps>(
     return (
       <group ref={group} position={position} scale={scale}>
         <primitive object={clonedScene} />
-        <HorseNumber
-          number={number}
-          color={color}
-          position={[0, 60,0]}
-        />
+          <HorseNumber number={number} color={color} position={[0, 60, 0]} />
       </group>
     );
   }
 );
 
 BullModel.displayName = "BullModel";
-
 
 export default BullModel;

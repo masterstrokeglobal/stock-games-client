@@ -1,11 +1,11 @@
 "use client";
-import { PropsWithChildren, useEffect } from "react";
+import GameLoadingScreen from "@/components/common/game-loading-screen";
 import { useAuthStore } from "@/context/auth-context";
-import LoadingScreen from "@/components/common/loading-screen";
-import { useRouter } from "next/navigation";
-import User from "@/models/user";
 import useGameUserLogin from "@/hooks/use-game-user-login";
+import User from "@/models/user";
 import Head from "next/head";
+import { useRouter } from "next/navigation";
+import { PropsWithChildren, useEffect } from "react";
 
 const GameLayout = ({ children }: PropsWithChildren) => {
     const { loading, userDetails } = useAuthStore();
@@ -19,7 +19,7 @@ const GameLayout = ({ children }: PropsWithChildren) => {
     }, [userDetails, loading]);
 
     if (loading || !(userDetails instanceof User)) {
-        return <LoadingScreen className="h-screen" />;
+        return <GameLoadingScreen className="h-screen" />;
     }
 
     return <>

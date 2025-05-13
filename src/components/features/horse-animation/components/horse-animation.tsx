@@ -7,13 +7,6 @@ import * as THREE from "three";
 import HorseModel from "./horse-model";
 import useWindowSize from "@/hooks/use-window-size";
 
-// Memoize color array to prevent recreation
-// const HORSE_COLORS = [
-//     "#D94D4D", "#3F8B83", "#3B91A5", "#D86F56", "#6F9F96",
-//     "#C89A3F", "#7F74B3", "#D066C6", "#59829E", "#C97A73",
-//     "#66B78F", "#E0B870", "#9E83B4", "#699EC7", "#D68A4A",
-//     "#4D8C7D", "#B7784D"
-// ] as const;
 
 
 type Props = {
@@ -25,7 +18,6 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
     const animationProgressRef = useRef(0);
     const horsesRef = useRef<(THREE.Object3D | null)[]>([]);
 
-    const {isMobile} = useWindowSize();
 
     const [currentPositions, setCurrentPositions] = useState<{ x: number, z: number }[]>([]);
     const [targetPositions, setTargetPositions] = useState<{ x: number, z: number }[]>([]);
@@ -85,15 +77,15 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
             // Use a larger fixed timestep for mobile
             const timestep = 0.016;
             const speed = 0.8; // Increased animation speed
-            
+
             animationProgressRef.current = Math.min(
-                animationProgressRef.current + timestep * speed, 
+                animationProgressRef.current + timestep * speed,
                 1
             );
 
             updateHorsePositions(animationProgressRef.current);
 
-            const animationProgress = isMobile ? 0.7 : 0.9;
+            const animationProgress = 0.9;
             if (animationProgressRef.current >= animationProgress) {
                 animationProgressRef.current = 1;
                 updateHorsePositions(1);

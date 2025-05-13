@@ -15,6 +15,7 @@ export default function HorseRace({ roundRecord }: Props) {
 
   return isPlaceOver ? (
     <Canvas>
+      <PixelRatioManager />
       <HorseRaceEnvironment roundRecord={roundRecord} />
     </Canvas>
   ) : (
@@ -36,3 +37,18 @@ function RacePreparation() {
     </div>
   );
 }
+
+import { useThree } from "@react-three/fiber";
+import { useEffect } from "react";
+import useWindowSize from "@/hooks/use-window-size";
+
+const PixelRatioManager = () => {
+  const { gl } = useThree();
+
+  const {isMobile} = useWindowSize();
+  useEffect(() => {
+    gl.setPixelRatio(isMobile ? 1.3 : Math.min(window.devicePixelRatio, 1.5));
+  }, [gl, isMobile]);
+
+  return null;
+};
