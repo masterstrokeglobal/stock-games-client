@@ -1,7 +1,6 @@
-import React, { useRef, useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
+import React, { useMemo, useRef } from "react";
 import * as THREE from "three";
-import { useThree } from "@react-three/fiber";
 
 type FenceModelProps = {
   position: [number, number, number];

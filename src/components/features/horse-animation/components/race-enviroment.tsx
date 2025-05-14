@@ -1,8 +1,7 @@
 import { RoundRecord } from "@/models/round-record";
 import {
     OrbitControls,
-    PerspectiveCamera,
-    Sky
+    PerspectiveCamera
 } from "@react-three/drei";
 import { Physics } from "@react-three/rapier";
 import { Ground } from "./Ground";

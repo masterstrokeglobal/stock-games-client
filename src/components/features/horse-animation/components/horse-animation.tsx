@@ -5,7 +5,6 @@ import { useFrame } from "@react-three/fiber";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import HorseModel from "./horse-model";
-import useWindowSize from "@/hooks/use-window-size";
 
 
 
