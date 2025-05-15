@@ -114,8 +114,7 @@ const SevenUpSevenDown = () => {
     
     return (
         <section className="flex flex-col items-center justify-center min-h-[calc(100svh-100px)]">
-            <div className="flex flex-col h-screen max-w-md w-full mx-auto bg-purple-950 text-white overflow-hidden">
-                {/* Dice result display */}
+            <div className="flex flex-col h-screen max-w-2xl w-full mx-auto bg- text-white overflow-hidden">
                 <div className="flex justify-center py-4">
                     <div className="relative">
                         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
