@@ -9,8 +9,8 @@ import { HighlightInit } from '@highlight-run/next/client';
 import { HIGHLIGHT_APP_KEY } from '@/lib/utils';
 
 const poppins = Poppins({
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'], // Include all weights
-  subsets: ['latin'],  // Optional, but typically used for basic character sets
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'], 
+  subsets: ['latin'],  
 });
 
 
@@ -26,7 +26,7 @@ export default async function RootLayout({
     <>
       <Analytics />
       {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID} />}
-       <HighlightInit
+      <HighlightInit
         projectId={HIGHLIGHT_APP_KEY}
         serviceName="my-nextjs-frontend"
         tracingOrigins
@@ -35,7 +35,7 @@ export default async function RootLayout({
           recordHeadersAndBody: true,
           urlBlocklist: [],
         }}
-      />  
+      />
       <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID!}>
 
         <html lang={locale}>

@@ -14,6 +14,8 @@ import GoogleLoginButton from "./google-login-button";
 import { useCaptcha } from "@/react-query/game-user-queries";
 import { useEffect } from "react";
 import { RefreshCcwIcon } from "lucide-react";
+import AuthTabs from "./auth-tabs";
+
 export const createLoginSchema = (t: any) =>
   z.object({
     username: z.string(),
@@ -37,14 +39,11 @@ type Props = {
 
 const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
   const t = useTranslations("auth");
-
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(createLoginSchema(t)),
     defaultValues,
   });
-
   const { control, handleSubmit } = form;
-
   const { data, error, isLoading: isCaptchaLoading, refetch } = useCaptcha();
   const captchaSvg = data?.data.svg || "";
   const captchaId = data?.data.id;
@@ -56,108 +55,104 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
   }, [captchaId, form]);
 
   const captchaError = error ? t("errors.captcha-fetch-failed") : "";
-  const handleRefreshCaptcha = () => {
-    refetch();
-  };
+  const handleRefreshCaptcha = () => refetch();
+
   return (
     <div className="w-full max-w-sm">
-      <h1 className="text-3xl text-center mb-10 font-semibold text-white">
-        {t("titles.welcome-back")}
-      </h1>
-
+      <AuthTabs />
       <FormProvider
         methods={form}
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-4"
       >
-        <FormInput
-          control={control}
-          game
-          name="username"
-          label={t("labels.username-email")}
-          required
-        />
-
-        <div className="space-y-2">
-          <FormPassword
+        <div className="grid grid-cols-1 gap-3">
+          <FormInput
             control={control}
             game
-            name="password"
-            type="password"
-            label={t("labels.password")}
+            name="username"
+            label={t("labels.username-email")}
             required
           />
 
-          <Link
-            href="/game/auth/forgot-password"
-            className="text-white text-sm ml-auto text-end mt-1 block"
-          >
-            {t("links.forgot-password")}
-          </Link>
+          <div className="space-y-1">
+            <FormPassword
+              control={control}
+              game
+              name="password"
+              type="password"
+              label={t("labels.password")}
+              required
+            />
+            <Link
+              href="/game/auth/forgot-password"
+              className="text-white text-xs text-end block"
+            >
+              {t("links.forgot-password")}
+            </Link>
+          </div>
+
+          {/* CAPTCHA - Improved Version */}
+          {isCaptchaLoading ? (
+            <p className="text-white text-sm">{t("common.loading")}</p>
+          ) : captchaSvg ? (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <p className="text-white text-sm font-medium">{t("labels.captcha")}</p>
+               
+              </div>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <div
+                  className="border border-secondary-game rounded bg-gray-900 [&>svg]:w-full [&>svg]:h-full h-10  mx-auto sm:mx-0"
+                  dangerouslySetInnerHTML={{ __html: captchaSvg }}
+                />
+                <span className="text-white text-sm font-medium flex items-center justify-center">
+                  =
+                </span>
+                <FormInput
+                  control={control}
+                  name="answer"
+                  className="text-white flex-grow"
+                  inputClassName="h-10"
+                  required
+                  placeholder={t("labels.captcha")}
+                /> 
+                
+                 <Button
+                  type="button"
+                  title={t("refresh-captcha")}
+                  variant="secondary"
+                  size="icon"
+                  className="text-sm  hover:bg-gray-700"
+                  onClick={handleRefreshCaptcha}
+                >
+                  <RefreshCcwIcon className="w-4 h-4" />
+                </Button>
+              </div>
+              {captchaError && (
+                <p className="text-red-500 text-xs">{captchaError}</p>
+              )}
+            </div>
+          ) : null}
         </div>
 
-        {/* CAPTCHA Display and Input */}
-        {isCaptchaLoading ? (
-          <p className="text-white">{t("common.loading")}</p>
-        ) : captchaSvg ? (
-          <div className="space-y-2">
-            <p className="text-white">{t("labels.captcha")}</p>
-            <div
-              className="border rounded bg-gray-950 p-2"
-              dangerouslySetInnerHTML={{ __html: captchaSvg }}
-            />
-            <div className="flex items-center gap-2">
-            <FormInput
-              control={control}
-              name="answer"
-              className="text-white"
-              inputClassName="h-12"
-              required
-              placeholder={t("labels.captcha")}
-            />
-            <Button
-              variant="game-secondary"
-              type="button"
-              className="h-12"
-              onClick={handleRefreshCaptcha}
-            >
-              <RefreshCcwIcon className="w-4 h-4 mr-2" />
-              {t("refresh-captcha")}
-            </Button>
-            </div>
-            {captchaError && (
-              <p className="text-red-500 text-sm">{captchaError}</p>
-            )}
-          </div>
-        ) : null}
-
-        <footer className="flex justify-end flex-col gap-2 mt-12">
-          <Button
-            type="submit"
-            size="lg"
-            variant="game"
-            className="w-full"
-            disabled={isLoading}
-          >
-            {isLoading ? t("buttons.signing-in") : t("buttons.sign-in")}
-          </Button>
-        </footer>
+        <Button
+          type="submit"
+          variant="game"
+          className="w-full mt-6"
+          disabled={isLoading}
+        >
+          {isLoading ? t("buttons.signing-in") : t("buttons.sign-in")}
+        </Button>
       </FormProvider>
 
-      <div className="flex items-center justify-center gap-3 text-white">
-        <Separator className="my-6 flex-1 bg-white/20" />
+      <div className="flex items-center my-2 justify-center gap-2 text-white text-sm">
+        <Separator className="my-3 flex-1 bg-white/20" />
         <span>{t("common.or")}</span>
-        <Separator className="my-6 flex-1 bg-white/20" />
+        <Separator className="my-3 flex-1 bg-white/20" />
       </div>
 
-      <GoogleLoginButton />
-      <DemoUserLogin className="mt-4" />
-      <div className="mt-8">
-        <Link href="/game/auth/register" className="text-white">
-          <Button variant="ghost" fullWidth>
-            {t("buttons.create-account")}
-          </Button>
-        </Link>
+      <div className="flex gap-2">
+        <GoogleLoginButton />
+        <DemoUserLogin className="h-10" />
       </div>
     </div>
   );

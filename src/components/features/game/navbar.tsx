@@ -2,35 +2,15 @@
 import LocaleSwitcher from "@/components/common/LocaleSwitcher";
 import Logo from "@/components/common/logo";
 import { MuteButton } from "@/components/common/mute-button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
-import { useGameType } from "@/hooks/use-game-type";
-import { SchedulerType } from "@/models/market-item";
-import User from "@/models/user";
-import Wallet from "@/models/wallet";
-import { useGetWallet } from "@/react-query/payment-queries";
-import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { useMemo } from "react";
-import { usePathname } from "next/navigation";
-
+import GameTimings from "./game-timings";
+import UserMenuNavbar from "./user-menu-navbar";
 const Navbar = () => {
-    const { userDetails } = useAuthStore();
-    const { data, isLoading } = useGetWallet();
-    const t = useTranslations("common");
-    const [gameType] = useGameType();
-    const pathname = usePathname();
+    const { isLoggedIn } = useAuthStore();
 
-    const isNSE = gameType === SchedulerType.NSE && pathname == "/game";
-    const isUSAMarket = gameType === SchedulerType.USA_MARKET && pathname == "/game";
 
-    const wallet = useMemo(() => {
-        if (isLoading) return new Wallet();
-        return new Wallet(data?.data?.wallet);
-    }, [data])
-
-    const user = userDetails as User;
     return (
         <nav className="items-center md:px-6 px-4 z-50  flex fixed top-0 justify-between font-semibold w-full h-14 bg--game bg-primary-game">
             <div className="flex items-center space-x-4 ">
@@ -39,42 +19,20 @@ const Navbar = () => {
                         <Logo />
                     </span>
                 </Link>
-                {isNSE && <div className="items-center hidden md:flex space-x-4 ml-auto">
-                    <span className="text-sm text-game-secondary">{t("timings")}</span>
-                </div>}
-                {isUSAMarket && <div className="items-center hidden md:flex space-x-4 ml-auto">
-                    <span className="text-sm text-game-secondary">{t("usa-timings")}</span>
-                </div>}
+                {isLoggedIn && <GameTimings />}
             </div>
             <div className="flex items-center space-x-4 ml-auto">
-                <MuteButton className="md:block hidden play-button" />
-                <LocaleSwitcher className="md:block hidden play-button " selectClassName="play-button" />
-                <div className="gold-button  text-game-text px-4 md:h-12 flex items-center md:py-2 py-2   rounded-md">
-                    <div className="shadow-custom-glow mr-2 rounded-md" >
-                        <img src="/coin.svg" alt="coin" className="md:w-auto w-5" />
-                    </div>
-                    <span className=" md:text-xl">
-                        {isLoading ? "..." : wallet.totalBalance}
-                    </span>
-                    <Link href="/game/wallet/deposit">
-                        <Button size="icon" variant="ghost" className="ml-6 md:block hidden">
-                            <img src="/plus-icon.svg" className="size-7" alt="arrow-down" />
-                        </Button>
+                <MuteButton className="md:block hidden play-button h-10" />
+                <LocaleSwitcher className="md:block hidden play-button " selectClassName="play-button h-10" />
+                {isLoggedIn && <UserMenuNavbar />}
+                {!isLoggedIn && <div className="flex items-center space-x-4">
+                    <Link href="/game/auth/login">
+                        <Button>Login</Button>
                     </Link>
-                </div>
-                <Link href="/game/user-menu">
-                    <button className="options-button  md:px-4 md:h-12 h-10 text-game-text justify-center  md:aspect-auto aspect-square space-x-3 flex items-center md:py-2 p-1 rounded-md">
-                        <Avatar className="size-6">
-                            <AvatarFallback className="bg-secondary-game">
-                                {user.firstname?.charAt(0) ?? "A"}
-                            </AvatarFallback>
-                            <AvatarImage src={user.profileImage} />
-                        </Avatar>
-                        <span className="text-sm md:block hidden" >
-                            {user.firstname}
-                        </span>
-                    </button>
-                </Link>
+                    <Link href="/game/auth/register" >
+                        <Button className="active-menu-button  rounded-full">Signup</Button>
+                    </Link>
+                </div>}
             </div>
             <div className="h-0.5 bottom-0 absolute w-full md:-mx-12 -mx-4" style={{ background: "radial-gradient(51.91% 51.91% at 48.09% 91.82%, #2397FA 0%, rgba(35, 151, 250, 0) 100%)" }} />
         </nav>
@@ -82,3 +40,4 @@ const Navbar = () => {
 }
 
 export default Navbar;
+

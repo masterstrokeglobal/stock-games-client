@@ -15,19 +15,19 @@ import {
     IconDice,
     IconGift,
     IconHeadphones,
+    IconHelpCircle,
     IconHome,
     IconLayoutGrid,
     IconMedal2,
     IconVideo,
-    IconWallet
+    IconWallet,
 } from "@tabler/icons-react"
 import { SidebarCloseIcon, SidebarOpenIcon } from "lucide-react"
-import { usePathname } from "next/navigation"
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation"
 
 const navItems = [
     { icon: IconHome, label: "Home", href: "/game/platform" },
-    { icon:  IconCoins, label: "Stock Market", href: `/game/platform/stock-games` },
+    { icon: IconCoins, label: "Stock Market", href: `/game/platform/stock-games` },
     { icon: IconCricket, label: "Sports Book", href: `/game/casino/${SPORTS_BOOK_GAMEID}` },
     { icon: IconDice, label: "Casino Games", href: "/game/platform/casino" },
     { icon: IconLayoutGrid, label: "Table Games", href: `/game/platform/casino/${GameCategory.TABLE_GAMES}` },
@@ -35,6 +35,7 @@ const navItems = [
     { icon: IconMedal2, label: "Tiers", href: "/game/platform/tier" },
     { icon: IconWallet, label: "Wallet", href: "/game/wallet/menu" },
     { icon: IconGift, label: "Promotions", href: "/game/platform/promotion" },
+    { icon: IconHelpCircle, label: "How to Play", href: "/game/platform/how-to-play" },
     { icon: IconHeadphones, label: "Support — Call Now!", href: "/game/contact" },
 ]
 
@@ -60,7 +61,7 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
         >
             <div className="flex h-full flex-col">
                 <div className="hidden md:flex justify-end p-2 sticky top-0  z-10">
-                    <Button 
+                    <Button
                         onClick={toggleSidebar}
                         variant="ghost"
                         aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
@@ -82,18 +83,19 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
                                                     isActive && "bg-[#1a2942] text-secondary-game"
                                                 )}
                                                 onClick={() => {
-                                                
-                                                    if(isMobile){
+
+                                                    if (isMobile) {
                                                         setTimeout(() => {
                                                             toggleSidebar();
-                                                        }, 500);                                                    }
+                                                        }, 500);
+                                                    }
                                                     router.push(item.href);
-                                                    
+
                                                 }}
                                             >
                                                 <item.icon
                                                     className={cn(
-                                                        "flex-shrink-0 text-secondary-game group-hover:text-secondary-game", 
+                                                        "flex-shrink-0 text-secondary-game group-hover:text-secondary-game",
                                                         sidebarOpen ? "h-5 w-5" : "h-6 w-6"
                                                     )}
                                                     stroke={1.5}

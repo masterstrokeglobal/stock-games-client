@@ -88,7 +88,8 @@
       "phone": "Telefon Numarası",
       "email": "E-posta*",
       "reference-code": "Referans Kodu",
-      "description-email-phone": "Telefon numarası ülke kodunu içermelidir"
+      "label-phone": "Telefon",
+      "label-description": "Açıklama"
     },
     "validation": {
       "firstname-required": "Ad gereklidir",

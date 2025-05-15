@@ -64,12 +64,11 @@ const MovingPeople: React.FC<MovingPeopleProps> = ({
     return cachedModel.clone();
   }, [scene, isMobile]);
 
-  const speed = .1; // Base speed
+  const speed = .05; // Base speed
   const frequency = 50; // Increase the frequency multiplier here
   const startZ = 800;
   const endZ = -800;
 
-  // Use delta time to make movement frame-rate independent, but now with increased frequency
   useFrame((_, delta) => {
     if (groupRef.current) {
       groupRef.current.position.z -= speed * frequency * delta * 60; // Increased frequency multiplier

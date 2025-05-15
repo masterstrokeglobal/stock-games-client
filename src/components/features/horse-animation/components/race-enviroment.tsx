@@ -18,7 +18,7 @@ const HorseRaceEnvironment = ({
     return (
         <>
             <PerspectiveCamera makeDefault fov={70} zoom={13} position={[-380, 70,0]} />
-           
+        
             <ambientLight intensity={1} />
             <OrbitControls 
                 enableRotate={false}

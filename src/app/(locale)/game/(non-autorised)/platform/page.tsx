@@ -3,8 +3,8 @@ import { FinancialTable } from "@/components/features/platform/finantial-table";
 import { GameAdsCarousel } from "@/components/features/platform/game-ads-carousel";
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { generateData, SPORTS_BOOK_GAMEID } from "@/lib/utils";
-import { IconCoins, IconCricket, IconGift } from "@tabler/icons-react";
+import { generateData } from "@/lib/utils";
+import { IconCoins, IconGift } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -22,13 +22,6 @@ const GAME_CARDS = [
         icon: IconGift,
         image: "/images/casino-games.png",
         href: "/game/platform/casino",
-        buttonText: "Start Playing"
-    },
-    {
-        title: "Sports Book",
-        icon: IconCricket,
-        image: "/images/sports-book.png",
-        href: `/game/casino/${SPORTS_BOOK_GAMEID}`,
         buttonText: "Start Playing"
     }
 ];
@@ -78,11 +71,7 @@ const PlatformPage = () => {
                 ))}
             </div>
 
-
-            {/* Mobile View */}
             <div className="md:hidden my-10">
-
-
                 <Carousel className="w-full" opts={{
                     align: "start",
                     containScroll: "trimSnaps"

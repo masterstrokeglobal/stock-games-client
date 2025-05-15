@@ -103,7 +103,9 @@
             "username": "Username",
             "phone": "Phone Number",
             "email": "Email*",
-            "reference-code": "Reference Code"
+            "reference-code": "Reference Code",
+            "label-phone": "Phone",
+            "label-description": "Description"
         },
         "validation": {
             "firstname-required": "First name is required",
@@ -358,6 +360,7 @@
         "labels": {
             "username-email": "Username or Email*",
             "username-email-phone": "Username or Email or Phone*",
+            "phone": "Phone*",
             "password": "Password*",
             "captcha": "Enter Captcha"
         },
@@ -409,8 +412,10 @@
         "label-full-name": "Full Name",
         "label-username": "Username",
         "label-email": "Email",
+        "label-phone": "Phone",
         "label-email-phone": "Email or Phone",
         "description-email-phone": "Enter your email or phone number",
+        "description-phone": "Enter your phone number",
         "label-reference-code": "Reference Code",
         "label-password": "Password",
         "terms-message": "By continuing you agree with our terms of service",
