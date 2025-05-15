@@ -114,7 +114,7 @@ const SevenUpSevenDown = () => {
     
     return (
         <section className="flex flex-col items-center justify-center min-h-[calc(100svh-100px)]">
-            <div className="flex flex-col h-screen max-w-2xl w-full mx-auto bg- text-white overflow-hidden">
+            <div className="flex flex-col h-screen max-w-2xl w-full mx-auto bg-gray-900 text-white overflow-hidden">
                 <div className="flex justify-center py-4">
                     <div className="relative">
                         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
@@ -150,7 +150,7 @@ const SevenUpSevenDown = () => {
                 {/* Betting areas */}
                 <div className="relative h-64 mx-4 mb-4">
                     {/* 8-12 Area */}
-                    <div className="absolute inset-x-0 top-0 h-32 bg-yellow-800 bg-opacity-70 rounded-t-3xl border-2 border-green-500 flex flex-col items-center justify-start pt-4">
+                    <div className="absolute inset-x-0 top-0 h-32  rounded-t-3xl border-yellow-500 border flex flex-col items-center justify-start pt-4">
                         <div className="text-2xl font-bold text-yellow-400">8~12</div>
                         <div className="text-sm text-yellow-400">1:1</div>
                     </div>
