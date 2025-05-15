@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { paymentAPI } from "@/lib/axios/payment-API"; // Adjust the path as needed
-
+import { GetCompanyProfitLossFilters, paymentAPI } from "@/lib/axios/payment-API"; // Adjust the path as needed
+import { ProfitLoss } from "@/models/profit-loss";
 // Create Deposit Request
 export const useCreateDepositRequest = () => {
     const queryClient = useQueryClient();
@@ -160,3 +160,20 @@ export const useVerifyCompanyDeposit = () => {
         },
     });
 }
+
+export const useGetCompanyDailyProfitLoss = (filters: GetCompanyProfitLossFilters) => {
+    return useQuery<{
+        count: number;
+        profitLoss: ProfitLoss[];
+    }, Error>({
+        queryKey: ["company", "profit-loss", filters],
+        queryFn: async () => {
+            const response = await paymentAPI.getCompanyProfitLoss(filters);
+            return {
+                count: response.data.count,
+                profitLoss: response.data.profitLoss.map((profitLoss: any) => new ProfitLoss(profitLoss)),
+            }
+        },
+    });
+}
+

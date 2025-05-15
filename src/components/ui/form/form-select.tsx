@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 function FormGroupSelect<
   TFieldValues extends FieldValues = FieldValues,
@@ -47,14 +48,14 @@ function FormGroupSelect<
           <FormLabel>{label}</FormLabel>
           <Select disabled={disabled} onValueChange={field.onChange} value={field.value}>
             <FormControl>
-              <SelectTrigger className={className}>
+              <SelectTrigger className={cn("w-full capitalize ", className)}>
                 {options.find((option) => option.value == field.value)?.label ??
                   <SelectValue placeholder={placeholder} />}
               </SelectTrigger>
             </FormControl>
             <SelectContent>
               {options.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
+                <SelectItem key={option.value} className="capitalize" value={option.value}>
                   {option.label}
                 </SelectItem>
               ))}
