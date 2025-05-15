@@ -149,9 +149,9 @@ const SevenUpSevenDown = () => {
                 </div>
 
                 {/* Betting areas */}
-                <div className="relative flex-1 mx-4 mb-4">
+                <div className="relative h-64 mx-4 mb-4">
                     {/* 8-12 Area */}
-                    <div className="absolute inset-x-0 top-0 h-32 bg-yellow-800 bg-opacity-70 rounded-t-3xl border-2 border-green-500 flex flex-col items-center justify-center">
+                    <div className="absolute inset-x-0 top-0 h-32 bg-yellow-800 bg-opacity-70 rounded-t-3xl border-2 border-green-500 flex flex-col items-center justify-start pt-4">
                         <div className="text-2xl font-bold text-yellow-400">8~12</div>
                         <div className="text-sm text-yellow-400">1:1</div>
                     </div>
@@ -161,9 +161,8 @@ const SevenUpSevenDown = () => {
                         <div className="text-4xl font-bold text-yellow-400">7</div>
                         <div className="text-sm text-yellow-400">1:4</div>
                     </div>
-
                     {/* 2-6 Area */}
-                    <div className="absolute inset-x-0 bottom-0 h-32 bg-red-900 bg-opacity-70 rounded-b-3xl border-2 border-green-500 flex flex-col items-center justify-center">
+                    <div className="absolute inset-x-0 bottom-0 h-32 bg-red-900 bg-opacity-70 rounded-b-3xl border-2 border-green-500 flex flex-col items-center justify-end py-4">
                         <div className="text-2xl font-bold text-yellow-400">2~6</div>
                         <div className="text-sm text-yellow-400">1:1</div>
                     </div>
