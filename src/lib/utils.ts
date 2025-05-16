@@ -232,3 +232,50 @@ export const formatRupee = (rupees: number) => {
   }).format(rupees);
 }
 
+export const checkCasinoAllowed = (companyId: number) => {
+  return companyId === 21;
+}
+
+// Generate current time in 12-hour format (HH:MM AM/PM)
+const getCurrentTime = () => {
+  const now = new Date()
+  let hours = now.getHours()
+  const minutes = now.getMinutes().toString().padStart(2, "0")
+  const ampm = hours >= 12 ? "PM" : "AM"
+  hours = hours % 12
+  hours = hours ? hours : 12 // the hour '0' should be '12'
+  return `${hours}:${minutes} ${ampm}`
+}
+
+// Generate random data
+export const generateData = (count: number) => {
+  const data = []
+
+  for (let i = 0; i < count; i++) {
+    const user = randomUsername()
+    const time = getCurrentTime()
+    const amount = randomNumber(50, 5000, 10).toString()
+
+    data.push({
+      id: Date.now() + i,
+      user,
+      time,
+      amount,
+    })
+  }
+
+  return data
+}
+
+export const SPORTS_BOOK_GAMEID = process.env.NEXT_PUBLIC_SPORTS_BOOK_GAMEID ?? 8653;
+
+export const generateNewCameraPosition = (currentPosition: [number, number, number]) => {
+  const [x, y, z] = currentPosition;
+
+  // rotate around the y axis
+  const newX = x * Math.cos(Math.PI / 4) - z * Math.sin(Math.PI / 4);
+  const newZ = x * Math.sin(Math.PI / 4) + z * Math.cos(Math.PI / 4);
+
+  return [newX, y, newZ];
+}
+

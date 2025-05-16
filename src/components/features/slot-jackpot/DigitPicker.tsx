@@ -11,9 +11,10 @@ interface DigitPickerProps {
   onChange: (digits: string) => void
   disabled?: boolean
   value?: string
+  showInput?: boolean
 }
 
-export function DigitPicker({ betType, onChange, value = betType === "both" ? "00" : "0", disabled = false }: DigitPickerProps) {
+export function DigitPicker({ betType, onChange, value = betType === "both" ? "00" : "0", disabled = false, showInput = true }: DigitPickerProps) {
   const digitCount = betType === "both" ? 2 : 1
 
   // Store the previous value to compare
@@ -103,7 +104,7 @@ export function DigitPicker({ betType, onChange, value = betType === "both" ? "0
 
   return (
     <div className="flex flex-col h-full justify-between  items-center">
-      <div className="flex justify-center items-center mb-4">
+      <div className="flex justify-center items-center ">
         {Array(digitCount)
           .fill(0)
           .map((_, index) => (
@@ -116,6 +117,7 @@ export function DigitPicker({ betType, onChange, value = betType === "both" ? "0
           ))}
       </div>
 
+      {showInput && (
       <div className="w-full mt-2">
         <Input
           type="text"
@@ -130,6 +132,7 @@ export function DigitPicker({ betType, onChange, value = betType === "both" ? "0
           maxLength={digitCount}
         />
       </div>
+      )}
     </div>
   )
 }

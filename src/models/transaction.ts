@@ -2,11 +2,13 @@ import Agent from "./agent";
 import Company from "./company";
 import User from "./user";
 
+
 export enum TransactionType {
     DEPOSIT = "deposit",
     WITHDRAWAL = "withdrawal",
     PLACEMENT = "placement",
     WINNING = "winning",
+    WINNING_RETURNS = "winning_returns",
     PLACEMENT_RETURNS = "placement_returns",
     LOBBY_PLACEMENT = "lobby_placement",
     LOBBY_WINNING = "lobby_winning",
@@ -15,7 +17,10 @@ export enum TransactionType {
     ADMIN_WITHDRAWAL = "admin_withdrawal",
     AGENT_DEPOSIT = "agent_deposit",
     AGENT_WITHDRAWAL = "agent_withdrawal",
+    POINTS_EARNED = "points_earned",
+    POINTS_REDEEMED = "points_redeemed",
   }
+  
 
 export enum TransactionStatus {
     PENDING = "pending",

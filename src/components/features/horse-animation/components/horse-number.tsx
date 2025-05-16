@@ -10,8 +10,8 @@ type HorseNumberProps = {
 
 const HorseNumber = forwardRef<THREE.Group, HorseNumberProps>(
   ({ number, color = "blue", position }, ref) => {
-    const radius = 0.4; 
-    const fontSize = 0.4; 
+    const radius =  12;
+    const fontSize = 12; 
 
     const [x, y, z] = position;
 

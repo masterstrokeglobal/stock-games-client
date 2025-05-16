@@ -80,16 +80,17 @@
         "split-bet-odds": "2x"
     },
     "profile": {
-        "page-title": "Vaše informacije",
+        "page-title": "Ваши подаци",
         "labels": {
-            "profile-image": "Slika profila",
-            "firstname": "Ime*",
-            "lastname": "Prezime*",
-            "username": "Korisničko ime",
-            "phone": "Broj telefona",
-            "email": "Email*",
-            "reference-code": "Referalni kod",
-            "description-email-phone": "Broj telefona treba da sadrži pozivni broj zemlje"
+            "profile-image": "Слика профила",
+            "firstname": "Име*",
+            "lastname": "Презиме*",
+            "username": "Корисничко име",
+            "phone": "Број телефона",
+            "email": "Имејл*",
+            "reference-code": "Референтни код",
+            "label-phone": "Телефон",
+            "label-description": "Опис"
         },
         "validation": {
             "firstname-required": "Ime je obavezno",

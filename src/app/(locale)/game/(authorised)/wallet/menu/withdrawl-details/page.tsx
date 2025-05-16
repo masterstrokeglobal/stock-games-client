@@ -8,7 +8,7 @@ import { useGetAllWithdrawDetails } from '@/react-query/withdrawl-details-querie
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
-import { BankIcon, DeleteIcon, UPIIcon } from '../../../user-menu/icons';
+import { BankIcon, DeleteIcon, UPIIcon } from '../../../../../../../components/features/user-menu/icons';
 import { useTranslations } from 'next-intl';
 
 const PaymentMethodCards = () => {

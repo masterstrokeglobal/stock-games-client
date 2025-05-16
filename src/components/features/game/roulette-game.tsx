@@ -23,7 +23,7 @@ import { BettingControls } from "./roulette-chips";
 import { RouletteBettingGrid } from "./roulette-grid";
 import { GameHeader } from "./roulette-header";
 import useUSAMarketAvailable from "@/hooks/use-usa-available";
-
+import useWindowSize from "@/hooks/use-window-size";
 enum PlacementType {
     SINGLE = "single",
     SPLIT = "split",
@@ -45,6 +45,7 @@ type Props = {
 const RouletteGame = ({ roundRecord }: Props) => {
 
     const t = useTranslations("game");
+    const { isMobile } = useWindowSize();
     const [betAmount, setBetAmount] = useState<number>(100);
     const gameState = useGameState(roundRecord);
     const isNSEAvailable = useNSEAvailable();
@@ -214,6 +215,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const oddNumbers = Array.from({ length: 8 }, (_, i) => (i * 2) + 1);
 
     const handleBoardClick = (e: React.MouseEvent) => {
+        console.log("handleBoardClick", gameState.isPlaceOver, isPlacingBet);
         if (gameState.isPlaceOver || isPlacingBet) return;
         if (!verifyBetAmount(betAmount)) return;
         const bet = getBetTypeFromClick(e, boardRef);
@@ -255,8 +257,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     return (
         <>
-
-            <ParticlesContainer />
+            {!isMobile && <ParticlesContainer />}
             <div className="mx-auto  lg:pr-4  py-2 bg-background-secondary h-full ">
                 <div className="relative rounded-xl lg:flex-row w-full flex-col flex border-brown-800">
                     <div className='lg:w-7/12 max-w-2xl mx-auto w-full'>
@@ -319,6 +320,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                         {getBetForPosition(PlacementType.SINGLE, [17]) && (
                                             <ButtonChip className=" top/1/2 bg-red-600 right-1/2 translate-x-1/2 -translate-y-1/2" amount={getBetForPosition(PlacementType.SINGLE, [17])!.amount} />
                                         )}
+                                        {roundRecord.winningId === roundRecord.market[16]?.id && <img className='z-40 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-auto md:h-7 h-6 animate-pulse  duration-500 ' src='/images/crown.png' />}
                                     </Button>
                                 </div>
 

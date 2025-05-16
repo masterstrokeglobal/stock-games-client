@@ -1,6 +1,7 @@
 import ParticlesContainer from "@/components/ui/particle";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGameType } from "@/hooks/use-game-type";
+import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { useLastRoundWinner } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
@@ -9,6 +10,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 const LastWinners = ({ className }: PropsWithClassName) => {
 
+    const { isMobile } = useWindowSize();
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
 
@@ -16,12 +18,10 @@ const LastWinners = ({ className }: PropsWithClassName) => {
         if (sectionRef.current) {
             const sectionHeight = sectionRef.current.offsetHeight;
             setScrollAreaHeight(sectionHeight);
-            console.log(sectionHeight);
         }
     }, []);
     return <section ref={sectionRef} className={cn("bg-background-last-winner relative w-full h-full ", className)}>
-
-        <ParticlesContainer className="w-full h-full" />
+        {!isMobile && <ParticlesContainer className="w-full h-full" />}
         <ScrollArea style={{ height: `${scrollAreaHeight}px` }} type="auto">
             <LastRoundWinner />
         </ScrollArea>

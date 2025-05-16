@@ -6,7 +6,7 @@ import { StepperProvider, useStepper } from "@/context/stepper-context";
 import { useGameUserLogin } from "@/react-query/game-user-queries";
 import { useRouter } from "next/navigation";
 
-const RegisterPage = () => {
+const LoginPage = () => {
     const { currentStep, nextStep } = useStepper();
     const { mutate, isPending } = useGameUserLogin();
     const router = useRouter();
@@ -50,7 +50,7 @@ const RegisterPage = () => {
 
 const Stepper = () => {
     return <StepperProvider initialStep={1}>
-        <RegisterPage />
+        <LoginPage />
     </StepperProvider>
 }
 

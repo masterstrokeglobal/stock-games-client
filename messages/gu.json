@@ -97,7 +97,9 @@
             "username": "યુઝરનેમ",
             "phone": "ફોન નંબર",
             "email": "ઇમેઇલ*",
-            "reference-code": "રેફરન્સ કોડ"
+            "reference-code": "રેફરન્સ કોડ",
+            "label-phone": "ફોન",
+            "label-description": "વર્ણન"
         },
         "validation": {
             "firstname-required": "પ્રથમ નામ જરૂરી છે",

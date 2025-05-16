@@ -1,10 +1,25 @@
 import { TransactionStatus } from "@/models/transaction";
 import api from "./instance";
 
+export type GetCompanyProfitLossFilters = {
+  search?: string;
+  page: number;
+  limit: number;
+  startDate?: Date;
+  endDate?: Date;
+  companyIdFilter?: number;
+}
+
 export const paymentAPI = {
   // Get the user's wallet information
   getUserWallet: async () => {
     return api.get("/payment/wallet");
+  },
+
+  getCompanyProfitLoss: async (filters: GetCompanyProfitLossFilters) => {
+    return api.get("/payment/daily-profit-loss", {
+      params: filters,
+    });
   },
 
   // Create a deposit request for the user's wallet

@@ -20,6 +20,9 @@ const GoogleLoginButton = () => {
 
     return (
         <GoogleLogin
+            containerProps={{
+                className: "w-full !h-12"
+            }}
             onSuccess={(credentialResponse) => {
                 console.log(credentialResponse);
                 if (credentialResponse.credential) {

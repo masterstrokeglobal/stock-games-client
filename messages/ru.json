@@ -80,13 +80,15 @@
     "profile": {
         "page-title": "Ваша информация",
         "labels": {
-            "profile-image": "Фото профиля",
+            "profile-image": "Изображение профиля",
             "firstname": "Имя*",
             "lastname": "Фамилия*",
             "username": "Имя пользователя",
             "phone": "Номер телефона",
-            "email": "Эл. почта*",
-            "reference-code": "Реферальный код"
+            "email": "Электронная почта*",
+            "reference-code": "Реферальный код",
+            "label-phone": "Телефон",
+            "label-description": "Описание"
         },
         "validation": {
             "firstname-required": "Укажите имя",

@@ -31,8 +31,6 @@ export default function RootLayout({
                     </QueryClientProvider>
                 </UserProvider>
             </AudioProvider>
-
-
         </Suspense>
     );
 }

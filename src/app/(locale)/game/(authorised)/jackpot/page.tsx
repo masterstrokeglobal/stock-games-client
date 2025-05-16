@@ -3,10 +3,9 @@
 import { Dispatch, SetStateAction, useState } from "react"
 
 import Navbar from "@/components/features/game/navbar"
-import SlotJackpotResultDialog from "@/components/features/game/slot-jackpot-result-dialog"
-import { BettingCard } from "@/components/features/slot-jackpot/BettingCard"
-import { BetSlip } from "@/components/features/slot-jackpot/bet-slip"
-import TimeDisplay from "@/components/features/stock-slot/time-left"
+import SlotResultDialog from "@/components/features/game/slot-result-dialog"
+import { BetSlip } from "@/components/features/stock-jackpot/bet-slip"
+import { BettingCard } from "@/components/features/stock-jackpot/betting-card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -15,17 +14,19 @@ import { useGameType } from "@/hooks/use-game-type"
 import { useLeaderboard } from "@/hooks/use-leadboard"
 import { SchedulerType } from "@/models/market-item"
 import { RoundRecordGameType } from "@/models/round-record"
-import { useGetMyStockSlotJackpotGameRecord } from "@/react-query/game-record-queries"
-import { CreditCard, SearchIcon } from "lucide-react"
+import { useGetMyStockSlotGameRecord } from "@/react-query/game-record-queries"
+import { CreditCard, SearchIcon, ZapIcon, ZapOffIcon } from "lucide-react"
+import TimeDisplay from "@/components/features/stock-jackpot/time-left"
 
 export default function Home() {
   // State for bet slip
   const [betSlipOpen, setBetSlipOpen] = useState(false)
   const [globalBetAmount, setGlobalBetAmount] = useState(100)
   const [searchQuery, setSearchQuery] = useState("")
+  const [quickBetEnabled, setQuickBetEnabled] = useState(false)
   const [tab, setTab] = useGameType();
 
-  const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_JACKPOT);
+  const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
 
   // Function to update global bet amount
   const handleGlobalBetAmountChange = (amount: number) => {
@@ -39,14 +40,14 @@ export default function Home() {
 
 
   return (
-    <div className="flex flex-col min-h-screen bg-background-secondary text-white p-4 mx-auto">
+    <div className="flex flex-col min-h-screen bg-background-secondary text-white py-4 mx-auto">
       <Navbar />
-      <Tabs className="flex-1 px-4 mt-40 py-6 max-w-7xl mx-auto w-full" value={tab} onValueChange={(value) => setTab(value as SchedulerType)}>
+      <Tabs className="flex-1 px-4 mt-48 py-6 max-w-7xl mx-auto w-full" value={tab} onValueChange={(value) => setTab(value as SchedulerType)}>
         {/* Global Bet Amount and Search Section */}
         <div className="w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             {/* Search Markets with improved UI */}
-            <div className=" group">
+            <div className="relative group">
               <div className="relative">
                 <Input
                   type="text"
@@ -76,7 +77,7 @@ export default function Home() {
                 <TabsTrigger value={SchedulerType.USA_MARKET} className="w-full">US Stock</TabsTrigger>
               </TabsList>
 
-              {roundRecord && <TimeDisplay className="fixed top-12 z-50 left-0 w-full" roundRecord={roundRecord} />}
+              {roundRecord && <TimeDisplay className="fixed top-14 left-1/2 -translate-x-1/2 z-50  w-full max-w-md" roundRecord={roundRecord} />}
             </div>
 
             {/* Global Bet Amount with improved UI */}
@@ -101,6 +102,22 @@ export default function Home() {
                     />
                   </div>
 
+                  {/* Quick Bet Toggle */}
+                  <div className="flex  items-end gap-2">
+                    <button
+                      onClick={() => setQuickBetEnabled(!quickBetEnabled)}
+                      className={`flex items-center justify-center w-12 h-12 rounded-lg transition-all duration-300 ${quickBetEnabled
+                        ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md shadow-green-500/30'
+                        : 'bg-gray-700 text-gray-300'
+                        }`}
+                      title={quickBetEnabled ? "Quick Bet Enabled" : "Quick Bet Disabled"}
+                    >
+                      {quickBetEnabled ? <ZapIcon className="w-5 h-5" /> : <ZapOffIcon className="w-5 h-5" />}
+                    </button>
+                    <span className="text-xs mt-1 text-gray-300">
+                      {quickBetEnabled ? "Quick Bet" : "Manual Bet"}
+                    </span>
+                  </div>
                 </div>
 
 
@@ -143,11 +160,7 @@ export default function Home() {
           setBetSlipOpen={setBetSlipOpen}
         />
       </Tabs>
-      {roundRecord && <BetSlip
-        roundRecord={roundRecord}
-        open={betSlipOpen}
-        setOpen={setBetSlipOpen}
-      />}
+
 
     </div>
   )
@@ -156,7 +169,7 @@ export default function Home() {
 
 const MarketSection = ({ title, globalBetAmount, betSlipOpen, searchQuery, setBetSlipOpen }: { title: string, searchQuery: string, globalBetAmount: number, betSlipOpen: boolean, setBetSlipOpen: Dispatch<SetStateAction<boolean>> }) => {
   const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
-  const { data: stockSlotPlacements } = useGetMyStockSlotJackpotGameRecord(roundRecord?.id);
+  const { data: stockSlotPlacements } = useGetMyStockSlotGameRecord(roundRecord?.id);
   const { showResults, previousRoundId } = useShowResults(roundRecord, stockSlotPlacements as any);
 
   const { stocks: marketItems } = useLeaderboard(roundRecord);
@@ -176,12 +189,12 @@ const MarketSection = ({ title, globalBetAmount, betSlipOpen, searchQuery, setBe
           No markets found matching your search.
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1  gap-2">
           {filteredMarketItems.map((marketItem: any) => (
             <BettingCard
-              globalBetAmount={globalBetAmount}
               key={marketItem.id}
               roundRecord={roundRecord}
+              globalBetAmount={globalBetAmount}
               marketItem={marketItem}
             />
           ))}
@@ -189,7 +202,7 @@ const MarketSection = ({ title, globalBetAmount, betSlipOpen, searchQuery, setBe
       )}
 
       {previousRoundId && (
-        <SlotJackpotResultDialog
+        <SlotResultDialog
           key={showResults?.toString()}
           open={showResults}
           roundRecordId={previousRoundId}
@@ -205,3 +218,4 @@ const MarketSection = ({ title, globalBetAmount, betSlipOpen, searchQuery, setBe
     </>
   )
 }
+

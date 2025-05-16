@@ -68,24 +68,10 @@ const frequencyOptions = Object.values(BonusFrequency).map((frequency) => ({
     value: frequency,
 }));
 
-const BonusForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
+const BonusForm = ({ defaultValues, onSubmit, isLoading }: Props) => {  
     const form = useForm<BonusFormValues>({
         resolver: zodResolver(bonusFormSchema),
-        defaultValues: {
-            name: defaultValues?.name || "",
-            description: defaultValues?.description || "",
-            amount: defaultValues?.amount || 0,
-            maxAmount: defaultValues?.maxAmount || null,
-            minAmount: defaultValues?.minAmount || null,
-            imageUrl: defaultValues?.imageUrl || null,
-            startDate: defaultValues?.startDate || null,
-            endDate: defaultValues?.endDate || null,
-            active: defaultValues?.active ?? false,
-            category: defaultValues?.category || BonusCategory.DEPOSIT,
-            frequency: defaultValues?.frequency || null,
-            maxCount: defaultValues?.maxCount || 1,
-            percentage: defaultValues?.percentage ?? true,
-        },
+        defaultValues: defaultValues,
     });
 
     const values = form.watch();

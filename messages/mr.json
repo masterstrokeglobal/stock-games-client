@@ -91,13 +91,15 @@
     "profile": {
         "page-title": "तुमची माहिती",
         "labels": {
-            "profile-image": "प्रोफाइल इमेज",
+            "profile-image": "प्रोफाइल प्रतिमा",
             "firstname": "पहिले नाव*",
             "lastname": "आडनाव*",
             "username": "युजरनेम",
             "phone": "फोन नंबर",
             "email": "ईमेल*",
-            "reference-code": "रेफरन्स कोड"
+            "reference-code": "रेफरन्स कोड",
+            "label-phone": "फोन",
+            "label-description": "वर्णन"
         },
         "validation": {
             "firstname-required": "पहिले नाव आवश्यक आहे",
