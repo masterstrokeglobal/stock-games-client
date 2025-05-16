@@ -28,7 +28,6 @@ import { usePathname, useRouter } from "next/navigation"
 const navItems = [
     { icon: IconHome, label: "Home", href: "/game/platform" },
     { icon: IconCoins, label: "Stock Market", href: `/game/platform/stock-games` },
-    { icon: IconCricket, label: "Sports Book", href: `/game/casino/${SPORTS_BOOK_GAMEID}` },
     { icon: IconDice, label: "Casino Games", href: "/game/platform/casino" },
     { icon: IconLayoutGrid, label: "Table Games", href: `/game/platform/casino/${GameCategory.TABLE_GAMES}` },
     { icon: IconVideo, label: "Live Casino", href: `/game/platform/casino/${GameCategory.LIVE}` },
