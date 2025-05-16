@@ -7,11 +7,10 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import useWindowSize from "@/hooks/use-window-size"
-import { cn, SPORTS_BOOK_GAMEID } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import { GameCategory } from "@/models/casino-games"
 import {
     IconCoins,
-    IconCricket,
     IconDice,
     IconGift,
     IconHeadphones,
@@ -20,7 +19,7 @@ import {
     IconLayoutGrid,
     IconMedal2,
     IconVideo,
-    IconWallet,
+    IconWallet
 } from "@tabler/icons-react"
 import { SidebarCloseIcon, SidebarOpenIcon } from "lucide-react"
 import { usePathname, useRouter } from "next/navigation"
