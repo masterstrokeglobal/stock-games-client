@@ -157,7 +157,7 @@ const MarketSection = ({ title, globalBetAmount, betSlipOpen, searchQuery, setBe
           ))}
 
           {!showMore && filteredMarketItems.length > 4 && (
-            <Button onClick={() => setShowMore(!showMore)} className="w-full">Show More</Button>
+            <Button variant="game-secondary" onClick={() => setShowMore(!showMore)} className="w-full text-center flex justify-center">Show More</Button>
           )}
 
           {showMore && filteredMarketItems.length > 4 && (

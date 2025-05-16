@@ -18,6 +18,7 @@ import { useGetMyStockSlotGameRecord } from "@/react-query/game-record-queries"
 import { CreditCard, SearchIcon } from "lucide-react"
 import { BettingAmoutMobile } from "@/components/features/slot-jackpot/betting-amout"
 import BettingAmount from "@/components/features/slot-jackpot/betting-amout"
+import { Button } from "@/components/ui/button"
 
 export default function Home() {
   // State for bet slip
@@ -121,6 +122,7 @@ export default function Home() {
 
 const MarketSection = ({ title, globalBetAmount, betSlipOpen, searchQuery, setBetSlipOpen }: { title: string, searchQuery: string, globalBetAmount: number, betSlipOpen: boolean, setBetSlipOpen: Dispatch<SetStateAction<boolean>> }) => {
   const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
+  const [showMore, setShowMore] = useState(false);  
   const { data: stockSlotPlacements } = useGetMyStockSlotGameRecord(roundRecord?.id);
   const { showResults, previousRoundId } = useShowResults(roundRecord, stockSlotPlacements as any);
 
@@ -142,14 +144,32 @@ const MarketSection = ({ title, globalBetAmount, betSlipOpen, searchQuery, setBe
         </div>
       ) : (
         <div className="grid grid-cols-1  gap-2">
-          {filteredMarketItems.map((marketItem: any) => (
+          {filteredMarketItems.slice(0, 4).map((marketItem: any) => (
             <BettingCard
               key={marketItem.id}
               roundRecord={roundRecord}
               globalBetAmount={globalBetAmount}
               marketItem={marketItem}
             />
-          ))}
+              ))}
+
+          {!showMore && filteredMarketItems.length > 4 && (
+            <Button variant="game-secondary" onClick={() => setShowMore(!showMore)} className="w-full text-center flex justify-center">Show More</Button>
+          )}
+          
+          {showMore && filteredMarketItems.length > 4 && (
+            <div className="grid grid-cols-1  gap-2">
+              {filteredMarketItems.slice(4).map((marketItem: any) => (
+                <BettingCard
+                  key={marketItem.id}
+                  roundRecord={roundRecord} 
+                  globalBetAmount={globalBetAmount}
+                  marketItem={marketItem}
+                />
+              ))}
+            </div>
+          )}
+          
         </div>
       )}
 

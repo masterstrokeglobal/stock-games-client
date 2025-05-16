@@ -12,6 +12,7 @@ import { DigitPicker } from "./DigitPicker"
 import { useIsPlaceOver } from "@/hooks/use-current-game"
 import { toast } from "sonner"
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react"
+import { formatRupee } from "@/lib/utils"
 
 interface BettingCardProps {
   globalBetAmount: number,
@@ -38,9 +39,6 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
   price = parseFloat(price);
   price = price.toFixed(2);
   
-  const lastDigit = price?.slice(-1)
-  const lastTwoDigits = price?.slice(-2);
-
   const initialPrice = roundRecord.getInitialPrice(marketItem.bitcode ?? "")
   const currentPrice = marketItem.price ?? initialPrice
   const changePercent = parseFloat(marketItem.change_percent) || 0
@@ -81,7 +79,7 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400">Bet Amount:</span>
-                <span>{marketItem.currency} {globalBetAmount}</span>
+                <span> {formatRupee(globalBetAmount)}</span>
               </div>
               {betPlaced && (
                 <div className="flex justify-between text-amber-400">
@@ -99,6 +97,7 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
         <div className="bg-gray-800/50 rounded-lg p-4 flex flex-col justify-between">
          { !isPlaceOver && <div className="text-center mb-4">
             <span className="text-gray-400">Current Price</span>
+            
           </div>}
           <div className="flex-1 flex flex-col justify-center">
          { !isPlaceOver && <div className="text-center">
@@ -113,8 +112,12 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
           </div>
 
           {isPlaceOver && (
-            <div className="mt-4  text-center">
-              <p className="text-gray-300 mb-2">Final Digits</p>
+            <div className="mt-4 gap-2 text-center">
+              <p className="text-gray-300 mb-2 flex items-center justify-center">Final Digits
+                <span className="text-white font-bold ml-2">
+                  {marketItem.currency} {currentPrice?.toFixed(2)}
+                </span>
+              </p>
               <DigitPicker showInput={false} betType={StockSlotJackpotPlacementType.BOTH} onChange={setPredictedDigits} value={currentPrice?.toString().slice(-2)} disabled={!!betPlaced} />
             </div>
           )}

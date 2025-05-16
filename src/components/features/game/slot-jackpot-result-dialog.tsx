@@ -28,7 +28,7 @@ const SlotJackpotResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
   }, [open]);
 
   // Check if the result is a win or loss
-  const isWin = data && Number(data.amountWon) >= 0;
+  const isWin = data && Number(data.netProfitLoss) >= 0;
 
   return (  
     <Dialog open={showDialog}>
