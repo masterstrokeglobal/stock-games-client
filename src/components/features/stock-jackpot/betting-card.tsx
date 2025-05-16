@@ -84,7 +84,7 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
           <div className="mt-2 sm:mt-3">
             <div className="flex justify-between items-center">
               <span className="text-xs sm:text-sm text-gray-400">Betting Price:</span>
-              <span className="font-medium text-xs sm:text-sm">{marketItem.currency} {initialPrice?.toFixed(2)}</span>
+              <span className="font-medium text-xs sm:text-sm">Rs. {initialPrice?.toFixed(2)}</span>
             </div>
             <div className="flex justify-between items-center mt-1">
               <span className="text-xs sm:text-sm text-gray-400">Your Bet:</span>
