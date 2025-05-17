@@ -11,6 +11,7 @@ import { useGetUserTier } from "@/react-query/game-user-queries"
 import Image from "next/image"
 import { Tier } from "@/models/tier"
 import LoadingScreen from "@/components/common/loading-screen"
+import Link from "next/link"
 
 interface Step {
     number: string;
@@ -193,7 +194,9 @@ export default function TiersProgram(): JSX.Element {
                                     </h4>
                                     <p className="text-xs sm:text-sm text-white/70 mb-3 sm:mb-4 flex-grow">{step.description}</p>
                                     {step.number === "04" && (
-                                        <Button variant="game" className="w-full mt-auto">Start growth</Button>
+                                        <Link href="/game/platform">
+                                            <Button variant="game" className="w-full mt-auto">Start growth</Button>
+                                        </Link>
                                     )}
                                 </div>
                             </Card>
