@@ -4,7 +4,7 @@ import { useGetCurrentRoundRecord } from '@/react-query/round-record-queries';
 import { useQueryClient, UseQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { useGameType } from './use-game-type';
-
+import { SchedulerType } from '@/models/market-item';
 interface FormattedTime {
     minutes: number;
     seconds: number;
@@ -13,6 +13,7 @@ interface FormattedTime {
     longFormat: string;     // "1 minute 30 seconds" format
     raw: number;           // milliseconds
 }
+
 
 interface RoundRecordResponse {
     data: {
@@ -70,9 +71,14 @@ export const useCurrentGame = (roundRecordGameType: RoundRecordGameType = RoundR
         const timeToPlace = new Date(roundRecord.placementEndTime).getTime() - new Date().getTime() + 4000;
 
         // adding 2 seconds delay for round creation
-        const timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 8000;
+        let timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 8000;
+
+        if ((roundRecord.roundRecordGameType === RoundRecordGameType.STOCK_SLOTS || roundRecord.roundRecordGameType === RoundRecordGameType.STOCK_JACKPOT) && roundRecord.type === SchedulerType.NSE ) {
+            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 18000;
+        }
 
         const gameEnd = setTimeout(() => {
+            console.log("gameEnd", timeToGameEnd);
             queryClient.invalidateQueries({
                 predicate: (query) => {
                     return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
@@ -88,9 +94,14 @@ export const useCurrentGame = (roundRecordGameType: RoundRecordGameType = RoundR
             });
         }, timeToPlace);
 
+        const interval = setInterval(() => {
+            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 15000;
+            console.log("timeToGameEnd", timeToGameEnd);
+        }, 1000);
         return () => {
             clearTimeout(gameEnd);
             clearTimeout(placeEnd);
+            clearInterval(interval);
         };
 
 
@@ -218,16 +229,15 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: {
             const now = new Date().getTime();
             const gameEnd = new Date(roundRecord.endTime).getTime();
             const adjustedEndTime = gameEnd + 3000;
-            const THIRTY_SECONDS = 30000;
+            const EMD_TIME = 30000;
 
-            if (now >= adjustedEndTime - THIRTY_SECONDS) {
+            if (now >= adjustedEndTime - EMD_TIME) {
                 setShowResults(false);
                 if (roundRecord.id !== previousRoundId) {
                     setPreviousRoundId(roundRecord.id);
                 }
             }
-
-            if (now >= adjustedEndTime && bettedChips.length > 0) {
+            if (now >= adjustedEndTime && bettedChips?.length > 0) {
                 setShowResults(true);
             }
         };
@@ -237,9 +247,8 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: {
         return () => {
             clearInterval(intervalId);
         };
-    }, [roundRecord, currentRoundId]);
+    }, [roundRecord, currentRoundId, bettedChips]);
 
     return { showResults, currentRoundId, previousRoundId };
 };
-
 

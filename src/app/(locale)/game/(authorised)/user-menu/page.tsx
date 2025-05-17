@@ -8,14 +8,16 @@ import User from '@/models/user';
 import Wallet from '@/models/wallet';
 import { useUserLogout } from '@/react-query/admin-auth-queries';
 import { useGetWallet } from '@/react-query/payment-queries';
-import { Coins, HelpCircleIcon, Home, LogOutIcon } from 'lucide-react';
+import { Coins, HelpCircleIcon, Home, LogOutIcon, WalletIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
-import { PasswordIcon, ProfileIcon, TransactionIcon, WalletIcon } from './icons';
+
 import LocaleSwitcher from '@/components/common/LocaleSwitcher';
 import { MuteButton } from '@/components/common/mute-button';
+import { PasswordIcon, TransactionIcon } from '@/components/features/user-menu/icons';
+import { ProfileIcon } from '@/components/features/user-menu/icons';
 const UserMenu = () => {
     const t = useTranslations('user-menu');
     const { userDetails } = useAuthStore();
@@ -65,7 +67,7 @@ const UserMenu = () => {
                 <nav className="space-y-4 w-full flex flex-col gap-3.5  max-w-sm">
                     <Link href="/game/profile" passHref>
                         <Button variant="game-secondary" className="w-full  gap-x-2 h-14">
-                            <ProfileIcon />
+                            <ProfileIcon     />
                             {t('your-info')}
                         </Button>
                     </Link>

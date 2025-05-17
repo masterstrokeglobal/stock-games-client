@@ -120,7 +120,7 @@ const RoundDetailPage = () => {
     return (
         <Container className="bg-primary-game w-fit rounded-xl relative flex flex-col pt-16 sm:pt-24 gap-4 sm:gap-6 items-center min-h-screen">
             <TopBar>
-                <h1 className="text-lg sm:text-xl font-semibold">{t('title', { roundId: round.id })}</h1>
+                <h1 className="text-lg sm:text-xl font-semibold">{t('title')}</h1>
             </TopBar>
 
             <section className="container-main w-full max-w-6xl px-3 sm:px-4 md:px-6">

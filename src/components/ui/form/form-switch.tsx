@@ -8,10 +8,9 @@ import {
   FormField,
   FormItem,
   FormLabel,
-} from "@/components/ui/form";
-import { Switch } from "@/components/ui/switch";
-import { cn } from "@/lib/utils";
-
+} from "@/components/ui/form"
+import { Switch } from "@/components/ui/switch"
+import { cn } from "@/lib/utils"
 function FormSwitch<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
@@ -32,40 +31,24 @@ function FormSwitch<
 } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem className={cn(
-          "flex flex-row items-center justify-between rounded-lg border p-4",
-          game && "border-[#EFF8FF17] bg-[#122146]",
-          className
-        )}>
-          <div className="space-y-0.5">
-            {label && (
-              <FormLabel className={cn(game && "text-white")}>
-                {label}
-              </FormLabel>
-            )}
-            {description && (
-              <FormDescription className={cn(game && "text-gray-400")}>
-                {description}
-              </FormDescription>
-            )}
-          </div>
-          <FormControl>
-            <Switch
-              checked={field.value}
-              onCheckedChange={field.onChange}
-              className={cn(
-                game && "data-[state=checked]:bg-[#55B0FF]",
-                className
-              )}
-            />
-          </FormControl>
-        </FormItem>
-      )}
-    />
-  );
+    control={control}
+    name={name}
+    render={({ field }) => (
+      <FormItem className={cn("flex flex-row items-center justify-between rounded-lg border p-4", className)}>
+        <div className="space-y-0.5">
+          {label && <FormLabel>{label}</FormLabel>}
+          {description && <FormDescription>{description}</FormDescription>}
+        </div>
+        <FormControl>
+          <Switch
+            checked={field.value}
+            onCheckedChange={field.onChange}
+          />
+        </FormControl>
+      </FormItem>
+    )}
+  />
+  )
 }
 
 export default FormSwitch;

@@ -26,22 +26,29 @@ const transactionColumns: ColumnDef<Transaction>[] = [
         header: "Type",
         accessorKey: "type",
         cell: ({ row }) => (
-            <Badge variant={row.original.type === TransactionType.DEPOSIT ? "success" : "destructive"}>
-                {row.original.type}
+            <Badge variant={row.original.type === TransactionType.DEPOSIT  ? "success" : "destructive"}>
+                {row.original.type.split("_").join(" ")}
             </Badge>
         ),
     },
     {
         header: "Amount",
         accessorKey: "amount",
-        cell: ({ row }) => <div>Rs. {row.original.amount.toFixed(2)}</div>,
+        cell: ({ row }) =>{
+            if(row.original.type === TransactionType.POINTS_EARNED || row.original.type === TransactionType.POINTS_REDEEMED){
+                return <div>
+                    {row.original.amount} Points
+                </div>
+            }
+            return <div>Rs. {row.original.amount.toFixed(2)}</div>
+        }
     },
     {
         header: "Status",
         accessorKey: "status",
         cell: ({ row }) => (
             <Badge variant={row.original.status === TransactionStatus.COMPLETED ? "success" : "outline"}>
-                {row.original.status}
+                {row.original.status.split("_").join(" ")}
             </Badge>
         ),
     },

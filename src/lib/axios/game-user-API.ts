@@ -2,59 +2,98 @@ import { COMPANYID } from "../utils";
 import api from "./instance";
 
 export const gameUserAPI = {
-    createUser: async (payload: any) => {
-        return api.post("/user", { ...payload, company: COMPANYID });
-    },
+  createUser: async (payload: any) => {
+    return api.post("/user", { ...payload, company: COMPANYID });
+  },
 
-    verifyUser: async ({ userId, verificationData }: { userId: string; verificationData: { otp: string } }) => {
-        return api.post(`/user/verify/${userId}`, verificationData);
-    },
+  getCaptcha: async () => {
+    return api.get("/auth/captcha");
+  },
 
-    resendOTP: async ({ userId }: { userId: string }) => {
-        return api.post(`/user/resend-otp/${userId}`);
-    },
+  verifyUser: async ({
+    userId,
+    verificationData,
+  }: {
+    userId: string;
+    verificationData: { otp: string };
+  }) => {
+    return api.post(`/user/verify/${userId}`, verificationData);
+  },
 
-    updateUserById: async ({ userId, updateData }: { userId: string; updateData: Record<string, any> }) => {
-        return api.patch(`/user/${userId}`, updateData);
-    },
+  resendOTP: async ({ userId }: { userId: string }) => {
+    return api.post(`/user/resend-otp/${userId}`);
+  },
 
-    changePassword: async (payload: { oldPassword: string; newPassword: string }) => {
-        return api.post(`/user/change-password`, payload);
-    }
-    ,
-    deleteUserById: async ({ userId }: { userId: string }) => {
-        return api.delete(`/user/${userId}`);
-    },
-    forgotPassword: async ({ email }: { email: string }) => {
-        return api.post(`/user/forget-password`, { email });
-    },
+  updateUserById: async ({
+    userId,
+    updateData,
+  }: {
+    userId: string;
+    updateData: Record<string, any>;
+  }) => {
+    return api.patch(`/user/${userId}`, updateData);
+  },
 
-    verifyForgotPassword: async (verificationData: { otp: string, userId: string, }) => {
-        return api.post(`/user/verify-forget-password/${verificationData.userId}`, verificationData);
-    },
+  changePassword: async (payload: {
+    oldPassword: string;
+    newPassword: string;
+  }) => {
+    return api.post(`/user/change-password`, payload);
+  },
+  deleteUserById: async ({ userId }: { userId: string }) => {
+    return api.delete(`/user/${userId}`);
+  },
+  forgotPassword: async ({ email }: { email: string }) => {
+    return api.post(`/user/forget-password`, { email });
+  },
 
-    changeForgotPassword: async (payload: { password: string, userId: string }) => {
-        return api.post(`/user/forget-password/change`, payload);
-    },
-    login: async (payload: any) => {
-        return api.post("/auth/user-login", { ...payload, companyId: COMPANYID });
-    },
+  verifyForgotPassword: async (verificationData: {
+    otp: string;
+    userId: string;
+  }) => {
+    return api.post(
+      `/user/verify-forget-password/${verificationData.userId}`,
+      verificationData
+    );
+  },
 
-    googleCreateLogin: async (payload: any) => {
-        return api.post("/auth/google", payload);
-    },
+  changeForgotPassword: async (payload: {
+    password: string;
+    userId: string;
+  }) => {
+    return api.post(`/user/forget-password/change`, payload);
+  },
+  login: async (payload: any) => {
+    return api.post("/auth/user-login", { ...payload, companyId: COMPANYID });
+  },
 
-    demoLogin: async () => {
-        return api.post("/auth/create-demo-user", { companyId: COMPANYID });
-    },
-    myProfile: async () => {
-        return api.get("/user/profile");
-    },
+  googleCreateLogin: async (payload: any) => {
+    return api.post("/auth/google", payload);
+  },
 
-    googleLogin: async () => {
-        return api.get("/auth/google");
-    },
-    googleLoginCallback: async () => {
-        return api.get("/auth/google/callback");
-    },
+  getTier: async () => {
+    return api.get("/user/my-tier");
+  }, 
+
+  demoLogin: async () => {
+    return api.post("/auth/create-demo-user", { companyId: COMPANYID });
+  },
+  myProfile: async () => {
+    return api.get("/user/profile");
+  },
+
+  googleLogin: async () => {
+    return api.get("/auth/google");
+  },
+  googleLoginCallback: async () => {
+    return api.get("/auth/google/callback");
+  },
+
+  toggleFavoriteMarket: async (payload: {marketId: string}) => {
+    return api.post("/favourite", payload);
+  },
+
+  getFavoriteMarket: async () => {
+    return api.get("/favourite");
+  },
 };

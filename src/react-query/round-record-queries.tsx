@@ -16,17 +16,18 @@ export const useGetAllRoundRecords = (filter: any) => {
 
 export const useGetCurrentRoundRecord = (
     type: SchedulerType,
-    roundRecordGameType?: RoundRecordGameType
+    roundRecordGameType: RoundRecordGameType
 ) => {
     return useQuery({
         queryKey: ["current-round-record", type],
+        staleTime: 1000 * 60 * 60 * 24,
         queryFn: () => {
             return roundRecordsAPI.getAllRoundRecords({
                 type: type,
                 limit: 1,
                 startTime: new Date(),
                 page: 1,
-                roundRecordGameType: roundRecordGameType
+                roundRecordGameType
             })
         },
     });

@@ -1,7 +1,8 @@
 {
     "common": {
         "app-name": "Stock Derby",
-        "timings": "NSE operates from 9:30 AM to 3:25 PM"
+        "timings": "NSE operates from 9:30 AM to 3:25 PM (IST)",
+        "usa-timings": "USA Market operates from 7:30 PM to 1:30AM (IST)"
     },
     "game": {
         "title": "Stock Derby",
@@ -16,7 +17,7 @@
         "leaderboard": "Leaderboard",
         "rank": "Rank",
         "please-wait": "Please wait...",
-        "horse": "Horse",
+        "bull": "Bull",
         "price": "Price",
         "betting-not-allowed": "Betting not allowed",
         "name": "Name",
@@ -24,6 +25,7 @@
         "username": "username",
         "amount": "Amount",
         "placement": "Placement",
+        "top-bets": "Top Bets",
         "race-begin": "Race is about to begin",
         "no-bets": "No bets placed yet",
         "betting-closed": "Betting Closed",
@@ -31,7 +33,9 @@
         "round-ends-in": "Round ends in",
         "round-starts-in": "Round starts in",
         "place-starts-in": "Place starts in",
-        "place-ends-in": "Place ends in"
+        "place-ends-in": "Place ends in",
+        "clear-all": "Clear All",
+        "repeat-bet": "Repeat Bet"
     },
     "last-round-winner": {
         "title": "Last Round Winner",
@@ -45,6 +49,7 @@
         "title": "User Menu",
         "profile-image-alt": "Profile Image",
         "coin-image-alt": "Coin Icon",
+        "rules": "Rules",
         "add-funds-alt": "Add Funds",
         "loading": "...",
         "your-info": "Your Info",
@@ -53,7 +58,43 @@
         "your-wallet": "Your Wallet",
         "transaction-history": "Transaction History",
         "betting-history": "Betting History",
-        "logout": "Log Out"
+        "game-history": "Game History",
+        "faq": "Frequently Asked Questions",
+        "terms-and-conditions": "Terms & Conditions",
+         "logout": "Log Out"
+    },
+    "game-rules": {
+        "title": "Game Rules",
+        "video-title": "Watch video tutorial",
+        "description": "We have a total of 17 numbers in the table. Players can place the following types of bets:",
+        "betting-options": "Betting Options",
+        "winning-odds": "Winning Odds",
+        "straight-bet": "A particular number",
+        "straight-bet-description": "Select any single number on the table for the highest payout.",
+        "between-two-numbers": "Between two numbers",
+        "between-two-numbers-description": "Place a bet on two adjacent numbers either horizontally or vertically.",
+        "even-odd": "Even/Odd",
+        "even-odd-description": "Lower risk, consistent returns",
+        "high-low": "High/Low",
+        "high-low-description": "Bet on numbers 19-36 or 1-18",
+        "column-bet": "Column Bet",
+        "column-bet-description": "Bet on all numbers of a specific column.",
+        "red-black-colors": "Red/Black colors",
+        "red-black-colors-description": "Bet on all numbers of a specific color (red or black).",
+        "row-of-four-numbers": "Row of four numbers",
+        "row-of-four-numbers-description": "Bet on an entire row of four numbers for a more balanced risk.",
+        "single-number": "Single Number",
+        "single-number-description": "Highest risk, highest reward",
+        "single-number-odds": "16x",
+        "between-two-numbers-odds": "8x",
+        "row-of-four-numbers-odds": "4x",
+        "even-odd-odds": "2x",
+        "high-low-odds": "2x",
+        "column-bet-odds": "2x",
+        "red-black-colors-odds": "2x",
+        "street-bet-odds": "2x",
+        "corner-bet-odds": "2x",
+        "split-bet-odds": "2x"
     },
     "profile": {
         "page-title": "Your Info",
@@ -64,7 +105,9 @@
             "username": "Username",
             "phone": "Phone Number",
             "email": "Email*",
-            "reference-code": "Reference Code"
+            "reference-code": "Reference Code",
+            "label-phone": "Phone",
+            "label-description": "Description"
         },
         "validation": {
             "firstname-required": "First name is required",
@@ -309,18 +352,25 @@
         "next": "Next"
     },
     "auth": {
+        "common":{
+            "loading": "Loading...",
+            "or": "Or"
+        },
         "titles": {
             "welcome-back": "Welcome Back"
         },
         "labels": {
             "username-email": "Username or Email*",
             "username-email-phone": "Username or Email or Phone*",
-            "password": "Password*"
+            "phone": "Phone*",
+            "password": "Password*",
+            "captcha": "Enter Captcha"
         },
         "validation": {
             "password-min": "Password must be at least 6 characters",
             "password-max": "Password must be less than 20 characters",
-            "password-required": "Password is required"
+            "password-required": "Password is required",
+            "captcha-required": "Captcha is required"
         },
         "links": {
             "forgot-password": "Forgot Password?"
@@ -331,12 +381,14 @@
             "continue-with-google": "Continue with Google",
             "create-account": "Create an Account"
         },
-        "common": {
-            "or": "Or"
-        },
         "alt": {
             "google-logo": "Google logo"
-        }
+        },
+        "terms-and-conditions": {
+            "title": "Terms and Conditions",
+            "description": "By continuing you agree with our terms of service"
+        },
+        "refresh-captcha": "Refresh Captcha"
     },
     "reset-password": {
         "title": "Forgot Password",
@@ -362,8 +414,10 @@
         "label-full-name": "Full Name",
         "label-username": "Username",
         "label-email": "Email",
+        "label-phone": "Phone",
         "label-email-phone": "Email or Phone",
         "description-email-phone": "Enter your email or phone number",
+        "description-phone": "Enter your phone number",
         "label-reference-code": "Reference Code",
         "label-password": "Password",
         "terms-message": "By continuing you agree with our terms of service",
@@ -456,6 +510,10 @@
         }
     },
     "contact": {
+        "page-title": "Contact Us",
+        "need-assistance": "Need assistance ?",
+        "support-team-available": "Our friendly support team is available 24/7 to help you!",
+        "contact-support": "Contact Support",
         "titles": {
             "contact-us": "Contact Us"
         },
@@ -473,5 +531,6 @@
             "message-min": "Message must be at least 10 characters",
             "message-max": "Message cannot exceed 500 characters"
         }
+
     }
 }

@@ -2,11 +2,13 @@
 import { useCreateAdvertisement } from "@/react-query/advertisment-queries"
 import { AdvertismentForm, AdvertismentFormSchema } from "./advertisment-form"
 import { useRouter } from "next/navigation";
+import { AdvertisementType } from "@/models/advertisment";
 const defaultValues: AdvertismentFormSchema = {
     name: "",
     description: "",
     image: "",
     link: "",
+    type: AdvertisementType.BANNER,
     active: true,
 }
 const CreateAdvertisment = () => {

@@ -1,18 +1,12 @@
 import { useLeaderboard } from "@/hooks/use-leadboard";
-import MarketItem from "@/models/market-item";
+import { ROULETTE_COLORS } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
 import { useFrame } from "@react-three/fiber";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import HorseModel from "./horse-model";
+import MarketItem from "@/models/market-item";
 
-// Memoized horse colors
-const HORSE_COLORS = [
-    "#D94D4D", "#3F8B83", "#3B91A5", "#D86F56", "#6F9F96",
-    "#C89A3F", "#7F74B3", "#D066C6", "#59829E", "#C97A73",
-    "#66B78F", "#E0B870", "#9E83B4", "#699EC7", "#D68A4A",
-    "#4D8C7D", "#B7784D"
-] as const;
 
 type Props = {
     roundRecord: RoundRecord;
@@ -32,6 +26,7 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
     const numberOfHorses = (filteredMarket && filteredMarket.length > 0) ? filteredMarket.length : roundRecord.market.length;
     const animationProgressRef = useRef(0);
     const horsesRef = useRef<(THREE.Object3D | null)[]>([]);
+
 
     const [currentPositions, setCurrentPositions] = useState<{ x: number, z: number }[]>([]);
     const [targetPositions, setTargetPositions] = useState<{ x: number, z: number }[]>([]);
@@ -89,18 +84,24 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
         },
         [currentPositions, targetPositions]
     );
-
-    // Optimize frame updates
+    // Optimize frame updates with fixed timestep and completion check
     useFrame(() => {
         if (isTransitioning && animationProgressRef.current < 1) {
-            // Use a constant transition time instead of delta-based
+            // Use a larger fixed timestep for mobile
+            const timestep = 0.016;
+            const speed = 0.8; // Increased animation speed
+
             animationProgressRef.current = Math.min(
-                animationProgressRef.current + 0.016 * .5, // Fixed timestep
+                animationProgressRef.current + timestep * speed,
                 1
             );
+
             updateHorsePositions(animationProgressRef.current);
 
-            if (animationProgressRef.current >= .9) {
+            const animationProgress = 0.9;
+            if (animationProgressRef.current >= animationProgress) {
+                animationProgressRef.current = 1;
+                updateHorsePositions(1);
                 setCurrentPositions(targetPositions);
                 setIsTransitioning(false);
             }
@@ -119,7 +120,7 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
             const initialPos = currentPositions[index] || initialPositions[index] || { x: 0 };
             return {
                 position: [initialPos.x, 0, initialPos.z],
-                scale: [0.05, 0.05, 0.05],
+                scale: [.2, .2, .2],
                 speed: 1 + Math.random() * 0.2,
                 horseNumber: stock.horse,
                 rank: currentHorse?.rank || index + 1,
@@ -132,11 +133,11 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
             {horses.map((horse, index) => (
                 <HorseModel
                     key={horse.horseNumber}
-                    ref={(el) => {
-                        horsesRef.current[index] = el as unknown as THREE.Object3D | null;
+                    ref={(el: THREE.Object3D | null) => {
+                        horsesRef.current[index] = el;
                     }}
                     number={horse.horseNumber == 17 ? 0 : horse.horseNumber!}
-                    color={HORSE_COLORS[index % HORSE_COLORS.length]}
+                    color={ROULETTE_COLORS[index].color}
                     position={horse.position as any}
                     scale={horse.scale as any}
                     speed={horse.speed}

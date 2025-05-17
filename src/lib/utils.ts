@@ -196,6 +196,13 @@ export const ROULETTE_NUMBERS = [
   { number: 13, color: 'black' }, { number: 14, color: 'red' }, { number: 15, color: 'black' }, { number: 16, color: 'red' }
 ];
 
+export const ROULETTE_COLORS = [
+  { number: 1, color: 'red' }, { number: 2, color: 'black' }, { number: 3, color: 'red' }, { number: 4, color: 'black' },
+  { number: 5, color: 'black' }, { number: 6, color: 'red' }, { number: 7, color: 'black' }, { number: 8, color: 'red' },
+  { number: 9, color: 'red' }, { number: 10, color: 'black' }, { number: 11, color: 'red' }, { number: 12, color: 'black' },
+  { number: 13, color: 'black' }, { number: 14, color: 'red' }, { number: 15, color: 'black' }, { number: 16, color: 'red' },{number:17,color:'green'}
+];
+
 export const googleAuth = () => {
   window.open(
       ` ${process.env.NEXT_PUBLIC_API_URL}auth/google?companyId=${process.env.NEXT_PUBLIC_COMPANY_ID}`,
@@ -216,3 +223,69 @@ export const PLATFORMFEES = 4
 export const LOBBY_PLATFORM_FEES = 10
 
 export const LEVERAGE_MULTIPLIER = 10;
+
+export const randomUsername = () => {
+  return indianNames[Math.floor(Math.random() * indianNames.length)] + " " + secondNames[Math.floor(Math.random() * secondNames.length)];
+}
+
+
+export const randomNumber = (min: number, max: number, multiple: number) => {
+  //multiple of 100
+  return Math.floor(Math.random() * (max - min + 1)) * multiple;
+}
+
+
+export const formatRupee = (rupees: number) => {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR'
+  }).format(rupees);
+}
+
+export const checkCasinoAllowed = (companyId: number) => {
+  return companyId === 21;
+}
+
+// Generate current time in 12-hour format (HH:MM AM/PM)
+const getCurrentTime = () => {
+  const now = new Date()
+  let hours = now.getHours()
+  const minutes = now.getMinutes().toString().padStart(2, "0")
+  const ampm = hours >= 12 ? "PM" : "AM"
+  hours = hours % 12
+  hours = hours ? hours : 12 // the hour '0' should be '12'
+  return `${hours}:${minutes} ${ampm}`
+}
+
+// Generate random data
+export const generateData = (count: number) => {
+  const data = []
+
+  for (let i = 0; i < count; i++) {
+    const user = randomUsername()
+    const time = getCurrentTime()
+    const amount = randomNumber(50, 5000, 10).toString()
+
+    data.push({
+      id: Date.now() + i,
+      user,
+      time,
+      amount,
+    })
+  }
+
+  return data
+}
+
+export const SPORTS_BOOK_GAMEID = process.env.NEXT_PUBLIC_SPORTS_BOOK_GAMEID ?? 8653;
+
+export const generateNewCameraPosition = (currentPosition: [number, number, number]) => {
+  const [x, y, z] = currentPosition;
+
+  // rotate around the y axis
+  const newX = x * Math.cos(Math.PI / 4) - z * Math.sin(Math.PI / 4);
+  const newZ = x * Math.sin(Math.PI / 4) + z * Math.cos(Math.PI / 4);
+
+  return [newX, y, newZ];
+}
+

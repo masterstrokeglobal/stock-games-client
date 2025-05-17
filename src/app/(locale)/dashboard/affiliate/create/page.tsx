@@ -1,0 +1,66 @@
+"use client";
+
+import AffiliateForm, { AffiliateFormValues } from "@/components/features/affiliate/affiliate-form"; // Adjust the import based on your file structure
+import { Separator } from "@/components/ui/separator";
+import { useRouter } from "next/navigation";
+import { useCreateAffiliate } from "@/react-query/affiliate-queries";
+import { AffiliateRole } from "@/models/affiliate";
+import { useAuthStore } from "@/context/auth-context";
+import Admin, { AdminRole } from "@/models/admin";
+
+const defaultValues: AffiliateFormValues = {
+    name: "",
+    username: "",
+    password: "",
+    companyId: "",
+    referralBonus: 0,
+    isPercentage: false,
+    role: AffiliateRole.MASTER_AFFILIATE,
+    comission: 0,
+    minAmount: 0,
+    maxAmount: 100,
+    provideMaxAmount: false,
+};
+
+const CreateAffiliatePage = () => {
+    const router = useRouter();
+    const { mutate, isPending } = useCreateAffiliate();
+    const { userDetails } = useAuthStore();
+
+    const isSubAffiliate = (userDetails as Admin)?.role === AdminRole.AFFILIATE;
+    const onSubmit = (data: AffiliateFormValues) => {
+        let payload = data;
+
+        if (!data.provideMaxAmount) {
+            payload = {
+                ...data,
+                maxAmount: undefined,
+            };
+        }
+
+        mutate(payload, {
+            onSuccess: () => {
+                router.push("/dashboard/affiliate");
+            },
+        });
+    };
+
+    return (
+        <section className="container-main min-h-[60vh] max-w-xl">
+            <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between">
+                <h2 className="text-xl font-semibold">Create Affiliate</h2>
+            </header>
+            <Separator className="mt-4" />
+            <main className="mt-4">
+                <AffiliateForm
+                    defaultValues={defaultValues}
+                    onSubmit={onSubmit}
+                    isLoading={isPending}
+                    subAffiliate={isSubAffiliate}
+                />
+            </main>
+        </section>
+    );
+};
+
+export default CreateAffiliatePage;

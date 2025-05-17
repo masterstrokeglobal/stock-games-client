@@ -2,9 +2,9 @@
 import { useIsPlaceOver } from "@/hooks/use-current-game";
 import { RoundRecord } from "@/models/round-record";
 import { Canvas } from "@react-three/fiber";
-import HorseRaceEnvironment from "./components/race-enviroment";
 import { useTranslations } from "next-intl";
 import MarketItem from "@/models/market-item";
+import HorseRaceEnvironment from "./components/race-enviroment";
 
 type Props = {
   roundRecord: RoundRecord;
@@ -18,9 +18,12 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
 
   console.log("horse race rendered");
   return isPlaceOver ? (
-    <Canvas>
-      <HorseRaceEnvironment roundRecord={roundRecord} filteredMarket={filteredMarket} />
-    </Canvas>
+    <Suspense fallback={<GameLoadingScreen className="h-96" loadingImageClassName="w-10 h-auto" />}>
+      <Canvas>
+        <PixelRatioManager />
+        <HorseRaceEnvironment roundRecord={roundRecord} />
+      </Canvas>
+    </Suspense>
   ) : (
     <RacePreparation />
   );
@@ -40,3 +43,19 @@ function RacePreparation() {
     </div>
   );
 }
+
+import useWindowSize from "@/hooks/use-window-size";
+import { useThree } from "@react-three/fiber";
+import { Suspense, useEffect } from "react";
+import GameLoadingScreen from "@/components/common/game-loading-screen";
+
+const PixelRatioManager = () => {
+  const { gl } = useThree();
+
+  const { isMobile } = useWindowSize();
+  useEffect(() => {
+    gl.setPixelRatio(isMobile ? 1.3 : Math.min(window.devicePixelRatio, 1.5));
+  }, [gl, isMobile]);
+
+  return null;
+};

@@ -1,4 +1,5 @@
 
+
 export enum SchedulerType {
     NSE = "nse",
     CRYPTO = "crypto",
@@ -16,6 +17,7 @@ export class MarketItem {
     placementAllowed?: boolean;
     updatedAt?: Date;
     deletedAt?: Date;
+    slotValues?: { upperValue: number; lowerValue: number } | null;
     horse?: number;
 
     constructor(params: Partial<MarketItem> = {}) {
@@ -30,6 +32,7 @@ export class MarketItem {
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;
         this.horse = params.horse;
+        this.slotValues = params.slotValues;
     }
 
     get codeName() {
@@ -44,6 +47,17 @@ export class MarketItem {
 
     get bitcode() {
         return this.code?.toUpperCase()
+    }
+
+    get currency() {    
+        switch(this.type) {
+            case SchedulerType.NSE:
+                return "Rs.";
+            case SchedulerType.CRYPTO:
+                return "USDT";
+            case SchedulerType.USA_MARKET:
+                return "$";
+        }
     }
 }
 

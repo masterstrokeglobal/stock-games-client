@@ -1,31 +1,55 @@
+
 type PropsWithClassName = {
-    className?: string;
+  className?: string;
 };
 
 type PaginationData = {
-    limit: number;
-    offset: number;
-    sortOn?: string | null;
-    sortBy?: "ASC" | "DESC" | null;
-    search?: string | null;
-    totalRecords?: number | null;
+  limit: number;
+  offset: number;
+  sortOn?: string | null;
+  sortBy?: "ASC" | "DESC" | null;
+  search?: string | null;
+  totalRecords?: number | null;
 }
 
 type SelectOption = { value: string; label: string }
 
 type KeyValue = {
-    [key: string]: string | number | boolean | undefined;
+  [key: string]: string | number | boolean | undefined;
 }
 
 type SearchFilters = {
-    page: number;
-    active?: string;
-    status?: string;
-    placementAllowed?: string;
-    companyId?: string;
-    search: string;
-    orderByField?: string;
-    orderBy?: string;
-    type?: string;
-    limit?: number;
+  page: number;
+  active?: string;
+  status?: string;
+  placementAllowed?: string;
+  companyId?: string;
+  search: string;
+  orderByField?: string;
+  orderBy?: string;
+  type?: string;
+  limit?: number;
 } & KeyValue
+
+
+type TawkMessengerReactProps = {
+  propertyId: string;
+  customStyle?: any;
+  widgetId: string;
+  onLoad?: () => void;
+}
+
+
+
+ type Market = "NSE" | "Crypto" | "US Stocks"
+ type BetDirection = "up" | "down"
+ type BetType = "single-digit" | "double-digit"
+
+
+declare module '@tawk.to/tawk-messenger-react' {
+
+  export type TawkMessengerReactComponent<T = any> = React.ComponentType<T>
+
+  const TawkMessengerReact: TawkMessengerReactComponent<TawkMessengerReactProps>;
+  export default TawkMessengerReact;
+}

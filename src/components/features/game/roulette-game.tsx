@@ -22,7 +22,8 @@ import GameResultDialog from "./result-dialog";
 import { BettingControls } from "./roulette-chips";
 import { RouletteBettingGrid } from "./roulette-grid";
 import { GameHeader } from "./roulette-header";
-
+import useUSAMarketAvailable from "@/hooks/use-usa-available";
+import useWindowSize from "@/hooks/use-window-size";
 enum PlacementType {
     SINGLE = "single",
     SPLIT = "split",
@@ -44,13 +45,16 @@ type Props = {
 const RouletteGame = ({ roundRecord }: Props) => {
 
     const t = useTranslations("game");
+    const { isMobile } = useWindowSize();
     const [betAmount, setBetAmount] = useState<number>(100);
     const gameState = useGameState(roundRecord);
     const isNSEAvailable = useNSEAvailable();
+    const isUSAMarketAvailable = useUSAMarketAvailable();
     const [tab, setTab] = useGameType();
     const { userDetails } = useAuthStore();
     const currentUser = userDetails as User;
     const { mutate, isPending: isPlacingBet } = useCreateGameRecord();
+
 
     const boardRef = useRef<HTMLDivElement>(null);
 
@@ -132,6 +136,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
         mutate({
             amount: betAmount,
             round: roundRecord.id,
+            horseNumbers: numbers,
             placementType: PlacementType.DOUBLE_STREET,
             market: markets,
             placedValues: getPlacementString({
@@ -151,6 +156,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
         mutate({
             amount: betAmount,
             round: roundRecord.id,
+            horseNumbers: numbers,
             placementType: PlacementType.COLOR,
             market: markets,
             placedValues: getPlacementString({
@@ -171,6 +177,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
             round: roundRecord.id,
             placementType: betType,
             market: markets,
+            horseNumbers: numbers,
             placedValues: getPlacementString({
                 market: markets as number[],
                 placementType: betType,
@@ -193,6 +200,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
             amount: betAmount,
             round: roundRecord.id,
             placementType: PlacementType.SINGLE,
+            horseNumbers: [17],
             market: [marketId],
             placedValues: getPlacementString({ market: [marketId], placementType: PlacementType.SINGLE }, roundRecord),
         });
@@ -206,6 +214,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const oddNumbers = Array.from({ length: 8 }, (_, i) => (i * 2) + 1);
 
     const handleBoardClick = (e: React.MouseEvent) => {
+        console.log("handleBoardClick", gameState.isPlaceOver, isPlacingBet);
         if (gameState.isPlaceOver || isPlacingBet) return;
         if (!verifyBetAmount(betAmount)) return;
         const bet = getBetTypeFromClick(e, boardRef);
@@ -225,6 +234,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
             round: roundRecord.id,
             placementType: bet.type,
             market: markets,
+            horseNumbers: bet.numbers,
             placedValues: getPlacementString({
                 market: markets as number[],
                 placementType: bet.type,
@@ -246,10 +256,9 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     return (
         <>
-
-            <ParticlesContainer />
+            {!isMobile && <ParticlesContainer />}
             <div className="mx-auto  lg:pr-4  py-2 bg-background-secondary h-full ">
-                <div className="relative rounded-xl lg:flex-row w-full flex-col flex gap-8 border-brown-800">
+                <div className="relative rounded-xl lg:flex-row w-full flex-col flex border-brown-800">
                     <div className='lg:w-7/12 max-w-2xl mx-auto w-full'>
                         <h1 className='text-xl lg:text-left text-center mt-2 mb-4 leading-none text-game-text font-semibold game-header-highlight lg:pl-4 pl-2   '>
                             {gameState.isPlaceOver ? t("betting-closed") : t("place-your-bets")}
@@ -267,9 +276,8 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                 {isCryptoAllowed && (
                                     <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
                                 )}
-
-                                {isUSAMarketAllowed && (
-                                    <TabsTrigger className="flex-1 h-8" value="usa_market">USA Market</TabsTrigger>
+                                {isUSAMarketAllowed && isUSAMarketAvailable && (
+                                    <TabsTrigger disabled={!isUSAMarketAvailable} className={cn("flex-1 h-8", !isUSAMarketAvailable && 'cursor-not-allowed')} value="usa_market">USA Market</TabsTrigger>
                                 )}
                             </TabsList>
                         </Tabs>
@@ -299,17 +307,19 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
                                 <div className="grid grid-rows-1 gap-2 ">
                                     <Button
+                                        disabled={gameState.isPlaceOver || isNotAllowedToPlaceBet}
                                         onClick={handleZeroBet}
                                         variant="game-secondary"
-                                        className="col-span-1 w-10 relative  bg-emerald-600 justify-center gap-4 text-white ml-2 h-full "
+                                        className="col-span-1 w-10 relative  bg-yellow-600 justify-center gap-4 text-white ml-2 h-full "
                                     >
                                         <span className="rotate-text">
                                             0 &nbsp;
                                             {roundRecord.market[16]?.codeName}
                                         </span>
                                         {getBetForPosition(PlacementType.SINGLE, [17]) && (
-                                            <ButtonChip className=" top-4 right-1/2 translate-x-1/2 -translate-y-1/2" amount={getBetForPosition(PlacementType.SINGLE, [17])!.amount} />
+                                            <ButtonChip className=" top/1/2 bg-red-600 right-1/2 translate-x-1/2 -translate-y-1/2" amount={getBetForPosition(PlacementType.SINGLE, [17])!.amount} />
                                         )}
+                                        {roundRecord.winningId === roundRecord.market[16]?.id && <img className='z-40 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-auto md:h-7 h-6 animate-pulse  duration-500 ' src='/images/crown.png' />}
                                     </Button>
                                 </div>
 
@@ -395,11 +405,11 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             </div>
                         </div>
                     </div>
-                    <div className='lg:w-5/12 flex justify-between flex-col '>
+                    <div className='lg:w-5/12  justify-between flex-col '>
                         <Tabs
                             value={tab}
                             onValueChange={(value) => setTab(value as SchedulerType)}
-                            className="w-full relative z-10"
+                            className="w-full relative z-10 mt-2"
                         >
                             <TabsList className="w-full hidden lg:flex  bg-tertiary ">
                                 {isNSEAllowed && (
@@ -409,12 +419,10 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                     <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
                                 )}
                                 {isUSAMarketAllowed && (
-                                    <TabsTrigger className="flex-1 h-8" value="usa_market">USA Market</TabsTrigger>
+                                    <TabsTrigger disabled={!isUSAMarketAvailable} className={cn("flex-1 h-8", !isUSAMarketAvailable && '!cursor-not-allowed')} value="usa_market">USA Market</TabsTrigger>
                                 )}
                             </TabsList>
-
                             <GameHeader gameState={gameState} />
-
                             <BettingControls
                                 isLoading={isPlacingBet}
                                 betAmount={betAmount}

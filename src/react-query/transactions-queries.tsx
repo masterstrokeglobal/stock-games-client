@@ -15,7 +15,6 @@ export const useCreateTransaction = () => {
 };
 
 export const useGetAllTransactions = (filter?: Record<string, any>) => {
-    console.log("filter", filter);
     return useQuery({
         queryKey: ["transactions", filter],
         queryFn: () => transactionAPI.getAllTransactions(filter),

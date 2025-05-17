@@ -4,6 +4,8 @@ export enum AdminRole {
     SUPER_ADMIN = "super_admin",
     COMPANY_ADMIN = "company_admin",
     AGENT = "agent",
+    AFFILIATE = "master_affiliate",
+    SUB_AFFILIATE = "sub_affiliate",
 }
 
 interface AdminParams {
@@ -67,6 +69,18 @@ class Admin {
 
     get isAgent(): boolean {
         return this.role === AdminRole.AGENT;
+    }
+
+    get isAffiliate(): boolean {
+        return this.role === AdminRole.AFFILIATE || this.role === AdminRole.SUB_AFFILIATE;
+    }
+
+    get isSubAffiliate(): boolean {
+        return this.role === AdminRole.SUB_AFFILIATE;
+    }
+
+    get isMasterAffiliate(): boolean {
+        return this.role === AdminRole.AFFILIATE;
     }
 }
 

@@ -29,7 +29,31 @@ export default function LocaleSwitcher( {className, selectClassName}: {className
         {
           value: 'ar',
           label: "Arabic"
-        }
+        },
+        {
+          value: 'hi',
+          label: "Hindi"
+        },
+        {
+          value: 'ta',
+          label: "Tamil"
+        },
+        {
+          value: 'te',
+          label: "Telugu"
+        },
+        {
+          value: 'kn',
+          label: "Kannada"
+        },
+        {
+          value: 'mr',
+          label: "Marathi"
+        },
+        {
+          value: 'gu',
+          label: "Gujarati"
+        }        
       ]}
     />
   );

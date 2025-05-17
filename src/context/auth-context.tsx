@@ -12,6 +12,7 @@ interface UserContextType {
   setLoadig: (loading: boolean) => void;
   loading: boolean;
   setUser: (details: Admin | User | null) => void;
+  isLoggedIn: boolean;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -38,6 +39,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     setLoadig: setIsLoading,
     setUser: updateUser,
     loading: isLoading,
+    isLoggedIn: userDetails !== null,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

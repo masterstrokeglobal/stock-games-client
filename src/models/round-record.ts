@@ -5,11 +5,13 @@ import MarketItem, { SchedulerType } from "./market-item";
 export enum RoundRecordGameType {
     DERBY = "derby",
     LOBBY = "lobby",
+    MINI_MUTUAL_FUND = "mini_mutual_fund",
     GUESS_FIRST_FOUR = "guess_first_four",
     GUESS_LAST_FOUR = "guess_last_four",
     GUESS_FIRST_EIGHT = "guess_first_eight",
     GUESS_LAST_EIGHT = "guess_last_eight",
-    MINI_MUTUAL_FUND = "mini_mutual_fund",
+    STOCK_SLOTS = "stock_slots",
+    STOCK_JACKPOT = "stock_jackpot",
 }
 
 export class RoundRecord {
@@ -22,30 +24,37 @@ export class RoundRecord {
     market: MarketItem[];
     type: SchedulerType;
     roundRecordGameType: RoundRecordGameType;
-    winningId?:  number[];
+    winningId?: number[];
     createdAt: Date;
     winningMarket?: MarketItem;
     updatedAt: Date;
+    slotValues: { [code: string]: { upperValue: number; lowerValue: number } } | null;
     deletedAt?: Date;
-    initialValues: any | null;
+    initialValues: Record<string, number> | null;
 
     constructor(data: Partial<RoundRecord>) {
         this.id = data.id || 0;
+        this.slotValues = data.slotValues || null;
         this.startTime = data.startTime ? new Date(data.startTime) : new Date();
         this.companyId = data.companyId || 0;
         this.endTime = data.endTime ? new Date(data.endTime) : new Date();
         this.placementStartTime = data.placementStartTime ? new Date(data.placementStartTime) : new Date();
         this.placementEndTime = data.placementEndTime ? new Date(data.placementEndTime) : new Date();
-        this.market = data.market?.map((item: any, index) => new MarketItem({ ...item, horse: index + 1 })) || [];
+        this.market = data.market?.map((item: any, index) => new MarketItem({ ...item, horse: index + 1, slotValues: this.getSlotValues(item.code) })) || [];
         this.type = data.type || SchedulerType.NSE;
         this.winningMarket = data.winningMarket;
-        this.winningId = data.winningId || [42];
+        this.winningId = data.winningId;
         this.roundRecordGameType = data.roundRecordGameType || RoundRecordGameType.DERBY;
         this.createdAt = data.createdAt ? new Date(data.createdAt) : new Date();
         this.updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
         this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : undefined;
         this.initialValues = data.initialValues || null;
     }
+
+    getSlotValues(code: string): { upperValue: number; lowerValue: number } {
+        return this.slotValues?.[code] || { upperValue: 0, lowerValue: 0 };
+    }
+
 
     get winnerName(): string {
         return this.market.find(item => item.id === this.winningId?.[0])?.name || "-";
@@ -103,5 +112,12 @@ export class RoundRecord {
                 this.roundRecordGameType === RoundRecordGameType.GUESS_FIRST_EIGHT ? "Guess First Eight" :
                     this.roundRecordGameType === RoundRecordGameType.GUESS_LAST_EIGHT ? "Guess Last Eight" :
                         this.roundRecordGameType === RoundRecordGameType.MINI_MUTUAL_FUND ? "Mini Mutual Fund" : "";
+    }
+    getInitialPrice(bitcode: string): number {
+        // case insensitive both ways 
+        const codeLower = bitcode.toLowerCase();
+        const codeUpper = bitcode.toUpperCase();
+        const initialPrice = this.initialValues?.[codeLower] || this.initialValues?.[codeUpper] || 0;
+        return initialPrice;
     }
 }

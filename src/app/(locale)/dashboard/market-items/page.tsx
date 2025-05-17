@@ -75,7 +75,7 @@ const MarketItemTable = () => {
                     <div className="flex gap-4">
 
                         {/* ShadCN Select for Scheduler Type Filter */}
-                        <Select value={type} defaultValue="all"  onValueChange={(val) => {
+                        <Select value={type} defaultValue="all" onValueChange={(val) => {
                             setType(val as SchedulerType)
                             setPage(1)
                         }}>
@@ -86,13 +86,16 @@ const MarketItemTable = () => {
                                 <SelectGroup>
                                     <SelectLabel>Types</SelectLabel>
                                     <SelectItem value="all">All Types</SelectItem>
-                                    <SelectItem value={SchedulerType.NSE}>NSE</SelectItem>
-                                    <SelectItem value={SchedulerType.CRYPTO}>Crypto</SelectItem>
+                                    {
+                                        Object.values(SchedulerType).map((item) => (
+                                            <SelectItem key={item} value={item} className="capitalize">{item.split("_").join(" ")}</SelectItem>
+                                        ))
+                                    }
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
 
-                        <Select value={active} defaultValue="all"  onValueChange={(val) => setActive(val)}>
+                        <Select value={active} defaultValue="all" onValueChange={(val) => setActive(val)}>
                             <SelectTrigger>
                                 <SelectValue placeholder="All Types" />
                             </SelectTrigger>

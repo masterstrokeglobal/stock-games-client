@@ -1,21 +1,6 @@
 import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin();
 
-
-const redirects = [
-  {
-    source: '/admin',
-    destination: '/dashboard',
-    permanent: true,
-  },
-  {
-    source: '/',
-    destination: '/game/platform',
-    permanent: true,
-  },
-];
-
-
 const nextConfig = {
   /* config options here */
   images: {
@@ -24,7 +9,18 @@ const nextConfig = {
     ],
   },
   redirects: async () => {
-    return redirects;
+    return [
+      {
+        source: '/',
+        destination: '/game/platform',
+        permanent: true,
+      },
+      {
+        source: '/admin',
+        destination: '/dashboard',
+        permanent: true,
+      },
+    ];
   }
 };
 

@@ -145,8 +145,11 @@ const RoundRecordTable = () => {
                             <SelectGroup>
                                 <SelectLabel>Types</SelectLabel>
                                 <SelectItem value="all">All Types</SelectItem>
-                                <SelectItem value={SchedulerType.NSE}>NSE</SelectItem>
-                                <SelectItem value={SchedulerType.CRYPTO}>Crypto</SelectItem>
+                                {
+                                    Object.values(SchedulerType).map((item) => (
+                                        <SelectItem key={item} value={item} className="capitalize">{item.split("_").join(" ")}</SelectItem>
+                                    ))
+                                }
                             </SelectGroup>
                         </SelectContent>
                     </Select>

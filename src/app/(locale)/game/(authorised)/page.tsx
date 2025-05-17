@@ -13,7 +13,14 @@ import { useCurrentGame, useGameState, useIsPlaceOver } from "@/hooks/use-curren
 import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
+import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
 import { useTranslations } from "next-intl";
+
+declare global {
+    interface Window {
+        Tawk_API: any;
+    }
+}
 
 const borderStyle = {
     borderColor: "var(--primary-game)",
@@ -25,8 +32,7 @@ const GamePage = () => {
     const { isMobile } = useWindowSize();
     useHorseRaceSound(roundRecord);
 
-
-    return (
+    return (<>
         <section className={cn("bg-background-game pt-14 md:min-h-screen ", isMobile && "bg-background-secondary")}>
             <Navbar />
             <UserWins />
@@ -40,7 +46,6 @@ const GamePage = () => {
                     style={borderStyle}
                     className="lg:col-span-5 col-span-4 row-span-2 rounded-2xl ">
                     {roundRecord && <LeaderBoard roundRecord={roundRecord} />}
-
                 </div>
 
                 <div
@@ -56,11 +61,16 @@ const GamePage = () => {
                     className="lg:col-span-2 col-span-4 overflow-hidden row-span-3 rounded-2xl ">
                     {roundRecord && <LastWinners className="h-full" />}
                 </div>
-
             </main>}
             <AdvertismentDialog />
+            <TawkMessengerReact
+                propertyId="/67fcabcc5de05719072dd2b9"
+                widgetId="1iopfu6mp"
+                onLoad={() => console.log('Tawk loaded')}
+            />
             {isMobile && roundRecord && <MobileGame roundRecord={roundRecord} />}
         </section>
+    </>
     );
 };
 
@@ -84,7 +94,7 @@ const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
                 {roundRecord && <CurrentBets round={roundRecord} />}
             </div>
         </main>}
-        {isPlaceOver && <LeaderBoard  roundRecord={roundRecord} />}
+        {isPlaceOver && <LeaderBoard roundRecord={roundRecord} />}
         {isPlaceOver && <RouletteGame roundRecord={roundRecord} />}
         {isPlaceOver && <CurrentBets round={roundRecord} />}
     </section>

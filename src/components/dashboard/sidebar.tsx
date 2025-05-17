@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Building, Clock, CoinsIcon, Contact2, DollarSign, Home, ImageUpIcon, LucideIcon, Repeat1, Users } from 'lucide-react';
+import { Building, Clock, CoinsIcon, Contact2, DollarSign, GamepadIcon, GiftIcon, Home, ImageUpIcon, LucideIcon, MedalIcon, Repeat1, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -13,6 +13,7 @@ import {
 import { useAuthStore } from '@/context/auth-context';
 import Admin, { AdminRole } from '@/models/admin';
 import Logo from '../common/logo';
+import { ScrollArea } from "../ui/scroll-area";
 
 interface SubMenuItem {
     name: string;
@@ -66,7 +67,9 @@ const adminMenuItems: MenuItem[] = [
         name: "Round Records",
         icon: Repeat1,
         link: '/dashboard/round-records'
-    }
+    },
+
+
 ];
 
 const companyMenuItems: MenuItem[] = [
@@ -80,6 +83,12 @@ const companyMenuItems: MenuItem[] = [
         name: 'Users',
         icon: Users,
         link: '/dashboard/users',
+    },
+
+    {
+        name: "User Reports",
+        icon: Users,
+        link: '/dashboard/affiliate/users'
     },
     // company wallet
     {
@@ -123,6 +132,26 @@ const companyMenuItems: MenuItem[] = [
         name: "Advertisment",
         icon: ImageUpIcon,
         link: '/dashboard/advertisements'
+    },
+    {
+        name: "Affiliate",
+        icon: Users,
+        link: '/dashboard/affiliate'
+    },
+    {
+        name: "Bonus",
+        icon: GiftIcon,
+        link: '/dashboard/bonus'
+    },
+    {
+        name: "Casino Games",
+        icon: GamepadIcon,
+        link: '/dashboard/casino-games'
+    },
+    {
+        name: "Tiers",
+        icon: MedalIcon,
+        link: '/dashboard/tier'
     }
 ];
 
@@ -150,6 +179,19 @@ const agentMenuItems: MenuItem[] = [
 ];
 
 
+const affiliateMenuItems: MenuItem[] = [
+    {
+        name: "Dashboard",
+        icon: Home,
+        link: '/dashboard/affiliate/profile'
+    },
+    {
+        name: "Direct Users",
+        icon: Users,
+        link: '/dashboard/affiliate/users'
+    },
+];
+
 
 const Sidebar = ({ className }: PropsWithClassName) => {
     let { userDetails } = useAuthStore();
@@ -159,6 +201,18 @@ const Sidebar = ({ className }: PropsWithClassName) => {
     let menus = userDetails?.isSuperAdmin ? adminMenuItems : companyMenuItems;
     if (userDetails.role === AdminRole.AGENT) {
         menus = agentMenuItems;
+    }
+
+    if (userDetails.isAffiliate) {
+        if (userDetails.role === AdminRole.AFFILIATE) {
+            menus = [...affiliateMenuItems, {
+                name: "Sub Affiliates",
+                icon: GiftIcon,
+                link: '/dashboard/affiliate'
+            }];
+        } else if (userDetails.role === AdminRole.SUB_AFFILIATE) {
+            menus = affiliateMenuItems;
+        }
     }
 
     const renderMenuItem = (item: MenuItem) => {
@@ -217,14 +271,16 @@ const Sidebar = ({ className }: PropsWithClassName) => {
 
     return (
         <div className={cn("flex  flex-col ", className)}>
-            <div className="flex h-16 items-center  px-4">
-                <Logo dark={false} />
+                <ScrollArea className="h-full">
+                <div className="flex h-16 items-center  px-4">
+                    <Logo dark={false} />
             </div>
             <nav className="flex-1 overflow-y-auto px-4 pt-8">
                 <Accordion type="multiple" className="w-full space-y-2">
                     {menus.map(renderMenuItem)}
                 </Accordion>
             </nav>
+        </ScrollArea>
         </div>
     );
 };
