@@ -99,6 +99,19 @@ export const StockDerbyGames = [
         link: "/game?gameType=usa_market",
         image: "/images/us-stock.png",
         description: "Rouletter game on live US stocks",
+    },
+    {
+        title:"Stock Jackpot",
+        link: "/game/jackpot",
+        image:"/images/ad1.webp",
+        description:"Guess Price Movement"
+    },
+    {
+        
+        title:"Stock Slot",
+        link: "/game/slot",
+        image:"/images/ad3.png",
+        description:"Guess Last Price Digit and win"
     }
 ]
 

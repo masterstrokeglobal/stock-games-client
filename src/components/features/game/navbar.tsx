@@ -8,9 +8,11 @@ import Link from "next/link";
 import GameTimings from "./game-timings";
 import UserMenuNavbar from "./user-menu-navbar";
 import { cn } from "@/lib/utils";
-const Navbar = () => {
+type Props = {
+    className?: string
+}
+const Navbar = ({ className }: Props) => {
     const { isLoggedIn } = useAuthStore();
-
 
     return (
         <nav className={cn("items-center md:px-6 px-4 z-50  flex fixed top-0 justify-between font-semibold w-full h-14 bg-primary-game", className)}>

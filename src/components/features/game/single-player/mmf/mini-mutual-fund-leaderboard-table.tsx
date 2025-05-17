@@ -4,11 +4,9 @@ import { useLeaderboardAggregation } from "@/hooks/use-mini-mutual-fund-aggrigat
 import { cn, LEVERAGE_MULTIPLIER } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
 import MiniMutualFundPlacement from "@/models/mini-mutual-fund";
-import { useGetMiniMutualFundCurrentRoundPlacements } from "@/react-query/lobby-query";
+import { useGetCurrentRoundPlacements } from "@/react-query/game-record-queries";
 import { useSinglePlayerGameStore } from "@/store/single-player-game-store";
 import React, { useMemo } from 'react';
-import { CAR_COLORS } from "../../../horse-animation/components/mmf-horse-animation";
-import { useGetCurrentRoundPlacements } from "@/react-query/game-record-queries";
 interface LeaderboardTableProps {
     leaderboardData: RankedMarketItem[];
     roundType?: SchedulerType;

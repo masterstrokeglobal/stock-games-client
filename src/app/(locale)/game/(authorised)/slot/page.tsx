@@ -6,6 +6,7 @@ import Navbar from "@/components/features/game/navbar"
 import SlotJackpotResultDialog from "@/components/features/game/slot-jackpot-result-dialog"
 import { BettingCard } from "@/components/features/slot-jackpot/BettingCard"
 import { BetSlip } from "@/components/features/slot-jackpot/bet-slip"
+import BettingAmount, { BettingAmoutMobile } from "@/components/features/slot-jackpot/betting-amout"
 import TimeDisplay from "@/components/features/stock-jackpot/time-left"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -16,9 +17,7 @@ import { useLeaderboard } from "@/hooks/use-leadboard"
 import { SchedulerType } from "@/models/market-item"
 import { RoundRecordGameType } from "@/models/round-record"
 import { useGetMyStockSlotJackpotGameRecord } from "@/react-query/game-record-queries"
-import { CoinsIcon, CreditCard, SearchIcon } from "lucide-react"
-import BettingAmount, { BettingAmoutMobile } from "@/components/features/slot-jackpot/betting-amout"
-import Link from "next/link"
+import { CreditCard, SearchIcon } from "lucide-react"
 
 export default function Home() {
   // State for bet slip

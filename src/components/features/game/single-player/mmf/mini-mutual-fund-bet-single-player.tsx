@@ -11,7 +11,6 @@ import MiniMutualFundPlacement from '@/models/mini-mutual-fund';
 import User from '@/models/user';
 import { useCreateSinglePlayerRouletteBet, useGetCurrentRoundPlacements } from '@/react-query/game-record-queries';
 import { useStockBettingStore } from '@/store/betting-store';
-import { useGameStore } from "@/store/game-store";
 import { useSinglePlayerGameStore } from '@/store/single-player-game-store';
 import { Triangle } from 'lucide-react';
 import Link from 'next/link';
@@ -180,8 +179,6 @@ interface GameHeaderProps {
 
 
 export const GameHeader: React.FC<GameHeaderProps> = ({ gameState, className }) => {
-
-  const { lobby } = useGameStore();
   const getMessage = () => {
     if (gameState.isGameOver) {
       return "Game Over";

@@ -1,10 +1,10 @@
+import MarketItem from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import {
     OrbitControls,
     PerspectiveCamera
 } from "@react-three/drei";
 import { Physics } from "@react-three/rapier";
-import { Ground } from "./Ground";
 import FenceRow from "./fence-row";
 import HorseAnimation from "./horse-animation";
 import MovingPeople from "./people-model";

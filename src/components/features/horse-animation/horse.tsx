@@ -1,9 +1,9 @@
 "use client";
 import { useIsPlaceOver } from "@/hooks/use-current-game";
+import MarketItem from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { Canvas } from "@react-three/fiber";
 import { useTranslations } from "next-intl";
-import MarketItem from "@/models/market-item";
 import HorseRaceEnvironment from "./components/race-enviroment";
 
 type Props = {
@@ -16,12 +16,11 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
 
   const isPlaceOver = useIsPlaceOver(roundRecord);
 
-  console.log("horse race rendered");
   return isPlaceOver ? (
     <Suspense fallback={<GameLoadingScreen className="h-96" loadingImageClassName="w-10 h-auto" />}>
       <Canvas>
         <PixelRatioManager />
-        <HorseRaceEnvironment roundRecord={roundRecord} />
+        <HorseRaceEnvironment roundRecord={roundRecord}  filteredMarket={filteredMarket}/>
       </Canvas>
     </Suspense>
   ) : (
@@ -44,10 +43,10 @@ function RacePreparation() {
   );
 }
 
+import GameLoadingScreen from "@/components/common/game-loading-screen";
 import useWindowSize from "@/hooks/use-window-size";
 import { useThree } from "@react-three/fiber";
 import { Suspense, useEffect } from "react";
-import GameLoadingScreen from "@/components/common/game-loading-screen";
 
 const PixelRatioManager = () => {
   const { gl } = useThree();

@@ -3,16 +3,16 @@
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useIsPlaceOver } from "@/hooks/use-current-game"
 import { RankedMarketItem } from "@/hooks/use-leadboard"
+import { formatRupee } from "@/lib/utils"
 import { RoundRecord } from "@/models/round-record"
 import { StockSlotJackpotPlacementType } from "@/models/stock-slot-jackpot"
 import { useCreateStockSlotJackpotGameRecord, useGetMyStockSlotJackpotGameRecord } from "@/react-query/game-record-queries"
-import { useEffect, useState } from "react"
-import { DigitPicker } from "./DigitPicker"
-import { useIsPlaceOver } from "@/hooks/use-current-game"
-import { toast } from "sonner"
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react"
-import { formatRupee } from "@/lib/utils"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
+import { DigitPicker } from "./DigitPicker"
 
 interface BettingCardProps {
   globalBetAmount: number,
@@ -35,10 +35,7 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
 
   const isPlaceOver = useIsPlaceOver(roundRecord);
 
-  let price:any = marketItem.price ?? roundRecord.getInitialPrice(marketItem.bitcode ?? "");
-  price = parseFloat(price);
-  price = price.toFixed(2);
-  
+
   const initialPrice = roundRecord.getInitialPrice(marketItem.bitcode ?? "")
   const currentPrice = marketItem.price ?? initialPrice
   const changePercent = parseFloat(marketItem.change_percent) || 0

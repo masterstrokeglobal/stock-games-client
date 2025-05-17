@@ -20,7 +20,6 @@ function FormSwitch<
   description,
   label,
   className,
-  game,
 }: {
   label?: string;
   control: Control<TFieldValues>;

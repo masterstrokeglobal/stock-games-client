@@ -17,7 +17,7 @@ const PlacementBetsSingleGame = ({ className, roundRecord }: Props) => {
     const { data, isSuccess } = useGetCurrentRoundPlacements(roundRecord?.id!.toString());
 
     const currentBetsData: SinglePlayerGamePlacement[] = useMemo(() => {
-        if (isSuccess) {
+        if (isSuccess && data) {
             return data.data.placements;
         }
         return [];

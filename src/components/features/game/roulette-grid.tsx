@@ -12,7 +12,7 @@ interface RouletteBettingGridProps {
     previousRoundId?: string;
     result?: LobbyResult;
 }
-export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord ,result}: RouletteBettingGridProps) => {
+export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord, result }: RouletteBettingGridProps) => {
 
 
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord.id);
@@ -55,11 +55,10 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord ,result}: 
         return `${roundRecord.market[index - 1]?.codeName}`;
     }
 
-    console.log(winningNumbers, "winningNumbers");
     return (
         <div className="grid grid-cols-4 flex-1 gap-2 p-px">
             {ROULETTE_NUMBERS.map(({ number, color }) => (
-                <div key={number} className={cn(winnerNumber === number ? 'border-2 border-yellow-600 rounded-sm  shadow-lg shadow-yellow-600/30' : '')}>
+                <div key={number} className={cn(winningNumbers.includes(number) ? 'border-2 border-yellow-600 rounded-sm  shadow-lg shadow-yellow-600/30' : '')}>
                     <div
                         key={number}
                         className={`
@@ -67,29 +66,16 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord ,result}: 
                   ${color === 'red' ? 'routelette-piece-red' : 'routelette-piece-black'}
                   ${hoveredCell?.numbers.includes(number) ? 'ring-4 ring-yellow-400 ring-opacity-75' : ''}
                   ${chips.some(chip => chip.numbers.includes(number)) ? 'ring-2 ring-yellow-500' : ''}
-<<<<<<< HEAD
                   transition-all duration-150`}
-                >
-                    <span className="absolute inset-0 flex items-end ml-1 font-semibold sm:text-[10px] text-[8px] justify-start text-game-text-secondary ">
-                        {getCodeByIndex(number)}
-                    </span>
-                    <span className="absolute inset-0 mx-1 flex items-start justify-end text-game-text-secondary text-2xl font-bold">
-                        {number}
-                    </span>
-                    {winningNumbers.includes(number) && <img className='z-40 relative' src='/crown.png' alt="Winner" />}
-=======
-                  transition-all duration-150
-                `}
                     >
-                        <span style={{ wordBreak: 'break-all' }} className="absolute inset-0 flex items-end ml-1 font-semibold break-words w-full sm:text-[10px] text-[8px] justify-start text-game-text-secondary ">
+                        <span className="absolute inset-0 flex items-end ml-1 font-semibold sm:text-[10px] text-[8px] justify-start text-game-text-secondary ">
                             {getCodeByIndex(number)}
                         </span>
                         <span className="absolute inset-0 mx-1 flex items-start justify-end text-game-text-secondary text-2xl font-bold">
                             {number}
                         </span>
-                        {winnerNumber === number && <img className='z-40 relative w-auto md:h-7 h-6 animate-pulse  duration-500 md:translate-x-0 -translate-x-1' src='/images/crown.png' />}
+                        {winningNumbers.includes(number) && <img className='z-40 relative' src='/crown.png' alt="Winner" />}
                     </div>
->>>>>>> new-game
                 </div>
             ))}
         </div>

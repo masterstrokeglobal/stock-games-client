@@ -18,6 +18,7 @@ import LocaleSwitcher from '@/components/common/LocaleSwitcher';
 import { MuteButton } from '@/components/common/mute-button';
 import { PasswordIcon, TransactionIcon } from '@/components/features/user-menu/icons';
 import { ProfileIcon } from '@/components/features/user-menu/icons';
+
 const UserMenu = () => {
     const t = useTranslations('user-menu');
     const { userDetails } = useAuthStore();

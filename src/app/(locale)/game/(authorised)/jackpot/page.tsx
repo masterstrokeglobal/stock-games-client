@@ -25,7 +25,6 @@ export default function Home() {
   const [betSlipOpen, setBetSlipOpen] = useState(false)
   const [globalBetAmount, setGlobalBetAmount] = useState(100)
   const [searchQuery, setSearchQuery] = useState("")
-  const [quickBetEnabled, setQuickBetEnabled] = useState(false)
   const [tab, setTab] = useGameType();
 
   const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
