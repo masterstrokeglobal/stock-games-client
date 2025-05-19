@@ -3,14 +3,14 @@ importScripts('https://www.gstatic.com/firebasejs/10.5.0/firebase-messaging-comp
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyAD_q_QKNxKzrq5Iy1SBYqOnH3gPQrPMak",
-    authDomain: "quanto-consulting.firebaseapp.com",
-    projectId: "quanto-consulting",
-    storageBucket: "quanto-consulting.firebasestorage.app",
-    messagingSenderId: "149842630739",
-    appId: "1:149842630739:web:5f8b61c2351953a6e30ea6",
-    measurementId: "G-0GYQ643PRR"
-};
+    apiKey: "AIzaSyDglSzdLjEfJVMw8bYnUp9LVz_77fjO1NA",
+    authDomain: "stock-games-1d833.firebaseapp.com",
+    projectId: "stock-games-1d833",
+    storageBucket: "stock-games-1d833.firebasestorage.app",
+    messagingSenderId: "529465077755",
+    appId: "1:529465077755:web:37f2b529778d7f597e655e",
+    measurementId: "G-XQS5NQNCMF"
+  };
 
 
 firebase.initializeApp(firebaseConfig);
