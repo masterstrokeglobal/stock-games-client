@@ -10,6 +10,7 @@ import useWindowSize from "@/hooks/use-window-size"
 import { cn } from "@/lib/utils"
 import { GameCategory } from "@/models/casino-games"
 import {
+    IconBookmark,
     IconCoins,
     IconDice,
     IconGift,
@@ -25,16 +26,17 @@ import { SidebarCloseIcon, SidebarOpenIcon } from "lucide-react"
 import { usePathname, useRouter } from "next/navigation"
 
 const navItems = [
-    { icon: IconHome, label: "Home", href: "/game/platform" },
-    { icon: IconCoins, label: "Stock Market", href: `/game/platform/stock-games` },
-    { icon: IconDice, label: "Casino Games", href: "/game/platform/casino" },
-    { icon: IconLayoutGrid, label: "Table Games", href: `/game/platform/casino/${GameCategory.TABLE_GAMES}` },
-    { icon: IconVideo, label: "Live Casino", href: `/game/platform/casino/${GameCategory.LIVE}` },
-    { icon: IconMedal2, label: "Tiers", href: "/game/platform/tier" },
-    { icon: IconWallet, label: "Wallet", href: "/game/wallet/menu" },
-    { icon: IconGift, label: "Promotions", href: "/game/platform/promotion" },
-    { icon: IconHelpCircle, label: "How to Play", href: "/game/platform/how-to-play" },
-    { icon: IconHeadphones, label: "Support — Call Now!", href: "/game/contact" },
+    { icon: IconHome, label: "Home", href: "/game/platform" ,authorized: false},
+    { icon: IconCoins, label: "Stock Market", href: `/game/platform/stock-games` ,authorized: false},
+    { icon: IconDice, label: "Casino Games", href: "/game/platform/casino" ,authorized: false},
+    { icon: IconLayoutGrid, label: "Table Games", href: `/game/platform/casino/${GameCategory.TABLE_GAMES}` ,authorized: false},
+    { icon: IconVideo, label: "Live Casino", href: `/game/platform/casino/${GameCategory.LIVE}` ,authorized: false},
+    { icon: IconMedal2, label: "Tiers", href: "/game/platform/tier" ,authorized: true},
+    { icon: IconWallet, label: "Wallet", href: "/game/wallet/menu" ,authorized: true},
+    { icon: IconBookmark, label: "Watchlist", href: "/game/platform/watchlist" ,authorized: true},
+    { icon: IconGift, label: "Promotions", href: "/game/platform/promotion" ,authorized: false},
+    { icon: IconHelpCircle, label: "How to Play", href: "/game/platform/how-to-play" ,authorized: false},
+    { icon: IconHeadphones, label: "Support — Call Now!", href: "/game/contact" ,authorized: false},
 ]
 
 interface SidebarProps {
