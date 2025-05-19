@@ -1,26 +1,34 @@
 "use client"
+
+import type React from "react"
 import { useState, useEffect, useRef } from "react"
-import { motion, type PanInfo, useAnimationControls } from "framer-motion"
+import { motion, type PanInfo } from "framer-motion"
+import { Input } from "@/components/ui/input"
+import { StockSlotJackpotPlacementType } from "@/models/stock-slot-jackpot"
 import { cn } from "@/lib/utils"
-
-type PlacementType = "zeroth" | "both"
-
+import { UnifrakturMaguntia } from "next/font/google"
 interface DigitPickerProps {
-  betType: PlacementType
+  betType: StockSlotJackpotPlacementType
   onChange: (digits: string) => void
   disabled?: boolean
   value?: string
+  showInput?: boolean
 }
 
-export function SlotMachine({
-  betType,
-  onChange,
-  value = betType === "both" ? "000" : "0",
-  disabled = false,
-}: DigitPickerProps) {
-  const digitCount = betType === "both" ? 3 : 1
+const fontVariable = UnifrakturMaguntia({
+  weight: "400",
+  subsets: ["latin"],
+})
+
+
+export function DigitPicker({ betType, onChange, value = betType === "both" ? "00" : "0", disabled = false, showInput = true }: DigitPickerProps) {
+  const digitCount = betType === "both" ? 2 : 1
+
+  // Store the previous value to compare
   const prevValueRef = useRef(value)
-  const [isSpinning, setIsSpinning] = useState(false)
+
+  // Temporary input state for handling backspace and editing
+  const [inputValue, setInputValue] = useState(value)
 
   // Parse initial value
   const parseValue = (val: string) => {
@@ -38,6 +46,7 @@ export function SlotMachine({
   useEffect(() => {
     if (value !== prevValueRef.current) {
       setSelectedDigits(parseValue(value))
+      setInputValue(value)
       prevValueRef.current = value
     }
   }, [value, digitCount])
@@ -49,115 +58,116 @@ export function SlotMachine({
     setSelectedDigits(newDigits)
 
     const digitString = newDigits.map((d) => d.toString()).join("")
+    setInputValue(digitString)
     prevValueRef.current = digitString
     onChange(digitString)
   }
 
-  // Handle spin action
-  const handleSpin = () => {
-    if (disabled || isSpinning) return
+  // Handle input field change
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newInputValue = e.target.value
 
-    setIsSpinning(true)
+    // Only allow digits and respect max length
+    if (!/^\d*$/.test(newInputValue) || newInputValue.length > digitCount) {
+      return
+    }
 
-    // Generate random digits
-    const randomDigits = Array(digitCount)
-      .fill(0)
-      .map(() => Math.floor(Math.random() * 10))
+    // Update the temporary input value
+    setInputValue(newInputValue)
 
-    // Stagger the stopping of each reel
-    setTimeout(() => {
-      handleDigitChange(0, randomDigits[0])
+    // If input is not empty, update the digit picker
+    if (newInputValue.length > 0) {
+      const paddedValue = newInputValue.padStart(digitCount, "0")
+      setSelectedDigits(parseValue(paddedValue))
+      prevValueRef.current = paddedValue
+      onChange(paddedValue)
+    }
+  }
 
-      setTimeout(() => {
-        if (digitCount > 1) handleDigitChange(1, randomDigits[1])
+  // Handle input field blur
+  const handleInputBlur = () => {
+    // If input is empty when blurred, reset to default value
+    if (inputValue === "") {
+      const defaultValue = betType === "zeroth" ? "0" : "00"
+      setInputValue(defaultValue)
+      setSelectedDigits(parseValue(defaultValue))
+      prevValueRef.current = defaultValue
+      onChange(defaultValue)
+    } else {
+      // Ensure the value is properly padded
+      const paddedValue = inputValue.padStart(digitCount, "0")
+      setInputValue(paddedValue)
+      setSelectedDigits(parseValue(paddedValue))
+      prevValueRef.current = paddedValue
+      onChange(paddedValue)
+    }
+  }
 
-        setTimeout(() => {
-          if (digitCount > 2) handleDigitChange(2, randomDigits[2])
-
-          setTimeout(() => {
-            setIsSpinning(false)
-          }, 300)
-        }, 300)
-      }, 300)
-    }, 1200)
+  // Handle input field focus
+  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    // Select all text when focused
+    e.target.select()
   }
 
   return (
-    <div className="relative flex justify-center items-center">
-      {/* Main slot machine container */}
-      <div className="relative bg-black rounded-xl overflow-hidden">
-        {/* Reels container */}
-        <div className="flex justify-center items-center p-4 space-x-4">
-          {Array(digitCount)
-            .fill(0)
-            .map((_, index) => (
-              <DigitReel
-                key={index}
-                selectedDigit={selectedDigits[index] || 0}
-                onChange={(digit) => handleDigitChange(index, digit)}
-                disabled={disabled}
-                isSpinning={isSpinning}
-                spinDelay={index * 200}
-              />
-            ))}
-        </div>
-
-        {/* Cyan neon outlines */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute left-[33.33%] top-0 bottom-0 w-[3px] bg-[#00ffff] shadow-[0_0_10px_#00ffff,0_0_15px_#00ffff] opacity-80"></div>
-          <div className="absolute right-[33.33%] top-0 bottom-0 w-[3px] bg-[#00ffff] shadow-[0_0_10px_#00ffff,0_0_15px_#00ffff] opacity-80"></div>
-        </div>
+    <div className="flex flex-col h-full justify-between  items-center">
+      <div className="flex justify-center items-center gap-3  ">
+        {Array(digitCount)
+          .fill(0)
+          .map((_, index) => (
+            <DigitReel
+              key={index}
+              selectedDigit={selectedDigits[index] || 0}
+              onChange={(digit) => handleDigitChange(index, digit)}
+              disabled={disabled}
+            />
+          ))}
       </div>
 
-      {/* Spin button - hidden but functional */}
-      <button
-        onClick={handleSpin}
-        disabled={disabled || isSpinning}
-        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-        aria-label="Spin"
-      />
+      {showInput && (
+        <div className="w-full mt-2">
+          <Input
+            type="text"
+            disabled={disabled}
+            value={inputValue}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            onFocus={handleInputFocus}
+            className="w-full bg-[#2A2F42] border border-[#3A3F52] rounded-md px-3 py-2 text-center text-white text-xl font-semibold focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+            placeholder={betType === "zeroth" ? "0-9" : "00-99"}
+            inputMode="numeric"
+            maxLength={digitCount}
+          />
+        </div>
+      )}
     </div>
   )
 }
 
 // Separate component for each digit reel
-function DigitReel({
-  selectedDigit,
-  onChange,
-  disabled,
-  isSpinning,
-  spinDelay = 0,
-}: {
-  selectedDigit: number
-  onChange: (digit: number) => void
-  disabled: boolean
-  isSpinning: boolean
-  spinDelay?: number
-}) {
+function DigitReel({ selectedDigit, onChange, disabled }: { selectedDigit: number; onChange: (digit: number) => void, disabled: boolean }) {
   const [isDragging, setIsDragging] = useState(false)
   const reelRef = useRef<HTMLDivElement>(null)
-  const controls = useAnimationControls()
 
   // Constants
-  const DIGIT_HEIGHT = 70
+  const DIGIT_HEIGHT = 60
   const VISIBLE_DIGITS = 3 // Number of visible digits in the reel
-  const DIGITS_TO_SHOW = 12 // Show more digits to create a more realistic reel
 
   // Handle click on a specific digit
   const handleDigitClick = (digit: number) => {
-    if (disabled) return
+    if (disabled) return;
     onChange(digit)
   }
 
   // Handle drag start
   const handleDragStart = () => {
-    if (disabled) return
+    if (disabled) return;
     setIsDragging(true)
   }
 
   // Handle drag end
   const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    if (disabled) return
+    if (disabled) return;
     setIsDragging(false)
 
     // Calculate which digit was dragged to based on the drag distance
@@ -171,60 +181,45 @@ function DigitReel({
     onChange(newDigit)
   }
 
-  // Generate extended digits for the reel to create a more realistic slot machine effect
-  const digits = []
-  for (let i = 0; i < DIGITS_TO_SHOW; i++) {
-    digits.push(i % 10)
-  }
+  // Generate digits for the reel (0-9)
+  const digits = Array(10)
+    .fill(0)
+    .map((_, i) => i)
 
   // Calculate the position for the selected digit to be centered
   const yPosition = -selectedDigit * DIGIT_HEIGHT + DIGIT_HEIGHT * Math.floor(VISIBLE_DIGITS / 2)
 
-  // Set up spinning animation
-  useEffect(() => {
-    if (isSpinning) {
-      const spinAnimation = async () => {
-        await controls.start({
-          y: [yPosition, yPosition - 1000, yPosition - 2000],
-          transition: {
-            duration: 2,
-            ease: "linear",
-            delay: spinDelay / 1000,
-          },
-        })
-        controls.set({ y: yPosition })
-      }
-
-      spinAnimation()
-    } else {
-      controls.start({ y: yPosition, transition: { type: "spring", stiffness: 300, damping: 30 } })
-    }
-  }, [isSpinning, yPosition, controls, spinDelay])
-
   return (
-    <div className="relative w-20 h-[210px] overflow-hidden bg-black" ref={reelRef}>
+    <div
+      className={cn("relative w-16 h-[180px] overflow-hidden  border-x border-[#3A3F52] rounded-md ", disabled && "opacity-50", fontVariable.className)}
+      ref={reelRef}
+    >
+      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#00ffff] shadow-[0_0_10px_#00ffff,0_0_15px_#00ffff] opacity-80"></div>
+      <div className="absolute right-0 top-0 bottom-0 w-[3px] bg-[#00ffff] shadow-[0_0_10px_#00ffff,0_0_15px_#00ffff] opacity-80"></div>
+
+      {/* Highlight for the selected digit */}
+      <div className="absolute top-1/2 left-0 right-0 h-[60px] transform -translate-y-1/2  z-10"></div>
+
       {/* The reel with all digits */}
       <motion.div
         className="absolute left-0 right-0"
-        animate={controls}
-        drag={!disabled && !isSpinning ? "y" : false}
+        style={{ y: yPosition }}
+        animate={{ y: yPosition }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        drag="y"
         dragConstraints={{ top: -DIGIT_HEIGHT * 9, bottom: DIGIT_HEIGHT }}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
         whileTap={{ cursor: "grabbing" }}
       >
-        {digits.map((digit, index) => (
+        {digits.map((digit) => (
           <div
-            key={`${digit}-${index}`}
-            className={cn(
-              "h-[70px] flex items-center justify-center font-bold cursor-pointer",
-              "text-[#ff3366] text-5xl",
-            )}
+            key={digit}
+            className={cn("h-[60px] flex items-center justify-center text-[27px] text-shadow-3d font-bold cursor-pointer  font-mono ",
+               digit === selectedDigit && !isDragging ? "glow text-3xl" : "text-white", 
+               fontVariable.className,
+                digit % 2 === 0 ? "text-[#FF2B49] drop-shadow-[0_0_10px_#FF2B49]" : "text-[#00AEEF] drop-shadow-[0_0_10px_#00AEEF] ")}
             onClick={() => handleDigitClick(digit)}
-            style={{
-              textShadow:
-                "0 0 5px #ff3366, 0 0 10px #ff3366, 0 0 15px #ff3366, 0 1px 0 #999, 0 2px 0 #888, 0 3px 0 #777, 0 4px 0 #666, 0 5px 0 #555, 0 6px 0 #444, 0 7px 0 #333, 0 8px 7px rgba(0,0,0,0.7)",
-            }}
           >
             {digit}
           </div>
@@ -232,8 +227,8 @@ function DigitReel({
       </motion.div>
 
       {/* Gradient overlays for fade effect */}
-      <div className="absolute top-0 left-0 right-0 h-[70px] bg-gradient-to-b from-black to-transparent pointer-events-none z-20"></div>
-      <div className="absolute bottom-0 left-0 right-0 h-[70px] bg-gradient-to-t from-black to-transparent pointer-events-none z-20"></div>
+      <div className="absolute top-0 left-0 right-0 h-[60px] bg-gradient-to-b from-[#0F1221] to-transparent pointer-events-none z-20"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-[60px] bg-gradient-to-t from-[#0F1221] to-transparent pointer-events-none z-20"></div>
     </div>
   )
 }

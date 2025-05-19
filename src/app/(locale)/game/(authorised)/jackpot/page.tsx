@@ -42,7 +42,8 @@ export default function Home() {
 
 
   return (
-    <div className="flex flex-col min-h-screen bg-background-secondary text-white py-4 mx-auto">
+    <div className="flex flex-col min-h-screen  relative bg-[url('/images/game-bg-pattern.png')] bg-repeat bg-center text-white  mx-auto">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent h-full to-primary/50 opacity-50 z-0" />
       <Navbar />
       <Tabs className="flex-1 px-4 mt-48 py-6 max-w-7xl mx-auto w-full" value={tab} onValueChange={(value) => setTab(value as SchedulerType)}>
         {/* Global Bet Amount and Search Section */}

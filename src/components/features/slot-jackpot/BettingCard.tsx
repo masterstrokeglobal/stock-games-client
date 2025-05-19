@@ -24,6 +24,7 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
   const { data: myStockSlotJackpotGameRecord, isPending: isPendingMyStockSlotJackpotGameRecord } = useGetMyStockSlotJackpotGameRecord(roundRecord.id)
   const { mutate: createStockSlotJackpotGameRecord } = useCreateStockSlotJackpotGameRecord()
 
+  const marketSLotGameRecord = myStockSlotJackpotGameRecord?.filter(record => record.marketItem.id === marketItem.id)
   const [selectedBetType, setSelectedBetType] = useState<StockSlotJackpotPlacementType>(StockSlotJackpotPlacementType.ZEROTH)
   const [predictedDigits, setPredictedDigits] = useState<string>(selectedBetType === StockSlotJackpotPlacementType.ZEROTH ? "0" : "00");
 
@@ -59,14 +60,16 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
     })
   }
 
+  const totalBetAmount = marketSLotGameRecord?.reduce((acc, record) => acc + record.amount, 0)
+
   const bettingOpen = !isPlaceOver && !isPendingMyStockSlotJackpotGameRecord;
 
   return (
-    <Card className="w-full relative bg-gradient-to-r md:pr-8 from-gray-900 to-gray-800 border-primary text-white">
+    <Card className="w-full relative bg-gradient-to-r md:pr-8 gradient-card  border border-gray-700 text-white">
       {marketItem.id && <FavoriteMarketItem marketItemId={marketItem.id} className="absolute top-2 right-2" />}
-      <div className="p-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="p-4 grid grid-cols-1 lg:grid-cols-3  gap-4">
         {/* Market Info */}
-        <div className="bg-gray-800/50 rounded-lg p-4 flex flex-col justify-between">
+        <div className="bg-white/10 backdrop-blur-md  rounded-lg p-4 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold text-lg">{marketItem.name}</h3>
@@ -80,14 +83,21 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-400">Bet Amount:</span>
-                <span> {formatRupee(globalBetAmount)}</span>
-              </div>
-              {betPlaced && (
-                <div className="flex justify-between text-amber-400">
-                  <span>Your Bet:</span>
-                  <span>{betPlaced.placedNumber}</span>
-                </div>
-              )}
+                <span> {formatRupee(totalBetAmount ?? 0)}</span>
+              </div>                {marketSLotGameRecord?.map(record => (
+                  <div key={record.id} className="flex border-b border-gray-700 pb-2 justify-between items-center text-sm">
+                    <span className="font-medium">
+                      {formatRupee(record.amount)} on {record.placement} digit{' '}
+                      &nbsp;
+                      <span className="text-purple-500 font-bold">
+                        {record.placedNumber}
+                      </span>
+                    </span>
+                    <span className="text-green-400">
+                      Win: {formatRupee(record.amount * 1.96)}
+                    </span>
+                  </div>
+                ))}
             </div>
           </div>
 
@@ -95,7 +105,7 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
         </div>
 
         {/* Current Price */}
-        <div className="bg-gray-800/50 rounded-lg p-4 flex flex-col justify-between">
+        <div className="bg-white/10  backdrop-blur-md  rounded-lg p-4 flex flex-col justify-between">
           {!isPlaceOver && <div className="text-center mb-4">
             <span className="text-gray-400">Current Price</span>
 
@@ -125,7 +135,7 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
         </div>
 
         {/* Betting Controls */}
-        <div className="bg-gray-800/50 rounded-lg p-4">
+        <div className="bg-white/10 backdrop-blur-md  rounded-lg p-4">
           <Tabs
             defaultValue={selectedBetType}
             className="flex flex-row h-full gap-3"
@@ -135,19 +145,19 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
               <TabsList className="grid grid-cols-1 gap-2 bg-transparent mb-4">
                 <TabsTrigger
                   value="zeroth"
-                  className="w-full data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-400 border border-gray-700"
+                  className="w-full data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-400 border border-gray-700"
                 >
                   Last Digit
                 </TabsTrigger>
                 <TabsTrigger
                   value="tenth"
-                  className="w-full data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-400 border border-gray-700"
+                  className="w-full data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-400 border border-gray-700"
                 >
                   First Digit
                 </TabsTrigger>
                 <TabsTrigger
                   value="both"
-                  className="w-full data-[state=active]:bg-amber-500/20 data-[state=active]:text-amber-400 border border-gray-700"
+                  className="w-full data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-400 border border-gray-700"
                 >
                   Both Digits
                 </TabsTrigger>
@@ -161,10 +171,10 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
                     disabled={isPendingMyStockSlotJackpotGameRecord || betPlaced !== undefined}
                     onClick={handlePlaceBet}
                     className={`w-full py-6 text-lg font-bold ${betPlaced
-                        ? "bg-amber-500 hover:bg-amber-600 text-black"
-                        : bettingOpen
-                          ? "bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white border-2 border-amber-400 shadow-lg shadow-amber-500/20 animate-pulse"
-                          : "bg-gray-700 text-gray-300"
+                      ? "bg-purple-500 hover:bg-purple-600 text-black"
+                      : bettingOpen
+                        ? "bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white border-2 border-purple-400 shadow-lg shadow-purple-500/20 animate-pulse"
+                        : "bg-gray-700 text-gray-300"
                       }`}
                   >
                     {isPendingMyStockSlotJackpotGameRecord
@@ -175,14 +185,14 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
                     }
                   </Button>
                 ) : betPlaced ? (
-                  <div className="bg-amber-900/40 rounded-lg border-2 border-amber-500/50 p-4 text-center">
+                  <div className="bg-purple-900/40 rounded-lg border-2 border-purple-500/50 p-4 text-center">
                     <p className="text-sm text-white mb-1">YOUR BET</p>
-                    <p className="text-2xl font-bold text-amber-400">{betPlaced.placedNumber}</p>
+                    <p className="text-2xl font-bold text-purple-400">{selectedBetType === StockSlotJackpotPlacementType.BOTH ? betPlaced.placedNumber.toPrecision(2) : betPlaced.placedNumber}</p>
                   </div>
                 ) : (
                   <div className="bg-red-900/30 rounded-lg border border-red-500/30 p-4 text-center">
                     <p className="text-red-400">No bet placed</p>
-                    <p className="text-sm text-gray-400">Better luck next time!</p>
+                    <p className="text-sm text-gray-400">Please place a bet to win!</p>
                   </div>
                 )}
               </div>
