@@ -1,16 +1,16 @@
 "use client"
 
+import FavoriteMarketItem from "@/components/common/favorite-markitem"
 import { Card } from "@/components/ui/card"
 import { useIsPlaceOver } from "@/hooks/use-current-game"
-import { formatRupee } from "@/lib/utils"
 import { RankedMarketItem } from "@/hooks/use-leadboard"
+import { formatRupee } from "@/lib/utils"
 import { RoundRecord } from "@/models/round-record"
 import { StockSlotPlacementType } from "@/models/stock-slot-placement"
 import { useCreateStockSlotGameRecord, useGetMyStockSlotGameRecord } from "@/react-query/game-record-queries"
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
-import { ArrowDownIcon, ArrowUpIcon, TrendingDownIcon, TrendingUpIcon, Info } from "lucide-react"
+import { ArrowDownIcon, ArrowUpIcon, TrendingDownIcon, TrendingUpIcon } from "lucide-react"
 import { useCallback, useMemo, useState } from "react"
-import FavoriteMarketItem from "@/components/common/favorite-markitem"
 
 interface BettingCardProps {
   globalBetAmount: number,

@@ -4,9 +4,11 @@ import { Dispatch, SetStateAction, useMemo, useState } from "react"
 
 import Navbar from "@/components/features/game/navbar"
 import SlotResultDialog from "@/components/features/game/slot-result-dialog"
+import BettingAmount, { BettingAmoutMobile } from "@/components/features/slot-jackpot/betting-amout"
 import { BetSlip } from "@/components/features/stock-jackpot/bet-slip"
 import { BettingCard } from "@/components/features/stock-jackpot/betting-card"
 import TimeDisplay from "@/components/features/stock-jackpot/time-left"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useCurrentGame, useShowResults } from "@/hooks/use-current-game"
@@ -14,18 +16,14 @@ import { useGameType } from "@/hooks/use-game-type"
 import { useLeaderboard } from "@/hooks/use-leadboard"
 import { SchedulerType } from "@/models/market-item"
 import { RoundRecordGameType } from "@/models/round-record"
+import { useGetMyFavorites } from "@/react-query/favorite-market-item-queries"
 import { useGetMyStockSlotGameRecord } from "@/react-query/game-record-queries"
 import { CreditCard, SearchIcon } from "lucide-react"
-import { BettingAmoutMobile } from "@/components/features/slot-jackpot/betting-amout"
-import BettingAmount from "@/components/features/slot-jackpot/betting-amout"
-import { Button } from "@/components/ui/button"
-import { useGetMyFavorites } from "@/react-query/favorite-market-item-queries"
 export default function Home() {
   // State for bet slip
   const [betSlipOpen, setBetSlipOpen] = useState(false)
   const [globalBetAmount, setGlobalBetAmount] = useState(100)
   const [searchQuery, setSearchQuery] = useState("")
-  const [quickBetEnabled, setQuickBetEnabled] = useState(false)
   const [tab, setTab] = useGameType();
 
   const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);

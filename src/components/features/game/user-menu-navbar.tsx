@@ -5,11 +5,12 @@ import { useAuthStore } from "@/context/auth-context";
 import User from "@/models/user";
 import Wallet from "@/models/wallet";
 import { useGetWallet } from "@/react-query/payment-queries";
+import { RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
 const UserMenuNavbar = () => {
     const { userDetails } = useAuthStore();
-    const { data, isLoading } = useGetWallet();
+    const { data, isLoading, refetch,isRefetching } = useGetWallet();
 
 
     const wallet = useMemo(() => {
@@ -25,13 +26,16 @@ const UserMenuNavbar = () => {
                     <img src="/coin.svg" alt="coin" className="md:w-auto w-5" />
                 </div>
                 <span className=" md:text-xl">
-                    {isLoading ? "..." : wallet.totalBalance}
+                    {isLoading || isRefetching ? "..." : wallet.totalBalance}
                 </span>
                 <Link href="/game/wallet/deposit">
                     <Button size="icon" variant="ghost" className="ml-6 md:block hidden">
                         <img src="/plus-icon.svg" className="size-7" alt="arrow-down" />
                     </Button>
                 </Link>
+                <Button onClick={() => refetch()} disabled={isRefetching} size="icon" variant="ghost" className="md:flex hidden items-center justify-center px-0">
+                    <RefreshCw className="size-5" />
+                </Button>
             </div>
             <Link href="/game/user-menu">
                 <button className="options-button  md:px-4 md:h-12 h-10 text-game-text justify-center  md:aspect-auto aspect-square space-x-3 flex items-center md:py-2 p-1 rounded-md">

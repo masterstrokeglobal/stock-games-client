@@ -1,8 +1,6 @@
 import { useGameState } from "@/hooks/use-current-game"
 import { cn } from "@/lib/utils"
 import { RoundRecord } from "@/models/round-record"
-import { motion, AnimatePresence } from "framer-motion"
-import { Clock, Timer } from "lucide-react"
 
 const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, className?: string }) => {
   const { gameTimeLeft, isPlaceOver, placeTimeLeft } = useGameState(roundRecord)

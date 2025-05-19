@@ -3,18 +3,18 @@ import React from "react";
 import { ProviderEnum } from "@/models/casino-games";
 
 const providers = [
-  { alt: ProviderEnum.EVOLUTION_GAMING, src: "/images/companies/evolution.svg" },
-  { alt: ProviderEnum.EZUGI, src: "/images/companies/ezugi.svg" },
-  { alt: ProviderEnum.SPRIBE, src: "/images/companies/spribe.svg" },
-  { alt: ProviderEnum.SMARTSOFT_GAMING, src: "/images/companies/smartsoft.png" },
-  { alt: ProviderEnum.PLAYTECH, src: "/images/companies/playtech.svg" },
-  { alt: ProviderEnum.BETGAMES, src: "/images/companies/betgames.png" },
-  { alt: ProviderEnum.EVOPLAY_ENTERTAINMENT, src: "/images/companies/evoplay.svg" },
-  { alt: ProviderEnum.TURBO, src: "/images/companies/turbo.svg" },
-  { alt: ProviderEnum.GAMZIX, src: "/images/companies/gamzix.png" },
+  { alt: ProviderEnum.Evolution_Gaming, src: "/images/companies/evolution.svg" },
+  { alt: ProviderEnum.Ezugi, src: "/images/companies/ezugi.svg" },
+  { alt: ProviderEnum.spribe, src: "/images/companies/spribe.svg" },
+  { alt: ProviderEnum.SmartSoft, src: "/images/companies/smartsoft.png" },
+  { alt: ProviderEnum.Playtech_Casino, src: "/images/companies/playtech.svg" },
+  { alt: ProviderEnum.BetGames, src: "/images/companies/betgames.png" },
+  { alt: ProviderEnum.Evoplay, src: "/images/companies/evoplay.svg" },
+  { alt: ProviderEnum.Turbo_Games, src: "/images/companies/turbo.svg" },
+  { alt: ProviderEnum.Gamzix, src: "/images/companies/gamzix.png" },
   { alt: ProviderEnum.JILI, src: "/images/companies/jili.png" },
-  { alt: ProviderEnum.VIVOGAMING, src: "/images/companies/vivo.png" },
-  { alt: ProviderEnum.SEXYBCRT, src: "/images/companies/ae-sexy.png" },
+  { alt: ProviderEnum.Vivo_Gaming, src: "/images/companies/vivo.png" },
+  { alt: ProviderEnum.SA_Gaming, src: "/images/companies/ae-sexy.png" },
 ];
 const CasinoProviders = () => {
   return (
