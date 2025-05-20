@@ -1,4 +1,5 @@
 import MarketItem, { SchedulerType } from "./market-item";
+import { RoundRecordGameType } from "./seven-up-down";
 
 
 export class RoundRecord {
@@ -9,6 +10,7 @@ export class RoundRecord {
     placementStartTime: Date;
     placementEndTime: Date;
     market: MarketItem[];
+    gameType: RoundRecordGameType;
     type: SchedulerType;
     winningId?: number;
     createdAt: Date;
@@ -28,6 +30,7 @@ export class RoundRecord {
         this.type = data.type || SchedulerType.NSE;
         this.winningMarket = data.winningMarket;
         this.winningId = data.winningId;
+        this.gameType = data.gameType || RoundRecordGameType.DERBY;
         this.createdAt = data.createdAt ? new Date(data.createdAt) : new Date();
         this.updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
         this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : undefined;

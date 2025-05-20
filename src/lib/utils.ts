@@ -180,7 +180,7 @@ export const secondNames: string[] = [
 ];
 
 
-export const INR = (rupees: string) => {
+export const INR = (rupees: string | number) => {
   // convert number into RUpees
   const number = Number(rupees);
 

@@ -19,7 +19,6 @@ const AffiliateBreadcrumb = ({ affiliateId }: Props) => {
     const { userDetails } = useAuthStore();
     const { data: affiliate, isLoading } = useGetAffiliateById(affiliateId);
 
-    console.log(affiliate);
     return (
         <Breadcrumb>
             <BreadcrumbList>

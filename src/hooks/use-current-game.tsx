@@ -4,6 +4,7 @@ import { useGetCurrentRoundRecord } from '@/react-query/round-record-queries';
 import { useQueryClient, UseQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { useGameType } from './use-game-type';
+import { RoundRecordGameType } from '@/models/seven-up-down';
 
 interface FormattedTime {
     minutes: number;
@@ -37,7 +38,7 @@ const formatTime = (ms: number): FormattedTime => {
     };
 };
 
-export const useCurrentGame = (): {
+export const useCurrentGame = (gameType: RoundRecordGameType =    RoundRecordGameType.DERBY): {
     roundRecord: RoundRecord | null;
     isLoading: boolean;
 } => {
@@ -47,7 +48,7 @@ export const useCurrentGame = (): {
         data,
         isLoading,
         isSuccess,
-    }: UseQueryResult<RoundRecordResponse, unknown> = useGetCurrentRoundRecord(type);
+    }: UseQueryResult<RoundRecordResponse, unknown> = useGetCurrentRoundRecord(type, gameType);
 
     const roundRecord = useMemo(() => {
         // Only compute when data is successfully loaded
@@ -175,11 +176,7 @@ export const useIsPlaceOver = (roundRecord: RoundRecord | null) => {
     return isPlaceOver;
 };
 
-export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: {
-    type: PlacementType;
-    amount: number;
-    numbers: number[];
-}[]) => {
+export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: any[]) => {
     const [showResults, setShowResults] = useState(false);
     const [currentRoundId, setCurrentRoundId] = useState<number | null>(null);
     const [previousRoundId, setPreviousRoundId] = useState<number | null>(null);
