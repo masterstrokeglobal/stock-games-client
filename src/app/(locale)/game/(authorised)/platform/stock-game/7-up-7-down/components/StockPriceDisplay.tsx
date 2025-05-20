@@ -35,7 +35,7 @@ export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord }> = ({ roun
           <StockPrice key={index} rankedMarketItem={stock} />
         ))}
       </div>
-      <CryptoStockChart latestValue={totalPositiveStocks} show={true} />
+      <CryptoStockChart latestValue={totalPositiveStocks} show={true} id={roundRecord.id.toString()} />
       <div className="grid grid-cols-6 w-full">
         {sortedStocks.slice(6).map((stock, index) => (
           <StockPrice key={index} rankedMarketItem={stock} />
