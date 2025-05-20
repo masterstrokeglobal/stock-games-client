@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Building, Clock, CoinsIcon, Contact2, DollarSign, GamepadIcon, GiftIcon, Home, ImageUpIcon, LucideIcon, MedalIcon, Repeat1, Users } from 'lucide-react';
+import { Building, Clock, CoinsIcon, Contact2, DollarSign, GamepadIcon, GiftIcon, Home, ImageUpIcon, LucideIcon, MedalIcon, PieChart, Repeat1, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -79,11 +79,18 @@ const companyMenuItems: MenuItem[] = [
         icon: Building,
         link: "/dashboard/company-admin"
     },
+
+    {
+        name: "Reports",
+        icon: PieChart,
+        link: "/dashboard/reports"
+    },
     {
         name: 'Users',
         icon: Users,
         link: '/dashboard/users',
     },
+
 
     {
         name: "User Reports",

@@ -20,7 +20,7 @@ const GameIdPage = () => {
 
     if (!game?.redirectUrl) return <div className="flex flex-col min-h-screen bg-primary-game text-white">
         <Navbar />
-        <main className="container mx-auto pt-14  min-h-screen flex justify-center items-center">
+        <main className="container mx-auto pt-14 flex flex-col gap-2  min-h-screen justify-center items-center">
             <h1 className="text-2xl font-bold">Error loading game</h1>
             <Link href="/game/platform/casino">
                 <Button variant="game">
@@ -34,7 +34,7 @@ const GameIdPage = () => {
         <div className="flex flex-col min-h-screen bg-primary-game text-white">
             <Navbar />
             <main className="container mx-auto pt-14 ">
-                <iframe src={game.redirectUrl} className="w-full min-h-[calc(100vh-4rem)]" />
+                 <iframe src={game.redirectUrl} className="w-full min-h-[calc(100vh-4rem)]" />
             </main>
         </div>
     )
