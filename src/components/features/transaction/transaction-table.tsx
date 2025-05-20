@@ -34,6 +34,7 @@ type Filter = {
 const TransactionTable = ({ userId }: Props) => {
     const [page, setPage] = useState(1);
     const { userDetails } = useAuthStore();
+    const [limit, setLimit] = useState(10);
     const [search, setSearch] = useState("");
     const [type, setType] = useState<string | "">("");
     const [status, setStatus] = useState<string | "">("");
@@ -48,6 +49,7 @@ const TransactionTable = ({ userId }: Props) => {
     const { data, isSuccess, isFetching } = useGetAllTransactions({
         page: page,
         search: search,
+        limit: limit,
         type: type === "all" ? "" : type,
         companyId: companyId === "all" ? "" : companyId,
         userId: userId,
@@ -67,8 +69,8 @@ const TransactionTable = ({ userId }: Props) => {
 
     // Calculate total pages based on data count
     const totalPages = useMemo(() => {
-        return Math.ceil(data?.data?.count / 10) || 1;
-    }, [data, isSuccess]);
+        return Math.ceil(data?.data?.count / limit) || 1;
+    }, [data, isSuccess, limit]);
 
     // Handle search input change
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,9 +143,12 @@ const TransactionTable = ({ userId }: Props) => {
                                 <SelectItem value="all">All Types</SelectItem>
                                 <SelectItem value={TransactionType.DEPOSIT}>Deposit</SelectItem>
                                 <SelectItem value={TransactionType.WITHDRAWAL}>Withdrawal</SelectItem>
+                                <SelectItem value={TransactionType.POINTS_EARNED}>Points Earned</SelectItem>
+                                <SelectItem value={TransactionType.POINTS_REDEEMED}>Points Redeemed</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
+                    
 
                     {/* ShadCN Select for Status Filter */}
                     <Select value={status} onValueChange={(val) => {
@@ -163,6 +168,21 @@ const TransactionTable = ({ userId }: Props) => {
                             </SelectGroup>
                         </SelectContent>
                     </Select>
+
+                    {/* limit the number of transactions to 100 */}
+                    <Select value={limit.toString()} onValueChange={(val) => {
+                        setLimit(parseInt(val))
+                        setPage(1);
+                    }} >
+                    <SelectTrigger className="w-fit">
+                        <SelectValue placeholder="Limit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="10">10</SelectItem>
+                        <SelectItem value="50">50</SelectItem>
+                        <SelectItem value="100">100</SelectItem>
+                    </SelectContent>
+                </Select>
                 </div>
             </header>
             <main className="mt-4">

@@ -127,7 +127,6 @@ const ReportsPage = () => {
     bets: item.totalBetsAmount,
     net: item.net,
     ftd: item.ftdCount,
-    ggr: item.totalBetsAmount * 0.15 // Assuming 15% margin
   }));
 
   return (
@@ -359,29 +358,6 @@ const ReportsPage = () => {
           </div>
         </div>
         
-        {/* Daily GGR Chart */}
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <h3 className="text-lg font-semibold mb-4">Daily GGR</h3>
-          <div className="h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={dailyDataFormatted}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip formatter={(value) => formatRupees(Number(value))} />
-                <Legend />
-                <Area 
-                  type="monotone" 
-                  dataKey="ggr" 
-                  name="GGR" 
-                  stroke={COLORS.ggr} 
-                  fill={COLORS.ggr} 
-                  fillOpacity={0.3} 
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
       </div>
 
       {/* Daily Activity Chart */}
@@ -405,11 +381,11 @@ const ReportsPage = () => {
 
       {/* Top Users Tables */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Top Users</h2>
+        <h2 className="text-xl font-semibold mb-4">Top  Users</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Top Depositors */}
           <div className="bg-white p-4 rounded-lg shadow">
-            <h2 className="text-lg font-semibold mb-4">Top Depositors</h2>
+            <h2 className="text-lg font-semibold mb-4">Top 10 Depositors</h2>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -425,6 +401,7 @@ const ReportsPage = () => {
                         <td className="px-4 py-2 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900">{user.firstName} {user.lastName}</div>
                           <div className="text-sm text-gray-500">{user.email}</div>
+                          <div className="text-sm text-gray-500">{user.phone}</div>
                         </td>
                         <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatRupees(user.totalAmount)}</td>
                       </tr>
@@ -441,7 +418,7 @@ const ReportsPage = () => {
 
           {/* Top Withdrawers */}
           <div className="bg-white p-4 rounded-lg shadow">
-            <h2 className="text-lg font-semibold mb-4">Top Withdrawers</h2>
+            <h2 className="text-lg font-semibold mb-4">Top 10 Withdrawers</h2>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -457,6 +434,7 @@ const ReportsPage = () => {
                         <td className="px-4 py-2 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900">{user.firstName} {user.lastName}</div>
                           <div className="text-sm text-gray-500">{user.email}</div>
+                          <div className="text-sm text-gray-500">{user.phone}</div>
                         </td>
                         <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatRupees(user.totalAmount)}</td>
                       </tr>
@@ -473,7 +451,7 @@ const ReportsPage = () => {
 
           {/* Top Betters */}
           <div className="bg-white p-4 rounded-lg shadow">
-            <h2 className="text-lg font-semibold mb-4">Top Betters</h2>
+            <h2 className="text-lg font-semibold mb-4">Top 10 Betters</h2>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -489,6 +467,7 @@ const ReportsPage = () => {
                         <td className="px-4 py-2 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900">{user.firstName} {user.lastName}</div>
                           <div className="text-sm text-gray-500">{user.email}</div>
+                          <div className="text-sm text-gray-500">{user.phone}</div>
                         </td>
                         <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatRupees(user.totalAmount)}</td>
                       </tr>
