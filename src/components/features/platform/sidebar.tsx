@@ -7,11 +7,10 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import useWindowSize from "@/hooks/use-window-size"
-import { cn, SPORTS_BOOK_GAMEID } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import { GameCategory } from "@/models/casino-games"
 import {
     IconCoins,
-    IconCricket,
     IconDice,
     IconGift,
     IconHeadphones,
@@ -20,7 +19,7 @@ import {
     IconLayoutGrid,
     IconMedal2,
     IconVideo,
-    IconWallet,
+    IconWallet
 } from "@tabler/icons-react"
 import { SidebarCloseIcon, SidebarOpenIcon } from "lucide-react"
 import { usePathname, useRouter } from "next/navigation"
@@ -28,10 +27,9 @@ import { usePathname, useRouter } from "next/navigation"
 const navItems = [
     { icon: IconHome, label: "Home", href: "/game/platform" },
     { icon: IconCoins, label: "Stock Market", href: `/game/platform/stock-games` },
-    { icon: IconCricket, label: "Sports Book", href: `/game/casino/${SPORTS_BOOK_GAMEID}` },
     { icon: IconDice, label: "Casino Games", href: "/game/platform/casino" },
-    { icon: IconLayoutGrid, label: "Table Games", href: `/game/platform/casino/${GameCategory.TABLE_GAMES}` },
-    { icon: IconVideo, label: "Live Casino", href: `/game/platform/casino/${GameCategory.LIVE}` },
+    { icon: IconLayoutGrid, label: "Table Games", href: `/game/platform/casino/${GameCategory["Table game"]}` },
+    { icon: IconVideo, label: "Live Casino", href: `/game/platform/casino/${GameCategory["Live Dealer"]}` },
     { icon: IconMedal2, label: "Tiers", href: "/game/platform/tier" },
     { icon: IconWallet, label: "Wallet", href: "/game/wallet/menu" },
     { icon: IconGift, label: "Promotions", href: "/game/platform/promotion" },

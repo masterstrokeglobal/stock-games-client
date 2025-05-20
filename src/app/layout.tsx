@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from "next-intl/server";
 import { Poppins } from 'next/font/google';
 import "./globals.css";
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { HighlightInit } from '@highlight-run/next/client';
 import { HIGHLIGHT_APP_KEY } from '@/lib/utils';
 
@@ -49,9 +50,11 @@ export default async function RootLayout({
           <body
             className={`${poppins.className} antialiased`}
           >
-            <NextIntlClientProvider messages={messages}>
-              {children}
-            </NextIntlClientProvider>
+            <NuqsAdapter>
+              <NextIntlClientProvider messages={messages}>
+                {children}
+              </NextIntlClientProvider>
+            </NuqsAdapter>
 
           </body>
         </html>

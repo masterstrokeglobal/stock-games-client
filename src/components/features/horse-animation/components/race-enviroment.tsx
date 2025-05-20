@@ -36,6 +36,7 @@ const HorseRaceEnvironment = ({
             />  
             <Physics>
                 <Ground />
+
                 <MovingPeople position={[120, -2, 0]} rotation={[0,40.8, 0]} scale={[15, 15, 15]} />
                 <FenceRow x={-35} count={1000} spacing={16}   />
                 <FenceRow x={85} count={1000} spacing={16}  />

@@ -30,6 +30,9 @@ export const companyAPI = {
             companyId
         });
     },
+    financialReport: async ({ startDate, endDate }: { startDate: string, endDate: string }) => {
+        return api.get(`/payment/financial-report`, { params: { startDate, endDate } });
+    },
     deleteCompanyById: async (companyId: string) => {
         return api.delete(`/company/${companyId}`);
     },

@@ -1,4 +1,3 @@
-import { DEFAULT } from "@react-three/fiber/dist/declarations/src/core/utils";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -16,6 +15,9 @@ const config: Config = {
 			},
 			animation: {
 				marquee: 'marquee 6s linear infinite',
+			},
+			screens: {
+				"xs": "360px",
 			},
 			keyframes: {
 				marquee: {
@@ -52,6 +54,7 @@ const config: Config = {
 					foreground: 'hsl(var(--primary-foreground))',
 					game: 'var(--primary-game)'
 				},
+				
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
 					foreground: 'hsl(var(--secondary-foreground))',
@@ -78,7 +81,9 @@ const config: Config = {
 				},
 				accent: {
 					DEFAULT: 'hsl(var(--accent))',
-					foreground: 'hsl(var(--accent-foreground))'
+					foreground: 'hsl(var(--accent-foreground))',
+					secondary: 'var(--accent-secondary)',
+					"secondary-foreground": 'var(--accent-secondary-foreground)'
 				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',

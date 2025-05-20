@@ -4,16 +4,20 @@ import AffiliateBreadcrumb from "@/components/features/affiliate/affiliate-bread
 import { Button } from "@/components/ui/button";
 import DataTable from "@/components/ui/data-table-server";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue   } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useGetAffiliateUsers, useGetAffiliateUsersDownload } from "@/react-query/affiliate-queries";
 import { Download, Search } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { useQueryState } from "nuqs";
 import React, { useMemo, useState } from "react";
 const UserTable = () => {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
     const [limit, setLimit] = useState(10); 
+    const [sortBy] = useQueryState('sortBy', {
+        defaultValue: JSON.stringify([])
+    });
 
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
@@ -27,6 +31,7 @@ const UserTable = () => {
         endDate,
         limit,
         affiliateId: affiliateId ? parseInt(affiliateId) : undefined,
+        sortBy: sortBy.toLowerCase()
     });
 
     const { mutate: downloadUsers } = useGetAffiliateUsersDownload({
@@ -35,6 +40,7 @@ const UserTable = () => {
         startDate,
         endDate,
         affiliateId: affiliateId ? parseInt(affiliateId) : undefined,
+        sortBy: sortBy.toLowerCase()
     });
 
     const users: AffiliateUser[] = useMemo(() => {

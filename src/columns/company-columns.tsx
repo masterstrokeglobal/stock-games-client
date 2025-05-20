@@ -82,6 +82,28 @@ const companyColumns: ColumnDef<Company>[] = [
         ),
     },
     {
+        header: "Profit Loss",
+        accessorKey: "profitLoss",
+        cell: ({ row }) => (
+            <Link href={`/dashboard/company-profit-loss?companyIdFilter=${row.original.id}`}>
+                <Button variant="secondary" size="sm" aria-label="View Profit Loss">
+                    View Profit Loss
+                </Button>
+            </Link>
+        ),
+    },
+    {
+        header: "Ledger",
+        accessorKey: "ledger",
+        cell: ({ row }) => (
+            <Link href={`/dashboard/company-ledger?companyIdFilter=${row.original.id}`}>
+                <Button variant="secondary" size="sm" aria-label="View Ledger">
+                    View Ledger
+                </Button>
+            </Link>
+        ),
+    },
+    {
         header: "Users",
         accessorKey: "users",
         cell: ({ row }) => (

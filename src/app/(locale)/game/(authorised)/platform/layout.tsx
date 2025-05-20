@@ -20,7 +20,7 @@ const menuItems = [
         label: "Search",
         icon: SearchIcon,
         href: "/game/platform/casino"
-    },
+    },  
 
     {
         label: "Account",
@@ -59,7 +59,7 @@ export default function GamingAppInterface({ children }: PropsWithChildren) {
                         <span>Menu</span>
                     </Button>
                 </div>
-                {menuItems.map((item) => (
+                {menuItems.map((item) => (  
                     <div key={item.href} className="flex items-center justify-center gap-2">
                         <Link href={item.href} className={cn(checkActive(item.href) ? "active-menu-button text-white rounded-md" : "text-gray-400")}>
                             <Button variant="ghost" aria-label="Collapse sidebar" className="flex flex-col gap-2 h-fit">
@@ -70,7 +70,7 @@ export default function GamingAppInterface({ children }: PropsWithChildren) {
                     </div>
                 ))}
             </div>
-            <div className={cn("flex-1 mt-14  md:pt-5 transition-all duration-300 ease-in-out", sidebarOpen ? "md:pl-64" : "md:pl-20")}>
+            <div className={cn("flex-1 mt-14  pt-5 transition-all duration-300 ease-in-out", sidebarOpen ? "md:pl-64" : "md:pl-20")}>
                 <main className="w-full md:px-12 px-4">
                     {children}
                     <div className="flex-1 overflow-auto transition-all duration-300 ease-in-out md:mb-4 mb-20">
@@ -101,5 +101,3 @@ export default function GamingAppInterface({ children }: PropsWithChildren) {
         </div>
     )
 }
-
-

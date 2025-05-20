@@ -172,7 +172,7 @@ export const useUpdateDepositBonusPercentageEnabled = () => {
 }
 
 export const useCompanyWalletByCompanyId = ({ companyId }: { companyId: string }) => {
-    return useQuery<CompanyWallet,AxiosError>({
+    return useQuery<CompanyWallet, AxiosError>({
         queryKey: ["company", "wallet", companyId],
         queryFn: async () => {
             const company = await companyAPI.companyWalletByCompanyId(companyId);
@@ -196,5 +196,15 @@ export const useCreateCompanyWallet = () => {
         onError: (error: any) => {
             toast.error(error.response?.data?.message ?? "Error creating company wallet");
         },
+    });
+}
+
+export const useFinancialReport = ({ startDate, endDate }: { startDate: string, endDate: string }) => {
+    return useQuery({
+        queryKey: ["company", "financial-report", startDate, endDate],
+        queryFn: async () => {
+            const report = await companyAPI.financialReport({ startDate, endDate });
+            return report.data;
+        }
     });
 }

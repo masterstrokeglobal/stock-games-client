@@ -1,120 +1,53 @@
 "use client";
-import { FinancialTable } from "@/components/features/platform/finantial-table";
-import { GameAdsCarousel } from "@/components/features/platform/game-ads-carousel";
+import { Marquee } from "@/components/common/marquee";
+import CategoryCarousel from "@/components/features/casino-games/category-carousel";
+import { CasinoProvidersCarousel } from "@/components/features/casino-games/game-providers";
+import StockGameCarousel from "@/components/features/stock-games.tsx/stock-game-carousel";
+import ActiveTierCard from "@/components/features/tier/user-tier-card";
 import { Button } from "@/components/ui/button";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { generateData } from "@/lib/utils";
-import { IconCoins, IconGift } from "@tabler/icons-react";
-import Image from "next/image";
+import { useAuthStore } from "@/context/auth-context";
+import { GameCategory } from "@/models/casino-games";
+import User from "@/models/user";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-
-const GAME_CARDS = [
-    {
-        title: "Stock Games",
-        icon: IconCoins,
-        image: "/images/stock-roulette.png",
-        href: "/game/platform/stock-games",
-        buttonText: "Start Playing"
-    },
-    {
-        title: "Casino Games",
-        icon: IconGift,
-        image: "/images/casino-games.png",
-        href: "/game/platform/casino",
-        buttonText: "Start Playing"
-    }
-];
 
 const PlatformPage = () => {
-    const [data, setData] = useState<any[]>([])
+    const t = useTranslations('wallet');
 
-    useEffect(() => {
-        setData(generateData(10))
-
-        const interval = setInterval(() => {
-            setData((prevData) => {
-                const newEntry = generateData(1)[0]
-                const updatedData = [newEntry, ...prevData]
-                if (updatedData.length > 10) {
-                    return updatedData.slice(0, 10)
-                }
-                return updatedData
-            })
-        }, 3000)
-
-        return () => clearInterval(interval)
-    }, [])
-
+    const  {isLoggedIn,userDetails} = useAuthStore();
+    const user = userDetails as User;
     return (
-        <>
-            <GameAdsCarousel />
-            {/* Desktop View */}
-            <div className="hidden md:grid grid-cols-3 my-20 gap-6">
-                {GAME_CARDS.map((card, index) => (
-                    <div key={index}>
-                        <div className="flex items-center gap-2 mb-4">
-                            <card.icon className="h-6 w-6 text-white" stroke={1.5} />
-                            <h2 className="font-bold text-white">{card.title}</h2>
-                        </div>
-                        <Image
-                            src={card.image}
-                            alt={card.title.toLowerCase()}
-                            width={500}
-                            height={500}
-                            className="rounded-lg overflow-hidden object-cover object-top"
-                        />
-                        <Link href={card.href}>
-                            <Button variant="game" className="mt-4 w-full">{card.buttonText}</Button>
-                        </Link>
-                    </div>
-                ))}
-            </div>
+        <section className="space-y-4 md:space-y-8">
+            <Marquee pauseOnHover repeat={30} className="[--duration:5s] bg-[#256381] border-y-2 border-[#6d98ac] -mx-4 md:-mx-12" >
+                <div className="flex items-center gap-2 ">
+                    Welcome to Stock Games
+                </div>
+            </Marquee>
+            {isLoggedIn && !user.isDemoUser && (
+                <div className="flex gap-2">
+                    <Link href="/game/wallet/deposit" className="flex-1" passHref>
+                        <Button className="w-full  bg-accent-secondary text-accent-secondary-foreground gap-x-2 md:h-12">
+                            {t('menu.deposit')}
+                    </Button>
+                </Link>
 
-            <div className="md:hidden my-10">
-                <Carousel className="w-full" opts={{
-                    align: "start",
-                    containScroll: "trimSnaps"
-                }}>
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-xl font-bold text-white">Our Games</h2>
-                        <div className="flex gap-2">
-                            <CarouselPrevious className="static translate-y-0" />
-                            <CarouselNext className="static translate-y-0" />
-                        </div>
-                    </div>
-                    <CarouselContent>
-                        {GAME_CARDS.map((card, index) => (
-                            <CarouselItem key={index} className="basis-1/2 ">
-                                <Link href={card.href} className="flex flex-col items-center relative rounded-lg">
-                                    <Image
-                                        src={card.image}
-                                        alt={card.title.toLowerCase()}
-                                        width={500}
-                                        height={500}
-                                        className="rounded-lg overflow-hidden object-cover object-top"
-                                    />
-                                    <div className="absolute rounded-lg flex flex-col items-center justify-end bottom-0 left-0 z-10 right-0 bg-gradient-to-t from-black/80 to-transparent h-1/2 text-white p-2">
-                                        <h2 className="sm:text-xl font-bold text-white flex items-center gap-2">
-                                            <card.icon className="h-6 w-6 text-white" stroke={1.5} />
-                                            {card.title}</h2>
-                                    </div>
-                                </Link>
-                            </CarouselItem>
-                        ))}
-                    </CarouselContent>
-                </Carousel>
-            </div>
+                <Link href="/game/wallet/withdrawl" className="flex-1" passHref>
+                    <Button className="w-full gap-x-2 md:h-12 border border-accent-secondary text-accent-secondary bg-transparent tex">
+                        {t('menu.withdraw')}
+                    </Button>
+                </Link>
 
-            <div className="container-main space-y-6 mb-12">
-                <img src="/images/banner/1.avif" alt="stock-roulette" className="rounded-lg w-full h-auto" />
-                <img src="/images/banner/2.avif" alt="stock-roulette" className="rounded-lg w-full h-auto" />
-            </div>
-            <header className="items-center mb-3 pl-1 justify-between md:flex hidden">
-                <h2 className="font-semibold text-white">Winning Reports</h2>
-            </header>
-            <FinancialTable data={data} className="w-full md:flex hidden mb-10" />
-        </>
+                </div>
+            )}
+
+            {isLoggedIn && <ActiveTierCard className="mt-12" />}
+            <StockGameCarousel />
+            <CasinoProvidersCarousel title="Game Providers" />
+            <CategoryCarousel title="Most Popular Games" popular={true} />
+            <CategoryCarousel title="Table Games" categoryId={GameCategory["Table game"]} />
+            <CategoryCarousel title="Casino Games" categoryId={GameCategory["Live Dealer"]} />
+            <CategoryCarousel title="New Games" new={true} />
+        </section>
     )
 }
 

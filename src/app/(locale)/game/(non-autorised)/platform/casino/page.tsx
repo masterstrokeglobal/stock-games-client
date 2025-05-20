@@ -6,8 +6,7 @@ import CasinoProviders from "@/components/features/casino-games/game-providers"
 import { GameAdsCarousel } from "@/components/features/platform/game-ads-carousel"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useAuthStore } from "@/context/auth-context"
-import { checkCasinoAllowed } from "@/lib/utils"
+import { checkCasinoAllowed, COMPANYID } from "@/lib/utils"
 import { GameCategories, GameCategory, ProviderEnum } from "@/models/casino-games"
 import { useGetCasinoGames } from "@/react-query/casino-games-queries"
 import { Search } from "lucide-react"
@@ -45,7 +44,6 @@ export default function GamingAppInterface() {
             setFilter({ ...filter, provider: provider })
         }
     }, [search, category, provider])
-    const { userDetails } = useAuthStore();
     const { data: searchResults, isLoading: searchLoading } = useGetCasinoGames({
         search: filter.search || undefined,
         category: filter.category == "all" ? undefined : filter.category,
@@ -53,7 +51,7 @@ export default function GamingAppInterface() {
         limit: 40
     })
 
-    const isCasinoAllowed = checkCasinoAllowed(userDetails?.company?.id ?? 0);
+    const isCasinoAllowed = checkCasinoAllowed(COMPANYID);
 
     if (!isCasinoAllowed) notFound();
 
@@ -118,8 +116,8 @@ export default function GamingAppInterface() {
                     <div className="space-y-12">
                         {/* most popular games , ne games with emoji  */}
                         <CategoryCarousel title="🔥 Most Popular Games" popular={true} />
-                        <CategoryCarousel title="🎲 Table Games" categoryId={GameCategory.TABLE_GAMES} />
-                        <CategoryCarousel title="🎰 Casino Games" categoryId={GameCategory.LIVE} />
+                        <CategoryCarousel title="🎲 Table Games" categoryId={GameCategory["Table game"]} />
+                        <CategoryCarousel title="🎰 Casino Games" categoryId={GameCategory["Live Dealer"]} />
                         <CategoryCarousel title="🆕 New Games" new={true} />
                         <CasinoProviders />
                     </div>

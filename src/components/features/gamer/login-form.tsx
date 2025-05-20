@@ -99,9 +99,9 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 <p className="text-white text-sm font-medium">{t("labels.captcha")}</p>
                
               </div>
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-row gap-3">
                 <div
-                  className="border border-secondary-game rounded bg-gray-900 [&>svg]:w-full [&>svg]:h-full h-10  mx-auto sm:mx-0"
+                  className="border border-secondary-game rounded bg-gray-900 [&>svg]:w-full [&>svg]:h-full h-10  w-full mx-auto sm:mx-0"
                   dangerouslySetInnerHTML={{ __html: captchaSvg }}
                 />
                 <span className="text-white text-sm font-medium flex items-center justify-center">
@@ -121,7 +121,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                   title={t("refresh-captcha")}
                   variant="secondary"
                   size="icon"
-                  className="text-sm  hover:bg-gray-700"
+                  className="text-sm hover:bg-gray-700"
                   onClick={handleRefreshCaptcha}
                 >
                   <RefreshCcwIcon className="w-4 h-4" />
