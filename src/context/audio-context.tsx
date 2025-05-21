@@ -36,9 +36,8 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   useEffect(() => {
     Howler.mute(isMuted);
   }, [isMuted]);
+  
   useEffect(() => {
-    if (pathname !== "/game") return;
-
     const backgroundMusic = new Howl({
       src: ["/background-sound.mp3"],
       loop: true,
@@ -46,17 +45,25 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       autoplay: true,
     });
 
-    const horseRace: HorseRaceSounds = {
-      gallop: new Howl({ src: ["/horseNeigh1.mp3"], loop: true, volume: 0.5, autoplay: false }),
-      crowd: new Howl({ src: ["/horseNeigh2.mp3"], loop: true, volume: 0.3, autoplay: false }),
-      announcer: new Howl({ src: ["/horseSteps.mp3"], loop: true, volume: 0.4, autoplay: false }),
-    };
-
     setBgMusic(backgroundMusic);
-    setHorseRaceSounds(horseRace);
 
     return () => {
       backgroundMusic.unload();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (pathname !== "/game") return;
+
+    const horseRace: HorseRaceSounds = {
+      gallop: new Howl({ src: ["/horseNeigh1.mp3"], loop: true, volume: 0.5, autoplay: false }),
+      crowd: new Howl({ src: ["/horseNeigh5.mp3"], loop: true, volume: 0.3, autoplay: false }),
+      announcer: new Howl({ src: ["/horseSteps.mp3"], loop: true, volume: 0.4, autoplay: false }),
+    };
+
+    setHorseRaceSounds(horseRace);
+
+    return () => {
       Object.values(horseRace).forEach((sound) => sound.unload());
     };
   }, [pathname]);
@@ -68,7 +75,6 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   const startHorseRace = (): void => {
     if (pathname !== "/game" || !horseRaceSounds) return;
 
-    bgMusic?.pause();
     horseRaceSounds.gallop.play();
     horseRaceSounds.crowd.play();
     horseRaceSounds.announcer.play();
@@ -79,7 +85,6 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
     if (pathname !== "/game" || !horseRaceSounds) return;
 
     Object.values(horseRaceSounds).forEach((sound) => sound.stop());
-    bgMusic?.play();
     setIsHorseRacePlaying(false);
   };
 

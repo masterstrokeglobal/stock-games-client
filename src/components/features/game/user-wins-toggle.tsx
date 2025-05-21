@@ -1,3 +1,4 @@
+import { Marquee } from '@/components/common/marquee';
 import { useGameType } from '@/hooks/use-game-type';
 import { cn, indianNames, secondNames } from '@/lib/utils';
 import { SchedulerType } from '@/models/market-item';
@@ -92,15 +93,16 @@ const UserWins = ({ className }: { className?: string }) => {
 
     refreshData(); // Initial load
 
-    const interval = setInterval(refreshData, 20000); // Refresh every 30 seconds
+    const interval = setInterval(refreshData, 5000); // Refresh every 30 seconds
     return () => clearInterval(interval);
   }, [type]);
 
+  console.log(displayWinnings);
 
   return (
-    <div className={cn("w-full overflow-hidden bg-black/80 text-white p-2 text-xs h-6", className)}>
-      <div className="flex animate-marquee space-x-8">
-        {[...displayWinnings, ...displayWinnings].map((winner, index) => (
+    <Marquee className={cn("w-full overflow-hidden [--duration:500s]  bg-black/80 text-white p-2 text-xs h-6", className)}>
+      <div className="flex space-x-8">
+        {displayWinnings.slice(0, 10).map((winner, index) => (
           <div
             key={`${winner.username}-${index}`}
             className="flex items-center space-x-4 whitespace-nowrap"
@@ -112,7 +114,7 @@ const UserWins = ({ className }: { className?: string }) => {
           </div>
         ))}
       </div>
-    </div>
+    </Marquee>
   );
 };
 

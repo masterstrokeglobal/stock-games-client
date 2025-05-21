@@ -21,7 +21,7 @@ const UserMenuNavbar = () => {
         <>
             <div className="text-top-bar-text text-xs space-y-1 font-medium">
                 <div>Bonus: {wallet.bonusBalance}</div>
-                <div>Bal: {wallet.totalBalance}</div>
+                <div>Bal: {wallet.mainBalance}</div>
             </div>
             <Link href="/game/user-menu">
                 <button className="  md:px-4 md:h-12 h-10 text-game-text justify-center  md:aspect-auto aspect-square space-x-3 flex items-center md:py-2 p-1 rounded-md">

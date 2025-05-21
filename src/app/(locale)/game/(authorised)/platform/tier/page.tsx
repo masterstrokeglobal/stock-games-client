@@ -48,7 +48,7 @@ export default function TiersProgram(): JSX.Element {
         if (userTier) {
             setActiveTier(tierList?.findIndex((tier) => tier.id === userTier.tierId))
         }
-    }, [userTier])
+    }, [userTier, tierList])
     // Scroll to the active tier when it changes
     useEffect(() => {
         if (tierRefs.current[activeTier]?.current && scrollAreaRef.current) {

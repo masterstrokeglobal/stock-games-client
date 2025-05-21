@@ -11,6 +11,7 @@ import Link from "next/link";
 const AdvertismentDialog = () => {
     const [isOpen, setIsOpen] = useState(false);
     const { data, isSuccess } = useGetAdvertisements();
+    
     const plugin = useRef(
         Autoplay({ delay: 2000, stopOnInteraction: true })
     )
@@ -46,7 +47,7 @@ const AdvertismentDialog = () => {
                             {advertisments.map((ad, index) => (
                                 <CarouselItem key={index} className="w-full">
                                     <Link href={ad.link ?? '#'} target="_blank">
-                                        <img key={index} src={ad.image} alt={ad.name} className="w-full h-auto object-cover" />
+                                        <img key={index} src={ad.image} alt={ad.name} className="w-auto h-full mx-auto max-h-[70svh] object-cover" />
                                     </Link>
                                 </CarouselItem>
                             ))}
