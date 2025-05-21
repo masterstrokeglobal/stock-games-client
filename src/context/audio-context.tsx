@@ -28,7 +28,6 @@ interface AudioProviderProps {
 
 export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
   const [isMuted, setIsMuted] = useState<boolean>(true);
-  const [bgMusic, setBgMusic] = useState<Howl | null>(null);
   const [horseRaceSounds, setHorseRaceSounds] = useState<HorseRaceSounds | null>(null);
   const [isHorseRacePlaying, setIsHorseRacePlaying] = useState<boolean>(false);
   const pathname = usePathname();
@@ -45,7 +44,6 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({ children }) => {
       autoplay: true,
     });
 
-    setBgMusic(backgroundMusic);
 
     return () => {
       backgroundMusic.unload();
