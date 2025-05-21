@@ -21,6 +21,8 @@ export enum RoundRecordGameType {
     STOCK_SLOTS = "stock_slots",
     STOCK_JACKPOT = "stock_jackpot",
     SEVEN_UP_DOWN = "seven_up_down",
+    HEAD_TAIL = "head_tail",
+    WHEEL_OF_FORTUNE = "wheel_of_fortune",
 }
 
 

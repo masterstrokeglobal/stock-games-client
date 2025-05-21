@@ -1,11 +1,11 @@
 "use client"
 import GameLoadingScreen from '@/components/common/game-loading-screen';
-import { useCurrentGame, useShowResults } from '@/hooks/use-current-game';
+import TimeDisplay from '@/components/features/7-up-down/BetLockedBanner';
+import { BettingArea } from '@/components/features/7-up-down/BettingArea';
+import { GameBoard } from '@/components/features/7-up-down/GameBoard';
+import { StockPriceDisplay } from '@/components/features/7-up-down/StockPriceDisplay';
+import { useCurrentGame } from '@/hooks/use-current-game';
 import { RoundRecordGameType } from '@/models/seven-up-down';
-import TimeDisplay from './components/BetLockedBanner';
-import { BettingArea } from './components/BettingArea';
-import { GameBoard } from './components/GameBoard';
-import { StockPriceDisplay } from './components/StockPriceDisplay';
 import { useState } from 'react';
 
 const SevenUpSevenDown = () => {
