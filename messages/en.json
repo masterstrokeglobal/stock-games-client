@@ -472,7 +472,7 @@
         }
     },
     "round-detail": {
-        "title": "Round #{roundId} Details",
+        "title": "Round Details",
         "round": {
             "details": "Round Information",
             "start-time": "Start Time",

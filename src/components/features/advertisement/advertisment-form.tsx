@@ -14,7 +14,7 @@ const advertismentSchema = z.object({
     name: z.string().min(1),
     description: z.string().min(1),
     image: z.string().url(),
-    mobileImage: z.string().url().optional(),
+    mobileImage: z.string().url().optional().or(z.undefined()).or(z.literal("")),
     type: z.nativeEnum(AdvertisementType),
     link: z.union([z.string().url(), z.literal("")]),
     active: z.boolean().default(true),
@@ -42,6 +42,7 @@ export const AdvertismentForm = ({ defaultValues, onSubmit, className, isLoading
 
     const adType = form.watch("type");
 
+    console.log(form.formState.errors);
     return (
         <FormProvider methods={form} onSubmit={form.handleSubmit(onSubmit)} className={cn("space-y-5", className)}>
             <FormInput

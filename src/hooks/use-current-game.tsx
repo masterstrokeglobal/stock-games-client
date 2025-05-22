@@ -1,10 +1,9 @@
-import { PlacementType } from '@/models/game-record';
 import { RoundRecord } from '@/models/round-record';
-import { useGetCurrentRoundRecord } from '@/react-query/round-record-queries';
+import { RoundRecordGameType } from '@/models/seven-up-down';
+import { useGetCurrentRoundRecord, useGetRoundRecordById } from '@/react-query/round-record-queries';
 import { useQueryClient, UseQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { useGameType } from './use-game-type';
-import { RoundRecordGameType } from '@/models/seven-up-down';
 
 interface FormattedTime {
     minutes: number;
@@ -38,7 +37,7 @@ const formatTime = (ms: number): FormattedTime => {
     };
 };
 
-export const useCurrentGame = (gameType: RoundRecordGameType =    RoundRecordGameType.DERBY): {
+export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameType.DERBY): {
     roundRecord: RoundRecord | null;
     isLoading: boolean;
 } => {
@@ -216,7 +215,7 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: any
                     setPreviousRoundId(roundRecord.id);
                 }
             }
-
+            console.log(now >= adjustedEndTime , bettedChips.length,roundRecord.id)
             if (now >= adjustedEndTime && bettedChips.length > 0) {
                 setShowResults(true);
             }
@@ -227,9 +226,42 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: any
         return () => {
             clearInterval(intervalId);
         };
-    }, [roundRecord, currentRoundId]); // Re-run when `roundRecord` or `currentRoundId` changes
+    }, [roundRecord, currentRoundId]);
 
     return { showResults, currentRoundId, previousRoundId };
+};
+
+
+export const usePlacementOver = (roundRecord: RoundRecord) => {
+
+    const [isPlaceOver, setIsPlaceOver] = useState(false);
+
+    useEffect(() => {
+        if (!roundRecord) {
+            setIsPlaceOver(false);
+            return;
+        }
+
+        const checkPlaceOver = () => {
+            const now = new Date().getTime();
+            const placeEnd = new Date(roundRecord.placementEndTime).getTime();
+
+            if (now >= placeEnd != isPlaceOver)
+                setIsPlaceOver(now >= placeEnd);
+        };
+
+        // Initial check
+        checkPlaceOver();
+
+        // Set up an interval to check periodically, but less frequently
+        const intervalId = setInterval(checkPlaceOver, 1000); // Check every second
+
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [roundRecord]); // Only re-run when roundRecord changes
+
+    return isPlaceOver;
 };
 
 

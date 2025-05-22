@@ -1,3 +1,4 @@
+import { HeadTailPlacementType } from "./head-tail";
 import MarketItem, { SchedulerType } from "./market-item";
 import { RoundRecordGameType } from "./seven-up-down";
 
@@ -17,6 +18,7 @@ export class RoundRecord {
     winningMarket?: MarketItem;
     updatedAt: Date;
     deletedAt?: Date;
+    winningSide?: HeadTailPlacementType;
     initialValues: any | null;
 
     constructor(data: Partial<RoundRecord>) {
@@ -35,6 +37,7 @@ export class RoundRecord {
         this.updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
         this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : undefined;
         this.initialValues = data.initialValues || null;
+        this.winningSide = data.winningSide || undefined;
     }
 
     get winnerName(): string {

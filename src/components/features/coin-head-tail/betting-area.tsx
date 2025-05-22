@@ -4,12 +4,11 @@ import { Input } from "@/components/ui/input";
 import { useAuthStore } from '@/context/auth-context';
 import { useIsPlaceOver, useShowResults } from '@/hooks/use-current-game';
 import { cn, INR } from '@/lib/utils';
+import { HeadTailPlacementType } from "@/models/head-tail";
 import { RoundRecord } from '@/models/round-record';
-import { useTranslations } from 'next-intl';
+import { useGetMyCurrentRoundHeadTailPlacement } from "@/react-query/head-tail-queries";
 import React from 'react';
 import CoinHeadTailResultDialog from './game-result';
-import { useGetMyCurrentRoundHeadTailPlacement } from "@/react-query/head-tail-queries";
-import { HeadTailPlacementType } from "@/models/head-tail";
 
 interface BettingAreaProps {
   betAmount: number;
@@ -23,47 +22,49 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
   roundRecord
 }) => {
   const { userDetails } = useAuthStore();
-  const {data:placements} = useGetMyCurrentRoundHeadTailPlacement(roundRecord.id);
+  const { data: placements } = useGetMyCurrentRoundHeadTailPlacement(roundRecord.id);
   const isPlaceOver = useIsPlaceOver(roundRecord);
   const coinValues = userDetails?.company?.coinValues;
 
   const showResult = useShowResults(roundRecord, placements ?? []);
-
   if (isPlaceOver && placements?.length) {
     return (
-      <div className="w-full bg-[#1a1b2e] text-white p-6">
-        <div className="flex flex-col gap-3">
-          <h3 className="text-xl font-semibold text-amber-400 mb-2">Your Bets</h3>
-          {placements.map((placement: { placement: any; amount: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }, index: React.Key | null | undefined) => (
-            <div key={index} className="flex items-center justify-between bg-[#2a2b3e] p-4 rounded-xl border-2 border-amber-500/30 hover:border-amber-400 transition-all duration-300 shadow-lg hover:shadow-amber-500/20">
-              <div className="flex items-center gap-3">
-                <div className="bg-gradient-to-br from-amber-500/30 to-red-500/30 p-3 rounded-lg">
-                  <div className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-red-400">
-                    {placement.placement === HeadTailPlacementType.HEAD && 'HEAD'}
-                    {placement.placement === HeadTailPlacementType.TAIL && 'TAIL'}
+      <>
+        <div className="w-full bg-[#1a1b2e] text-white p-6">
+          <div className="flex flex-col gap-3">
+            <h3 className="text-xl font-semibold text-amber-400 mb-2">Your Bets</h3>
+            {placements.map((placement: { placement: any; amount: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }, index: React.Key | null | undefined) => (
+              <div key={index} className="flex items-center justify-between bg-[#2a2b3e] p-4 rounded-xl border-2 border-amber-500/30 hover:border-amber-400 transition-all duration-300 shadow-lg hover:shadow-amber-500/20">
+                <div className="flex items-center gap-3">
+                  <div className="bg-gradient-to-br from-amber-500/30 to-red-500/30 p-3 rounded-lg">
+                    <div className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-red-400">
+                      {placement.placement === HeadTailPlacementType.HEAD && 'HEAD'}
+                      {placement.placement === HeadTailPlacementType.TAIL && 'TAIL'}
+                    </div>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm text-amber-200 opacity-70">
+                      {placement.placement === HeadTailPlacementType.HEAD && 'Head Bet'}
+                      {placement.placement === HeadTailPlacementType.TAIL && 'Tail Bet'}
+                    </span>
+                    <span className="text-xs text-amber-300/50">1:0.7</span>
                   </div>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-sm text-amber-200 opacity-70">
-                    {placement.placement === HeadTailPlacementType.HEAD && 'Head Bet'}
-                    {placement.placement === HeadTailPlacementType.TAIL && 'Tail Bet'}
-                  </span>
-                  <span className="text-xs text-amber-300/50">1:0.7</span>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-red-500 flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+                    <span className="text-lg font-bold">₹</span>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-lg font-bold text-amber-300">₹{placement.amount}</span>
+                    <span className="text-xs text-amber-300/50">Placed</span>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-red-500 flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.3)]">
-                  <span className="text-lg font-bold">₹</span>
-                </div>
-                <div className="flex flex-col items-end">
-                  <span className="text-lg font-bold text-amber-300">₹{placement.amount}</span>
-                  <span className="text-xs text-amber-300/50">Placed</span>
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+        <CoinHeadTailResultDialog key={String(showResult.showResults)} open={showResult.showResults} roundRecordId={showResult.previousRoundId ?? 0} />
+      </>
     );
   }
 

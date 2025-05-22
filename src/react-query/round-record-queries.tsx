@@ -35,10 +35,10 @@ export const useGetCurrentRoundRecord = (
  * Hook to get a specific round record by ID.
  * @param roundRecordId - ID of the round record to fetch
  */
-export const useGetRoundRecordById = (roundRecordId: number) => {
+export const useGetRoundRecordById = (roundRecordId?: number) => {
     return useQuery({
         queryKey: ["round-record", roundRecordId],
-        queryFn: () => roundRecordsAPI.getRoundRecordById(roundRecordId),
+        queryFn:  roundRecordId ? () => roundRecordsAPI.getRoundRecordById(roundRecordId) : undefined,
         enabled: !!roundRecordId, // Prevents the query from running if the ID is falsy
     });
 };
