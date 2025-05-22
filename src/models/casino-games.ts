@@ -187,6 +187,8 @@ class CasinoGames {
     subProviderName!: ProviderEnum;
     category!: GameCategory;
     status!: GameStatus;
+    slot!: boolean;
+    liveGame!: boolean;
     popular!: boolean;
     new!: boolean;
     code!: string;
@@ -204,6 +206,8 @@ class CasinoGames {
         this.category = params.category;
         this.status = params.status;
         this.code = params.code;
+        this.slot = params.slot;
+        this.liveGame = params.liveGame;
         this.gameId = params.gameId;
         this.popular = params.popular;
         this.new = params.new;

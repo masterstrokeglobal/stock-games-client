@@ -6,7 +6,6 @@ import StockGameCarousel from "@/components/features/stock-games.tsx/stock-game-
 import ActiveTierCard from "@/components/features/tier/user-tier-card";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
-import { GameCategory } from "@/models/casino-games";
 import User from "@/models/user";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -44,9 +43,9 @@ const PlatformPage = () => {
             <StockGameCarousel />
             <CasinoProvidersCarousel title="Game Providers" />
             <CategoryCarousel title="Hot Games" popular={true} />
-            <CategoryCarousel title="Table Games" categoryId={GameCategory["Table game"]} />
-            <CategoryCarousel title="Casino Games" categoryId={GameCategory["Live Dealer"]} />
-            <CategoryCarousel title="New Games" new={true} />
+            <CategoryCarousel title="Live Games" liveGame={true} />
+            <CategoryCarousel title="Slot"  slot={true} />
+            <CategoryCarousel title="New Released" new={true} />
         </section>
     )
 }

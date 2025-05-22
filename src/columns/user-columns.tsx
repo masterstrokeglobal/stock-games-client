@@ -111,6 +111,7 @@ const userColumns: ColumnDef<User>[] = [
   },
 ];
 export default userColumns;
+
 const ActionColumn = ({ user }: { user: User }) => {
   const { mutate: deleteUser, isPending: deleting } = useDeleteUserById();
   const { userDetails } = useAuthStore();

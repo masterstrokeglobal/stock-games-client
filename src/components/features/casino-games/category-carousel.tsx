@@ -9,15 +9,19 @@ interface CategoryCarouselProps {
     categoryId?: GameCategory,
     popular?: boolean,
     new?: boolean,
+    slot?: boolean,
+    liveGame?: boolean,
     title: string
 }
 
-export default function CategoryCarousel({ categoryId, title, popular, new: isNew }: CategoryCarouselProps) {
+export default function CategoryCarousel({ categoryId, title, popular, new: isNew, slot, liveGame  }: CategoryCarouselProps) {
     const { data, isLoading } = useGetCasinoGames({
         limit: 200,
         popular,
         excludeCategory: categoryId,
-        new: isNew
+        new: isNew,
+        slot,
+        liveGame
     })
 
 
