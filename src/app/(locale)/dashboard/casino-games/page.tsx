@@ -11,9 +11,9 @@ import { GameCategory, ProviderEnum } from "@/models/casino-games";
 import { ComboboxSelect } from "@/components/ui/combobox";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const providerOptions = Object.values(ProviderEnum).map((provider) => ({
+const providerOptions : {label: string, value: string}[] = Object.values(ProviderEnum).map((provider) => ({
     label: provider.split("_").join(" ").charAt(0).toUpperCase() + provider.split("_").join(" ").slice(1),
-    value: provider.toLowerCase()
+    value: provider
 })).sort((a, b) => a.label.localeCompare(b.label));
 
 providerOptions.unshift({
@@ -22,9 +22,9 @@ providerOptions.unshift({
 })
 
 
-const CategoryOptions = Object.values(GameCategory).map((category) => ({
+const CategoryOptions : {label: string, value: string}[] = Object.values(GameCategory).map((category) => ({
     label: category.split("_").join(" ").charAt(0).toUpperCase() + category.split("_").join(" ").slice(1),
-    value: category.toLowerCase()
+    value: category
 })).sort((a, b) => a.label.localeCompare(b.label));
 
 CategoryOptions.unshift({
@@ -88,7 +88,7 @@ const CasinoGames = () => {
                         defaultValue={filter.provider?.toString()}
                         placeholder="Select Provider"
                         value={filter.provider?.toString()}
-                        className="w-40"
+                        className="min-w-40"
                         onValueChange={(value) => setFilter({ ...filter, provider: value as ProviderEnum })}
                     />
 
@@ -98,7 +98,7 @@ const CasinoGames = () => {
                         placeholder="Select Category"
                         value={filter.category?.toString()}
                         onValueChange={(value) => setFilter({ ...filter, category: value as GameCategory })}
-                        className="w-40"
+                        className="min-w-40"
                     />
 
 

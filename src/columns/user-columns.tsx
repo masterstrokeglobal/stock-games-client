@@ -17,9 +17,8 @@ import User from "@/models/user";
 import { useDeleteUserById } from "@/react-query/user-queries";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { ArrowDown, ArrowUp, ArrowUpDown, Eye, Loader2, Trash2 } from 'lucide-react';
+import { Eye, Loader2, Trash2 } from 'lucide-react';
 import Link from "next/link";
-import { useQueryState } from 'nuqs';
 
 // ===================== User Table =====================
 
@@ -189,59 +188,59 @@ export type AffiliateUser = {
     balance: number;
 }
 
-// New sortable header creator
-const CreateSortableHeader = ({ label, field }: { label: string, field: string }) => {
-  const [sortBy, setSortBy] = useQueryState('sortBy', {
-    defaultValue: JSON.stringify([]),
-  });
+// // New sortable header creator
+// const CreateSortableHeader = ({ label, field }: { label: string, field: string }) => {
+//   const [sortBy, setSortBy] = useQueryState('sortBy', {
+//     defaultValue: JSON.stringify([]),
+//   });
 
-  const currentSort = sortBy;
+//   const currentSort = sortBy;
 
-  const isSorted = currentSort.includes(field);
-  const sortOrder = isSorted ? (currentSort.includes(`${field}_ASC`) ? 'ASC' : 'DESC') : null;
+//   const isSorted = currentSort.includes(field);
+//   const sortOrder = isSorted ? (currentSort.includes(`${field}_ASC`) ? 'ASC' : 'DESC') : null;
 
-  const toggleSort = () => {
-    const newOrder = !isSorted || sortOrder === 'DESC' ? 'ASC' : 'DESC';
-    setSortBy(`${field}_${newOrder}`);
-  };
+//   const toggleSort = () => {
+//     const newOrder = !isSorted || sortOrder === 'DESC' ? 'ASC' : 'DESC';
+//     setSortBy(`${field}_${newOrder}`);
+//   };
 
-  return (
-    <Button
-      variant="ghost"
-      onClick={toggleSort}
-      className="flex items-center space-x-2"
-    >
-      <span>{label}</span>
-      {isSorted ? (
-        sortOrder === 'ASC' ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
-      ) : (
-        <ArrowUpDown className="w-4 h-4" />
-      )}
-    </Button>
-  );
-};
+//   return (
+//     <Button
+//       variant="ghost"
+//       onClick={toggleSort}
+//       className="flex items-center space-x-2"
+//     >
+//       <span>{label}</span>
+//       {isSorted ? (
+//         sortOrder === 'ASC' ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
+//       ) : (
+//         <ArrowUpDown className="w-4 h-4" />
+//       )}
+//     </Button>
+//   );
+// };
 
 export const affiliateUserColumns: ColumnDef<AffiliateUser>[] = [
   {
-    header: () => <CreateSortableHeader label="USERNAME" field="username" />,
+    header: "USERNAME",
     accessorKey: 'username',
   },
   {
-    header: () => <CreateSortableHeader label="EMAIL" field="email" />,
+    header: "EMAIL",
     accessorKey: 'email',
   },
   {
-    header: () => <CreateSortableHeader label="PHONE" field="phone" />,
+    header: "PHONE",
     accessorKey: 'phone',
     cell: ({ row }) => <div className="text-[#6B7280]">{row.original.phone || 'N/A'}</div>,
   },
   {
-    header: () => <CreateSortableHeader label="SIGNUP DATE" field="signup_date" />,
+    header: "SIGNUP DATE",
     accessorKey: 'createdAt',
     cell: ({ row }) => <div className="text-[#6B7280]">{dayjs(row.original.signupDate).format("DD-MM-YYYY")}</div>,
   },
   {
-    header: () => <CreateSortableHeader label="FTD DATE" field="ftd_date" />,
+    header: "FTD DATE",
     accessorKey: 'ftdDate',
     cell: ({ row }) => (
       <div className="text-[#6B7280] text-nowrap">
@@ -250,7 +249,7 @@ export const affiliateUserColumns: ColumnDef<AffiliateUser>[] = [
     ),
   },
   {
-    header: () => <CreateSortableHeader label="LAST DEPOSIT DATE" field="last_deposit_date" />,
+    header: "LAST DEPOSIT DATE",
     accessorKey: 'lastDepositDate',
     cell: ({ row }) => (
       <div className="text-[#6B7280] text-nowrap">
@@ -259,38 +258,38 @@ export const affiliateUserColumns: ColumnDef<AffiliateUser>[] = [
     ),
   },
   {
-    header: () => <CreateSortableHeader label="AFFILIATE" field="affiliate" />,
+    header: "AFFILIATE",
     accessorKey: 'affiliate',
     cell: ({ row }) => <div className="text-[#6B7280]">{row.original.affiliate || 'N/A'}</div>,
   },
   {
-    header: () => <CreateSortableHeader label="SUB AFFILIATE" field="subAffiliate" />,
+    header: "SUB AFFILIATE",
     accessorKey: 'subAffiliate',
     cell: ({ row }) => <div className="text-[#6B7280]">{row.original.subAffiliate || 'N/A'}</div>,
   },
 
   {
-    header: () => <CreateSortableHeader label="LIFETIME DEPOSIT COUNT" field="lifetime_deposit_count" />,
+    header: "LIFETIME DEPOSIT COUNT",
     accessorKey: 'lifetimeDepositCount',
     cell: ({ row }) => <div className="text-[#6B7280]">{row.original.lifetimeDepositCount || 'N/A'}</div>,
   },
   {
-    header: () => <CreateSortableHeader label="LIFETIME DEPOSIT AMOUNT" field="lifetime_deposit_amount" />,
+    header: "LIFETIME DEPOSIT AMOUNT",
     accessorKey: 'lifetimeDepositAmount',
     cell: ({ row }) => <div className="text-[#6B7280]">{row.original.lifetimeDepositAmount || 'N/A'}</div>,
   },
   {
-    header: () => <CreateSortableHeader label="LIFETIME WITHDRAWAL COUNT" field="lifetime_withdrawal_count" />,
+    header: "LIFETIME WITHDRAWAL COUNT",
     accessorKey: 'lifetimeWithdrawalCount',
     cell: ({ row }) => <div className="text-[#6B7280]">{row.original.lifetimeWithdrawalCount || 'N/A'}</div>,
   },
   {
-    header: () => <CreateSortableHeader label="LIFETIME WITHDRAWAL AMOUNT" field="lifetime_withdrawal_amount" />,
+    header: "LIFETIME WITHDRAWAL AMOUNT",
     accessorKey: 'lifetimeWithdrawalAmount',
     cell: ({ row }) => <div className="text-[#6B7280]">{row.original.lifetimeWithdrawalAmount || 'N/A'}</div>,
   },
   {
-    header: () => <CreateSortableHeader label="BALANCE" field="balance" />,
+    header: "BALANCE",
     accessorKey: 'balance',
     cell: ({ row }) => <div className="text-[#6B7280]">{row.original.balance || 'N/A'}</div>,
   },
