@@ -3,6 +3,8 @@ import { RoundRecord } from '@/models/round-record';
 import { WheelColor } from '@/models/wheel-of-fortune-placement';
 import { ArrowUpIcon } from "@radix-ui/react-icons";
 import React from 'react';
+import StockWheel from './stock-wheel';
+import { usePlacementOver } from '@/hooks/use-current-game';
 interface StockPriceProps {
   rankedMarketItem: RankedMarketItem;
 }
@@ -21,24 +23,15 @@ const StockPrice: React.FC<StockPriceProps> = ({ rankedMarketItem }) => {
   );
 };
 
-export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, winningColor: WheelColor | null }> = ({ roundRecord, winningColor }) => {
+export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, winningMarketId: number[] | null }> = ({ roundRecord, winningMarketId }) => {
 
-  const { stocks } = useLeaderboard(roundRecord);
+  const isPlaceOver = usePlacementOver(roundRecord);
+  const isSpinning = winningMarketId == null && isPlaceOver;
 
-  const sortedStocks = stocks.sort((a, b) => parseFloat(b.change_percent) - parseFloat(a.change_percent));
-
+  console.log(winningMarketId, isSpinning)
   return (
     <div className="flex flex-col justify-between items-start bg-gray-200">
-      <div className="grid grid-cols-6 w-full">
-        {sortedStocks.slice(0, 6).map((stock, index) => (
-          <StockPrice key={index} rankedMarketItem={stock} />
-        ))}
-      </div>
-      <div className="grid grid-cols-6 w-full">
-        {sortedStocks.slice(6).map((stock, index) => (
-          <StockPrice key={index} rankedMarketItem={stock} />
-        ))}
-      </div>
+     <StockWheel roundRecord={roundRecord} winningMarketId={winningMarketId} isSpinning={isSpinning} />
     </div>
   );
 }; 

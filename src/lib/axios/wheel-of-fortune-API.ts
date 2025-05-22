@@ -1,7 +1,7 @@
 import api from "./instance";
-import { WheelOfFortunePlacement } from "@/models/wheel-of-fortune-placement";
+import { WheelColor, WheelOfFortunePlacement } from "@/models/wheel-of-fortune-placement";
 const wheelOfFortuneAPI = {
-    createWheelOfFortunePlacement: async (data: any) => {
+    createWheelOfFortunePlacement: async (data: {roundId: number, amount: number, placementColor: WheelColor}) => {
         const response = await api.post("/wheel-of-fortune/", data);
         return response.data;
     },

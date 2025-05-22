@@ -215,7 +215,6 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: any
                     setPreviousRoundId(roundRecord.id);
                 }
             }
-            console.log(now >= adjustedEndTime , bettedChips.length,roundRecord.id)
             if (now >= adjustedEndTime && bettedChips.length > 0) {
                 setShowResults(true);
             }

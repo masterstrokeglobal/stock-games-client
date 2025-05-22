@@ -11,6 +11,16 @@ export enum WheelColor {
 }
 
 
+export interface ColorConfig {
+    name: string;
+    bgColor: string;
+    textColor: string;
+    borderColor: string;
+    shadowColor: string;
+    actualColor: string;
+    multiplier: number;
+}
+
 export class WheelOfFortunePlacement {
 
     id: number;
@@ -45,3 +55,4 @@ export class WheelOfFortunePlacement {
         return this.amount;
     }
 }
+
