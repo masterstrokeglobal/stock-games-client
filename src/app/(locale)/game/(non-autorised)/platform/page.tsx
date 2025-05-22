@@ -43,7 +43,7 @@ const PlatformPage = () => {
             {isLoggedIn && <ActiveTierCard className="mt-12" />}
             <StockGameCarousel />
             <CasinoProvidersCarousel title="Game Providers" />
-            <CategoryCarousel title="Most Popular Games" popular={true} />
+            <CategoryCarousel title="Hot Games" popular={true} />
             <CategoryCarousel title="Table Games" categoryId={GameCategory["Table game"]} />
             <CategoryCarousel title="Casino Games" categoryId={GameCategory["Live Dealer"]} />
             <CategoryCarousel title="New Games" new={true} />

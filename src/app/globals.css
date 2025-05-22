@@ -285,6 +285,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   color: black;
   opacity: 0.6;
 }
+input[type="date"]::-webkit-calendar-picker-indicator.dark {
+  color: white;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+
 
 .gold-button {
   background: linear-gradient(145deg, #ff3c3c, #ff7a00); /* Reversed gradient */

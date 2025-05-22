@@ -67,14 +67,14 @@ const BettingHistoryPage = () => {
                             type="date"
                             value={filter.startDate}
                             onChange={(e) => setFilter({ ...filter, startDate: e.target.value })}
-                            className="h-12 text-white bg-primary-game border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF]"
+                            className="h-12 text-white bg-primary-game border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF] dark"
                         />
                         <span>{t('date-range.to')}</span>
                         <Input
                             type="date"
                             value={filter.endDate}
                             onChange={(e) => setFilter({ ...filter, endDate: e.target.value })}
-                            className="h-12 text-white bg-primary-game border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF]"
+                            className="h-12 text-white bg-primary-game border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF] dark"
                         />
                         <div className="sm:ml-auto sm:w-fit w-full flex sm:flex-row flex-col gap-2 sm:items-center">
                             <Label>

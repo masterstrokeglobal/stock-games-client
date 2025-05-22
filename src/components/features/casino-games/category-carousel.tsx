@@ -14,9 +14,9 @@ interface CategoryCarouselProps {
 
 export default function CategoryCarousel({ categoryId, title, popular, new: isNew }: CategoryCarouselProps) {
     const { data, isLoading } = useGetCasinoGames({
-        category: categoryId,
-        limit: 10,
+        limit: 200,
         popular,
+        excludeCategory: categoryId,
         new: isNew
     })
 

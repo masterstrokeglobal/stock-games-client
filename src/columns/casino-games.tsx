@@ -47,14 +47,14 @@ const casinoGamesColumns: ColumnDef<CasinoGames>[] = [
         }
     },
     {
-        header: "Popular",
+        header: "Hot Game",
         accessorKey: "popular",
         cell: ({ row }) => {
             return <PopularColumn row={row.original} />
         }
     },
     {
-        header: "New",
+        header: "New Game",
         accessorKey: "new",
         cell: ({ row }) => {
             return <NewColumn row={row.original} />

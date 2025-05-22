@@ -44,11 +44,12 @@ export default function GamingAppInterface() {
             setFilter({ ...filter, provider: provider })
         }
     }, [search, category, provider])
+
     const { data: searchResults, isLoading: searchLoading } = useGetCasinoGames({
         search: filter.search || undefined,
         category: filter.category == "all" ? undefined : filter.category,
         provider: filter.provider == "all" ? undefined : filter.provider,
-        limit: 40
+        limit: 100
     })
 
     const isCasinoAllowed = checkCasinoAllowed(COMPANYID);
@@ -115,7 +116,7 @@ export default function GamingAppInterface() {
                 ) : (
                     <div className="space-y-12">
                         {/* most popular games , ne games with emoji  */}
-                        <CategoryCarousel title="🔥 Most Popular Games" popular={true} />
+                        <CategoryCarousel title="🔥 Hot Games" popular={true} />
                         <CategoryCarousel title="🎲 Table Games" categoryId={GameCategory["Table game"]} />
                         <CategoryCarousel title="🎰 Casino Games" categoryId={GameCategory["Live Dealer"]} />
                         <CategoryCarousel title="🆕 New Games" new={true} />
