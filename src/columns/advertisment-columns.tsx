@@ -9,6 +9,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useUpdateAdvertisementById, useDeleteAdvertisementById } from "@/react-query/advertisment-queries";
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
 
 const advertisementColumns: ColumnDef<Advertisement>[] = [
     {
@@ -35,6 +36,11 @@ const advertisementColumns: ColumnDef<Advertisement>[] = [
                 />
             </div>
         ),
+    },
+    {
+        header: "TYPE",
+        accessorKey: "type",
+        cell: ({ row }) => <Badge variant="outline" className="text-[#6B7280]">{row.original.type}</Badge>,
     },
     {
         header: "LINK",
