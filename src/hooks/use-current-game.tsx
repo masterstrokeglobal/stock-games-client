@@ -77,7 +77,6 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         }
 
         const gameEnd = setTimeout(() => {
-            console.log("gameEnd", timeToGameEnd);
             queryClient.invalidateQueries({
                 predicate: (query) => {
                     return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
@@ -95,7 +94,6 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
 
         const interval = setInterval(() => {
             timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 15000;
-            console.log("timeToGameEnd", timeToGameEnd);
         }, 1000);
         return () => {
             clearTimeout(gameEnd);
@@ -242,7 +240,7 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: any
         return () => {
             clearInterval(intervalId);
         };
-    }, [roundRecord, currentRoundId]);
+    }, [roundRecord, currentRoundId, bettedChips]);
 
     return { showResults, currentRoundId, previousRoundId };
 };

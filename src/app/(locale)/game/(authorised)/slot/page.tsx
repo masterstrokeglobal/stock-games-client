@@ -42,7 +42,6 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen  relative bg-[url('/images/game-bg-pattern.png')] bg-repeat  bg-center text-white  mx-auto">
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/50 h-full to-primary/100 opacity-50 z-0"/>
       <Navbar />
       <Tabs className="flex-1 px-4 mt-40 py-6 max-w-7xl mx-auto w-full" value={tab} onValueChange={(value) => setTab(value as SchedulerType)}>
         {/* Global Bet Amount and Search Section */}
@@ -129,8 +128,7 @@ const MarketSection = ({ title, globalBetAmount, betSlipOpen, searchQuery, setBe
   const { data: myFavorites } = useGetMyFavorites();
   const [showMore, setShowMore] = useState(false);
   const { data: stockSlotPlacements } = useGetMyStockSlotJackpotGameRecord(roundRecord?.id);
-  const { showResults, previousRoundId } = useShowResults(roundRecord, stockSlotPlacements as any);
-
+  const { showResults, previousRoundId } = useShowResults(roundRecord, stockSlotPlacements ?? []);
   const { stocks: marketItems } = useLeaderboard(roundRecord);
   const sortedMarketItems = useMemo(() => {
     const filteredMarketItems = marketItems.filter((marketItem) => (marketItem.name?.toLowerCase() || '').includes(searchQuery.toLowerCase()) || (marketItem.code?.toLowerCase() || '').includes(searchQuery.toLowerCase())).sort((a, b) => (a.id || 0) - (b.id || 0))

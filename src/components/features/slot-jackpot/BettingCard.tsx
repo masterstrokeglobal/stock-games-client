@@ -62,6 +62,8 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
 
   const bettingOpen = !isPlaceOver && !isPendingMyStockSlotJackpotGameRecord;
 
+  const lastTwoDigits = parseFloat(currentPrice.toString()).toFixed(2).toString().slice(-2);
+
   return (
 
     <div className="">
@@ -69,7 +71,6 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
         <div className="card__border" />
         {marketItem.id && <FavoriteMarketItem marketItemId={marketItem.id} className="absolute top-2 right-2" />}
         <div className="p-4 grid grid-cols-1 lg:grid-cols-3  gap-4">
-          {/* Market Info */}
           <div className="bg-white/10 cards__inner backdrop-blur-md rounded-xl  flex flex-col justify-between">
             <div className="cards__card card">
               <div className="flex items-center justify-between mb-4">
@@ -104,9 +105,10 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
           </div>
 
           {/* Current Price */}
-          <div className="bg-white/10  backdrop-blur-md  rounded-lg p-4 flex flex-col justify-between">
+          <div className=" cards__inner group  backdrop-blur-md  rounded-lg  flex flex-col justify-between">
+            <div className="cards__card card">
             {!isPlaceOver && <div className="text-center mb-4">
-              <span className="text-gray-400">Current Price</span>
+              <span className="text-gray-400 group-hover:text-gray-700 transition-all duration-300">Current Price</span>
 
             </div>}
             <div className="flex-1 flex flex-col justify-center">
@@ -128,13 +130,15 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
                     {marketItem.currency} {currentPrice?.toFixed(2)}
                   </span>
                 </p>
-                <DigitPicker showInput={false} betType={StockSlotJackpotPlacementType.BOTH} onChange={setPredictedDigits} value={currentPrice?.toString().slice(-2)} disabled={!!betPlaced} />
+                <DigitPicker showInput={false} betType={StockSlotJackpotPlacementType.BOTH} onChange={setPredictedDigits} value={lastTwoDigits} disabled={!!betPlaced} />
               </div>
             )}
+            </div>
           </div>
 
           {/* Betting Controls */}
-          <div className="bg-white/10 backdrop-blur-md  rounded-lg p-4">
+          <div className="cards__inner backdrop-blur-md  ">
+            <div className="cards__card card">
             <Tabs
               defaultValue={selectedBetType}
               className="flex flex-row h-full gap-3"
@@ -211,7 +215,8 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
                   </div>
                 )
               }
-            </Tabs>
+              </Tabs>
+            </div>
           </div>
         </div>
       </Card>
