@@ -150,7 +150,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
         <Separator className="my-3 flex-1 bg-white/20" />
       </div>
 
-      <div className="flex gap-2 flex-col md:flex-row">
+      <div className="flex gap-2 md:flex-row flex-col">
         <GoogleLoginButton />
         <DemoUserLogin className="h-10" />
       </div>

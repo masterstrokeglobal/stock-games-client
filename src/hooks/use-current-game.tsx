@@ -1,10 +1,9 @@
-import { PlacementType } from '@/models/game-record';
+import { SchedulerType } from '@/models/market-item';
 import { RoundRecord, RoundRecordGameType } from '@/models/round-record';
 import { useGetCurrentRoundRecord } from '@/react-query/round-record-queries';
 import { useQueryClient, UseQueryResult } from '@tanstack/react-query';
 import { useEffect, useMemo, useState } from 'react';
 import { useGameType } from './use-game-type';
-import { SchedulerType } from '@/models/market-item';
 interface FormattedTime {
     minutes: number;
     seconds: number;
@@ -38,7 +37,7 @@ const formatTime = (ms: number): FormattedTime => {
     };
 };
 
-export const useCurrentGame = (roundRecordGameType: RoundRecordGameType = RoundRecordGameType.DERBY): {
+export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameType.DERBY): {
     roundRecord: RoundRecord | null;
     isLoading: boolean;
 } => {
@@ -48,7 +47,7 @@ export const useCurrentGame = (roundRecordGameType: RoundRecordGameType = RoundR
         data,
         isLoading,
         isSuccess,
-    }: UseQueryResult<RoundRecordResponse, unknown> = useGetCurrentRoundRecord(type, roundRecordGameType);
+    }: UseQueryResult<RoundRecordResponse, unknown> = useGetCurrentRoundRecord(type, gameType);
 
     const roundRecord = useMemo(() => {
         // Only compute when data is successfully loaded
@@ -194,11 +193,7 @@ export const useIsPlaceOver = (roundRecord: RoundRecord | null) => {
     return isPlaceOver;
 };
 
-export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: {
-    type: PlacementType;
-    amount: number;
-    numbers: number[];
-}[]) => {
+export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: any[]) => {
     const [showResults, setShowResults] = useState(false);
     const [currentRoundId, setCurrentRoundId] = useState<number | null>(null);
     const [previousRoundId, setPreviousRoundId] = useState<number | null>(null);
@@ -237,7 +232,7 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: {
                     setPreviousRoundId(roundRecord.id);
                 }
             }
-            if (now >= adjustedEndTime && bettedChips?.length > 0) {
+            if (now >= adjustedEndTime && bettedChips.length > 0) {
                 setShowResults(true);
             }
         };
@@ -247,8 +242,42 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: {
         return () => {
             clearInterval(intervalId);
         };
-    }, [roundRecord, currentRoundId, bettedChips]);
+    }, [roundRecord, currentRoundId]);
 
     return { showResults, currentRoundId, previousRoundId };
 };
+
+
+export const usePlacementOver = (roundRecord: RoundRecord) => {
+
+    const [isPlaceOver, setIsPlaceOver] = useState(false);
+
+    useEffect(() => {
+        if (!roundRecord) {
+            setIsPlaceOver(false);
+            return;
+        }
+
+        const checkPlaceOver = () => {
+            const now = new Date().getTime();
+            const placeEnd = new Date(roundRecord.placementEndTime).getTime();
+
+            if (now >= placeEnd != isPlaceOver)
+                setIsPlaceOver(now >= placeEnd);
+        };
+
+        // Initial check
+        checkPlaceOver();
+
+        // Set up an interval to check periodically, but less frequently
+        const intervalId = setInterval(checkPlaceOver, 1000); // Check every second
+
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, [roundRecord]); // Only re-run when roundRecord changes
+
+    return isPlaceOver;
+};
+
 

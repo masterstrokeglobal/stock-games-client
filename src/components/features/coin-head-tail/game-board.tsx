@@ -1,0 +1,104 @@
+import { cn, INR } from '@/lib/utils';
+import { HeadTailPlacementType } from '@/models/head-tail';
+import { RoundRecord } from '@/models/round-record';
+import { useCreateHeadTailPlacement, useGetMyCurrentRoundHeadTailPlacement } from '@/react-query/head-tail-queries';
+
+
+type Props = {
+  roundRecord: RoundRecord;
+  amount: number;
+  className?: string;
+  children?: React.ReactNode;
+  winningSide?: HeadTailPlacementType;
+}
+
+export default function CoinFlipGame({ roundRecord, amount, className, children, winningSide }: Props) {
+
+  const { mutate: createHeadTailPlacement, isPending } = useCreateHeadTailPlacement();
+
+  const {data:placements} = useGetMyCurrentRoundHeadTailPlacement(roundRecord.id);
+
+  const handleCardClick = (side: HeadTailPlacementType) => {
+    if (isPending) return;
+    createHeadTailPlacement({ roundId: roundRecord.id, placement: side, amount })
+  };
+
+  const { myHeadAmount, myTailAmount} = placements?.reduce((acc, placement) => {
+    if(placement.placement === HeadTailPlacementType.HEAD){
+      acc.myHeadAmount += placement.amount;
+    }else{
+      acc.myTailAmount += placement.amount;
+    }
+    return acc;
+  }, {myHeadAmount: 0, myTailAmount: 0}) ?? {myHeadAmount: 0, myTailAmount: 0};
+
+  return (
+    <div className={cn("flex flex-col items-center justify-center w-full h-full bg-amber-800 p-4 pt-20 rounded-lg bg-center relative ", className)}>
+      {children}
+      <img src="/images/wodden-board.jpg" alt="wodden-board" className="w-full h-full object-fill absolute top-0 left-0 z-0" />
+      <div className="flex w-full max-w-md gap-4 p-4">
+        {/* HEAD CARD */}
+        <div
+          className={cn("w-1/2 min-h-64 z-10 rounded-md flex flex-col cursor-pointer transition-all duration-300", isPending ? 'opacity-70 pointer-events-none' : 'hover:shadow-lg hover:scale-105', winningSide === HeadTailPlacementType.HEAD ? 'border-2 border-amber-600 shadow-custom-glow' : '')}
+          onClick={() => handleCardClick(HeadTailPlacementType.HEAD)}
+        >
+          <div className="bg-green-600 rounded-t-md p-3 text-center">
+            <span className="text-white text-2xl font-bold">HEAD</span>
+          </div>
+          <div className="bg-amber-100 flex-1 rounded-b-md flex flex-col items-center justify-start p-4 relative">
+            <div className="w-20 h-20 rounded-full flex items-center justify-center">
+              <img src="/images/coin-face/head.png" alt="head" className="w-full h-full object-fill" />
+            </div>
+            <div className="mt-4 text-amber-900 font-bold">1:1.96</div>
+            
+            {/* Stats Container */}
+            <div className="absolute bottom-0 left-0 right-0 bg-amber-50 bg-opacity-80 p-2 rounded-b-md">
+              <div className="flex justify-between items-center px-2">
+                <div className="text-xs font-semibold text-amber-900">
+                  <span>Your Bet:</span>
+                  <span className="block font-bold">{INR(myHeadAmount)}</span>
+                </div>
+                <div className="text-xs font-semibold text-amber-900">
+                  <span>Win:</span>
+                  <span className="block font-bold">{INR(myHeadAmount * 1.96)}</span>
+                </div>
+              </div>
+            </div>
+          
+          </div>
+        </div>
+
+        {/* TAIL CARD */}
+        <div
+          className={`w-1/2 min-h-64 z-10 pb-30 rounded-md flex flex-col cursor-pointer transition-all duration-300 ${isPending ? 'opacity-70 pointer-events-none' : 'hover:shadow-lg hover:scale-105'}`}
+          onClick={() => handleCardClick(HeadTailPlacementType.TAIL)}
+        >
+          <div className="bg-red-600 rounded-t-md p-3 text-center">
+            <span className="text-white text-2xl font-bold">TAIL</span>
+          </div>
+          <div className="bg-amber-100 flex-1 rounded-b-md flex flex-col items-center justify-start p-4 relative">
+            <div className="w-20 h-20 rounded-full flex items-center justify-center">
+              <img src="/images/coin-face/tail.png" alt="tail" className="w-full h-full object-fill" />
+            </div>
+            <div className="mt-4 text-amber-900 font-bold">1:1.96</div>
+            
+            {/* Stats Container */}
+            <div className="absolute bottom-0 left-0 right-0 w-full bg-amber-50 bg-opacity-80 p-2 rounded-b-md">
+              <div className="flex justify-between items-center px-2">
+                <div className="text-xs font-semibold text-amber-900">
+                  <span>Your Bet:</span>
+                  <span className="block font-bold">{INR(myTailAmount)}</span>
+                </div>
+                <div className="text-xs font-semibold text-amber-900">
+                  <span>Win:</span>
+                  <span className="block font-bold">{INR(myTailAmount * 1.96)}</span>
+                </div>
+              </div>
+            </div>           
+          
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

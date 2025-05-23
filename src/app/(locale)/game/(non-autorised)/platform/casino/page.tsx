@@ -63,9 +63,9 @@ export default function GamingAppInterface() {
     return (
         <>
             <GameAdsCarousel />
-            <main className="container mx-auto mt-20">
+            <main className="container md:mx-auto w-full mt-20">
                 {/* Search Bar */}
-                <div className="relative mb-8  mx-auto flex flex-col md:flex-row justify-start gap-2">
+                <div className="relative mb-8  md:mx-auto w-full flex flex-col md:flex-row justify-start gap-2">
                     <div className="relative max-w-2xl w-full">
                         <Input
                             className="w-full bg-background-secondary focus:bg-background-secondary/80 border-transparent border-2 focus:border-game-secondary text-white placeholder:text-gray-400 h-12 pl-10 rounded-full"

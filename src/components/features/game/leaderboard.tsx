@@ -33,7 +33,6 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
         const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 4000;
 
         const timer = setTimeout(() => {
-            console.log('refetching');
             refetch();
         }, resultFetchTime);
 

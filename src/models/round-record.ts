@@ -1,6 +1,6 @@
+import { HeadTailPlacementType } from "./head-tail";
 import MarketItem, { SchedulerType } from "./market-item";
-
-
+import { WheelColor, ColorConfig } from "./wheel-of-fortune-placement";
 
 export enum RoundRecordGameType {
     DERBY = "derby",
@@ -12,7 +12,59 @@ export enum RoundRecordGameType {
     GUESS_LAST_EIGHT = "guess_last_eight",
     STOCK_SLOTS = "stock_slots",
     STOCK_JACKPOT = "stock_jackpot",
+    SEVEN_UP_DOWN = "seven_up_down",
+    HEAD_TAIL = "head_tail",
+    WHEEL_OF_FORTUNE = "wheel_of_fortune",
 }
+
+export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
+    [WheelColor.COLOR1]: {
+        name: 'GOLDEN',
+        bgColor: 'bg-yellow-500',
+        textColor: 'text-yellow-900',
+        borderColor: 'border-yellow-600',
+        shadowColor: 'shadow-yellow-500/50',
+        actualColor: '#FFD700',
+        multiplier: 2.4
+    },
+    [WheelColor.COLOR2]: {
+        name: 'RED',
+        bgColor: 'bg-red-600',
+        textColor: 'text-red-900',
+        borderColor: 'border-red-600',
+        shadowColor: 'shadow-red-500/50',
+        actualColor: '#DC2626',
+        multiplier: 2.4 // 1:2.4 payout for red
+    },
+    [WheelColor.COLOR3]: {
+        name: 'BLUE',
+        bgColor: 'bg-blue-600',
+        textColor: 'text-blue-900',
+        borderColor: 'border-blue-600',
+        shadowColor: 'shadow-blue-500/50',
+        actualColor: '#2563EB',
+        multiplier: 2.4 // 1:2.4 payout for blue
+    },
+    [WheelColor.COLOR4]: {
+        name: 'GREEN',
+        bgColor: 'bg-green-600',
+        textColor: 'text-green-900',
+        borderColor: 'border-green-600',
+        shadowColor: 'shadow-green-500/50',
+        actualColor: '#16A34A',
+        multiplier: 2.4 // 1:2.4 payout for green
+    },
+    [WheelColor.COLOR5]: {
+        name: 'PURPLE',
+        bgColor: 'bg-purple-600',
+        textColor: 'text-purple-900',
+        borderColor: 'border-purple-600',
+        shadowColor: 'shadow-purple-500/50',
+        actualColor: '#7C3AED',
+        multiplier: 4.8// 1:2.4 payout for purple
+    }
+};
+
 
 export class RoundRecord {
     id: number;
@@ -22,6 +74,7 @@ export class RoundRecord {
     placementStartTime: Date;
     placementEndTime: Date;
     market: MarketItem[];
+    gameType: RoundRecordGameType;
     type: SchedulerType;
     roundRecordGameType: RoundRecordGameType;
     winningId?: number[];
@@ -31,6 +84,11 @@ export class RoundRecord {
     slotValues: { [code: string]: { upperValue: number; lowerValue: number } } | null;
     deletedAt?: Date;
     initialValues: Record<string, number> | null;
+    winningSide?: HeadTailPlacementType;
+    marketColors: {
+        color: WheelColor;
+        marketId: number;
+    }[];
 
     constructor(data: Partial<RoundRecord>) {
         this.id = data.id || 0;
@@ -45,14 +103,26 @@ export class RoundRecord {
         this.winningMarket = data.winningMarket;
         this.winningId = data.winningId;
         this.roundRecordGameType = data.roundRecordGameType || RoundRecordGameType.DERBY;
+        this.gameType = data.gameType || RoundRecordGameType.DERBY;
         this.createdAt = data.createdAt ? new Date(data.createdAt) : new Date();
         this.updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
         this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : undefined;
         this.initialValues = data.initialValues || null;
+        this.winningSide = data.winningSide || undefined;
+        this.marketColors = data.marketColors || [];
     }
 
     getSlotValues(code: string): { upperValue: number; lowerValue: number } {
         return this.slotValues?.[code] || { upperValue: 0, lowerValue: 0 };
+    }
+    marketColor(marketId: number): WheelColor | undefined {
+        return this.marketColors.find(item => item.marketId === marketId)?.color || undefined;
+    }
+
+    marketColorConfig(marketId: number): ColorConfig | undefined {
+        const color = this.marketColor(marketId);
+        if (!color) return undefined;
+        return WHEEL_COLOR_CONFIG[color];
     }
 
 

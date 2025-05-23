@@ -6,10 +6,9 @@ import {
 } from "@react-three/drei";
 import { Physics } from "@react-three/rapier";
 import FenceRow from "./fence-row";
+import { Ground } from "./Ground";
 import HorseAnimation from "./horse-animation";
 import MovingPeople from "./people-model";
-import { RaceTrack } from "./race-track";
-import { Ground } from "./Ground";
 type Props = {
     roundRecord: RoundRecord;
     filteredMarket?: MarketItem[];
