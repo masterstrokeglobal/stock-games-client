@@ -18,6 +18,7 @@ class User {
     placementNotAllowed: SchedulerType[];
     company?: Company;
     createdAt?: Date;
+    demoUser?: boolean;
     updatedAt?: Date;
     deletedAt?: Date;
 
@@ -34,6 +35,7 @@ class User {
         this.otpSecret = params.otpSecret;
         this.isVerified = params.isVerified;
         this.profileImage = params.profileImage;
+        this.demoUser = params.demoUser;
 
         if (params.company) {
             this.company = new Company(params.company);
@@ -54,6 +56,9 @@ class User {
         return `${this.firstname} ${this.lastname}`;
     }
 
+    get isDemoUser() {
+        return this.demoUser;
+    }
 }
 
 export default User;

@@ -9,10 +9,11 @@ import casinoGamesColumns from "@/columns/casino-games";
 import { useGetCasinoGames } from "@/react-query/casino-games-queries";
 import { GameCategory, ProviderEnum } from "@/models/casino-games";
 import { ComboboxSelect } from "@/components/ui/combobox";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const providerOptions = Object.values(ProviderEnum).map((provider) => ({
+const providerOptions : {label: string, value: string}[] = Object.values(ProviderEnum).map((provider) => ({
     label: provider.split("_").join(" ").charAt(0).toUpperCase() + provider.split("_").join(" ").slice(1),
-    value: provider.toLowerCase()
+    value: provider
 })).sort((a, b) => a.label.localeCompare(b.label));
 
 providerOptions.unshift({
@@ -21,9 +22,9 @@ providerOptions.unshift({
 })
 
 
-const CategoryOptions = Object.values(GameCategory).map((category) => ({
+const CategoryOptions : {label: string, value: string}[] = Object.values(GameCategory).map((category) => ({
     label: category.split("_").join(" ").charAt(0).toUpperCase() + category.split("_").join(" ").slice(1),
-    value: category.toLowerCase()
+    value: category
 })).sort((a, b) => a.label.localeCompare(b.label));
 
 CategoryOptions.unshift({
@@ -40,18 +41,20 @@ const CasinoGames = () => {
         provider: string;
         category: string;
         page: number;
+        limit: number;
     }>({
         search: "",
         provider: "all",
         category: "all",
-        page: 1
+        page: 1,
+        limit: 10
     });
 
 
     const { data, isFetching } = useGetCasinoGames({
         page: filter.page,
         search: filter.search,
-        limit: 10,
+        limit: filter.limit,
         provider: filter.provider === "all" ? undefined : filter.provider as ProviderEnum,
         category: filter.category === "all" ? undefined : filter.category as GameCategory
     });
@@ -64,7 +67,7 @@ const CasinoGames = () => {
         setFilter({ ...filter, page: newPage });
     };
 
-    const totalPage = Math.ceil(data?.count ? data.count / 10 : 1);
+    const totalPage = Math.ceil(data?.count ? data.count / filter.limit : 1);
 
     return (
         <section className="container-main min-h-[60vh] my-12">
@@ -85,7 +88,7 @@ const CasinoGames = () => {
                         defaultValue={filter.provider?.toString()}
                         placeholder="Select Provider"
                         value={filter.provider?.toString()}
-                        className="w-40"
+                        className="min-w-40"
                         onValueChange={(value) => setFilter({ ...filter, provider: value as ProviderEnum })}
                     />
 
@@ -95,10 +98,23 @@ const CasinoGames = () => {
                         placeholder="Select Category"
                         value={filter.category?.toString()}
                         onValueChange={(value) => setFilter({ ...filter, category: value as GameCategory })}
-                        className="w-40"
+                        className="min-w-40"
                     />
 
 
+                    <Select onValueChange={(value) => setFilter({ ...filter, limit: parseInt(value) })} value={filter.limit.toString()}>
+                        <SelectTrigger className="w-24">
+                            <SelectValue placeholder="Select Limit" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                            <SelectLabel>Limit</SelectLabel>
+                            <SelectItem value="10">10</SelectItem>
+                            <SelectItem value="50">50</SelectItem>
+                            <SelectItem value="100">100</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
                 </div>
             </header>
             <main className="mt-4">

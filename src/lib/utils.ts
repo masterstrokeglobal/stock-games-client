@@ -43,7 +43,7 @@ export const getPlacementString = (bet: { market: number[], placementType: Place
   switch (bet.placementType) {
 
     case PlacementType.SINGLE:
-      return `Single ${HorseNumbers[0] == 17? '0' : HorseNumbers[0]}`;
+      return `Single ${HorseNumbers[0] == 17 ? '0' : HorseNumbers[0]}`;
     case PlacementType.SPLIT:
       return `Split ${HorseNumbers[0]}-${HorseNumbers[1]}`;
     case PlacementType.QUARTER:
@@ -200,13 +200,13 @@ export const ROULETTE_COLORS = [
   { number: 1, color: 'red' }, { number: 2, color: 'black' }, { number: 3, color: 'red' }, { number: 4, color: 'black' },
   { number: 5, color: 'black' }, { number: 6, color: 'red' }, { number: 7, color: 'black' }, { number: 8, color: 'red' },
   { number: 9, color: 'red' }, { number: 10, color: 'black' }, { number: 11, color: 'red' }, { number: 12, color: 'black' },
-  { number: 13, color: 'black' }, { number: 14, color: 'red' }, { number: 15, color: 'black' }, { number: 16, color: 'red' },{number:17,color:'green'}
+  { number: 13, color: 'black' }, { number: 14, color: 'red' }, { number: 15, color: 'black' }, { number: 16, color: 'red' }, { number: 17, color: 'green' }
 ];
 
 export const googleAuth = () => {
   window.open(
-      ` ${process.env.NEXT_PUBLIC_API_URL}auth/google?companyId=${process.env.NEXT_PUBLIC_COMPANY_ID}`,
-      "_self"
+    ` ${process.env.NEXT_PUBLIC_API_URL}auth/google?companyId=${process.env.NEXT_PUBLIC_COMPANY_ID}`,
+    "_self"
   );
 };
 
@@ -289,3 +289,12 @@ export const generateNewCameraPosition = (currentPosition: [number, number, numb
   return [newX, y, newZ];
 }
 
+export const baseTheme = {
+  "radius": "0.5rem;",
+  "accent-secondary": "#5fd9ed",
+  "primary": "#001e34", "gameText": "#07171F", "tertiary": "#000000", "secondary": "#ADEBFF", "chip-color": "#f78a32", "borderColor": "rgba(85, 176, 255, 0.31)", "input-field": "#000000", "top-bar-text": "#FFFFFF", "backgroundGame": "#FFFFFF", "bet-button-end": "#279BFF", "bet-button-mid": "#4DAAFF", "last-winner-bg": "#a0b1c3", "redGradientEnd": "#ad0707", "bet-button-start": "#0D7FE1", "blackGradientEnd": "#000000", "innerShadowColor": "rgba(208, 232, 253, 0.05)", "redGradientStart": "#ad0707", "bet-button-border": "#55B0FF", "gameTextSecondary": "#FFFFFF", "blackGradientStart": "#000000", "gameHeaderHighlight": "linear-gradient(to right, #fafafa, transparent)", "secondary-background": "#003459", "input-field-background": "#ffffff"
+};
+
+export const decodeUrlString = (encoded: string): string => {
+  return decodeURIComponent(encoded);
+}

@@ -83,7 +83,6 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     /* Gradients */
     --routelette-black-gradient: linear-gradient(180deg, var(--routelette-black-gradient-start) 0%, var(--routelette-black-gradient-end) 100%);
     --routelette-red-gradient: linear-gradient(180deg, var(--routelette-red-gradient-start) 0%, var(--routelette-red-gradient-end) 100%);
-
     --background-game: #253e78;
     --game-text: #FFFFFF;
 
@@ -98,7 +97,12 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     /* game background */
     --secondary-background: #0a0a0a;
 
-    --top-bar-text: "#FFFFFF",
+    --accent-secondary: #61d8ea;
+    --accent-secondary-foreground: var(--primary);
+
+    --top-bar-text: "#FFFFFF";
+    --animate-marquee: marquee var(--duration) infinite linear;
+    --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
   }
 
 
@@ -112,7 +116,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
     --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
+    --secondary: #003459;
     --secondary-foreground: 0 0% 98%;
     --muted: 0 0% 14.9%;
     --muted-foreground: 0 0% 63.9%;
@@ -307,6 +311,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   color: black;
   opacity: 0.6;
 }
+input[type="date"]::-webkit-calendar-picker-indicator.dark {
+  color: white;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+
 
 .gold-button {
   background: linear-gradient(145deg, #ff3c3c, #ff7a00); /* Reversed gradient */
@@ -356,3 +369,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+@keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+  }
+}

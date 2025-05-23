@@ -15,7 +15,7 @@ const Navbar = ({ className }: Props) => {
     const { isLoggedIn } = useAuthStore();
 
     return (
-        <nav className={cn("items-center md:px-6 px-4 z-50  flex fixed top-0 justify-between font-semibold w-full h-14 bg-primary-game", className)}>
+    <nav className="items-center md:px-6 px-4 z-50 border-b-2 border-accent-secondary  flex fixed top-0 justify-between font-semibold w-full h-14 bg--game bg-primary-game">
             <div className="flex items-center space-x-4 ">
                 <Link href="/game/platform">
                     <span className="md:text-xl text-sm font-semibold flex items-end">
@@ -37,7 +37,6 @@ const Navbar = ({ className }: Props) => {
                     </Link>
                 </div>}
             </div>
-            <div className="h-0.5 bottom-0 absolute w-full md:-mx-12 -mx-4" style={{ background: "radial-gradient(51.91% 51.91% at 48.09% 91.82%, #2397FA 0%, rgba(35, 151, 250, 0) 100%)" }} />
         </nav>
     );
 }

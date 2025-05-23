@@ -1,4 +1,4 @@
-import { COMPANYID } from "@/lib/utils";
+import { baseTheme, COMPANYID } from "@/lib/utils";
 import Company from "@/models/company";
 import { useGetCompanyById } from "@/react-query/company-queries";
 import { useEffect, useMemo } from "react";
@@ -14,8 +14,7 @@ const ThemeManager = () => {
     }, [data, isSuccess]);
 
     useEffect(() => {
-        if (!company) return;
-        const theme = company.theme;
+        const theme = company?.theme || baseTheme;
         if (!theme) return;
 
         // Set main theme variables
@@ -35,7 +34,7 @@ const ThemeManager = () => {
         document.documentElement.style.setProperty('--bet-button-start', theme["bet-button-start"]);
         document.documentElement.style.setProperty('--bet-button-mid', theme["bet-button-mid"]);
         document.documentElement.style.setProperty('--bet-button-end', theme["bet-button-end"]);
-        document.documentElement.style.setProperty('--bet-button-border', theme["bet-button-border"]); 
+        document.documentElement.style.setProperty('--bet-button-border', theme["bet-button-border"]);
 
         // Set main theme variables
         document.documentElement.style.setProperty('--background-game', theme["backgroundGame"]);
@@ -97,6 +96,7 @@ const ThemeManager = () => {
 
         };
     }, [company]);
+
 
     return null;
 };

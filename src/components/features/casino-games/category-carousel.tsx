@@ -1,30 +1,29 @@
 "use client"
 
-import { useEffect } from "react"
-import { useGetCasinoGames } from "@/react-query/casino-games-queries"
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import GameCard from "@/components/features/casino-games/game-card"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import type { GameCategory } from "@/models/casino-games"
+import { useGetCasinoGames } from "@/react-query/casino-games-queries"
 
 interface CategoryCarouselProps {
     categoryId?: GameCategory,
     popular?: boolean,
     new?: boolean,
+    slot?: boolean,
+    liveGame?: boolean,
     title: string
 }
 
-export default function CategoryCarousel({ categoryId, title, popular, new: isNew }: CategoryCarouselProps) {
-    const { data, isLoading, refetch } = useGetCasinoGames({
-        category: categoryId,
-        limit: 10,
+export default function CategoryCarousel({ categoryId, title, popular, new: isNew, slot, liveGame  }: CategoryCarouselProps) {
+    const { data, isLoading } = useGetCasinoGames({
+        limit: 200,
         popular,
-        new: isNew
+        excludeCategory: categoryId,
+        new: isNew,
+        slot,
+        liveGame
     })
 
-    // Fetch games when component mounts
-    useEffect(() => {
-        refetch()
-    }, [refetch])
 
     if (isLoading) {
         return (
@@ -54,9 +53,9 @@ export default function CategoryCarousel({ categoryId, title, popular, new: isNe
                         <CarouselNext className="static translate-y-0 bg-background/20 hover:bg-background/40" />
                     </div>
                 </div>
-                <CarouselContent>
+                <CarouselContent className="py-4 overflow-visible">
                     {data.games.map((game) => (
-                        <CarouselItem key={game.id} className="basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 pl-4">
+                        <CarouselItem key={game.id} className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                             <GameCard game={game} />
                         </CarouselItem>
                     ))}

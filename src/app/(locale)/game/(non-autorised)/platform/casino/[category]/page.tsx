@@ -3,8 +3,7 @@
 import GameGrid from "@/components/features/casino-games/game-grid"
 import { GameAdsCarousel } from "@/components/features/platform/game-ads-carousel"
 import { Input } from "@/components/ui/input"
-import { useAuthStore } from "@/context/auth-context"
-import { checkCasinoAllowed } from "@/lib/utils"
+import { checkCasinoAllowed, COMPANYID, decodeUrlString } from "@/lib/utils"
 import { useGetCasinoGames } from "@/react-query/casino-games-queries"
 import { Search } from "lucide-react"
 import { notFound, useParams } from "next/navigation"
@@ -12,14 +11,13 @@ import { useState } from "react"
 
 export default function GamingAppInterface() {
     const [searchQuery, setSearchQuery] = useState("");
-    const category = useParams().category;
-    const { userDetails } = useAuthStore();
+    const category = decodeUrlString(useParams().category as string);
     const { data: searchResults, isLoading: searchLoading } = useGetCasinoGames({
         search: searchQuery || undefined,
         category: category || undefined,
     })
 
-    const isCasinoAllowed = checkCasinoAllowed(userDetails?.company?.id ?? 0);
+    const isCasinoAllowed = checkCasinoAllowed(COMPANYID);
 
     if (!isCasinoAllowed || !category) notFound();
     

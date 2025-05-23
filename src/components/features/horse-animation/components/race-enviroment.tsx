@@ -8,6 +8,8 @@ import { Physics } from "@react-three/rapier";
 import FenceRow from "./fence-row";
 import HorseAnimation from "./horse-animation";
 import MovingPeople from "./people-model";
+import { RaceTrack } from "./race-track";
+import { Ground } from "./Ground";
 type Props = {
     roundRecord: RoundRecord;
     filteredMarket?: MarketItem[];
@@ -42,7 +44,7 @@ const HorseRaceEnvironment = ({
                 <FenceRow x={-35} count={1000} spacing={16}   />
                 <FenceRow x={85} count={1000} spacing={16}  />
                 <HorseAnimation roundRecord={roundRecord} filteredMarket={filteredMarket} />
-
+                <Ground />
             </Physics>
         </>
     );

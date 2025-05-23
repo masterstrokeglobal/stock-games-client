@@ -1,5 +1,5 @@
 "use client";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn, getPlacementString, randomNumber, randomUsername } from "@/lib/utils";
 import GameRecord from "@/models/game-record";
 import { RoundRecord } from "@/models/round-record";
@@ -105,7 +105,7 @@ const CurrentBets = ({ className, round }: Props) => {
                                     {t("username")}
                                 </th>
                                 <th className="p-2 text-sm text-right text-game-secondary rounded-tr-lg flex-1">
-                                Rs. {t("amount")}
+                                   {t("amount")}
                                 </th>
                             </tr>
                         </thead>
@@ -129,6 +129,8 @@ const CurrentBets = ({ className, round }: Props) => {
                             ))}
                         </tbody>
                     </table>
+                    <ScrollBar orientation="vertical" />
+                    <ScrollBar orientation="horizontal" />
                 </ScrollArea>
             </div>
         </section>

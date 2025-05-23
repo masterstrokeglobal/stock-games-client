@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/tooltip"
 import useWindowSize from "@/hooks/use-window-size"
 import { cn } from "@/lib/utils"
-import { GameCategory } from "@/models/casino-games"
 import {
     IconCoins,
     IconDice,
@@ -28,8 +27,8 @@ const navItems = [
     { icon: IconHome, label: "Home", href: "/game/platform" },
     { icon: IconCoins, label: "Stock Market", href: `/game/platform/stock-games` },
     { icon: IconDice, label: "Casino Games", href: "/game/platform/casino" },
-    { icon: IconLayoutGrid, label: "Table Games", href: `/game/platform/casino/${GameCategory.TABLE_GAMES}` },
-    { icon: IconVideo, label: "Live Casino", href: `/game/platform/casino/${GameCategory.LIVE}` },
+    { icon: IconLayoutGrid, label: "Slot Games", href: `/game/platform/casino/slot-games` },
+    { icon: IconVideo, label: "Live Casino", href: `/game/platform/casino/live-games` },
     { icon: IconMedal2, label: "Tiers", href: "/game/platform/tier" },
     { icon: IconWallet, label: "Wallet", href: "/game/wallet/menu" },
     { icon: IconGift, label: "Promotions", href: "/game/platform/promotion" },
