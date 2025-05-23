@@ -39,6 +39,10 @@ export class StockSlotJackpot {
         this.updatedAt = params.updatedAt ? new Date(params.updatedAt) : new Date();
         this.deletedAt = params.deletedAt ? new Date(params.deletedAt) : undefined;
     }
+
+    get typeName() {
+        return this.placement === StockSlotJackpotPlacementType.ZEROTH ? "Last Digit" : this.placement === StockSlotJackpotPlacementType.TENTH ? "First Digit" : "Both Digits";
+    }
 }
 
 

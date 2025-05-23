@@ -56,7 +56,6 @@ export default function GamingAppInterface() {
 
     if (!isCasinoAllowed) notFound();
 
-    console.log(filter)
     const areFiltersApplied = filter.search || filter.category !== "all" || filter.provider !== "all";
 
     console.log(areFiltersApplied)
@@ -116,11 +115,11 @@ export default function GamingAppInterface() {
                 ) : (
                     <div className="space-y-12">
                         {/* most popular games , ne games with emoji  */}
-                        <CategoryCarousel title="🔥 Hot Games" popular={true} />
+                        <CategoryCarousel title="🔥 Most Popular Games" popular={true} />
                         <CategoryCarousel title="🎲 Table Games" categoryId={GameCategory["Table game"]} />
                         <CategoryCarousel title="🎰 Casino Games" categoryId={GameCategory["Live Dealer"]} />
                         <CategoryCarousel title="🆕 New Games" new={true} />
-                        <CasinoProviders />
+                        <CasinoProviders /> 
                     </div>
                 )}
             </main>

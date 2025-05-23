@@ -1,5 +1,6 @@
 "use client"
 
+import FavoriteMarketItem from "@/components/common/favorite-markitem"
 import { Card } from "@/components/ui/card"
 import { useIsPlaceOver } from "@/hooks/use-current-game"
 import { RankedMarketItem } from "@/hooks/use-leadboard"
@@ -70,7 +71,8 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
   const bettingOpen = !isPlaceOver && !isPlacingBet;
 
   return (
-    <Card className="w-full bg-gradient-to-r from-gray-900 to-gray-800 border-primary text-white">
+    <Card className="w-full bg-gradient-to-r md:pr-8 from-gray-900 to-gray-800 border-primary relative text-white">
+    {marketItem.id && <FavoriteMarketItem marketItemId={marketItem.id} className="absolute top-1 right-1" />}
       <div className="p-2 sm:p-4 flex flex-col lg:flex-row w-full gap-2 sm:gap-4">
         {/* Part 1: Stock Details */}
         <div className="flex-1 bg-gray-800/50 rounded-lg p-2 sm:p-3 flex flex-col justify-between">

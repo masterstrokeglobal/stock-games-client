@@ -6,6 +6,7 @@ import { motion, type PanInfo } from "framer-motion"
 import { Input } from "@/components/ui/input"
 import { StockSlotJackpotPlacementType } from "@/models/stock-slot-jackpot"
 import { cn } from "@/lib/utils"
+import { UnifrakturMaguntia } from "next/font/google"
 interface DigitPickerProps {
   betType: StockSlotJackpotPlacementType
   onChange: (digits: string) => void
@@ -13,6 +14,12 @@ interface DigitPickerProps {
   value?: string
   showInput?: boolean
 }
+
+const fontVariable = UnifrakturMaguntia({
+  weight: "400",
+  subsets: ["latin"],
+})
+
 
 export function DigitPicker({ betType, onChange, value = betType === "both" ? "00" : "0", disabled = false, showInput = true }: DigitPickerProps) {
   const digitCount = betType === "both" ? 2 : 1
@@ -104,7 +111,7 @@ export function DigitPicker({ betType, onChange, value = betType === "both" ? "0
 
   return (
     <div className="flex flex-col h-full justify-between  items-center">
-      <div className="flex justify-center items-center ">
+      <div className="flex justify-center items-center gap-3  ">
         {Array(digitCount)
           .fill(0)
           .map((_, index) => (
@@ -118,27 +125,27 @@ export function DigitPicker({ betType, onChange, value = betType === "both" ? "0
       </div>
 
       {showInput && (
-      <div className="w-full mt-2">
-        <Input
-          type="text"
-          disabled={disabled}
-          value={inputValue}
-          onChange={handleInputChange}
-          onBlur={handleInputBlur}
-          onFocus={handleInputFocus}
-          className="w-full bg-[#2A2F42] border border-[#3A3F52] rounded-md px-3 py-2 text-center text-white text-xl font-semibold focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
-          placeholder={betType === "zeroth" ? "0-9" : "00-99"}
-          inputMode="numeric"
-          maxLength={digitCount}
-        />
-      </div>
+        <div className="w-full mt-2">
+          <Input
+            type="text"
+            disabled={disabled}
+            value={inputValue}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+            onFocus={handleInputFocus}
+            className="w-full bg-[#2A2F42] border border-[#3A3F52] rounded-md px-3 py-2 text-center text-white text-xl font-semibold focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+            placeholder={betType === "zeroth" ? "0-9" : "00-99"}
+            inputMode="numeric"
+            maxLength={digitCount}
+          />
+        </div>
       )}
     </div>
   )
 }
 
 // Separate component for each digit reel
-function DigitReel({ selectedDigit, onChange, disabled }: { selectedDigit: number; onChange: (digit: number) => void , disabled: boolean}) {
+function DigitReel({ selectedDigit, onChange, disabled }: { selectedDigit: number; onChange: (digit: number) => void, disabled: boolean }) {
   const [isDragging, setIsDragging] = useState(false)
   const reelRef = useRef<HTMLDivElement>(null)
 
@@ -184,11 +191,14 @@ function DigitReel({ selectedDigit, onChange, disabled }: { selectedDigit: numbe
 
   return (
     <div
-      className={cn("relative w-16 h-[180px] overflow-hidden bg-[#0F1221] border border-[#3A3F52] rounded-md mx-1", disabled && "opacity-50")}
+      className={cn("relative w-16 h-[180px] overflow-hidden  border-x border-[#3A3F52] rounded-md ", disabled && "opacity-50", fontVariable.className)}
       ref={reelRef}
     >
+      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#00ffff] shadow-[0_0_10px_#00ffff,0_0_15px_#00ffff] opacity-80"></div>
+      <div className="absolute right-0 top-0 bottom-0 w-[3px] bg-[#00ffff] shadow-[0_0_10px_#00ffff,0_0_15px_#00ffff] opacity-80"></div>
+
       {/* Highlight for the selected digit */}
-      <div className="absolute top-1/2 left-0 right-0 h-[60px] transform -translate-y-1/2 bg-[#2A2F42]/50 border-y-2 border-amber-500 z-10"></div>
+      <div className="absolute top-1/2 left-0 right-0 h-[60px] transform -translate-y-1/2  z-10"></div>
 
       {/* The reel with all digits */}
       <motion.div
@@ -205,8 +215,10 @@ function DigitReel({ selectedDigit, onChange, disabled }: { selectedDigit: numbe
         {digits.map((digit) => (
           <div
             key={digit}
-            className={`h-[60px] flex items-center justify-center text-2xl font-bold cursor-pointer
-              ${digit === selectedDigit && !isDragging ? "text-amber-500 glow text-3xl" : "text-white"}`}
+            className={cn("h-[60px] flex items-center justify-center text-[27px] text-shadow-3d font-bold cursor-pointer  font-mono ",
+               digit === selectedDigit && !isDragging ? "glow text-3xl" : "text-white", 
+               fontVariable.className,
+                digit % 2 === 0 ? "text-[#FF2B49] drop-shadow-[0_0_10px_#FF2B49]" : "text-[#00AEEF] drop-shadow-[0_0_10px_#00AEEF] ")}
             onClick={() => handleDigitClick(digit)}
           >
             {digit}
