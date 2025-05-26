@@ -28,7 +28,6 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord, result }:
     }, [roundRecord, refetch]);
 
     const winningNumbers: number[] = useMemo(() => {
-        console.log(result, "result");
         if (result) {
             return result.winningItems?.map(item => {
                 // Find the market item that matches the winning item code

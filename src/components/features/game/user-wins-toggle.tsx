@@ -97,7 +97,6 @@ const UserWins = ({ className }: { className?: string }) => {
     return () => clearInterval(interval);
   }, [type]);
 
-  console.log(displayWinnings);
 
   return (
     <Marquee className={cn("w-full overflow-hidden [--duration:500s]  bg-black/80 text-white p-2 text-xs h-6", className)}>

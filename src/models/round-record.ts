@@ -25,7 +25,7 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
         borderColor: 'border-yellow-600',
         shadowColor: 'shadow-yellow-500/50',
         actualColor: '#FFD700',
-        multiplier: 2.4
+        multiplier: 2
     },
     [WheelColor.COLOR2]: {
         name: 'RED',
@@ -34,7 +34,7 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
         borderColor: 'border-red-600',
         shadowColor: 'shadow-red-500/50',
         actualColor: '#DC2626',
-        multiplier: 2.4 // 1:2.4 payout for red
+        multiplier: 2
     },
     [WheelColor.COLOR3]: {
         name: 'BLUE',
@@ -43,7 +43,7 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
         borderColor: 'border-blue-600',
         shadowColor: 'shadow-blue-500/50',
         actualColor: '#2563EB',
-        multiplier: 2.4 // 1:2.4 payout for blue
+        multiplier: 2
     },
     [WheelColor.COLOR4]: {
         name: 'GREEN',
@@ -52,7 +52,7 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
         borderColor: 'border-green-600',
         shadowColor: 'shadow-green-500/50',
         actualColor: '#16A34A',
-        multiplier: 2.4 // 1:2.4 payout for green
+        multiplier: 2
     },
     [WheelColor.COLOR5]: {
         name: 'PURPLE',
@@ -61,7 +61,7 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
         borderColor: 'border-purple-600',
         shadowColor: 'shadow-purple-500/50',
         actualColor: '#7C3AED',
-        multiplier: 4.8// 1:2.4 payout for purple
+        multiplier: 2
     }
 };
 

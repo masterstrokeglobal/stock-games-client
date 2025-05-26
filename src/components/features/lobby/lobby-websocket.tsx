@@ -27,7 +27,6 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, gameType }: { 
         const chatQueryKey = ["lobbies", "chat", lobbyId];
         const lobbyRoundQueryKey = ["lobbies", "round", lobbyId];
 
-        console.log('Game type:', gameType);
 
         switch (message.event) {
             case LobbyEvents.USER_JOINED:
@@ -73,7 +72,6 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, gameType }: { 
                 if (gameType == LobbyGameType.MINI_MUTUAL_FUND) {
                     url = `/game/lobby/${lobbyCode}/play/mini-mutual-fund`;
                 }
-                console.log('Redirecting to:', url, gameType);
 
                 router.push(url);
                 break;
@@ -135,7 +133,7 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, gameType }: { 
                 break;
 
             default:
-                console.log('Unknown event:', message);
+                break;
         }
     }, [lobbyCode, lobbyId, queryClient, router]);
 
@@ -143,7 +141,6 @@ function useLobbyWebSocket<T extends Lobby>({ lobbyCode, lobbyId, gameType }: { 
     useEffect(() => {
         if (!lobbyId || !userDetails?.id) return;
 
-        console.log('Connecting to lobby websocket', lobbyId, userDetails.id);
         const wsInstance = WebSocketSingleton.getInstance();
         wsInstance.connect(lobbyId, userDetails.id.toString());
         wsInstance.addListener(handleAction);

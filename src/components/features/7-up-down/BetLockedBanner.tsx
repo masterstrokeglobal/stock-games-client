@@ -3,8 +3,8 @@ import { cn } from "@/lib/utils"
 import { RoundRecord } from "@/models/round-record"
 
 const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, className?: string }) => {
-  const { gameTimeLeft, isPlaceOver, placeTimeLeft } = useGameState(roundRecord)
-  const statusText = isPlaceOver ? "Betting Closed" : "Betting Open"
+  const { gameTimeLeft, isPlaceOver, placeTimeLeft, isGameOver } = useGameState(roundRecord)
+  const statusText = isPlaceOver ? isGameOver ? "Game Over" : "Betting Closed" : "Betting Open"
 
   return (<div className={cn(className)}>
     <div className="bg-gradient-to-r from-blue-900 px-4 via-blue-800 to-blue-900 h-14 rounded-b-full shadow-lg flex items-center justify-center relative overflow-hidden">

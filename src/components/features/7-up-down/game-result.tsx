@@ -30,7 +30,6 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
   // Check if the result is a win or loss
   const isWin = data && Number(data.netProfitLoss) >= 0;
 
-  console.log(data);    
   return (  
     <Dialog open={showDialog}>
       <DialogContent className="sm:max-w-md bg-primary-game text-white [&>.close-button]:hidden" data-hide-children="true">

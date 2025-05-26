@@ -1,16 +1,19 @@
 "use client"
 import GameLoadingScreen from '@/components/common/game-loading-screen';
+import MarketSelector from '@/components/common/market-selector';
 import TimeDisplay from '@/components/features/7-up-down/BetLockedBanner';
 import { BettingArea } from '@/components/features/wheel-of-fortune/betting-area';
 import GameBoard from '@/components/features/wheel-of-fortune/game-board';
 import { StockPriceDisplay } from '@/components/features/wheel-of-fortune/stock-price';
 import { useCurrentGame } from '@/hooks/use-current-game';
+import { useMarketSelector } from '@/hooks/use-market-selector';
 import { RoundRecord } from '@/models/round-record';
 import { RoundRecordGameType } from '@/models/round-record';
 import { useGetRoundRecordById } from '@/react-query/round-record-queries';
 import { useEffect, useMemo, useState } from 'react';
 
 const WheelOfFortune = () => {
+    const { marketSelected } = useMarketSelector();
     const [betAmount, setBetAmount] = useState<number>(100);
     const { roundRecord, isLoading } = useCurrentGame(RoundRecordGameType.WHEEL_OF_FORTUNE);
 
@@ -28,11 +31,12 @@ const WheelOfFortune = () => {
 
     const winningMarketId: number[] | null = useMemo(() => {
         if (!isSuccess) return null;
-        console.log(data?.data)
         if (roundRecord?.id == data?.data?.id) return (data.data as RoundRecord).winningId || null;
         return null;
     }, [data, isSuccess, roundRecord]);
 
+
+    if (!marketSelected) return <MarketSelector className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Wheel of Fortune Market" />
 
     if (isLoading || !roundRecord) return <GameLoadingScreen className='min-h-[calc(100svh-100px)]' />
 

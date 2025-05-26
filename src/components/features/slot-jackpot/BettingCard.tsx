@@ -66,7 +66,7 @@ export function BettingCard({ marketItem, roundRecord, globalBetAmount }: Bettin
 
   return (
 
-    <div className="">
+    <div className=" selection:bg-transparent">
       <Card className="w-full relative bg-gradient-to-r md:pr-8 bg-gray-900  border border-gray-700 text-white">
         <div className="card__border" />
         {marketItem.id && <FavoriteMarketItem marketItemId={marketItem.id} className="absolute top-2 right-2" />}

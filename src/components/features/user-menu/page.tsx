@@ -30,7 +30,6 @@ const UserMenu = () => {
     }, [data])
     const user = userDetails as User;
 
-    console.log(user)
 
     return (
         <>

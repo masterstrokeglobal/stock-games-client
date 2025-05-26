@@ -1,7 +1,7 @@
 "use client";
 import CasinoCarousel from "@/components/features/platform/carousel-game-cards";
 import { GameAdsCarousel } from "@/components/features/platform/game-ads-carousel";
-import { Game, LOBBY_GAMES, SinglePlayerGames, StockDerbyGames } from "@/lib/constants";
+import { LOBBY_GAMES, SinglePlayerGames, StockDerbyGames } from "@/lib/constants";
 export default function GamingAppInterface() {
 
     return (
@@ -9,9 +9,9 @@ export default function GamingAppInterface() {
 
             <GameAdsCarousel />
 
-            <CasinoCarousel games={StockDerbyGames as unknown as Game[]} title="Stock Games" />
-            <CasinoCarousel games={SinglePlayerGames as unknown as Game[]} title="Single Player Games" />
-            <CasinoCarousel games={LOBBY_GAMES as unknown as Game[]} title="Multiplayer Games" />
+            <CasinoCarousel games={StockDerbyGames} title="Stock Games" />
+            <CasinoCarousel games={SinglePlayerGames} title="Single Player Games" />
+            <CasinoCarousel games={LOBBY_GAMES} title="Multiplayer Games" />
         </div>
     )
 }

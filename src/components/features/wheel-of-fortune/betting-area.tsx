@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { useAuthStore } from '@/context/auth-context';
 import { useIsPlaceOver, useShowResults } from '@/hooks/use-current-game';
 import { cn, INR } from '@/lib/utils';
-import { RoundRecord } from '@/models/round-record';
+import { RoundRecord, WHEEL_COLOR_CONFIG } from '@/models/round-record';
 import { useGetMyCurrentRoundWheelOfFortunePlacement } from "@/react-query/wheel-of-fortune-queries";
 import React from 'react';
 import WheelOfFortuneResultDialog from "./game-result";
@@ -43,14 +43,14 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
                 <div className="flex items-center gap-3">
                   <div className="bg-gradient-to-br from-amber-500/30 to-red-500/30 p-3 rounded-lg">
                     <div className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-red-400">
-                      {placement.placementColor}
+                      {WHEEL_COLOR_CONFIG[placement.placementColor].name}
                     </div>
                   </div>
                   <div className="flex flex-col">
                     <span className="text-sm text-amber-200 opacity-70">
                       {placement.placementColor} Bet
                     </span>
-                    <span className="text-xs text-amber-300/50">1:0.7</span>
+                    <span className="text-xs text-amber-300/50">1:{WHEEL_COLOR_CONFIG[placement.placementColor].multiplier}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">

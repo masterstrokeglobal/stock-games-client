@@ -41,7 +41,6 @@ const SchedulerForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
 
     const { control, handleSubmit } = form;
 
-    console.log(form.formState.errors)
 
     return (
         <FormProvider methods={form} onSubmit={handleSubmit(onSubmit, (e) => console.error(e))} className="space-y-4">

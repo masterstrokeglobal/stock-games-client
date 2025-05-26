@@ -58,7 +58,6 @@ export default function GamingAppInterface() {
 
     const areFiltersApplied = filter.search || filter.category !== "all" || filter.provider !== "all";
 
-    console.log(areFiltersApplied)
     return (
         <>
             <GameAdsCarousel />

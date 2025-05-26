@@ -1,7 +1,7 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { RankedMarketItem } from '@/hooks/use-leadboard';
 import { useLeaderboardAggregation } from "@/hooks/use-mini-mutual-fund-aggrigation";
-import { cn, LEVERAGE_MULTIPLIER } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
 import MiniMutualFundPlacement from "@/models/mini-mutual-fund";
 import { useGetCurrentRoundPlacements } from "@/react-query/game-record-queries";
@@ -24,7 +24,7 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
         return isSuccess ? data?.data.placements : [];
     }, [isSuccess, data]);
 
-    const userPlacements = useLeaderboardAggregation(placements, leaderboardData);
+    const userPlacements = useLeaderboardAggregation(placements, leaderboardData, false);
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('en-US', {
             minimumFractionDigits: 2,
@@ -41,8 +41,8 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
 
     const sortedUserPlacements = useMemo(() => {
         return [...userPlacements].sort((a, b) => {
-            const aProfit = a.potentialReturn - a.bettedAmount / LEVERAGE_MULTIPLIER;
-            const bProfit = b.potentialReturn - b.bettedAmount / LEVERAGE_MULTIPLIER;
+            const aProfit = a.potentialReturn - a.bettedAmount ;
+            const bProfit = b.potentialReturn - b.bettedAmount ;
             return bProfit - aProfit;
         });
     }
@@ -77,8 +77,8 @@ const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
 
                             <td className="p-2 text-left">{item.username}</td>
                             <td className="p-2 text-left">{formatPrice(item.bettedAmount)}</td>
-                            <td className={cn("p-2 text-left whitespace-nowrap", getColor(item.potentialReturn - item.bettedAmount/LEVERAGE_MULTIPLIER))}>
-                                Rs. {formatPrice(item.potentialReturn - item.bettedAmount/LEVERAGE_MULTIPLIER)}
+                            <td className={cn("p-2 text-left whitespace-nowrap", getColor(item.potentialReturn - item.bettedAmount))}>
+                                Rs. {formatPrice(item.potentialReturn - item.bettedAmount)}
                             </td>
                             <td className="p-2 text-right whitespace-nowrap">
                                 {formatPrice(item.potentialReturn)} ({item.changePercent.toFixed(2)}%)

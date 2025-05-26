@@ -24,7 +24,6 @@ const GoogleLoginButton = () => {
                 className: "w-full !h-12"
             }}
             onSuccess={(credentialResponse) => {
-                console.log(credentialResponse);
                 if (credentialResponse.credential) {
                     handleGoogleLogin(credentialResponse.credential);
                 }
