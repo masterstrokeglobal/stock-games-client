@@ -7,7 +7,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip"
 import useWindowSize from "@/hooks/use-window-size"
-import { cn } from "@/lib/utils"
+import { checkCasinoAllowed, cn, COMPANYID } from "@/lib/utils"
 import {
     IconCoins,
     IconDice,
@@ -26,15 +26,23 @@ import { usePathname, useRouter } from "next/navigation"
 const navItems = [
     { icon: IconHome, label: "Home", href: "/game/platform" },
     { icon: IconCoins, label: "Stock Market", href: `/game/platform/stock-games` },
-    { icon: IconDice, label: "Casino Games", href: "/game/platform/casino" },
-    { icon: IconLayoutGrid, label: "Slot Games", href: `/game/platform/casino/slot-games` },
-    { icon: IconVideo, label: "Live Casino", href: `/game/platform/casino/live-games` },
+
     { icon: IconMedal2, label: "Tiers", href: "/game/platform/tier" },
     { icon: IconWallet, label: "Wallet", href: "/game/wallet/menu" },
     { icon: IconGift, label: "Promotions", href: "/game/platform/promotion" },
     { icon: IconHelpCircle, label: "How to Play", href: "/game/platform/how-to-play" },
     { icon: IconHeadphones, label: "Support — Call Now!", href: "/game/contact" },
-]
+];
+
+const casinoItems = [
+    { icon: IconDice, label: "Casino Games", href: "/game/platform/casino" },
+    { icon: IconLayoutGrid, label: "Slot Games", href: `/game/platform/casino/slot-games` },
+    { icon: IconVideo, label: "Live Casino", href: `/game/platform/casino/live-games` },
+];
+
+const withCasino = [...navItems];
+
+withCasino.splice(2, 0, ...casinoItems);
 
 interface SidebarProps {
     className?: string;
@@ -47,6 +55,9 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
     const { isMobile } = useWindowSize();
     const router = useRouter();
 
+    const isCasinoAllowed = checkCasinoAllowed(COMPANYID);
+
+    const sideBarItems = isCasinoAllowed ? withCasino : navItems;
     return (
         <aside
             className={cn(
@@ -69,7 +80,7 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
                 <ScrollArea className="flex-1">
                     <nav className={cn("space-y-1 px-2 py-4", !sidebarOpen && "hidden md:block")}>
                         <TooltipProvider>
-                            {navItems.map((item, index) => {
+                            {sideBarItems.map((item, index) => {
                                 const isActive = pathname === item.href
                                 return (
                                     <Tooltip key={index}>
