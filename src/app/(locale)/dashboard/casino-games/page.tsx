@@ -7,7 +7,7 @@ import React, { useState } from "react";
 
 import casinoGamesColumns from "@/columns/casino-games";
 import { useGetCasinoGames } from "@/react-query/casino-games-queries";
-import { GameCategory, ProviderEnum } from "@/models/casino-games";
+import { GameCategory, GameTypeEnum, ProviderEnum } from "@/models/casino-games";
 import { ComboboxSelect } from "@/components/ui/combobox";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -33,6 +33,17 @@ CategoryOptions.unshift({
 })
 
 
+const typeOptions : {label: string, value: string}[] = Object.values(GameTypeEnum).map((type) => ({
+    label: type.split("_").join(" ").charAt(0).toUpperCase() + type.split("_").join(" ").slice(1),
+    value: type
+})).sort((a, b) => a.label.localeCompare(b.label));
+
+typeOptions.unshift({
+    label: "All",
+    value: "all"
+})
+
+
 
 const CasinoGames = () => {
 
@@ -40,12 +51,14 @@ const CasinoGames = () => {
         search: string;
         provider: string;
         category: string;
+        type: string;
         page: number;
         limit: number;
     }>({
         search: "",
         provider: "all",
         category: "all",
+        type: "all",
         page: 1,
         limit: 10
     });
@@ -55,6 +68,7 @@ const CasinoGames = () => {
         page: filter.page,
         search: filter.search,
         limit: filter.limit,
+        type: filter.type === "all" ? undefined : filter.type as GameTypeEnum,
         provider: filter.provider === "all" ? undefined : filter.provider as ProviderEnum,
         category: filter.category === "all" ? undefined : filter.category as GameCategory
     });
@@ -101,7 +115,14 @@ const CasinoGames = () => {
                         className="min-w-40"
                     />
 
-
+                    <ComboboxSelect
+                        options={typeOptions}
+                        defaultValue={filter.type?.toString()}
+                        placeholder="Select Type"
+                        value={filter.type?.toString()}
+                        onValueChange={(value) => setFilter({ ...filter, type: value as GameTypeEnum })}
+                        className="min-w-40"
+                    />
                     <Select onValueChange={(value) => setFilter({ ...filter, limit: parseInt(value) })} value={filter.limit.toString()}>
                         <SelectTrigger className="w-24">
                             <SelectValue placeholder="Select Limit" />

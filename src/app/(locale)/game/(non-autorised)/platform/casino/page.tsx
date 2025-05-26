@@ -7,7 +7,7 @@ import { GameAdsCarousel } from "@/components/features/platform/game-ads-carouse
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { checkCasinoAllowed, COMPANYID } from "@/lib/utils"
-import { GameCategories, GameCategory, ProviderEnum } from "@/models/casino-games"
+import { GameCategories, GameTypeEnum, ProviderEnum } from "@/models/casino-games"
 import { useGetCasinoGames } from "@/react-query/casino-games-queries"
 import { Search } from "lucide-react"
 import { notFound, useSearchParams } from "next/navigation"
@@ -116,10 +116,15 @@ export default function GamingAppInterface() {
                 ) : (
                     <div className="space-y-12">
                         {/* most popular games , ne games with emoji  */}
-                        <CategoryCarousel title="🔥 Hot Games" popular={true} />
-                        <CategoryCarousel title="🎲 Table Games" categoryId={GameCategory["Table game"]} />
-                        <CategoryCarousel title="🎰 Casino Games" categoryId={GameCategory["Live Dealer"]} />
-                        <CategoryCarousel title="🆕 New Games" new={true} />
+                        <CategoryCarousel title="🔥Hot Games" popular={true} />
+                        <CategoryCarousel title=" Crash Games" type={GameTypeEnum.CRASH_GAME} />
+                        <CategoryCarousel title="Game Show" type={GameTypeEnum.GAME_SHOW} />
+                        <CategoryCarousel title="Instant Win" type={GameTypeEnum.INSTANT_WIN} />
+                        <CategoryCarousel title="Live Dealer" type={GameTypeEnum.LIVE_DEALER} />
+                        <CategoryCarousel title="Table Games" type={GameTypeEnum.TABLE_GAMES} />
+                        <CategoryCarousel title="Slots" type={GameTypeEnum.SLOTS} />
+                        <CategoryCarousel title="Lottery" type={GameTypeEnum.LOTTERY} />
+                        <CategoryCarousel title="New Released" new={true} />
                         <CasinoProviders />
                     </div>
                 )}

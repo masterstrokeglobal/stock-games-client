@@ -3,6 +3,9 @@ import { Switch } from "@/components/ui/switch";
 import CasinoGames, { GameStatus } from "@/models/casino-games";
 import { useUpdateGame } from "@/react-query/casino-games-queries";
 import { ColumnDef } from "@tanstack/react-table";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { PencilIcon } from "lucide-react";
 
 const casinoGamesColumns: ColumnDef<CasinoGames>[] = [
     {
@@ -58,17 +61,10 @@ const casinoGamesColumns: ColumnDef<CasinoGames>[] = [
         }
     },
     {
-        header: "Slot Game",
-        accessorKey: "slot",
+        header: "Game Type",
+        accessorKey: "type",
         cell: ({ row }) => {
-            return <SlotColumn row={row.original} />
-        }
-    },
-    {
-        header: "Live Game",
-        accessorKey: "liveGame",
-        cell: ({ row }) => {
-            return <LiveColumn row={row.original} />
+            return <Badge variant="outline"  className="w-fit truncate">{row.original.type.split("_").join(" ")}</Badge>
         }
     },
     {
@@ -76,6 +72,19 @@ const casinoGamesColumns: ColumnDef<CasinoGames>[] = [
         accessorKey: "active",
         cell: ({ row }) => {
             return <StatusColumn row={row.original} />
+        }
+    },
+    {
+        header: "Action",
+        accessorKey: "action",
+        cell: ({ row }) => {
+            return <div className="flex gap-2">
+                <Link href={`/dashboard/casino-games/${row.original.id}`}>
+                    <Button variant="outline" size="icon">
+                        <PencilIcon className="w-4 h-4" />
+                    </Button>
+                </Link>
+            </div>
         }
     }
 ]
@@ -108,22 +117,6 @@ const NewColumn = ({ row }: { row: CasinoGames }) => {
     return <Switch
         checked={row.new}
         onCheckedChange={() => updateGame({ id: row.id, new: !row.new })}
-    />
-}
-
-const SlotColumn = ({ row }: { row: CasinoGames }) => {
-    const { mutate: updateGame } = useUpdateGame();
-    return <Switch
-        checked={row.slot}
-        onCheckedChange={() => updateGame({ id: row.id, slot: !row.slot })}
-    />
-}
-
-const LiveColumn = ({ row }: { row: CasinoGames }) => {
-    const { mutate: updateGame } = useUpdateGame();
-    return <Switch
-        checked={row.liveGame}
-        onCheckedChange={() => updateGame({ id: row.id, liveGame: !row.liveGame })}
     />
 }
 

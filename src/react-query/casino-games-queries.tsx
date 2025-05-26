@@ -34,7 +34,7 @@ export const useGetGameById = (id: string) => {
         queryKey: ["casino-game", id],
         queryFn: async () => {
             const response = await casinoAPI.getGameById(id);
-            return response.data;
+            return new CasinoGames(response.data);
         }
     });
 };
