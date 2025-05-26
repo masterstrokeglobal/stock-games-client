@@ -123,6 +123,7 @@ export default function GamingAppInterface() {
                         <CategoryCarousel title="Live Dealer" type={GameTypeEnum.LIVE_DEALER} />
                         <CategoryCarousel title="Table Games" type={GameTypeEnum.TABLE_GAMES} />
                         <CategoryCarousel title="Slots" type={GameTypeEnum.SLOTS} />
+                        <CategoryCarousel title="Shooting" type={GameTypeEnum.SHOOTING} />
                         <CategoryCarousel title="Lottery" type={GameTypeEnum.LOTTERY} />
                         <CategoryCarousel title="New Released" new={true} />
                         <CasinoProviders />

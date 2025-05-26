@@ -6,6 +6,7 @@ import StockGameCarousel from "@/components/features/stock-games.tsx/stock-game-
 import ActiveTierCard from "@/components/features/tier/user-tier-card";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
+import { checkCasinoAllowed, COMPANYID } from "@/lib/utils";
 import { GameTypeEnum } from "@/models/casino-games";
 import User from "@/models/user";
 import { useTranslations } from "next-intl";
@@ -15,6 +16,9 @@ const PlatformPage = () => {
     const t = useTranslations('wallet');
     const { isLoggedIn, userDetails } = useAuthStore();
     const user = userDetails as User;
+
+    const isCasinoAllowed = checkCasinoAllowed(COMPANYID);
+
     return (
         <section className="space-y-4 md:space-y-8">
             <Marquee pauseOnHover repeat={30} className="[--duration:5s] bg-[#256381] border-y-2 border-[#6d98ac] -mx-4 md:-mx-12" >
@@ -42,16 +46,22 @@ const PlatformPage = () => {
             {isLoggedIn && <ActiveTierCard className="mt-12" />}
 
             <StockGameCarousel />
-            <CasinoProvidersCarousel title="Game Providers" />
-            <CategoryCarousel title="Hot Games" popular={true} />
-            <CategoryCarousel title="Crash Games" type={GameTypeEnum.CRASH_GAME} />
-            <CategoryCarousel title="Game Show" type={GameTypeEnum.GAME_SHOW} />
-            <CategoryCarousel title="Instant Win" type={GameTypeEnum.INSTANT_WIN} />
-            <CategoryCarousel title="Live Dealer" type={GameTypeEnum.LIVE_DEALER} />
-            <CategoryCarousel title="Table Games" type={GameTypeEnum.TABLE_GAMES} />
-            <CategoryCarousel title="Slots" type={GameTypeEnum.SLOTS} />
-            <CategoryCarousel title="Lottery" type={GameTypeEnum.LOTTERY} />
-            <CategoryCarousel title="New Released" new={true} />
+            {isCasinoAllowed && (
+                <>
+                    <CasinoProvidersCarousel title="Game Providers" />
+                    <CategoryCarousel title="Hot Games" popular={true} />
+                    <CategoryCarousel title="Crash Games" type={GameTypeEnum.CRASH_GAME} />
+                    <CategoryCarousel title="Game Show" type={GameTypeEnum.GAME_SHOW} />
+                    <CategoryCarousel title="Instant Win" type={GameTypeEnum.INSTANT_WIN} />
+                    <CategoryCarousel title="Live Dealer" type={GameTypeEnum.LIVE_DEALER} />
+                    <CategoryCarousel title="Table Games" type={GameTypeEnum.TABLE_GAMES} />
+                    <CategoryCarousel title="Slots" type={GameTypeEnum.SLOTS} />
+                    <CategoryCarousel title="Shooting" type={GameTypeEnum.SHOOTING} />
+                    <CategoryCarousel title="Lottery" type={GameTypeEnum.LOTTERY} />
+                    <CategoryCarousel title="New Released" new={true} />
+                </>
+            )}
+
         </section>
     )
 }

@@ -4,7 +4,7 @@ import GameGrid from "@/components/features/casino-games/game-grid"
 import { GameAdsCarousel } from "@/components/features/platform/game-ads-carousel"
 import { Input } from "@/components/ui/input"
 import { checkCasinoAllowed, COMPANYID } from "@/lib/utils"
-import { ProviderEnum } from "@/models/casino-games"
+import { GameTypeEnum, ProviderEnum } from "@/models/casino-games"
 import { useGetCasinoGames } from "@/react-query/casino-games-queries"
 import { Search } from "lucide-react"
 import { notFound } from "next/navigation"
@@ -20,7 +20,7 @@ export default function SlotGamesPage() {
     });
     const { data: searchResults, isLoading: searchLoading } = useGetCasinoGames({
         search: filter.search || undefined,
-        slot: true,
+        type: GameTypeEnum.SLOTS,
         category: filter.category == "all" ? undefined : filter.category,
         provider: filter.provider == "all" ? undefined : filter.provider,
         limit: 100
