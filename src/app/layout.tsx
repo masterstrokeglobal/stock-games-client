@@ -8,10 +8,11 @@ import "./globals.css";
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { HighlightInit } from '@highlight-run/next/client';
 import { HIGHLIGHT_APP_KEY } from '@/lib/utils';
+import Script from 'next/script';
 
 const poppins = Poppins({
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'], 
-  subsets: ['latin'],  
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  subsets: ['latin'],
 });
 
 
@@ -43,6 +44,16 @@ export default async function RootLayout({
           <head>
             <meta charSet="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+            <Script id="onesignal-script" dangerouslySetInnerHTML={{
+              __html: `
+              window.OneSignalDeferred = window.OneSignalDeferred || [];
+              OneSignalDeferred.push(async function(OneSignal) {
+                await OneSignal.init({
+                  appId: "98c76023-329b-4653-88a8-ad26acf5b033",
+                });
+              });
+            `}} />
             <title>Stock Games </title>
             <link rel="preconnect" href="https://fonts.gstatic.com" />
             <link rel="icon" href="/favicon.ico" />
