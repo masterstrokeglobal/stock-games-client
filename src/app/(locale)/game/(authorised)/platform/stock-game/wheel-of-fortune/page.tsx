@@ -1,16 +1,14 @@
 "use client"
+import TimeDisplay from '@/components/common/bet-locked-banner';
 import GameLoadingScreen from '@/components/common/game-loading-screen';
 import MarketSelector from '@/components/common/market-selector';
-import TimeDisplay from '@/components/features/7-up-down/BetLockedBanner';
 import { BettingArea } from '@/components/features/wheel-of-fortune/betting-area';
 import GameBoard from '@/components/features/wheel-of-fortune/game-board';
 import { StockPriceDisplay } from '@/components/features/wheel-of-fortune/stock-price';
 import { useCurrentGame } from '@/hooks/use-current-game';
 import { useMarketSelector } from '@/hooks/use-market-selector';
-import { RoundRecord } from '@/models/round-record';
-import { RoundRecordGameType } from '@/models/round-record';
+import { RoundRecord, RoundRecordGameType } from '@/models/round-record';
 import { useGetRoundRecordById } from '@/react-query/round-record-queries';
-import { SchedulerType } from '@/models/market-item';
 import { useEffect, useMemo, useState } from 'react';
 
 

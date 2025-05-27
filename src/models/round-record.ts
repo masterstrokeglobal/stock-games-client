@@ -15,6 +15,8 @@ export enum RoundRecordGameType {
     SEVEN_UP_DOWN = "seven_up_down",
     HEAD_TAIL = "head_tail",
     WHEEL_OF_FORTUNE = "wheel_of_fortune",
+    AVIATOR = "aviator",
+    DICE = "dice"    
 }
 
 export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {

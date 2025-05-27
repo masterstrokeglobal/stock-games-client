@@ -2,9 +2,9 @@
 import GameLoadingScreen from '@/components/common/game-loading-screen';
 import MarketSelector from '@/components/common/market-selector';
 import StockGameHeader from '@/components/common/stock-game-header';
-import TimeDisplay from '@/components/features/7-up-down/BetLockedBanner';
+import TimeDisplay from '@/components/common/bet-locked-banner';
 import { BettingArea } from '@/components/features/7-up-down/BettingArea';
-import { GameBoard } from '@/components/features/7-up-down/GameBoard';
+import { GameBoard } from '@/components/features/7-up-down/game-board';
 import { StockPriceDisplay } from '@/components/features/7-up-down/StockPriceDisplay';
 import { useCurrentGame } from '@/hooks/use-current-game';
 import { useMarketSelector } from '@/hooks/use-market-selector';

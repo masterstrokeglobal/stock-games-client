@@ -17,6 +17,7 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
     className,
     onSpinComplete,
 }) => {
+    
     if (!roundRecord) {
         return (
             <div className={`flex h-[500px] w-full items-center justify-center ${className || ""}`}>

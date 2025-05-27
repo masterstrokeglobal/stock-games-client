@@ -11,7 +11,6 @@ export const useCreateWheelOfFortunePlacement = () => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
                     return query.queryKey[0] === "wheelOfFortune" || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
-
                 },
             });
             toast.success("Bet Placed Successfully");
