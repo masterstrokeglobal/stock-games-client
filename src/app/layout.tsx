@@ -57,6 +57,7 @@ export default async function RootLayout({
             <title>Stock Games </title>
             <link rel="preconnect" href="https://fonts.gstatic.com" />
             <link rel="icon" href="/favicon.ico" />
+            <link rel="manifest" href="/manifest.json" />
           </head>
           <body
             className={`${poppins.className} antialiased`}
