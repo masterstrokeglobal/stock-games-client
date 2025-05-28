@@ -3,7 +3,7 @@
     "short_name": "Stock Games",
     "theme_color": "#000000",
     "background_color": "#ffffff",
-    "display": "browser",
+    "display": "standalone",
     "orientation": "natural",
     "scope": "/",
     "start_url": "/",
