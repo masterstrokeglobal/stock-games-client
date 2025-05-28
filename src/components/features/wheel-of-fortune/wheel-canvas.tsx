@@ -206,25 +206,28 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
       
       return new Promise<THREE.Group>((resolve) => {
         fontLoader.load(
-          'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json',
+          'https://threejs.org/examples/fonts/helvetiker_bold.typeface.json',
           (font) => {
             const textGroup = new THREE.Group();
             textGroup.name = 'MarketNamesGroup';
             
             const totalMarkets = markets.length;
-            const segmentAngle = (2 * Math.PI) / totalMarkets;
-            const offset = segmentAngle / 2;
+            const offset =  Math.PI/48;
             
             markets.forEach((market, index) => {
-              const angle = (index / totalMarkets) * Math.PI * 2 + offset;
+              const angle = (index / totalMarkets) * Math.PI * 2 + offset ;
               
               // Create initial text geometry with placeholder
               const textGeometry = new TextGeometry('Loading...', {
                 font: font,
                 size: 0.08,
-                depth: 0.01,
+                depth: 0.00001,
                 curveSegments: 20,
-                bevelEnabled: false 
+                bevelEnabled: true,
+                bevelThickness: 0.002,
+                bevelSize: 0.002,
+                bevelOffset: 0,
+                bevelSegments: 8
               });
               
               textGeometry.computeBoundingBox();
@@ -236,10 +239,10 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
               
               const textMaterial = new THREE.MeshPhysicalMaterial({
                 color: 0x000000,
-                metalness: 0.1,
-                roughness: 0.5,
-                clearcoat: 1,
-                clearcoatRoughness: 0.1,
+                metalness:1,
+                // roughness: 0.5,
+                // clearcoat: 1,
+                // clearcoatRoughness: 0.1,
                 polygonOffset: true,
                 polygonOffsetFactor: 1,
               });
@@ -285,7 +288,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
   const updateTextMeshes = useCallback(() => {
     if (!textGroupRef.current || marketNames.length === 0) return;
 
-    textGroupRef.current.children.forEach((child, index) => {
+    textGroupRef.current.children.forEach((child) => {
       if (child instanceof THREE.Mesh && (child as any).marketIndex !== undefined) {
         const meshIndex = (child as any).marketIndex;
         const newText = marketNames[meshIndex] || `Market ${meshIndex + 1}`;
@@ -302,9 +305,13 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
             const newGeometry = new TextGeometry(newText, {
               font: font,
               size: 0.08,
-              depth: 0.01,
+              depth: 0.00001,
               curveSegments: 20,
-              bevelEnabled: false 
+              bevelEnabled: true,
+              bevelThickness: 0.002,
+              bevelSize: 0.002,
+              bevelOffset: 0,
+              bevelSegments: 8
             });
             
             newGeometry.computeBoundingBox();
@@ -335,35 +342,39 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
     if (deltaAccumulatorRef.current >= frameInterval) {
       // Update text meshes with current market names
       updateTextMeshes();
+
+     const multiplier = 50
       
       // Apply rotation to spinning objects using current speed
       if (Math.abs(currentSpeedRef.current) > 0 && spinningObjectsRef.current.length > 0) {
+        const rotationIncrement = currentSpeedRef.current * delta * multiplier;
+        
         spinningObjectsRef.current.forEach((obj: THREE.Object3D) => {
           // Handle different objects with potentially different rotation directions
           if (obj.name === 'Plates009') {
             // Plates009 might need opposite rotation to match other elements
-            // obj.rotation.z -= currentSpeedRef.current; // Reverse the rotation for plates
+            obj.rotation.z -= rotationIncrement; // Reverse the rotation for plates
           } else {
             // Default rotation for other objects (InnerLight, WheelStopper, text)
-            // obj.rotation.z += currentSpeedRef.current;
+            obj.rotation.z += rotationIncrement;
           }
         });
         
         // Update rotation state
-        const degreesIncrement = (currentSpeedRef.current * 180) / Math.PI;
         setWheelRotationDegrees(prevDegrees => {
-          const newDegrees = (prevDegrees + Math.abs(degreesIncrement)) % 360;
+          const newDegrees = Math.abs((spinningObjectsRef.current[2].rotation.z * 180) / Math.PI % 360);
           if (typeof window !== 'undefined') {
             localStorage.setItem('wheelRotationDegrees', newDegrees.toString());
           }
           
-          // Check if we've reached the target rotation (within tolerance)
+          // Check if we've reached the target rotat          // const degreesIncrement = (rotationIncrement * 180) / Math.PI; // Convert radians to degrees
+          // const newDegrees = (prevDegrees + degreesIncrement) % 360;
+          // console.log("newDegrees",  newDegrees);ion (within tolerance)
           if (targetRotationRef.current !== null && isSpinning) {
             const tolerance = 5; // degrees tolerance
-            const angleDifference = Math.abs(newDegrees - targetRotationRef.current);
-            const minDifference = Math.min(angleDifference, 360 - angleDifference);
+            const angleDifference = Math.abs(360 -newDegrees - targetRotationRef.current);
             
-            if (minDifference <= tolerance) {
+            if (angleDifference <= tolerance) {
               console.log("Target rotation reached! Current:", newDegrees, "Target:", targetRotationRef.current);
               // Clear the target and stop spinning immediately
               targetRotationRef.current = null;
@@ -433,11 +444,33 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
 
   // Handle spin state changes
   useEffect(() => {
-    if (isSpinning) {
+    // Additional safety checks before allowing spin
+    if (roundRecord) {
+      const currentTime = new Date().getTime();
+      const placementEndTime = new Date(roundRecord.placementEndTime).getTime();
+      const gameEndTime = new Date(roundRecord.endTime).getTime();
+      
+      // Ensure we're in the correct time window for spinning
+      const isBettingClosed = currentTime >= placementEndTime;
+      const isGameStillActive = currentTime < gameEndTime;
+      
+      // Only start spinning if all conditions are met
+      if (isSpinning && isBettingClosed && isGameStillActive && !winningMarketId) {
+        startSpinning();
+        // Clear any existing target when starting new spin
+        targetRotationRef.current = null;
+      } else if (isSpinning && (!isBettingClosed || !isGameStillActive)) {
+        // Don't spin if betting is still open or game is over
+        return;
+      }
+    } else if (isSpinning) {
+      // Fallback to original logic if no roundRecord
       startSpinning();
-      // Clear any existing target when starting new spin
       targetRotationRef.current = null;
-    } else if (winningMarketId) {
+    }
+    
+    // Handle stopping logic
+    if (!isSpinning && winningMarketId) {
       console.log("winning MarketID", winningMarketId);
       console.log("winner in round record", roundRecord);
       
@@ -466,6 +499,9 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
       } else {
         stopSpinning();
       }
+    } else if (!isSpinning && !winningMarketId) {
+      // Stop spinning if isSpinning is false and no winner yet
+      stopSpinning();
     }
   }, [isSpinning, startSpinning, stopSpinning, winningMarketId, roundRecord, wheelRotationDegrees]);
 
