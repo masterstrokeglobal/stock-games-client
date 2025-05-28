@@ -3,7 +3,6 @@
 import CategoryCarousel from "@/components/features/casino-games/category-carousel"
 import GameGrid from "@/components/features/casino-games/game-grid"
 import CasinoProviders from "@/components/features/casino-games/game-providers"
-import { GameAdsCarousel } from "@/components/features/platform/game-ads-carousel"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { checkCasinoAllowed, COMPANYID } from "@/lib/utils"
@@ -62,10 +61,9 @@ export default function GamingAppInterface() {
     console.log(areFiltersApplied)
     return (
         <>
-            <GameAdsCarousel />
-            <main className="container mx-auto mt-20">
+            <main className=" md:mx-auto w-full md:px-4 mt-10">
                 {/* Search Bar */}
-                <div className="relative mb-8  mx-auto flex flex-col md:flex-row justify-start gap-2">
+                <div className="relative mb-8  md:mx-auto w-full flex flex-col md:flex-row justify-start gap-2">
                     <div className="relative max-w-2xl w-full">
                         <Input
                             className="w-full bg-background-secondary focus:bg-background-secondary/80 border-transparent border-2 focus:border-game-secondary text-white placeholder:text-gray-400 h-12 pl-10 rounded-full"
