@@ -19,7 +19,6 @@ const WheelOfFortune = () => {
 
     const winningMarketId = useWinningId(roundRecord);
 
-    console.log(roundRecord, "roundRecord");
 
     if (!marketSelected) return <MarketSelector className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Dice Game Market" />
 
@@ -30,7 +29,7 @@ const WheelOfFortune = () => {
             <div className="flex flex-col min-h-screen max-w-2xl w-full mx-auto bg-gray-900 border border-gray-600 rounded-lg text-white overflow-hidden">
                 <StockGameHeader onBack={() => setMarketSelected(false)} title="Dice Game" />
                 <Dice3D className='h-36' roundRecord={roundRecord} winningMarketId={winningMarketId} />
-                <BettingGrid className='relative pt-32' roundRecord={roundRecord} globalBetAmount={betAmount} >
+                <BettingGrid className='relative pt-32' roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={winningMarketId} >
                     <TimeDisplay className="absolute top-0 left-1/2 -translate-x-1/2 z-10 w-full max-w-sm  " roundRecord={roundRecord} />
                 </BettingGrid>
                 <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />

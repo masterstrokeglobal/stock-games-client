@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { RoundRecord } from '@/models/round-record';
 import { MarketItem } from '@/models/market-item';
 import { cn } from '@/lib/utils';
 import { usePlacementOver } from '@/hooks/use-current-game';
+import { useLeaderboard } from '@/hooks/use-leadboard';
 
 interface DiceFaceProps {
   marketItem: MarketItem;
@@ -18,34 +19,88 @@ interface Dice3DProps {
   winningMarketId: number[] | null;
 }
 
+const StockDisplay = ({ stock }: { stock: any }) => (
+  <div className="flex justify-between items-center text-[10px] text-white/90 py-0.5 px-1 bg-black/30 backdrop-blur-sm rounded hover:bg-black/40 transition-colors w-full">
+    <div className="flex items-center gap-0.5 min-w-0">
+      <span className="font-medium truncate max-w-[40px]">{stock.codeName}</span>
+      <span className="text-[8px] font-bold bg-white/10 px-0.5 rounded-full flex-shrink-0">
+        {stock.horse % 6 === 0 ? 6 : stock.horse % 6}
+      </span>
+    </div>
+    <span className={cn(
+      "font-bold px-0.5 rounded flex-shrink-0",
+      Number(stock.change_percent) >= 0 
+        ? 'text-green-400 bg-green-400/10' 
+        : 'text-red-400 bg-red-400/10'
+    )}>
+      {Number(stock.change_percent) >= 0 ? '+' : ''}{stock.change_percent}%
+    </span>
+  </div>
+);
+
 const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, winningMarketId }) => {
   const marketItems = roundRecord.market;
+  const { stocks } = useLeaderboard(roundRecord);
   const isPlaceOver = usePlacementOver(roundRecord);
   const isRolling = winningMarketId == null && isPlaceOver;
 
-
   const firstCube = marketItems.slice(0, 6);
   const secondCube = marketItems.slice(6, 12);
+
+  const marketItemsStocks = useMemo(() => {
+    console.log(stocks);
+    return marketItems.map((item) => {
+      const stock = stocks.find((stock) => stock.id === item.id);
+      console.log(stock);
+      return stock;
+    });
+  }, [marketItems, stocks]);
+
 
   // Check if we're waiting for winning data
   const isWaitingForResults = !isRolling && (!winningMarketId || winningMarketId.length === 0);
 
   return (
-    <div className={`p-5 font-sans overflow-visible ${className}`} style={{ height: '16rem' }}>
-      <div className="flex justify-center gap-24 flex-wrap h-full items-center">
-        <Cube 
-          marketItems={firstCube} 
-          isRolling={isRolling} 
-          winningMarketId={winningMarketId?.[0]}
-          isLoading={isWaitingForResults}
-        />
-        <Cube 
-          marketItems={secondCube} 
-          className='delay-1000' 
-          isRolling={isRolling} 
-          winningMarketId={winningMarketId?.[1]}
-          isLoading={isWaitingForResults}
-        />
+    <div className={`font-sans overflow-visible ${className}`} style={{ height: '14rem' }}>
+      <div className="flex justify-center flex-wrap h-full items-center">
+        <div className='flex flex-col flex-1 h-full gap-2 items-center justify-between border border-amber-500'>
+          <div className='grid grid-cols-3 w-full gap-2'>
+            {marketItemsStocks.slice(0, 3).map((stock) => (
+              <StockDisplay key={stock?.id} stock={stock} />
+            ))}
+          </div>
+          <Cube
+            marketItems={firstCube}
+            isRolling={isRolling}
+            winningMarketId={winningMarketId?.[0]}
+            isLoading={isWaitingForResults}
+          />
+          <div className='grid grid-cols-3 w-full gap-2'>
+            {marketItemsStocks.slice(3, 6).map((stock) => (
+              <StockDisplay key={stock?.id} stock={stock} />
+            ))}
+          </div>
+        </div>
+        <div className='flex flex-col flex-1 h-full gap-2 items-center justify-between border border-amber-500'>
+          <div className='grid grid-cols-3 w-full gap-2'>
+            {marketItemsStocks.slice(6, 9).map((stock) => (
+              <StockDisplay key={stock?.id} stock={stock} />
+            ))}
+          </div>
+          <Cube
+            marketItems={secondCube}
+            className='delay-1000'
+            isRolling={isRolling}
+            isSecondCube
+            winningMarketId={winningMarketId?.[1]}
+            isLoading={isWaitingForResults}
+          />
+          <div className='grid grid-cols-3 w-full gap-2'>
+            {marketItemsStocks.slice(9, 12).map((stock) => (
+              <StockDisplay key={stock?.id} stock={stock} />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -81,7 +136,7 @@ const DiceFace: React.FC<DiceFaceProps> = ({ marketItem, className, number, isWi
         <div
           key={i}
           className={cn(
-            "absolute w-3 h-3 bg-white rounded-full shadow-lg",
+            "absolute w-2 h-2 bg-black rounded-full shadow-lg",
             isLoading && "animate-pulse"
           )}
           style={{
@@ -103,25 +158,21 @@ const DiceFace: React.FC<DiceFaceProps> = ({ marketItem, className, number, isWi
         `absolute ${className}`
       )}
       style={{
-        width: '120px',
-        height: '120px',
-        background: isWinning ? '#1e40af' : '#2563eb',
-        border: '2px solid #1e40af',
+        width: '80px',
+        height: '80px',
+        background: isWinning ? 'linear-gradient(to right, #ffd700, #ffa500)' : 'linear-gradient(to right, #ffd700, #ffa500)',
+        border: '2px solid',
+        borderImage: 'linear-gradient(90deg, #b8860b 0%, #daa520 50%, #b8860b 100%) 1',
         borderRadius: '8px',
-        boxShadow: `
-          0 4px 8px rgba(0, 0, 0, 0.3),
-          inset 0 1px 0 rgba(255, 255, 255, 0.2),
-          inset 0 -1px 0 rgba(0, 0, 0, 0.2)
-        `
+        boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 8px 32px rgba(255, 215, 0, 0.15)'
       }}
     >
       {renderDots(number)}
-      <div className="absolute bottom-2 left-0 right-0 text-center">
+      <div className="absolute bottom-0 left-0 right-0 text-center">
         <span className={cn(
-          "text-white text-sm selection:bg-transparent font-light jersey tracking-wider",
-          isLoading && "animate-pulse"
+          "text-[10px] selection:bg-transparent text-black font-medium z-10 relative tracking-wider",
         )} style={{ textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
-          {marketItem.name || '?'}
+          {marketItem.codeName || '?'}
         </span>
       </div>
     </div>
@@ -132,25 +183,26 @@ interface CubeProps {
   marketItems: MarketItem[];
   className?: string;
   isRolling: boolean;
+  isSecondCube?: boolean;
   winningMarketId?: number;
   isLoading?: boolean;
 }
 
-const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, winningMarketId, isLoading }) => {
+const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, winningMarketId, isLoading, isSecondCube }) => {
   // Ensure we have at least 6 market items, if not, repeat the available ones
-  const items = marketItems.length >= 6 
-    ? marketItems.slice(0, 6) 
+  const items = marketItems.length >= 6
+    ? marketItems.slice(0, 6)
     : [...marketItems, ...marketItems.slice(0, 6 - marketItems.length)];
 
   // Find the index of the winning market item
-  const winningIndex = winningMarketId !== undefined 
+  const winningIndex = winningMarketId !== undefined
     ? items.findIndex(item => item.id === winningMarketId)
     : -1;
 
   // Calculate the rotation needed to show the winning face
   const getWinningRotation = () => {
     if (winningIndex === -1) return '';
-    
+
     const rotations = {
       0: 'rotateX(0deg) rotateY(0deg)',      // front
       1: 'rotateX(0deg) rotateY(180deg)',    // back
@@ -159,7 +211,7 @@ const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, winningM
       4: 'rotateX(-90deg) rotateY(0deg)',    // top
       5: 'rotateX(90deg) rotateY(0deg)'      // bottom
     };
-    
+
     return rotations[winningIndex as keyof typeof rotations] || '';
   };
 
@@ -170,10 +222,9 @@ const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, winningM
     <div
       className={cn('dice-cube-container', className)}
       style={{
-        width: '60px',
-        height: '60px',
-        perspective: '600px',
-        margin: '0 auto'
+        width: '80px',
+        height: '80px',
+        perspective: '400px'
       }}
     >
       <div
@@ -183,49 +234,49 @@ const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, winningM
           width: '100%',
           height: '100%',
           transformStyle: 'preserve-3d',
-          animation: isRolling ? 'smoothRotation 1s infinite linear' : 'none',
+          animation: isRolling ? isSecondCube ? 'smoothRotation2 2s infinite linear' : 'smoothRotation 1.5s infinite linear' : 'none',
           transform: shouldShowWinningFace ? getWinningRotation() : undefined
         }}
       >
-        <DiceFace 
-          marketItem={items[0]} 
-          className="dice-front" 
-          number={1} 
+        <DiceFace
+          marketItem={items[0]}
+          className="dice-front"
+          number={1}
           isWinning={winningIndex === 0}
           isLoading={isLoading}
         />
-        <DiceFace 
-          marketItem={items[1]} 
-          className="dice-back" 
-          number={6} 
+        <DiceFace
+          marketItem={items[5]}
+          className="dice-back"
+          number={6}
           isWinning={winningIndex === 1}
           isLoading={isLoading}
         />
-        <DiceFace 
-          marketItem={items[2]} 
-          className="dice-right" 
-          number={3} 
+        <DiceFace
+          marketItem={items[2]}
+          className="dice-right"
+          number={3}
           isWinning={winningIndex === 2}
           isLoading={isLoading}
         />
-        <DiceFace 
-          marketItem={items[3]} 
-          className="dice-left" 
-          number={4} 
+        <DiceFace
+          marketItem={items[3]}
+          className="dice-left"
+          number={4}
           isWinning={winningIndex === 3}
           isLoading={isLoading}
         />
-        <DiceFace 
-          marketItem={items[4]} 
-          className="dice-top" 
-          number={2} 
+        <DiceFace
+          marketItem={items[1]}
+          className="dice-top"
+          number={2}
           isWinning={winningIndex === 4}
           isLoading={isLoading}
         />
-        <DiceFace 
-          marketItem={items[5]} 
-          className="dice-bottom" 
-          number={5} 
+        <DiceFace
+          marketItem={items[4]}
+          className="dice-bottom"
+          number={5}
           isWinning={winningIndex === 5}
           isLoading={isLoading}
         />

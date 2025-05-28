@@ -48,7 +48,7 @@ export const useGetDiceGameRoundResult = (roundId: number, open: boolean) => {
         queryKey: ["dice-game-round-result", roundId],
         queryFn: async () => {
             const { data } = await diceGameAPI.getDiceGameRoundResult(roundId);
-            return data ? new DicePlacement(data) : null;
+            return data.data;
         },
         enabled: !!roundId && open
     });

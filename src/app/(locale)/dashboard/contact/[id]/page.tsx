@@ -32,7 +32,6 @@ const EditContactPage = () => {
         });
     };
 
-    console.log("contact", contact);
     if (isLoading && contact == null) return <LoadingScreen>Loading contact...</LoadingScreen>;
 
     return (
