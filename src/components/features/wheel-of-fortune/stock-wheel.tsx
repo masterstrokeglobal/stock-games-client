@@ -39,18 +39,17 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
                     winningMarketId={winningMarketId}
                     onSpinComplete={onSpinComplete}
                 />
+
             </div>
 
             {winningMarketId && winningMarketId.length > 0 && (
-                <div className="w-full opacity-50 max-w-md border-2 border-amber-700 bg-amber-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 ">
+                <div className="w-full  max-w-md border-2 border-amber-700 bg-amber-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 ">
                     <p className="text-center font-medium">
                         Winner:{" "}
                         <span className="font-bold text-amber-700">
                             {roundRecord.market.find(
                                 (market) => market.id === winningMarketId[0]
-                            )?.codeName}
-{" "}
-                            {roundRecord.market[0].codeName}
+                            )?.name}
                         </span>
                     </p>
                 </div>
