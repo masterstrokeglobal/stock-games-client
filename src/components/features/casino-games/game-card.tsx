@@ -13,7 +13,7 @@ export default function GameCard({ game }: GameCardProps) {
     <Link href={`/game/casino/${game.id}`} >
       <Card className="relative overflow-hidden aspect-square border-none rounded-xl group cursor-pointer transition-transform duration-300 hover:translate-y-[-10px]">
         {game.new && (
-          <div className="absolute top-0 right-0  text-white  px-2 py-1 m-1 tracking-wide  gold-button text-sm">
+          <div className="absolute top-0 right-0  text-white  px-2 py-1 m-1 tracking-wide  gold-button md:text-sm text-[10px]">
             New
           </div>
         )}
@@ -23,7 +23,7 @@ export default function GameCard({ game }: GameCardProps) {
           alt={game.name}
           className="w-full h-full object-cover bg-gray-300"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/100 via-black/40 to-transparent md:opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end md:p-4 p-2">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/100 via-black/40 to-transparent md:opacity-0 md:flex hidden group-hover:opacity-100 transition-opacity duration-300 flex items-end md:p-4 p-2">
           <h3 className="text-white font-semibold md:text-md text-sm tracking-wide">{game.name}</h3>
         </div>
       </Card>
