@@ -26,7 +26,13 @@ export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, winningMark
   const isSpinning = isBettingClosed && isGameStillActive && hasNoWinner && isPlaceOver;
 
   return (
-    <div className="flex flex-col justify-between items-start bg-gray-200 relative">
+    <div className="flex flex-col justify-between items-center bg-gray-200 relative z-0">
+
+      <img
+        src="/fortuneBg.png"
+        alt="wodden-board"
+        className="w-full h-full object-fit  absolute top-0 left-0 z-0"
+      />
       {isSpinning && (
         <DotLottieReact
           className="absolute z-15 scale-[200%] top-0 left-0 w-full h-full z-10 pointer-events-none"
@@ -35,7 +41,7 @@ export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, winningMark
           loop
         />
       )}
-      <div className=''>
+      <div className='relative z-20'>
         <StockWheel roundRecord={roundRecord} winningMarketId={winningMarketId} isSpinning={isSpinning} />
       </div>
     </div>

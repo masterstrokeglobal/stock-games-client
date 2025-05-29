@@ -21,13 +21,21 @@ const WheelOfFortune = () => {
     } = useCurrentGame(RoundRecordGameType.WHEEL_OF_FORTUNE);
     // const roundRecord = useMemo(() => RoundRecord.fromAPI(roundRecordData), []);
 
+
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord?.id);
 
     useEffect(() => {
+        if (isSuccess) {
+            console.log("round record refetched winningId", data.data.winningId);
+        }
+    }, [data]);
+
+    useEffect(() => {
         if (!roundRecord) return;
-        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 3000;
+        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() - 300;
 
         const timer = setTimeout(() => {
+            console.log("refetching round record");
             refetch();
         }, resultFetchTime);
         return () => clearTimeout(timer);

@@ -1,7 +1,7 @@
 "use client";
 import { RoundRecord } from "@/models/round-record";
 import { WheelCanvas } from "./wheel-canvas";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 interface WheelOfFortuneProps {
     className?: string;
@@ -19,7 +19,18 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
 }) => {
 
     const [showResult, setShowResult] = React.useState(false);
-    
+    const [displayWinner, setDisplayWinner] = useState(false);
+    useEffect(() => {
+        if (winningMarketId && winningMarketId.length > 0) {
+            setTimeout(() => {
+                setDisplayWinner(true);
+            }, 1500);
+        }
+        else {
+            setDisplayWinner(false);
+        }
+    }, [winningMarketId]);
+
     if (!roundRecord) {
         return (
             <div className={`flex h-[500px] w-full items-center justify-center ${className || ""}`}>
@@ -41,11 +52,6 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
 
     return (
         <div className={`flex flex-col items-center w-full relative gap-6 ${className || ""}`}>
-            <img
-                src="/images/wodden-board.jpg"
-                alt="wodden-board"
-                className="w-full h-full object-fill scale-150 absolute top-0 left-0 z-0"
-            />
             <div className="h-[500px] w-full">
                 <WheelCanvas
                     isSpinning={isSpinning}
@@ -56,7 +62,7 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
 
             </div>
 
-            {showResult && winningMarketId && winningMarketId.length > 0 && (
+            {showResult && displayWinner && winningMarketId && winningMarketId.length > 0 && (
                 <div className="w-full  max-w-md border-2 border-amber-700 bg-amber-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 ">
                     <p className="text-center font-medium">
                         Winner:{" "}
