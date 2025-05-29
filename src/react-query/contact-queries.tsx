@@ -16,7 +16,7 @@ export const useCreateContact = () => {
 };
 
 // Hook to get all contacts with optional filters
-export const useGetContacts = (filter?: SearchFilters) => {
+export const useGetContacts = (filter?: any) => {
     return useQuery({
         queryKey: ["contacts", filter],
         queryFn: () => contactAPI.getContacts(filter),

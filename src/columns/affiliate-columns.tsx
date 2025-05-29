@@ -1,14 +1,14 @@
-import { ColumnDef } from "@tanstack/react-table";
-import dayjs from "dayjs";
-import Link from "next/link";
-import { Trash2, Loader2, Eye, Users } from 'lucide-react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from '@/components/ui/alert-dialog';
 import { useAuthStore } from "@/context/auth-context";
 import Admin, { AdminRole } from "@/models/admin";
-import { Badge } from "@/components/ui/badge";
 import Affiliate, { AffiliateRole } from "@/models/affiliate";
 import { useDeleteAffiliate } from "@/react-query/affiliate-queries";
+import { ColumnDef } from "@tanstack/react-table";
+import dayjs from "dayjs";
+import { Edit2, Loader2, Trash2, Users } from 'lucide-react';
+import Link from "next/link";
 
 const affiliateColumns: ColumnDef<Affiliate>[] = [
     {
@@ -106,9 +106,9 @@ const ActionColumn = ({ affiliate }: { affiliate: Affiliate }) => {
     return (
         <AlertDialog>
             <div className="flex space-x-4 w-36 justify-end">
-                <Link href={`/dashboard/affiliates/${affiliate.id}`}>
+                <Link href={`/dashboard/affiliate/${affiliate.id}`}>
                     <Button size="icon" variant="ghost" aria-label="View Affiliate">
-                        <Eye className="w-5 h-5" />
+                        <Edit2 className="w-5 h-5" />
                     </Button>
                 </Link>
                 {showDelete && <AlertDialogTrigger asChild>

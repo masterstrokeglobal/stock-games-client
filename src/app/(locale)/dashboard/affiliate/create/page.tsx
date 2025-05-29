@@ -12,7 +12,7 @@ const defaultValues: AffiliateFormValues = {
     name: "",
     username: "",
     password: "",
-    companyId: "",
+    canCreateSubAffiliate: false,
     referralBonus: 0,
     isPercentage: false,
     role: AffiliateRole.MASTER_AFFILIATE,

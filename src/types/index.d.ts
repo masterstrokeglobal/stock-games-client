@@ -26,6 +26,7 @@ type SearchFilters = {
   companyId?: string;
   search: string;
   orderByField?: string;
+  status?: string;
   orderBy?: string;
   type?: string;
   limit?: number;

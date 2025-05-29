@@ -2,6 +2,7 @@
 export enum AdvertisementType {
     BANNER = "banner",
     SLIDER = "slider",
+    NOTICE = "notice",
 }
 export class Advertisement {
     id!: number;

@@ -13,8 +13,9 @@ interface FormImageProps<TFieldValues extends FieldValues = FieldValues> {
     label?: string
     description?: string
     className?: string
-    aspectRatio?: number ,
-    aspectRatioDescription?: string
+    aspectRatio?: number,
+    aspectRatioDescription?: string,
+    maxSize?: number // Size in MB
 }
 
 const FormImage = <TFieldValues extends FieldValues>({
@@ -24,6 +25,7 @@ const FormImage = <TFieldValues extends FieldValues>({
     className,
     aspectRatio,
     aspectRatioDescription,
+    maxSize = 5, // Default 5MB
 }: FormImageProps<TFieldValues>) => {
     const { setValue, getFieldState, getValues } = useFormContext()
     const [previewUrl, setPreviewUrl] = useState<string | null>(null)
@@ -57,7 +59,17 @@ const FormImage = <TFieldValues extends FieldValues>({
         });
     };
 
+    const validateFileSize = (file: File): boolean => {
+        const fileSizeInMB = file.size / (1024 * 1024);
+        return fileSizeInMB <= maxSize;
+    };
+
     const handleUpload = useCallback(async (file: File) => {
+        if (!validateFileSize(file)) {
+            toast.error(`File size must be less than ${maxSize}MB`);
+            return;
+        }
+
         if (aspectRatio) {
             const isValidDimensions = await validateImageDimensions(file);
             if (!isValidDimensions) {
@@ -84,7 +96,7 @@ const FormImage = <TFieldValues extends FieldValues>({
                 toast.error("Failed to upload image")
             }
         })
-    }, [name, setValue, uploadImageMutation, aspectRatio, aspectRatioDescription])
+    }, [name, setValue, uploadImageMutation, aspectRatio, aspectRatioDescription, maxSize])
 
     const handleDrop = useCallback((event: React.DragEvent<HTMLDivElement>) => {
         event.preventDefault();

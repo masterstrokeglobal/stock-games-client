@@ -30,6 +30,10 @@ export const paymentAPI = {
   createCompanyDepositRequest: async (data: any) => {
     return api.post(`/payment/company-chips-deposit/`, data);
   },
+
+  createCompanyWithdrawalRequest: async (data: any) => {
+    return api.post(`/payment/company-chips-withdraw`, data);
+  },
   // Create a withdrawal request for the user's wallet
   createWithdrawalRequest: async (data: any) => {
     return api.post("/payment/withdraw", data);

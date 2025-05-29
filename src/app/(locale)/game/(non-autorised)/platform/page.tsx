@@ -1,7 +1,7 @@
 "use client";
-import { Marquee } from "@/components/common/marquee";
 import CategoryCarousel from "@/components/features/casino-games/category-carousel";
 import { CasinoProvidersCarousel } from "@/components/features/casino-games/game-providers";
+import AdMarquee from "@/components/features/platform/ad-marquee";
 import StockGameCarousel from "@/components/features/stock-games.tsx/stock-game-carousel";
 import ActiveTierCard from "@/components/features/tier/user-tier-card";
 import { Button } from "@/components/ui/button";
@@ -21,11 +21,7 @@ const PlatformPage = () => {
 
     return (
         <section className="space-y-4 md:space-y-8">
-            <Marquee pauseOnHover repeat={30} className="[--duration:5s] bg-[#256381] border-y-2 border-[#6d98ac] -mx-4 md:-mx-12" >
-                <div className="flex items-center gap-2 ">
-                    Welcome to Stock Games
-                </div>
-            </Marquee>
+            <AdMarquee />
             {isLoggedIn && !user.isDemoUser && (
                 <div className="flex gap-2">
                     <Link href="/game/wallet/deposit" className="flex-1" passHref>

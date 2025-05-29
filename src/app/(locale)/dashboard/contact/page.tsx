@@ -4,21 +4,33 @@ import contactColumns from "@/columns/contact-columns";
 import DataTable from "@/components/ui/data-table-server";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import Contact from "@/models/contact"; // You'll need to create this model
+import Contact from "@/models/contact";
 import { useGetContacts } from "@/react-query/contact-queries";
 import { Search } from "lucide-react";
 import React, { useMemo, useState } from "react";
 
 const ContactTable = () => {
-    const [page, setPage] = useState(1);
-    const [search, setSearch] = useState("");
-    const [filter, setFilter] = useState("all");
+    const [filters, setFilters] = useState<{
+        search: string;
+        status: string;
+        startDate: Date;
+        endDate: Date;
+        page: number;
+    }>({
+        search: "",
+        status: "all",
+        startDate: new Date(new Date().setDate(1)), // First day of current month
+        endDate: new Date(),
+        page: 1
+    });
 
-    const { data, isSuccess, isFetching } = useGetContacts({
-        page: page,
-        status: filter === "all" ? undefined : filter,
-        search: search,
+    const { data, isLoading, isSuccess } = useGetContacts({
+        page: filters.page,
+        status: filters.status === "all" ? undefined : filters.status,
+        search: filters.search || undefined,
         limit: 10,
+        startDate: filters.startDate.toISOString().split('T')[0],
+        endDate: filters.endDate.toISOString().split('T')[0],
     });
 
     const contacts = useMemo(() => {
@@ -35,12 +47,11 @@ const ContactTable = () => {
     }, [data, isSuccess]);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearch(e.target.value);
-        setPage(1); // Reset to first page on search
+        setFilters(prev => ({ ...prev, search: e.target.value, page: 1 }));
     };
 
     const changePage = (newPage: number) => {
-        setPage(newPage);
+        setFilters(prev => ({ ...prev, page: newPage }));
     };
 
     return (
@@ -53,12 +64,25 @@ const ContactTable = () => {
                         <Input
                             placeholder="Search by name, email or subject"
                             onChange={handleSearch}
+                            value={filters.search}
                             className="pl-10"
                         />
                     </div>
+                    <Input
+                        type="date"
+                        value={filters.startDate.toISOString().split('T')[0]}
+                        onChange={(e) => setFilters(prev => ({ ...prev, startDate: new Date(e.target.value), page: 1 }))}
+                        className="w-[180px]"
+                    />
+                    <Input
+                        type="date"
+                        value={filters.endDate.toISOString().split('T')[0]}
+                        onChange={(e) => setFilters(prev => ({ ...prev, endDate: new Date(e.target.value), page: 1 }))}
+                        className="w-[180px]"
+                    />
                     <Select
-                        value={filter}
-                        onValueChange={(value: string) => setFilter(value)}
+                        value={filters.status}
+                        onValueChange={(value) => setFilters(prev => ({ ...prev, status: value, page: 1 }))}
                     >
                         <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="Sort by field" />
@@ -72,13 +96,12 @@ const ContactTable = () => {
                             </SelectGroup>
                         </SelectContent>
                     </Select>
-
                 </div>
             </header>
             <main className="mt-4">
                 <DataTable
-                    page={page}
-                    loading={isFetching}
+                    page={filters.page}
+                    loading={isLoading}
                     columns={contactColumns}
                     data={contacts}
                     totalPage={totalPages}

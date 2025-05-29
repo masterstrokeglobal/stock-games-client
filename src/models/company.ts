@@ -25,6 +25,8 @@ export class Company {
     deletedAt?: Date;
     minPlacement?: number;
     maxPlacement?: number;
+    minCasinoPlacement?: number;
+    maxCasinoPlacement?: number;
     otpIntegration?: boolean;
     coinValues?: number[];
 
@@ -50,6 +52,8 @@ export class Company {
         this.minPlacement = params.minPlacement;
         this.maxPlacement = params.maxPlacement;
         this.coinValues = params.coinValues;
+        this.minCasinoPlacement = params.minCasinoPlacement;
+        this.maxCasinoPlacement = params.maxCasinoPlacement;
     }
 }
 

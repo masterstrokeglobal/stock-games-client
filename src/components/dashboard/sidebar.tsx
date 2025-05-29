@@ -211,13 +211,16 @@ const Sidebar = ({ className }: PropsWithClassName) => {
     }
 
     if (userDetails.isAffiliate) {
-        if (userDetails.role === AdminRole.AFFILIATE) {
+        if (userDetails.role === AdminRole.AFFILIATE && userDetails.canCreateSubAffiliate) {
             menus = [...affiliateMenuItems, {
                 name: "Sub Affiliates",
                 icon: GiftIcon,
                 link: '/dashboard/affiliate'
             }];
-        } else if (userDetails.role === AdminRole.SUB_AFFILIATE) {
+        } else if (userDetails.role === AdminRole.AFFILIATE ) {
+            menus = affiliateMenuItems;
+        }
+        if (userDetails.role === AdminRole.SUB_AFFILIATE) {
             menus = affiliateMenuItems;
         }
     }
