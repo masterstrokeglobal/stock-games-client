@@ -25,22 +25,17 @@ export default function StockGameCarousel() {
                 <CarouselContent>
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href={`/game?gameType=${SchedulerType.NSE}`} className="w-full">
-                            <div className="rounded-xl overflow-hidden border border-yellow-600 relative shadow-lg shadow-green-900/30">
-                                <Image src="/images/stock-roulette.png" alt="stock-roulette" className="w-full h-auto object-contain" width={500} height={500} />
-                                <div className="md:p-2 w-full absolute bottom-0 bg-gradient-to-b from-transparent to-black text-game-text text-center">
-                                    <h3 className="font-semibold mb-2 text-sm md:text-lg text-white">NSE STOCKS ROULETTE</h3>
-                                </div>
+                            <div className="rounded-xl overflow-hidden  relative shadow-lg shadow-green-900/30">
+                                <Image src="/images/stock-game/nse.png" alt="stock-roulette" className="w-full h-auto object-contain" width={500} height={500} />
+
                             </div>
                         </Link>
                     </CarouselItem>
 
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href={`/game?gameType=${SchedulerType.USA_MARKET}`} className="w-full">
-                            <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
-                                <Image src="/images/ad2.jpg" alt="coming-soon" className="w-full h-auto object-contain" width={500} height={500} />
-                                <div className="md:p-2 w-full absolute bottom-0 bg-gradient-to-b from-transparent to-black text-game-text text-center">
-                                    <h3 className="font-semibold mb-2 text-sm md:text-lg text-white">USA STOCKS ROULETTE</h3>
-                                </div>
+                            <div className="rounded-xl overflow-hidden  aspect-square relative shadow-lg shadow-blue-900">
+                                <Image src="/images/stock-game/usa-market.png" alt="coming-soon" className="w-full h-auto object-contain" width={500} height={500} />
                             </div>
                         </Link>
                     </CarouselItem>
@@ -48,21 +43,15 @@ export default function StockGameCarousel() {
                     {isCasinoAllowed && (
                         <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                             <Link href={`/game/casino/18480`} className="w-full">
-                                <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
-                                    <img src="https://client.int.qtlauncher.com/images/?id=EVO-stockmarket_en_US&type=logo-square" alt="coming-soon" className="w-full h-auto object-contain" width={500} height={500} />
-                                    <div className="md:p-2 w-full absolute bottom-0 bg-gradient-to-b from-transparent to-black text-game-text text-center">
-                                        <h3 className="font-semibold mb-2 text-sm md:text-lg text-white">STOCK Market</h3>
-                                    </div>
+                                <div className="rounded-xl overflow-hidden  aspect-square  relative ">
+                                    <img src="/images/stock-game/stock-market.png" alt="coming-soon" className="w-full h-auto object-contain" width={500} height={500} />
                                 </div>
                             </Link>
                         </CarouselItem>
-                    )};
+                    )}
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
-                            <Image src="/images/ad1.png" alt="coming-soon" className="w-full h-full object-cover" width={500} height={500} />
-                            <div className="absolute bottom-0 left-0 w-full h-fit bg-gradient-to-b pt-4 from-transparent to-black text-white p-4">
-                                <h3 className="md:text-lg text-sm font-bold text-center">Coming Soon</h3>
-                            </div>
+                            <Image src="/images/stock-game/stock-jackpot.png" alt="coming-soon" className="w-full h-full object-cover" width={500} height={500} />
                         </div>
                     </CarouselItem>
 
@@ -73,9 +62,7 @@ export default function StockGameCarousel() {
                                 <h3 className="md:text-lg text-sm font-bold text-center">Coming Soon</h3>
                             </div>
                         </div>
-                    </CarouselItem>
-
-                
+                    </CarouselItem>                
                 </CarouselContent>
             </div>
         </Carousel>
