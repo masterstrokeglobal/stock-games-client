@@ -20,7 +20,7 @@ interface Dice3DProps {
 }
 
 const StockDisplay = ({ stock }: { stock: any }) => (
-  <div className="flex justify-between items-center text-[10px] text-white/90 py-0.5 px-1 bg-black/30 backdrop-blur-sm rounded hover:bg-black/40 transition-colors w-full">
+  <div className="flex justify-between items-center text-[10px] text-white/90 py-0.5 px-1 bg-black/70 backdrop-blur-sm rounded hover:bg-black transition-colors w-full">
     <div className="flex items-center gap-0.5 min-w-0">
       <span className="font-medium truncate max-w-[40px]">{stock.codeName}</span>
       <span className="text-[8px] font-bold bg-white/10 px-0.5 rounded-full flex-shrink-0">
@@ -42,7 +42,7 @@ const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, winningMar
   const marketItems = roundRecord.market;
   const { stocks } = useLeaderboard(roundRecord);
   const isPlaceOver = usePlacementOver(roundRecord);
-  const isRolling = winningMarketId == null && isPlaceOver;
+  const isRolling = false;
 
   const firstCube = marketItems.slice(0, 6);
   const secondCube = marketItems.slice(6, 12);
@@ -61,9 +61,9 @@ const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, winningMar
   const isWaitingForResults = !isRolling && (!winningMarketId || winningMarketId.length === 0);
 
   return (
-    <div className={`font-sans overflow-visible ${className}`} style={{ height: '14rem' }}>
-      <div className="flex justify-center flex-wrap h-full items-center">
-        <div className='flex flex-col flex-1 h-full gap-2 items-center justify-between border border-amber-500'>
+    <div className={`font-sans  bg-cover bg-center overflow-visible ${className}`} style={{ height: '14rem' }}>
+      <div className="flex justify-center flex-wrap  h-full items-center">
+        <div className="flex flex-col bg-[url('/images/dice-game/dice-bg.jpg')] pr-1 bg-cover bg-center flex-1 h-full gap-2 items-center justify-between">
           <div className='grid grid-cols-3 w-full gap-2'>
             {marketItemsStocks.slice(0, 3).map((stock) => (
               <StockDisplay key={stock?.id} stock={stock} />
@@ -81,7 +81,7 @@ const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, winningMar
             ))}
           </div>
         </div>
-        <div className='flex flex-col flex-1 h-full gap-2 items-center justify-between border border-amber-500'>
+        <div className="flex flex-col bg-[url('/images/dice-game/dice-bg.jpg')] pl-1 bg-cover bg-center flex-1 h-full gap-2 items-center justify-between ">
           <div className='grid grid-cols-3 w-full gap-2'>
             {marketItemsStocks.slice(6, 9).map((stock) => (
               <StockDisplay key={stock?.id} stock={stock} />
@@ -170,9 +170,9 @@ const DiceFace: React.FC<DiceFaceProps> = ({ marketItem, className, number, isWi
       {renderDots(number)}
       <div className="absolute bottom-0 left-0 right-0 text-center">
         <span className={cn(
-          "text-[10px] selection:bg-transparent text-black font-medium z-10 relative tracking-wider",
+          "text-[10px] selection:bg-transparent text-black font-medium z-10 relative tracking-wider rotate-15 block",
         )} style={{ textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
-          {marketItem.codeName || '?'}
+          {"HEROMOTOCO"}
         </span>
       </div>
     </div>
@@ -241,7 +241,7 @@ const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, winningM
         <DiceFace
           marketItem={items[0]}
           className="dice-front"
-          number={1}
+          number={5}
           isWinning={winningIndex === 0}
           isLoading={isLoading}
         />
@@ -277,7 +277,7 @@ const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, winningM
           marketItem={items[4]}
           className="dice-bottom"
           number={5}
-          isWinning={winningIndex === 5}
+          isWinning={5 === 5}
           isLoading={isLoading}
         />
       </div>

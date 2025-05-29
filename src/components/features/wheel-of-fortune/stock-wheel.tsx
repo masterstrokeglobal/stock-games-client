@@ -1,7 +1,7 @@
 "use client";
 import { RoundRecord } from "@/models/round-record";
 import { WheelCanvas } from "./wheel-canvas";
-import React from "react";
+import React, { useEffect } from "react";
 
 interface WheelOfFortuneProps {
     className?: string;
@@ -17,6 +17,8 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
     className,
     onSpinComplete,
 }) => {
+
+    const [showResult, setShowResult] = React.useState(false);
     
     if (!roundRecord) {
         return (
@@ -25,6 +27,17 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
             </div>
         );
     }
+
+    useEffect(() => {
+        if (winningMarketId) {
+            setTimeout(() => {
+                setShowResult(true);
+            }, 2000);
+        }
+        else {
+            setShowResult(false);
+        }
+    }, [winningMarketId]);
 
     return (
         <div className={`flex flex-col items-center w-full relative gap-6 ${className || ""}`}>
@@ -43,13 +56,13 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
 
             </div>
 
-            {winningMarketId && winningMarketId.length > 0 && (
+            {showResult && winningMarketId && winningMarketId.length > 0 && (
                 <div className="w-full  max-w-md border-2 border-amber-700 bg-amber-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 ">
                     <p className="text-center font-medium">
                         Winner:{" "}
                         <span className="font-bold text-amber-700">
                             {roundRecord.market.find(
-                                (market) => market.id === winningMarketId[0]
+                                (market) => market.id === winningMarketId?.[0]
                             )?.name}
                         </span>
                     </p>
