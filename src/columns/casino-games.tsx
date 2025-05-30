@@ -127,11 +127,3 @@ const LiveColumn = ({ row }: { row: CasinoGames }) => {
     />
 }
 
-const DiceColumn = ({ row }: { row: CasinoGames }) => {
-    const { mutate: updateGame } = useUpdateGame();
-    return <Switch
-        checked={row.diceGame}
-        onCheckedChange={() => updateGame({ id: row.id, diceGame: !row.diceGame })}
-    />
-}
-

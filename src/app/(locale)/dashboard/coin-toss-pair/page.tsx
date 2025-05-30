@@ -6,16 +6,16 @@ import { Button } from "@/components/ui/button";
 import DataTable from "@/components/ui/data-table-server";
 import { Input } from "@/components/ui/input";
 import { useGetCoinTossPairs } from "@/react-query/coin-toss-queries";
-import {  Search } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import { Search } from "lucide-react";
 import Link from "next/link";
+import React, { useMemo, useState } from "react";
 
 const CoinTossPairTable = () => {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
-    const [filter, setFilter] = useState("all");
+    const [filter] = useState("all");
 
-    const { data, isSuccess, isFetching } = useGetCoinTossPairs({
+    const { data, isFetching } = useGetCoinTossPairs({
         page: page,
         status: filter === "all" ? undefined : filter,
         search: search,

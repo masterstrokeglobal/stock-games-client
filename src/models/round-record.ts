@@ -1,3 +1,4 @@
+import { CoinTossPair } from "./coin-toss-pair";
 import { HeadTailPlacementType } from "./head-tail";
 import MarketItem, { SchedulerType } from "./market-item";
 import { WheelColor, ColorConfig } from "./wheel-of-fortune-placement";
@@ -80,6 +81,7 @@ export class RoundRecord {
     type: SchedulerType;
     roundRecordGameType: RoundRecordGameType;
     winningId?: number[];
+    coinTossPair?: CoinTossPair;
     createdAt: Date;
     winningMarket?: MarketItem;
     updatedAt: Date;
@@ -110,6 +112,7 @@ export class RoundRecord {
         this.updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
         this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : undefined;
         this.initialValues = data.initialValues || null;
+        this.coinTossPair = data.coinTossPair ? new CoinTossPair(data.coinTossPair) : undefined;
         this.winningSide = data.winningSide || undefined;
         this.marketColors = data.marketColors || [];
     }

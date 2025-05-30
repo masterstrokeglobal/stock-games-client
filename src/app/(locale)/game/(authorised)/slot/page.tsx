@@ -6,11 +6,9 @@ import Navbar from "@/components/features/game/navbar"
 import SlotJackpotResultDialog from "@/components/features/game/slot-jackpot-result-dialog"
 import { BettingCard } from "@/components/features/slot-jackpot/BettingCard"
 import { BetSlip } from "@/components/features/slot-jackpot/bet-slip"
-import BettingAmount, { BettingAmoutMobile } from "@/components/features/slot-jackpot/betting-amout"
-import TimeDisplay from "@/components/features/stock-jackpot/time-left"
+import { BettingAmoutMobile } from "@/components/features/slot-jackpot/betting-amout"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs } from "@/components/ui/tabs"
 import { useCurrentGame, useShowResults } from "@/hooks/use-current-game"
 import { useGameType } from "@/hooks/use-game-type"
 import { useLeaderboard } from "@/hooks/use-leadboard"
@@ -18,14 +16,13 @@ import { SchedulerType } from "@/models/market-item"
 import { RoundRecordGameType } from "@/models/round-record"
 import { useGetMyFavorites } from "@/react-query/favorite-market-item-queries"
 import { useGetMyStockSlotJackpotGameRecord } from "@/react-query/game-record-queries"
-import { CreditCard, SearchIcon } from "lucide-react"
-import BettingChips from "@/components/features/slot-jackpot/betting-chips"
+import { ArrowUp, CreditCard } from "lucide-react"
 
 export default function Home() {
   // State for bet slip
   const [betSlipOpen, setBetSlipOpen] = useState(false)
   const [globalBetAmount, setGlobalBetAmount] = useState(100)
-  const [searchQuery, setSearchQuery] = useState("")
+  const [searchQuery] = useState("")
   const [tab, setTab] = useGameType();
 
   const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_JACKPOT);
@@ -35,10 +32,7 @@ export default function Home() {
     setGlobalBetAmount(amount)
   }
 
-  // Function to clear search
-  const clearSearch = () => {
-    setSearchQuery("")
-  }
+
 
 
   return (
@@ -47,7 +41,7 @@ export default function Home() {
       <Tabs className="flex-1 px-4 mt-8  py-6 w-full" value={tab} onValueChange={(value) => setTab(value as SchedulerType)}>
         {/* Global Bet Amount and Search Section */}
         <div className="w-full">
-          <div className="grid relative grid-cols-1  gap-6 mb-8 border rounded-lg h-[500px]  border-dashed border-primary  bg-gray-200">
+          <div className="grid relative grid-cols-1  gap-6 mb-8 border rounded-lg  border-dashed border-primary  bg-green-600">
             {/* <div className=" group">
               <div className="relative">
                 <Input
@@ -84,8 +78,49 @@ export default function Home() {
             */}
 
             <div className="relative h-full w-full  bg-contain bg-no-repeat bg-center">
-
-              <img src="/images/jackpot/table.png" className=" w-auto  h-full " />
+              <img src="/images/jackpot/table.png" className=" w-auto mx-auto  h-full " />
+              <div className="absolute bottom-0 p-2 left-1/2 -translate-x-1/2 flex gap-4 top-1/4 h-fit">
+              <div className="gap-4 grid grid-cols-2">
+                <div className="col-span-2 text-center font-bold">HIGH</div>
+              <div className="h-24 w-24 bg-white  rounded-sm shadow-lg p-2">
+                <span className="text-black text-sm font-bold">WIP</span>
+                <ArrowUp className="w-4 h-4 text-black" />
+              </div>
+              <div className="h-24 w-24 bg-white  rounded-sm shadow-lg p-2">
+                <span className="text-black text-sm font-bold">WIP</span>
+                <ArrowUp className="w-4 h-4 text-black" />
+              </div>
+              <div className="h-24 w-24 bg-white  rounded-sm shadow-lg p-2  ">
+                <span className="text-black text-sm font-bold">WIP</span>
+                <ArrowUp className="w-4 h-4 text-black" />
+              </div>
+              <div className="h-24 w-24 bg-white  rounded-sm shadow-lg p-2  ">
+                <span className="text-black text-sm font-bold">WIP</span>
+                <ArrowUp className="w-4 h-4 text-black" />
+              </div>
+              </div>
+              <div className="mx-20 border-r-[5px]   border-amber-600">
+              </div>
+              <div className="gap-4 grid grid-cols-2  border-white">
+                <div className="col-span-2 text-center font-bold">LOW</div>
+              <div className="h-24 w-24 bg-white  rounded-sm shadow-lg p-2  ">
+                <span className="text-black text-sm font-bold">WIP</span>
+                <ArrowUp className="w-4 h-4 text-black" />
+              </div>
+              <div className="h-24 w-24 bg-white  rounded-sm shadow-lg p-2">
+                <span className="text-black text-sm font-bold">WIP</span>
+                <ArrowUp className="w-4 h-4 text-black" />
+              </div>
+              <div className="h-24 w-24 bg-white  rounded-sm shadow-lg p-2">
+                <span className="text-black text-sm font-bold">WIP</span>
+                <ArrowUp className="w-4 h-4 text-black" />
+              </div>
+              <div className="h-24 w-24 bg-white  rounded-sm shadow-lg p-2">
+                <span className="text-black text-sm font-bold">WIP</span>
+                <ArrowUp className="w-4 h-4 text-black" />
+              </div>
+              </div>
+              </div>
             </div>
             {/* <BettingChips
               className="absolute bottom-0 left-0 w-full  h-fit"

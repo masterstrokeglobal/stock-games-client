@@ -1,6 +1,5 @@
-import { CoinTossPair } from "@/models/coin-toss-pair";
-import api from "./instance";
 import { CoinTossPairFormValues } from "@/components/features/coin-head-tail/coin-toss-pair-form";
+import api from "./instance";
 
 const coinTossPairAPI = {
     createCoinTossPair: async (data: CoinTossPairFormValues) => {

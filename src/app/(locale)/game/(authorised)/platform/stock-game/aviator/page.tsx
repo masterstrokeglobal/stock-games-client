@@ -1,9 +1,8 @@
     "use client"
 
-    import { useState } from "react"
     import { Button } from "@/components/ui/button"
-    import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-    import { Menu, Minus, Plus, LayoutGrid, Check } from "lucide-react"
+import { LayoutGrid, Menu, Minus, Plus } from "lucide-react"
+import { useState } from "react"
 
     export default function AviatorGame() {
         const [betAmount, setBetAmount] = useState(10.0)

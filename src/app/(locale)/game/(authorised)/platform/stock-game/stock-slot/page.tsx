@@ -5,7 +5,6 @@ import StockGameHeader from '@/components/common/stock-game-header';
 import { BettingArea } from '@/components/features/slot-game/betting-area';
 import { useCurrentGame } from '@/hooks/use-current-game';
 import { useMarketSelector } from '@/hooks/use-market-selector';
-import useWinningId from '@/hooks/use-winning-id';
 import { RoundRecordGameType } from '@/models/round-record';
 import { useState } from 'react';
 
@@ -14,7 +13,6 @@ const StockSlot = () => {
     const [betAmount, setBetAmount] = useState<number>(100);
     const { roundRecord, isLoading } = useCurrentGame(RoundRecordGameType.STOCK_JACKPOT);
 
-    const winningMarketId = useWinningId(roundRecord);
 
     if (!marketSelected) return <MarketSelector className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Stock Slot Market" />
 

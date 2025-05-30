@@ -1,8 +1,8 @@
+import { usePlacementOver } from '@/hooks/use-current-game';
 import { cn } from '@/lib/utils';
-import React, { PropsWithChildren, useMemo } from 'react';
-import { useGetMyCurrentRoundDiceGamePlacement, useCreateDiceGamePlacement } from '@/react-query/dice-game-queries';
-import { useIsPlaceOver, usePlacementOver } from '@/hooks/use-current-game';
 import { RoundRecord } from '@/models/round-record';
+import { useCreateDiceGamePlacement, useGetMyCurrentRoundDiceGamePlacement } from '@/react-query/dice-game-queries';
+import { PropsWithChildren } from 'react';
 
 interface GameBoardProps extends PropsWithChildren<PropsWithClassName> {
     roundRecord: RoundRecord;
@@ -29,7 +29,7 @@ const secondRow = [
     { number: 12, multiplier: '2x' }
 ];
 
-const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningMarketId }: GameBoardProps) => {
+const GameBoard = ({ children, className, roundRecord, globalBetAmount }: GameBoardProps) => {
     const { data: placements } = useGetMyCurrentRoundDiceGamePlacement(roundRecord.id);
     const createPlacement = useCreateDiceGamePlacement();
     const isPlaceOver = usePlacementOver(roundRecord);
@@ -95,7 +95,7 @@ export default GameBoard;
 
 
 
-const BetButton = ({ number, multiplier, isWinner,betAmounts,handleBetSelect }: { number: number, multiplier: string, isWinner: boolean,betAmounts:Record<number,number>,handleBetSelect:(number:number)=>void }) => {
+const BetButton = ({ number, multiplier,betAmounts,handleBetSelect }: { number: number, multiplier: string, isWinner: boolean,betAmounts:Record<number,number>,handleBetSelect:(number:number)=>void }) => {
     const amountBet = betAmounts[number] || 0;
     const hasBet = amountBet > 0;
 

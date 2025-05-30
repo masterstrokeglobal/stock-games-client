@@ -31,14 +31,6 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
         }
     }, [winningMarketId]);
 
-    if (!roundRecord) {
-        return (
-            <div className={`flex h-[500px] w-full items-center justify-center ${className || ""}`}>
-                <div className="text-gray-500">Loading wheel...</div>
-            </div>
-        );
-    }
-
     useEffect(() => {
         if (winningMarketId) {
             setTimeout(() => {
@@ -49,6 +41,15 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
             setShowResult(false);
         }
     }, [winningMarketId]);
+
+    
+    if (!roundRecord) {
+        return (
+            <div className={`flex h-[500px] w-full items-center justify-center ${className || ""}`}>
+                <div className="text-gray-500">Loading wheel...</div>
+            </div>
+        );
+    }
 
     return (
         <div className={`flex flex-col items-center w-full relative gap-6 ${className || ""}`}>

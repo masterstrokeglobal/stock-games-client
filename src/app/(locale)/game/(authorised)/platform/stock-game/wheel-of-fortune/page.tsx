@@ -32,7 +32,7 @@ const WheelOfFortune = () => {
 
     useEffect(() => {
         if (!roundRecord) return;
-        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() - 300;
+        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() +2000;
 
         const timer = setTimeout(() => {
             console.log("refetching round record");
@@ -46,6 +46,8 @@ const WheelOfFortune = () => {
         if (roundRecord?.id == data?.data?.id) return (data.data as RoundRecord).winningId || null;
         return null;
     }, [data, isSuccess, roundRecord]);
+
+    console.log("winningMarketId", winningMarketId);
 
 
     if (!marketSelected) return <MarketSelector className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Wheel of Fortune Market" />

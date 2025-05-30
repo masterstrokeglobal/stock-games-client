@@ -48,13 +48,16 @@ export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, winningSide
 
   return (
     <div className="flex flex-col justify-center items-start bg-gray-200">
-      <div className="w-full">
-        <StockPrice rankedMarketItem={stocks[0]} />
+      <div className="w-full grid grid-cols-2 ">
+        {
+          stocks.map((stock) => (
+            <StockPrice key={stock.id} rankedMarketItem={stock} />
+          ))
+        }
+        
       </div>
       <div className='h-32 w-full bg-white'>
-        <video src="/videos/head.webm" autoPlay loop muted />
-        <video src="/videos/tail.webm" autoPlay loop muted />
-        <video src="/videos/toss.webm" autoPlay loop muted />
+        <CoinFlip isFlipping={isFlipping} resultOutcome={winningSide ?? undefined} />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { RoundRecord } from "@/models/round-record";
 import { MarketItem } from "@/models/market-item";
 import { useRef, useState, useCallback, useEffect } from "react";
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 
@@ -297,11 +298,9 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         if ((child as any).currentText !== newText) {
           
           const font = (child as any).font;
-          const angle = (child as any).angle;
           
           if (font) {
             // Create new geometry
-            const { TextGeometry } = require('three/examples/jsm/geometries/TextGeometry.js');
             const newGeometry = new TextGeometry(newText, {
               font: font,
               size: 0.08,
@@ -361,7 +360,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         });
         
         // Update rotation state
-        setWheelRotationDegrees(prevDegrees => {
+        setWheelRotationDegrees(() => {
           const newDegrees = Math.abs((spinningObjectsRef.current[2].rotation.z * 180) / Math.PI % 360);
           if (typeof window !== 'undefined') {
             localStorage.setItem('wheelRotationDegrees', newDegrees.toString());
