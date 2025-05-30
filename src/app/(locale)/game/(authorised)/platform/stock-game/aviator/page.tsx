@@ -121,7 +121,7 @@
                         <div className="w-32 h-1 bg-gradient-to-r from-red-500 via-red-500 to-gray-500 mt-2"></div>
 
                         {/* SPRIBE Badge */}
-                        <div className="mt-8 bg-green-900/30 border border-green-500/30 rounded-lg p-3">
+                        {/* <div className="mt-8 bg-green-900/30 border border-green-500/30 rounded-lg p-3">
                             <div className="flex items-center justify-center space-x-2">
                                 <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center">
                                     <span className="text-green-500 text-xs">S</span>
@@ -135,11 +135,11 @@
                                 </div>
                             </div>
                             <div className="text-xs text-center text-gray-400 mt-1">Since 2018</div>
-                        </div> */}
+                        </div>  */}
                     </div>
 
                     {/* Red airplane in bottom left */}
-                    <div className="absolute bottom-4 left-4">
+                    {/* <div className="absolute bottom-4 left-4">
                         <svg
                             className="w-16 h-16 text-red-500 transform -rotate-12"
                             viewBox="0 0 24 24"
@@ -148,10 +148,10 @@
                         >
                             <path d="M22 2L2 9l7 3.5L17 8l-6.5 7.5L18 22l4-20z" stroke="none" />
                         </svg>
-                    </div>
+                    </div> */}
 
                     {/* User avatars */}
-                    <div className="absolute bottom-4 right-4 flex items-center space-x-2">
+                    {/* <div className="absolute bottom-4 right-4 flex items-center space-x-2">
                         <div className="flex -space-x-2">
                             <Avatar className="w-8 h-8 border-2 border-gray-700">
                                 <AvatarImage src="/placeholder.svg?height=32&width=32" />
@@ -163,7 +163,7 @@
                             </Avatar>
                         </div>
                         <span className="text-sm text-gray-400">155</span>
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Betting Controls */}

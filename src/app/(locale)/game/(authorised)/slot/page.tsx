@@ -19,6 +19,7 @@ import { RoundRecordGameType } from "@/models/round-record"
 import { useGetMyFavorites } from "@/react-query/favorite-market-item-queries"
 import { useGetMyStockSlotJackpotGameRecord } from "@/react-query/game-record-queries"
 import { CreditCard, SearchIcon } from "lucide-react"
+import BettingChips from "@/components/features/slot-jackpot/betting-chips"
 
 export default function Home() {
   // State for bet slip
@@ -41,14 +42,13 @@ export default function Home() {
 
 
   return (
-    <div className="flex flex-col min-h-screen  relative bg-[url('/images/game-bg-pattern.png')] bg-repeat  bg-center text-white  mx-auto">
+    <div className="flex flex-col min-h-screen   relative bg-[url('/images/game-bg-pattern.png')] bg-repeat  bg-center text-white  mx-auto">
       <Navbar />
-      <Tabs className="flex-1 px-4 mt-40 py-6 max-w-7xl mx-auto w-full" value={tab} onValueChange={(value) => setTab(value as SchedulerType)}>
+      <Tabs className="flex-1 px-4 mt-8  py-6 w-full" value={tab} onValueChange={(value) => setTab(value as SchedulerType)}>
         {/* Global Bet Amount and Search Section */}
         <div className="w-full">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            {/* Search Markets with improved UI */}
-            <div className=" group">
+          <div className="grid relative grid-cols-1  gap-6 mb-8 border rounded-lg h-[500px]  border-dashed border-primary  bg-gray-200">
+            {/* <div className=" group">
               <div className="relative">
                 <Input
                   type="text"
@@ -81,11 +81,17 @@ export default function Home() {
               {roundRecord && <TimeDisplay className="fixed top-14 left-1/2 -translate-x-1/2 z-50  w-full max-w-md" roundRecord={roundRecord} />}
             </div>
 
-            {/* Global Bet Amount with improved UI */}
-            <BettingAmount
+            */}
+
+            <div className="relative h-full w-full  bg-contain bg-no-repeat bg-center">
+
+              <img src="/images/jackpot/table.png" className=" w-auto  h-full " />
+            </div>
+            {/* <BettingChips
+              className="absolute bottom-0 left-0 w-full  h-fit"
               globalBetAmount={globalBetAmount}
               handleGlobalBetAmountChange={handleGlobalBetAmountChange}
-            />
+            />  */}
           </div>
 
           {/* Bet slip counter badge */}

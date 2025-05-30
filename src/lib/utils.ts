@@ -1,4 +1,5 @@
 import { PlacementType } from "@/models/game-record";
+import { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -298,3 +299,11 @@ export const baseTheme = {
 export const decodeUrlString = (encoded: string): string => {
   return decodeURIComponent(encoded);
 }
+
+
+export const schedulerTypeOptions = Object.values(SchedulerType).map((type) => ({
+  label: type,
+  value: type
+}));
+
+

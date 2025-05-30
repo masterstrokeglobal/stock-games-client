@@ -113,6 +113,37 @@ export const StockDerbyGames : Game[] = [
         image: "/images/ad3.png",
         description: "Guess Last Price Digit and win"
     },
+
+    // 7 up down
+    {
+        title: "7 Up Down",
+        link: "/game/platform/stock-game/7-up-7-down",
+        image: "/images/banner/7-up.png",
+        description: "14 stocks choosing will more than 7 go up or down"
+    }
+,
+    // coin head tail
+    {
+        title: "Coin Head Tail",
+        link: "/game/platform/stock-game/coin-head-tail",
+        image: "/images/banner/coin-toss.png",
+        description: "Guess the side of the coin"
+    }
+    , 
+    {
+        title: "Wheel of Fortune",
+        link: "/game/platform/stock-game/wheel-of-fortune",
+        image: "/images/banner/wheel-of-fortune.png",
+        description: "Guess the side of the coin"
+    }
+    ,
+    {
+        title: "Dice Game",
+        link: "/game/platform/stock-game/dice-game",
+        image: "/images/banner/dice-game.png",
+        description: "Guess the side of the coin"
+    }
+
    
 ]
 

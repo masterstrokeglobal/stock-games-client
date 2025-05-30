@@ -4,7 +4,6 @@ import { MarketItem } from '@/models/market-item';
 import { cn } from '@/lib/utils';
 import { usePlacementOver } from '@/hooks/use-current-game';
 import { useLeaderboard } from '@/hooks/use-leadboard';
-import Image from 'next/image';
 interface DiceFaceProps {
   marketItem: MarketItem;
   className: string;
@@ -22,18 +21,18 @@ interface Dice3DProps {
 const StockDisplay = ({ stock }: { stock: any }) => (
   <div className="flex justify-between items-center text-[10px] relative z-20 text-white/90 py-0.5 px-1 bg-black/70 backdrop-blur-sm rounded hover:bg-black transition-colors w-full">
     <div className="flex items-center gap-0.5 min-w-0">
-      <span className="font-medium truncate max-w-[40px]">{stock.codeName}</span>
+      <span className="font-medium truncate max-w-[40px]">{stock?.codeName}</span>
       <span className="text-[8px] font-bold bg-white/10 px-0.5 rounded-full flex-shrink-0">
-        {stock.horse % 6 === 0 ? 6 : stock.horse % 6}
+        {stock?.horse % 6 === 0 ? 6 : stock?.horse % 6}
       </span>
     </div>
     <span className={cn(
       "font-bold px-0.5 rounded flex-shrink-0",
-      Number(stock.change_percent) >= 0
+      Number(stock?.change_percent) >= 0
         ? 'text-green-400 bg-green-400/10'
         : 'text-red-400 bg-red-400/10'
     )}>
-      {Number(stock.change_percent) >= 0 ? '+' : ''}{stock.change_percent}%
+      {Number(stock?.change_percent) >= 0 ? '+' : ''}{stock?.change_percent}%
     </span>
   </div>
 );
@@ -42,13 +41,14 @@ const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, winningMar
   const marketItems = roundRecord.market;
   const { stocks } = useLeaderboard(roundRecord);
   const isPlaceOver = usePlacementOver(roundRecord);
-  const isRolling = false;
+  const isRolling = isPlaceOver && winningMarketId == null;
 
   const firstCube = marketItems.slice(0, 6);
   const secondCube = marketItems.slice(6, 12);
 
+  console.log(isPlaceOver, winningMarketId);
+
   const marketItemsStocks = useMemo(() => {
-    console.log(stocks);
     return marketItems.map((item) => {
       const stock = stocks.find((stock) => stock.id === item.id);
       console.log(stock);

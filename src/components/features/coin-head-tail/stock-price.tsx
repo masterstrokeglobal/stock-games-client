@@ -12,6 +12,11 @@ interface StockPriceProps {
 }
 
 const StockPrice: React.FC<StockPriceProps> = ({ rankedMarketItem }) => {
+
+  if (rankedMarketItem == null) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="bg-black flex text-xs flex-row  justify-between px-4 items-center gap-2 p-2">
       <div className="flex flex-col gap-2">
@@ -47,7 +52,9 @@ export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, winningSide
         <StockPrice rankedMarketItem={stocks[0]} />
       </div>
       <div className='h-32 w-full bg-white'>
-        <CoinFlip isFlipping={isFlipping} resultOutcome={winningSide ?? undefined} />
+        <video src="/videos/head.webm" autoPlay loop muted />
+        <video src="/videos/tail.webm" autoPlay loop muted />
+        <video src="/videos/toss.webm" autoPlay loop muted />
       </div>
     </div>
   );
