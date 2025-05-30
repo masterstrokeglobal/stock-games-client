@@ -1,3 +1,4 @@
+import { CoinTossPair } from "./coin-toss-pair";
 import { HeadTailPlacementType } from "./head-tail";
 import MarketItem, { SchedulerType } from "./market-item";
 import { WheelColor, ColorConfig } from "./wheel-of-fortune-placement";
@@ -15,6 +16,8 @@ export enum RoundRecordGameType {
     SEVEN_UP_DOWN = "seven_up_down",
     HEAD_TAIL = "head_tail",
     WHEEL_OF_FORTUNE = "wheel_of_fortune",
+    AVIATOR = "aviator",
+    DICE = "dice"    
 }
 
 export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
@@ -25,7 +28,7 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
         borderColor: 'border-yellow-600',
         shadowColor: 'shadow-yellow-500/50',
         actualColor: '#FFD700',
-        multiplier: 2.4
+        multiplier: 2
     },
     [WheelColor.COLOR2]: {
         name: 'RED',
@@ -34,7 +37,7 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
         borderColor: 'border-red-600',
         shadowColor: 'shadow-red-500/50',
         actualColor: '#DC2626',
-        multiplier: 2.4 // 1:2.4 payout for red
+        multiplier: 2
     },
     [WheelColor.COLOR3]: {
         name: 'BLUE',
@@ -43,7 +46,7 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
         borderColor: 'border-blue-600',
         shadowColor: 'shadow-blue-500/50',
         actualColor: '#2563EB',
-        multiplier: 2.4 // 1:2.4 payout for blue
+        multiplier: 2
     },
     [WheelColor.COLOR4]: {
         name: 'GREEN',
@@ -52,7 +55,7 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
         borderColor: 'border-green-600',
         shadowColor: 'shadow-green-500/50',
         actualColor: '#16A34A',
-        multiplier: 2.4 // 1:2.4 payout for green
+        multiplier: 2
     },
     [WheelColor.COLOR5]: {
         name: 'PURPLE',
@@ -61,7 +64,7 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
         borderColor: 'border-purple-600',
         shadowColor: 'shadow-purple-500/50',
         actualColor: '#7C3AED',
-        multiplier: 4.8// 1:2.4 payout for purple
+        multiplier: 2
     }
 };
 
@@ -78,6 +81,7 @@ export class RoundRecord {
     type: SchedulerType;
     roundRecordGameType: RoundRecordGameType;
     winningId?: number[];
+    coinTossPair?: CoinTossPair;
     createdAt: Date;
     winningMarket?: MarketItem;
     updatedAt: Date;
@@ -108,6 +112,7 @@ export class RoundRecord {
         this.updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
         this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : undefined;
         this.initialValues = data.initialValues || null;
+        this.coinTossPair = data.coinTossPair ? new CoinTossPair(data.coinTossPair) : undefined;
         this.winningSide = data.winningSide || undefined;
         this.marketColors = data.marketColors || [];
     }

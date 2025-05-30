@@ -1,26 +1,41 @@
 "use client"
+import TimeDisplay from '@/components/common/bet-locked-banner';
 import GameLoadingScreen from '@/components/common/game-loading-screen';
-import TimeDisplay from '@/components/features/7-up-down/BetLockedBanner';
+import MarketSelector from '@/components/common/market-selector';
 import { BettingArea } from '@/components/features/wheel-of-fortune/betting-area';
 import GameBoard from '@/components/features/wheel-of-fortune/game-board';
 import { StockPriceDisplay } from '@/components/features/wheel-of-fortune/stock-price';
 import { useCurrentGame } from '@/hooks/use-current-game';
-import { RoundRecord } from '@/models/round-record';
-import { RoundRecordGameType } from '@/models/round-record';
+import { useMarketSelector } from '@/hooks/use-market-selector';
+import { RoundRecord, RoundRecordGameType } from '@/models/round-record';
 import { useGetRoundRecordById } from '@/react-query/round-record-queries';
 import { useEffect, useMemo, useState } from 'react';
 
+
 const WheelOfFortune = () => {
+    const { marketSelected } = useMarketSelector();
     const [betAmount, setBetAmount] = useState<number>(100);
-    const { roundRecord, isLoading } = useCurrentGame(RoundRecordGameType.WHEEL_OF_FORTUNE);
+    const {
+        roundRecord,
+        isLoading
+    } = useCurrentGame(RoundRecordGameType.WHEEL_OF_FORTUNE);
+    // const roundRecord = useMemo(() => RoundRecord.fromAPI(roundRecordData), []);
+
 
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord?.id);
 
     useEffect(() => {
+        if (isSuccess) {
+            console.log("round record refetched winningId", data.data.winningId);
+        }
+    }, [data]);
+
+    useEffect(() => {
         if (!roundRecord) return;
-        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 3000;
+        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() +2000;
 
         const timer = setTimeout(() => {
+            console.log("refetching round record");
             refetch();
         }, resultFetchTime);
         return () => clearTimeout(timer);
@@ -28,11 +43,14 @@ const WheelOfFortune = () => {
 
     const winningMarketId: number[] | null = useMemo(() => {
         if (!isSuccess) return null;
-        console.log(data?.data)
         if (roundRecord?.id == data?.data?.id) return (data.data as RoundRecord).winningId || null;
         return null;
     }, [data, isSuccess, roundRecord]);
 
+    console.log("winningMarketId", winningMarketId);
+
+
+    if (!marketSelected) return <MarketSelector className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Wheel of Fortune Market" />
 
     if (isLoading || !roundRecord) return <GameLoadingScreen className='min-h-[calc(100svh-100px)]' />
 

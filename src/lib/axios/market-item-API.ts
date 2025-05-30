@@ -15,7 +15,7 @@ export const marketItemAPI = {
             }
         });
         return api.get("/market-items", { params: sanitizedFilter });
-    },
+    },          
     updatePlacementAllowed: async (id: string) => {
         return api.patch(`/market-items/placement-allowed/${id}`);
     },

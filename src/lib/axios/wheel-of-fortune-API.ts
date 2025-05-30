@@ -15,7 +15,7 @@ const wheelOfFortuneAPI = {
     },
     getWheelOfFortuneRoundResult: async (roundId: number) => {
         const response = await api.get(`/wheel-of-fortune/result/${roundId}`);
-        return response.data;
+        return response.data.placements;
     }
 }
 

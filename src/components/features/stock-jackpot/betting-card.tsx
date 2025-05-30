@@ -9,7 +9,7 @@ import { RoundRecord } from "@/models/round-record"
 import { StockSlotPlacementType } from "@/models/stock-slot-placement"
 import { useCreateStockSlotGameRecord, useGetMyStockSlotGameRecord } from "@/react-query/game-record-queries"
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
-import { ArrowDownIcon, ArrowUpIcon, TrendingDownIcon, TrendingUpIcon } from "lucide-react"
+import { ArrowDownIcon, ArrowUpIcon, TrendingUpIcon } from "lucide-react"
 import { useCallback, useMemo, useState } from "react"
 
 interface BettingCardProps {
@@ -71,7 +71,7 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
   const bettingOpen = !isPlaceOver && !isPlacingBet;
 
   return (
-    <Card className="w-full bg-gradient-to-r md:pr-8 from-gray-900 to-gray-800 border-primary relative text-white">
+    <Card className="w-full bg-gradient-to-r md:pr-8 selection:bg-transparent from-gray-900 to-gray-800 border-primary relative text-white">
     {marketItem.id && <FavoriteMarketItem marketItemId={marketItem.id} className="absolute top-1 right-1" />}
       <div className="p-2 sm:p-4 flex flex-col lg:flex-row w-full gap-2 sm:gap-4">
         {/* Part 1: Stock Details */}
@@ -86,7 +86,7 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
           <div className="mt-2 sm:mt-3">
             <div className="flex justify-between items-center">
               <span className="text-xs sm:text-sm text-gray-400">Betting Price:</span>
-              <span className="font-medium text-xs sm:text-sm">Rs. {initialPrice?.toFixed(2)}</span>
+              <span className="font-medium text-xs sm:text-sm">{marketItem.currency} {initialPrice?.toFixed(2)}</span>
             </div>
             <div className="flex justify-between items-center mt-1">
               <span className="text-xs sm:text-sm text-gray-400">Your Bet:</span>
@@ -97,13 +97,13 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord }: Bettin
 
         {/* Part 2: Bet Down Section */}
         <div className="flex-1 bg-gray-800/50 rounded-lg p-2 sm:p-3 relative flex flex-col justify-between overflow-hidden">
-          <div className="flex justify-between items-center mb-1 sm:mb-2">
+          {/* <div className="flex justify-between items-center mb-1 sm:mb-2">
             <div className="flex items-center gap-1">
               <TrendingDownIcon className="w-3 h-3 sm:w-4 sm:h-4 text-red-400" />
               <span className="font-bold  sm:text-sm text-red-400">DOWN</span>
             </div>
             <span className=" font-bold text-red-300">1.96x</span>
-          </div>
+          </div> */}
           <div className="h-14 sm:h-16 flex items-center justify-center relative">
             { downPlaced ? (
               <div className="w-full h-full bg-red-900/40 rounded-lg border-2 border-red-500/50 flex items-center justify-center">

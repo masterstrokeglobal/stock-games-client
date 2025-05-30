@@ -12,6 +12,7 @@ interface BettingControlsProps {
     roundId: number;
     isLoading: boolean;
     isPlaceOver: boolean;
+    showFooterButtons?: boolean;
 }
 
 export const BettingControls: React.FC<BettingControlsProps> = ({
@@ -20,6 +21,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
     isPlaceOver,
     roundId,
     isLoading,
+    showFooterButtons = true,
 }) => {
     const t = useTranslations('game');
     const { userDetails } = useAuthStore();
@@ -69,23 +71,26 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                     ))}
                 </div>
             </div>
-            <div className='flex justify-between items-center  md:flex-row mb-2 gap-2'>
-                <Button
-                    className={`bg-primary-game w-full ${isPlaceOver || isLoading ? 'opacity-50      cursor-not-allowed' : ''}`}
-                    disabled={isPlaceOver || isLoading || isClearPlacementPending}
-                    onClick={handleClearPlacement}
-                >
-                    {isPlaceOver ? t('betting-closed').toUpperCase() : isLoading ? t('please-wait').toUpperCase() : t('clear-all').toUpperCase()}
-                </Button>
+            {
+                showFooterButtons && (
+                    <div className='flex justify-between items-center  md:flex-row mb-2 gap-2'>
+                        <Button
+                            className={`bg-primary-game w-full ${isPlaceOver || isLoading ? 'opacity-50      cursor-not-allowed' : ''}`}
+                            disabled={isPlaceOver || isLoading || isClearPlacementPending}
+                            onClick={handleClearPlacement}
+                        >
+                            {isPlaceOver ? t('betting-closed').toUpperCase() : isLoading ? t('please-wait').toUpperCase() : t('clear-all').toUpperCase()}
+                        </Button>
 
-                <Button
-                    className={`bg-primary-game w-full ${isPlaceOver || isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    disabled={isPlaceOver || isLoading || isRepeatPlacementPending}
-                    onClick={handleRepeatPlacement}
-                >
-                    {isPlaceOver ? t('betting-closed').toUpperCase() : isLoading ? t('please-wait').toUpperCase() : t('repeat-bet').toUpperCase()}
-                </Button>
-            </div>
+                        <Button
+                            className={`bg-primary-game w-full ${isPlaceOver || isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            disabled={isPlaceOver || isLoading || isRepeatPlacementPending}
+                            onClick={handleRepeatPlacement}
+                        >
+                            {isPlaceOver ? t('betting-closed').toUpperCase() : isLoading ? t('please-wait').toUpperCase() : t('repeat-bet').toUpperCase()}
+                        </Button>
+                    </div>
+                )}
         </div>
     );
 };

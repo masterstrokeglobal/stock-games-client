@@ -104,7 +104,7 @@ const SinglePlayerRouletteGame = ({ roundRecord }: Props) => {
         });
     }
 
-    
+
     const ButtonChip = ({ amount, className }: { amount: number, className?: string }) => (
         <div className={cn("absolute top-1/2 right-4 translate-x-1/2 -translate-y-1/2 bg-chip text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold", className)}>
             {amount}
@@ -187,6 +187,7 @@ const SinglePlayerRouletteGame = ({ roundRecord }: Props) => {
                             <BettingControls
                                 roundId={roundRecord.id}
                                 isLoading={isPlacingBet}
+                                showFooterButtons={false}
                                 betAmount={betAmount}
                                 setBetAmount={setBetAmount}
                                 isPlaceOver={gameState.isPlaceOver || isNotAllowedToPlaceBet}

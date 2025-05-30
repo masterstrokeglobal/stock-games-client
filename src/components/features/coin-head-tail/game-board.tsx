@@ -16,21 +16,21 @@ export default function CoinFlipGame({ roundRecord, amount, className, children,
 
   const { mutate: createHeadTailPlacement, isPending } = useCreateHeadTailPlacement();
 
-  const {data:placements} = useGetMyCurrentRoundHeadTailPlacement(roundRecord.id);
+  const { data: placements } = useGetMyCurrentRoundHeadTailPlacement(roundRecord.id);
 
   const handleCardClick = (side: HeadTailPlacementType) => {
     if (isPending) return;
     createHeadTailPlacement({ roundId: roundRecord.id, placement: side, amount })
   };
 
-  const { myHeadAmount, myTailAmount} = placements?.reduce((acc, placement) => {
-    if(placement.placement === HeadTailPlacementType.HEAD){
+  const { myHeadAmount, myTailAmount } = placements?.reduce((acc, placement) => {
+    if (placement.placement === HeadTailPlacementType.HEAD) {
       acc.myHeadAmount += placement.amount;
-    }else{
+    } else {
       acc.myTailAmount += placement.amount;
     }
     return acc;
-  }, {myHeadAmount: 0, myTailAmount: 0}) ?? {myHeadAmount: 0, myTailAmount: 0};
+  }, { myHeadAmount: 0, myTailAmount: 0 }) ?? { myHeadAmount: 0, myTailAmount: 0 };
 
   return (
     <div className={cn("flex flex-col items-center justify-center w-full h-full bg-amber-800 p-4 pt-20 rounded-lg bg-center relative ", className)}>
@@ -45,12 +45,16 @@ export default function CoinFlipGame({ roundRecord, amount, className, children,
           <div className="bg-green-600 rounded-t-md p-3 text-center">
             <span className="text-white text-2xl font-bold">HEAD</span>
           </div>
-          <div className="bg-amber-100 flex-1 rounded-b-md flex flex-col items-center justify-start p-4 relative">
+
+          <div className="bg-amber-100 flex-1 rounded-b-md flex flex-col items-center justify-start px-4 pb-4 relative">
+            <div className="flex flex-col gap-2 text-black text-sm font-semibold">
+              {roundRecord.coinTossPair?.head?.name}
+            </div>
             <div className="w-20 h-20 rounded-full flex items-center justify-center">
               <img src="/images/coin-face/head.png" alt="head" className="w-full h-full object-fill" />
             </div>
             <div className="mt-4 text-amber-900 font-bold">1:1.96</div>
-            
+
             {/* Stats Container */}
             <div className="absolute bottom-0 left-0 right-0 bg-amber-50 bg-opacity-80 p-2 rounded-b-md">
               <div className="flex justify-between items-center px-2">
@@ -64,7 +68,7 @@ export default function CoinFlipGame({ roundRecord, amount, className, children,
                 </div>
               </div>
             </div>
-          
+
           </div>
         </div>
 
@@ -76,12 +80,15 @@ export default function CoinFlipGame({ roundRecord, amount, className, children,
           <div className="bg-red-600 rounded-t-md p-3 text-center">
             <span className="text-white text-2xl font-bold">TAIL</span>
           </div>
-          <div className="bg-amber-100 flex-1 rounded-b-md flex flex-col items-center justify-start p-4 relative">
+          <div className="bg-amber-100 flex-1 rounded-b-md flex flex-col items-center justify-start px-4 pb-4 relative">
+            <div className="flex flex-col gap-2 text-black text-sm font-semibold">
+              {roundRecord.coinTossPair?.tail?.name}
+            </div>
             <div className="w-20 h-20 rounded-full flex items-center justify-center">
               <img src="/images/coin-face/tail.png" alt="tail" className="w-full h-full object-fill" />
             </div>
             <div className="mt-4 text-amber-900 font-bold">1:1.96</div>
-            
+
             {/* Stats Container */}
             <div className="absolute bottom-0 left-0 right-0 w-full bg-amber-50 bg-opacity-80 p-2 rounded-b-md">
               <div className="flex justify-between items-center px-2">
@@ -94,8 +101,8 @@ export default function CoinFlipGame({ roundRecord, amount, className, children,
                   <span className="block font-bold">{INR(myTailAmount * 1.96)}</span>
                 </div>
               </div>
-            </div>           
-          
+            </div>
+
           </div>
         </div>
       </div>

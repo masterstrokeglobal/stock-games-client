@@ -557,3 +557,78 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   outline: none;
   background-color: #0d0d0d;
 }
+
+
+.dice-front {
+  transform: translateZ(40px);
+}
+
+.dice-back {
+  transform: rotateY(180deg) translateZ(40px);
+}
+
+.dice-right {
+  transform: rotateY(90deg) translateZ(40px);
+}
+
+.dice-left {
+  transform: rotateY(-90deg) translateZ(40px);
+}
+
+.dice-top {
+  transform: rotateX(90deg) translateZ(40px);
+}
+
+.dice-bottom {
+  transform: rotateX(-90deg) translateZ(40px);
+}
+
+.dice-cube-container:hover .dice-cube {
+  animation-play-state: paused;
+}
+
+@keyframes smoothRotation {
+  0% {
+    transform-origin: center;
+    transform: rotateX(0deg) rotateY(0deg);
+  }
+  25% {
+    transform-origin: center;
+    transform: rotateX(90deg) rotateY(90deg);
+  }
+  50% {
+    transform-origin: center;
+    transform: rotateX(180deg) rotateY(180deg);
+  }
+  75% {
+    transform-origin: center;
+    transform: rotateX(270deg) rotateY(270deg);
+  }
+  100% {
+    transform-origin: center;
+    transform: rotateX(360deg) rotateY(360deg);
+  }
+}
+
+@keyframes smoothRotation2 {
+  0% {
+    transform-origin: center;
+    transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  }
+  25% {
+    transform-origin: center;
+    transform: rotateX(90deg) rotateY(90deg) rotateZ(90deg);
+  }
+  50% {
+    transform-origin: center;
+    transform: rotateX(180deg) rotateY(180deg) rotateZ(180deg);
+  }
+  75% {
+    transform-origin: center;
+    transform: rotateX(270deg) rotateY(270deg) rotateZ(270deg);
+  }
+  100% {
+    transform-origin: center;
+    transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+  }
+}

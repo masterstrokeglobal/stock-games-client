@@ -18,7 +18,7 @@ export function useGameType() {
 
     const getCurrentGameType = useCallback((): SchedulerType => {
         const gameTypeFromParams = searchParams.get("gameType") as SchedulerType | null;
-        let type =  gameTypeFromParams ??(isNseAvailable? SchedulerType.NSE : SchedulerType.CRYPTO);
+        let type = gameTypeFromParams ?? (isNseAvailable ? SchedulerType.NSE : SchedulerType.CRYPTO);
         if (user?.isNotAllowedToPlaceOrder(type)) {
             type = SchedulerType.NSE;
         }
@@ -33,6 +33,7 @@ export function useGameType() {
             const newParams = new URLSearchParams(searchParams.toString());
             newParams.set("gameType", newGameType);
             router.replace(`?${newParams.toString()}`);
+            console.log("replaced", newGameType);
         },
         [searchParams, router]
     );
@@ -49,7 +50,7 @@ export function useGameType() {
             setGameType(newGameType);
             updateUrl(newGameType);
         },
-        [updateUrl]
+        [updateUrl, gameType]
     );
 
 
@@ -63,9 +64,9 @@ export function useRoundRecordGameType() {
     const pathname = usePathname();
 
     const gameTypeFromParams = searchParams.get("roundRecordGameType") as RoundRecordGameType | null;
-    let type = gameTypeFromParams ?? RoundRecordGameType.GUESS_FIRST_FOUR ;
+    let type = gameTypeFromParams ?? RoundRecordGameType.GUESS_FIRST_FOUR;
 
-    if(pathname.includes("mini-mutual-fund")){
+    if (pathname.includes("mini-mutual-fund")) {
         type = RoundRecordGameType.MINI_MUTUAL_FUND;
     }
 
@@ -73,7 +74,7 @@ export function useRoundRecordGameType() {
 
     const updateUrl = useCallback(
         (newGameType: RoundRecordGameType) => {
-            if(pathname.includes("mini-mutual-fund")){
+            if (pathname.includes("mini-mutual-fund")) {
                 router.replace(`/game/single-player/mini-mutual-fund`);
                 return;
             }
@@ -86,13 +87,13 @@ export function useRoundRecordGameType() {
 
     // Synchronize state and update URL when gameType changes
     const setGameTypeAndSync = useCallback(
-        (newGameType: RoundRecordGameType) => { 
+        (newGameType: RoundRecordGameType) => {
             setGameType(newGameType);
             updateUrl(newGameType);
         },
         [updateUrl]
     );
 
-    
+
     return [gameType, setGameTypeAndSync] as const;
 }

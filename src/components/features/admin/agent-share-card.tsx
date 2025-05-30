@@ -16,8 +16,8 @@ const ReferralCard = ({ agentCode }: Props) => {
         try {
             await navigator.clipboard.writeText(gameLink);
             toast.success("Link copied to clipboard");
-        } catch (_) {
-            console.log(_);
+        } catch (error) {
+            console.log(error);
             toast.error("Failed to copy link");
         }
     };

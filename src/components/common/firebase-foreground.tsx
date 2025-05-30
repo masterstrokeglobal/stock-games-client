@@ -21,7 +21,6 @@ export default function FcmTokenComp() {
             if (notificationPermissionStatus === 'granted') {
                 const messaging = getMessaging(firebaseApp);
                 const unsubscribe = onMessage(messaging, (payload) => {
-                    console.log('Message received. ', payload);
 
                     toast.success(payload.notification?.title ?? 'New Notification', {
                         description: payload.notification?.body,

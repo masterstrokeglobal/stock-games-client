@@ -1,6 +1,6 @@
 import { LobbyGameType } from "@/models/lobby";
 
-export const LOBBY_GAMES = [
+export const LOBBY_GAMES : Game[] = [
     {
         title: "Guess First Four",
         gameType: LobbyGameType.GUESS_FIRST_FOUR,
@@ -81,7 +81,7 @@ export const LOBBY_GAMES = [
 ] as const;
 
 
-export const StockDerbyGames = [
+export const StockDerbyGames : Game[] = [
     {
         title: "NSE Market",
         link: "/game?gameType=nse",
@@ -101,21 +101,53 @@ export const StockDerbyGames = [
         description: "Rouletter game on live US stocks",
     },
     {
-        title:"Stock Jackpot",
+        title: "Stock Jackpot",
         link: "/game/jackpot",
-        image:"/images/ad1.webp",
-        description:"Guess Price Movement"
+        image: "/images/ad1.webp",
+        description: "Guess Price Movement"
     },
     {
-        
-        title:"Stock Slot",
+
+        title: "Stock Slot",
         link: "/game/slot",
-        image:"/images/ad3.png",
-        description:"Guess Last Price Digit and win"
+        image: "/images/ad3.png",
+        description: "Guess Last Price Digit and win"
+    },
+
+    // 7 up down
+    {
+        title: "7 Up Down",
+        link: "/game/platform/stock-game/7-up-7-down",
+        image: "/images/banner/7-up.png",
+        description: "14 stocks choosing will more than 7 go up or down"
     }
+,
+    // coin head tail
+    {
+        title: "Coin Head Tail",
+        link: "/game/platform/stock-game/coin-head-tail",
+        image: "/images/banner/coin-toss.png",
+        description: "Guess the side of the coin"
+    }
+    , 
+    {
+        title: "Wheel of Fortune",
+        link: "/game/platform/stock-game/wheel-of-fortune",
+        image: "/images/banner/wheel-of-fortune.png",
+        description: "Guess the side of the coin"
+    }
+    ,
+    {
+        title: "Dice Game",
+        link: "/game/platform/stock-game/dice-game",
+        image: "/images/banner/dice-game.png",
+        description: "Guess the side of the coin"
+    }
+
+   
 ]
 
-export const SinglePlayerGames = [
+export const SinglePlayerGames : Game[] = [
     {
         title: "Guess First Four",
         gameType: LobbyGameType.GUESS_FIRST_FOUR,
@@ -174,9 +206,29 @@ export const SinglePlayerGames = [
         image: "/images/games/mini-mutual-fund.png",
         description: "Create a small portfolio and compete with other players",
     },
+    {
+        title: "7up Down",
+        link: "/game/platform/stock-game/7-up-7-down",
+        image: "/images/games/7-up.png",
+        description: "14 stocks choosing will more than 7 go up or down"
+    },
+    {
+        title: "Coin Head Tail",
+        link: "/game/platform/stock-game/coin-head-tail",
+        image: "/images/games/coin-head-tail.png",
+        description: "Guess the side of the coin"
+    }
 
 ]
 
 
 
-export type Game = (typeof LOBBY_GAMES)[number];
+export type Game = {
+    title: string;
+    gameType?: LobbyGameType;
+    link: string;
+    image: string;
+    description: string;
+    rules?: string[];
+    color?: string;
+}

@@ -13,7 +13,9 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
 
   useEffect(() => {
     if (open) {
-      setShowDialog(open);
+      setTimeout(()=>{
+        setShowDialog(open);
+      }, 2000)
     }
   }, [open]);
 

@@ -15,7 +15,8 @@ interface UserLeaderboardStats {
 
 export function useLeaderboardAggregation(
     placements: MiniMutualFundPlacement[],
-    leaderboardData: RankedMarketItem[]
+    leaderboardData: RankedMarketItem[],
+    isLeverageUsed: boolean = false
 ): UserLeaderboardStats[] {
 
     const userIdHorseMap = useMemo(() => {
@@ -65,14 +66,14 @@ export function useLeaderboardAggregation(
             userStatsMap[userId!].bettedAmount += amount;
 
             // Calculate this placement's potential return and add to user's total
-            const placementReturn = amount * (1 + (marketData.changePercent / 100)) / LEVERAGE_MULTIPLIER;
+            const placementReturn = amount * (1 + (marketData.changePercent / 100)) / (isLeverageUsed ? LEVERAGE_MULTIPLIER : 1);
             userStatsMap[userId].potentialReturn += placementReturn;
         });
 
         Object.values(userStatsMap).forEach(user => {
             if (user.bettedAmount > 0) {
                 // This gives us the effective change percent across all investments
-                user.changePercent = ((user.potentialReturn / (user.bettedAmount / LEVERAGE_MULTIPLIER)) - 1) * 100;
+                user.changePercent = ((user.potentialReturn / (user.bettedAmount / (isLeverageUsed ? LEVERAGE_MULTIPLIER : 1))) - 1) * 100;
             }
         });
 

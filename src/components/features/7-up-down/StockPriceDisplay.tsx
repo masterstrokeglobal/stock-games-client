@@ -30,14 +30,14 @@ export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord }> = ({ roun
   const totalPositiveStocks = sortedStocks.filter(stock => parseFloat(stock.change_percent) > 0).length;
   return (
     <div className="flex flex-col justify-between items-start bg-gray-200">
-      <div className="grid grid-cols-6 w-full">
-        {sortedStocks.slice(0, 6).map((stock, index) => (
+      <div className="grid grid-cols-7 w-full">
+        {sortedStocks.slice(0, 7).map((stock, index) => (
           <StockPrice key={index} rankedMarketItem={stock} />
         ))}
       </div>
       <CryptoStockChart latestValue={totalPositiveStocks} show={true} id={roundRecord.id.toString()} />
-      <div className="grid grid-cols-6 w-full">
-        {sortedStocks.slice(6).map((stock, index) => (
+      <div className="grid grid-cols-7 w-full">
+        {sortedStocks.slice(7).map((stock, index) => (
           <StockPrice key={index} rankedMarketItem={stock} />
         ))}
       </div>

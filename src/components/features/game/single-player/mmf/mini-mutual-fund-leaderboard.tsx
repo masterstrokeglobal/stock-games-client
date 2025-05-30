@@ -14,8 +14,6 @@ const MiniMutualFundLeaderBoard = () => {
     const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
     const { isGameOver, isPlaceOver } = useGameState(roundRecord);
 
-    console.log(isPlaceOver, "isPlaceOver");
-
     useEffect(() => {
         if (sectionRef.current) {
             const sectionHeight = sectionRef.current.offsetHeight;
