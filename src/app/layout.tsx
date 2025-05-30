@@ -45,6 +45,9 @@ export default async function RootLayout({
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
             <title>Stock Games </title>
             <link rel="preconnect" href="https://fonts.gstatic.com" />
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preload" href="https://fonts.googleapis.com/css2?family=Keania+One:wght@400&display=swap" as="style" />
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Keania+One:wght@400&display=swap" />
             <link rel="icon" href="/favicon.ico" />
           </head>
           <body
