@@ -18,7 +18,7 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
     onSpinComplete,
 }) => {
 
-    const [showResult, setShowResult] = React.useState(false);
+    const [showResult, setShowResult] = useState(false);
     const [displayWinner, setDisplayWinner] = useState(false);
     useEffect(() => {
         if (winningMarketId && winningMarketId.length > 0) {

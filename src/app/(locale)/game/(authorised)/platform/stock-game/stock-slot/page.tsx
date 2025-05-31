@@ -20,12 +20,13 @@ const StockSlot = () => {
     if (isLoading || !roundRecord) return <GameLoadingScreen className='min-h-[calc(100svh-100px)]' />
 
     return (
-        <section className="flex flex-col  items-center justify-center min-h-[calc(100svh-80px)] h-full">
-            <div className="flex flex-col flex-1 max-w-2xl h-full w-full mx-auto bg-gray-900 border border-gray-600 rounded-lg text-white overflow-hidden">
+        <section className="flex flex-col  items-center justify-center min-h-[calc(100svh-80px)] h-fit">
+            <div className="flex flex-col  max-w-2xl h-fit w-full mx-auto bg-gray-900 border border-gray-600 rounded-lg text-white overflow-hidden">
                 <StockGameHeader onBack={() => setMarketSelected(false)} title="Stock Slot" />
-                 <div className='flex flex-col flex-1 h-full items-center justify-center'>
-                        <Slot roundRecord={roundRecord} />
-                </div> 
+                <div className='flex flex-col flex-1 h-fit max-h-[500px] items-center justify-center'>
+                    <Slot roundRecord={roundRecord} />
+                </div>
+
                 <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
             </div>
         </section>
