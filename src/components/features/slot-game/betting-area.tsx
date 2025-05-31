@@ -1,10 +1,15 @@
 "use client"
 import { Button } from "@/components/ui/button";
-import { useIsPlaceOver } from '@/hooks/use-current-game';
+import { useIsPlaceOver, usePlacementOver, useShowResults } from '@/hooks/use-current-game';
+import { formatRupee } from "@/lib/utils";
 import { RoundRecord } from '@/models/round-record';
-import { Minus, Plus, Play, Wallet, Zap } from 'lucide-react';
+import Wallet from "@/models/wallet";
+import { useGetWallet } from "@/react-query/payment-queries";
+import { useCreateStockGamePlacement, useGetMySlotGamePlacement } from "@/react-query/slot-game-queries";
+import { Minus, Plus, Play, Zap, WalletIcon, } from 'lucide-react';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
+import SlotGameResultDialog from "../game/slot-game-result-dialog";
 
 interface BettingAreaProps {
     betAmount: number;
@@ -17,28 +22,40 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
     setBetAmount,
     roundRecord
 }) => {
+    const { data: walletData, isLoading } = useGetWallet();
 
-    const [currentBetAmount, setCurrentBetAmount] = useState(
-        500 // set it max the wallet have if less than 500
-    );
+    const { mutate: createStockGamePlacement, isPending: isCreateStockGamePlacementPending } = useCreateStockGamePlacement();
+    
+    const { data: myPlacementData } = useGetMySlotGamePlacement(roundRecord.id);
+    
+    const {showResults, currentRoundId, previousRoundId} = useShowResults( roundRecord, myPlacementData?.data ?? []);
 
-    const isPlaceOver = useIsPlaceOver(roundRecord);
+    const totalBetAmount = useMemo(() => {
+        console.log(myPlacementData);
+        return myPlacementData?.data?.reduce((acc, curr) => acc + curr.amount, 0);
+    }, [myPlacementData])
 
-    const placeBetHandler = (e: React.MouseEvent<HTMLDivElement>) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (isPlaceOver) return; // Don't allow betting if betting is closed
-        if (currentBetAmount !== betAmount) {
-            setBetAmount(currentBetAmount);
-        }
+    const wallet = useMemo(() => {
+        if (isLoading) return new Wallet();
+        return new Wallet(walletData?.data?.wallet);
+    }, [walletData])
+
+    const isPlaceOver = usePlacementOver(roundRecord);
+
+    const placeBetHandler = () => {
+        createStockGamePlacement({
+            roundId: roundRecord.id,
+            amount: betAmount,
+        })
     }
 
     return (
+        <>
         <div className="w-full bg-[url('/images/slot-game/wodden-bg.jpg')] bg-repeat bg-contain bg-center text-[#E3B872] p-4">
             <div className="flex items-center justify-between gap-4 mb-4">
                 <div className="flex items-center justify-center flex-1 gap-2 bg-[#1B1B1B] border-2 border-[#E3B872] px-2 py-1 rounded-md">
-                    <Wallet className="w-5 h-5" />
-                    <span className="text-lg">₹changeIt to max in wallet</span>
+                    <WalletIcon className="w-5 h-5" />
+                    <span className="text-lg">{formatRupee(wallet?.mainBalance ?? 0)}</span>
                 </div>
                 <div className="flex items-center justify-center flex-1 gap-2 bg-[#1B1B1B] border-2 border-[#E3B872] px-2 py-1 rounded-md">
                     <Image
@@ -47,7 +64,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
                         width={28}
                         height={28}
                     />
-                    <span className="text-lg">₹{currentBetAmount}</span>
+                    <span className="text-lg">₹{betAmount}</span>
                 </div>
             </div>
 
@@ -56,12 +73,12 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
                 <Button
                     variant="ghost"
                     className="h-14 w-14 p-0 rounded-full bg-[#2A1810]/80 hover:bg-[#2A1810] border-2 border-[#E3B872] transition-all duration-300 hover:border-[#FFD700] hover:shadow-[0_0_15px_rgba(255,215,0,0.3)]"
-                    onClick={() => setCurrentBetAmount(Math.max(0, currentBetAmount - 100))}
+                    onClick={() => setBetAmount(Math.max(0, betAmount - 100))}
                 >
                     <Minus size={28} className=" text-[#E3B872]" />
                 </Button>
 
-                <div className="relative w-24 h-24 group relative">
+                <div className="relative w-24 h-24 group ">
                     <div
                         style={{ animationDuration: "5s" }} className="absolute inset-0 rounded-full border-4 animate-spin border-[#E3B872] bg-[#2A1810]/80 flex items-center justify-center transition-all duration-300 group-hover:border-[#FFD700] group-hover:shadow-[0_0_20px_rgba(255,215,0,0.5)] group-hover:bg-[#2A1810]">
                         <Image
@@ -72,18 +89,18 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
                             className="object-contain w-full h-full scale-110 transition-all duration-300 group-hover:brightness-125"
                         />
                     </div>
-                    <div
+                    <button
+                        disabled={isPlaceOver || isCreateStockGamePlacementPending || isPlaceOver}
                         onClick={isPlaceOver ? undefined : placeBetHandler}
-                        className={`absolute inset-0 flex items-center justify-center rounded-full ${
-                            isPlaceOver ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
-                        }`}>
-                    </div>
+                        className={`absolute inset-0 flex items-center justify-center rounded-full ${isPlaceOver ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+                            }`}>
+                    </button>
                 </div>
 
                 <Button
                     variant="ghost"
                     className="h-14 w-14 p-0 rounded-full bg-[#2A1810]/80 hover:bg-[#2A1810] border-2 border-[#E3B872] transition-all duration-300 hover:border-[#FFD700] hover:shadow-[0_0_15px_rgba(255,215,0,0.3)]"
-                    onClick={() => setCurrentBetAmount(currentBetAmount + 100)}
+                    onClick={() => setBetAmount(betAmount + 100)}
                 >
                     <Plus className="w-7 h-7 text-[#E3B872]" />
                 </Button>
@@ -95,9 +112,18 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
             </div>
             <div className="flex items-center mt-4 justify-center max-w-sm mx-auto flex-1 gap-2 bg-[#1B1B1B] border-2 border-[#E3B872] px-2 py-1 rounded-md">
                 TotalBet :
-                <span className="text-lg">₹{betAmount}</span>
+                <span className="text-lg">₹{totalBetAmount}</span>
             </div>
-
         </div>
+        {
+            previousRoundId && (
+                <SlotGameResultDialog
+                    key={String(previousRoundId)}
+                    open={showResults}
+                    roundRecordId={previousRoundId}
+                />
+            )
+        }
+        </>
     );
 };
