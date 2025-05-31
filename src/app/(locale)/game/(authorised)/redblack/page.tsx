@@ -87,12 +87,12 @@ const GamePage = () => {
                   backgroundSize: "10%",
                 }}
               >
-                {/* {roundRecord && (
+                {roundRecord && (
                   <CardSpinner
                     last10winners={last10winners}
                     // roundRecord={roundRecord}
                   />
-                )} */}
+                )}
               </div>
             </div>
 
