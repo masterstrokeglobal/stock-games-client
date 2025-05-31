@@ -46,11 +46,11 @@ export default function Home() {
         <div className="w-full mb-8 ">
           <div className="grid relative grid-cols-1  gap-6  rounded-lg  pt-20  ">
             <img src="/images/jackpot/bg.jpg" className=" w-full absolute top-0 left-0 object-cover  mx-auto  h-full " />
-            <div className="relative h-full w-full md:min-h-[800px]   sm:min-h-[600px] min-h-[400px]  bg-contain bg-no-repeat bg-center">
-              <div className=' absolute left-1/2 -translate-x-1/2 bottom-32 h-full z-10 flex md:bottom-1/3 w-full md:max-w-md sm:max-w-sm max-w-xs items-end justify-center'>
-                <img src="/images/jackpot/lady.gif" alt="dice-bg" className=' w-full h-auto mt-20' />
-              </div>
+            <div className="relative h-full w-full md:min-h-[700px]   sm:min-h-[600px] min-h-[400px]  bg-contain bg-no-repeat bg-center">
               <div className="absolute bottom-0 w-full h-fit ">
+                <div className='absolute left-1/2 -translate-x-1/2 bottom-[calc(100%-2vw)] md:h-[60%] h-3/4 z-10 flex max-w-sm items-end justify-center'>
+                  <img src="/images/jackpot/lady.gif" alt="dice-bg" className='w-auto h-full mt-20' />
+                </div>
                 <img src="/images/jackpot/table.png" className=" w-full sm:mx-auto   h-full  relative z-10  md:max-w-6xl sm:max-w-2xl max-w-xl" />
                 <StockCardStack roundRecord={roundRecord} />
               </div>
