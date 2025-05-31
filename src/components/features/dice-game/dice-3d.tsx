@@ -244,7 +244,7 @@ const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, winningM
         <DiceFace
           marketItem={items[0]}
           className="dice-front"
-          number={5}
+          number={1}
           isWinning={winningIndex === 0}
           isLoading={isLoading}
         />
