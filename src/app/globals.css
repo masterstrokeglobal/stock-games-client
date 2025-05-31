@@ -663,3 +663,10 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   top: 0;
   right: 0;
 }
+.slotmachine-gradient {
+  background: #5B2902;
+  background: -webkit-linear-gradient(0deg, rgba(91, 41, 2, 1) 0%, rgba(45, 17, 0, 1) 41%, rgba(0, 0, 0, 1) 100%);
+  background: -moz-linear-gradient(0deg, rgba(91, 41, 2, 1) 0%, rgba(45, 17, 0, 1) 41%, rgba(0, 0, 0, 1) 100%);
+  background: linear-gradient(0deg, rgba(91, 41, 2, 1) 0%, rgba(45, 17, 0, 1) 41%, rgba(0, 0, 0, 1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#5B2902", endColorstr="#000000", GradientType=0);
+}

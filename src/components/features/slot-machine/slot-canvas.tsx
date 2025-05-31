@@ -193,6 +193,6 @@ export const SlotCanvas = ({ stockStates }: { stockStates: number[] }) => {
     }, [stockStates])
 
     return (
-        <div ref={mountRef} className="w-full h-full"></div>
+        <div ref={mountRef} className="w-full h-full bg-black"></div>
     )
 }

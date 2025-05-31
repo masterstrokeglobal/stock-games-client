@@ -75,17 +75,5 @@ export const gameRecordAPI = {
   getStockSlotRoundResult: async (roundId: string) => {
     return api.get(`/stock-slot-placement/result/${roundId}`);
   },
-  // slot jackpot
-  getSlotJackpotGameRecord: async (roundId: number) => {
-    return api.get(`/stock-jackpot-placement/current-round-placements/${roundId}`);
-  },
-  getMySlotJackpotGameRecord: async (roundId: number) => {
-    return api.get(`/stock-jackpot-placement/my-current-placement/${roundId}`);
-  },
-  createStockJackpotGameRecord: async (data: { roundId: number, marketItem: number, placement: any, amount: number, placedNumber: number }) => {
-    return api.post(`/stock-jackpot-placement`, data);
-  },
-  getStockJackpotRoundResult: async (roundId: number) => {
-    return api.get(`/stock-jackpot-placement/result/${roundId}`);
-  }
+
 };

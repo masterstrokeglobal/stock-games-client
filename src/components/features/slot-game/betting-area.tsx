@@ -1,9 +1,16 @@
 "use client"
 import { Button } from "@/components/ui/button";
+import { usePlacementOver, useShowResults } from '@/hooks/use-current-game';
+import { formatRupee } from "@/lib/utils";
 import { RoundRecord } from '@/models/round-record';
-import { Minus, Plus, Play, Wallet, Zap } from 'lucide-react';
+import Wallet from "@/models/wallet";
+import { useGetWallet } from "@/react-query/payment-queries";
+import { useCreateStockGamePlacement, useGetMySlotGamePlacement } from "@/react-query/slot-game-queries";
+import { Minus, Plus, WalletIcon, } from 'lucide-react';
 import Image from 'next/image';
-import React from 'react';
+import { useMemo, useEffect, useState } from 'react';
+import SlotGameResultDialog from "../game/slot-game-result-dialog";
+import { useLeaderboard } from "@/hooks/use-leadboard";
 
 interface BettingAreaProps {
     betAmount: number;
@@ -13,54 +20,118 @@ interface BettingAreaProps {
 
 export const BettingArea: React.FC<BettingAreaProps> = ({
     betAmount,
-    setBetAmount
+    setBetAmount,
+    roundRecord
 }) => {
+    const { data: walletData, isLoading } = useGetWallet();
+    const { data: myPlacementData } = useGetMySlotGamePlacement(roundRecord.id);
+    const {showResults, previousRoundId} = useShowResults( roundRecord, myPlacementData?.data ?? []);
+    const { mutate: createStockGamePlacement, isPending: isCreateStockGamePlacementPending } = useCreateStockGamePlacement();
+    const {stocks} = useLeaderboard(roundRecord)
+
+    const [currentStocks, setCurrentStocks] = useState<RoundRecord['market']>([])
+    const [stockPrice, setStockPrice] = useState<Record<string, number>>({})
+
+    const isPlaceOver = usePlacementOver(roundRecord);
+
+    const totalBetAmount = useMemo(() => {
+        console.log(myPlacementData);
+        return myPlacementData?.data?.reduce((acc, curr) => acc + curr.amount, 0);
+    }, [myPlacementData])
+
+    const wallet = useMemo(() => {
+        if (isLoading) return new Wallet();
+        return new Wallet(walletData?.data?.wallet);
+    }, [walletData])
+
+
+    const placeBetHandler = () => {
+        createStockGamePlacement({
+            roundId: roundRecord.id,
+            amount: betAmount,
+        })
+    }
+
+    useEffect(() => {
+        if(roundRecord){
+            console.log("roundRecord",roundRecord)
+            const stocks = roundRecord.market.map((stock) => {
+                return stock
+            })
+            setCurrentStocks(stocks)
+            
+            if (roundRecord.initialValues && Object.keys(roundRecord.initialValues).length > 0) {
+                setStockPrice(roundRecord.initialValues)
+            }
+        }
+        if(stocks.length > 0){
+            stocks.forEach((stock) => {
+                if(stock.price){
+                    setStockPrice((prev) => ({...prev, [stock.code ?? '']: stock.price}))
+                }
+            })
+
+        }
+    }, [roundRecord, stocks])
 
     return (
+        <>
         <div className="w-full bg-[url('/images/slot-game/wodden-bg.jpg')] bg-repeat bg-contain bg-center text-[#E3B872] p-4">
+        
+            <div className="flex items-center justify-between gap-4 mb-4">
+
+                {currentStocks.length > 0 && (
+                    currentStocks.map((stock) => (
+                        <div className="flex flex-col items-center justify-center flex-1 gap-2 bg-[#1B1B1B] border-2 border-[#E3B872] px-2 py-1 rounded-md">
+                            <span className="text-lg">{stock.name}</span>
+                            <span className="text-lg">{stockPrice[stock.code ?? '']}</span>
+                        </div>
+                    ))
+                )}
+
+            </div>
             <div className="flex items-center justify-between gap-4 mb-4">
                 <div className="flex items-center justify-center flex-1 gap-2 bg-[#1B1B1B] border-2 border-[#E3B872] px-2 py-1 rounded-md">
-                    <Wallet className="w-5 h-5" />
-                    <span className="text-lg">₹500.00</span>
+                    <WalletIcon className="w-5 h-5" />
+                    <span className="text-lg">{formatRupee(wallet?.mainBalance ?? 0)}</span>
                 </div>
                 <div className="flex items-center justify-center flex-1 gap-2 bg-[#1B1B1B] border-2 border-[#E3B872] px-2 py-1 rounded-md">
                     <Image
                         src="/images/coin.png"
                         alt="Bet"
-                        width={28} 
+                        width={28}
                         height={28}
                     />
                     <span className="text-lg">₹{betAmount}</span>
                 </div>
             </div>
 
-            <div className="flex items-center justify-between gap-4">
-                <Button
-                    variant="ghost"
-                    className="h-14 w-14 p-0 rounded-full bg-[#2A1810]/80 hover:bg-[#2A1810] border-2 border-[#E3B872] transition-all duration-300 hover:border-[#FFD700] hover:shadow-[0_0_15px_rgba(255,215,0,0.3)]"
-                    onClick={() => {}}
-                >
-                    <Zap className="w-7 h-7 fill-[#E3B872] text-[#E3B872]" />
-                </Button>
+            <div className="flex items-center justify-center gap-[100px]">
 
                 <Button
-                    variant="ghost" 
+                    variant="ghost"
                     className="h-14 w-14 p-0 rounded-full bg-[#2A1810]/80 hover:bg-[#2A1810] border-2 border-[#E3B872] transition-all duration-300 hover:border-[#FFD700] hover:shadow-[0_0_15px_rgba(255,215,0,0.3)]"
                     onClick={() => setBetAmount(Math.max(0, betAmount - 100))}
                 >
                     <Minus size={28} className=" text-[#E3B872]" />
                 </Button>
 
-                <div className="relative w-24 h-24 group">
-                    <button style={{animationDuration: "5s"}} className="absolute inset-0 rounded-full border-4 animate-spin border-[#E3B872] bg-[#2A1810]/80 flex items-center justify-center transition-all duration-300 group-hover:border-[#FFD700] group-hover:shadow-[0_0_20px_rgba(255,215,0,0.5)] group-hover:bg-[#2A1810]">
-                       
-                            <Image 
-                                src="/images/slot-game/wheel.png"
-                                alt="Spin"
-                                width={400}
-                                height={400}
-                                className="object-contain w-full h-full scale-110 transition-all duration-300 group-hover:brightness-125"
-                            />
+                <div className="relative w-24 h-24 group ">
+                    <div
+                        style={{ animationDuration: "5s" }} className="absolute inset-0 rounded-full border-4 animate-spin border-[#E3B872] bg-[#2A1810]/80 flex items-center justify-center transition-all duration-300 group-hover:border-[#FFD700] group-hover:shadow-[0_0_20px_rgba(255,215,0,0.5)] group-hover:bg-[#2A1810]">
+                        <Image
+                            src="/images/slot-game/wheel.png"
+                            alt="Spin"
+                            width={400}
+                            height={400}
+                            className="object-contain w-full h-full scale-110 transition-all duration-300 group-hover:brightness-125"
+                        />
+                    </div>
+                    <button
+                        disabled={isPlaceOver || isCreateStockGamePlacementPending || isPlaceOver}
+                        onClick={isPlaceOver ? undefined : placeBetHandler}
+                        className={`absolute inset-0 flex items-center justify-center rounded-full ${isPlaceOver ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+                            }`}>
                     </button>
                 </div>
 
@@ -72,14 +143,25 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
                     <Plus className="w-7 h-7 text-[#E3B872]" />
                 </Button>
 
-                <Button
-                    variant="ghost"
-                    className="h-14 w-14 rounded-full bg-[#2A1810]/80 hover:bg-[#2A1810] border-2 border-[#E3B872] transition-all duration-300 hover:border-[#FFD700] hover:shadow-[0_0_15px_rgba(255,215,0,0.3)]"
-                    onClick={() => {}}
-                >
-                    <Play className="w-7 h-7 fill-[#E3B872] text-[#E3B872]" />
-                </Button>
+            </div>
+
+            <div className="flex items-center justify-center gap-4">
+
+            </div>
+            <div className="flex items-center mt-4 justify-center max-w-sm mx-auto flex-1 gap-2 bg-[#1B1B1B] border-2 border-[#E3B872] px-2 py-1 rounded-md">
+                TotalBet :
+                <span className="text-lg">₹{totalBetAmount}</span>
             </div>
         </div>
+        {
+            previousRoundId && (
+                <SlotGameResultDialog
+                    key={String(previousRoundId)}
+                    open={showResults}
+                    roundRecordId={previousRoundId}
+                />
+            )
+        }
+        </>
     );
 };

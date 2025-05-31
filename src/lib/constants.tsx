@@ -109,7 +109,7 @@ export const StockDerbyGames : Game[] = [
     {
 
         title: "Stock Slot",
-        link: "/game/slot",
+        link: "/game/platform/stock-game/stock-slot",
         image: "/images/ad3.png",
         description: "Guess Last Price Digit and win"
     },
@@ -149,7 +149,14 @@ export const StockDerbyGames : Game[] = [
         link: "/game/redblack",
         image:"/images/redvsblack.png",
         description:"Guess Red or Black"
+    },
+  {
+        title: "Aviator",
+        link: "/game/platform/stock-game/aviator",
+        image: "/images/banner/aviator.png",
+        description: "Guess the side of the coin"
     }
+   
 ]
 
 export const SinglePlayerGames : Game[] = [
