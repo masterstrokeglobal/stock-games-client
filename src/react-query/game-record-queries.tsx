@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient, UseQueryResult } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { gameRecordAPI } from "@/lib/axios/game-record-API"; // Adjust the path as needed
-import { StockSlotPlacement } from "@/models/stock-slot-placement";
+import { StockJackpotPlacement } from "@/models/stock-slot-placement";
 import { StockSlotJackpot } from "@/models/stock-slot-jackpot";
 
 // Create Game Record Hook with Predicate-based Invalidation
@@ -233,23 +233,23 @@ export const useRepeatPlacement = () => {
 
 // Stock Slot Game Record Hook
 
-export const useGetStockSlotGameRecord = (roundId: number): UseQueryResult<StockSlotPlacement[]> => {
+export const useGetStockSlotGameRecord = (roundId: number): UseQueryResult<StockJackpotPlacement[]> => {
     return useQuery({
         queryKey: ["stockSlotGameRecord", roundId],
         queryFn: async () => {
             const { data } = await gameRecordAPI.getStockSlotGameRecord(roundId);
-            return data.data.map((item: any) => new StockSlotPlacement(item));
+            return data.data.map((item: any) => new StockJackpotPlacement(item));
         }
     });
 };
 
-export const useGetMyStockSlotGameRecord = (roundId?: number): UseQueryResult<StockSlotPlacement[]> => {
+export const useGetMyStockSlotGameRecord = (roundId?: number): UseQueryResult<StockJackpotPlacement[]> => {
     return useQuery({
         queryKey: ["myStockSlotGameRecord", roundId],
         enabled: !!roundId,
         queryFn: roundId ? async () => {
             const { data } = await gameRecordAPI.getMyStockSlotGameRecord(roundId);
-            return data.data.map((item: any) => new StockSlotPlacement(item));
+            return data.data.map((item: any) => new StockJackpotPlacement(item));
         } : undefined
     });
 };
@@ -326,6 +326,7 @@ export const useGetMyStockSlotJackpotGameRecord = (roundId?: number): UseQueryRe
         enabled: !!roundId,
         queryFn: roundId ? async () => {
             const { data } = await gameRecordAPI.getMySlotJackpotGameRecord(roundId);
+            console.log(data.data)
             return data.data.map((item: any) => new StockSlotJackpot(item));
         } : undefined
     });

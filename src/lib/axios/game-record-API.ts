@@ -1,6 +1,4 @@
 import api from "./instance";
-import { StockSlotPlacementType } from "../../models/stock-slot-placement";
-import { StockSlotJackpotPlacementType } from "../../models/stock-slot-jackpot";
 
 export const gameRecordAPI = {
   createGameRecord: async (data: any) => {
@@ -71,7 +69,7 @@ export const gameRecordAPI = {
   getMyStockSlotGameRecord: async (roundId: number) => {
     return api.get(`/stock-slot-placement/my-current-placement/${roundId}`);
   },
-  createStockSlotGameRecord: async (data: { roundId: string, marketItem: number, placement: StockSlotPlacementType, amount: number }) => {
+  createStockSlotGameRecord: async (data: { roundId: string, marketItem: number, placement: any, amount: number }) => {
     return api.post(`/stock-slot-placement`, data);
   },
   getStockSlotRoundResult: async (roundId: string) => {
@@ -84,7 +82,7 @@ export const gameRecordAPI = {
   getMySlotJackpotGameRecord: async (roundId: number) => {
     return api.get(`/stock-jackpot-placement/my-current-placement/${roundId}`);
   },
-  createStockJackpotGameRecord: async (data: { roundId: number, marketItem: number, placement: StockSlotJackpotPlacementType, amount: number, placedNumber: number }) => {
+  createStockJackpotGameRecord: async (data: { roundId: number, marketItem: number, placement: any, amount: number, placedNumber: number }) => {
     return api.post(`/stock-jackpot-placement`, data);
   },
   getStockJackpotRoundResult: async (roundId: number) => {

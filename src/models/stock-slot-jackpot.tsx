@@ -4,12 +4,16 @@ import { RoundRecord } from "./round-record";
 import User from "./user";
 
 
-export enum StockSlotJackpotPlacementType {
+export enum StockJackpotGameType {
     ZEROTH = "zeroth",
-    TENTH = "tenth",
-    BOTH = "both"
+    BOTH = "both",
+    FIRST = "first",
 }
 
+export enum StockJackpotPlacementType {
+    HIGH = "high",
+    LOW = "low"
+}
 
 export class StockSlotJackpot {
     id!: number;
@@ -19,7 +23,7 @@ export class StockSlotJackpot {
     isWinner!: boolean;
     gameType!: RoundRecordGameType;
     marketItem!: MarketItem;
-    placement!: StockSlotJackpotPlacementType;
+    placement!: StockJackpotPlacementType;
     placedNumber!: number;
     createdAt!: Date;
     updatedAt!: Date;
@@ -41,7 +45,7 @@ export class StockSlotJackpot {
     }
 
     get typeName() {
-        return this.placement === StockSlotJackpotPlacementType.ZEROTH ? "Last Digit" : this.placement === StockSlotJackpotPlacementType.TENTH ? "First Digit" : "Both Digits";
+        return this.placement === StockJackpotPlacementType.HIGH ? "High" : this.placement === StockJackpotPlacementType.LOW ? "Low" : "Both";
     }
 }
 

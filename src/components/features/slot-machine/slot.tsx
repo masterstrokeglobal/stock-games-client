@@ -6,7 +6,7 @@ import { RoundRecord } from "@/models/round-record";
 export const Slot = ({roundRecord}: {roundRecord: RoundRecord}) => {
 
     const [stockStates, setStockStates] = useState<number[]>([0, 0, 0, 0, 0])
-    const [time, setTime] = useState<string>("88:88")
+    const [time] = useState<string>("88:88")
 
     const { stocks } = useLeaderboard(roundRecord)
 
