@@ -1,59 +1,71 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-
+import { useState } from "react";
+import { Settings2 } from "lucide-react";
 
 type BettingAmountProps = {
     globalBetAmount: number,
     className?: string,
+    showBetting: boolean,
     handleGlobalBetAmountChange: (amount: number) => void
 }
 
-const BettingChips = ({ globalBetAmount, handleGlobalBetAmountChange, className }: BettingAmountProps) => {
-    return (
-        <div id="betting-amount" className={cn("rounded-lg p-4 bg-primary-game  transition-all duration-200 shadow-lg shadow-purple-900/20", className)}>
-            <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center">
-                    <span className="text-sm font-medium text-yellow-100">Betting Amount</span>
-                </div>
+const BettingChips = ({ globalBetAmount, handleGlobalBetAmountChange, className, showBetting }: BettingAmountProps) => {
+    const [showBettingInput, setShowBettingInput] = useState(false);
 
-            </div>
-            <div>
-                <div className="flex items-center space-x-4">
-                    <div className="flex justify-center relative mb-2">
-                        <div className="mr-2 absolute left-2 top-3 bottom-2 rounded-full">
-                            <img src="/coin.svg" className='shadow-custom-glow rounded-full' alt="coin" />
+    if (!showBetting) return null;
+    return (
+        <div id="betting-amount" className={cn("transition-all duration-200 p-4", className)}>
+            {!showBettingInput ? (
+                <div className="flex justify-center gap-4 w-full flex-wrap">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="rounded-full bg-amber-600/20 hover:bg-amber-600/40 border-2 border-amber-600 hover:rotate-90 transition-transform"
+                        onClick={() => setShowBettingInput(true)}
+                    >
+                        <Settings2 className="h-4 w-4 text-amber-200" />
+                    </Button>
+                    {[100, 500, 1000, 5000, 10000].map((amount) => (
+                        <Button
+                            key={amount}
+                            variant="ghost"
+                            className={cn(
+                                'h-10 w-20 text-base font-bold rounded-full bg-amber-600/20 hover:bg-amber-600/40 text-amber-200 border-2 border-amber-600',
+                                globalBetAmount === amount && 'bg-amber-600 text-white'
+                            )}
+                            onClick={() => handleGlobalBetAmountChange(amount)}
+                        >
+                            ₹{amount}
+                        </Button>
+                    ))}
+                </div>
+            ) : (
+                <div className="flex items-center gap-2 max-w-sm mx-auto animate-in slide-in-from-top">
+                    <div className="relative flex-1">
+                        <div className="absolute left-2 top-1/2 -translate-y-1/2">
+                            <img src="/coin.svg" className="w-6 h-6" alt="coin" />
                         </div>
                         <Input
                             placeholder="Enter bet amount"
                             value={globalBetAmount}
                             onChange={(e) => handleGlobalBetAmountChange(Number(e.target.value))}
-                            className=" p-2  rounded-2xl pl-14 h-14 border-2 border-game-text text-xl"
+                            className="pl-10 h-10 bg-amber-600/20 border-2 border-amber-600 text-amber-200 text-base rounded-full"
                         />
                     </div>
-
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-10 px-4 rounded-full bg-amber-600 hover:bg-amber-700 text-white font-bold"
+                        onClick={() => setShowBettingInput(false)}
+                    >
+                        Done
+                    </Button>
                 </div>
-
-
-                <div className="flex justify-between items-center mb-2">
-                    <div className="flex justify-between gap-1 w-full xl:flex-wrap flex-wrap" >
-                        {[100, 500, 1000, 5000, 10000].map((amount) => (
-                            <Button
-                                className='flex-1 text-game-text bg-secondary-game'
-                                variant="game-secondary"
-                                key={amount}
-
-                                onClick={() => handleGlobalBetAmountChange(amount)}
-                            >
-                                ₹{amount}
-                            </Button>
-                        ))}
-                    </div>
-                </div>
-            </div>
+            )}
         </div>
-    )
+    );
 }
-
 
 export default BettingChips;

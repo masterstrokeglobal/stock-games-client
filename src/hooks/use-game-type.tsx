@@ -32,8 +32,9 @@ export function useGameType() {
         (newGameType: SchedulerType) => {
             const newParams = new URLSearchParams(searchParams.toString());
             newParams.set("gameType", newGameType);
-            router.replace(`?${newParams.toString()}`);
-            console.log("replaced", newGameType);
+            router.replace(`?${newParams.toString()}`, {
+                scroll: false
+            });
         },
         [searchParams, router]
     );

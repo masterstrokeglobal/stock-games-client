@@ -4,9 +4,9 @@ import { RoundRecord } from "./round-record";
 import User from "./user";
 
 
-export type StockSlotPlacementType = "high" | "low";
+export type StockJackpotPlacementType = "high" | "low";
 
-export class StockSlotPlacement {
+export class StockJackpotPlacement {
     id!: number;
     round!: RoundRecord;
     user?: User;
@@ -14,12 +14,12 @@ export class StockSlotPlacement {
     isWinner!: boolean;
     gameType!: RoundRecordGameType;
     marketItem!: MarketItem;
-    placement!: StockSlotPlacementType;
+    placement!: StockJackpotPlacementType;
     createdAt!: Date;
     updatedAt!: Date;
     deletedAt?: Date;
 
-    constructor(params: StockSlotPlacement) {
+    constructor(params: StockJackpotPlacement) {
         this.id = params.id;
         this.round = params.round;
         this.user = params.user;

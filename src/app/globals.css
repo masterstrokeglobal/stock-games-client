@@ -18,6 +18,10 @@ body {
   font-family: 'Jersey', sans-serif;
 }
 
+.keania-one-regular {
+  font-family: "Keania One", cursive, sans-serif !important;
+}
+
 input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
   border-radius: 4px;

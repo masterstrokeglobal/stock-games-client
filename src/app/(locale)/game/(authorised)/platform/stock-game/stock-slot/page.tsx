@@ -7,6 +7,7 @@ import { useCurrentGame } from '@/hooks/use-current-game';
 import { useMarketSelector } from '@/hooks/use-market-selector';
 import { RoundRecordGameType } from '@/models/round-record';
 import { useState } from 'react';
+import { Slot } from '@/components/features/slot-machine/slot';
 
 const StockSlot = () => {
     const { marketSelected, setMarketSelected } = useMarketSelector();
@@ -22,10 +23,8 @@ const StockSlot = () => {
         <section className="flex flex-col  items-center justify-center min-h-[calc(100svh-80px)] h-full">
             <div className="flex flex-col flex-1 max-w-2xl h-full w-full mx-auto bg-gray-900 border border-gray-600 rounded-lg text-white overflow-hidden">
                 <StockGameHeader onBack={() => setMarketSelected(false)} title="Stock Slot" />
-                 <div className='flex flex-col flex-1 items-center justify-center'>
-                    <div className='w-full h-36 bg-gray-800 rounded-lg'>
-                        Animation
-                    </div>
+                 <div className='flex flex-col flex-1 h-full items-center justify-center'>
+                        <Slot roundRecord={roundRecord} />
                 </div> 
                 <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
             </div>
