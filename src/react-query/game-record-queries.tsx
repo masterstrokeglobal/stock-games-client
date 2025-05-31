@@ -1,8 +1,7 @@
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient, UseQueryResult } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { gameRecordAPI } from "@/lib/axios/game-record-API"; // Adjust the path as needed
 import { StockJackpotPlacement } from "@/models/stock-slot-placement";
-import { StockSlotJackpot } from "@/models/stock-slot-jackpot";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient, UseQueryResult } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 // Create Game Record Hook with Predicate-based Invalidation
 export const useCreateGameRecord = () => {

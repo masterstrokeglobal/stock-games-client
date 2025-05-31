@@ -20,7 +20,7 @@ export const Slot = ({ roundRecord }: { roundRecord: RoundRecord }) => {
 
     useEffect(() => {
         if (stocks.length > 0) {
-            let newStockStates = [...stockStates]
+            const newStockStates = [...stockStates]
             stocks.forEach((stock, index) => {
                 if (stock.price) newStockStates[index] = parseInt(stock.price.toString().slice(-1))
             })

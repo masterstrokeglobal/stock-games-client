@@ -82,7 +82,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
                 {currentStocks.length > 0 && (
                     currentStocks.map((stock) => (
-                        <div className="flex flex-col items-center justify-center flex-1 gap-2 bg-[#1B1B1B] border-2 border-[#E3B872] px-2 py-1 rounded-md">
+                        <div key={stock.code} className="flex flex-col items-center justify-center flex-1 gap-2 bg-[#1B1B1B] border-2 border-[#E3B872] px-2 py-1 rounded-md">
                             <span className="text-lg">{stock.name}</span>
                             <span className="text-lg">{stockPrice[stock.code ?? '']}</span>
                         </div>

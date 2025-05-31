@@ -137,6 +137,7 @@ export default function PlaneGame() {
   }
 
   const placeBet = (amount: string) => {
+    console.log('amount', amount)
     if (!isPlaying) {
       startGame()
     }

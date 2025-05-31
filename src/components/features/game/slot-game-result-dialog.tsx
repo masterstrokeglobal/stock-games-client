@@ -1,17 +1,12 @@
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import GameResult from '@/components/common/game-result';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
-import { Separator } from '@/components/ui/separator';
-import { cn, formatRupee } from '@/lib/utils';
-import { AlertCircle, Loader2 } from 'lucide-react';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
 import { useStockGameRoundResult } from '@/react-query/slot-game-queries';
-import GameResult from '@/components/common/game-result';
+import { useEffect, useState } from 'react';
 
 interface GameResultDialogProps {
   open: boolean;
@@ -28,8 +23,6 @@ const SlotGameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) =>
     }
   }, [open]);
 
-  // Check if the result is a win or loss
-  const isWin = data && Number(data.netProfitLoss) >= 0;
 
   return (
     <Dialog open={showDialog}>

@@ -32,7 +32,7 @@ export const useCreateStockGamePlacement = () => {
 
     return useMutation({
         mutationFn: slotGameAPI.createStockJackpotGameRecord,
-        onSuccess: (_) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
                     return query.queryKey[0] === "slot-jackpot" ||
