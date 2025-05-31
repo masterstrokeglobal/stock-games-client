@@ -35,7 +35,6 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
     const isPlaceOver = usePlacementOver(roundRecord);
 
     const totalBetAmount = useMemo(() => {
-        console.log(myPlacementData);
         return myPlacementData?.data?.reduce((acc, curr) => acc + curr.amount, 0);
     }, [myPlacementData])
 
@@ -54,7 +53,6 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
     useEffect(() => {
         if(roundRecord){
-            console.log("roundRecord",roundRecord)
             const stocks = roundRecord.market.map((stock) => {
                 return stock
             })
