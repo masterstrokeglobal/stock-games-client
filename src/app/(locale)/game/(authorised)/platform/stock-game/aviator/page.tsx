@@ -1,246 +1,340 @@
-    "use client"
+"use client"
 
-    import { Button } from "@/components/ui/button"
-import { LayoutGrid, Menu, Minus, Plus } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { ChevronDown, Clock } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Switch } from "@/components/ui/switch"
 
-    export default function AviatorGame() {
-        const [betAmount, setBetAmount] = useState(10.0)
-        const [betMode, setBetMode] = useState<"Bet" | "Auto">("Bet")
+interface GameRound {
+  id: number
+  time: string
+  multiplier: string
+  duration: string
+  status: "crashed" | "completed"
+}
 
-        const multipliers = [
-            "25.77x",
-            "5.40x",
-            "4.42x",
-            "1.21x",
-            "17.83x",
-            "1.11x",
-            "2.88x",
-            "1.72x",
-            "1.67x",
-            "2.76x",
-            "1.17x",
-            "1.00x",
-            "1.21x",
-            "3.90x",
-            "1.08x",
-            "1.03x",
-            "4.82x",
-        ]
+export default function PlaneGame() {
+  const [multiplier, setMultiplier] = useState(1.0)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [betAmount1, setBetAmount1] = useState("10")
+  const [betAmount2, setBetAmount2] = useState("5000")
+  const [autoPlay1, setAutoPlay1] = useState(false)
+  const [autoPlay2, setAutoPlay2] = useState(false)
 
-        const quickAmounts = [100.0, 1000.0, 5000.0, 10000.0]
+  // Sample last rounds data
+  const lastRounds: GameRound[] = [
+    {
+      id: 1,
+      time: "14:32:15",
+      multiplier: "5.57x",
+      duration: "12.3s",
+      status: "crashed",
+    },
+    {
+      id: 2,
+      time: "14:31:48",
+      multiplier: "2.86x",
+      duration: "8.1s",
+      status: "crashed",
+    },
+    {
+      id: 3,
+      time: "14:31:22",
+      multiplier: "3.21x",
+      duration: "9.7s",
+      status: "crashed",
+    },
+    {
+      id: 4,
+      time: "14:30:55",
+      multiplier: "1.67x",
+      duration: "4.2s",
+      status: "crashed",
+    },
+    {
+      id: 5,
+      time: "14:30:28",
+      multiplier: "8.94x",
+      duration: "18.6s",
+      status: "crashed",
+    },
+    {
+      id: 6,
+      time: "14:30:01",
+      multiplier: "1.23x",
+      duration: "2.8s",
+      status: "crashed",
+    },
+    {
+      id: 7,
+      time: "14:29:34",
+      multiplier: "4.15x",
+      duration: "11.2s",
+      status: "crashed",
+    },
+    {
+      id: 8,
+      time: "14:29:07",
+      multiplier: "2.44x",
+      duration: "6.9s",
+      status: "crashed",
+    },
+    {
+      id: 9,
+      time: "14:28:40",
+      multiplier: "6.78x",
+      duration: "15.4s",
+      status: "crashed",
+    },
+    {
+      id: 10,
+      time: "14:28:13",
+      multiplier: "1.89x",
+      duration: "5.1s",
+      status: "crashed",
+    },
+    {
+      id: 11,
+      time: "14:27:46",
+      multiplier: "3.67x",
+      duration: "10.3s",
+      status: "crashed",
+    },
+    {
+      id: 12,
+      time: "14:27:19",
+      multiplier: "12.45x",
+      duration: "24.7s",
+      status: "crashed",
+    },
+  ]
 
-        const adjustBetAmount = (increment: boolean) => {
-            const newAmount = increment ? betAmount + 1 : Math.max(1, betAmount - 1)
-            setBetAmount(newAmount)
-        }
+  useEffect(() => {
+    let interval: NodeJS.Timeout
 
-        const setQuickAmount = (amount: number) => {
-            setBetAmount(amount)
-        }
-
-        return (
-            <div className="min-h-screen bg-black text-white flex flex-col">
-                {/* Multipliers Row */}
-                <div className="flex items-center space-x-2 p-4 overflow-x-auto scrollbar-hide">
-                    {multipliers.map((multiplier, index) => {
-                        const value = Number.parseFloat(multiplier)
-                        let textColor = "text-blue-400"
-
-                        if (value >= 10) {
-                            textColor = "text-fuchsia-500"
-                        } else if (value >= 4) {
-                            textColor = "text-purple-500"
-                        } else if (value >= 2) {
-                            textColor = "text-pink-500"
-                        } else if (value >= 1.5) {
-                            textColor = "text-blue-400"
-                        } else {
-                            textColor = "text-blue-400"
-                        }
-
-                        return (
-                            <div key={index} className={`px-2 py-1 rounded text-xs font-medium whitespace-nowrap ${textColor}`}>
-                                {multiplier}
-                            </div>
-                        )
-                    })}
-                    <div className="px-2 py-1 rounded-full bg-gray-800 flex items-center justify-center">
-                        <Menu className="h-4 w-4" />
-                    </div>
-                </div>
-
-                {/* Animation Area */}
-                <div className="flex-1 relative bg-black overflow-hidden rounded-lg mx-4 mb-4">
-                    {/* Radiating lines background */}
-                    <div className="absolute inset-0">
-                        {Array.from({ length: 20 }).map((_, i) => (
-                            <div
-                                key={i}
-                                className="absolute bg-gradient-to-r from-transparent via-gray-800 to-transparent h-1 origin-bottom-left"
-                                style={{
-                                    bottom: "50%",
-                                    left: "0%",
-                                    width: "200%",
-                                    transform: `rotate(${i * 9 - 90}deg)`,
-                                    opacity: 0.3,
-                                }}
-                            />
-                        ))}
-                    </div>
-
-                    {/* UFC and Aviator Partnership */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        {/* <div className="flex items-center space-x-4">
-                            <div className="text-red-500 text-5xl font-bold">UFC</div>
-                            <div className="h-12 w-px bg-white"></div>
-                            <div className="flex flex-col items-start">
-                                <div className="text-red-500 text-3xl font-bold italic">Aviator</div>
-                                <div className="text-red-500 text-sm -mt-1">
-                                    <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M4 17L12 10L18 15L20 13"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                        <path
-                                            d="M15 8H20V13"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="text-white text-2xl font-bold mt-2">OFFICIAL PARTNERS</div>
-                        <div className="w-32 h-1 bg-gradient-to-r from-red-500 via-red-500 to-gray-500 mt-2"></div>
-
-                        {/* SPRIBE Badge */}
-                        {/* <div className="mt-8 bg-green-900/30 border border-green-500/30 rounded-lg p-3">
-                            <div className="flex items-center justify-center space-x-2">
-                                <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center">
-                                    <span className="text-green-500 text-xs">S</span>
-                                </div>
-                                <div className="text-white font-bold uppercase">SPRIBE</div>
-                            </div>
-                            <div className="mt-1 text-xs text-center border border-green-500/30 rounded px-2 py-0.5 bg-green-900/20">
-                                <div className="flex items-center justify-center space-x-1">
-                                    <span className="text-green-500">Official Game</span>
-                                    <Check className="h-3 w-3 text-green-500" />
-                                </div>
-                            </div>
-                            <div className="text-xs text-center text-gray-400 mt-1">Since 2018</div>
-                        </div>  */}
-                    </div>
-
-                    {/* Red airplane in bottom left */}
-                    {/* <div className="absolute bottom-4 left-4">
-                        <svg
-                            className="w-16 h-16 text-red-500 transform -rotate-12"
-                            viewBox="0 0 24 24"
-                            fill="currentColor"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path d="M22 2L2 9l7 3.5L17 8l-6.5 7.5L18 22l4-20z" stroke="none" />
-                        </svg>
-                    </div> */}
-
-                    {/* User avatars */}
-                    {/* <div className="absolute bottom-4 right-4 flex items-center space-x-2">
-                        <div className="flex -space-x-2">
-                            <Avatar className="w-8 h-8 border-2 border-gray-700">
-                                <AvatarImage src="/placeholder.svg?height=32&width=32" />
-                                <AvatarFallback>U1</AvatarFallback>
-                            </Avatar>
-                            <Avatar className="w-8 h-8 border-2 border-gray-700">
-                                <AvatarImage src="/placeholder.svg?height=32&width=32" />
-                                <AvatarFallback>U2</AvatarFallback>
-                            </Avatar>
-                        </div>
-                        <span className="text-sm text-gray-400">155</span>
-                    </div> */}
-                </div>
-
-                {/* Betting Controls */}
-                <div className="p-6 bg-black">
-                    {/* Bet/Auto Toggle with Grid Icon */}
-                    <div className="flex items-center justify-center mb-6">
-                        <div className="flex rounded-full bg-gray-800 p-1">
-                            <Button
-                                variant={betMode === "Bet" ? "default" : "ghost"}
-                                size="sm"
-                                className={`px-8 py-2 rounded-full text-sm font-medium ${betMode === "Bet" ? "bg-gray-600 text-white" : "bg-transparent text-gray-400 hover:text-white"
-                                    }`}
-                                onClick={() => setBetMode("Bet")}
-                            >
-                                Bet
-                            </Button>
-                            <Button
-                                variant={betMode === "Auto" ? "default" : "ghost"}
-                                size="sm"
-                                className={`px-8 py-2 rounded-full text-sm font-medium ${betMode === "Auto" ? "bg-gray-600 text-white" : "bg-transparent text-gray-400 hover:text-white"
-                                    }`}
-                                onClick={() => setBetMode("Auto")}
-                            >
-                                Auto
-                            </Button>
-                        </div>
-                        <Button variant="ghost" size="icon" className="ml-3 bg-gray-800 hover:bg-gray-700 rounded-full h-10 w-10">
-                            <LayoutGrid className="h-4 w-4 text-gray-400" />
-                        </Button>
-                    </div>
-
-                    {/* Bet Amount Controls */}
-                    <div className="flex items-center justify-center space-x-6 mb-6">
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="bg-gray-800 border-gray-600 hover:bg-gray-700 rounded-full h-12 w-12"
-                            onClick={() => adjustBetAmount(false)}
-                        >
-                            <Minus className="h-5 w-5 text-white" />
-                        </Button>
-                        <div className="text-center min-w-[100px]">
-                            <div className="text-3xl font-bold text-white">{betAmount.toFixed(2)}</div>
-                        </div>
-                        <Button
-                            variant="outline"
-                            size="icon"
-                            className="bg-gray-800 border-gray-600 hover:bg-gray-700 rounded-full h-12 w-12"
-                            onClick={() => adjustBetAmount(true)}
-                        >
-                            <Plus className="h-5 w-5 text-white" />
-                        </Button>
-                    </div>
-
-                    {/* Quick Amount Buttons */}
-                    <div className="grid grid-cols-4 gap-3 mb-6 max-w-md mx-auto">
-                        {quickAmounts.map((amount) => (
-                            <Button
-                                key={amount}
-                                variant="outline"
-                                size="sm"
-                                className="bg-gray-800 border-gray-600 hover:bg-gray-700 text-gray-300 hover:text-white py-2 text-xs font-medium"
-                                onClick={() => setQuickAmount(amount)}
-                            >
-                                {amount.toLocaleString()}.00
-                            </Button>
-                        ))}
-                    </div>
-
-                    {/* Bet Button */}
-                    <div className="max-w-md mx-auto">
-                        <Button className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 text-lg rounded-xl shadow-lg">
-                            Bet
-                            <br />
-                            <span className="text-xl">{betAmount.toFixed(2)} INR</span>
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        )
+    if (isPlaying) {
+      interval = setInterval(() => {
+        setMultiplier((prev) => {
+          const newValue = Number.parseFloat((prev + 0.01).toFixed(2))
+          return newValue
+        })
+      }, 100)
     }
+
+    return () => clearInterval(interval)
+  }, [isPlaying])
+
+  const startGame = () => {
+    setIsPlaying(true)
+    setMultiplier(1.0)
+
+    // Simulate random game duration between 5-15 seconds
+    const duration = 5000 + Math.random() * 10000
+
+    setTimeout(() => {
+      setIsPlaying(false)
+    }, duration)
+  }
+
+  const placeBet = (amount: string) => {
+    if (!isPlaying) {
+      startGame()
+    }
+  }
+
+  const quickBetOptions = [
+    { value: "500", label: "500" },
+    { value: "2000", label: "2K" },
+    { value: "5000", label: "5K" },
+    { value: "15000", label: "15K" },
+  ]
+
+  const getMultiplierColor = (multiplier: string) => {
+    const value = Number.parseFloat(multiplier.replace("x", ""))
+    if (value >= 10) return "text-purple-400"
+    if (value >= 5) return "text-green-400"
+    if (value >= 2) return "text-yellow-400"
+    return "text-red-400"
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-purple-600 to-pink-500">
+      <div className="flex flex-col h-screen">
+        {/* Header */}
+        <header className="flex items-center justify-end p-4 bg-opacity-20 bg-black backdrop-blur-sm">
+          <div className="flex items-center space-x-2">
+            <Clock className="h-5 w-5 text-white" />
+            <span className="text-white font-medium">Last Rounds</span>
+          </div>
+        </header>
+
+        {/* Main Game Area */}
+        <div className="flex flex-1 overflow-hidden">
+          <div className="flex-1 relative">
+            {/* Plane Placeholder */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <img src="/placeholder.svg?height=200&width=300" alt="Plane" className="opacity-70" />
+            </div>
+
+            {/* Multiplier */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <h1 className="text-8xl font-bold text-white drop-shadow-lg">{multiplier.toFixed(2)}x</h1>
+            </div>
+
+            {/* Betting Controls */}
+            <div className="absolute bottom-0 left-0 right-0 p-4">
+              <div className="bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-lg p-4">
+                <div className="grid grid-cols-2 gap-4">
+                  {/* Left Bet Panel */}
+                  <div className="space-y-4">
+                    <div className="flex items-center bg-gray-900 rounded-lg">
+                      <div className="bg-yellow-400 rounded-full px-2 py-1 m-2">
+                        <span className="text-xs font-bold">₹</span>
+                      </div>
+                      <input
+                        type="text"
+                        value={betAmount1}
+                        onChange={(e) => setBetAmount1(e.target.value)}
+                        className="bg-transparent text-white w-full p-2 focus:outline-none"
+                      />
+                    </div>
+
+                    <Button
+                      className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+                      onClick={() => placeBet(betAmount1)}
+                    >
+                      PLACE BET
+                    </Button>
+
+                    <div className="flex justify-between">
+                      {quickBetOptions.map((option) => (
+                        <Button
+                          key={option.value}
+                          variant="outline"
+                          className="bg-gray-700 hover:bg-gray-600 text-white border-none"
+                          onClick={() => setBetAmount1(option.value)}
+                        >
+                          {option.label}
+                        </Button>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="text-white">Auto play</span>
+                      <Switch checked={autoPlay1} onCheckedChange={setAutoPlay1} />
+                    </div>
+                  </div>
+
+                  {/* Right Bet Panel */}
+                  <div className="space-y-4">
+                    <div className="flex items-center bg-gray-900 rounded-lg">
+                      <div className="bg-yellow-400 rounded-full px-2 py-1 m-2">
+                        <span className="text-xs font-bold">₹</span>
+                      </div>
+                      <input
+                        type="text"
+                        value={betAmount2}
+                        onChange={(e) => setBetAmount2(e.target.value)}
+                        className="bg-transparent text-white w-full p-2 focus:outline-none"
+                      />
+                    </div>
+
+                    <Button
+                      className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+                      onClick={() => placeBet(betAmount2)}
+                    >
+                      PLACE BET
+                    </Button>
+
+                    <div className="flex justify-between">
+                      {quickBetOptions.map((option) => (
+                        <Button
+                          key={option.value}
+                          variant="outline"
+                          className="bg-gray-700 hover:bg-gray-600 text-white border-none"
+                          onClick={() => setBetAmount2(option.value)}
+                        >
+                          {option.label}
+                        </Button>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <span className="text-white">Auto play</span>
+                      <Switch checked={autoPlay2} onCheckedChange={setAutoPlay2} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <div className="w-96 bg-gray-900 bg-opacity-90 backdrop-blur-sm overflow-y-auto">
+            <div className="p-4">
+              {/* Header Bar */}
+              <div className="flex items-center justify-between mb-4 pb-2 border-b border-gray-700">
+                <div className="flex items-center space-x-2">
+                  <ChevronDown className="h-5 w-5 text-white" />
+                  <span className="text-white font-bold">Last 12 Rounds</span>
+                </div>
+                <div className="h-1 flex-1 mx-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
+              </div>
+
+              {/* Rounds Table */}
+              <div className="space-y-2">
+                {/* Table Header */}
+                <div className="grid grid-cols-4 gap-3 pb-2 border-b border-gray-700 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                  <div>Time</div>
+                  <div className="text-center">Multi</div>
+                  <div className="text-center">Duration</div>
+                  <div className="text-center">Status</div>
+                </div>
+
+                {/* Table Rows */}
+                {lastRounds.map((round) => (
+                  <div
+                    key={round.id}
+                    className="grid grid-cols-4 gap-3 py-2 border-b border-gray-800 hover:bg-gray-800 hover:bg-opacity-50 transition-colors"
+                  >
+                    <div className="flex items-center">
+                      <span className="text-gray-300 text-sm font-mono">{round.time}</span>
+                    </div>
+
+                    <div className="text-center">
+                      <span className={`text-sm font-bold ${getMultiplierColor(round.multiplier)}`}>
+                        {round.multiplier}
+                      </span>
+                    </div>
+
+                    <div className="text-center">
+                      <span className="text-gray-300 text-sm font-mono">{round.duration}</span>
+                    </div>
+
+                    <div className="flex justify-center">
+                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Summary Stats */}
+              <div className="mt-6 pt-4 border-t border-gray-700">
+                <div className="grid grid-cols-2 gap-4 text-center">
+                  <div>
+                    <div className="text-gray-400 text-xs uppercase tracking-wider">Avg Multi</div>
+                    <div className="text-white font-bold">4.23x</div>
+                  </div>
+                  <div>
+                    <div className="text-gray-400 text-xs uppercase tracking-wider">Avg Duration</div>
+                    <div className="text-white font-bold">10.8s</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
