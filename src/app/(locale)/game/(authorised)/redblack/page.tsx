@@ -74,9 +74,9 @@ const GamePage = () => {
                   backgroundSize: "100%",
                 }}
               >
-                {/* {roundRecord && (
+                {roundRecord && (
                   <RedBlackRouletteGame roundRecord={roundRecord} />
-                )} */}
+                )}
               </div>
               <div
                 className="rounded-2xl overflow-y-auto"
