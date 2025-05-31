@@ -1,73 +1,124 @@
-import { useAuthStore } from "@/context/auth-context";
-import { useGameType, useMarketSelector } from "@/hooks/use-market-selector";
-import useNSEAvailable from "@/hooks/use-nse-available";
-import useUSAMarketAvailable from "@/hooks/use-usa-available";
+import { useGameType, useMarketSelector, useStockSelectorAviator, useStockType } from "@/hooks/use-market-selector";
 import { cn } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
-import User from "@/models/user";
+import { useSearchParams } from "next/navigation";
 
 
 type MarketSelectorProps = {
     title: string;
     className?: string;
-    variant?: 'aviator' | 'all';
 }
 
-const MarketSelector = ({ title, className, variant = 'all' }: MarketSelectorProps) => {
-    const isNSEAvailable = useNSEAvailable();
-    const isUSAMarketAvailable = useUSAMarketAvailable();
+const MarketSelector = ({ title, className}: MarketSelectorProps) => {
+    const { setStockSelectedAviator } = useStockSelectorAviator();
+    const { setStockType } = useStockType();
+    // get it from url parameter 
+    const searchParams = useSearchParams();
+    const selectedMarket = searchParams.get('gameType');
 
-    const { setMarketSelected } = useMarketSelector();
-    const { setGameType } = useGameType();
 
-    const { userDetails } = useAuthStore();
-
-    const currentUser = userDetails as User;
-    const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
-    const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO);
-    const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
-
-    const handleMarketSelection = (market: SchedulerType) => {
-        setGameType(market);
-        setMarketSelected(true);
+    const handleMarketSelection = (stock: string) => {
+        setStockType(stock);
+        setStockSelectedAviator(true);
     }
 
-    const markets = [
+    const usa_markets = [
         {
-            id: SchedulerType.NSE,
-            title: "NSE",
-            subtitle: "National Stock Exchange",
-            available: variant === 'all' ? isNSEAvailable : true,
-            allowed: isNSEAllowed,
-            color: "from-blue-400 to-blue-600",
-            icon: "📈"
-        },
-        {
-            id: SchedulerType.CRYPTO,
-            title: "CRYPTO",
-            subtitle: "Digital Currency",
+            id: "AAPL",
+            title: "AAPL",
+            subtitle: "Apple Inc.",
             available: true,
-            allowed: isCryptoAllowed,
-            color: "from-orange-400 to-red-500",
-            icon: "₿"
+            allowed: true,
+            color: "from-gray-400 to-gray-600",
+            icon: "🍎"
         },
         {
-            id: SchedulerType.USA_MARKET,
-            title: "USA",
-            subtitle: "US Stock Market",
-            available: variant === 'all' ? isUSAMarketAvailable : true,
-            allowed: isUSAMarketAllowed,
-            color: "from-green-400 to-emerald-600",
-            icon: "🇺🇸"
+            id: "GOOGL",
+            title: "GOOGL",
+            subtitle: "Alphabet Inc. (Google)",
+            available: true,
+            allowed: true,
+            color: "from-red-400 to-yellow-500",
+            icon: "🔍"
+        },
+        {
+            id: "MSFT",
+            title: "MSFT",
+            subtitle: "Microsoft Corporation",
+            available: true,
+            allowed: true,
+            color: "from-blue-400 to-blue-600",
+            icon: "💻"
+        },
+        {
+            id: "TSLA",
+            title: "TSLA",
+            subtitle: "Tesla Inc.",
+            available: true,
+            allowed: true,
+            color: "from-red-500 to-red-700",
+            icon: "⚡"
+        },
+        {
+            id: "AMZN",
+            title: "AMZN",
+            subtitle: "Amazon.com Inc.",
+            available: true,
+            allowed: true,
+            color: "from-orange-400 to-yellow-500",
+            icon: "📦"
         }
-    ].filter(market => {
-        if (variant === 'aviator' && market.id === SchedulerType.CRYPTO) {
-            return false;
-        }
-        return true;
-    });
+    ];
 
-    const availableMarkets = markets.filter(market => market.allowed);
+    const nse_markets = [
+        {
+            id: "RELIANCE",
+            title: "RELIANCE",
+            subtitle: "Reliance Industries Ltd.",
+            available: true,
+            allowed: true,
+            color: "from-blue-500 to-blue-700",
+            icon: "⛽"
+        },
+        {
+            id: "TCS",
+            title: "TCS",
+            subtitle: "Tata Consultancy Services Ltd.",
+            available: true,
+            allowed: true,
+            color: "from-blue-400 to-blue-600",
+            icon: "💼"
+        },
+        {
+            id: "HDFCBANK",
+            title: "HDFCBANK",
+            subtitle: "HDFC Bank Ltd.",
+            available: true,
+            allowed: true,
+            color: "from-red-400 to-red-600",
+            icon: "🏦"
+        },
+        {
+            id: "INFY",
+            title: "INFY",
+            subtitle: "Infosys Ltd.",
+            available: true,
+            allowed: true,
+            color: "from-green-400 to-green-600",
+            icon: "💻"
+        },
+        {
+            id: "ITC",
+            title: "ITC",
+            subtitle: "ITC Ltd.",
+            available: true,
+            allowed: true,
+            color: "from-brown-400 to-brown-600",
+            icon: "🚬"
+        }
+    ];
+
+    const availableMarkets = selectedMarket === SchedulerType.USA_MARKET ? usa_markets : nse_markets;
 
     return (
         <div
@@ -122,15 +173,6 @@ const MarketSelector = ({ title, className, variant = 'all' }: MarketSelectorPro
                                     </p>
                                 </div>
 
-                                {/* Status Badge */}
-                                <div className={cn(
-                                    "px-2 py-1 rounded-full text-xs font-semibold",
-                                    market.available
-                                        ? "bg-green-500/20 text-green-300 border border-green-500/30"
-                                        : "bg-red-500/20 text-red-300 border border-red-500/30"
-                                )}>
-                                    {market.available ? "OPEN" : "CLOSED"}
-                                </div>
                             </div>
 
                             {/* Bottom Section */}
