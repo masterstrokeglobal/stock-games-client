@@ -61,7 +61,6 @@ const GamePage = () => {
       <section className={cn("pt-14 min-h-screen w-screen")}>
         <Navbar />
         <UserWins />
-        {!isMobile && (
           <main className="grid grid-cols-12 gap-4 h-screen pt-8 px-4 pb-4 max-w-7xl mx-auto w-full">
             {/* Left Column: Top (e.g. RouletteGame) and Bottom (e.g. CardSpinner) */}
             <div className="col-span-12 lg:col-span-7 flex flex-col gap-4 h-full">
@@ -124,14 +123,13 @@ const GamePage = () => {
               </div>
             </div>
           </main>
-        )}
         <AdvertismentDialog />
         <TawkMessengerReact
           propertyId="/67fcabcc5de05719072dd2b9"
           widgetId="1iopfu6mp"
           onLoad={() => console.log("Tawk loaded")}
         />
-        {isMobile && roundRecord && <MobileGame roundRecord={roundRecord} />}
+        {/* {isMobile && roundRecord && <MobileGame roundRecord={roundRecord} />} */}
       </section>
     </>
   );
@@ -167,16 +165,14 @@ const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
                 <RedBlackRouletteGame roundRecord={roundRecord} />
               )}
             </div>
-            {roundRecord && (
-              <LastWinners className="min-h-[300px] max-h-[400px] rounded-none" />
-            )}
-            {roundRecord && <CurrentBets round={roundRecord} />}
+            {roundRecord && <CardSpinner last10winners={last10winners} />}
+            {/* {roundRecord && <CurrentBets round={roundRecord} />} */}
           </div>
         </main>
       )}
       {isPlaceOver && (
         <>
-          {roundRecord && <LeaderBoard roundRecord={roundRecord} />}
+          {roundRecord && <RedBlackLeaderBoard roundRecord={roundRecord} />}
           <div
             className="rounded-xl overflow-hidden min-h-[300px] max-h-[400px] mx-2 mt-2"
             style={{
@@ -189,7 +185,7 @@ const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
           >
             <RedBlackRouletteGame roundRecord={roundRecord} />
           </div>
-          {roundRecord && <CurrentBets round={roundRecord} />}
+          {roundRecord && <CardSpinner last10winners={last10winners} />}
         </>
       )}
     </section>
