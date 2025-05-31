@@ -1,15 +1,16 @@
 "use client"
 import { Button } from "@/components/ui/button";
-import { useIsPlaceOver, usePlacementOver, useShowResults } from '@/hooks/use-current-game';
+import { usePlacementOver, useShowResults } from '@/hooks/use-current-game';
 import { formatRupee } from "@/lib/utils";
 import { RoundRecord } from '@/models/round-record';
 import Wallet from "@/models/wallet";
 import { useGetWallet } from "@/react-query/payment-queries";
 import { useCreateStockGamePlacement, useGetMySlotGamePlacement } from "@/react-query/slot-game-queries";
-import { Minus, Plus, Play, Zap, WalletIcon, } from 'lucide-react';
+import { Minus, Plus, WalletIcon, } from 'lucide-react';
 import Image from 'next/image';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import SlotGameResultDialog from "../game/slot-game-result-dialog";
+import { useLeaderboard } from "@/hooks/use-leadboard";
 
 interface BettingAreaProps {
     betAmount: number;
@@ -23,12 +24,15 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
     roundRecord
 }) => {
     const { data: walletData, isLoading } = useGetWallet();
-
-    const { mutate: createStockGamePlacement, isPending: isCreateStockGamePlacementPending } = useCreateStockGamePlacement();
-    
     const { data: myPlacementData } = useGetMySlotGamePlacement(roundRecord.id);
-    
-    const {showResults, currentRoundId, previousRoundId} = useShowResults( roundRecord, myPlacementData?.data ?? []);
+    const {showResults, previousRoundId} = useShowResults( roundRecord, myPlacementData?.data ?? []);
+    const { mutate: createStockGamePlacement, isPending: isCreateStockGamePlacementPending } = useCreateStockGamePlacement();
+    const {stocks} = useLeaderboard(roundRecord)
+
+    const [currentStocks, setCurrentStocks] = useState<RoundRecord['market']>([])
+    const [stockPrice, setStockPrice] = useState<Record<string, number>>({})
+
+    const isPlaceOver = usePlacementOver(roundRecord);
 
     const totalBetAmount = useMemo(() => {
         console.log(myPlacementData);
@@ -40,7 +44,6 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
         return new Wallet(walletData?.data?.wallet);
     }, [walletData])
 
-    const isPlaceOver = usePlacementOver(roundRecord);
 
     const placeBetHandler = () => {
         createStockGamePlacement({
@@ -49,9 +52,44 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
         })
     }
 
+    useEffect(() => {
+        if(roundRecord){
+            console.log("roundRecord",roundRecord)
+            const stocks = roundRecord.market.map((stock) => {
+                return stock
+            })
+            setCurrentStocks(stocks)
+            
+            if (roundRecord.initialValues && Object.keys(roundRecord.initialValues).length > 0) {
+                setStockPrice(roundRecord.initialValues)
+            }
+        }
+        if(stocks.length > 0){
+            stocks.forEach((stock) => {
+                if(stock.price){
+                    setStockPrice((prev) => ({...prev, [stock.code ?? '']: stock.price}))
+                }
+            })
+
+        }
+    }, [roundRecord, stocks])
+
     return (
         <>
         <div className="w-full bg-[url('/images/slot-game/wodden-bg.jpg')] bg-repeat bg-contain bg-center text-[#E3B872] p-4">
+        
+            <div className="flex items-center justify-between gap-4 mb-4">
+
+                {currentStocks.length > 0 && (
+                    currentStocks.map((stock) => (
+                        <div className="flex flex-col items-center justify-center flex-1 gap-2 bg-[#1B1B1B] border-2 border-[#E3B872] px-2 py-1 rounded-md">
+                            <span className="text-lg">{stock.name}</span>
+                            <span className="text-lg">{stockPrice[stock.code ?? '']}</span>
+                        </div>
+                    ))
+                )}
+
+            </div>
             <div className="flex items-center justify-between gap-4 mb-4">
                 <div className="flex items-center justify-center flex-1 gap-2 bg-[#1B1B1B] border-2 border-[#E3B872] px-2 py-1 rounded-md">
                     <WalletIcon className="w-5 h-5" />
