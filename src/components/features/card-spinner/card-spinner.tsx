@@ -43,7 +43,7 @@ export default function CardSpinner({ last10winners }: { last10winners: any[] })
             number={round.roundNumber || -1}
             time={dayjs(round.startTime).format("hh:mm A")}
             color={(round.winningColor === "red"  ? 'red' : 'black')}
-            name={round.winningMarket.name || `Card ${index + 1}`}
+            name={round?.winningMarket?.name || `Card ${index + 1}`}
             position={index + 1}
           />
         ))}
