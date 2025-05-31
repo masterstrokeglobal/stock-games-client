@@ -1,8 +1,8 @@
 "use client";
 import AdvertismentDialog from "@/components/features/advertisement/advertismemnt-dialog";
-import CurrentBets from "@/components/features/game/current-bets";
-import LastWinners from "@/components/features/game/last-winners";
-import LeaderBoard from "@/components/features/game/leaderboard";
+// import CurrentBets from "@/components/features/game/current-bets";
+// import LastWinners from "@/components/features/game/last-winners";
+// import LeaderBoard from "@/components/features/game/leaderboard";
 import Navbar from "@/components/features/game/navbar";
 import RedBlackRouletteGame from "@/components/features/game/red-black-roulette-game";
 import { MobileGameHeader } from "@/components/features/game/roulette-header";
@@ -14,7 +14,7 @@ import {
   useGameState,
   useIsPlaceOver,
 } from "@/hooks/use-current-game";
-import useWindowSize from "@/hooks/use-window-size";
+// import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
 import TawkMessengerReact from "@tawk.to/tawk-messenger-react";
@@ -53,7 +53,7 @@ const last10winners = [
 
 const GamePage = () => {
   const { roundRecord } = useCurrentGame();
-  const { isMobile } = useWindowSize();
+//   const { isMobile } = useWindowSize();
   useHorseRaceSound(roundRecord);
 
   return (
