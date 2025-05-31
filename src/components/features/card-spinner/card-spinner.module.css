@@ -1,0 +1,228 @@
+.bannerContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.banner {
+  padding: 20px;
+  width: 100%;
+  height: 300px;
+  /* text-align: center; */
+  overflow: auto;
+  position: relative;
+}
+
+.banner:active {
+  cursor: grabbing;
+}
+
+.slider {
+  position: absolute;
+  width: 100px;
+  height: 133px;
+  top: 50%;
+  left: calc(50% - 50px);
+  transform-style: preserve-3d;
+  transform: perspective(1000px) rotateX(-16deg) rotateY(0deg) translateY(-60%);
+  z-index: 2;
+}
+
+.spinning {
+  animation: autoRun 20s linear infinite;
+}
+
+@keyframes autoRun {
+  from {
+    transform: perspective(1000px) rotateX(-16deg) rotateY(0deg) translateY(-60%);
+  }
+  to {
+    transform: perspective(1000px) rotateX(-16deg) rotateY(360deg) translateY(-60%);
+  }
+}
+
+.item {
+  position: absolute;
+  inset: 0 0 0 0;
+  transform: rotateY(calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)) translateZ(267px);
+  transition: transform 0.5s ease;
+}
+
+.item:hover {
+  transform: rotateY(calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)) translateZ(280px) scale(1.1);
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 7px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.red {
+  background-color: #ad0707;
+  color: white;
+  box-shadow: 0 4px 8px rgba(229, 57, 53, 0.4);
+}
+
+.black {
+  background-color: #010201;
+  color: white;
+  box-shadow: 0 4px 8px rgba(33, 33, 33, 0.4);
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.cardNumber {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 4px;
+  text-shadow: 1.5px 1.5px 3px rgba(0,0,0,0.5);
+  letter-spacing: 0.7px;
+}
+
+.cardName {
+  font-size: 0.67rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+.red .cardContent::before,
+.black .cardContent::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.controls {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.controlButton {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #3a3a3a 0%, #1a1a1a 100%);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  min-width: 100px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.controlButton:hover {
+  background: linear-gradient(135deg, #444 0%, #2a2a2a 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.controlButton:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.dragHint {
+  color: #666;
+  font-size: 14px;
+  font-style: italic;
+  animation: fadeInOut 2s ease-in-out infinite;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 1023px) {
+  .slider {
+    width: 80px;
+    height: 106px;
+    left: calc(50% - 40px);
+  }
+  
+  .item {
+    transform: rotateY(calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)) translateZ(170px);
+  }
+  
+  .item:hover {
+    transform: rotateY(calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)) translateZ(180px) scale(1.1);
+  }
+  
+  .cardNumber {
+    font-size: 1.35rem;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .slider {
+    width: 53px;
+    height: 80px;
+    left: calc(50% - 26.5px);
+  }
+  
+  .item {
+    transform: rotateY(calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)) translateZ(100px);
+  }
+  
+  .item:hover {
+    transform: rotateY(calc((var(--position) - 1) * (360 / var(--quantity)) * 1deg)) translateZ(110px) scale(1.1);
+  }
+  
+  .cardNumber {
+    font-size: 1rem;
+    margin-bottom: 2px;
+  }
+  
+  .cardName {
+    font-size: 0.5rem;
+  }
+  
+  .controlButton {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+  
+  .dragHint {
+    font-size: 12px;
+  }
+} 

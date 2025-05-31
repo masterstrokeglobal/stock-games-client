@@ -636,6 +636,33 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
   }
 }
+
+* {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #555 #1a1a1a05; /* thumb and track */
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #1a1a1a05;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 10px;
+  border: 2px solid #1a1a1a;
+}
+
+.watch-timer{
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 .slotmachine-gradient {
   background: #5B2902;
   background: -webkit-linear-gradient(0deg, rgba(91, 41, 2, 1) 0%, rgba(45, 17, 0, 1) 41%, rgba(0, 0, 0, 1) 100%);
