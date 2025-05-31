@@ -1,0 +1,105 @@
+.shuffle-grid-container {
+    display: grid;
+}
+
+.shuffle-grid-2-columns {
+    &> * {
+        margin-inline: 5px;
+        margin-block: 5px;
+    }
+    grid-template-areas:
+        /* "child-1 child-9"
+        "child-2 child-10"
+        "child-3 child-11"
+        "child-4 child-12"
+        "child-5 child-13"
+        "child-6 child-14"
+        "child-7 child-15"
+        "child-8 child-16"; */
+        "child-1 child-2 child-9 child-10"
+        "child-3 child-4 child-11 child-12"
+        "child-5 child-6 child-13 child-14"
+        "child-7 child-8 child-15 child-16"
+}
+.shuffle-grid-4-columns {
+    &> * {
+        margin-inline: 5px;
+        margin-block: 5px;
+    }
+    grid-template-areas:
+        "child-1 child-9 child-2 child-10"
+        "child-11 child-3 child-12 child-4"
+        "child-5 child-13 child-6 child-14"
+        "child-15 child-7 child-16 child-8";
+}
+
+.shuffle-grid-2-columns>:nth-child(2),
+.shuffle-grid-2-columns>:nth-child(4),
+.shuffle-grid-2-columns>:nth-child(6),
+.shuffle-grid-2-columns>:nth-child(8){
+ margin-right: 10rem;
+}
+
+.shuffle-grid-container > :nth-child(1) {
+    grid-area: child-1;
+}
+
+.shuffle-grid-container > :nth-child(2) {
+    grid-area: child-2;
+}
+
+.shuffle-grid-container > :nth-child(3) {
+    grid-area: child-3;
+}
+
+.shuffle-grid-container > :nth-child(4) {
+    grid-area: child-4;
+}
+
+.shuffle-grid-container > :nth-child(5) {
+    grid-area: child-5;
+}
+
+.shuffle-grid-container > :nth-child(6) {
+    grid-area: child-6;
+}
+
+.shuffle-grid-container > :nth-child(7) {
+    grid-area: child-7;
+}
+
+.shuffle-grid-container > :nth-child(8) {
+    grid-area: child-8;
+}
+
+.shuffle-grid-container > :nth-child(9) {
+    grid-area: child-9;
+}
+
+.shuffle-grid-container > :nth-child(10) {
+    grid-area: child-10;
+}
+
+.shuffle-grid-container > :nth-child(11) {
+    grid-area: child-11;
+}
+
+.shuffle-grid-container > :nth-child(12) {
+    grid-area: child-12;
+}
+
+.shuffle-grid-container > :nth-child(13) {
+    grid-area: child-13;
+}
+
+.shuffle-grid-container > :nth-child(14) {
+    grid-area: child-14;
+}
+
+.shuffle-grid-container > :nth-child(15) {
+    grid-area: child-15;
+}
+
+.shuffle-grid-container > :nth-child(16) {
+    grid-area: child-16;
+}

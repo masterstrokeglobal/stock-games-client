@@ -632,3 +632,30 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
   }
 }
+
+* {
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #555 #1a1a1a05; /* thumb and track */
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #1a1a1a05;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 10px;
+  border: 2px solid #1a1a1a;
+}
+
+.watch-timer{
+  position: absolute;
+  top: 0;
+  right: 0;
+}
