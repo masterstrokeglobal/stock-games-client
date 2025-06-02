@@ -265,7 +265,7 @@ const StockCardStack = ({ roundRecord }: { roundRecord: RoundRecord | null }) =>
         <div className="flex-1 gap-2 md:gap-4 flex justify-around">
           {highStocks.length > 0 ? (
             highStocks.map((item) => (
-              <StockCard key={item.id} stock={item.stock} />
+              <StockCard key={item.id} stock={item.stock} amount={item.amount} />
             ))
           ) : (
             <div className="text-center text-gray-400 text-xs md:text-sm border border-dashed border-gray-400  p-2 rounded-lg">No stocks selected</div>

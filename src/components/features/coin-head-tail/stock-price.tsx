@@ -44,8 +44,7 @@ export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, winningSide
   const isPlaceOver = usePlacementOver(roundRecord);
   const isFlipping = isPlaceOver;
 
-  console.log(isFlipping,winningSide)
-
+  console.log(roundRecord)
   return (
     <div className="flex flex-col justify-center items-start bg-red-500">
       <div className="w-full grid grid-cols-2 ">
@@ -53,12 +52,13 @@ export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, winningSide
             <StockPrice key={stock.id} rankedMarketItem={stock} />
           ))}
       </div>
-      <div className='h-32 w-full bg-white'>
+      <div className='h-64 w-full bg-white'>
         <CoinFlipVideo isFlipping={isFlipping} resultOutcome={winningSide ?? undefined} />
       </div>
     </div>
   );
 };
+
 const CoinFlipVideo = ({ isFlipping, resultOutcome }: { isFlipping: boolean, resultOutcome?: HeadTailPlacementType }) => {
   const headRef = React.useRef<HTMLVideoElement>(null);
   const tailRef = React.useRef<HTMLVideoElement>(null);
@@ -78,7 +78,7 @@ const CoinFlipVideo = ({ isFlipping, resultOutcome }: { isFlipping: boolean, res
 
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full bg-[url('/images/coin-face/wodenboard.jpeg')] bg-cover bg-center">
       <video
         ref={headRef}
         src="/videos/head.webm"

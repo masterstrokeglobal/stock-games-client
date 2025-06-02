@@ -11,8 +11,9 @@ import { Slot } from '@/components/features/slot-machine/slot';
 
 const StockSlot = () => {
     const { marketSelected, setMarketSelected } = useMarketSelector();
-    const [betAmount, setBetAmount] = useState<number>(100);
     const { roundRecord, isLoading } = useCurrentGame(RoundRecordGameType.STOCK_JACKPOT);
+
+    const [betAmount, setBetAmount] = useState<number>(100);
 
 
     if (!marketSelected) return <MarketSelector className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Stock Slot Market" />

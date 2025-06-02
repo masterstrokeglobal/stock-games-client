@@ -42,7 +42,7 @@ export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, winningMark
         />
       )}
       <div className='relative z-20'>
-        <StockWheel roundRecord={roundRecord} winningMarketId={winningMarketId} isSpinning={isSpinning} />
+        <StockWheel roundRecord={roundRecord} winningMarketId={winningMarketId} isSpinning={false} />
       </div>
     </div>
   );

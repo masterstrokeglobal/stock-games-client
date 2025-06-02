@@ -7,29 +7,87 @@ import { useCreateSevenUpDownPlacement, useGetMyCurrentRoundSevenUpDownPlacement
 import React, { PropsWithChildren } from 'react';
 
 const MarketItemDisplay: React.FC<{ items: RankedMarketItem[], isPositive: boolean }> = ({ items, isPositive }) => {
+  // Calculate non-overlapping positions using grid-based approach
+  const calculateSafePosition = (existingPositions: Array<{x: number, y: number}>) => {
+    const gridSize = 10; // Size of each grid cell
+    const padding = 15; // Minimum padding between items
+    const grid: boolean[][] = Array(100/gridSize).fill(false).map(() => Array(100/gridSize).fill(false));
+    
+    // Mark existing positions in grid
+    existingPositions.forEach(pos => {
+      const gridX = Math.floor(pos.x / gridSize);
+      const gridY = Math.floor(pos.y / gridSize);
+      if (gridX >= 0 && gridX < grid.length && gridY >= 0 && gridY < grid[0].length) {
+        grid[gridX][gridY] = true;
+        // Mark surrounding cells as occupied too
+        for (let dx = -1; dx <= 1; dx++) {
+          for (let dy = -1; dy <= 1; dy++) {
+            const nx = gridX + dx;
+            const ny = gridY + dy;
+            if (nx >= 0 && nx < grid.length && ny >= 0 && ny < grid[0].length) {
+              grid[nx][ny] = true;
+            }
+          }
+        }
+      }
+    });
+    
+    // Find empty cells
+    const emptyCells: Array<{x: number, y: number}> = [];
+    for (let i = 0; i < grid.length; i++) {
+      for (let j = 0; j < grid[0].length; j++) {
+        if (!grid[i][j]) {
+          emptyCells.push({
+            x: (i * gridSize) + (Math.random() * gridSize),
+            y: (j * gridSize) + (Math.random() * gridSize)
+          });
+        }
+      }
+    }
+    
+    // If no empty cells found, create emergency position
+    if (emptyCells.length === 0) {
+      return {
+        x: Math.random() * 100,
+        y: Math.random() * 100
+      };
+    }
+    
+    // Return random empty cell position
+    const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+    
+    // Ensure position is within bounds and add small random offset
+    return {
+      x: Math.max(padding, Math.min(100 - padding, randomCell.x)),
+      y: Math.max(padding, Math.min(100 - padding, randomCell.y))
+    };
+  };
+
   return (
     <div className="flex flex-col gap-2">
       {items.map((item, index) => {
-        // Calculate random position avoiding center 40-60% and with 5% padding
-        const randomPosition = () => {
-          const position = Math.random() * 90 + 5; // Initial 5-95% range with 5% padding
-          
-          // If position falls in center 40-60% range, adjust it to either side
-          if (position > 40 && position < 60) {
-            return position < 50 ? position - 20 : position + 20;
-          }
-          return position;
-        };
+        const positions = items.slice(0, index).map((_, i) => {
+          const el = document.querySelector(`[data-item-index="${i}"]`);
+          return {
+            x: el ? parseFloat(el.getAttribute('data-x') || '0') : 0,
+            y: el ? parseFloat(el.getAttribute('data-y') || '0') : 0
+          };
+        });
+        
+        const {x, y} = calculateSafePosition(positions);
 
         return (
           <div
             key={index}
+            data-item-index={index}
+            data-x={x}
+            data-y={y}
             className={`px-2 text-[10px] py-1 rounded-full text-white absolute`}
             style={{
               backgroundColor: isPositive ? 'rgb(34, 197, 94)' : 'rgb(239, 68, 68)',
               animationDelay: `${index * 0.3}s`,
-              left: `${randomPosition()}%`, 
-              top: `${5 + Math.random() * 90}%`, // 5-95% vertical range
+              left: `${x}%`,
+              top: `${y}%`,
               transform: 'translate(-50%, -50%)',
               transition: 'all 0.5s linear',
               animation: `float 4s linear infinite, move ${4 + index}s linear infinite`

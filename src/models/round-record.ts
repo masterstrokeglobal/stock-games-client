@@ -20,54 +20,113 @@ export enum RoundRecordGameType {
     DICE = "dice"    
 }
 
+export const WHEEL_COLOR_SEQUENCE = [
+    WheelColor.COLOR5, // GOLDEN - Segment 0 (top)
+    WheelColor.COLOR1, // RED - Segment 1
+    WheelColor.COLOR2, // GREEN - Segment 2
+    WheelColor.COLOR3, // BLUE - Segment 3
+    WheelColor.COLOR1, // RED - Segment 4
+    WheelColor.COLOR2, // GREEN - Segment 5
+    WheelColor.COLOR4, // PURPLE - Segment 6
+    WheelColor.COLOR1, // RED - Segment 7
+    WheelColor.COLOR2, // GREEN - Segment 8
+    WheelColor.COLOR3, // BLUE - Segment 9
+    WheelColor.COLOR1, // RED - Segment 10
+    WheelColor.COLOR2, // GREEN - Segment 11
+    WheelColor.COLOR4, // PURPLE - Segment 12
+    WheelColor.COLOR1, // RED - Segment 13
+    WheelColor.COLOR2, // GREEN - Segment 14
+    WheelColor.COLOR3, // BLUE - Segment 15
+    WheelColor.COLOR1, // RED - Segment 16
+    WheelColor.COLOR2, // GREEN - Segment 17
+    WheelColor.COLOR4, // PURPLE - Segment 18
+    WheelColor.COLOR1, // RED - Segment 19
+    WheelColor.COLOR3  // BLUE - Segment 20
+];
+
+
+export const WHEEL_COLOR_BANDS = [
+    { color: WheelColor.COLOR1, indices: [0, 3, 6, 9, 12, 15, 18] }, // 7 items
+    { color: WheelColor.COLOR2, indices: [1, 4, 7, 10, 13, 16] }, // 6 items
+    { color: WheelColor.COLOR3, indices: [2, 8, 14, 19] }, // 4 items
+    { color: WheelColor.COLOR4, indices: [5, 11, 17] }, // 3 items
+    { color: WheelColor.COLOR5, indices: [20] }, // 1 item
+];
+
+export const IndexwithColorBands = [
+    { color: WheelColor.COLOR5, index: 20 },
+    { color: WheelColor.COLOR5, index: 0 },
+    { color: WheelColor.COLOR1, index: 1 },
+    { color: WheelColor.COLOR2, index: 2 },
+    { color: WheelColor.COLOR3, index: 3 },
+    { color: WheelColor.COLOR1, index: 4 },
+    { color: WheelColor.COLOR2, index: 5 },
+    { color: WheelColor.COLOR4, index: 6 },
+    { color: WheelColor.COLOR1, index: 7 },
+    { color: WheelColor.COLOR2, index: 8 },
+    { color: WheelColor.COLOR3, index: 9 },
+    { color: WheelColor.COLOR1, index: 10 },
+    { color: WheelColor.COLOR2, index: 11 },
+    { color: WheelColor.COLOR4, index: 12 },
+    { color: WheelColor.COLOR1, index: 13 },
+    { color: WheelColor.COLOR2, index: 14 },
+    { color: WheelColor.COLOR3, index: 15 },
+    { color: WheelColor.COLOR1, index: 16 },
+    { color: WheelColor.COLOR2, index: 17 },
+    { color: WheelColor.COLOR4, index: 18 },
+    { color: WheelColor.COLOR1, index: 19 },
+];
+
+
+
+
 export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
     [WheelColor.COLOR1]: {
-        name: 'GOLDEN',
-        bgColor: 'bg-yellow-500',
-        textColor: 'text-yellow-900',
-        borderColor: 'border-yellow-600',
-        shadowColor: 'shadow-yellow-500/50',
-        actualColor: '#FFD700',
+        name: 'RED',
+        bgColor: 'bg-red-500',
+        textColor: 'text-white',
+        borderColor: 'border-red-600',
+        shadowColor: 'shadow-red-500/50',
+        actualColor: '#F44336', // Vibrant red (most frequent - 7 items)
         multiplier: 2
     },
     [WheelColor.COLOR2]: {
-        name: 'RED',
-        bgColor: 'bg-red-600',
-        textColor: 'text-red-900',
-        borderColor: 'border-red-600',
-        shadowColor: 'shadow-red-500/50',
-        actualColor: '#DC2626',
+        name: 'GREEN',
+        bgColor: 'bg-green-500',
+        textColor: 'text-white',
+        borderColor: 'border-green-600',
+        shadowColor: 'shadow-green-500/50',
+        actualColor: '#4CAF50', // Vibrant green (6 items)
         multiplier: 2
     },
     [WheelColor.COLOR3]: {
         name: 'BLUE',
-        bgColor: 'bg-blue-600',
-        textColor: 'text-blue-900',
+        bgColor: 'bg-blue-500',
+        textColor: 'text-white',
         borderColor: 'border-blue-600',
         shadowColor: 'shadow-blue-500/50',
-        actualColor: '#2563EB',
+        actualColor: '#2196F3', // Bright blue (4 items)
         multiplier: 2
     },
     [WheelColor.COLOR4]: {
-        name: 'GREEN',
-        bgColor: 'bg-green-600',
-        textColor: 'text-green-900',
-        borderColor: 'border-green-600',
-        shadowColor: 'shadow-green-500/50',
-        actualColor: '#16A34A',
+        name: 'PURPLE',
+        bgColor: 'bg-fuchsia-600',
+        textColor: 'text-white',
+        borderColor: 'border-fuchsia-700',
+        shadowColor: 'shadow-fuchsia-500/50',
+        actualColor: '#E91E63', // Bright magenta-pink (3 items)
         multiplier: 2
     },
     [WheelColor.COLOR5]: {
-        name: 'PURPLE',
-        bgColor: 'bg-purple-600',
-        textColor: 'text-purple-900',
-        borderColor: 'border-purple-600',
-        shadowColor: 'shadow-purple-500/50',
-        actualColor: '#7C3AED',
+        name: 'GOLDEN',
+        bgColor: 'bg-yellow-400',
+        textColor: 'text-yellow-900',
+        borderColor: 'border-yellow-500',
+        shadowColor: 'shadow-yellow-400/50',
+        actualColor: '#FFD700', // Golden yellow (1 item - rarest)
         multiplier: 2
     }
 };
-
 
 export class RoundRecord {
     id: number;
@@ -124,6 +183,9 @@ export class RoundRecord {
         return this.marketColors.find(item => item.marketId === marketId)?.color || undefined;
     }
 
+    getMarketsByColor(color: WheelColor): MarketItem[] {
+        return this.marketColors.filter(item => item.color === color).map(item => this.market.find(market => market.id === item.marketId)).filter(item => item !== undefined) as MarketItem[];
+    }   
     marketColorConfig(marketId: number): ColorConfig | undefined {
         const color = this.marketColor(marketId);
         if (!color) return undefined;
@@ -195,4 +257,10 @@ export class RoundRecord {
         const initialPrice = this.initialValues?.[codeLower] || this.initialValues?.[codeUpper] || 0;
         return initialPrice;
     }
+
+    get sequenceMarketItems(): MarketItem[] {
+       const marketItems = IndexwithColorBands.map(item => this.market[item.index]);
+       return marketItems.filter(item => item !== undefined) as MarketItem[];
+    }
+    
 }

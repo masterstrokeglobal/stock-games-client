@@ -43,7 +43,7 @@ const CoinHeadTail = () => {
     if (!marketSelected) return <MarketSelector className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Coin Head Tail Market" />
     return (
         <section className="flex flex-col  items-center justify-center min-h-[calc(100svh-100px)] -mx-4">
-            <div className="flex flex-col min-h-screen max-w-2xl w-full mx-auto bg-gray-900 border border-gray-600 sm:rounded-lg text-white overflow-hidden">
+            <div className="flex flex-col h-fit max-w-2xl w-full mx-auto bg-gray-900 border border-gray-600 sm:rounded-lg text-white overflow-hidden">
                 <StockGameHeader onBack={() => setMarketSelected(false)} title="Coin Head Tail" />
                 <StockPriceDisplay roundRecord={roundRecord} winningSide={winningSide} />
                 <GameBoard roundRecord={roundRecord} amount={betAmount}>
