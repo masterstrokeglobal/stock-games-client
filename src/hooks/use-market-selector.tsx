@@ -20,3 +20,21 @@ export const useGameType = () => {
         setGameType
     }
 }
+
+export const useStockSelectorAviator = () => {
+    const [stockSelectedAviator, setStockSelectedAviator] = useQueryState<boolean>("stockSelectedAviator", { defaultValue: false, parse: (value) => value === "true" });
+
+    return {
+        stockSelectedAviator,
+        setStockSelectedAviator
+    }
+}
+
+export const useStockType = () => {
+    const [stockType, setStockType] = useQueryState<string>("stockType", { defaultValue: "", parse: (value) => value as string });
+
+    return {
+        stockType,
+        setStockType
+    }
+}

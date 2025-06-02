@@ -19,7 +19,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
   roundRecord,
   winningMarketId,
   onSpinComplete,
-  modelUrl = "/models/fortuneWheel/FortuneWheel.glb",
+  modelUrl = "/models/fortuneWheel/FortuneWheel_v3.glb",
   hdriUri = "/models/fortuneWheel/hdri2.exr",
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -292,7 +292,12 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
     textGroupRef.current.children.forEach((child) => {
       if (child instanceof THREE.Mesh && (child as any).marketIndex !== undefined) {
         const meshIndex = (child as any).marketIndex;
-        const newText = marketNames[meshIndex] || `Market ${meshIndex + 1}`;
+        const originalText = marketNames[meshIndex] || `Market ${meshIndex + 1}`;
+        
+        // Truncate text if longer than 7 characters
+        const newText = originalText.length > 6 
+          ? originalText.substring(0, 5) + '.' 
+          : originalText;
         
         // Check if text needs updating
         if ((child as any).currentText !== newText) {
