@@ -86,7 +86,6 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
         perspective: '1000px',
         transformStyle: 'preserve-3d'
       }}
-    
       onClick={() => handleColorClick(color)}
     >
       <div 
