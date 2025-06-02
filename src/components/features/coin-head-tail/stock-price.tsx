@@ -53,7 +53,7 @@ export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, winningSide
             <StockPrice key={stock.id} rankedMarketItem={stock} />
           ))}
       </div>
-      <div className='h-32 w-full bg-white'>
+      <div className='h-64 w-full bg-white'>
         <CoinFlipVideo isFlipping={isFlipping} resultOutcome={winningSide ?? undefined} />
       </div>
     </div>
@@ -78,7 +78,7 @@ const CoinFlipVideo = ({ isFlipping, resultOutcome }: { isFlipping: boolean, res
 
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full bg-[url('/images/coin-face/wodenboard.jpeg')] bg-cover bg-center">
       <video
         ref={headRef}
         src="/videos/head.webm"

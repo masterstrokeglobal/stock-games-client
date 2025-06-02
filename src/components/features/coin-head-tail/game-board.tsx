@@ -33,7 +33,7 @@ export default function CoinFlipGame({ roundRecord, amount, className, children,
   }, { myHeadAmount: 0, myTailAmount: 0 }) ?? { myHeadAmount: 0, myTailAmount: 0 };
 
   return (
-    <div className={cn("flex flex-col items-center justify-center w-full h-full bg-amber-800 p-4 pt-20 rounded-lg bg-center relative ", className)}>
+    <div className={cn("flex flex-col items-center justify-center w-full h-full bg-amber-800 p-4 pt-20 rounded-lg bg-center relative", className)}>
       {children}
       <img src="/images/wodden-board.jpg" alt="wodden-board" className="w-full h-full object-fill absolute top-0 left-0 z-0" />
       <div className="flex w-full max-w-md gap-4 p-4">
