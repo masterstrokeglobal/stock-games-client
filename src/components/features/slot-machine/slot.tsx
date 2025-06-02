@@ -20,7 +20,7 @@ export const Slot = ({ roundRecord }: { roundRecord: RoundRecord }) => {
 
     useEffect(() => {
         if (stocks.length > 0) {
-            let newStockStates= [...stockStates]
+            const newStockStates= [...stockStates]
 
             let localStocks: any = stocks
             localStocks = localStocks.sort((a: any, b: any) => a.name.localeCompare(b.name))

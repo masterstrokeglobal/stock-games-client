@@ -47,7 +47,6 @@ const WheelOfFortune = () => {
         return null;
     }, [data, isSuccess, roundRecord]);
 
-    console.log("winningMarketId", winningMarketId);
 
 
     if (!marketSelected) return <MarketSelector className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Wheel of Fortune Market" />

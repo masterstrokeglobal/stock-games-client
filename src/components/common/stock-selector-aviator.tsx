@@ -1,4 +1,4 @@
-import { useGameType, useMarketSelector, useStockSelectorAviator, useStockType } from "@/hooks/use-market-selector";
+import { useStockSelectorAviator, useStockType } from "@/hooks/use-market-selector";
 import { cn } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
 import { useSearchParams } from "next/navigation";

@@ -44,8 +44,7 @@ export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, winningSide
   const isPlaceOver = usePlacementOver(roundRecord);
   const isFlipping = isPlaceOver;
 
-  console.log(isFlipping,winningSide)
-
+  console.log(roundRecord)
   return (
     <div className="flex flex-col justify-center items-start bg-red-500">
       <div className="w-full grid grid-cols-2 ">

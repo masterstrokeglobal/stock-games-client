@@ -3,18 +3,19 @@ import { RoundRecord } from '@/models/round-record';
 import { ArrowUpIcon } from "@radix-ui/react-icons";
 import React from 'react';
 import CryptoStockChart from './animated-chart';
+import { cn } from '@/lib/utils';
 interface StockPriceProps {
   rankedMarketItem: RankedMarketItem;
 }
 
 const StockPrice: React.FC<StockPriceProps> = ({ rankedMarketItem }) => {
   return (
-    <div className="bg-black flex text-xs flex-row items-center gap-2 p-2">
-      <div className="flex flex-col gap-2">
-        <span>{rankedMarketItem.name}</span>
-        <span>Price: {rankedMarketItem.price}</span>
+    <div className="bg-black flex  text-xs items-center gap-2 p-2 relative border-r border-gray-700 ">
+      <div className="flex items-start flex-col gap-2 flex-1">
+        <span className='line-clamp-2'>{rankedMarketItem.name}</span>
+        <span className={cn('font-semibold', parseFloat(rankedMarketItem.change_percent) > 0 ? 'text-green-500' : 'text-red-500')}>{rankedMarketItem.price}</span>
       </div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 absolute right-2 bottom-2">
         <ArrowUpIcon className={`w-4 h-4 ${parseFloat(rankedMarketItem.change_percent) > 0 ? 'text-green-500' : 'text-red-500 rotate-180'}`} />
       </div>
     </div>

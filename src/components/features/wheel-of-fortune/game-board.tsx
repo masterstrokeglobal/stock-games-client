@@ -34,6 +34,7 @@ export default function WheelOfFortuneGameBoard({ roundRecord, amount, className
   }, {} as Record<WheelColor, number>);
 
 
+  console.log(roundRecord)
 
   return (
     <div className={cn("flex flex-col items-center justify-center w-full h-full bg-amber-800 p-4 pt-20 rounded-lg bg-center relative", className)}>
@@ -72,6 +73,8 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
 
   const [isFlipped, setIsFlipped] = useState(false);
 
+  console.log(setIsFlipped)
+
   return (
     <div
       className={cn(
@@ -83,8 +86,8 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
         perspective: '1000px',
         transformStyle: 'preserve-3d'
       }}
-      onMouseEnter={() => setIsFlipped(true)}
-      onMouseLeave={() => setIsFlipped(false)}
+    
+      onClick={() => handleColorClick(color)}
     >
       <div 
         className={cn(
@@ -95,7 +98,6 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
           backfaceVisibility: 'hidden',
           transform: isFlipped ? 'rotateY(180deg)' : ''
         }}
-        onClick={() => handleColorClick(color)}
       >
         <div className="h-full flex flex-col">
           <div className={cn(config.bgColor, "rounded-t-lg p-2 text-center w-full")}>

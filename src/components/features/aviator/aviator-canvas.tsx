@@ -17,7 +17,7 @@ export interface AviatorCanvasRef {
 }
 
 const AviatorCanvas = forwardRef<AviatorCanvasRef, AviatorCanvasProps>(
-  ({ multiplier }, ref) => {
+  (_, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
     const sceneRef = useRef<{
@@ -135,7 +135,7 @@ const AviatorCanvas = forwardRef<AviatorCanvasRef, AviatorCanvasProps>(
           pmremGenerator.dispose()
         },
         undefined,
-        (error) => {
+        () => {
           console.log('HDR environment not found, using procedural environment')
         }
       )
@@ -163,7 +163,7 @@ const AviatorCanvas = forwardRef<AviatorCanvasRef, AviatorCanvasProps>(
       let plane: THREE.Group | null = null
       let mixer: THREE.AnimationMixer | null = null
       let animations: THREE.AnimationClip[] = []
-      let actions: THREE.AnimationAction[] = []
+      const actions: THREE.AnimationAction[] = []
 
       loader.load(
         '/models/aviator/plane.glb',

@@ -62,6 +62,7 @@ export default function Aviator() {
   const [autoPlay2, setAutoPlay2] = useState(false)
 
   // Game history
+  console.log(crashMultiplier, gameStarted)
   const [lastRounds, setLastRounds] = useState<GameRound[]>([
     {
       id: 1,
