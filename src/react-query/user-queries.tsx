@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { userAPI } from "@/lib/axios/user-API"; // Adjust the path as needed
+import { GetUserIpLogsParams, userAPI } from "@/lib/axios/user-API"; // Adjust the path as needed
 import { gameUserAPI } from "@/lib/axios/game-user-API";
 
 export const useGetAllUsers = (filter: SearchFilters) => {
@@ -186,3 +186,12 @@ export const useRemoveAgentUserPlacementNotAllowed = () => {
         },
     });
 }
+
+
+export const useGetUserIpLogs = (filter: GetUserIpLogsParams) => {
+    return useQuery({
+        queryKey: ["users", "ip-logs", filter],
+        queryFn: () => userAPI.getUserIpLogs(filter),
+    });
+}
+

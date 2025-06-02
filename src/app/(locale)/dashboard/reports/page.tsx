@@ -4,16 +4,16 @@ import { useFinancialReport } from "@/react-query/company-queries";
 import dayjs from "dayjs";
 import { useState } from "react";
 import {
-    Area,
-    AreaChart,
-    Bar,
-    BarChart,
-    CartesianGrid,
-    Legend,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
 } from "recharts";
 
 interface DateRange {
@@ -40,6 +40,8 @@ interface DailyData {
   totalWithdrawalAmount: number;
   totalBetsAmount: number;
   net: number;
+  totalCasinoBetsAmount: number;
+  totalStockBetsAmount: number;
 }
 
 interface FinancialReportData {
@@ -55,6 +57,8 @@ interface FinancialReportData {
     totalWithdrawalAmount: number;
     totalBets: number;
     totalBonusAmount: number;
+    totalCasinoBets: number;
+    totalStockBets: number;
     ftdUsers: number;
     ftdAmount: number;
     refilledUsers: number;
@@ -67,12 +71,14 @@ interface FinancialReportData {
 
 const COLORS = {
   signups: "#8884d8",
-  ftd: "#82ca9d", 
+  ftd: "#82ca9d",
   deposit: "#0088FE",
   withdrawal: "#FF8042",
   net: "#00C49F",
   bets: "#FFBB28",
-  ggr: "#FF5733"
+  ggr: "#FF5733",
+  casino: "#00C49F",
+  stock: "#00C49F"
 };
 
 const formatRupees = (amount: number) => {
@@ -114,7 +120,7 @@ const ReportsPage = () => {
   const { topReport, financialReport } = financialData;
 
   // Filter daily data for selected month
-  const selectedMonthData = financialReport.dailyData.filter(day => 
+  const selectedMonthData = financialReport.dailyData.filter(day =>
     dayjs(day.date).format('YYYY-MM') === dateRange.selectedMonth
   );
 
@@ -127,13 +133,15 @@ const ReportsPage = () => {
     bets: item.totalBetsAmount,
     net: item.net,
     ftd: item.ftdCount,
+    casino: item.totalCasinoBetsAmount,
+    stock: item.totalStockBetsAmount
   }));
 
   return (
     <div className="p-4 bg-gray-50 min-h-screen">
       <div className="mb-8">
         <h1 className="text-2xl font-bold mb-4">Financial Dashboard</h1>
-        
+
         {/* Date Filter */}
         <div className="flex flex-wrap gap-4 mb-6 p-4 bg-white rounded-lg shadow">
           <div>
@@ -167,7 +175,7 @@ const ReportsPage = () => {
       </div>
 
       {/* Key Metrics Cards - First Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-gray-500 text-sm">Total Deposits</h2>
           <p className="text-2xl font-bold">{formatRupees(financialReport.totalDepositAmount)}</p>
@@ -179,15 +187,26 @@ const ReportsPage = () => {
           <p className="text-sm text-gray-600">From {financialReport.totalWithdrawers} users</p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
-          <h2 className="text-gray-500 text-sm">Total Bets</h2>
-          <p className="text-2xl font-bold">{formatRupees(financialReport.totalBets)}</p>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-gray-500 text-sm">Net Revenue</h2>
           <p className="text-2xl font-bold">{formatRupees(financialReport.net)}</p>
         </div>
       </div>
-      
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        <div className="bg-white p-4 rounded-lg shadow">
+          <h2 className="text-gray-500 text-sm">Total Bets</h2>
+          <p className="text-2xl font-bold">{formatRupees(financialReport.totalBets)}</p>
+        </div>
+        <div className="bg-white p-4 rounded-lg shadow">
+          <h2 className="text-gray-500 text-sm">Total Casino Bets</h2>
+          <p className="text-2xl font-bold">{formatRupees(financialReport.totalCasinoBets)}</p>
+        </div>
+        <div className="bg-white p-4 rounded-lg shadow">
+          <h2 className="text-gray-500 text-sm">Total Stock Bets</h2>
+          <p className="text-2xl font-bold">{formatRupees(financialReport.totalStockBets)}</p>
+        </div>
+      </div>
+
       {/* Key Metrics Cards - Second Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <div className="bg-white p-4 rounded-lg shadow">
@@ -210,10 +229,12 @@ const ReportsPage = () => {
         </div>
       </div>
 
+
+
       {/* Daily Charts Section */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-4">Daily Performance Metrics</h2>
-        
+
         {/* Daily Sign Ups Chart */}
         <div className="bg-white p-4 rounded-lg shadow mb-6">
           <h3 className="text-lg font-semibold mb-4">Daily Sign Ups</h3>
@@ -225,19 +246,19 @@ const ReportsPage = () => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Area 
-                  type="monotone" 
-                  dataKey="signUps" 
-                  name="Sign Ups" 
-                  stroke={COLORS.signups} 
-                  fill={COLORS.signups} 
-                  fillOpacity={0.3} 
+                <Area
+                  type="monotone"
+                  dataKey="signUps"
+                  name="Sign Ups"
+                  stroke={COLORS.signups}
+                  fill={COLORS.signups}
+                  fillOpacity={0.3}
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
-        
+
         {/* Daily FTD Chart */}
         <div className="bg-white p-4 rounded-lg shadow mb-6">
           <h3 className="text-lg font-semibold mb-4">Daily First Time Deposits</h3>
@@ -249,19 +270,19 @@ const ReportsPage = () => {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Area 
-                  type="monotone" 
-                  dataKey="ftd" 
-                  name="FTD Count" 
-                  stroke={COLORS.ftd} 
-                  fill={COLORS.ftd} 
-                  fillOpacity={0.3} 
+                <Area
+                  type="monotone"
+                  dataKey="ftd"
+                  name="FTD Count"
+                  stroke={COLORS.ftd}
+                  fill={COLORS.ftd}
+                  fillOpacity={0.3}
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
-        
+
         {/* Daily Total Deposit Chart */}
         <div className="bg-white p-4 rounded-lg shadow mb-6">
           <h3 className="text-lg font-semibold mb-4">Daily Total Deposits</h3>
@@ -273,19 +294,19 @@ const ReportsPage = () => {
                 <YAxis />
                 <Tooltip formatter={(value) => formatRupees(Number(value))} />
                 <Legend />
-                <Area 
-                  type="monotone" 
-                  dataKey="deposits" 
-                  name="Deposits" 
-                  stroke={COLORS.deposit} 
-                  fill={COLORS.deposit} 
-                  fillOpacity={0.3} 
+                <Area
+                  type="monotone"
+                  dataKey="deposits"
+                  name="Deposits"
+                  stroke={COLORS.deposit}
+                  fill={COLORS.deposit}
+                  fillOpacity={0.3}
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
-        
+
         {/* Daily Total Withdrawal Chart */}
         <div className="bg-white p-4 rounded-lg shadow mb-6">
           <h3 className="text-lg font-semibold mb-4">Daily Total Withdrawals</h3>
@@ -297,19 +318,19 @@ const ReportsPage = () => {
                 <YAxis />
                 <Tooltip formatter={(value) => formatRupees(Number(value))} />
                 <Legend />
-                <Area 
-                  type="monotone" 
-                  dataKey="withdrawals" 
-                  name="Withdrawals" 
-                  stroke={COLORS.withdrawal} 
-                  fill={COLORS.withdrawal} 
-                  fillOpacity={0.3} 
+                <Area
+                  type="monotone"
+                  dataKey="withdrawals"
+                  name="Withdrawals"
+                  stroke={COLORS.withdrawal}
+                  fill={COLORS.withdrawal}
+                  fillOpacity={0.3}
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
-        
+
         {/* Daily Net (D-W) Chart */}
         <div className="bg-white p-4 rounded-lg shadow mb-6">
           <h3 className="text-lg font-semibold mb-4">Daily Net (Deposits - Withdrawals)</h3>
@@ -321,19 +342,19 @@ const ReportsPage = () => {
                 <YAxis />
                 <Tooltip formatter={(value) => formatRupees(Number(value))} />
                 <Legend />
-                <Area 
-                  type="monotone" 
-                  dataKey="net" 
-                  name="Net" 
-                  stroke={COLORS.net} 
-                  fill={COLORS.net} 
-                  fillOpacity={0.3} 
+                <Area
+                  type="monotone"
+                  dataKey="net"
+                  name="Net"
+                  stroke={COLORS.net}
+                  fill={COLORS.net}
+                  fillOpacity={0.3}
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
-        
+
         {/* Daily Bets Chart */}
         <div className="bg-white p-4 rounded-lg shadow mb-6">
           <h3 className="text-lg font-semibold mb-4">Daily Bets</h3>
@@ -345,19 +366,68 @@ const ReportsPage = () => {
                 <YAxis />
                 <Tooltip formatter={(value) => formatRupees(Number(value))} />
                 <Legend />
-                <Area 
-                  type="monotone" 
-                  dataKey="bets" 
-                  name="Bets" 
-                  stroke={COLORS.bets} 
-                  fill={COLORS.bets} 
-                  fillOpacity={0.3} 
+                <Area
+                  type="monotone"
+                  dataKey="bets"
+                  name="Bets"
+                  stroke={COLORS.bets}
+                  fill={COLORS.bets}
+                  fillOpacity={0.3}
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
-        
+
+        {/* Daily Casino Bets Chart */}
+        <div className="bg-white p-4 rounded-lg shadow mb-6">
+          <h3 className="text-lg font-semibold mb-4">Daily Casino Bets</h3>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={dailyDataFormatted}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip formatter={(value) => formatRupees(Number(value))} />
+                <Legend />
+                <Area
+                  type="monotone"
+                  dataKey="casino"
+                  name="Casino Bets"
+                  stroke={COLORS.casino}
+                  fill={COLORS.casino}
+                  fillOpacity={0.3}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+
+        {/* Daily Stock Bets Chart */}
+        <div className="bg-white p-4 rounded-lg shadow mb-6">
+          <h3 className="text-lg font-semibold mb-4">Daily Stock Bets</h3>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={dailyDataFormatted}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip formatter={(value) => formatRupees(Number(value))} />
+                <Legend />
+                <Area
+                  type="monotone"
+                  dataKey="stock"
+                  name="Stock Bets"
+                  stroke={COLORS.stock}
+                  fill={COLORS.stock}
+                  fillOpacity={0.3}
+                />  
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
       </div>
 
       {/* Daily Activity Chart */}

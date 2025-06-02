@@ -36,6 +36,8 @@ const EditCompanyPage = () => {
             minPlacement: company.minPlacement,
             maxPlacement: company.maxPlacement,
             coinValues: company.coinValues,
+            minCasinoPlacement: company.minCasinoPlacement,
+            maxCasinoPlacement: company.maxCasinoPlacement,
         };
     }, [data, isSuccess]);
 

@@ -1,6 +1,5 @@
 "use client";
 import GameLoadingScreen from "@/components/common/game-loading-screen";
-import LightningBackground from "@/components/ui/lightningBg";
 import { useAuthStore } from "@/context/auth-context";
 import useGameUserLogin from "@/hooks/use-game-user-login";
 import User from "@/models/user";
@@ -23,20 +22,13 @@ const GameLayout = ({ children }: PropsWithChildren) => {
     return <GameLoadingScreen className="h-screen" />;
   }
 
-  const isRedBlackGame = location.pathname === "/game/redblack";
-
   return (
     <>
       <Head>
         <link rel="icon" href={userDetails?.company?.logo ?? "/logo.png"} />
         <title>{userDetails?.company?.name ?? "--"}</title>
       </Head>
-
-      {isRedBlackGame ? (
-        <LightningBackground>{children}</LightningBackground>
-      ) : (
         <div className="bg-background-game">{children}</div>
-      )}
     </>
   );
 };

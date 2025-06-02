@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useRef } from 'react';
 import styles from '../../app/LightningBackground.module.css';
 
@@ -93,7 +94,7 @@ const LightningBackground: React.FC<LightningBackgroundProps> = ({ children }) =
       <div className={styles.cloudLayer}></div>
       <div className={styles.lightning} ref={lightningRef}></div>
       <canvas className={styles.lightningCanvas} ref={canvasRef}></canvas>
-      <div>{children}</div>
+      <div className='w-full h-full bg-background-secondary z-40'>{children}</div>
     </div>
   );
 };

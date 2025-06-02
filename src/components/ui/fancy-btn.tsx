@@ -7,9 +7,16 @@ import {
   RED_NUMBERS,
 } from "@/lib/utils";
 
-const FancyButton = ({ handleColorBet , code , color, number }: any) => {
+type FancyButtonProps = {
+  code: string;
+  color: string;
+  handleColorBet?: (numbers: number[]) => void
+  number: string;
+};
+
+const FancyButton = ({  code , color, number }: FancyButtonProps) => {
   return (
-    <StyledWrapper color={color} onClick={() => handleColorBet(color === "red" ? RED_NUMBERS : BLACK_NUMBERS)}>
+    <StyledWrapper color={color} className="fancy-button cursor-pointer">
       <div>
         <div id="poda">
           <div className="glow" />
@@ -38,30 +45,30 @@ const StyledWrapper = styled.div`
   .border,
   .darkBorderBg,
   .glow {
-    max-height: 42px; /* Reduced from 52px */
-    max-width: 128px; /* Reduced from 160px */
+    max-height: 42px;
+    max-width: 128px;
     height: 100%;
     width: 100%;
     position: absolute;
     overflow: hidden;
     z-index: 99;
-    border-radius: 7px; /* Reduced from 9px */
-    filter: blur(2.4px); /* Reduced from 3px */
+    border-radius: 7px;
+    filter: blur(2.4px);
   }
   .number {
     color: #d6d6e6;
-    font-size: 15px; /* Reduced from 12px */
+    font-size: 15px;
     font-weight: bold;
   }
   .input {
     background-color: ${(props) => (props.color === "red" ? "#ad0707" : "#010201")};
     border: none;
-    width: 120px; /* Reduced from 150px */
-    height: 34px; /* Reduced from 42px */
-    border-radius: 6px; /* Reduced from 8px */
+    width: 120px;
+    height: 34px;
+    border-radius: 6px;
     color: white;
-    padding-inline: 6px; /* Reduced from 7px */
-    font-size: 12px; /* Reduced from 14px */
+    padding-inline: 6px;
+    font-size: 12px;
     z-index: 101;
     margin: auto;
   }
@@ -85,13 +92,13 @@ const StyledWrapper = styled.div`
   
   #pink-mask {
     pointer-events: none;
-    width: 18px; /* Reduced from 22px */
-    height: 12px; /* Reduced from 15px */
+    width: 18px;
+    height: 12px;
     position: absolute;
     background: #cf30aa;
-    top: 6px; /* Reduced from 8px */
-    left: 3px; /* Reduced from 4px */
-    filter: blur(12px); /* Reduced from 15px */
+    top: 6px;
+    left: 3px;
+    filter: blur(12px);
     opacity: 0.8;
     transition: all 2s;
   }
@@ -100,10 +107,10 @@ const StyledWrapper = styled.div`
     opacity: 0;
   }
   .white {
-    max-height: 38px; /* Reduced from 47px */
-    max-width: 120px; /* Reduced from 150px */
-    border-radius: 6px; /* Reduced from 8px */
-    filter: blur(1.6px); /* Reduced from 2px */
+    max-height: 38px;
+    max-width: 120px;
+    border-radius: 6px;
+    filter: blur(1.6px);
   }
   .white::before {
     content: "";
@@ -113,8 +120,8 @@ const StyledWrapper = styled.div`
     left: 50%;
     transform: translate(-50%, -50%) rotate(83deg);
     position: absolute;
-    width: 120px; /* Reduced from 150px */
-    height: 360px; /* Reduced from 450px */
+    width: 120px;
+    height: 360px;
     background-repeat: no-repeat;
     background-position: 0 0;
     filter: brightness(1.4);
@@ -126,13 +133,16 @@ const StyledWrapper = styled.div`
       #dfa2da,
       rgba(0, 0, 0, 0) 58%
     );
+    animation: none;
+  }
+  &:hover .white::before {
     animation: rotate 4s linear infinite;
   }
   .border {
-    max-height: 35px; /* Reduced from 44px */
-    max-width: 120px; /* Reduced from 150px */
-    border-radius: 6px; /* Reduced from 8px */
-    filter: blur(0.4px); /* Reduced from 0.5px */
+    max-height: 35px;
+    max-width: 120px;
+    border-radius: 6px;
+    filter: blur(0.4px);
   }
   .border::before {
     content: "";
@@ -142,8 +152,8 @@ const StyledWrapper = styled.div`
     left: 50%;
     transform: translate(-50%, -50%) rotate(70deg);
     position: absolute;
-    width: 120px; /* Reduced from 150px */
-    height: 360px; /* Reduced from 450px */
+    width: 120px;
+    height: 360px;
     filter: brightness(1.3);
     background-repeat: no-repeat;
     background-position: 0 0;
@@ -155,11 +165,14 @@ const StyledWrapper = styled.div`
       #cf30aa 60%,
       #1c191c 64%
     );
+    animation: none;
+  }
+  &:hover .border::before {
     animation: rotate 4s linear infinite;
   }
   .darkBorderBg {
-    max-height: 39px; /* Reduced from 49px */
-    max-width: 120px; /* Reduced from 150px */
+    max-height: 39px;
+    max-width: 120px;
   }
   .darkBorderBg::before {
     content: "";
@@ -169,8 +182,8 @@ const StyledWrapper = styled.div`
     left: 50%;
     transform: translate(-50%, -50%) rotate(82deg);
     position: absolute;
-    width: 120px; /* Reduced from 150px */
-    height: 360px; /* Reduced from 450px */
+    width: 120px;
+    height: 360px;
     background-repeat: no-repeat;
     background-position: 0 0;
     background-image: conic-gradient(
@@ -181,14 +194,21 @@ const StyledWrapper = styled.div`
       #6e1b60,
       rgba(0, 0, 0, 0) 60%
     );
+    animation: none;
+  }
+  &:hover .darkBorderBg::before {
     animation: rotate 4s linear infinite;
   }
   .glow {
     overflow: hidden;
-    filter: blur(18px); /* Reduced from 22px */
+    filter: blur(18px);
     opacity: 0.4;
-    max-height: 78px; /* Reduced from 97px */
-    max-width: 128px; /* Reduced from 160px */
+    max-height: 78px;
+    max-width: 128px;
+    transition: opacity 0.3s ease;
+  }
+  &:hover .glow {
+    opacity: 1;
   }
   .glow::before {
     content: "";
@@ -198,8 +218,8 @@ const StyledWrapper = styled.div`
     left: 50%;
     transform: translate(-50%, -50%) rotate(60deg);
     position: absolute;
-    width: 120px; /* Reduced from 150px */
-    height: 600px; /* Reduced from 750px */
+    width: 120px;
+    height: 600px;
     background-repeat: no-repeat;
     background-position: 0 0;
     background-image: conic-gradient(
@@ -210,6 +230,9 @@ const StyledWrapper = styled.div`
       #cf30aa 60%,
       #000 87%
     );
+    animation: none;
+  }
+  &:hover .glow::before {
     animation: rotate 4s linear infinite;
   }
   @keyframes rotate {
@@ -223,11 +246,11 @@ const StyledWrapper = styled.div`
       opacity: 1;
     }
     49% {
-      transform: translate(150px, 0px); /* Reduced from 187px */
+      transform: translate(150px, 0px);
       opacity: 0;
     }
     80% {
-      transform: translate(-24px, 0px); /* Reduced from -30px */
+      transform: translate(-24px, 0px);
       opacity: 0;
     }
     100% {
@@ -237,30 +260,30 @@ const StyledWrapper = styled.div`
   }
   #filter-icon {
     position: absolute;
-    top: 5px; /* Reduced from 6px */
-    right: 5px; /* Reduced from 6px */
+    top: 5px;
+    right: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 101;
-    max-height: 24px; /* Reduced from 30px */
-    max-width: 40px; /* Reduced from 28px */
+    max-height: 24px;
+    max-width: 40px;
     height: 100%;
     width: 100%;
     isolation: isolate;
     overflow: hidden;
-    border-radius: 6px; /* Reduced from 8px */
+    border-radius: 6px;
     background: ${(props) => (props.color === "black" ? "linear-gradient(180deg, #161329, black, #1d1b4b)" : "linear-gradient(180deg,rgb(90, 4, 20), rgb(97, 15, 26)  ,rgb(222, 66, 14))")};
     border: 1px solid transparent;
   }
   .filterBorder {
-    height: 25px; /* Reduced from 31px */
-    width: 24px; /* Reduced from 30px */
+    height: 25px;
+    width: 24px;
     position: absolute;
     overflow: hidden;
-    top: 4px; /* Reduced from 5px */
-    right: 4px; /* Reduced from 5px */
-    border-radius: 6px; /* Reduced from 8px */
+    top: 4px;
+    right: 4px;
+    border-radius: 6px;
   }
   .filterBorder::before {
     content: "";
@@ -269,8 +292,8 @@ const StyledWrapper = styled.div`
     left: 50%;
     transform: translate(-50%, -50%) rotate(90deg);
     position: absolute;
-    width: 360px; /* Reduced from 450px */
-    height: 360px; /* Reduced from 450px */
+    width: 360px;
+    height: 360px;
     background-repeat: no-repeat;
     background-position: 0 0;
     filter: brightness(1.35);
@@ -282,6 +305,9 @@ const StyledWrapper = styled.div`
       #3d3a4f,
       rgba(0, 0, 0, 0) 100%
     );
+    animation: none;
+  }
+  &:hover .filterBorder::before {
     animation: rotate 4s linear infinite;
   }
   #main {
@@ -289,10 +315,9 @@ const StyledWrapper = styled.div`
   }
   #search-icon {
     position: absolute;
-    left: 12px; /* Reduced from 15px */
-    top: 9px; /* Reduced from 11px */
+    left: 12px;
+    top: 9px;
   }
 `;
-
 
 export default FancyButton;

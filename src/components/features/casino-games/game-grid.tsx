@@ -15,7 +15,7 @@ export default function GameGrid({ games }: GameGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4  xl:grid-cols-5 gap-6">
+    <div className="grid xs:grid-cols-3 grid-cols-1 md:grid-cols-4 lg:grid-cols-5  xl:grid-cols-6 md:gap-6 gap-2">
       {games.map((game) => (
         <GameCard key={game.id} game={game} />
       ))}

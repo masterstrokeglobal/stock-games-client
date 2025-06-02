@@ -19,6 +19,8 @@ export const createCompanyInputSchema = z.object({
     minPlacement: z.coerce.number().optional(),
     coinValues: z.array(z.coerce.number()).min(4).max(4).default([]),
     maxPlacement: z.coerce.number().optional(),
+    minCasinoPlacement: z.coerce.number().optional(),
+    maxCasinoPlacement: z.coerce.number().optional(),
 }).superRefine((data, ctx) => {
     if (!data.id && !data.logo) {
         ctx.addIssue({
@@ -90,6 +92,16 @@ const CompanyForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 label="Maximum Placement"
             />
 
+            <FormInput
+                control={control}
+                name="minCasinoPlacement"
+                label="Minimum Casino Placement"
+            />
+            <FormInput
+                control={control}
+                name="maxCasinoPlacement"
+                label="Maximum Casino Placement"
+            />
             <FormMultiInput
                 control={control}
                 name="coinValues"

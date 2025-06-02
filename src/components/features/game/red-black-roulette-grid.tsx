@@ -18,7 +18,6 @@ interface RouletteBettingGridProps {
   chips: Chip[];
   roundRecord: RoundRecord;
   previousRoundId?: string;
-  // Animation configuration props
   gridToggleInterval?: number; // Time between layout toggles in ms
   gridAnimationDuration?: number; // Animation duration in seconds
   gameState: CurrentGameState;
@@ -71,22 +70,13 @@ export const RedBlackRouletteBettingGrid = ({
       gridRef.current.classList.remove(`shuffle-grid-${currentLayout}`);
       gridRef.current.classList.add(`shuffle-grid-${newLayout}`);
 
-      // const gridRect = gridContainerRef.current && gridContainerRef.current.getBoundingClientRect();
-      // const timerRect = timerRef.current && timerRef.current.getBoundingClientRect();
-      
-      // Calculate the center position
-      // const centerX = gridRect && timerRect ? ((gridRect.width - timerRect.width) / 2) : 0;
-      // const centerY = gridRect && timerRect ? ((gridRect.height - timerRect.height) / 2) : 0;
-      // Animate to the new state
-      // console.log(centerX, centerY, "centerX, centerY");
       Flip.from(state, {
         duration: gridAnimationDuration,
         ease: "power2.inOut",
         absolute: true,
         onComplete: () => {
           console.log(`Switched to ${newLayout} layout`);
-          // Handle timer opacity based on layout
-          // const targetOpacity = newLayout === "2-columns" ? 1 : 0;
+          
           if (!gameState.isGameOver) {
             gsap.to(timerRef.current, {
               duration: 1,
@@ -104,18 +94,6 @@ export const RedBlackRouletteBettingGrid = ({
       });
     };
 
-    // If transitioning to 4-columns, fade out timer first
-    // if (targetLayout === "4-columns" && currentLayout === "2-columns") {
-    //   gsap.to(timerRef.current, {
-    //     opacity: 0,
-    //     duration: 0.3,
-    //     onComplete: () => {
-    //       setTimerOpacity(0);
-    //       performGridTransition(targetLayout);
-    //     },
-    //   });
-    // } else {
-    // For 4-columns to 2-columns or initial setup, transition immediately
     performGridTransition(targetLayout);
     // }
 

@@ -55,7 +55,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
   // State to track target rotation for stopping
   const targetRotationRef = useRef<number | null>(null);
 
-  const stocks: MarketItem[] = roundRecord?.sequenceMarketItems || [];
+  const stocks: MarketItem[] = roundRecord?.market || [];
 
   // Frame rate limiting
   const targetFrameRate = 60;
@@ -475,12 +475,14 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
     
     // Handle stopping logic
     if (!isSpinning && winningMarketId) {
- 
+      console.log("winning MarketID", winningMarketId);
+      console.log("winner in round record", roundRecord);
       
       // Find the actual index in the markets array
       if (winningMarketId && winningMarketId.length > 0) {
         const marketIndex = roundRecord?.market?.findIndex(market => market.id === winningMarketId[0]);
-      
+        console.log("winner market index in array:", marketIndex);
+        console.log("current wheel rotation (degrees):", wheelRotationDegrees);
         
         // Calculate the target rotation where winning market should be at top (0 degrees)
         if (marketIndex !== undefined && marketIndex >= 0 && roundRecord?.market) {
@@ -490,6 +492,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
           const winningMarketAngle = (marketIndex / totalMarkets) * 360 + offset;
           const targetRotation = (360 - winningMarketAngle) % 360;
           // const targetRotation = (winningMarketAngle + 90) % 360 ;
+          console.log("target rotation to win (degrees):", targetRotation);
           
           // Set the target rotation - the animation loop will handle stopping
           targetRotationRef.current = targetRotation;
@@ -756,6 +759,8 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
     // in i need to update something what i want you to do is shift the array to right i need the zero number to become 5th and 20th to be 0th 
     const shiftedNames = [...names.slice(-5), ...names.slice(0, -5)];
     setMarketNames(shiftedNames);
+    console.log("Updated market names array :", names);
+    console.log("Updated market names array shifted:", shiftedNames);
   }, [stocks]);
 
   if (!roundRecord || stocks.length === 0) {

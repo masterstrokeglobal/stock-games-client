@@ -3,11 +3,10 @@
 import CategoryCarousel from "@/components/features/casino-games/category-carousel"
 import GameGrid from "@/components/features/casino-games/game-grid"
 import CasinoProviders from "@/components/features/casino-games/game-providers"
-import { GameAdsCarousel } from "@/components/features/platform/game-ads-carousel"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { checkCasinoAllowed, COMPANYID } from "@/lib/utils"
-import { GameCategories, GameCategory, ProviderEnum } from "@/models/casino-games"
+import { GameCategories, GameTypeEnum, ProviderEnum } from "@/models/casino-games"
 import { useGetCasinoGames } from "@/react-query/casino-games-queries"
 import { Search } from "lucide-react"
 import { notFound, useSearchParams } from "next/navigation"
@@ -60,8 +59,7 @@ export default function GamingAppInterface() {
 
     return (
         <>
-            <GameAdsCarousel />
-            <main className="container md:mx-auto w-full mt-20">
+            <main className=" md:mx-auto w-full md:px-4 mt-10">
                 {/* Search Bar */}
                 <div className="relative mb-8  md:mx-auto w-full flex flex-col md:flex-row justify-start gap-2">
                     <div className="relative max-w-2xl w-full">
@@ -114,11 +112,17 @@ export default function GamingAppInterface() {
                 ) : (
                     <div className="space-y-12">
                         {/* most popular games , ne games with emoji  */}
-                        <CategoryCarousel title="🔥 Most Popular Games" popular={true} />
-                        <CategoryCarousel title="🎲 Table Games" categoryId={GameCategory["Table game"]} />
-                        <CategoryCarousel title="🎰 Casino Games" categoryId={GameCategory["Live Dealer"]} />
-                        <CategoryCarousel title="🆕 New Games" new={true} />
-                        <CasinoProviders /> 
+                        <CategoryCarousel title="🔥Hot Games" popular={true} />
+                        <CategoryCarousel title=" Crash Games" type={GameTypeEnum.CRASH_GAME} />
+                        <CategoryCarousel title="Game Show" type={GameTypeEnum.GAME_SHOW} />
+                        <CategoryCarousel title="Instant Win" type={GameTypeEnum.INSTANT_WIN} />
+                        <CategoryCarousel title="Live Dealer" type={GameTypeEnum.LIVE_DEALER} />
+                        <CategoryCarousel title="Table Games" type={GameTypeEnum.TABLE_GAMES} />
+                        <CategoryCarousel title="Slots" type={GameTypeEnum.SLOTS} />
+                        <CategoryCarousel title="Shooting" type={GameTypeEnum.SHOOTING} />
+                        <CategoryCarousel title="Lottery" type={GameTypeEnum.LOTTERY} />
+                        <CategoryCarousel title="New Released" new={true} />
+                        <CasinoProviders />
                     </div>
                 )}
             </main>

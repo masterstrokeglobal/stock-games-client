@@ -1,16 +1,14 @@
 "use client"
 
 import GameGrid from "@/components/features/casino-games/game-grid"
-import { GameAdsCarousel } from "@/components/features/platform/game-ads-carousel"
 import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { checkCasinoAllowed, COMPANYID } from "@/lib/utils"
-import { ProviderEnum } from "@/models/casino-games"
+import { GameCategories, GameTypeEnum, ProviderEnum } from "@/models/casino-games"
 import { useGetCasinoGames } from "@/react-query/casino-games-queries"
 import { Search } from "lucide-react"
 import { notFound } from "next/navigation"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState } from "react"
-import { GameCategories } from "@/models/casino-games"
 
 export default function SlotGamesPage() {
     const [filter, setFilter] = useState({
@@ -20,7 +18,7 @@ export default function SlotGamesPage() {
     });
     const { data: searchResults, isLoading: searchLoading } = useGetCasinoGames({
         search: filter.search || undefined,
-        slot: true,
+        type: GameTypeEnum.SLOTS,
         category: filter.category == "all" ? undefined : filter.category,
         provider: filter.provider == "all" ? undefined : filter.provider,
         limit: 100
@@ -32,8 +30,7 @@ export default function SlotGamesPage() {
 
     return (
         <div className="flex flex-col min-h-screen bg-primary-game text-white">
-            <GameAdsCarousel />
-            <main className="container mx-auto mt-20 px-4 py-6">
+            <main className="container mx-auto mt-10 md:px-4 py-6">
                 {/* Search Bar */}
                 <div className="relative mb-8  mx-auto flex flex-col md:flex-row justify-start gap-2">
                     <div className="relative max-w-2xl w-full">

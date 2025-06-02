@@ -37,7 +37,6 @@ enum PlacementType {
 }
 
 const PlaceBets = ({ className, roundRecord  }: Props) => {
-  console.log("Round:", roundRecord);
   const gameState = useGameState(roundRecord);
   const { mutate, isPending: isPlacingBet } = useCreateGameRecord();
   const t = useTranslations("game");
@@ -254,7 +253,7 @@ const PlaceBets = ({ className, roundRecord  }: Props) => {
       ref={sectionRef}
       className={cn("md:rounded-2xl h-full w-full", className)}
     >
-      <div className="flex gap-2 md:flex-row flex-col">
+      {/* <div className="flex gap-2 md:flex-row flex-col">
         <div className="w-full">
           <div>
             <table className="min-w-full">
@@ -388,7 +387,7 @@ const PlaceBets = ({ className, roundRecord  }: Props) => {
             </table>
           </div>
         </div>
-      </div>
+      </div> */}
     </section>
   );
 };
