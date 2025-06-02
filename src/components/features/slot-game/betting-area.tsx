@@ -76,7 +76,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
         <>
         <div className="w-full bg-[url('/images/slot-game/wodden-bg.jpg')] bg-repeat bg-contain bg-center text-[#E3B872] p-4">
         
-            <div className="flex items-center justify-between gap-4 mb-4">
+            <div className="flex items-center flex-wrap item-center justify-between gap-4 mb-4">
 
                 {currentStocks.length > 0 && (
                     currentStocks.map((stock) => (
