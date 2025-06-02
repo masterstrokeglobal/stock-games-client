@@ -20,6 +20,30 @@ export enum RoundRecordGameType {
     DICE = "dice"    
 }
 
+export const WHEEL_COLOR_SEQUENCE = [
+    WheelColor.COLOR1, // GOLDEN - Segment 1 (top)
+    WheelColor.COLOR2, // RED - Segment 2
+    WheelColor.COLOR4, // GREEN - Segment 3
+    WheelColor.COLOR3, // BLUE - Segment 4
+    WheelColor.COLOR2, // RED - Segment 5
+    WheelColor.COLOR5, // PURPLE - Segment 6
+    WheelColor.COLOR4, // GREEN - Segment 7
+    WheelColor.COLOR2, // RED - Segment 8
+    WheelColor.COLOR3, // BLUE - Segment 9
+    WheelColor.COLOR4, // GREEN - Segment 10
+    WheelColor.COLOR2, // RED - Segment 11
+    WheelColor.COLOR5, // PURPLE - Segment 12
+    WheelColor.COLOR4, // GREEN - Segment 13
+    WheelColor.COLOR3, // BLUE - Segment 14
+    WheelColor.COLOR2, // RED - Segment 15
+    WheelColor.COLOR4, // GREEN - Segment 16
+    WheelColor.COLOR3, // BLUE - Segment 17
+    WheelColor.COLOR5, // PURPLE - Segment 18
+    WheelColor.COLOR4, // GREEN - Segment 19
+    WheelColor.COLOR3, // BLUE - Segment 20
+];
+
+
 export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
     [WheelColor.COLOR1]: {
         name: 'GOLDEN',
@@ -124,6 +148,9 @@ export class RoundRecord {
         return this.marketColors.find(item => item.marketId === marketId)?.color || undefined;
     }
 
+    getMarketsByColor(color: WheelColor): MarketItem[] {
+        return this.marketColors.filter(item => item.color === color).map(item => this.market.find(market => market.id === item.marketId)).filter(item => item !== undefined) as MarketItem[];
+    }   
     marketColorConfig(marketId: number): ColorConfig | undefined {
         const color = this.marketColor(marketId);
         if (!color) return undefined;
@@ -195,4 +222,33 @@ export class RoundRecord {
         const initialPrice = this.initialValues?.[codeLower] || this.initialValues?.[codeUpper] || 0;
         return initialPrice;
     }
+
+    get colorSequenceMarket(): MarketItem[] {
+        const sequenceMarkets: MarketItem[] = [];
+        
+        WHEEL_COLOR_SEQUENCE.forEach((color, segmentIndex) => {
+            // Get all markets for this color
+            const marketsForColor = this.getMarketsByColor(color);
+            
+            if (marketsForColor.length > 0) {
+                // For each segment, we need to determine which specific market from this color group
+                // You can use different strategies here:
+                
+                // Strategy 1: Distribute markets evenly across segments of the same color
+                const colorSegmentIndex = WHEEL_COLOR_SEQUENCE.slice(0, segmentIndex + 1).filter(c => c === color).length - 1;
+                const marketIndex = colorSegmentIndex % marketsForColor.length;
+                sequenceMarkets.push(marketsForColor[marketIndex]);
+                
+                // Strategy 2: Round-robin assignment (alternative)
+                // const marketIndex = segmentIndex % marketsForColor.length;
+                // sequenceMarkets.push(marketsForColor[marketIndex]);
+                
+                // Strategy 3: First market for each color (simplest)
+                // sequenceMarkets.push(marketsForColor[0]);
+            }
+        });
+        
+        return sequenceMarkets;
+    }
+    
 }

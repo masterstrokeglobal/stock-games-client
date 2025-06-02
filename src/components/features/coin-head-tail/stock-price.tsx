@@ -59,6 +59,7 @@ export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, winningSide
     </div>
   );
 };
+
 const CoinFlipVideo = ({ isFlipping, resultOutcome }: { isFlipping: boolean, resultOutcome?: HeadTailPlacementType }) => {
   const headRef = React.useRef<HTMLVideoElement>(null);
   const tailRef = React.useRef<HTMLVideoElement>(null);
