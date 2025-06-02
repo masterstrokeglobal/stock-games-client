@@ -53,9 +53,10 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
     useEffect(() => {
         if(roundRecord){
-            const stocks = roundRecord.market.map((stock) => {
+            let stocks = roundRecord.market.map((stock) => {
                 return stock
             })
+            stocks = stocks.sort((a, b) => a.name?.localeCompare(b.name ?? '') ?? 0)
             setCurrentStocks(stocks)
             
             if (roundRecord.initialValues && Object.keys(roundRecord.initialValues).length > 0) {
@@ -81,8 +82,22 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
                 {currentStocks.length > 0 && (
                     currentStocks.map((stock) => (
                         <div key={stock.code} className="flex flex-col items-center justify-center flex-1 gap-2 bg-[#1B1B1B] border-2 border-[#E3B872] px-2 py-1 rounded-md">
-                            <span className="text-lg">{stock.name}</span>
-                            <span className="text-lg">{stockPrice[stock.code ?? '']}</span>
+                            <span className="text-lg">{stock.name?.slice(0, 7)}</span>
+                            <span className="text-lg">
+                                {(() => {
+                                    const price = stockPrice[stock.code ?? '']?.toString() || '0';
+                                    const lastDigit = price.slice(-1);
+                                    const restOfPrice = price.slice(0, -1);
+                                    return (
+                                        <>
+                                            {restOfPrice}
+                                            <span className="text-[#FFD700] ml-1 text-lg font-bold">
+                                                {lastDigit}
+                                            </span>
+                                        </>
+                                    );
+                                })()}
+                            </span>
                         </div>
                     ))
                 )}
