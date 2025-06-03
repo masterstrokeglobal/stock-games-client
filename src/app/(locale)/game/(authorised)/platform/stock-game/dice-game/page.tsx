@@ -25,8 +25,8 @@ const WheelOfFortune = () => {
     if (isLoading || !roundRecord) return <GameLoadingScreen className='min-h-[calc(100svh-100px)]' />
 
     return (
-        <section className="flex flex-col  items-center justify-center min-h-[calc(100svh-100px)]">
-            <div className="flex flex-col h-fit max-w-2xl w-full mx-auto bg-gray-900 border border-gray-600 rounded-lg text-white overflow-hidden">
+        <section className="flex flex-col  items-start justify-start min-h-[calc(100svh-100px)] -mx-4">
+            <div className="flex flex-col h-fit max-w-2xl w-full  bg-gray-900 border border-gray-600 sm:rounded-lg rounded-none mx-auto  text-white overflow-hidden">
                 <StockGameHeader onBack={() => setMarketSelected(false)} title="Dice Game" />
                 <Dice3D className='h-36' roundRecord={roundRecord} winningMarketId={winningMarketId} />
                 <BettingGrid className='relative pt-32' roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={winningMarketId} >

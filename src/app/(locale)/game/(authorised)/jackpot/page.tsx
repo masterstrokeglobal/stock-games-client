@@ -45,7 +45,7 @@ export default function Home() {
         {roundRecord && <TimeDisplay className="fixed top-14 left-1/2 -translate-x-1/2 z-50  w-full max-w-md" roundRecord={roundRecord} />}
         <div className="w-full mb-8 ">
           <div className="grid relative grid-cols-1  gap-6  rounded-lg  pt-20  ">
-            <img src="/images/jackpot/bg.jpg" className=" w-full absolute top-0 left-0 object-cover  mx-auto  h-full " />
+            <img src="/images/jackpot/bg.png" className=" w-full absolute top-0 left-0 object-cover  mx-auto  h-full " />
             <div className="relative h-full w-full md:min-h-[700px]   sm:min-h-[600px] min-h-[400px]  bg-contain bg-no-repeat bg-center">
               <div className="absolute bottom-0 w-full h-fit ">
                 <div className='absolute left-1/2 -translate-x-1/2 bottom-[calc(100%-2vw)] md:h-[60%] h-3/4 z-10 flex max-w-sm items-end justify-center'>
@@ -57,7 +57,7 @@ export default function Home() {
             </div>
             <BettingChips
               showBetting={!isPlacementOver}
-              className="absolute bottom-0 left-1/2 -translate-x-1/2 z-50 w-full md:block hidden"
+              className="absolute bottom-0 left-1/2 -translate-x-1/2 z-30 w-full md:block hidden"
               globalBetAmount={globalBetAmount}
               handleGlobalBetAmountChange={handleGlobalBetAmountChange}
             />
@@ -214,9 +214,9 @@ const StockCard = ({ stock, className, amount }: { stock?: RankedMarketItem, cla
         className
       )} style={{ background: 'linear-gradient(135deg, #fff 0%, #f0f0f0 100%)' }}>
         <div className="h-full flex flex-col items-center justify-center gap-1">
-          <span className="text-black text-[8px] md:text-[10px] lg:text-sm font-bold">{stock.code}</span>
+          <span className="text-black text-[8px] md:text-[10px] lg:text-xs font-bold truncate w-full">herororooo</span>
 
-          <span className="text-black text-[8px] font-bold ">
+          <span className={cn("text-black md:text-xs text-[8px] whitespace-nowrap font-bold truncate w-full", Number(stock.change_percent) >= 0 ? "text-green-600" : "text-red-600")}>
             {stock.currency}   {stock.price}
           </span>
           <div className={`text-[8px] md:text-[10px] lg:text-sm font-bold flex items-center gap-0.5 ${Number(stock.change_percent) >= 0 ? "text-green-600" : "text-red-600"

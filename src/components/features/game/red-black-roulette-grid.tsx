@@ -35,7 +35,6 @@ export const RedBlackRouletteBettingGrid = ({
   const [currentLayout, setCurrentLayout] = useState<"2-columns" | "4-columns">(
     "2-columns"
   );
-  console.log("Game State", gameState);
   useEffect(() => {
     const resultFetchTime =
       new Date(roundRecord.endTime).getTime() - new Date().getTime() + 4000;
@@ -117,7 +116,7 @@ export const RedBlackRouletteBettingGrid = ({
               key={number}
               code={getCodeByIndex(number)}
               color={color}
-              number={number}
+              number={number.toString()}
             />
           </div>
         ))}

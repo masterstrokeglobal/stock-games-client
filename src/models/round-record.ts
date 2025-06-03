@@ -262,4 +262,15 @@ export class RoundRecord {
        return marketItems.filter(item => item !== undefined) as MarketItem[];
     }
     
+
+    get gameDuration(): number {
+         // in seconds 
+         return Math.floor((this.endTime.getTime() - this.startTime.getTime()) / 1000);
+    }
+
+    get placementDuration(): number {
+        // in seconds 
+        return Math.floor((this.placementEndTime.getTime() - this.placementStartTime.getTime()) / 1000);
+    }
+
 }

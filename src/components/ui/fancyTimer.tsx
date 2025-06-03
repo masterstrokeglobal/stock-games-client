@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 
 const FancyTimer = ({gameStateTime} : any) => {
-  console.log("gameStateTime", gameStateTime.formatted);
   // Timer logic
   // useEffect(() => {
   //   const interval = setInterval(() => {

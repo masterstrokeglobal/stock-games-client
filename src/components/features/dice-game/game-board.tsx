@@ -49,21 +49,21 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount }: GameBo
             number
         });
     };
-    
+
 
 
     return (
-        <div className={cn("bg-gradient-to-b bg-[url('/images/dice-game/board-bg.jpg')] bg-cover bg-center from-gray-900 via-gray-800 to-black p-8  border border-yellow-600/30 shadow-2xl", className)}>
+        <div className={cn("bg-gradient-to-b bg-[url('/images/dice-game/board-bg.jpg')] bg-cover bg-center from-gray-900 via-gray-800 to-black md:p-8 p-4 pt-14 md:pt-24  border border-yellow-600/30 shadow-2xl", className)}>
             {/* Header */}
             {children}
 
             {/* Betting Grid */}
             <div className="space-y-4">
                 {/* First Row */}
-                <div className="flex justify-center gap-3">
+                <div className="flex justify-center md:gap-3 gap-1">
                     {firstRow.map((bet) => (
                         <BetButton
-                        isWinner={false}
+                            isWinner={false}
                             betAmounts={betAmounts}
                             handleBetSelect={handleBetSelect}
                             key={bet.number}
@@ -74,7 +74,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount }: GameBo
                 </div>
 
                 {/* Second Row */}
-                <div className="flex justify-center gap-3">
+                <div className="flex justify-center md:gap-3 gap-1">
                     {secondRow.map((bet) => (
                         <BetButton
                             isWinner={false}
@@ -95,7 +95,7 @@ export default GameBoard;
 
 
 
-const BetButton = ({ number, multiplier,betAmounts,handleBetSelect }: { number: number, multiplier: string, isWinner: boolean,betAmounts:Record<number,number>,handleBetSelect:(number:number)=>void }) => {
+const BetButton = ({ number, multiplier, betAmounts, handleBetSelect }: { number: number, multiplier: string, isWinner: boolean, betAmounts: Record<number, number>, handleBetSelect: (number: number) => void }) => {
     const amountBet = betAmounts[number] || 0;
     const hasBet = amountBet > 0;
 

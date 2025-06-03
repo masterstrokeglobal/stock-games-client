@@ -90,11 +90,11 @@ const LightningBackground: React.FC<LightningBackgroundProps> = ({ children }) =
   }, []);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} >
       <div className={styles.cloudLayer}></div>
       <div className={styles.lightning} ref={lightningRef}></div>
       <canvas className={styles.lightningCanvas} ref={canvasRef}></canvas>
-      <div className='w-full h-full bg-background-secondary z-40'>{children}</div>
+      <div className='w-full h-full  z-40'>{children}</div>
     </div>
   );
 };

@@ -1,11 +1,4 @@
-import React from "react";
 import styled from "styled-components";
-import {
-  BLACK_NUMBERS,
-  // cn,
-  // getPlacementString,
-  RED_NUMBERS,
-} from "@/lib/utils";
 
 type FancyButtonProps = {
   code: string;

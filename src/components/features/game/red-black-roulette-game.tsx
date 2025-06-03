@@ -13,6 +13,7 @@ import { useMemo, useRef } from "react";
 import { Bet, Chip } from "./contants";
 import GameResultDialog from "./result-dialog";
 import { RedBlackRouletteBettingGrid } from "./red-black-roulette-grid";
+import BettingChips from "../slot-jackpot/betting-chips";
 
 type Props = {
   roundRecord: RoundRecord;
@@ -121,7 +122,9 @@ const RedBlackRouletteGame = ({ roundRecord }: Props) => {
             </div>
           </div>
         </div>
+        <BettingChips globalBetAmount={100} showBetting={true} handleGlobalBetAmountChange={() => {}} />
       </div>
+      
       <GameResultDialog
         key={String(showResults)}
         open={showResults}
