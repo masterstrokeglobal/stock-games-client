@@ -6,6 +6,8 @@ import GameDisplay from "./GameDisplay"
 import BettingPanel from "./BettingPanel"
 import LastRoundsPanel from "./LastRoundsPanel"
 import { AviatorCanvasRef } from "./aviator-canvas"
+import { cn } from "@/lib/utils"
+import useWindowSize from "@/hooks/use-window-size"
 
 interface GameRound {
   id: number
@@ -44,25 +46,23 @@ const formatTime = (ms: number): FormattedTime => {
   };
 };
 
-export default function Aviator() {
+export default function Aviator({className}: {className?: string}) {
   const aviatorRef = useRef<AviatorCanvasRef>(null)
-  const nextRoundIdRef = useRef(13) // Start from 13 since dummy data goes 1-12
+  const nextRoundIdRef = useRef(13) 
+
+  const {isMobile} = useWindowSize();
   
   const [multiplier, setMultiplier] = useState(1.0)
   const [gamePhase, setGamePhase] = useState<GamePhase>(GamePhase.WAITING)
   const [timeLeft, setTimeLeft] = useState<FormattedTime>(formatTime(0))
-  const [gameStarted, setGameStarted] = useState(false)
-  const [crashMultiplier, setCrashMultiplier] = useState(0)
+
   const [shouldShowBlast, setShouldShowBlast] = useState(false)
   
-  // Betting state
-  const [betAmount1, setBetAmount1] = useState("10")
-  const [betAmount2, setBetAmount2] = useState("5000")
-  const [autoPlay1, setAutoPlay1] = useState(false)
-  const [autoPlay2, setAutoPlay2] = useState(false)
+  // Mobile responsiveness state
+  const [showLastRounds, setShowLastRounds] = useState(false)
 
-  // Game history
-  console.log(crashMultiplier, gameStarted)
+
+
   const [lastRounds, setLastRounds] = useState<GameRound[]>([
     {
       id: 1,
@@ -211,9 +211,7 @@ export default function Aviator() {
       
       setGamePhase(GamePhase.BETTING_OPEN)
       setMultiplier(1.0)
-      setGameStarted(false)
       setShouldShowBlast(false) // Ensure blast is off for new round
-      setCrashMultiplier(0)
       
       // Start 15-second countdown
       let timeRemaining = 15000
@@ -238,12 +236,10 @@ export default function Aviator() {
     const startGamePhase = () => {
       console.log("🚀 Starting game phase")
       setGamePhase(GamePhase.GAME_RUNNING)
-      setGameStarted(true)
       setTimeLeft(formatTime(0))
       
       // Generate target crash multiplier
       const targetMultiplier = generateCrashMultiplier()
-      setCrashMultiplier(targetMultiplier)
       
       // Determine if plane will crash or fly away
       // 10% chance to fly away, but only if target multiplier is >= 3.0x
@@ -284,7 +280,6 @@ export default function Aviator() {
       clearInterval(countdownInterval)
       
       setGamePhase(GamePhase.GAME_ENDED)
-      setGameStarted(false)
       
       // Add to history
       addRoundToHistory(finalMultiplier, duration, status)
@@ -306,8 +301,6 @@ export default function Aviator() {
         
         // Reset other game states for the new round
         setMultiplier(1.0)
-        setCrashMultiplier(0)
-        setGameStarted(false)
         setTimeLeft(formatTime(0))
         
         // Brief waiting period before next betting phase
@@ -344,33 +337,29 @@ export default function Aviator() {
     }
   }
 
-  const placeBet = (amount: string) => {
-    console.log('Bet placed:', amount)
-    // Only allow betting during betting open phase
-    if (gamePhase !== GamePhase.BETTING_OPEN) {
-      console.log('Betting not allowed in current phase')
-      return
-    }
+
+  const toggleLastRounds = () => {
+    setShowLastRounds(!showLastRounds)
   }
 
   return (
-    <div className="min-h-[calc(100svh-70px)] bg-gradient-to-b from-purple-600 to-pink-500 rounded-lg overflow-hidden">
+    <div className= {cn("min-h-[calc(100svh-70px)] bg-gradient-to-b from-purple-600 to-pink-500  overflow-hidden", className)}>
       <div className="flex relative flex-col h-[calc(100svh-70px)]">
         <Header />
 
         {/* Timer Display */}
         <div className="text-center w-full absolute top-0 left-[50%] translate-x-[-50%] z-10">
-          <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 h-16 rounded-full shadow-lg flex items-center justify-center mx-auto max-w-md relative overflow-hidden">
+          <div className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 h-12 sm:h-16 rounded-full shadow-lg flex items-center justify-center mx-auto max-w-xs sm:max-w-md relative overflow-hidden">
             <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-500 to-blue-400 opacity-50"></div>
             
-            <div className="flex flex-col items-center justify-center">
-              <span className="text-white font-bold tracking-wider text-sm">
+            <div className="flex flex-col items-center justify-center px-4">
+              <span className="text-white font-bold tracking-wider text-xs sm:text-sm">
                 {getStatusText()}
               </span>
               
               {gamePhase === GamePhase.BETTING_OPEN && (
                 <span
-                  className="text-white font-bold text-xl tracking-wider transition-opacity duration-500"
+                  className="text-white font-bold text-lg sm:text-xl tracking-wider transition-opacity duration-500"
                   style={{
                     opacity: timeLeft.raw % 2000 < 1000 ? 1 : 0.5
                   }}
@@ -380,7 +369,7 @@ export default function Aviator() {
               )}
               
               {gamePhase === GamePhase.GAME_RUNNING && (
-                <span className="text-white font-bold text-xl tracking-wider">
+                <span className="text-white font-bold text-lg sm:text-xl tracking-wider">
                   {multiplier.toFixed(2)}x
                 </span>
               )}
@@ -388,9 +377,20 @@ export default function Aviator() {
           </div>
         </div>
 
+        {/* Mobile Last Rounds Toggle Button */}
+        {isMobile && (
+          <button
+            onClick={toggleLastRounds}
+            className="absolute top-2 right-2 z-20 bg-black/50 text-white px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm border border-white/20 hover:bg-black/70 transition-colors"
+          >
+            {showLastRounds ? '✕ Close' : '📊 History'}
+          </button>
+        )}
+
         {/* Main Game Area */}
-        <div className="flex flex-1 overflow-hidden">
-          <div className="flex-1 relative flex flex-col">
+        <div className="flex flex-1 overflow-hidden flex-col lg:flex-row relative">
+          {/* Game Content */}
+          <div className="flex-1 relative flex flex-col min-h-[60vh] lg:min-h-0">
             <GameDisplay 
               ref={aviatorRef} 
               multiplier={multiplier}
@@ -398,21 +398,47 @@ export default function Aviator() {
               setShouldShowBlast={setShouldShowBlast}
             />
             
-            <BettingPanel
-              betAmount1={betAmount1}
-              setBetAmount1={setBetAmount1}
-              betAmount2={betAmount2}
-              setBetAmount2={setBetAmount2}
-              autoPlay1={autoPlay1}
-              setAutoPlay1={setAutoPlay1}
-              autoPlay2={autoPlay2}
-              setAutoPlay2={setAutoPlay2}
-              onPlaceBet={placeBet}
-              gamePhase={gamePhase}
-            />
+            <BettingPanel gamePhase={gamePhase} />
           </div>
 
-          <LastRoundsPanel lastRounds={lastRounds} />
+          {/* Last Rounds Panel - Desktop always visible, Mobile toggle */}
+          <div className={`
+            ${isMobile 
+              ? `fixed inset-0 z-30 bg-black/50 backdrop-blur-sm transition-all duration-300 ${
+                  showLastRounds 
+                    ? 'opacity-100 pointer-events-auto' 
+                    : 'opacity-0 pointer-events-none'
+                }`
+              : 'lg:w-80 h-[40vh] lg:h-auto'
+            }
+          `}>
+            {isMobile ? (
+              // Mobile overlay version
+              <div className={`
+                absolute right-0 top-0 h-full w-full max-w-sm bg-gradient-to-b from-purple-600 to-pink-500 
+                transform transition-transform duration-300 ease-out
+                ${showLastRounds ? 'translate-x-0' : 'translate-x-full'}
+              `}>
+                <div className="h-full flex flex-col">
+                  <div className="flex items-center justify-between p-4 border-b border-white/20">
+                    <h3 className="text-white font-bold text-lg">Round History</h3>
+                    <button
+                      onClick={toggleLastRounds}
+                      className="text-white hover:text-gray-300 text-2xl font-bold"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <div className="flex-1 overflow-hidden">
+                    <LastRoundsPanel lastRounds={lastRounds} />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              // Desktop version
+              <LastRoundsPanel lastRounds={lastRounds} />
+            )}
+          </div>
         </div>
       </div>
     </div>

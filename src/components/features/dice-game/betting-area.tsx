@@ -102,11 +102,11 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
           />
         </div>
 
-        <div className="grid grid-cols-4 gap-2 w-full">
+        <div className="flex flex-wrap gap-2 w-full">
           {coinValues?.map((amount) => (
             <Button
               className={cn(
-                'rounded-full transition-all duration-200 relative group overflow-hidden',
+                'rounded-full  transition-all duration-200 relative group overflow-hidden',
                 betAmount === amount ? 'bg-gradient-to-br from-amber-400 to-red-500 shadow-[0_0_15px_rgba(245,158,11,0.3)]' : 'bg-[#2a2b3e] hover:bg-[#3a3b4e]'
               )}
               key={amount}

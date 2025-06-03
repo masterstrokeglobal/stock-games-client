@@ -19,6 +19,7 @@ interface AdminParams {
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
+    canCreateSubAffiliate?: boolean;
     firstname?: string;
     lastname?: string;
 }
@@ -31,6 +32,7 @@ class Admin {
     referenceCode?: string;
     password?: string;
     role?: AdminRole;
+    canCreateSubAffiliate?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
@@ -45,6 +47,7 @@ class Admin {
         this.createdAt = params.createdAt ? new Date(params.createdAt) : undefined;
         this.updatedAt = params.updatedAt ? new Date(params.updatedAt) : undefined;
         this.deletedAt = params.deletedAt ? new Date(params.deletedAt) : undefined;
+        this.canCreateSubAffiliate = params.canCreateSubAffiliate;
 
         // Handle company initialization
         if (params.company) {

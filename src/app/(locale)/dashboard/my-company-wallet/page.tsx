@@ -13,7 +13,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"; // Import ShadCN Select components
 import { Transaction, TransactionStatus, TransactionType } from "@/models/transaction";
-import { useGetTransactions } from "@/react-query/payment-queries";
+import { useGetCompanyWalletTransactions } from "@/react-query/payment-queries";
 import { Search } from "lucide-react";
 import React, { useMemo, useState } from "react";
 
@@ -26,10 +26,10 @@ const TransactionTable = () => {
     const [status, setStatus] = useState<string | "">("");
 
 
-    const requestType = type === "all" ? [TransactionType.ADMIN_DEPOSIT, TransactionType.ADMIN_WITHDRAWAL, TransactionType.WITHDRAWAL, TransactionType.DEPOSIT].join(",") : type;
+    const requestType = type === "all" ? undefined : type;
     // Fetch all transactions with pagination, search query, and filters
 
-    const { data, isSuccess, isFetching } = useGetTransactions({
+    const { data, isSuccess, isFetching } = useGetCompanyWalletTransactions({
         page: page,
         search: search,
         type: requestType,
@@ -88,8 +88,6 @@ const TransactionTable = () => {
                                 <SelectItem value={"all"}>All</SelectItem>
                                 <SelectItem value={TransactionType.ADMIN_DEPOSIT}>Admin Deposit</SelectItem>
                                 <SelectItem value={TransactionType.ADMIN_WITHDRAWAL}>Admin Withdrawal</SelectItem>
-                                <SelectItem value={TransactionType.DEPOSIT}>User Deposit</SelectItem>
-                                <SelectItem value={TransactionType.WITHDRAWAL}>User Withdrawal</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>

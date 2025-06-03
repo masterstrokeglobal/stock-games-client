@@ -11,12 +11,12 @@ import { z } from "zod";
 // Define the schema for affiliate input
 const passwordValidation = z.string().min(8);
 export const createAffiliateInputSchema = z.object({
-    id: z.string().optional(),
+    id: z.coerce.number().optional(),
     name: z.string().max(100).optional(),
     username: z.string().min(1).email(),
+    canCreateSubAffiliate: z.boolean().default(false),
     password: passwordValidation.optional(),
     comission: z.coerce.number().min(0).nonnegative(),
-    companyId: z.string().optional(),
     referralBonus: z.coerce.number().min(0).nonnegative(),
     isPercentage: z.boolean().default(false),
     minAmount: z.coerce.number().min(0).nonnegative(),
@@ -70,6 +70,7 @@ const AffiliateForm = ({ defaultValues, onSubmit, isLoading, subAffiliate }: Pro
     };
 
 
+    console.log(form.formState.errors);
     return (
         <FormProvider onSubmit={form.handleSubmit(handleSubmit)} methods={form}>
             <div className="space-y-4">
@@ -102,8 +103,16 @@ const AffiliateForm = ({ defaultValues, onSubmit, isLoading, subAffiliate }: Pro
                             name="isPercentage"
                             label="Is Percentage"
                         />
+                        <FormSwitch
+                            control={form.control}
+                            name="canCreateSubAffiliate"
+                            label="Sub Affiliate Creation"
+                            description="If enabled, the affiliate can create sub affiliates under them"
+                        />
                     </>
                 )}
+
+                
                 <div className="flex gap-4">
                     <FormInput
                         control={form.control}

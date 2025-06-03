@@ -9,22 +9,30 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { AdvertisementType } from "@/models/advertisment";
 import FormSelect from "@/components/ui/form/form-select";
-
 const advertismentSchema = z.object({
     name: z.string().min(1),
     description: z.string().min(1),
-    image: z.string().url(),
-    mobileImage: z.string().url().optional().or(z.undefined()).or(z.literal("")),
+    image: z.string().url().optional().or(z.undefined()).or(z.literal("")).or(z.null()),
+    mobileImage: z.string().url().optional().or(z.undefined()).or(z.literal("")).or(z.null()),
     type: z.nativeEnum(AdvertisementType),
     link: z.union([z.string().url(), z.literal("")]),
     active: z.boolean().default(true),
-})
+}).superRefine((data, ctx) => {
+    if (data.type !== AdvertisementType.NOTICE && !data.image) {
+        ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Image is required for banner and slider advertisements",
+            path: ["image"]
+        });
+    }
+});
 
 export type AdvertismentFormSchema = z.infer<typeof advertismentSchema>
 
 const advertismentTypeOptions = [
     { label: "Banner", value: AdvertisementType.BANNER },
     { label: "Slider", value: AdvertisementType.SLIDER },
+    { label: "Notice", value: AdvertisementType.NOTICE },
 ]
 
 type Props = {
@@ -41,6 +49,10 @@ export const AdvertismentForm = ({ defaultValues, onSubmit, className, isLoading
     })
 
     const adType = form.watch("type");
+
+    const values = form.watch();
+
+    console.log(form.formState.errors, "errors", values)
 
     return (
         <FormProvider methods={form} onSubmit={form.handleSubmit(onSubmit)} className={cn("space-y-5", className)}>
@@ -64,34 +76,38 @@ export const AdvertismentForm = ({ defaultValues, onSubmit, className, isLoading
                 options={advertismentTypeOptions}
             />
 
-            {adType === AdvertisementType.BANNER ? (
-                <FormImage
-                    control={form.control}
-                    name="image"
-                    label="Banner Image"
-                    description="Square image - width: 300px height: 300px"
-                    aspectRatio={1}
-                    aspectRatioDescription="1:1"
-                />
+            {adType !== AdvertisementType.SLIDER ? (
+                adType === AdvertisementType.BANNER && (
+                    <FormImage
+                        control={form.control}
+                        name="image"
+                        label="Banner Image"
+                        description="Square image - width: 300px height: 300px max size: 5MB"
+                        aspectRatio={1}
+                        aspectRatioDescription="1:1"
+                        maxSize={5}
+                    />)
             ) : (
                 <>
                     <FormImage
                         control={form.control}
                         name="image"
                         label="Desktop Image"
-                        description="Aspect ratio: 16:9 width: 1200px height: 675px"
-                        aspectRatio={16/9}
+                        description="Aspect ratio: 16:9 width: 1200px height: 675px max size: 5MB"
+                        aspectRatio={16 / 9}
                         aspectRatioDescription="16:9"
+                        maxSize={5}
                     />
 
                     <FormImage
                         control={form.control}
                         name="mobileImage"
                         label="Mobile Image (Optional)"
-                        description="Aspect ratio: 5:4 width: 375px height: 300px"
-                        aspectRatio={5/4}
+                        description="Aspect ratio: 5:4 width: 375px height: 300px max size: 5MB"
+                        aspectRatio={5 / 4}
                         aspectRatioDescription="5:4"
-                    />  
+                        maxSize={5}
+                    />
                 </>
             )}
 

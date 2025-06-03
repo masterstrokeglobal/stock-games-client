@@ -1,11 +1,8 @@
 import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
 
 interface BetControlProps {
   betAmount: string
   setBetAmount: (amount: string) => void
-  autoPlay: boolean
-  setAutoPlay: (enabled: boolean) => void
   onPlaceBet: (amount: string) => void
   disabled?: boolean
 }
@@ -13,8 +10,6 @@ interface BetControlProps {
 export default function BetControl({
   betAmount,
   setBetAmount,
-  autoPlay,
-  setAutoPlay,
   onPlaceBet,
   disabled = false,
 }: BetControlProps) {
@@ -61,11 +56,6 @@ export default function BetControl({
           </Button>
         ))}
       </div>
-
-      <div className={`flex items-center justify-between ${disabled ? 'opacity-50' : ''}`}>
-        <span className="text-white">Auto play</span>
-        <Switch checked={autoPlay} onCheckedChange={setAutoPlay} disabled={disabled} />
-      </div>
     </div>
   )
-} 
+}

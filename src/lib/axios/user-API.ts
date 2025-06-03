@@ -2,6 +2,14 @@ import { SchedulerType } from "@/models/market-item";
 import User from "@/models/user";
 import api from "./instance";
 import { COMPANYID } from "../utils";
+import UserIpLog from "@/models/user-ip-logs";
+export type GetUserIpLogsParams = {
+    userId: string;
+    page: number;
+    limit: number;
+    startDate?: Date;
+    endDate?: Date;
+}
 
 export const userAPI = {
     getAllUsers: async (filter: SearchFilters) => {
@@ -44,6 +52,21 @@ export const userAPI = {
     },
     removeAgentUserPlacementNotAllowed: async (data: { placementNotAllowed: SchedulerType, userId: string }) => {
         return api.post(`/user/remove-agent-placement-not-allowed/${data.userId}`, data);
+    },
+
+    getUserIpLogs: async ({ userId, page, limit, startDate, endDate }: GetUserIpLogsParams) => {
+        const response = await api.get(`/user/ip-logs/${userId}`, {
+            params: {
+                page,
+                limit,
+                startDate,
+                endDate
+            }
+        });
+        return response.data as {
+            data: UserIpLog[];
+            totalPage: number;
+        };
     },
 };
 

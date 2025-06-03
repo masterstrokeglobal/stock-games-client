@@ -145,6 +145,14 @@ const ActionColumn = ({ user }: { user: User }) => {
             </Button>
           </AlertDialogTrigger>
         )}
+
+        {/* {isAdmin && (
+          <Link href={`/dashboard/users/${user.id}/ip-logs`}>
+            <Button size="icon" variant="ghost" aria-label="View User IP Logs" title='View User IP Logs'>
+              <LogsIcon className="w-5 h-5" />
+            </Button>
+          </Link>
+        )} */}
       </div>
 
       <AlertDialogContent className="bg-white rounded-lg shadow-lg p-6">

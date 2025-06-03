@@ -108,17 +108,17 @@ const RedBlackLeaderBoard = ({ roundRecord, className }: Props) => {
                     </thead>
                     <tbody className="">
                         {winnerMarketItem && (
-                            <tr className="border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden">
-                                <td className="p-2  text-game-text">
+                            <tr className="border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden text-white">
+                                <td className="p-2 ">
                                     <img src="/rank-1.svg" alt="Rank 1" className="w-8 h-8" />
                                 </td>
-                                <td className="p-2  text-game-text">
+                                <td className="p-2">
                                     {winnerMarketItem.horse}
                                 </td>
-                                <td className="p-2  text-game-text">
+                                <td className="p-2">
                                     {winnerMarketItem.name}
                                 </td>
-                                <td className="p-2  text-right text-game-text">
+                                <td className="p-2  text-right">
                                     {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : "Rs."}
                                     {winnerMarketItem.price ? formatPrice(winnerMarketItem.price) : "-"}
                                 </td>
@@ -135,9 +135,9 @@ const RedBlackLeaderBoard = ({ roundRecord, className }: Props) => {
                             <tr
                                 key={index}
 
-                                className={cn("border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden", (index === 0 && winnerNumber == 0) ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm")}
+                                className={cn("border-b last:border-none rounded-lg border-[#DADCE00D] text-white overflow-hidden", (index === 0 && winnerNumber == 0) ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm")}
                             >
-                                <td className="p-2  text-game-text">
+                                <td className="p-2">
 
                                     {(index === 0 && winnerNumber == 0 && !isGameOver) ? (
                                         <img
@@ -152,18 +152,18 @@ const RedBlackLeaderBoard = ({ roundRecord, className }: Props) => {
                                             className="size-8"
                                         />
                                     ) : (
-                                        <span className="text-game-text">
+                                        <span className="text-white">
                                             {(winnerNumber == 0 && !isGameOver) ? (index + 1) : "-"}
                                         </span>
                                     )}
                                 </td>
-                                <td className="p-2  text-game-text">
+                                <td className="p-2">
                                     {marketItem.horse == 17 ? 0 : marketItem.horse}
                                 </td>
-                                <td className="p-2  text-game-text">
+                                <td className="p-2">
                                     {marketItem.name}
                                 </td>
-                                <td className="p-2  text-right whitespace-nowrap text-game-text">
+                                <td className="p-2  text-right whitespace-nowrap text-white">
                                     {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : "Rs."}
                                     {marketItem.price ? formatPrice(marketItem.price) : "-"}
                                 </td>

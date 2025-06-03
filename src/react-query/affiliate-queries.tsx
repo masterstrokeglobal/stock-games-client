@@ -22,6 +22,20 @@ export const useCreateAffiliate = () => {
     });
 };
 
+export const useUpdateAffiliate = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: ({ id, payload }: any) => affiliateAPI.updateAffiliate(id, payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "affiliate";
+                },
+            });
+        },
+    });
+};
+
 export const useGetAllAffiliate = (filter: any) => {
     return useQuery({
         queryKey: ["affiliate", filter],

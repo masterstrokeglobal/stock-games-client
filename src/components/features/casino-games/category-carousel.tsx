@@ -3,6 +3,7 @@
 import GameCard from "@/components/features/casino-games/game-card"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import type { GameCategory } from "@/models/casino-games"
+import { GameTypeEnum } from "@/models/casino-games"
 import { useGetCasinoGames } from "@/react-query/casino-games-queries"
 
 interface CategoryCarouselProps {
@@ -11,16 +12,18 @@ interface CategoryCarouselProps {
     new?: boolean,
     slot?: boolean,
     liveGame?: boolean,
-    title: string
+    title: string,
+    type?: GameTypeEnum
 }
 
-export default function CategoryCarousel({ categoryId, title, popular, new: isNew, slot, liveGame  }: CategoryCarouselProps) {
+export default function CategoryCarousel({ categoryId, title, popular, new: isNew, slot, liveGame, type }: CategoryCarouselProps) {
     const { data, isLoading } = useGetCasinoGames({
-        limit: 200,
+        limit: 100,
         popular,
         excludeCategory: categoryId,
         new: isNew,
         slot,
+        type,
         liveGame
     })
 

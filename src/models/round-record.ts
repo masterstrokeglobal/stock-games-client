@@ -55,26 +55,25 @@ export const WHEEL_COLOR_BANDS = [
 
 export const IndexwithColorBands = [
     { color: WheelColor.COLOR5, index: 20 },
-    { color: WheelColor.COLOR5, index: 0 },
-    { color: WheelColor.COLOR1, index: 1 },
-    { color: WheelColor.COLOR2, index: 2 },
-    { color: WheelColor.COLOR3, index: 3 },
-    { color: WheelColor.COLOR1, index: 4 },
-    { color: WheelColor.COLOR2, index: 5 },
-    { color: WheelColor.COLOR4, index: 6 },
-    { color: WheelColor.COLOR1, index: 7 },
-    { color: WheelColor.COLOR2, index: 8 },
-    { color: WheelColor.COLOR3, index: 9 },
-    { color: WheelColor.COLOR1, index: 10 },
-    { color: WheelColor.COLOR2, index: 11 },
-    { color: WheelColor.COLOR4, index: 12 },
-    { color: WheelColor.COLOR1, index: 13 },
-    { color: WheelColor.COLOR2, index: 14 },
-    { color: WheelColor.COLOR3, index: 15 },
-    { color: WheelColor.COLOR1, index: 16 },
-    { color: WheelColor.COLOR2, index: 17 },
-    { color: WheelColor.COLOR4, index: 18 },
-    { color: WheelColor.COLOR1, index: 19 },
+    { color: WheelColor.COLOR1, index: 0 },
+    { color: WheelColor.COLOR2, index: 1 },
+    { color: WheelColor.COLOR3, index: 2 },
+    { color: WheelColor.COLOR1, index: 3 },
+    { color: WheelColor.COLOR2, index: 4 },
+    { color: WheelColor.COLOR4, index: 5 },
+    { color: WheelColor.COLOR1, index: 6 },
+    { color: WheelColor.COLOR2, index: 7 },
+    { color: WheelColor.COLOR3, index: 8 },
+    { color: WheelColor.COLOR1, index: 9 },
+    { color: WheelColor.COLOR2, index: 10 },
+    { color: WheelColor.COLOR4, index: 11 },
+    { color: WheelColor.COLOR1, index: 12 },
+    { color: WheelColor.COLOR2, index: 13 },
+    { color: WheelColor.COLOR3, index: 14 },
+    { color: WheelColor.COLOR1, index: 15 },
+    { color: WheelColor.COLOR2, index: 16 },
+    { color: WheelColor.COLOR4, index: 17 },
+    { color: WheelColor.COLOR1, index: 18 },
 ];
 
 
@@ -263,4 +262,15 @@ export class RoundRecord {
        return marketItems.filter(item => item !== undefined) as MarketItem[];
     }
     
+
+    get gameDuration(): number {
+         // in seconds 
+         return Math.floor((this.endTime.getTime() - this.startTime.getTime()) / 1000);
+    }
+
+    get placementDuration(): number {
+        // in seconds 
+        return Math.floor((this.placementEndTime.getTime() - this.placementStartTime.getTime()) / 1000);
+    }
+
 }

@@ -86,6 +86,8 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
         perspective: '1000px',
         transformStyle: 'preserve-3d'
       }}
+      onMouseEnter={() => setIsFlipped(true)}
+      onMouseLeave={() => setIsFlipped(false)}
       onClick={() => handleColorClick(color)}
     >
       <div 

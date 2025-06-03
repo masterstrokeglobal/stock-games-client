@@ -14,7 +14,8 @@ type GameResultProps = {
 }
 
 const GameResult = ({ showDialog, setShowDialog, isLoading, isError, data }: GameResultProps) => {
-    const isWin = data && Number(data.netProfitLoss) >= 0;
+    const isWin = data && Number(data.netProfitLoss) > 0;
+
     return <Dialog open={showDialog}>
         <DialogContent className="sm:max-w-md bg-primary-game text-white [&>.close-button]:hidden" data-hide-children="true">
             <DialogHeader>

@@ -2,11 +2,23 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Contact from "@/models/contact";
 import { ColumnDef } from "@tanstack/react-table";
+import dayjs from "dayjs";
 import { Eye } from 'lucide-react';
 import Link from "next/link";
 
 
 const contactColumns: ColumnDef<Contact>[] = [
+
+    {
+        header: "ID",
+        accessorKey: "id",
+        cell: ({ row }) => <div className="w-48 truncate">{row.original.id}</div>,
+    },
+    {
+        header: "Date",
+        accessorKey: "createdAt",
+        cell: ({ row }) => <div className="w-48 truncate">{dayjs(row.original.createdAt).format("DD/MM/YYYY")}</div>,
+    },
     {
         header: "NAME",
         accessorKey: "name",
@@ -28,14 +40,14 @@ const contactColumns: ColumnDef<Contact>[] = [
         cell: ({ row }) => {
 
             return (
-                <Badge >
-                    {row.original.status.charAt(0).toUpperCase() + row.original.status.slice(1)}
+                <Badge className="capitalize" variant={row.original.status === "open" ? "success" : row.original.status === "closed" ? "destructive" : "outline"}>
+                    {row.original.status}
                 </Badge>
             );
         },
     },
     {
-        header: "",
+        header: "ACTIONS",
         accessorKey: "actions",
         cell: ({ row }) => <ActionColumn contact={row.original} />,
     },
@@ -44,7 +56,7 @@ const contactColumns: ColumnDef<Contact>[] = [
 const ActionColumn = ({ contact }: { contact: Contact }) => {
 
     return (
-        <div className="flex space-x-4 w-36 justify-end">
+        <div className="flex space-x-4 w-36 justify-start">
             <Link href={`/dashboard/contact/${contact.id}`}>
                 <Button size="icon" variant="ghost" aria-label="View Contact">
                     <Eye className="w-5 h-5" />

@@ -168,6 +168,20 @@ export enum ProviderEnum {
     snowborn_games = "snowborn_games",
 }
 
+
+export enum GameTypeEnum {
+    CRASH_GAME = "crash_game",
+    GAME_SHOW = "game_show",
+    INSTANT_WIN = "instant_win",
+    LIVE_DEALER = "live_dealer",
+    TABLE_GAMES = "table_games",
+    SLOTS = "slots",
+    LOTTERY = "lottery",
+    SHOOTING = "shooting",
+    OTHERS = "others",
+}
+
+
 export const GameCategories = Object.values(GameCategory).map((category) => ({
     label: category.replace(/_/g, " ").charAt(0).toUpperCase() + category.replace(/_/g, " ").slice(1),
     value: category
@@ -187,12 +201,11 @@ class CasinoGames {
     subProviderName!: ProviderEnum;
     category!: GameCategory;
     status!: GameStatus;
-    slot!: boolean;
-    liveGame!: boolean;
+    type!: GameTypeEnum;
     popular!: boolean;
     new!: boolean;
     code!: string;
-    gameId!: number;
+    gameId!: string;
     createdAt!: Date;
     updatedAt!: Date;
     deletedAt?: Date;
@@ -206,8 +219,7 @@ class CasinoGames {
         this.category = params.category;
         this.status = params.status;
         this.code = params.code;
-        this.slot = params.slot;
-        this.liveGame = params.liveGame;
+        this.type = params.type;
         this.gameId = params.gameId;
         this.popular = params.popular;
         this.new = params.new;
