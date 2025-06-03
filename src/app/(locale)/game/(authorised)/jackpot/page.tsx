@@ -49,7 +49,7 @@ export default function Home() {
             <div className="relative h-full w-full md:min-h-[700px]   sm:min-h-[600px] min-h-[400px]  bg-contain bg-no-repeat bg-center">
               <div className="absolute bottom-0 w-full h-fit ">
                 <div className='absolute left-1/2 -translate-x-1/2 bottom-[calc(100%-2vw)] md:h-[60%] h-3/4 z-10 flex max-w-sm items-end justify-center'>
-                  <img src="/images/jackpot/lady.gif" alt="dice-bg" className='w-auto h-full mt-20' />
+                  <img src="/images/dice-game/lady.gif" alt="dice-bg" className='w-auto h-full mt-20' />
                 </div>
                 <img src="/images/jackpot/table.png" className=" w-full sm:mx-auto   h-full  relative z-10  md:max-w-6xl sm:max-w-2xl max-w-xl" />
                 <StockCardStack roundRecord={roundRecord} />

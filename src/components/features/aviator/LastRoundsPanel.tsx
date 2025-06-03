@@ -1,18 +1,12 @@
+import { useGameType } from "@/hooks/use-game-type"
+import { useAviatorRoundHistory } from "@/react-query/aviator-queries"
+import dayjs from "dayjs"
 import { ChevronDown } from "lucide-react"
 
-interface GameRound {
-  id: number
-  time: string
-  multiplier: string
-  duration: string
-  status: "crashed" | "flew_away"
-}
+export default function LastRoundsPanel() {
+  const [gameType] = useGameType();
+  const { data: lastRounds } = useAviatorRoundHistory(gameType);
 
-interface LastRoundsPanelProps {
-  lastRounds: GameRound[]
-}
-
-export default function LastRoundsPanel({ lastRounds }: LastRoundsPanelProps) {
   const getMultiplierColor = (multiplier: string) => {
     const value = Number.parseFloat(multiplier.replace("x", ""))
     if (value >= 10) return "text-purple-400"
@@ -30,8 +24,8 @@ export default function LastRoundsPanel({ lastRounds }: LastRoundsPanelProps) {
   }
 
   return (
-    <div className="w-full  bg-gray-900 bg-opacity-90 backdrop-blur-sm h-full flex flex-col overflow-x-auto">
-      <div className="p-4 flex-none min-w-[320px]">
+    <div className="w-full bg-gray-900 bg-opacity-90 backdrop-blur-sm h-full flex flex-col overflow-x-auto">
+      <div className="p-4 flex-none">
         {/* Header Bar */}
         <div className="flex items-center justify-between mb-4 pb-2 border-b border-gray-700">
           <div className="flex items-center space-x-2">
@@ -41,47 +35,46 @@ export default function LastRoundsPanel({ lastRounds }: LastRoundsPanelProps) {
           <div className="h-1 flex-1 mx-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
         </div>
 
-        {/* Table Header */}
-        <div className="grid grid-cols-4 gap-3 pb-2 border-b border-gray-700 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-          <div>Time</div>
-          <div className="text-center">Multi</div>
-          <div className="text-center">Duration</div>
-          <div className="text-center">Status</div>
-        </div>
-      </div>
-
-      {/* Scrollable Rounds Table */}
-      <div className="flex-1 overflow-y-auto px-4 min-w-[320px]">
-        <div className="space-y-2">
-          {lastRounds.map((round) => (
-            <div
-              key={round.id}
-              className="grid grid-cols-4 gap-3 py-2 border-b border-gray-800 hover:bg-gray-800 hover:bg-opacity-50 transition-colors"
-            >
-              <div className="flex items-center">
-                <span className="text-gray-300 text-sm font-mono">{round.time}</span>
-              </div>
-
-              <div className="text-center">
-                <span className={`text-sm font-bold ${getMultiplierColor(round.multiplier)}`}>
-                  {round.multiplier}
-                </span>
-              </div>
-
-              <div className="text-center">
-                <span className="text-gray-300 text-sm font-mono">{round.duration}</span>
-              </div>
-
-              <div className="flex justify-center">
-                {getStatusIcon(round.status)}
-              </div>
-            </div>
-          ))}
+        {/* Table */}
+        <div className="w-full min-w-[320px]">
+          <table className="w-full">
+            <thead>
+              <tr className="text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-gray-700">
+                <th className="pb-2 text-left">Time</th>
+                <th className="pb-2 text-center">Name</th>
+                <th className="pb-2 text-center">Multi</th>
+                <th className="pb-2 text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-800">
+              {lastRounds?.map((round) => (
+                <tr
+                  key={`${round.roundId}-${round.code}`}
+                  className="hover:bg-gray-800 hover:bg-opacity-50 transition-colors"
+                >
+                  <td className="py-2">
+                    <span className="text-gray-300 text-sm font-mono whitespace-nowrap">{dayjs(round.time).format("hh:mm a")}</span>
+                  </td>
+                  <td className="py-2 text-center cursor-pointer" title={round.name}>
+                    <span className="text-gray-300 text-sm font-mono whitespace-nowrap w-24 block truncate">{round.name}</span>
+                  </td>
+                  <td className="py-2 text-center">
+                    <span className={`text-sm font-bold ${getMultiplierColor(round.multiplier.toString())}`}>{round.multiplier}</span>
+                  </td>
+                  <td className="py-2">
+                    <div className="flex justify-center">
+                      {getStatusIcon(round.status as "crashed" | "flew_away")}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
       {/* Summary Stats - Fixed at Bottom */}
-      <div className="p-4 flex-none border-t border-gray-700 min-w-[320px]">
+      <div className="p-4 mt-auto border-t border-gray-700 min-w-[320px]">
         <div className="grid grid-cols-2 gap-4 text-center">
           <div>
             <div className="text-gray-400 text-xs uppercase tracking-wider">Avg Multi</div>

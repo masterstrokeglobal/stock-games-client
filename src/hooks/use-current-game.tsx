@@ -51,7 +51,7 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
 
     const roundRecord = useMemo(() => {
         // Only compute when data is successfully loaded
-        if (!isSuccess || !data?.data.roundRecords?.[0]) {
+        if (!isSuccess || !data?.data?.roundRecords?.[0]) {
             return null;
         }
 
@@ -104,12 +104,12 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         };
         
         // Apply the rearrangement to the market array
-        if (roundRecord.market && Array.isArray(roundRecord.market)) {
+        if (roundRecord.market && Array.isArray(roundRecord.market) && roundRecord.roundRecordGameType === RoundRecordGameType.WHEEL_OF_FORTUNE) {
             roundRecord.market = rearrangeMarketsForWheel(roundRecord.market);
         }
 
         return roundRecord;
-    }, [data?.data.roundRecords?.[0], isSuccess]);
+    }, [data?.data?.roundRecords?.[0], isSuccess]);
 
 
     useEffect(() => {
