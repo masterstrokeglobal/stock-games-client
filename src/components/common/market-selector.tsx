@@ -60,12 +60,7 @@ const MarketSelector = ({ title, className, variant = 'all' }: MarketSelectorPro
             color: "from-green-400 to-emerald-600",
             icon: "🇺🇸"
         }
-    ].filter(market => {
-        if (variant === 'aviator' && market.id === SchedulerType.CRYPTO) {
-            return false;
-        }
-        return true;
-    });
+    ];
 
     const availableMarkets = markets.filter(market => market.allowed);
 

@@ -56,11 +56,8 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         }
 
         // Create RoundRecord only when necessary
-        let roundRecord = new RoundRecord(data.data.roundRecords[0]);
-        console.log("roundRecord color update", roundRecord);
-        console.log("roundRecord color update", roundRecord.market);
-        console.log("roundRecord color update", roundRecord.marketColors);
-
+        const roundRecord = new RoundRecord(data.data.roundRecords[0]);
+  
         /*
         gold, color5: market index [20] wheel index [0] 
         red color1: [market index 0, 3, 6, 9, 12, 15, 18 ] wheel index [2, 5, 8,11, 14, 17 ]
@@ -70,9 +67,6 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         
         */
 
-        roundRecord.market.forEach((market, index) => {
-            console.log(`color update ${index}  ${roundRecord.marketColors[index].color} ${market.name}`);
-        })
 
         // Function to rearrange markets according to wheel position mapping
         const rearrangeMarketsForWheel = (markets: any[]) => {
