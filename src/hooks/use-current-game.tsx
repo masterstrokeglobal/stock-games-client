@@ -296,7 +296,7 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: any
 };
 
 
-export const usePlacementOver = (roundRecord: RoundRecord) => {
+export const usePlacementOver = (roundRecord: RoundRecord | null) => {
 
     const [isPlaceOver, setIsPlaceOver] = useState(false);
 

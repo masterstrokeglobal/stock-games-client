@@ -31,7 +31,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
   const [tab, setTab] = useGameType();
-  const isPlacementOver = usePlacementOver(roundRecord as any);
+  const isPlacementOver = usePlacementOver(roundRecord);
 
   // Function to update global bet amount
   const handleGlobalBetAmountChange = (amount: number) => {
@@ -52,7 +52,7 @@ export default function Home() {
                   <img src="/images/dice-game/lady.gif" alt="dice-bg" className='w-auto h-full mt-20' />
                 </div>
                 <img src="/images/jackpot/table.png" className=" w-full sm:mx-auto   h-full  relative z-10  md:max-w-6xl sm:max-w-2xl max-w-xl" />
-                <StockCardStack roundRecord={roundRecord} />
+                {roundRecord && <StockCardStack roundRecord={roundRecord} />}
               </div>
             </div>
             <BettingChips
@@ -240,10 +240,11 @@ const StockCard = ({ stock, className, amount }: { stock?: RankedMarketItem, cla
   )
 }
 
-const StockCardStack = ({ roundRecord }: { roundRecord: RoundRecord | null }) => {
+const StockCardStack = ({ roundRecord }: { roundRecord: RoundRecord}) => {
 
   const { stocks: marketItems } = useLeaderboard(roundRecord);
-  const { data: myStockSlotJackpotGameRecord } = useGetMyStockSlotGameRecord(roundRecord?.id)
+  const { data: myStockSlotJackpotGameRecord } = useGetMyStockSlotGameRecord(roundRecord?.id);
+  const isPlaceOver = usePlacementOver(roundRecord);
 
   const bettedMarketItems = useMemo(() => {
     const bettedMarketItems = myStockSlotJackpotGameRecord?.filter((record) => record.placement === StockJackpotPlacementType.HIGH || record.placement === StockJackpotPlacementType.LOW)
@@ -260,22 +261,7 @@ const StockCardStack = ({ roundRecord }: { roundRecord: RoundRecord | null }) =>
 
   return (<div className="absolute p-2 left-1/2 -translate-x-1/2  md:bottom-[calc(45%+1rem)] bottom-[calc(33%+1rem)] z-10 w-full  md:max-w-xl sm:max-w-sm max-w-[280px]  ">
     <div style={{ transform: 'perspective(1000px) rotateX(15deg)' }} className=" origin-center mx-auto flex z-10 gap-2 md:gap-4 h-fit w-full" >
-      <div className="flex-1 gap-2 md:gap-4 flex flex-col" >
-        <div className="col-span-2 text-center font-bold text-xs md:text-sm">HIGH</div>
-        <div className="flex-1 gap-2 md:gap-4 flex justify-around">
-          {highStocks.length > 0 ? (
-            highStocks.map((item) => (
-              <StockCard key={item.id} stock={item.stock} amount={item.amount} />
-            ))
-          ) : (
-            <div className="text-center text-gray-400 text-xs md:text-sm border border-dashed border-gray-400  p-2 rounded-lg">No stocks selected</div>
-          )}
-        </div>
-      </div>
-
-      <div className="mx-2 md:mx-12 border-r-[5px] border-amber-600 self-stretch">
-      </div>
-
+    
       <div className="flex-1 gap-2 md:gap-4 flex flex-col">
         <div className="col-span-2 text-center font-bold text-xs md:text-sm">LOW</div>
         <div className="flex-1 gap-2 md:gap-4 flex justify-around">
@@ -285,6 +271,19 @@ const StockCardStack = ({ roundRecord }: { roundRecord: RoundRecord | null }) =>
             ))
           ) : (
             <div className="text-center border border-dashed border-gray-400  p-2 text-gray-400 text-xs md:text-sm rounded-lg">No stocks selected</div>
+          )}
+        </div>
+      </div>
+
+      <div className="flex-1 gap-2 md:gap-4 flex flex-col" >
+        <div className="col-span-2 text-center font-bold text-xs md:text-sm">HIGH</div>
+        <div className="flex-1 gap-2 md:gap-4 flex justify-around">
+          {highStocks.length > 0 ? (
+            highStocks.map((item) => (
+              <StockCard key={item.id} stock={item.stock} amount={item.amount} />
+            ))
+          ) : (
+            <div className="text-center text-gray-400 text-[10px] md:text-sm border border-dashed border-gray-400  md:p-2 p-1 rounded-lg">No stocks selected</div>
           )}
         </div>
       </div>

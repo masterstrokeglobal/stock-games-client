@@ -4,8 +4,8 @@ export enum SchedulerType {
     NSE = "nse",
     CRYPTO = "crypto",
     USA_MARKET = "usa_market",
+    MCX = "mcx",
 }
-
 export class MarketItem {
     id?: number;
     type?: SchedulerType;
