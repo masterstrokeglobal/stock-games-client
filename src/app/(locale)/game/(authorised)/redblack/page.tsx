@@ -8,6 +8,7 @@ import Last10WinnersCardSpin from "@/components/features/card-spinner/card-spinn
 import PlaceBets from "@/components/features/game/place-bet";
 import RedBlackLeaderBoard from "@/components/features/game/red-black-leaderboard";
 import { cn } from "@/lib/utils";
+import { RoundRecordGameType } from "@/models/round-record";
 
 declare global {
   interface Window {
@@ -26,12 +27,12 @@ const borderStyle = {
 
 
 const GamePage = () => {
-  const { roundRecord } = useCurrentGame();
+  const { roundRecord } = useCurrentGame(RoundRecordGameType.RED_BLACK);
   useHorseRaceSound(roundRecord);
 
   return (
     <>
-      <section className={cn("pt-16 h-screen grid grid-cols-1")}>
+      <section className={cn("pt-16 h-screen grid grid-cols-1 overflow-scroll")}>
         <Navbar />
         <main className="grid grid-cols-12 gap-4 flex-1  px-4 pb-4 max-w-7xl mx-auto w-full">
           <div className="col-span-12 lg:col-span-7 flex flex-col gap-4 h-full">
@@ -62,7 +63,7 @@ const GamePage = () => {
           {/* Right Column: Top (PlaceBets) and Bottom (LeaderBoard) */}
           <div className="col-span-12 lg:col-span-5  gap-4 h-full  flex flex-col w-full">
             {roundRecord && <RedBlackLeaderBoard roundRecord={roundRecord} className="flex-[2]  bg-primary-game" />}
-              {roundRecord && <PlaceBets className="flex-[3]" />}
+              {roundRecord && <PlaceBets roundRecord={roundRecord} className="flex-[3]" />}
           </div>
         </main>
       </section>

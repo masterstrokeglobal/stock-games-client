@@ -40,7 +40,8 @@ export enum PlacementType {
     COLUMN = "column",
     COLOR = "color",
     EVEN_ODD = "even_odd",
-    HIGH_LOW = "high_low"
+    HIGH_LOW = "high_low",
+    ROUND_RANGE = "round_range"
 }
 
 export default GameRecord;

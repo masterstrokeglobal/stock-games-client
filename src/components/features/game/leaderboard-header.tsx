@@ -124,7 +124,7 @@ const LeaderboardHeader = () => {
 
     return (
         <div className='flex justify-between  pr-3 '>
-            <h2 className="text-xl font-semibold flex-1 mb-4 game-header-highlight mt-2 pl-2 b text-game-text">
+            <h2 className="text-xl font-semibold flex-1 mb-4 game-header-highlight pl-2 b text-game-text">
                 {t("leaderboard")}
             </h2>
             <div className="flex justify-between items-center">

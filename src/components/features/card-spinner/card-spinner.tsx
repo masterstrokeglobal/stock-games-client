@@ -69,7 +69,7 @@ function Card({
       <div className={`${styles.card} ${styles[color.toLowerCase()]}`}>
         <div className={styles.cardContent}>
           <span className={styles.cardNumber}>Round {number}</span>
-          <span className={styles.cardNumber}>{time}</span>
+          <span className={styles.cardTime}>{time}</span>
           <span className={styles.cardName}>{name}</span>
         </div>
       </div>

@@ -105,6 +105,20 @@
   letter-spacing: 0.7px;
 }
 
+.cardTime {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 4px;
+  text-shadow: 1.5px 1.5px 3px rgba(0,0,0,0.5);
+  letter-spacing: 0.7px;
+}
+
+@media (max-width: 768px) {
+  .cardTime {
+    display: none;
+  }
+}
+
 .cardName {
   font-size: 0.67rem;
   font-weight: 500;
