@@ -94,8 +94,6 @@ const StyledWrapper = styled.div`
     filter: blur(12px);
     opacity: 0.8;
     transition: all 2s;
-  }
-  #main:hover > #pink-mask {
     animation: rotate 4s linear infinite;
     opacity: 0;
   }
@@ -126,9 +124,6 @@ const StyledWrapper = styled.div`
       #dfa2da,
       rgba(0, 0, 0, 0) 58%
     );
-    animation: none;
-  }
-  &:hover .white::before {
     animation: rotate 4s linear infinite;
   }
   .border {
@@ -158,9 +153,6 @@ const StyledWrapper = styled.div`
       #cf30aa 60%,
       #1c191c 64%
     );
-    animation: none;
-  }
-  &:hover .border::before {
     animation: rotate 4s linear infinite;
   }
   .darkBorderBg {
@@ -187,21 +179,15 @@ const StyledWrapper = styled.div`
       #6e1b60,
       rgba(0, 0, 0, 0) 60%
     );
-    animation: none;
-  }
-  &:hover .darkBorderBg::before {
     animation: rotate 4s linear infinite;
   }
   .glow {
     overflow: hidden;
     filter: blur(18px);
-    opacity: 0.4;
+    opacity: 1;
     max-height: 78px;
     max-width: 128px;
     transition: opacity 0.3s ease;
-  }
-  &:hover .glow {
-    opacity: 1;
   }
   .glow::before {
     content: "";
@@ -223,9 +209,6 @@ const StyledWrapper = styled.div`
       #cf30aa 60%,
       #000 87%
     );
-    animation: none;
-  }
-  &:hover .glow::before {
     animation: rotate 4s linear infinite;
   }
   @keyframes rotate {
@@ -298,9 +281,6 @@ const StyledWrapper = styled.div`
       #3d3a4f,
       rgba(0, 0, 0, 0) 100%
     );
-    animation: none;
-  }
-  &:hover .filterBorder::before {
     animation: rotate 4s linear infinite;
   }
   #main {

@@ -1,15 +1,14 @@
 "use client";
 
+import Last10WinnersCardSpin from "@/components/features/card-spinner/card-spinner";
 import Navbar from "@/components/features/game/navbar";
+import PlaceBets from "@/components/features/game/place-bet";
+import RedBlackLeaderBoard from "@/components/features/game/red-black-leaderboard";
 import RedBlackRouletteGame from "@/components/features/game/red-black-roulette-game";
 import { useHorseRaceSound } from "@/context/audio-context";
 import { useCurrentGame } from "@/hooks/use-current-game";
-import Last10WinnersCardSpin from "@/components/features/card-spinner/card-spinner";
-import PlaceBets from "@/components/features/game/place-bet";
-import RedBlackLeaderBoard from "@/components/features/game/red-black-leaderboard";
-import { cn } from "@/lib/utils";
 import { RoundRecordGameType } from "@/models/round-record";
-
+import { useState } from "react";
 declare global {
   interface Window {
     Tawk_API: any;
@@ -27,44 +26,44 @@ const borderStyle = {
 
 
 const GamePage = () => {
+  const [globalBetAmount, setGlobalBetAmount] = useState(100);
   const { roundRecord } = useCurrentGame(RoundRecordGameType.RED_BLACK);
   useHorseRaceSound(roundRecord);
 
   return (
     <>
-      <section className={cn("pt-16 h-screen grid grid-cols-1 overflow-scroll")}>
+      <section>
         <Navbar />
-        <main className="grid grid-cols-12 gap-4 flex-1  px-4 pb-4 max-w-7xl mx-auto w-full">
-          <div className="col-span-12 lg:col-span-7 flex flex-col gap-4 h-full">
-            <div
-              className="flex-[3] bg-las relative rounded-2xl overflow-hidden w-full"
-              style={{
-                flex: "0 0 50%", // 70% height
-                ...borderStyle,
-                backgroundImage: `url(/images/bg-lightning.jpg)`,
-                backgroundSize: "100%",
-              }}
-            >
-              {roundRecord && (
-                <RedBlackRouletteGame roundRecord={roundRecord} />
-              )}
-            </div>
-            <div
-              className="flex-[1] rounded-2xl overflow-y-auto bg-primary-game relative">
-              <header className="absolute top-0 left-0 w-full">
-                <h1 className="text-xl px-4 py-2 font-semibold text-game-secondary">Last 10 Winners</h1>
-              </header>
-              {roundRecord && (
-                <Last10WinnersCardSpin />
-              )}
-            </div>
+        <main className="grid grid-cols-12 grid-rows-7 gap-4 flex-1 px-4 pb-4 h-screen pt-16 mx-auto w-full">
+          <div
+            className="col-span-6 row-span-4 bg-las relative rounded-2xl overflow-hidden w-full"
+            style={{
+              ...borderStyle,
+              backgroundImage: `url(/images/bg-lightning.jpg)`,
+              backgroundSize: "100%",
+            }}
+          >
+            {roundRecord && (
+              <RedBlackRouletteGame roundRecord={roundRecord} globalBetAmount={globalBetAmount} handleGlobalBetAmountChange={setGlobalBetAmount} />
+            )}
           </div>
 
-          {/* Right Column: Top (PlaceBets) and Bottom (LeaderBoard) */}
-          <div className="col-span-12 lg:col-span-5  gap-4 h-full  flex flex-col w-full">
-            {roundRecord && <RedBlackLeaderBoard roundRecord={roundRecord} className="flex-[2]  bg-primary-game" />}
-              {roundRecord && <PlaceBets roundRecord={roundRecord} className="flex-[3]" />}
+          {roundRecord && <RedBlackLeaderBoard roundRecord={roundRecord} className="col-span-6 row-span-3 bg-primary-game" />}
+
+
+          {/* Bottom Row */}
+          {roundRecord && <PlaceBets roundRecord={roundRecord} className="col-span-6 row-span-5" globalBetAmount={globalBetAmount} />}
+
+          {/* Right Column */}
+          <div className="col-span-6 row-span-4 rounded-2xl rostart   bg-[url('/images/bg-design.jpg')] overflow-y-auto bg-primary-game relative">
+            <header className="absolute top-0 left-0 w-full">
+              <h1 className="text-xl px-4 py-2 font-semibold text-game-secondary">Last 10 Winners</h1>
+            </header>
+            {roundRecord && (
+              <Last10WinnersCardSpin />
+            )}
           </div>
+
         </main>
       </section>
     </>

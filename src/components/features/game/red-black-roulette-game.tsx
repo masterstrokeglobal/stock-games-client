@@ -13,15 +13,18 @@ import { useMemo, useRef } from "react";
 import { Bet, Chip } from "./contants";
 import GameResultDialog from "./result-dialog";
 import { RedBlackRouletteBettingGrid } from "./red-black-roulette-grid";
-import BettingChips from "../slot-jackpot/betting-chips";
+import BettingChips from "../red-black/betting-chips";
 
 type Props = {
   roundRecord: RoundRecord;
   previousRoundId?: string;
+  globalBetAmount: number;
+  handleGlobalBetAmountChange: (amount: number) => void;
 };
 
-const RedBlackRouletteGame = ({ roundRecord }: Props) => {
+const RedBlackRouletteGame = ({ roundRecord, globalBetAmount, handleGlobalBetAmountChange }: Props) => {
   const t = useTranslations("game");
+
 
   const gameState = useGameState(roundRecord);
 
@@ -122,9 +125,9 @@ const RedBlackRouletteGame = ({ roundRecord }: Props) => {
             </div>
           </div>
         </div>
-        <BettingChips globalBetAmount={100} showBetting={true} handleGlobalBetAmountChange={() => {}} />
+        <BettingChips globalBetAmount={globalBetAmount} showBetting={true} handleGlobalBetAmountChange={handleGlobalBetAmountChange} />
       </div>
-      
+
       <GameResultDialog
         key={String(showResults)}
         open={showResults}

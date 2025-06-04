@@ -47,7 +47,6 @@ const GamePage = () => {
                     className="lg:col-span-5 col-span-4 row-span-2 rounded-2xl ">
                     {roundRecord && <LeaderBoard roundRecord={roundRecord} />}
                 </div>
-
                 <div
                     style={borderStyle}
                     className="lg:col-span-7 col-span-8 bg-las relative  row-span-3 bg-background-secondary rounded-2xl overflow-y-auto">

@@ -24,9 +24,10 @@ import { useEffect, useRef, useState } from "react";
 type Props = {
   className?: string;
   roundRecord: RoundRecord;
+  globalBetAmount: number;
 };
 
-const PlaceBets = ({ className, roundRecord }: Props) => {
+const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
   const t = useTranslations("game");
   const sectionRef = useRef<HTMLDivElement>(null);
   const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
@@ -36,7 +37,6 @@ const PlaceBets = ({ className, roundRecord }: Props) => {
     useCreateGameRecord();
   const { mutate: mutateAdvanceGameRecord, isPending: isAdvancePlacingBet } =
     useCreateAdvanceGameRecord();
-  const [betAmount, setBetAmount] = useState<number>(100);
 
   const fancyRounds = [
     {
@@ -67,13 +67,12 @@ const PlaceBets = ({ className, roundRecord }: Props) => {
   const handleColorBet = (numbers: number[]) => {
     if (gameState.isPlaceOver || isPlacingBet) return;
     // if (!verifyBetAmount(betAmount)) return;
-    setBetAmount(100);
     const markets = numbers
       .map((number) => roundRecord.market[number - 1]?.id)
       .filter((id) => id !== undefined);
 
     mutateGameRecord({
-      amount: betAmount,
+      amount: globalBetAmount,
       round: roundRecord.id,
       horseNumbers: numbers,
       placementType: PlacementType.COLOR,
@@ -91,13 +90,12 @@ const PlaceBets = ({ className, roundRecord }: Props) => {
   const handleRangeBet = (start: number, end: number, numbers: number[]) => {
     if (gameState.isPlaceOver || isAdvancePlacingBet) return;
     // if (!verifyBetAmount(betAmount)) return;
-    setBetAmount(100);
     const markets = numbers
       .map((number) => roundRecord.market[number - 1]?.id)
       .filter((id) => id !== undefined);
 
     mutateAdvanceGameRecord({
-      amount: betAmount,
+      amount: globalBetAmount,
       round: roundRecord.id,
       horseNumbers: numbers,
       placementType: PlacementType.ROUND_RANGE,
@@ -116,7 +114,7 @@ const PlaceBets = ({ className, roundRecord }: Props) => {
 
   useEffect(() => {
     if (sectionRef.current) {
-      const sectionHeight = sectionRef.current.offsetHeight - 30;
+      const sectionHeight = sectionRef.current.offsetHeight ;
       setScrollAreaHeight(sectionHeight);
     }
   }, []);
