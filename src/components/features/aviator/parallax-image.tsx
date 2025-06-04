@@ -6,44 +6,64 @@ export default function ParallaxImage({ multiplier }: { multiplier: number }) {
   const imgContainerRef = useRef<HTMLDivElement>(null)
   
   useEffect(() => {
-    if (!imageRef.current) return
+    if (!imageRef.current || !imgContainerRef.current) return
     
-    // Calculate the progress from 1x to 10x multiplier
-    const normalizedMultiplier = Math.max(1, Math.min(10, multiplier))
-    const progress = (normalizedMultiplier - 1) / 5 // 0 to 1
+    // Start constant X-axis movement (horizontal scrolling)
+    const imageWidth = 8000 * 16 // Total width of all tiles
+    const containerWidth = imgContainerRef.current.clientWidth
+    const maxMoveX = imageWidth - containerWidth
     
-    // Calculate positions for bottom-left to top-right movement
-    // Bottom-left (0% progress): x: 0%, y: -100% (show bottom part)
-    // Top-right (100% progress): x: -100%, y: 0% (show top part)
-    // add an offset of container height / 2
-    const containerHeight = imgContainerRef.current?.clientHeight || 0
-    const containerHeightPercentOfImgHeight = containerHeight / 8000
-    const translateX = (-progress * 100)  // 0% to -100%
-    const translateY = (-(1 - progress) * 100) + (containerHeightPercentOfImgHeight * 100) // -100% to 0%
-    
-    // Calculate scale for zoom effect
-    // const scale = 1 + (progress * 0.5) // 1x to 1.5x zoom
-    
-    // Animate with GSAP
+    // Create infinite horizontal movement
+    gsap.set(imageRef.current, { x: 0 })
     gsap.to(imageRef.current, {
-      x: `${translateX}%`,
-      y: `${translateY}%`,
-    //   scale: scale,
+      x: -maxMoveX,
+      duration: 500, // 30 seconds for full cycle
+      ease: "none",
+      repeat: -1, // Infinite repeat
+    })
+    
+    return () => {
+      gsap.killTweensOf(imageRef.current)
+    }
+  }, []) // Only run once on mount
+  
+  useEffect(() => {
+    if (!imageRef.current || !imgContainerRef.current) return
+    
+    // Calculate the progress from 1x to 10x multiplier for Y-axis only
+    const normalizedMultiplier = Math.max(1, Math.min(10, multiplier))
+    const progress = (normalizedMultiplier - 1) / 9 // 0 to 1
+    
+    // Get container dimensions
+    const containerHeight = imgContainerRef.current.clientHeight
+    const imageHeight = 8000
+    
+    // Calculate how much we can move vertically
+    const maxMoveY = imageHeight - containerHeight
+    
+    // Y-axis movement: 0% progress = -maxMoveY (bottom), 100% progress = 0px (top)
+    const translateY = -(1 - progress) * maxMoveY
+    
+    // Animate only Y position with GSAP
+    gsap.to(imageRef.current, {
+      y: translateY,
       duration: 0.3,
-      ease: "power2.out"
+      ease: "power2.inOut"
     })
     
   }, [multiplier])
   
   return (
     <div ref={imgContainerRef} className="absolute inset-0 overflow-hidden">
-      <div
-        ref={imageRef}
-        className="w-[8000px] h-[8000px] absolute bg-[url('/images/aviator/scene_green.webp')] bg-cover bg-no-repeat"
-        // style={{
-        //   transformOrigin: 'top left'
-        // }}
-      />
+      <div ref={imageRef} className="min-w-[calc(8000px*16)] min-h-[8000px] absolute flex">
+        {Array.from({ length: 16 }).map((_, i) => (
+          <div
+            key={i}
+            className="w-[8000px] h-[8000px] absolute bg-[url('/images/aviator/scene_green.webp')] bg-cover bg-no-repeat"
+            style={{ left: `${i * 8000}px` }}
+          />
+        ))}
+      </div>
     </div>
   )
 }
