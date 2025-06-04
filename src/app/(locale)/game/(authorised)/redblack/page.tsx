@@ -34,9 +34,9 @@ const GamePage = () => {
     <>
       <section>
         <Navbar />
-        <main className="grid grid-cols-12 grid-rows-7 gap-4 flex-1 px-4 pb-4 h-screen pt-16 mx-auto w-full">
+        <main className="grid md:grid-cols-12 grid-cols-1 md:grid-rows-7 grid-rows-1 gap-4 flex-1 px-4 pb-4 md:h-screen pt-16 mx-auto w-full">
           <div
-            className="col-span-6 row-span-4 bg-las relative rounded-2xl overflow-hidden w-full"
+            className="md:col-span-6 col-span-12 md:row-span-4 bg-las relative rounded-2xl overflow-hidden w-full order-1"
             style={{
               ...borderStyle,
               backgroundImage: `url(/images/bg-lightning.jpg)`,
@@ -48,14 +48,9 @@ const GamePage = () => {
             )}
           </div>
 
-          {roundRecord && <RedBlackLeaderBoard roundRecord={roundRecord} className="col-span-6 row-span-3 bg-primary-game" />}
+          {roundRecord && <RedBlackLeaderBoard roundRecord={roundRecord} className="md:col-span-6 col-span-12 row-span-3 bg-primary-game order-2" />}
 
-
-          {/* Bottom Row */}
-          {roundRecord && <PlaceBets roundRecord={roundRecord} className="col-span-6 row-span-5" globalBetAmount={globalBetAmount} />}
-
-          {/* Right Column */}
-          <div className="col-span-6 row-span-4 rounded-2xl rostart   bg-[url('/images/bg-design.jpg')] overflow-y-auto bg-primary-game relative">
+          <div className="md:col-span-6 col-span-12 md:row-span-4 rounded-2xl rostart bg-[url('/images/bg-design.jpg')] overflow-y-auto bg-primary-game relative order-3">
             <header className="absolute top-0 left-0 w-full">
               <h1 className="text-xl px-4 py-2 font-semibold text-game-secondary">Last 10 Winners</h1>
             </header>
@@ -63,6 +58,9 @@ const GamePage = () => {
               <Last10WinnersCardSpin />
             )}
           </div>
+
+          {/* Bottom Row */}
+          {roundRecord && <PlaceBets roundRecord={roundRecord} className="md:col-span-6 col-span-12 md:row-span-5 md:order-2 order-1" globalBetAmount={globalBetAmount} />}
 
         </main>
       </section>
