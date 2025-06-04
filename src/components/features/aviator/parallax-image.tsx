@@ -1,12 +1,17 @@
 import { useEffect, useRef } from "react"
 import { gsap } from "gsap"
 
-export default function ParallaxImage({ multiplier }: { multiplier: number }) {
+interface ParallaxImageProps {
+  multiplier: number
+  isMoving?: boolean // Control whether the constant X movement is active
+}
+
+export default function ParallaxImage({ multiplier, isMoving = false }: ParallaxImageProps) {
   const imageRef = useRef<HTMLDivElement>(null)
   const imgContainerRef = useRef<HTMLDivElement>(null)
   
   useEffect(() => {
-    if (!imageRef.current || !imgContainerRef.current) return
+    if (!imageRef.current || !imgContainerRef.current || !isMoving) return
     
     // Start constant X-axis movement (horizontal scrolling)
     const imageWidth = 8000 * 16 // Total width of all tiles
@@ -25,7 +30,7 @@ export default function ParallaxImage({ multiplier }: { multiplier: number }) {
     return () => {
       gsap.killTweensOf(imageRef.current)
     }
-  }, []) // Only run once on mount
+  }, [isMoving]) // Re-run when isMoving changes
   
   useEffect(() => {
     if (!imageRef.current || !imgContainerRef.current) return

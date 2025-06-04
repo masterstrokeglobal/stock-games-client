@@ -8,10 +8,11 @@ interface GameDisplayProps {
   multiplier: number
   shouldShowBlast?: boolean
   setShouldShowBlast?: (isPlaying: boolean) => void
+  isParallaxMoving?: boolean
 }
 
 const GameDisplay = forwardRef<AviatorCanvasRef, GameDisplayProps>(
-  ({ multiplier, shouldShowBlast = false, setShouldShowBlast }, ref) => {
+  ({ multiplier, shouldShowBlast = false, setShouldShowBlast, isParallaxMoving = false }, ref) => {
 
     const [isBlastPlaying, setIsBlastPlaying] = useState(false)
 
@@ -33,7 +34,7 @@ const GameDisplay = forwardRef<AviatorCanvasRef, GameDisplayProps>(
     return (
       <div className="relative flex-1">
         <div className="absolute inset-0 ">
-          <ParallaxImage multiplier={multiplier} />
+          <ParallaxImage multiplier={multiplier} isMoving={isParallaxMoving} />
           <AviatorCanvas ref={ref} multiplier={multiplier} />
           <BlastVideo isPlaying={isBlastPlaying} setIsBlastPlaying={handleBlastComplete} />
           

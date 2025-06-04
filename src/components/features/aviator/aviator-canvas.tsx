@@ -4,6 +4,7 @@ import { useEffect, useRef, forwardRef, useImperativeHandle } from "react"
 import * as THREE from "three"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js"
+import { gsap } from "gsap"
 
 interface AviatorCanvasProps {
   multiplier: number
@@ -14,6 +15,9 @@ export interface AviatorCanvasRef {
   pauseAnimation: () => void
   toggleAnimation: () => void
   isAnimationPlaying: () => boolean
+  startFlyingSequence: () => void
+  resetToInitialPosition: () => void
+  flyAway: () => void
 }
 
 const AviatorCanvas = forwardRef<AviatorCanvasRef, AviatorCanvasProps>(
@@ -30,6 +34,9 @@ const AviatorCanvas = forwardRef<AviatorCanvasRef, AviatorCanvasProps>(
       actions: THREE.AnimationAction[]
       animationId: number | null
       isAnimationPlaying: boolean
+      initialPosition: THREE.Vector3
+      centerPosition: THREE.Vector3
+      flyAwayPosition: THREE.Vector3
     } | null>(null)
 
     useImperativeHandle(ref, () => ({
@@ -61,6 +68,94 @@ const AviatorCanvas = forwardRef<AviatorCanvasRef, AviatorCanvasProps>(
       },
       isAnimationPlaying: () => {
         return sceneRef.current?.isAnimationPlaying ?? false
+      },
+      startFlyingSequence: () => {
+        if (sceneRef.current?.plane) {
+          // Start plane animations by unpausing them
+          sceneRef.current.actions.forEach(action => {
+            action.paused = false
+            if (!action.isRunning()) {
+              action.play()
+            }
+          })
+          sceneRef.current.isAnimationPlaying = true
+          
+          // Animate plane from initial position to fly away position over 2 seconds
+          gsap.to(sceneRef.current.plane.position, {
+            x: sceneRef.current.flyAwayPosition.x,
+            y: sceneRef.current.flyAwayPosition.y,
+            z: sceneRef.current.flyAwayPosition.z,
+            duration: 2,
+            ease: "power2.out"
+          })
+        }
+      },
+      resetToInitialPosition: () => {
+        if (sceneRef.current?.plane) {
+          // Stop and reset animations
+          sceneRef.current.actions.forEach(action => {
+            action.stop()
+            action.reset()
+            action.paused = true
+          })
+          sceneRef.current.isAnimationPlaying = false
+          
+          // Reset plane to initial position
+          sceneRef.current.plane.position.copy(sceneRef.current.initialPosition)
+          
+          // Reset scale and visibility
+          sceneRef.current.plane.scale.set(2, 2, 2) // Original scale
+          sceneRef.current.plane.visible = true
+          
+          // Kill any ongoing GSAP animations on the plane
+          gsap.killTweensOf(sceneRef.current.plane)
+          gsap.killTweensOf(sceneRef.current.plane.position)
+          gsap.killTweensOf(sceneRef.current.plane.scale)
+        }
+      },
+      flyAway: () => {
+        if (sceneRef.current?.plane && sceneRef.current?.camera) {
+          // Calculate top-right corner position relative to camera view
+          const camera = sceneRef.current.camera
+          const distance = 15 // Distance from camera
+          
+          // Get screen space top-right corner in world coordinates
+          const topRightPosition = new THREE.Vector3(
+            camera.position.x + 8,  // Right side
+            camera.position.y + 6,  // Top side  
+            camera.position.z + distance // Away from camera
+          )
+          
+          // Animate plane to top-right and scale down
+          const plane = sceneRef.current.plane
+          
+          gsap.to(plane.position, {
+            x: topRightPosition.x,
+            y: topRightPosition.y,
+            z: topRightPosition.z,
+            duration: 3,
+            ease: "power2.out"
+          })
+          
+          gsap.to(plane.scale, {
+            x: 0.1,
+            y: 0.1,
+            z: 0.1,
+            duration: 3,
+            ease: "power2.out"
+          })
+          
+          // Fade out by reducing opacity
+          gsap.to(plane, {
+            opacity: 0,
+            duration: 3,
+            ease: "power2.out",
+            onComplete: () => {
+              // Make plane invisible
+              plane.visible = false
+            }
+          })
+        }
       }
     }))
 
@@ -140,10 +235,14 @@ const AviatorCanvas = forwardRef<AviatorCanvasRef, AviatorCanvasProps>(
         }
       )
 
-
       // Camera position
       camera.position.set(-3,0.5,0)
       camera.lookAt(0, 0, 0)
+
+      // Define positions
+      const centerPosition = new THREE.Vector3(0, 0, 0) // Current center position
+      const initialPosition = new THREE.Vector3(-6, -3, -4) // Far away, bottom left
+      const flyAwayPosition = new THREE.Vector3(8, 4, 6) // Far away from camera, top right
 
       // Handle resize function
       const handleResize = () => {
@@ -176,6 +275,9 @@ const AviatorCanvas = forwardRef<AviatorCanvasRef, AviatorCanvasProps>(
           const center = box.getCenter(new THREE.Vector3())
           plane.position.sub(center)
           
+          // Set initial position (far away, bottom left)
+          plane.position.copy(initialPosition)
+          
           // Setup animations if they exist
           if (gltf.animations && gltf.animations.length > 0) {
             mixer = new THREE.AnimationMixer(plane)
@@ -185,11 +287,11 @@ const AviatorCanvas = forwardRef<AviatorCanvasRef, AviatorCanvasProps>(
             animations.forEach((clip) => {
               const action = mixer!.clipAction(clip)
               action.setLoop(THREE.LoopRepeat, Infinity)
+              // Start animations but pause them immediately
+              action.play()
+              action.paused = true
               actions.push(action)
             })
-            
-            // Start animations by default
-            actions.forEach(action => action.play())
             
             console.log(`Loaded ${animations.length} animations:`, animations.map(clip => clip.name))
           } else {
@@ -236,7 +338,10 @@ const AviatorCanvas = forwardRef<AviatorCanvasRef, AviatorCanvasProps>(
             sceneRef.current.mixer = mixer
             sceneRef.current.animations = animations
             sceneRef.current.actions = actions
-            sceneRef.current.isAnimationPlaying = actions.length > 0
+            sceneRef.current.isAnimationPlaying = false // Start with animations paused
+            sceneRef.current.initialPosition = initialPosition
+            sceneRef.current.centerPosition = centerPosition
+            sceneRef.current.flyAwayPosition = flyAwayPosition
           }
         },
         (progress) => {
@@ -258,6 +363,9 @@ const AviatorCanvas = forwardRef<AviatorCanvasRef, AviatorCanvasProps>(
         actions,
         animationId: null,
         isAnimationPlaying: false,
+        initialPosition,
+        centerPosition,
+        flyAwayPosition,
       }
 
       // Animation loop
@@ -296,7 +404,6 @@ const AviatorCanvas = forwardRef<AviatorCanvasRef, AviatorCanvasProps>(
         }
       }
     }, [])
-
 
     return (
       <div ref={containerRef} className="absolute inset-0" style={{ pointerEvents: 'auto' }}>
