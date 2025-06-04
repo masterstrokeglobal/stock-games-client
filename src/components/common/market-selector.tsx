@@ -5,15 +5,16 @@ import useUSAMarketAvailable from "@/hooks/use-usa-available";
 import { cn } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
 import User from "@/models/user";
-
+import { RoundRecordGameType } from "@/models/round-record";
 
 type MarketSelectorProps = {
     title: string;
     className?: string;
     variant?: 'aviator' | 'all';
+    roundRecordType?: RoundRecordGameType;
 }
 
-const MarketSelector = ({ title, className, variant = 'all' }: MarketSelectorProps) => {
+const MarketSelector = ({ title, className, variant = 'all', roundRecordType = RoundRecordGameType.DERBY }: MarketSelectorProps) => {
     const isNSEAvailable = useNSEAvailable();
     const isUSAMarketAvailable = useUSAMarketAvailable();
 
@@ -31,6 +32,8 @@ const MarketSelector = ({ title, className, variant = 'all' }: MarketSelectorPro
         setGameType(market);
         setMarketSelected(true);
     }
+
+    const isMCXAllowed = roundRecordType === RoundRecordGameType.HEAD_TAIL;
 
     const markets = [
         {
@@ -59,6 +62,13 @@ const MarketSelector = ({ title, className, variant = 'all' }: MarketSelectorPro
             allowed: isUSAMarketAllowed,
             color: "from-green-400 to-emerald-600",
             icon: "🇺🇸"
+        },
+        {
+            id: SchedulerType.MCX,
+            title: "MCX",
+            subtitle: "MCX Stock Market",
+            available: true,
+            allowed: isMCXAllowed,
         }
     ];
 

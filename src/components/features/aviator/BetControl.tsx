@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/button"
 
 interface BetControlProps {
-  betAmount: string
-  setBetAmount: (amount: string) => void
-  onPlaceBet: (amount: string) => void
+  betAmount: number,
+  setBetAmount: (amount: number) => void
+  onPlaceBet: (amount: number) => void
+  onCashOut: () => void
+  isPlaced?: boolean
+  cashOutDisabled?: boolean
   disabled?: boolean
 }
 
@@ -11,13 +14,16 @@ export default function BetControl({
   betAmount,
   setBetAmount,
   onPlaceBet,
+  onCashOut,
+  isPlaced = false,
   disabled = false,
+  cashOutDisabled = false,
 }: BetControlProps) {
   const quickBetOptions = [
-    { value: "500", label: "500" },
-    { value: "2000", label: "2K" },
-    { value: "5000", label: "5K" },
-    { value: "15000", label: "15K" },
+    { value: 500, label: "500" },
+    { value: 2000, label: "2K" },
+    { value: 5000, label: "5K" },
+    { value: 15000, label: "15K" },
   ]
 
   return (
@@ -29,28 +35,38 @@ export default function BetControl({
         <input
           type="text"
           value={betAmount}
-          onChange={(e) => setBetAmount(e.target.value)}
+          onChange={(e) => setBetAmount(Number(e.target.value))}
           className="bg-transparent text-white w-full p-2 focus:outline-none"
-          disabled={disabled}
+          disabled={disabled || isPlaced}
         />
       </div>
 
-      <Button
-        className={`w-full bg-blue-500 hover:bg-blue-600 text-white ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-        onClick={() => onPlaceBet(betAmount)}
-        disabled={disabled}
-      >
-        {disabled ? 'BETTING CLOSED' : 'PLACE BET'}
-      </Button>
+      {isPlaced ? (
+        <Button
+          className="w-full bg-green-500 hover:bg-green-600 text-white"
+          onClick={onCashOut}
+          disabled={cashOutDisabled}
+        >
+          CASH OUT
+        </Button>
+      ) : (
+        <Button
+          className={`w-full bg-blue-500 hover:bg-blue-600 text-white ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+          onClick={() => onPlaceBet(betAmount)}
+          disabled={disabled}
+        >
+          {disabled ? 'BETTING CLOSED' : 'PLACE BET'}
+        </Button>
+      )}
 
       <div className="flex justify-between">
         {quickBetOptions.map((option) => (
           <Button
             key={option.value}
             variant="outline"
-            className={`bg-gray-700 hover:bg-gray-600 text-white border-none ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`bg-gray-700 hover:bg-gray-600 text-white border-none ${(disabled || isPlaced) ? 'opacity-50 cursor-not-allowed' : ''}`}
             onClick={() => setBetAmount(option.value)}
-            disabled={disabled}
+            disabled={disabled || isPlaced}
           >
             {option.label}
           </Button>

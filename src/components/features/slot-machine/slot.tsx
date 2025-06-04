@@ -26,7 +26,7 @@ export const Slot = ({ roundRecord }: { roundRecord: RoundRecord }) => {
             localStocks = localStocks.sort((a: any, b: any) => a.name.localeCompare(b.name))
 
             localStocks.forEach((stock: any, index: any) => {
-                if (stock.price) newStockStates[index] = parseInt(stock.price.toString().slice(-1))
+                if (stock.price) newStockStates[index] = parseInt(parseFloat(stock.price).toFixed(2).toString().slice(-1));
             })
             setStockStates(newStockStates)
         }

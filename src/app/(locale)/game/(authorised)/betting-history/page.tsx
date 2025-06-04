@@ -17,8 +17,8 @@ import {
 import { useGameRecordHistory } from "@/react-query/game-record-queries";
 import dayjs from "dayjs";
 import { Loader2 } from "lucide-react";
-import { useMemo, useState } from "react";
 import { useTranslations } from 'next-intl';
+import { useMemo, useState } from "react";
 
 const BettingHistoryPage = () => {
     const t = useTranslations('betting-history');
