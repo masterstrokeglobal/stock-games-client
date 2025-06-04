@@ -17,7 +17,8 @@ export enum RoundRecordGameType {
     HEAD_TAIL = "head_tail",
     WHEEL_OF_FORTUNE = "wheel_of_fortune",
     AVIATOR = "aviator",
-    DICE = "dice"    
+    DICE = "dice",
+    RED_BLACK = "red_black",    
 }
 
 export const WHEEL_COLOR_SEQUENCE = [
@@ -140,6 +141,7 @@ export class RoundRecord {
     roundRecordGameType: RoundRecordGameType;
     winningId?: number[];
     coinTossPair?: CoinTossPair;
+    todayCount?: number;
     createdAt: Date;
     winningMarket?: MarketItem;
     updatedAt: Date;
@@ -173,6 +175,7 @@ export class RoundRecord {
         this.coinTossPair = data.coinTossPair ? new CoinTossPair(data.coinTossPair) : undefined;
         this.winningSide = data.winningSide || undefined;
         this.marketColors = data.marketColors || [];
+        this.todayCount = data.todayCount || -1;
     }
 
     getSlotValues(code: string): { upperValue: number; lowerValue: number } {

@@ -51,7 +51,7 @@ export const RedBlackRouletteBettingGrid = ({
   useEffect(() => {
     if (!gridRef.current || typeof window === "undefined") return;
 
-    const targetLayout = gameState.isGameOver ? "2-columns" : "4-columns";
+    const targetLayout = gameState.isPlaceOver ? "2-columns" : "4-columns";
 
     // If the current layout is already the target, no transition needed
     if (currentLayout === targetLayout) return;
@@ -76,7 +76,7 @@ export const RedBlackRouletteBettingGrid = ({
         onComplete: () => {
           console.log(`Switched to ${newLayout} layout`);
           
-          if (!gameState.isGameOver) {
+          if (!gameState.isPlaceOver) {
             gsap.to(timerRef.current, {
               duration: 1,
               y: -50,
@@ -98,7 +98,7 @@ export const RedBlackRouletteBettingGrid = ({
 
     // Set initial layout class
     gridRef.current.classList.add(`shuffle-grid-${targetLayout}`);
-  }, [currentLayout, gridAnimationDuration, gameState.isGameOver]);
+  }, [currentLayout, gridAnimationDuration, gameState.isPlaceOver]);
 
   const getCodeByIndex = (index: number) => {
     return `${roundRecord.market[index - 1]?.codeName}`;
