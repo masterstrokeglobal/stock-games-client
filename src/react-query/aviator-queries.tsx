@@ -1,8 +1,7 @@
+import { AviatorPlacement } from "@/models/aviator-placement";
 import { SchedulerType } from "@/models/market-item";
 import { useQuery } from "@tanstack/react-query";
 import aviatorAPI from "../lib/axios/aviator-API";
-import { RoundRecord } from "@/models/round-record";
-import { AviatorPlacement } from "@/models/aviator-placement";
 
 type AviatorRoundHistory = {
     time: Date;

@@ -244,7 +244,6 @@ const StockCardStack = ({ roundRecord }: { roundRecord: RoundRecord}) => {
 
   const { stocks: marketItems } = useLeaderboard(roundRecord);
   const { data: myStockSlotJackpotGameRecord } = useGetMyStockSlotGameRecord(roundRecord?.id);
-  const isPlaceOver = usePlacementOver(roundRecord);
 
   const bettedMarketItems = useMemo(() => {
     const bettedMarketItems = myStockSlotJackpotGameRecord?.filter((record) => record.placement === StockJackpotPlacementType.HIGH || record.placement === StockJackpotPlacementType.LOW)

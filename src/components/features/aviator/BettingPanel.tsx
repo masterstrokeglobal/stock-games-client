@@ -1,19 +1,10 @@
-import { useMemo, useState } from "react";
-import BetControl from "./BetControl"
-import { RoundRecord } from "@/models/round-record";
+import { AviatorHookReturn } from "@/hooks/use-aviator";
 import { usePlacementOver } from "@/hooks/use-current-game";
-import useAviator, { AviatorHookReturn } from "@/hooks/use-aviator";
-import { SchedulerType } from "@/models/market-item";
+import { RoundRecord } from "@/models/round-record";
 import { useAviatorMyPlacement } from "@/react-query/aviator-queries";
-import { AviatorPlacement } from "@/models/aviator-placement";
-// Game phases enum (matching the one in aviator.tsx)
-enum GamePhase {
-  BETTING_OPEN = "BETTING_OPEN",
-  BETTING_CLOSED = "BETTING_CLOSED",
-  GAME_RUNNING = "GAME_RUNNING",
-  GAME_ENDED = "GAME_ENDED",
-  WAITING = "WAITING"
-}
+import { useMemo, useState } from "react";
+import BetControl from "./BetControl";
+
 
 interface BettingPanelProps {
   roundRecord: RoundRecord

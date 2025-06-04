@@ -1,17 +1,17 @@
 "use client"
 
+import TimeDisplay from "@/components/common/bet-locked-banner"
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
+import useAviator from "@/hooks/use-aviator"
+import { useGameType } from "@/hooks/use-market-selector"
 import useWindowSize from "@/hooks/use-window-size"
 import { cn } from "@/lib/utils"
-import { RoundRecord, RoundRecordGameType } from "@/models/round-record"
+import { RoundRecord } from "@/models/round-record"
 import { useEffect, useRef, useState } from "react"
 import BettingPanel from "./BettingPanel"
 import GameDisplay from "./GameDisplay"
 import LastRoundsPanel from "./LastRoundsPanel"
 import { AviatorCanvasRef } from "./aviator-canvas"
-import useAviator from "@/hooks/use-aviator"
-import { useGameType } from "@/hooks/use-market-selector"
-import TimeDisplay from "@/components/common/bet-locked-banner"
 // Game phases enum
 enum GamePhase {
   BETTING_OPEN = "BETTING_OPEN",
@@ -20,26 +20,6 @@ enum GamePhase {
   GAME_ENDED = "GAME_ENDED",
   WAITING = "WAITING"
 }
-
-interface FormattedTime {
-  minutes: number;
-  seconds: number;
-  formatted: string;
-  raw: number;
-}
-
-const formatTime = (ms: number): FormattedTime => {
-  const seconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-
-  return {
-    minutes,
-    seconds: remainingSeconds,
-    formatted: `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`,
-    raw: ms
-  };
-};
 
 
 type AviatorProps = {
@@ -58,12 +38,11 @@ export default function Aviator({ className, roundRecord, token }: AviatorProps)
   });
 
   console.log(aviator.data)
-  const nextRoundIdRef = useRef(13)
 
   const { isMobile } = useWindowSize();
 
-  const [multiplier, setMultiplier] = useState(1.0)
-  const [gamePhase, setGamePhase] = useState<GamePhase>(GamePhase.WAITING)
+  const [, setMultiplier] = useState(1.0)
+  const [, setGamePhase] = useState<GamePhase>(GamePhase.WAITING)
 
   const [shouldShowBlast, setShouldShowBlast] = useState(false)
 
@@ -91,21 +70,7 @@ export default function Aviator({ className, roundRecord, token }: AviatorProps)
     }
   }
 
-  // Add round to history
-  const addRoundToHistory = (finalMultiplier: number, duration: number, status: "crashed" | "flew_away") => {
-    const now = new Date()
-    const timeString = now.toLocaleTimeString('en-US', {
-      hour12: false,
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
-    })
 
-    // Use ref to ensure unique IDs
-    const uniqueId = nextRoundIdRef.current
-    nextRoundIdRef.current += 1
-
-  }
 
   // Main game simulation logic
   useEffect(() => {
@@ -191,7 +156,6 @@ export default function Aviator({ className, roundRecord, token }: AviatorProps)
       setGamePhase(GamePhase.GAME_ENDED)
 
       // Add to history
-      addRoundToHistory(finalMultiplier, duration, status)
 
       // Show blast animation if crashed
       if (status === "crashed") {
@@ -228,20 +192,6 @@ export default function Aviator({ className, roundRecord, token }: AviatorProps)
     }
   }, []) // Empty dependency array - only run once on mount
 
-  const getStatusText = () => {
-    switch (gamePhase) {
-      case GamePhase.BETTING_OPEN:
-        return "Betting Open"
-      case GamePhase.BETTING_CLOSED:
-        return "Betting Closed"
-      case GamePhase.GAME_RUNNING:
-        return "Flying..."
-      case GamePhase.WAITING:
-        return "Next Round Starting..."
-      default:
-        return ""
-    }
-  }
 
 
   const toggleLastRounds = () => {

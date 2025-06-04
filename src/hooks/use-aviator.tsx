@@ -47,6 +47,7 @@ class WebSocketManager {
                     const parsedData = JSON.parse(event.data);
                     this.listeners[type].forEach(listener => listener(parsedData));
                 } catch (err) {
+                    console.log(err);
                     this.errorListeners[type].forEach(listener => listener('Failed to parse websocket data'));
                 }
             };
@@ -163,7 +164,7 @@ const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: 
             if (event.type === WebSocketEventType.ROUND_CREATED) {
                 const round = event.round.roundRecord;
                 toast.success("new Round Select Your Market");
-                queryClient.setQueryData(["current-round-record", type, RoundRecordGameType.AVIATOR], (oldData: any) => {
+                queryClient.setQueryData(["current-round-record", type, RoundRecordGameType.AVIATOR], () => {
                     return {
                         data: {
                             roundRecords: [round]
