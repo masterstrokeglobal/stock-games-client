@@ -59,7 +59,7 @@ export default function LastRoundsPanel() {
                     <span className="text-gray-300 text-sm font-mono whitespace-nowrap w-24 block truncate">{round.name}</span>
                   </td>
                   <td className="py-2 text-center">
-                    <span className={`text-sm font-bold ${getMultiplierColor(round.multiplier.toString())}`}>{round.multiplier}</span>
+                    <span className={`text-sm font-bold ${getMultiplierColor(round?.multiplier?.toString() ?? "1")}`}>{round?.multiplier}</span>
                   </td>
                   <td className="py-2">
                     <div className="flex justify-center">

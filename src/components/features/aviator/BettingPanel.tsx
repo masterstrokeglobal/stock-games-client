@@ -36,8 +36,9 @@ export default function BettingPanel({
     return myPlacement ? myPlacement.length > 0 : false;
   }, [myPlacement]);
 
-
-  console.log(isPlaceOver, isPlaced)
+  const isCashoutdone = useMemo(() => {
+    return myPlacement ? myPlacement.findIndex((placement) => placement.isWinner) !== -1 : false;
+  }, [myPlacement]);
 
   return (
     <div className="bottom-0 left-0 right-0 p-4">
@@ -49,7 +50,7 @@ export default function BettingPanel({
             setBetAmount={setBetAmount}
             onPlaceBet={onPlaceBet}
             isPlaced={isPlaced}
-            cashOutDisabled={!(isPlaceOver && isPlaced)}
+            cashOutDisabled={!(isPlaceOver && isPlaced) || isCashoutdone}
             disabled={isPlaceOver || isPlaced}
           />
         </div>

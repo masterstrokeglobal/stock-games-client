@@ -136,11 +136,12 @@ const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: 
             if (event.type === WebSocketEventType.BET_PLACED) {
                 toast.success("Bet placed successfully");
                 queryClient.invalidateQueries({ queryKey: ["aviator-my-placement", roundRecord.id] });
+                queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === "user" && query.queryKey[1] == 'wallet' });
             }
             if (event.type === WebSocketEventType.CASH_OUT_SUCCESS) {
                 toast.success("Cash out successful");
                 queryClient.invalidateQueries({ queryKey: ["aviator-my-placement", roundRecord.id] });
-            }
+                queryClient.invalidateQueries({predicate: (query) =>query.queryKey[0] === "user" && query.queryKey[1] == 'wallet'});            }
             if (event.type === WebSocketEventType.ITEMS_STATUS) {
                 const selectedMarketItem = roundRecord.market.find((item: MarketItem) => stockSelectedAviator === item.id?.toString());
 
