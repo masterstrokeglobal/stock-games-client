@@ -1,20 +1,16 @@
 "use client";
-import BackToLobbiesButton from "@/components/features/game/back-to-lobbies-button";
-import { MobileHeader } from "@/components/features/game/common/mobile-components";
-import StockSelectionGridSinglePlayer from "@/components/features/game/single-player/mmf/mini-mutual-fund-bet-single-player";
 import Navbar from "@/components/features/game/navbar";
+import StockSelectionGridSinglePlayer from "@/components/features/game/single-player/mmf/mini-mutual-fund-bet-single-player";
+import StockProgressChart from "@/components/features/game/single-player/mmf/mmf-stock-chart";
 import { useHorseRaceSound } from "@/context/audio-context";
 import { useCurrentGame, useIsPlaceOver } from "@/hooks/use-current-game";
 import { useRoundRecordGameType } from "@/hooks/use-game-type";
 import useWindowSize from "@/hooks/use-window-size";
 import { useSinglePlayerGameStore } from "@/store/single-player-game-store";
 import { useEffect } from "react";
-import MiniMutualFundLeaderBoard from "@/components/features/game/single-player/mmf/mini-mutual-fund-leaderboard";
-import CurrentBetsMiniMutualFunds from "@/components/features/game/single-player/mmf/current-bets-mini-mutual-funds";
-import HorseRace from "@/components/features/horse-animation/horse";
 
 const borderStyle = {
-    borderColor: "#3799ED",
+    borderColor: "#22c55e", // Changed to green
     borderWidth: "1px",
     borderStyle: "solid",
 };
@@ -32,17 +28,15 @@ const GamePage = () => {
         roundRecord: storeRoundRecord
     } = useSinglePlayerGameStore();
 
-
     // Update store when data changes
     useEffect(() => {
         setRoundRecord(roundRecordData || null);
     }, [roundRecordData, setRoundRecord]);
 
-
     const roundRecord = storeRoundRecord ? storeRoundRecord : null;
     useHorseRaceSound(roundRecord);
 
-    if (isRoundLoading || !storeRoundRecord) return <div>Loading...</div>;
+    if (isRoundLoading || !storeRoundRecord) return <div className="text-red-500">Loading...</div>;
 
     return (
         <section className="bg-primary-game pt-20 md:h-screen">
@@ -50,57 +44,18 @@ const GamePage = () => {
             {!isMobile && <main className="grid grid-cols-12 grid-rows-5 gap-4 h-full p-4">
                 <div
                     style={borderStyle}
-                    className="xl:col-span-7 col-span-8 row-span-2 rounded-2xl overflow-hidden">
-                    {roundRecord && <HorseRace roundRecord={roundRecord} />}
+                    className="xl:col-span-12 col-span-4 row-span-2 rounded-2xl bg-green-900">
+                    <StockProgressChart />
                 </div>
                 <div
                     style={borderStyle}
-                    className="xl:col-span-5 col-span-4 row-span-2 rounded-2xl">
-                    <CurrentBetsMiniMutualFunds />
-                </div>
-                <div
-                    style={borderStyle}
-                    className="xl:col-span-7 col-span-8 row-span-3 rounded-2xl">
+                    className="xl:col-span-12 col-span-12 overflow-hidden row-span-3 rounded-2xl bg-green-900">
                     {roundRecord &&
                         <StockSelectionGridSinglePlayer />
                     }
                 </div>
-                <div
-                    style={borderStyle}
-                    className="xl:col-span-5 col-span-4 row-span-3 rounded-2xl">
-                    {roundRecord && <MiniMutualFundLeaderBoard />}
-                </div>
             </main>}
 
-            {(isMobile && roundRecord) &&
-                <section className="text-white">
-                    {roundRecord &&
-                        <MobileHeader
-                            roundRecord={roundRecord}
-                        />
-                    }
-
-                    {roundRecord && <HorseRace roundRecord={roundRecord} />}
-
-                    <BackToLobbiesButton />
-
-                    {!isPlaceOver &&
-                        <main className="bg-[#0A1634]">
-                            <div className="px-2">
-                                {roundRecord &&
-                                    <StockSelectionGridSinglePlayer />
-                                }
-                            </div>
-                        </main>
-                    }
-                    {roundRecord &&
-                        <MiniMutualFundLeaderBoard />
-                    }
-                    {isPlaceOver && roundRecord &&
-                        <CurrentBetsMiniMutualFunds />
-                    }
-                </section>
-            }
         </section>
     );
 };

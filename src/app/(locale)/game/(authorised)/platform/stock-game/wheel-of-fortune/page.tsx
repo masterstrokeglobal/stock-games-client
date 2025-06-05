@@ -2,6 +2,7 @@
 import TimeDisplay from '@/components/common/bet-locked-banner';
 import GameLoadingScreen from '@/components/common/game-loading-screen';
 import MarketSelector from '@/components/common/market-selector';
+import StockGameHeader from '@/components/common/stock-game-header';
 import { BettingArea } from '@/components/features/wheel-of-fortune/betting-area';
 import GameBoard from '@/components/features/wheel-of-fortune/game-board';
 import { StockPriceDisplay } from '@/components/features/wheel-of-fortune/stock-price';
@@ -13,7 +14,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 
 const WheelOfFortune = () => {
-    const { marketSelected } = useMarketSelector();
+    const { marketSelected, setMarketSelected } = useMarketSelector();
     const [betAmount, setBetAmount] = useState<number>(100);
     const {
         roundRecord,
@@ -33,7 +34,6 @@ const WheelOfFortune = () => {
         const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 2000;
 
         const timer = setTimeout(() => {
-            console.log("refetching round record");
             refetch();
         }, resultFetchTime);
         return () => clearTimeout(timer);
@@ -52,8 +52,9 @@ const WheelOfFortune = () => {
     if (isLoading || !roundRecord) return <GameLoadingScreen className='min-h-[calc(100svh-100px)]' />
 
     return (
-        <section className="flex flex-col  items-center justify-center min-h-[calc(100svh-100px)]">
-            <div className="flex flex-col min-h-screen max-w-2xl w-full mx-auto bg-gray-900 border border-gray-600 rounded-lg text-white overflow-hidden">
+        <section className="flex flex-col  items-center justify-center min-h-[calc(100svh-100px)] -md:mx-12 -mx-4">
+            <div className="flex flex-col min-h-screen max-w-2xl w-full mx-auto bg-gray-900 border border-gray-600 md:rounded-lg text-white overflow-hidden">
+                <StockGameHeader onBack={() => setMarketSelected(false)} title="Wheel of Fortune" />
                 <StockPriceDisplay roundRecord={roundRecord} winningMarketId={winningMarketId} />
                 <GameBoard roundRecord={roundRecord} amount={betAmount}>
                     <TimeDisplay className="absolute top-0 left-1/2 -translate-x-1/2 z-10 w-full max-w-sm  " roundRecord={roundRecord} />

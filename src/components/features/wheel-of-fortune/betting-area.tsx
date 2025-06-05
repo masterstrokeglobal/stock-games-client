@@ -27,10 +27,6 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
   const showResult = useShowResults(roundRecord, placements ?? []);
 
-  // const aggregatedPlacements = placements?.reduce((acc, placement) => {
-  //   acc[placement.placementColor] = (acc[placement.placementColor] || 0) + placement.amount;
-  //   return acc;
-  // }, {} as Record<WheelColor, number>);
 
   if (isPlaceOver && placements?.length) {
     return (

@@ -217,7 +217,7 @@ export const useDemoLogin = () => {
     },
     onError: (error: any) => {
       toast.error(
-        error.response?.data.message ?? "Error logging in with Google"
+        error.response?.data.message ?? "Error logging in with Demo"
       );
     },
   });
