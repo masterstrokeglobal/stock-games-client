@@ -14,7 +14,7 @@ type MarketSelectorProps = {
     roundRecordType?: RoundRecordGameType;
 }
 
-const MarketSelector = ({ title, className, variant = 'all', roundRecordType = RoundRecordGameType.DERBY }: MarketSelectorProps) => {
+const MarketSelector = ({ title, className, roundRecordType = RoundRecordGameType.DERBY }: MarketSelectorProps) => {
     const isNSEAvailable = useNSEAvailable();
     const isUSAMarketAvailable = useUSAMarketAvailable();
 
@@ -40,7 +40,7 @@ const MarketSelector = ({ title, className, variant = 'all', roundRecordType = R
             id: SchedulerType.NSE,
             title: "NSE",
             subtitle: "National Stock Exchange",
-            available: variant === 'all' ? isNSEAvailable : true,
+            available: isNSEAvailable,
             allowed: isNSEAllowed,
             color: "from-blue-400 to-blue-600",
             icon: "📈"
@@ -58,7 +58,7 @@ const MarketSelector = ({ title, className, variant = 'all', roundRecordType = R
             id: SchedulerType.USA_MARKET,
             title: "USA",
             subtitle: "US Stock Market",
-            available: variant === 'all' ? isUSAMarketAvailable : true,
+            available: isUSAMarketAvailable,
             allowed: isUSAMarketAllowed,
             color: "from-green-400 to-emerald-600",
             icon: "🇺🇸"
