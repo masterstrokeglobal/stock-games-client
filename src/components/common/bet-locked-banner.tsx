@@ -2,7 +2,7 @@ import { useGameState } from "@/hooks/use-current-game"
 import { cn } from "@/lib/utils"
 import { RoundRecord } from "@/models/round-record"
 
-const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, className?: string }) => {
+const TimeDisplay = ({ roundRecord, className ,isAviator}: { roundRecord: RoundRecord, className?: string ,isAviator?: boolean}) => {
   const { gameTimeLeft, isPlaceOver, placeTimeLeft, isGameOver } = useGameState(roundRecord)
   const statusText = isPlaceOver ? isGameOver ? "Game Over" : "Betting Closed" : "Betting Open"
 
@@ -25,7 +25,7 @@ const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, cla
             opacity: gameTimeLeft.raw % 2 === 0 ? 1 : 0.5
           }}
         >
-          {!isPlaceOver ? placeTimeLeft.seconds : gameTimeLeft.seconds}
+          {!isPlaceOver ? placeTimeLeft.seconds : isAviator ? "--" : gameTimeLeft.seconds}
         </span>
       </div>
     </div>

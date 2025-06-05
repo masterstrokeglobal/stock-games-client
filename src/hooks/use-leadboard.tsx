@@ -105,7 +105,6 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
             try {
                 setConnectionStatus('connecting');
                 console.log('Connecting to WebSocket', roundRecord?.type);
-
                 if (roundRecord?.type === SchedulerType.CRYPTO) {
                     socketRef.current = new WebSocket(process.env.NEXT_PUBLIC_CRYPTO_WEBSOCKET_URL as string);
                     socketRef.current.onopen = () => {
@@ -126,7 +125,6 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
 
                                 latestDataRef.current = latestDataRef.current.map(stock => {
                                     if (stock.bitcode === streamData.s) {
-
                                         return {
                                             ...stock,
                                             price: currentPrice,
@@ -136,7 +134,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                                             currency: stock.currency,
                                             stream: stock.stream,
                                             bitcode: stock.bitcode,
-                                            codeName: stock.codeName // Ensure codeName is included
+                                            codeName: stock.codeName
                                         };
                                     }
                                     return stock;
@@ -155,7 +153,6 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                     socketRef.current = new WebSocket(process.env.NEXT_PUBLIC_NSE_WEBSOCKET_URL as string);
                     socketRef.current.onopen = () => {
                         setConnectionStatus('connected');
-                        // Connection established - subscription messages can be sent here if needed
                     };
 
                     socketRef.current.onmessage = (message) => {
@@ -166,7 +163,6 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                             const changedStocks = changes.map(change => new NSEMarketItem(change));
 
                             changedStocks.map(changeStock => {
-                                // Skip stocks that are not in the initial list
                                 if (!latestDataRef.current.some(stock => stock.bitcode === changeStock.code)) {
                                     return;
                                 }
@@ -202,17 +198,16 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                                     latestDataRef.current = calculateRanks(latestDataRef.current);
                                 }
                             });
-
                         } catch (error) {
                             console.error('Error processing WebSocket message:', error);
                         }
                     };
                 }
+
                 if (roundRecord.type === SchedulerType.USA_MARKET) {
                     socketRef.current = new WebSocket(process.env.NEXT_PUBLIC_USA_WEBSOCKET_URL as string);
                     socketRef.current.onopen = () => {
                         setConnectionStatus('connected');
-                        // Connection established - subscription messages can be sent here if needed
                     };
 
                     socketRef.current.onmessage = (message) => {
@@ -223,7 +218,6 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                             const changedStocks = changes.map(change => new NSEMarketItem(change));
 
                             changedStocks.map(changeStock => {
-                                // Skip stocks that are not in the initial list
                                 if (!latestDataRef.current.some(stock => stock.bitcode === changeStock.code)) {
                                     return;
                                 }
@@ -259,90 +253,71 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                                     latestDataRef.current = calculateRanks(latestDataRef.current);
                                 }
                             });
-
                         } catch (error) {
                             console.error('Error processing WebSocket message:', error);
                         }
                     };
                 }
-                if (roundRecord.type === SchedulerType.USA_MARKET) {
-                    socketRef.current = new WebSocket(process.env.NEXT_PUBLIC_USA_WEBSOCKET_URL as string);
+
+                if (roundRecord.type === SchedulerType.MCX) {
+                    socketRef.current = new WebSocket(process.env.NEXT_PUBLIC_MCX_WEBSOCKET_URL as string);
                     socketRef.current.onopen = () => {
                         setConnectionStatus('connected');
-                        // Connection established - subscription messages can be sent here if needed
                     };
 
                     socketRef.current.onmessage = (message) => {
                         try {
-                            const changes = JSON.parse(message.data as string) as any[];
-                            if (Array.isArray(changes) && changes.length === 0) return;
+                            console.log("message", message.data);
+                            const data = JSON.parse(message.data as string);
+                            if (!Array.isArray(data) || data.length === 0) return;
 
-                            const changedStocks = changes.map(change => new NSEMarketItem(change));
+                            const innerData = data[0];
+                            if (!Array.isArray(innerData)) return;
 
-                            changedStocks.map(changeStock => {
-                                // Skip stocks that are not in the initial list
-                                if (!latestDataRef.current.some(stock => stock.bitcode === changeStock.code)) {
-                                    return;
-                                }
-                                const currentPrice = parseFloat(changeStock.price.toString());
-                                const { initialPrice, changePercent } = processPrice(
-                                    changeStock.code,
-                                    currentPrice
-                                );
+                            const today = new Date();
+                            const contractsByCommodity: {
+                                [key: string]: Array<{ symbol: string; expiryDate: Date; price: number }>;
+                            } = {};
 
-                                latestDataRef.current = latestDataRef.current.map(stock => {
-                                    if (stock.bitcode === changeStock.code) {
-                                        return {
-                                            ...stock,
-                                            price: currentPrice,
-                                            change_percent: changePercent,
-                                            initialPrice: initialPrice,
-                                            rank: stock.rank,
-                                            stream: stock.stream,
-                                            currency: stock.currency,
-                                            bitcode: stock.bitcode,
-                                            codeName: stock.codeName // Ensure codeName is included
-                                        };
+                            for (let i = 0; i < innerData.length; i += 10) {
+                                const chunk = innerData.slice(i, i + 10);
+                                if (chunk.length >= 3 && chunk[0] !== "") {
+                                    const fullSymbol = chunk[0];
+                                    const symbolMatch = fullSymbol.match(
+                                        /^([A-Z]+M?)([0-9]{1,2}[A-Z]{3}(?:[0-9]{2})?)FUT$/
+                                    );
+                                    
+                                    if (symbolMatch) {
+                                        const baseSymbol = symbolMatch[1];
+                                        const price = parseFloat(chunk[3]);
+                                        
+                                        if (!isNaN(price)) {
+                                            if (!contractsByCommodity[baseSymbol]) {
+                                                contractsByCommodity[baseSymbol] = [];
+                                            }
+                                            
+                                            contractsByCommodity[baseSymbol].push({
+                                                symbol: baseSymbol,
+                                                expiryDate: today,
+                                                price: price
+                                            });
+                                        }
                                     }
-                                    return stock;
-                                });
-
-                                if (getRoundStatus() === 'tracking') {
-                                    latestDataRef.current = calculateRanks(latestDataRef.current);
                                 }
-                            });
-                        } catch (error) {
-                            console.log('Error parsing NSE data', error);
-                        }
-                    };
-                }
-                if (roundRecord.type === SchedulerType.USA_MARKET) {
-                    socketRef.current = new WebSocket(process.env.NEXT_PUBLIC_USA_WEBSOCKET_URL as string);
-                    socketRef.current.onopen = () => {
-                        setConnectionStatus('connected');
-                        // Connection established - subscription messages can be sent here if needed
-                    };
+                            }
 
-                    socketRef.current.onmessage = (message) => {
-                        try {
-                            const changes = JSON.parse(message.data as string) as any[];
-                            if (Array.isArray(changes) && changes.length === 0) return;
+                            for (const commodity in contractsByCommodity) {
+                                const contracts = contractsByCommodity[commodity];
+                                if (contracts.length === 0) continue;
 
-                            const changedStocks = changes.map(change => new NSEMarketItem(change));
-
-                            changedStocks.map(changeStock => {
-                                // Skip stocks that are not in the initial list
-                                if (!latestDataRef.current.some(stock => stock.bitcode === changeStock.code)) {
-                                    return;
-                                }
-                                const currentPrice = parseFloat(changeStock.price.toString());
+                                const currentPrice = contracts[0].price;
                                 const { initialPrice, changePercent } = processPrice(
-                                    changeStock.code,
+                                    commodity,
                                     currentPrice
                                 );
 
                                 latestDataRef.current = latestDataRef.current.map(stock => {
-                                    if (stock.bitcode === changeStock.code) {
+                                    if (stock.bitcode === commodity) {
                                         return {
                                             ...stock,
                                             price: currentPrice,
@@ -351,8 +326,13 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                                             rank: stock.rank,
                                             stream: stock.stream,
                                             bitcode: stock.bitcode,
+                                            codeName: stock.codeName,
                                             currency: stock.currency,
-                                            codeName: stock.codeName // Ensure codeName is included
+                                            horse: stock.horse,
+                                            type: stock.type,
+                                            active: stock.active,
+                                            name: stock.name,
+                                            id: stock.id
                                         };
                                     }
                                     return stock;
@@ -361,12 +341,13 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                                 if (getRoundStatus() === 'tracking') {
                                     latestDataRef.current = calculateRanks(latestDataRef.current);
                                 }
-                            });
+                            }
                         } catch (error) {
-                            console.log('Error parsing NSE data', error);
+                            console.error('Error processing MCX WebSocket message:', error);
                         }
                     };
                 }
+          
             } catch (error) {
                 console.log(error)
                 setConnectionStatus('disconnected');

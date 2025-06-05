@@ -5,7 +5,9 @@ interface BetControlProps {
   setBetAmount: (amount: number) => void
   onPlaceBet: (amount: number) => void
   onCashOut: () => void
-  isPlaced?: boolean
+  isPlaced?: boolean,
+  isCashoutdone?: boolean,
+  cashOutAmount: number
   cashOutDisabled?: boolean
   disabled?: boolean
 }
@@ -16,6 +18,8 @@ export default function BetControl({
   onPlaceBet,
   onCashOut,
   isPlaced = false,
+  isCashoutdone = false,
+  cashOutAmount,
   disabled = false,
   cashOutDisabled = false,
 }: BetControlProps) {
@@ -47,7 +51,7 @@ export default function BetControl({
           onClick={onCashOut}
           disabled={cashOutDisabled}
         >
-          CASH OUT
+          {isCashoutdone ? "CASHED OUT" : "CASH OUT " + cashOutAmount}
         </Button>
       ) : (
         <Button

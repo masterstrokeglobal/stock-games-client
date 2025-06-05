@@ -37,8 +37,6 @@ export default function Aviator({ className, roundRecord, token }: AviatorProps)
     roundRecord: roundRecord
   });
 
-  console.log(aviator.data)
-
   const { isMobile } = useWindowSize();
 
   const [, setMultiplier] = useState(1.0)
@@ -214,7 +212,7 @@ export default function Aviator({ className, roundRecord, token }: AviatorProps)
     <div className={cn("min-h-[calc(100svh-70px)] bg-gradient-to-b from-purple-600 to-pink-500  overflow-hidden", className)}>
       <div className="flex relative flex-col h-[calc(100svh-70px)]">
 
-        <TimeDisplay roundRecord={roundRecord} className="fixed top-14 left-1/2 -translate-x-1/2 z-50  w-full max-w-md" />
+        <TimeDisplay roundRecord={roundRecord} className="fixed top-14 left-1/2 -translate-x-1/2 z-50  w-full max-w-md" isAviator />
         {/* Mobile Last Rounds Toggle Button */}
         {isMobile && (
           <button
@@ -237,7 +235,7 @@ export default function Aviator({ className, roundRecord, token }: AviatorProps)
               isParallaxMoving={isParallaxMoving}
             />
 
-            <BettingPanel roundRecord={roundRecord} aviator={aviator} />
+            <BettingPanel roundRecord={roundRecord} aviator={aviator} multiplier={aviator.data[aviator.data.length - 1]?.multiplier ?? 1} />
           </div>
           <div className="lg:w-96 h-[40vh] lg:h-auto">
             {isMobile ? (

@@ -9,10 +9,12 @@ import BetControl from "./BetControl";
 interface BettingPanelProps {
   roundRecord: RoundRecord
   aviator: AviatorHookReturn
+  multiplier: number
 }
 
 export default function BettingPanel({
   roundRecord,
+  multiplier,
   aviator
 }: BettingPanelProps) {
 
@@ -31,6 +33,11 @@ export default function BettingPanel({
     return myPlacement ? myPlacement.findIndex((placement) => placement.isWinner) !== -1 : false;
   }, [myPlacement]);
 
+  const cashOutAmount = useMemo(() => {
+    const amount = myPlacement ? myPlacement.reduce((acc, placement) => acc + placement.amount, 0) : 0;
+    return parseFloat((amount * multiplier).toFixed(2));
+  }, [myPlacement, multiplier]);
+
   return (
     <div className="bottom-0 left-0 right-0 p-4">
       <div className="bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-lg p-4">
@@ -40,7 +47,9 @@ export default function BettingPanel({
             betAmount={betAmount}
             setBetAmount={setBetAmount}
             onPlaceBet={onPlaceBet}
+            cashOutAmount={cashOutAmount}
             isPlaced={isPlaced}
+            isCashoutdone={isCashoutdone}
             cashOutDisabled={!(isPlaceOver && isPlaced) || isCashoutdone}
             disabled={isPlaceOver || isPlaced}
           />
