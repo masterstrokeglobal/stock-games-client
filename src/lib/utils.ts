@@ -191,10 +191,10 @@ export const INR = (rupees: string | number) => {
 }
 
 export const RED_BLACK_ROULETTE_NUMBERS = [
-  { number: 1, color: 'red' }, { number: 2, color: 'black' }, { number: 3, color: 'red' }, { number: 4, color: 'black' },
-  { number: 5, color: 'red' }, { number: 6, color: 'black' }, { number: 7, color: 'red' }, { number: 8, color: 'black' },
-  { number: 9, color: 'red' }, { number: 10, color: 'black' }, { number: 11, color: 'red' }, { number: 12, color: 'black' },
-  { number: 13, color: 'red' }, { number: 14, color: 'black' }, { number: 15, color: 'red' }, { number: 16, color: 'black' }
+  { number: 1, color: 'red' }, { number: 2, color: 'red' }, { number: 3, color: 'red' }, { number: 4, color: 'red' },
+  { number: 5, color: 'red' }, { number: 6, color: 'red' }, { number: 7, color: 'red' }, { number: 8, color: 'red' },
+  { number: 9, color: 'black' }, { number: 10, color: 'black' }, { number: 11, color: 'black' }, { number: 12, color: 'black' },
+  { number: 13, color: 'black' }, { number: 14, color: 'black' }, { number: 15, color: 'black' }, { number: 16, color: 'black' }
 ];
 
 export const ROULETTE_NUMBERS = [

@@ -19,7 +19,8 @@ import { RoundRecord } from "@/models/round-record";
 import { useCreateAdvanceGameRecord } from "@/react-query/advance-game-record-queries";
 import { useCreateGameRecord } from "@/react-query/game-record-queries";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
+import { toast } from "sonner";
 
 type Props = {
   className?: string;
@@ -30,7 +31,7 @@ type Props = {
 const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
   const t = useTranslations("game");
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
+  // const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
   const gameState = useGameState(roundRecord);
   const currentRound = roundRecord.todayCount || -1;
   const { mutate: mutateGameRecord, isPending: isPlacingBet } =
@@ -65,7 +66,14 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
   ];
 
   const handleColorBet = (numbers: number[]) => {
-    if (gameState.isPlaceOver || isPlacingBet) return;
+    console.log("Round Record:", roundRecord);
+
+    console.log("game state", gameState);
+    console.log("isplacingbet", isPlacingBet);
+    if (gameState.isPlaceOver || isPlacingBet) {
+      toast.error("Betting Time is Over");
+      return;
+    }
     // if (!verifyBetAmount(betAmount)) return;
     const markets = numbers
       .map((number) => roundRecord.market[number - 1]?.id)
@@ -88,7 +96,7 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
   };
 
   const handleRangeBet = (start: number, end: number, numbers: number[]) => {
-    if (gameState.isPlaceOver || isAdvancePlacingBet) return;
+    if (isAdvancePlacingBet) return;
     // if (!verifyBetAmount(betAmount)) return;
     const markets = numbers
       .map((number) => roundRecord.market[number - 1]?.id)
@@ -96,7 +104,7 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
 
     mutateAdvanceGameRecord({
       amount: globalBetAmount,
-      round: roundRecord.id,
+      currentRoundId: roundRecord.id,
       horseNumbers: numbers,
       placementType: PlacementType.ROUND_RANGE,
       market: markets,
@@ -112,26 +120,23 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
     });
   };
 
-  useEffect(() => {
-    if (sectionRef.current) {
-      const sectionHeight = sectionRef.current.offsetHeight ;
-      setScrollAreaHeight(sectionHeight);
-    }
-  }, []);
-
-  console.log("Round Record:", roundRecord);
-
+  // useEffect(() => {
+  //   if (sectionRef.current) {
+  //     const sectionHeight = sectionRef.current.offsetHeight;
+  //     setScrollAreaHeight(sectionHeight);
+  //   }
+  // }, []);
   return (
     <section
       ref={sectionRef}
       className={cn(
-        "md:rounded-2xl w-full bg-zinc-900/95 backdrop-blur-sm overflow-hidden",
+        "w-full bg-zinc-900/95 backdrop-blur-sm overflow-hidden",
         className
       )}
     >
       <ScrollArea
         className="h-full"
-        style={{ height: `${scrollAreaHeight}px` }}
+        // style={{ height: `${scrollAreaHeight}px` }}
         type="auto"
       >
         <div className="w-full bg-gradient-to-r from-red-500/10 via-zinc-900/50 to-zinc-800/10 py-3 px-4 border-b border-zinc-800">
@@ -141,54 +146,69 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
         </div>
         <div className="flex gap-2 md:flex-row flex-col p-4">
           <div className="w-full space-y-6">
-            <div className="bg-zinc-800/30 rounded-xl overflow-hidden">
-              <table className="min-w-full">
-                <thead>
-                  <tr className="flex border-b border-zinc-700/50">
-                    <th className="p-4 text-lg font-semibold text-center bg-gradient-to-r from-red-400 to-zinc-300 bg-clip-text text-transparent w-full">
-                      {t("current-bets")}
-                    </th>
-                  </tr>
-                  <tr className="flex border-b border-zinc-700/50">
-                    <th className="p-4 text-base font-medium text-center flex-1">
-                      <span className="bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">
-                        {t("red")}
-                      </span>
-                    </th>
-                    <th className="p-4 text-base font-medium text-center flex-1">
-                      <span className="bg-gradient-to-r from-zinc-200 to-zinc-300 bg-clip-text text-transparent">
-                        {t("black")}
-                      </span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="flex">
-                    <td className="p-4 text-sm flex-1">
-                      <button
-                        onClick={() => handleColorBet(RED_NUMBERS)}
-                        className="w-full py-3 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all shadow-lg shadow-red-500/20"
-                      >
-                        1.77x
-                      </button>
-                    </td>
-                    <td className="p-4 text-sm flex-1">
-                      <button
-                        onClick={() => handleColorBet(BLACK_NUMBERS)}
-                        className="w-full py-3 bg-gradient-to-br from-zinc-800 to-zinc-900 text-white rounded-lg hover:from-zinc-700 hover:to-zinc-800 transition-all shadow-lg shadow-zinc-900/20"
-                      >
-                        1.99x
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
 
             <Accordion type="single" collapsible className="w-full space-y-4">
               <AccordionItem
+                value="current-bets"
+                className="border-none bg-gradient-to-br from-[#a11d4c] to-[#0d123f] overflow-hidden"
+              >
+                <AccordionTrigger className="py-4 px-4 hover:no-underline">
+                  <span className="text-red-400 font-medium">
+                    {t("current-bets")}
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-3 p-4">
+                      <div className="flex items-center gap-4 px-2">
+                        <div className="flex-1 text-sm text-zinc-400">
+                          
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            className="px-6 py-2 text-white hover:from-red-600 hover:to-red-700 transition-all"
+                          >
+                            RED
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleColorBet(BLACK_NUMBERS)
+                            }
+                            className="px-6 py-2 text-white hover:from-zinc-700 hover:to-zinc-800 transition-all"
+                          >
+                            BLACK
+                          </button>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 px-2">
+                        <div className="flex-1 text-sm text-zinc-400">
+                          
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() =>
+                              handleColorBet(RED_NUMBERS)
+                            }
+                            className="rounded-md px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all"
+                          >
+                            1.77x
+                          </button>
+                          <button
+                            onClick={() =>
+                              handleColorBet(BLACK_NUMBERS)
+                            }
+                            className="rounded-md px-6 py-2 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-800 transition-all"
+                          >
+                            1.77x
+                          </button>
+                        </div>
+                      </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem
                 value="fancy-bets"
-                className="border-none bg-zinc-800/30 rounded-xl overflow-hidden"
+                className="border-none bg-gradient-to-br from-[#e88a0f] to-[#ad0707] overflow-hidden"
               >
                 <AccordionTrigger className="py-4 px-4 hover:no-underline">
                   <span className="text-red-400 font-medium">
@@ -196,7 +216,7 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
                   </span>
                 </AccordionTrigger>
                 <AccordionContent>
-                  <div className="space-y-3 p-4">
+                  <div className="text-black space-y-3 p-4">
                     {fancyRounds.map(({ start, end, Description }, index) => (
                       <div key={index} className="flex items-center gap-4 px-2">
                         <div className="flex-1 text-sm text-zinc-400">
@@ -207,7 +227,7 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
                             onClick={() =>
                               handleRangeBet(start, end, RED_NUMBERS)
                             }
-                            className="px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all"
+                            className="rounded-md px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all"
                           >
                             1.77x
                           </button>
@@ -215,7 +235,7 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
                             onClick={() =>
                               handleRangeBet(start, end, BLACK_NUMBERS)
                             }
-                            className="px-6 py-2 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white rounded-lg hover:from-zinc-700 hover:to-zinc-800 transition-all"
+                            className="rounded-md px-6 py-2 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-800 transition-all"
                           >
                             1.77x
                           </button>
@@ -228,7 +248,7 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
 
               <AccordionItem
                 value="advance-bets"
-                className="border-none bg-zinc-800/30 rounded-xl overflow-hidden"
+                className="border-none bg-gradient-to-br from-[#b91c1c] to-[#450a0a] overflow-hidden"
               >
                 <AccordionTrigger className="py-4 px-4 hover:no-underline">
                   <span className="text-zinc-200 font-medium">
@@ -247,7 +267,7 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
                             onClick={() =>
                               handleRangeBet(start, end, RED_NUMBERS)
                             }
-                            className="px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all"
+                            className="rounded-md px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all"
                           >
                             1.77x
                           </button>
@@ -255,7 +275,7 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
                             onClick={() =>
                               handleRangeBet(start, end, BLACK_NUMBERS)
                             }
-                            className="px-6 py-2 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white rounded-lg hover:from-zinc-700 hover:to-zinc-800 transition-all"
+                            className="rounded-md px-6 py-2 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-800 transition-all"
                           >
                             1.77x
                           </button>

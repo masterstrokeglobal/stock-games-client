@@ -3,13 +3,13 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useGameState } from "@/hooks/use-current-game";
 import { useLeaderboard } from "@/hooks/use-leadboard";
-import useWindowSize from "@/hooks/use-window-size";
+// import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { useGetRoundRecordById } from "@/react-query/round-record-queries";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 type Props = {
     roundRecord: RoundRecord;
@@ -20,9 +20,9 @@ const RedBlackLeaderBoard = ({ roundRecord, className }: Props) => {
     const t = useTranslations("game");
     const { stocks: leaderboardData } = useLeaderboard(roundRecord);
     const sectionRef = useRef<HTMLDivElement | null>(null);
-    const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
+    // const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
     const { isGameOver } = useGameState(roundRecord);
-    const { isMobile } = useWindowSize();
+    // const { isMobile } = useWindowSize();
 
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord.id);
 
@@ -44,12 +44,12 @@ const RedBlackLeaderBoard = ({ roundRecord, className }: Props) => {
         return winningNumber.horse;
     }, [data, isSuccess]);
 
-    useEffect(() => {
-        if (sectionRef.current) {
-            const sectionHeight = sectionRef.current.offsetHeight;
-            setScrollAreaHeight(sectionHeight);
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (sectionRef.current) {
+    //         const sectionHeight = sectionRef.current.offsetHeight;
+    //         setScrollAreaHeight(sectionHeight);
+    //     }
+    // }, []);
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('en-US', {
@@ -71,7 +71,7 @@ const RedBlackLeaderBoard = ({ roundRecord, className }: Props) => {
         <section
             ref={sectionRef}
             className={cn(
-                "md:rounded-2xl h-full overflow-hidden w-full",
+                "h-full overflow-hidden w-full",
                 "bg-gradient-to-br from-slate-900/95 via-black/95 to-red-950/95",
                 "border border-red-800/30 shadow-2xl shadow-red-900/20",
                 "backdrop-blur-xl",
@@ -83,7 +83,7 @@ const RedBlackLeaderBoard = ({ roundRecord, className }: Props) => {
                     Leaderboard                </h2>
             </div>           <ScrollArea
                 className="h-full"
-                style={{ height: isMobile ? "fit-content" : `${scrollAreaHeight}px` }}
+                // style={{ height: isMobile ? "fit-content" : `${scrollAreaHeight}px` }}
                 type="auto"
             >
                 <table className="min-w-full mb-12">

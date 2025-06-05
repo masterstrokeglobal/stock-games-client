@@ -51,7 +51,7 @@ export const RedBlackRouletteBettingGrid = ({
   useEffect(() => {
     if (!gridRef.current || typeof window === "undefined") return;
 
-    const targetLayout = gameState.isPlaceOver ? "2-columns" : "4-columns";
+    const targetLayout = gameState.isPlaceOver ? "4-columns" : "2-columns";
 
     // If the current layout is already the target, no transition needed
     if (currentLayout === targetLayout) return;
@@ -76,7 +76,7 @@ export const RedBlackRouletteBettingGrid = ({
         onComplete: () => {
           console.log(`Switched to ${newLayout} layout`);
           
-          if (!gameState.isPlaceOver) {
+          if (gameState.isPlaceOver) {
             gsap.to(timerRef.current, {
               duration: 1,
               y: -50,
