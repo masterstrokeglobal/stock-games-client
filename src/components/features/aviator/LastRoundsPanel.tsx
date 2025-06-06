@@ -47,9 +47,9 @@ export default function LastRoundsPanel() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-800">
-              {lastRounds?.map((round) => (
+              {lastRounds?.map((round, index) => (
                 <tr
-                  key={`${round.roundId}-${round.code}`}
+                  key={`${round.roundId}-${round.code}-${index}`}
                   className="hover:bg-gray-800 hover:bg-opacity-50 transition-colors"
                 >
                   <td className="py-2">

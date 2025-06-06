@@ -5,13 +5,14 @@ import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
 import useAviator from "@/hooks/use-aviator"
 import { useGameType } from "@/hooks/use-market-selector"
 import useWindowSize from "@/hooks/use-window-size"
+import { useGameState } from "@/hooks/use-current-game"
 import { cn } from "@/lib/utils"
 import { RoundRecord } from "@/models/round-record"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import BettingPanel from "./BettingPanel"
 import GameDisplay from "./GameDisplay"
 import LastRoundsPanel from "./LastRoundsPanel"
-import { AviatorCanvasRef } from "./aviator-canvas"
+
 // Game phases enum
 enum GamePhase {
   BETTING_OPEN = "BETTING_OPEN",
@@ -29,8 +30,8 @@ type AviatorProps = {
 }
 
 export default function Aviator({ className, roundRecord, token }: AviatorProps) {
-  const aviatorRef = useRef<AviatorCanvasRef>(null)
   const { gameType } = useGameType();
+  const { gameTimeLeft, isPlaceOver, placeTimeLeft, isGameOver } = useGameState(roundRecord);
   const aviator = useAviator({
     type: gameType,
     token: token,
@@ -44,6 +45,8 @@ export default function Aviator({ className, roundRecord, token }: AviatorProps)
 
   const [shouldShowBlast, setShouldShowBlast] = useState(false)
   const [isParallaxMoving, setIsParallaxMoving] = useState(false)
+  const [hasTriggeredFlying, setHasTriggeredFlying] = useState(false)
+  const [shouldStartTakeOffAnimation, setShouldStartTakeOffAnimation] = useState(false)
 
   // Mobile responsiveness state
   const [showLastRounds, setShowLastRounds] = useState(false)
@@ -72,49 +75,19 @@ export default function Aviator({ className, roundRecord, token }: AviatorProps)
   useEffect(() => {
     let phaseTimer: NodeJS.Timeout
     let multiplierInterval: NodeJS.Timeout
-    let countdownInterval: NodeJS.Timeout
-    let flyingSequenceTimer: NodeJS.Timeout | undefined
 
     const startBettingPhase = () => {
       console.log("🎯 Starting betting phase")
 
       // Ensure clean state for new round
       clearInterval(multiplierInterval)
-      clearInterval(countdownInterval)
       clearTimeout(phaseTimer)
-      if (flyingSequenceTimer) clearTimeout(flyingSequenceTimer)
 
       setGamePhase(GamePhase.BETTING_OPEN)
       setMultiplier(1.0)
       setShouldShowBlast(false) // Ensure blast is off for new round
       setIsParallaxMoving(false) // Stop parallax movement
-      
-      // Reset plane to initial position
-      aviatorRef.current?.resetToInitialPosition()
-
-      // Start 15-second countdown
-      let timeRemaining = 15000
-
-      countdownInterval = setInterval(() => {
-        timeRemaining -= 1000
-
-        // Start flying sequence 2 seconds before betting ends (13 seconds in)
-        if (timeRemaining === 2000) {
-          console.log("🛫 Starting flying sequence - 2 seconds before game start")
-          setIsParallaxMoving(true) // Start parallax movement
-          aviatorRef.current?.startFlyingSequence() // Start plane animation
-        }
-
-        if (timeRemaining <= 0) {
-          clearInterval(countdownInterval)
-          setGamePhase(GamePhase.BETTING_CLOSED)
-        }
-      }, 1000)
-
-      phaseTimer = setTimeout(() => {
-        setGamePhase(GamePhase.BETTING_CLOSED)
-        startGamePhase()
-      }, 15000)
+      setHasTriggeredFlying(false) // Reset flying trigger
     }
 
     const startGamePhase = () => {
@@ -160,8 +133,6 @@ export default function Aviator({ className, roundRecord, token }: AviatorProps)
 
       // Clear any remaining intervals immediately
       clearInterval(multiplierInterval)
-      clearInterval(countdownInterval)
-      if (flyingSequenceTimer) clearTimeout(flyingSequenceTimer)
 
       setGamePhase(GamePhase.GAME_ENDED)
 
@@ -170,15 +141,13 @@ export default function Aviator({ className, roundRecord, token }: AviatorProps)
         setShouldShowBlast(true)
       } else if (status === "flew_away") {
         // Trigger plane fly away animation
-        aviatorRef.current?.flyAway()
       }
 
       // Wait 10 seconds before starting next round
       phaseTimer = setTimeout(() => {
         setGamePhase(GamePhase.WAITING)
 
-        // Only reset shouldShowBlast if the blast video has finished
-        // (the GameDisplay component will handle setting it to false when done)
+        // Only reset shouldShowBlast if the GameDisplay component will handle setting it to false when done
         if (status === "flew_away") {
           setShouldShowBlast(false)
         }
@@ -199,10 +168,48 @@ export default function Aviator({ className, roundRecord, token }: AviatorProps)
     return () => {
       clearTimeout(phaseTimer)
       clearInterval(multiplierInterval)
-      clearInterval(countdownInterval)
-      if (flyingSequenceTimer) clearTimeout(flyingSequenceTimer)
     }
   }, []) // Empty dependency array - only run once on mount
+
+  // Handle game state changes based on roundRecord
+  useEffect(() => {
+    console.log("🎯 isPlaceOver", isPlaceOver, placeTimeLeft)
+    // Trigger flying sequence when 2 seconds left in betting phase
+    if (!isPlaceOver && placeTimeLeft.seconds <= 2 && placeTimeLeft.seconds > 0 && !hasTriggeredFlying) {
+      console.log("🛫 Starting flying sequence - 2 seconds before game start")
+      setIsParallaxMoving(true) // Start parallax movement
+      setShouldStartTakeOffAnimation(true) // Start plane takeoff animation
+      setHasTriggeredFlying(true)
+    }
+
+    // Stop animation 2 seconds after round ends
+    if (isGameOver && shouldStartTakeOffAnimation) {
+      console.log("🛬 Game ended, stopping animation in 2 seconds")
+      const stopTimer = setTimeout(() => {
+        console.log("🛑 Stopping plane animation")
+        setShouldStartTakeOffAnimation(false)
+        setIsParallaxMoving(false) // Also stop parallax movement
+      }, 2000) // 2-second delay after round ends
+
+      return () => clearTimeout(stopTimer)
+    }
+
+    // Reset flying trigger when new round starts
+    if (!isPlaceOver && placeTimeLeft.raw > 10) {
+      setHasTriggeredFlying(false)
+      setShouldStartTakeOffAnimation(false) // Reset animation trigger
+    }
+
+    // Handle phase transitions based on game state
+    if (isPlaceOver && !isGameOver) {
+      setGamePhase(GamePhase.BETTING_CLOSED)
+      // Game should start automatically based on roundRecord timing
+    } else if (!isPlaceOver) {
+      setGamePhase(GamePhase.BETTING_OPEN)
+    } else if (isGameOver) {
+      setGamePhase(GamePhase.GAME_ENDED)
+    }
+  }, [isPlaceOver, isGameOver, placeTimeLeft.raw, hasTriggeredFlying, shouldStartTakeOffAnimation])
 
   const toggleLastRounds = () => {
     setShowLastRounds(!showLastRounds)
@@ -228,11 +235,11 @@ export default function Aviator({ className, roundRecord, token }: AviatorProps)
           {/* Game Content */}
           <div className="flex-1 relative flex flex-col min-h-[60vh] lg:min-h-0">
             <GameDisplay
-              ref={aviatorRef}
               multiplier={aviator.data[aviator.data.length - 1]?.multiplier ?? 1}
               shouldShowBlast={shouldShowBlast}
               setShouldShowBlast={setShouldShowBlast}
               isParallaxMoving={isParallaxMoving}
+              shouldStartTakeOffAnimation={shouldStartTakeOffAnimation}
             />
 
             <BettingPanel roundRecord={roundRecord} aviator={aviator} multiplier={aviator.data[aviator.data.length - 1]?.multiplier ?? 1} />

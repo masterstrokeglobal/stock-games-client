@@ -1,5 +1,5 @@
-import { forwardRef, useEffect, useState } from "react"
-import AviatorCanvas, { AviatorCanvasRef } from "./aviator-canvas"
+import { useEffect, useState } from "react"
+import AviatorCanvas from "./aviator-canvas"
 import BlastVideo from "./blast-video"
 import ParallaxImage from "./parallax-image"
 
@@ -9,10 +9,10 @@ interface GameDisplayProps {
   shouldShowBlast?: boolean
   setShouldShowBlast?: (isPlaying: boolean) => void
   isParallaxMoving?: boolean
+  shouldStartTakeOffAnimation?: boolean
 }
 
-const GameDisplay = forwardRef<AviatorCanvasRef, GameDisplayProps>(
-  ({ multiplier, shouldShowBlast = false, setShouldShowBlast, isParallaxMoving = false }, ref) => {
+const GameDisplay = ({ multiplier, shouldShowBlast = false, setShouldShowBlast, isParallaxMoving = false, shouldStartTakeOffAnimation = false }: GameDisplayProps) => {
 
     const [isBlastPlaying, setIsBlastPlaying] = useState(false)
 
@@ -35,7 +35,7 @@ const GameDisplay = forwardRef<AviatorCanvasRef, GameDisplayProps>(
       <div className="relative flex-1">
         <div className="absolute inset-0 ">
           <ParallaxImage multiplier={multiplier} isMoving={isParallaxMoving} />
-          <AviatorCanvas ref={ref} multiplier={multiplier} />
+          <AviatorCanvas multiplier={multiplier} shouldStartTakeOffAnimation={shouldStartTakeOffAnimation} />
           <BlastVideo isPlaying={isBlastPlaying} setIsBlastPlaying={handleBlastComplete} />
           
           <div className="absolute bottom-0 left-[50%] translate-x-[-50%] flex items-center justify-center pointer-events-none">
@@ -45,7 +45,6 @@ const GameDisplay = forwardRef<AviatorCanvasRef, GameDisplayProps>(
       </div>
     )
   }
-)
 
 GameDisplay.displayName = 'GameDisplay'
 

@@ -8,15 +8,21 @@ import { useMarketSelector, useStockSelectorAviator } from '@/hooks/use-market-s
 import { MarketItem } from '@/models/market-item';
 import { RoundRecordGameType } from '@/models/round-record';
 import { useAviatorToken } from '@/react-query/aviator-queries';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 const StockSlot = () => {
     const { marketSelected } = useMarketSelector();
     const { stockSelectedAviator } = useStockSelectorAviator();
     const { roundRecord, isLoading } = useCurrentGame(RoundRecordGameType.AVIATOR);
     const { isLoading: isTokenLoading, data: token } = useAviatorToken();
 
-    const isstockPresent = useMemo(() => {
-        return roundRecord?.market.some((item: MarketItem) => item.id == Number(stockSelectedAviator));
+    const [isstockPresent, setIsstockPresent] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsstockPresent(roundRecord?.market.some((item: MarketItem) => item.id == Number(stockSelectedAviator)) ?? false);
+        }, 3000);
+
+        return () => clearTimeout(timer);
     }, [roundRecord, stockSelectedAviator]);
 
     if (!marketSelected) return <MarketSelector variant='aviator' className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Avaiator" />
