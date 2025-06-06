@@ -65,7 +65,7 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
   const bettingOpen = !isPlaceOver && !isPlacingBet;
 
   return (
-    <Card className={cn("w-full bg-gradient-to-r from-gray-900 to-gray-800 border-none relative text-white p-3 rounded-none border-b", className)}>
+    <Card className={cn("w-full bg-white/10 border-none relative text-white p-3 rounded-none border-b", className)}>
       <div className="flex flex-col md:flex-row md:items-center gap-4">
         <div className="flex items-center justify-around md:flex-1">
           <span className="font-bold text-sm md:text-base">{marketItem.name}</span>

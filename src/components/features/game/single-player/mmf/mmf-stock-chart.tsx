@@ -22,7 +22,6 @@ const StockProgressChart = () => {
     
     const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
 
-    console.log(chartData);
     const [highestValue, setHighestValue] = useState(0);
     const [lowestValue, setLowestValue] = useState(0);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -64,11 +63,9 @@ const StockProgressChart = () => {
         
         intervalRef.current = setInterval(() => {
             setChartData(prevData => {
-                const lastPoint = prevData[prevData.length - 1];
-                const newValue = generateDataPoint(lastPoint.value);
+                const newValue = totalPotentialReturn;
                 
                 setHighestValue(prev => Math.max(prev, newValue));
-                setLowestValue(prev => Math.min(prev, newValue));
                 
                 const newPoint: ChartDataPoint = {
                     time: Date.now(),
@@ -86,6 +83,8 @@ const StockProgressChart = () => {
             }
         };
     }, [roundRecord, isGameOver, totalPotentialReturn, totalBettedAmount]);
+
+    console.log(chartData);
     
     const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
         if (active && payload && payload.length) {
@@ -147,7 +146,7 @@ const StockProgressChart = () => {
                         tick={{ fill: "#9CA3AF", fontSize: 12 }}
                     />
                     
-                    <Tooltip content={<CustomTooltip />} />
+                    <Tooltip active content={<CustomTooltip />} />
                     
                     <ReferenceLine 
                         y={highestValue} 

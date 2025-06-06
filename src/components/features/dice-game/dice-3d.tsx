@@ -18,13 +18,13 @@ interface Dice3DProps {
   winningMarketId: number[] | null;
 }
 
-const StockDisplay = ({ stock, className }: { stock?: RankedMarketItem, className?: string }) => {
+const StockDisplay = ({ stock, className, isSecondCube }: { stock?: RankedMarketItem, className?: string, isSecondCube?: boolean }) => {
   if (!stock) return null;
   return (
-    <div className={cn("flex flex-col justify-between items-center text-[10px] relative z-20 text-white/90 py-0.5 px-1 bg-black/70 backdrop-blur-sm rounded hover:bg-black transition-colors w-full", className)}>
-    <div className="flex items-center gap-0.5 min-w-0">
+    <div className={cn("flex flex-col justify-between items-center border-b border-white/10  text-[10px] relative z-20 text-white/90 py-0.5 px-1 bg-black/70 backdrop-blur-sm  hover:bg-black transition-colors w-full", className)}>
+    <div className="flex items-center justify-between w-full px-1 gap-0.5 min-w-0">
       <span className="font-medium truncate max-w-[60px]">{stock?.codeName}</span>
-      <span className="text-[8px] font-bold bg-white/10 px-0.5 rounded-full flex-shrink-0">
+      <span className={cn("text-[10px]  font-bold bg-white/10 text-amber-600 px-0.5 rounded-full flex-shrink-0", isSecondCube && "order-first")}>
         {stock?.horse ? stock?.horse % 6 === 0 ? 6 : stock?.horse % 6 : ''}
       </span>
     </div>
@@ -68,7 +68,7 @@ const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, winningMar
         <div className="flex sm:pr-24 pr-12 flex-row bg-[url('/images/dice-game/dice-bg.jpg')] pr-1 bg-cover bg-center flex-1 h-full gap-2 items-center justify-end animate-slide-left relative">
           <div className='flex flex-col  absolute left-0 top-0 h-full w-fit'>
             {marketItemsStocks.slice(0, 6).map((stock) => (
-              <StockDisplay key={stock?.id} stock={stock} className='flex-1 rounded-none w-full' />
+              <StockDisplay key={stock?.id} stock={stock} className='flex-1 rounded-r-xl w-full' />
             ))}
           </div>
           <Cube
@@ -92,7 +92,7 @@ const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, winningMar
           />
           <div className='flex flex-col  h-full absolute right-0 top-0 w-fit self-end'>
             {marketItemsStocks.slice(6, 12).map((stock) => (
-              <StockDisplay key={stock?.id} stock={stock} className='flex-1 rounded-none w-full' />
+              <StockDisplay key={stock?.id} stock={stock} className='flex-1 rounded-l-xl w-full' isSecondCube />
             ))}
           </div>
         </div>

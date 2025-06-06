@@ -116,7 +116,7 @@ const StockRouletteComponent = () => {
   const getPhaseStatus = () => {
     if (gameState.isGameOver) return { text: "Round Complete", color: "text-gray-400", icon: Square };
     if (!gameState.isPlaceOver) return { text: "Betting Phase", color: "text-green-400", icon: Play };
-    return { text: "Waiting Period", color: "text-yellow-400", icon: Clock };
+    return { text: "Trading Period", color: "text-yellow-400", icon: Clock };
   };
 
   const phaseStatus = getPhaseStatus();
@@ -256,16 +256,16 @@ const StockRouletteComponent = () => {
                         }
                     ${!gameState.isPlaceOver && !gameState.isGameOver && !isPlacingBet
                           ? 'hover:shadow-2xl hover:shadow-red-500/20 hover:scale-105 cursor-pointer transform hover:bg-white/5'
-                          : 'opacity-50 cursor-not-allowed'
+                          : 'opacity-100 cursor-not-allowed'
                         }
                   `}
                     >
                       {/* Price Change Triangle */}
-                      {changePercent !== null && (
+                      {Number(changePercent ?? 0) > 0 && (
                         <Triangle
                           size={10}
                           className={cn(
-                            "absolute top-2 left-2 drop-shadow-sm",
+                            "absolute top-2 right-2 drop-shadow-sm",
                             isPositive ? "text-white/80 fill-white/80" : "text-white/80 fill-white/80 rotate-180"
                           )}
                         />
@@ -273,13 +273,13 @@ const StockRouletteComponent = () => {
 
                       {/* Stock Info */}
                       <div className="text-center">
-                        <div className="text-white text-sm font-black mb-1 truncate max-w-full drop-shadow-sm">
+                        <div className="text-white text-sm text-left line-clamp-2  font-black mb-1   drop-shadow-sm">
                           {stock.name}
                         </div>
                         {price && (
                           <div className="text-white/90 text-xs drop-shadow-sm">
-                            {roundRecord.type === SchedulerType.CRYPTO ? "USDT " : "₹"}
-                            {price > 1000 ? `${(price / 1000).toFixed(1)}K` : price.toFixed(0)}
+                            {roundRecord.type === SchedulerType.CRYPTO ? "USDT " : stock.currency}
+                            {price}
                           </div>
                         )}
                       </div>

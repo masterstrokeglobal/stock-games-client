@@ -1,9 +1,9 @@
-import { RankedMarketItem, useLeaderboard } from '@/hooks/use-leadboard';
 import { RoundRecord } from '@/models/round-record';
 import { ArrowUpIcon } from "@radix-ui/react-icons";
 import React from 'react';
 import CryptoStockChart from './animated-chart';
 import { cn } from '@/lib/utils';
+import { RankedMarketItem, useLeaderboard } from '@/hooks/use-sevenup-leader-board';
 interface StockPriceProps {
   rankedMarketItem: RankedMarketItem;
 }

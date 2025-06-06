@@ -39,7 +39,7 @@ const BetInputForm = () => {
   if (!roundRecord) return null;
 
   return (
-    <div className="max-w-md mx-auto p-6 rounded-2xl">
+    <div className="max-w-md min-w-96 mx-auto p-6 rounded-2xl">
       <h2 className="text-2xl font-bold text-white mb-6 text-center bg-gradient-to-r from-[#FFD700] to-[#FFA500] bg-clip-text text-transparent">
         Place Your Bet
       </h2>
