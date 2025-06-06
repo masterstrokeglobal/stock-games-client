@@ -31,31 +31,31 @@ type Props = {
 const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
   const t = useTranslations("game");
   const sectionRef = useRef<HTMLDivElement>(null);
-  const { data : advanceData, isSuccess : isAdvanceSuccess } = useGetAdvancePlacements({ roundId: roundRecord.id.toString() });
+  const { data: advanceData, isSuccess: isAdvanceSuccess } = useGetAdvancePlacements({ roundId: roundRecord.id.toString() });
   const { data, isSuccess } = useGetMyPlacements({ roundId: roundRecord.id.toString() });
 
-    const currentBetsData: GameRecord[] = useMemo(() => {
-        if (isSuccess) {
-            return data.data;
-        }
-        return [];
-    }, [isSuccess, data]);
+  const advancePlacements: GameRecord[] = useMemo(() => {
+    return advanceData?.data.map((item: any) => new GameRecord(item)) || [];
+  }, [advanceData]);
 
+  const { redBets, blackBets, placements } = useMemo(() => {
+    const placements: GameRecord[] | undefined = data?.data.map((item: any) => new GameRecord(item));
 
-  const advanceBetsData: GameRecord[] = useMemo(() => {
-      if (isAdvanceSuccess) {
-          return advanceData.data;
-      }
-      return [];
-  }, [isAdvanceSuccess, advanceData]);
+    if (!placements) return { placements: [], redBets: 0, blackBets: 0 };
 
+    const redMarketItems = RED_NUMBERS.map((number) => roundRecord.market[number - 1]);
+    const redBets = placements?.filter((p) => p.placementType == PlacementType.COLOR && redMarketItems.some(item => p.market.includes(item?.id ?? 0))).reduce((sum, p) => sum + p.amount, 0) || 0;
 
-  console.log("Current Bets Data:", currentBetsData);
-  console.log(isSuccess, "isSuccess for current bets");
-  console.log("Advance Bets Data:", advanceBetsData);
-  console.log(isAdvanceSuccess, "isSuccess for advance bets");
+    const blackMarketItems = BLACK_NUMBERS.map((number) => roundRecord.market[number - 1]);
+    const blackBets = placements?.filter((p) => p.placementType == PlacementType.COLOR && blackMarketItems.some(item => p.market.includes(item?.id ?? 0))).reduce((sum, p) => sum + p.amount, 0) || 0;
 
-  // const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
+    return {
+      placements,
+      redBets,
+      blackBets
+    };
+  }, [data]);
+
   const gameState = useGameState(roundRecord);
   const currentRound = roundRecord.todayCount || -1;
   const { mutate: mutateGameRecord, isPending: isPlacingBet } =
@@ -90,15 +90,10 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
   ];
 
   const handleColorBet = (numbers: number[]) => {
-    console.log("Round Record:", roundRecord);
-
-    console.log("game state", gameState);
-    console.log("isplacingbet", isPlacingBet);
     if (gameState.isPlaceOver || isPlacingBet) {
       toast.error("Betting Time is Over");
       return;
     }
-    // if (!verifyBetAmount(betAmount)) return;
     const markets = numbers
       .map((number) => roundRecord.market[number - 1]?.id)
       .filter((id) => id !== undefined);
@@ -121,7 +116,6 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
 
   const handleRangeBet = (start: number, end: number, numbers: number[]) => {
     if (isAdvancePlacingBet) return;
-    // if (!verifyBetAmount(betAmount)) return;
     const markets = numbers
       .map((number) => roundRecord.market[number - 1]?.id)
       .filter((id) => id !== undefined);
@@ -144,12 +138,44 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
     });
   };
 
-  // useEffect(() => {
-  //   if (sectionRef.current) {
-  //     const sectionHeight = sectionRef.current.offsetHeight;
-  //     setScrollAreaHeight(sectionHeight);
-  //   }
-  // }, []);
+  const fancyBetCount = useMemo(() => {
+    return advancePlacements
+      .filter(placement => {
+        // Check if placement matches any fancy round
+        const matchesFancyRound = fancyRounds.some(
+          round => placement.placementType === PlacementType.ROUND_RANGE && 
+                  placement.startRound === round.start && 
+                  placement.endRound === round.end
+        );
+        return matchesFancyRound;
+      }).length
+     
+  }, [advancePlacements, fancyRounds]);
+
+  const advanceBetCount = useMemo(() => {
+    return advanceBets.filter(bet => {
+      return advancePlacements.some(
+        p => p.placementType === PlacementType.ROUND_RANGE && 
+             p.startRound === bet.start && 
+             p.endRound === bet.end
+      );
+    }).length;
+  }, [advancePlacements, advanceBets]);
+
+
+  
+  const advanceBetsas = useMemo(() => {
+    return advanceBets.filter(bet => {
+      return advancePlacements.some(
+        p => p.placementType === PlacementType.ROUND_RANGE && 
+             p.startRound === bet.start && 
+             p.endRound === bet.end
+      );
+    });
+  }, [advancePlacements]);
+
+
+
   return (
     <section
       ref={sectionRef}
@@ -160,7 +186,6 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
     >
       <ScrollArea
         className="h-full"
-        // style={{ height: `${scrollAreaHeight}px` }}
         type="auto"
       >
         <div className="w-full bg-gradient-to-r from-red-500/10 via-zinc-900/50 to-zinc-800/10 py-3 px-4 border-b border-zinc-800">
@@ -170,102 +195,111 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
         </div>
         <div className="flex gap-2 md:flex-row flex-col p-4">
           <div className="w-full space-y-6">
-
             <Accordion type="single" collapsible className="w-full space-y-4">
               <AccordionItem
                 value="current-bets"
                 className="border-none bg-gradient-to-br from-[#a11d4c] to-[#0d123f] overflow-hidden"
               >
-                <AccordionTrigger className="py-4 px-4 hover:no-underline">
-                  <span className="text-red-400 font-medium">
+                <AccordionTrigger iconClassName="text-white" className="py-4 px-4 hover:no-underline">
+                  <span className="text-white font-medium">
                     {t("current-bets")}
                   </span>
+                  <div className="text-white text-sm ml-auto space-x-2 mr-2">
+                    {redBets > 0 && <span className="bg-red-500 px-2 py-1 rounded-md">Rs. {redBets}</span>}
+                    {blackBets > 0 && <span className="bg-zinc-800 px-2 py-1 rounded-md">Rs.{blackBets}</span>}
+                  </div>
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="space-y-3 p-4">
-                      <div className="flex items-center gap-4 px-2">
-                        <div className="flex-1 text-sm text-zinc-400">
-                          
-                        </div>
-                        <div className="flex gap-2">
-                          <button
-                            className="px-6 py-2 text-white hover:from-red-600 hover:to-red-700 transition-all"
-                          >
-                            RED
-                          </button>
-                          <button
-                            onClick={() =>
-                              handleColorBet(BLACK_NUMBERS)
-                            }
-                            className="px-6 py-2 text-white hover:from-zinc-700 hover:to-zinc-800 transition-all"
-                          >
-                            BLACK
-                          </button>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4 px-2">
-                        <div className="flex-1 text-sm text-zinc-400">
-                          
-                        </div>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() =>
-                              handleColorBet(RED_NUMBERS)
-                            }
-                            className="rounded-md px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all"
-                          >
-                            1.77x
-                          </button>
-                          <button
-                            onClick={() =>
-                              handleColorBet(BLACK_NUMBERS)
-                            }
-                            className="rounded-md px-6 py-2 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-800 transition-all"
-                          >
-                            1.77x
-                          </button>
-                        </div>
-                      </div>
+                    <div className="flex gap-2 w-full justify-between">
+                      <button
+                        className="px-6 py-2 flex-1 text-white text-center hover:from-red-600 hover:to-red-700 transition-all"
+                      >
+                        RED {redBets > 0 && <span className="text-red-400">(Rs. {redBets})</span>}
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleColorBet(BLACK_NUMBERS)
+                        }
+                        className="px-6 py-2 text-white text-center flex-1 hover:from-zinc-700 hover:to-zinc-800 transition-all"
+                      >
+                        BLACK {blackBets > 0 && <span className="text-zinc-400">(Rs.{blackBets})</span>}
+                      </button>
+                    </div>
+                    <div className="flex gap-2 w-full justify-between">
+                      <button
+                        onClick={() =>
+                          handleColorBet(RED_NUMBERS)
+                        }
+                        className="rounded-md flex-1 px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all"
+                      >
+                        1.77x
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleColorBet(BLACK_NUMBERS)
+                        }
+                        className="rounded-md flex-1 px-6 py-2 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-800 transition-all"
+                      >
+                        1.77x
+                      </button>
+                    </div>
                   </div>
                 </AccordionContent>
               </AccordionItem>
-
               <AccordionItem
                 value="fancy-bets"
                 className="border-none bg-gradient-to-br from-[#e88a0f] to-[#ad0707] overflow-hidden"
               >
-                <AccordionTrigger className="py-4 px-4 hover:no-underline">
-                  <span className="text-red-400 font-medium">
+                <AccordionTrigger iconClassName="text-white" className="py-4 px-4 hover:no-underline mr-2">
+                  <span className="text-white font-medium">
                     {t("fancy-bets")}
                   </span>
+                  <div className="text-white text-sm ml-auto space-x-2">
+                   {fancyBetCount > 0 && <span className="bg-orange-500 px-2 py-1 rounded-md">
+                        {fancyBetCount} bets
+                      </span>}
+                  </div>
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="text-black space-y-3 p-4">
-                    {fancyRounds.map(({ start, end, Description }, index) => (
-                      <div key={index} className="flex items-center gap-4 px-2">
-                        <div className="flex-1 text-sm text-zinc-400">
-                          {Description}
+                    {fancyRounds.map(({ start, end, Description }, index) => {
+                      const redBetAmount = advancePlacements
+                        .filter(p => p.placementType === PlacementType.ROUND_RANGE && p.startRound === start && p.endRound === end && p.placedValues?.includes("Red"))
+                        .reduce((sum, p) => sum + p.amount, 0);
+                      
+                      const blackBetAmount = advancePlacements
+                        .filter(p => p.placementType === PlacementType.ROUND_RANGE && p.startRound === start && p.endRound === end && p.placedValues?.includes("Black"))
+                        .reduce((sum, p) => sum + p.amount, 0);
+                      
+                      const totalBets =  advancePlacements
+                      .filter(p => p.placementType === PlacementType.ROUND_RANGE && p.startRound === start && p.endRound === end)
+                      .length;
+
+                      return (
+                        <div key={index} className="flex items-center gap-4 px-2">
+                          <div className="flex-1 text-sm text-zinc-200"> 
+                            {Description}
+
+                            {totalBets > 0 && <span className=" text-white"> ({totalBets} bets)</span>}
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleRangeBet(start, end, RED_NUMBERS)}
+                              className="rounded-md px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all"
+                            >
+                              {redBetAmount > 0 ? `Rs. ${redBetAmount}` : "1.77x"}
+                            </button>
+                            <button
+                              onClick={() => handleRangeBet(start, end, BLACK_NUMBERS)}
+                              className="rounded-md px-6 py-2 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-800 transition-all"
+                            >
+                              {blackBetAmount > 0 ? `Rs. ${blackBetAmount}` : "1.77x"}
+                            </button>
+                          </div>
                         </div>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() =>
-                              handleRangeBet(start, end, RED_NUMBERS)
-                            }
-                            className="rounded-md px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all"
-                          >
-                            1.77x
-                          </button>
-                          <button
-                            onClick={() =>
-                              handleRangeBet(start, end, BLACK_NUMBERS)
-                            }
-                            className="rounded-md px-6 py-2 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-800 transition-all"
-                          >
-                            1.77x
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </AccordionContent>
               </AccordionItem>
@@ -274,38 +308,49 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
                 value="advance-bets"
                 className="border-none bg-gradient-to-br from-[#b91c1c] to-[#450a0a] overflow-hidden"
               >
-                <AccordionTrigger className="py-4 px-4 hover:no-underline">
+                <AccordionTrigger iconClassName="text-white" className="py-4 px-4 hover:no-underline">
                   <span className="text-zinc-200 font-medium">
                     {t("advance-bets")}
                   </span>
+                  <div className="text-white text-sm space-x-2 ml-auto mr-2">
+                    {advanceBetCount > 0 && <span className="bg-red-500 px-2 py-1 rounded-md">  
+                      {advanceBetCount} bets
+                    </span>}  
+                  </div>
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="space-y-3 p-4">
-                    {advanceBets.map(({ start, end, Description }, index) => (
-                      <div key={index} className="flex items-center gap-4 px-2">
-                        <div className="flex-1 text-sm text-zinc-400">
-                          {Description}
+                    {advanceBets.map(({ start, end, Description }, index) => {
+                      const redBetAmount = advancePlacements
+                        .filter(p => p.placementType === PlacementType.ROUND_RANGE && p.startRound === start && p.endRound === end && p.placeValue === "Red")
+                        .reduce((sum, p) => sum + p.amount, 0);
+                      
+                      const blackBetAmount = advancePlacements
+                        .filter(p => p.placementType === PlacementType.ROUND_RANGE && p.startRound === start && p.endRound === end && p.placeValue === "Black")
+                        .reduce((sum, p) => sum + p.amount, 0);
+                      
+                      return (
+                        <div key={index} className="flex items-center gap-4 px-2">
+                          <div className="flex-1 text-sm text-zinc-400">
+                            {Description}
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleRangeBet(start, end, RED_NUMBERS)}
+                              className="rounded-md px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all"
+                            >
+                              {redBetAmount > 0 ? `Rs. ${redBetAmount}` : "1.77x"}
+                            </button>
+                            <button
+                              onClick={() => handleRangeBet(start, end, BLACK_NUMBERS)}
+                              className="rounded-md px-6 py-2 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-800 transition-all"
+                            >
+                              {blackBetAmount > 0 ? `Rs. ${blackBetAmount}` : "1.77x"}
+                            </button>
+                          </div>
                         </div>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() =>
-                              handleRangeBet(start, end, RED_NUMBERS)
-                            }
-                            className="rounded-md px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all"
-                          >
-                            1.77x
-                          </button>
-                          <button
-                            onClick={() =>
-                              handleRangeBet(start, end, BLACK_NUMBERS)
-                            }
-                            className="rounded-md px-6 py-2 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-800 transition-all"
-                          >
-                            1.77x
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </AccordionContent>
               </AccordionItem>

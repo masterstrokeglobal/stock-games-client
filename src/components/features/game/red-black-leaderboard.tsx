@@ -4,7 +4,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useGameState } from "@/hooks/use-current-game";
 import { useLeaderboard } from "@/hooks/use-leadboard";
 // import useWindowSize from "@/hooks/use-window-size";
-import { cn } from "@/lib/utils";
+import { cn, RED_NUMBERS } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { useGetRoundRecordById } from "@/react-query/round-record-queries";
@@ -20,10 +20,7 @@ const RedBlackLeaderBoard = ({ roundRecord, className }: Props) => {
     const t = useTranslations("game");
     const { stocks: leaderboardData } = useLeaderboard(roundRecord);
     const sectionRef = useRef<HTMLDivElement | null>(null);
-    // const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
     const { isGameOver } = useGameState(roundRecord);
-    // const { isMobile } = useWindowSize();
-    console.log('RedBlackLeaderBoard', roundRecord, leaderboardData);
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord.id);
 
     useEffect(() => {
@@ -44,12 +41,6 @@ const RedBlackLeaderBoard = ({ roundRecord, className }: Props) => {
         return winningNumber.horse;
     }, [data, isSuccess]);
 
-    // useEffect(() => {
-    //     if (sectionRef.current) {
-    //         const sectionHeight = sectionRef.current.offsetHeight;
-    //         setScrollAreaHeight(sectionHeight);
-    //     }
-    // }, []);
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('en-US', {
@@ -93,7 +84,7 @@ const RedBlackLeaderBoard = ({ roundRecord, className }: Props) => {
                                 {t("rank")}
                             </th>
                             <th className="p-3 text-left text-red-100 font-semibold">
-                                {t("bull")}
+                                {t("color")}
                             </th>
                             <th className="p-3 text-left text-red-100 font-semibold">
                                 {t("name")}
@@ -112,7 +103,7 @@ const RedBlackLeaderBoard = ({ roundRecord, className }: Props) => {
                                 <td className="p-3">
                                     <img src="/rank-1.svg" alt="Rank 1" className="w-8 h-8 drop-shadow-glow" />
                                 </td>
-                                <td className="p-3 font-semibold">{winnerMarketItem.horse}</td>
+                                <td className="p-3 font-semibold">{ RED_NUMBERS.includes(winnerMarketItem.horse ??0) ?<div className="bg-red-500/20 rounded-full w-4 h-4"></div> : <div className="bg-black/20 rounded-full w-4 h-4"></div>}</td>
                                 <td className="p-3 font-semibold">{winnerMarketItem.name}</td>
                                 <td className="p-3 text-right font-semibold">
                                     {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : "Rs."}
@@ -147,7 +138,7 @@ const RedBlackLeaderBoard = ({ roundRecord, className }: Props) => {
                                     )}
                                 </td>
                                 <td className="p-3 text-slate-300">
-                                    {marketItem.horse == 17 ? 0 : marketItem.horse}
+                                    {RED_NUMBERS.includes(marketItem.horse ?? 0) ? <div className="bg-red-500 border border-white/80 rounded-full w-4 h-4"></div> : <div className="bg-black border border-white/80 rounded-full w-4 h-4"></div>}
                                 </td>
                                 <td className="p-3 text-slate-300">
                                     {marketItem.name}

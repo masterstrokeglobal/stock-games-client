@@ -22,6 +22,7 @@ import { StockJackpotPlacementType } from "@/models/stock-slot-jackpot"
 import { useGetMyFavorites } from "@/react-query/favorite-market-item-queries"
 import { useGetMyStockSlotGameRecord } from "@/react-query/game-record-queries"
 import { CreditCard, SearchIcon, Triangle } from "lucide-react"
+import useWindowSize from "@/hooks/use-window-size"
 
 
 export default function Home() {
@@ -31,6 +32,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
   const [tab, setTab] = useGameType();
+  const { isDesktop } = useWindowSize()
   const isPlacementOver = usePlacementOver(roundRecord);
 
   // Function to update global bet amount
@@ -40,19 +42,20 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen  relative bg-[url('/images/game-bg-pattern.png')] bg-repeat bg-center text-white  mx-auto">
       <Navbar />
-      
+
       <Tabs className="flex-1  mt-8  py-6 w-full" value={tab} onValueChange={(value) => setTab(value as SchedulerType)}>
-      <MarketSection
-          title={`${tab.split('-')[0].toUpperCase()} Markets`}
-          searchQuery={searchQuery}
-          globalBetAmount={globalBetAmount}
-          betSlipOpen={betSlipOpen}
-          className="absolute top-0 right-0 max-w-sm h-full z-10"
-          setSearchQuery={setSearchQuery}
-          setBetSlipOpen={setBetSlipOpen}
-        />
+        {isDesktop &&
+          <MarketSection
+            searchQuery={searchQuery}
+            globalBetAmount={globalBetAmount}
+            betSlipOpen={betSlipOpen}
+            className="absolute top-12 right-0 max-w-sm h-fit z-10"
+            setSearchQuery={setSearchQuery}
+            setBetSlipOpen={setBetSlipOpen}
+          />
+        }
         {/* Global Bet Amount and Search Section */}
-        {roundRecord && <TimeDisplay className="fixed top-14 left-1/2 -translate-x-1/2 z-50  w-full max-w-md" roundRecord={roundRecord} />}
+        {roundRecord && <TimeDisplay className="fixed top-14 left-1/2 -translate-x-1/2 z-50  w-full max-w-sm" roundRecord={roundRecord} />}
         <div className="w-full mb-8 ">
           <div className="grid relative grid-cols-1  gap-6  rounded-lg  pt-20  ">
             <img src="/images/jackpot/bg.png" className=" w-full absolute top-0 left-0 object-cover  mx-auto  h-full " />
@@ -62,8 +65,8 @@ export default function Home() {
                   <img src="/images/dice-game/lady.gif" alt="dice-bg" className='w-auto h-full mt-20' />
                 </div>
                 <img src="/images/jackpot/table.png" className=" w-full sm:mx-auto   h-full  relative z-10  md:max-w-6xl sm:max-w-2xl max-w-xl" />
-                {roundRecord && <StockCardStack  roundRecord={roundRecord} />}
-                
+                {roundRecord && <StockCardStack roundRecord={roundRecord} />}
+
               </div>
             </div>
             <BettingChips
@@ -81,19 +84,18 @@ export default function Home() {
               handleGlobalBetAmountChange={handleGlobalBetAmountChange}
             />
           </div>
-          {/* Bet slip counter badge */}
-          <div className="flex items-center justify-center my-6">
-            <button
-              onClick={() => setBetSlipOpen(true)}
-              className="bg-primary hover:bg-primary/80 text-white rounded-full py-2 px-6 flex items-center space-x-2 transition-all duration-200 shadow-lg shadow-primary/20"
-            >
-              <CreditCard className="w-4 h-4" />
-              <span>Open Bet Slip</span>
-            </button>
-          </div>
         </div>
 
-   
+
+{ !isDesktop &&
+  <MarketSection
+  searchQuery={searchQuery}
+  globalBetAmount={globalBetAmount}
+  betSlipOpen={betSlipOpen}
+  setSearchQuery={setSearchQuery}
+  setBetSlipOpen={setBetSlipOpen}
+/>
+  }
       </Tabs>
 
       <BettingAmoutMobile
@@ -107,9 +109,8 @@ export default function Home() {
 }
 
 
-const MarketSection = ({ title, globalBetAmount, betSlipOpen, searchQuery, setSearchQuery, setBetSlipOpen ,className}: { title: string, searchQuery: string, globalBetAmount: number, betSlipOpen: boolean, className?: string, setSearchQuery: Dispatch<SetStateAction<string>>, setBetSlipOpen: Dispatch<SetStateAction<boolean>> }) => {
+const MarketSection = ({ globalBetAmount, betSlipOpen, searchQuery, setBetSlipOpen, className }: { searchQuery: string, globalBetAmount: number, betSlipOpen: boolean, className?: string, setSearchQuery: Dispatch<SetStateAction<string>>, setBetSlipOpen: Dispatch<SetStateAction<boolean>> }) => {
   const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
-  const [showMore, setShowMore] = useState(false);
   const { data: stockSlotPlacements } = useGetMyStockSlotGameRecord(roundRecord?.id);
   const { showResults, previousRoundId } = useShowResults(roundRecord, stockSlotPlacements as any);
 
@@ -127,8 +128,8 @@ const MarketSection = ({ title, globalBetAmount, betSlipOpen, searchQuery, setSe
   if (!roundRecord) return <div className="text-center py-8 text-gray-400 bg-primary/5 rounded-lg border border-primary/10">No markets found matching your search.</div>
 
   return (
-    <div className={cn("relative", className)}>
-      <div className={cn(" mt-12  px-4 max-w-7xl mx-auto")}>
+    <div className={cn("relative w-full", className)}>
+      {/* <div className={cn(" mt-12  px-4 max-w-7xl mx-auto")}>
         <h2 className="text-lg font-bold flex items-center ">
           {title}
         </h2>
@@ -152,7 +153,7 @@ const MarketSection = ({ title, globalBetAmount, betSlipOpen, searchQuery, setSe
             <TabsTrigger value={SchedulerType.USA_MARKET} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">US Stock</TabsTrigger>
           </TabsList>
         </div>
-      </div>
+      </div> */}
 
       {roundRecord.market.length === 0 ? (
         <div className="text-center py-8 text-gray-400 bg-primary/5 rounded-lg border border-primary/10">
@@ -170,7 +171,7 @@ const MarketSection = ({ title, globalBetAmount, betSlipOpen, searchQuery, setSe
             />
           ))}
 
-          {showMore && sortedMarketItems && sortedMarketItems?.length > 4 && (
+          {/* {showMore && sortedMarketItems && sortedMarketItems?.length > 4 && (
             <>
               {sortedMarketItems?.slice(4).map((marketItem: any) => (
                 <BettingCard
@@ -185,7 +186,7 @@ const MarketSection = ({ title, globalBetAmount, betSlipOpen, searchQuery, setSe
 
           <Button variant="game-secondary" onClick={() => setShowMore(!showMore)} className="w-full text-center flex justify-center">
             {showMore ? "Show Less" : "Show More"}
-          </Button>
+          </Button> */}
         </div>
       )}
 
@@ -244,7 +245,7 @@ const StockCard = ({ stock, className, amount }: { stock?: RankedMarketItem, cla
   )
 }
 
-const StockCardStack = ({ roundRecord }: { roundRecord: RoundRecord}) => {
+const StockCardStack = ({ roundRecord }: { roundRecord: RoundRecord }) => {
 
   const { stocks: marketItems } = useLeaderboard(roundRecord);
   const { data: myStockSlotJackpotGameRecord } = useGetMyStockSlotGameRecord(roundRecord?.id);
@@ -264,7 +265,7 @@ const StockCardStack = ({ roundRecord }: { roundRecord: RoundRecord}) => {
 
   return (<div className="absolute p-2 left-1/2 -translate-x-1/2  md:bottom-[calc(45%+1rem)] bottom-[calc(33%+1rem)] z-10 w-full  md:max-w-xl sm:max-w-sm max-w-[280px]  ">
     <div style={{ transform: 'perspective(1000px) rotateX(15deg)' }} className=" origin-center mx-auto flex z-10 gap-2 md:gap-4 h-fit w-full" >
-    
+
       <div className="flex-1 gap-2 md:gap-4 flex flex-col">
         <div className="col-span-2 text-center font-bold text-xs md:text-sm">LOW</div>
         <div className="flex-1 gap-2 md:gap-4 flex justify-around">

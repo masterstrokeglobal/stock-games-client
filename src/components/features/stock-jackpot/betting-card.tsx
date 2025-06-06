@@ -11,7 +11,6 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 import { useCallback, useMemo, useState } from "react"
 import { StockJackpotPlacementType } from "@/models/stock-slot-jackpot"
 
-
 interface BettingCardProps {
   globalBetAmount: number,
   roundRecord: RoundRecord,
@@ -65,16 +64,15 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
   const bettingOpen = !isPlaceOver && !isPlacingBet;
 
   return (
-    <Card className={cn("w-full bg-white/10 border-none relative text-white p-3 rounded-none border-b", className)}>
+    <Card className={cn("w-full bg-black/70 backdrop-blur-sm border-none relative text-white p-3 rounded-none border-b", className)}>
       <div className="flex flex-col md:flex-row md:items-center gap-4">
-        <div className="flex items-center justify-around md:flex-1">
+        <div className="flex flex-col md:flex-1">
           <span className="font-bold text-sm md:text-base">{marketItem.name}</span>
-          <span className="text-gray-400 text-sm md:text-base ml-2">{marketItem.currency} {initialPrice?.toFixed(2)}</span>
-          {marketItem.id && <div className="md:hidden"><FavoriteMarketItem marketItemId={marketItem.id} /></div>}
+          <span className="text-gray-400 text-sm md:text-base">{marketItem.currency} {initialPrice?.toFixed(2)}</span>
         </div>
 
         <div className="flex gap-4 mt-2 w-full flex-1">
-          <div className="flex-1 relative w-1/2">
+          <div className="flex-1 relative">
             {downPlaced ? (
               <div className="w-full h-8 md:h-10 bg-red-900/40 rounded-lg border-2 border-red-500/50 flex items-center justify-center">
                 <span className="text-white font-bold text-sm md:text-base">{formatRupee(downWinAmount)}</span>
@@ -102,7 +100,7 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
             )}
           </div>
 
-          <div className="flex-1 relative w-1/2">
+          <div className="flex-1 relative">
             {upPlaced ? (
               <div className="w-full h-8 md:h-10 bg-green-900/40 rounded-lg border-2 border-green-500/50 flex items-center justify-center">
                 <span className="text-white font-bold text-sm md:text-base">{formatRupee(upWinAmount)}</span>
@@ -130,7 +128,6 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
             )}
           </div>
         </div>
-        {marketItem.id && <div className="hidden md:block"><FavoriteMarketItem marketItemId={marketItem.id} /></div>}
       </div>
     </Card>
   )

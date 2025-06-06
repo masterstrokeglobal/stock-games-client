@@ -5,23 +5,30 @@ class GameRecord {
     roundId: number;
     userId: number;
     amount: number;
+    startRound?: number;
+    endRound?: number;
     isWinner: boolean;
     placementType: PlacementType;
     placeValue?: string;
     market: number[];
+    placedValues?: string;
     createdAt: Date;
     round?: RoundRecord;
     updatedAt: Date;
     deletedAt?: Date;
 
     constructor(params: Partial<GameRecord>) {
+        console.log(params, "params");
         this.id = params.id;
         this.roundId = params.roundId ?? 0;
         this.userId = params.userId!;
         this.amount = params.amount!;
         this.isWinner = params.isWinner ?? false;
         this.placementType = params.placementType!;
+        this.startRound = params.startRound;
+        this.endRound = params.endRound;
         this.market = params.market!;
+        this.placedValues = params.placedValues;
         this.placeValue = params.placeValue ?? this.placementType;
         this.createdAt = params.createdAt!;
         this.round = params.round;

@@ -35,7 +35,7 @@ const GamePage = () => {
         <Navbar />
         <main className="grid md:grid-cols-12 grid-cols-1 md:grid-rows-7 grid-rows-1 gap-4 flex-1 px-4 pb-4 md:h-screen pt-16 mx-auto w-full overflow-scroll">
           <div
-            className="h-96 md:col-span-7 col-span-12 md:row-span-6 bg-las relative overflow-hidden w-full order-1"
+            className=" md:col-span-7 col-span-12 md:row-span-4 bg-las relative overflow-hidden w-full order-1"
             style={{
               ...borderStyle,
               backgroundImage: `url(/images/bg-lightning.jpg)`,
@@ -54,7 +54,7 @@ const GamePage = () => {
           {roundRecord && (
             <PlaceBets
               roundRecord={roundRecord}
-              className="md:col-span-5 col-span-12 md:row-span-6 md:order-2 order-1 h-96"
+              className="md:col-span-5 col-span-12 md:row-span-4 md:order-2 order-1 "
               globalBetAmount={globalBetAmount}
             />
           )}

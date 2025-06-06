@@ -111,7 +111,6 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         return roundRecord;
     }, [data?.data?.roundRecords?.[0], isSuccess]);
 
-    console.log("Current Round Record:", roundRecord);
 
     useEffect(() => {
 
