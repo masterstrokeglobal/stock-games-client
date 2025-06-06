@@ -111,6 +111,13 @@ export const useGetMyPlacements = (filter: any) => {
     });
 };
 
+export const useGetAdvancePlacements = (filter: any) => {
+    return useQuery({
+        queryKey: ["advancePlacements", filter],
+        queryFn: () => gameRecordAPI.getAdvancePlacements(filter),
+    });
+};
+
 // Get Game Record History Hook infinite query page and limit 
 export const useGameRecordHistoryInfinite = (params: any) => {
     return useInfiniteQuery({

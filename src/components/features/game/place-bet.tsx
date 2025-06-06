@@ -14,12 +14,12 @@ import {
   getPlacementString,
   RED_NUMBERS,
 } from "@/lib/utils";
-import { PlacementType } from "@/models/game-record";
+import GameRecord, { PlacementType } from "@/models/game-record";
 import { RoundRecord } from "@/models/round-record";
 import { useCreateAdvanceGameRecord } from "@/react-query/advance-game-record-queries";
-import { useCreateGameRecord } from "@/react-query/game-record-queries";
+import { useCreateGameRecord, useGetAdvancePlacements, useGetMyPlacements } from "@/react-query/game-record-queries";
 import { useTranslations } from "next-intl";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { toast } from "sonner";
 
 type Props = {
@@ -31,6 +31,30 @@ type Props = {
 const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
   const t = useTranslations("game");
   const sectionRef = useRef<HTMLDivElement>(null);
+  const { data : advanceData, isSuccess : isAdvanceSuccess } = useGetAdvancePlacements({ roundId: roundRecord.id.toString() });
+  const { data, isSuccess } = useGetMyPlacements({ roundId: roundRecord.id.toString() });
+
+    const currentBetsData: GameRecord[] = useMemo(() => {
+        if (isSuccess) {
+            return data.data;
+        }
+        return [];
+    }, [isSuccess, data]);
+
+
+  const advanceBetsData: GameRecord[] = useMemo(() => {
+      if (isAdvanceSuccess) {
+          return advanceData.data;
+      }
+      return [];
+  }, [isAdvanceSuccess, advanceData]);
+
+
+  console.log("Current Bets Data:", currentBetsData);
+  console.log(isSuccess, "isSuccess for current bets");
+  console.log("Advance Bets Data:", advanceBetsData);
+  console.log(isAdvanceSuccess, "isSuccess for advance bets");
+
   // const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
   const gameState = useGameState(roundRecord);
   const currentRound = roundRecord.todayCount || -1;

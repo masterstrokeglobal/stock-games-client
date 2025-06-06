@@ -34,6 +34,13 @@ export const gameRecordAPI = {
       params: filter
     });
   },
+
+  getAdvancePlacements: async (filter: any) => {
+    return api.get("/game-records/my-advance-placements", {
+      params: filter
+    });
+  },
+
   getGameRecordHistory: async (filter: any) => {
     return api.get("/round-records/history", {
       params: filter

@@ -23,7 +23,7 @@ const RedBlackLeaderBoard = ({ roundRecord, className }: Props) => {
     // const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
     const { isGameOver } = useGameState(roundRecord);
     // const { isMobile } = useWindowSize();
-
+    console.log('RedBlackLeaderBoard', roundRecord, leaderboardData);
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord.id);
 
     useEffect(() => {
