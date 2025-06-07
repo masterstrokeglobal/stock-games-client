@@ -11,21 +11,26 @@ export default function ParallaxImage({ multiplier, isMoving = false }: Parallax
   const imgContainerRef = useRef<HTMLDivElement>(null)
   
   useEffect(() => {
-    if (!imageRef.current || !imgContainerRef.current || !isMoving) return
+    if (!imageRef.current || !imgContainerRef.current) return
     
-    // Start constant X-axis movement (horizontal scrolling)
-    const imageWidth = 8000 * 16 // Total width of all tiles
-    const containerWidth = imgContainerRef.current.clientWidth
-    const maxMoveX = imageWidth - containerWidth
-    
-    // Create infinite horizontal movement
-    gsap.set(imageRef.current, { x: 0 })
-    gsap.to(imageRef.current, {
-      x: -maxMoveX,
-      duration: 500, // 30 seconds for full cycle
-      ease: "none",
-      repeat: -1, // Infinite repeat
-    })
+    if (isMoving) {
+      // Start constant X-axis movement (horizontal scrolling)
+      const imageWidth = 8000 * 16 // Total width of all tiles
+      const containerWidth = imgContainerRef.current.clientWidth
+      const maxMoveX = imageWidth - containerWidth
+      
+      // Create infinite horizontal movement
+      gsap.set(imageRef.current, { x: 0 })
+      gsap.to(imageRef.current, {
+        x: -maxMoveX,
+        duration: 500, // 30 seconds for full cycle
+        ease: "none",
+        repeat: -1, // Infinite repeat
+      })
+    } else {
+      // Immediately stop all X-axis animations when isMoving becomes false
+      gsap.killTweensOf(imageRef.current, "x")
+    }
     
     return () => {
       gsap.killTweensOf(imageRef.current)
@@ -57,14 +62,14 @@ export default function ParallaxImage({ multiplier, isMoving = false }: Parallax
     })
     
   }, [multiplier])
-  
+
   return (
     <div ref={imgContainerRef} className="absolute inset-0 overflow-hidden">
       <div ref={imageRef} className="min-w-[calc(8000px*16)] min-h-[8000px] absolute flex">
         {Array.from({ length: 16 }).map((_, i) => (
           <div
             key={i}
-            className="w-[8000px] h-[8000px] absolute bg-[url('/images/aviator/scene_green.webp')] bg-cover bg-no-repeat"
+            className="w-[8000px] h-[8000px] absolute bg-[url('/images/aviator/scene.webp')] bg-cover bg-no-repeat"
             style={{ left: `${i * 8000}px` }}
           />
         ))}

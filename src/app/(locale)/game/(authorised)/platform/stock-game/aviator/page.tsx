@@ -20,7 +20,7 @@ const StockSlot = () => {
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsstockPresent(roundRecord?.market.some((item: MarketItem) => item.id == Number(stockSelectedAviator)) ?? false);
-        }, 3000);
+        }, 5000);
 
         return () => clearTimeout(timer);
     }, [roundRecord, stockSelectedAviator]);

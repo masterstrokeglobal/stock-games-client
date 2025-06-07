@@ -4,15 +4,18 @@ import { useEffect, useRef } from "react"
 import * as THREE from "three"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js"
+import { gsap } from "gsap"
 
 interface AviatorCanvasProps {
   multiplier: number
   shouldStartTakeOffAnimation?: boolean
+  opacity?: number
 }
 
-const AviatorCanvas = ({ multiplier, shouldStartTakeOffAnimation = false }: AviatorCanvasProps) => {
+const AviatorCanvas = ({ multiplier, shouldStartTakeOffAnimation = false, opacity = 1 }: AviatorCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const canvasContainerRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<{
     scene: THREE.Scene
     camera: THREE.PerspectiveCamera
@@ -285,20 +288,58 @@ const AviatorCanvas = ({ multiplier, shouldStartTakeOffAnimation = false }: Avia
     }
   }, [shouldStartTakeOffAnimation])
 
+  useEffect(() => {
+    if (!canvasContainerRef.current) return
+
+    if (shouldStartTakeOffAnimation) {
+      // Scale up to full size and move to center when animation starts
+      console.log("📈 Scaling canvas to full size and centering")
+      gsap.to(canvasContainerRef.current, {
+        // scale: 1,
+        x: "0%",
+        y: "0%",
+        duration: 1,
+        ease: "power2.out"
+      })
+    } else {
+      // Scale down to half size and move to bottom-left initially or when resetting
+      console.log("📉 Scaling canvas to half size and moving to bottom-left")
+      gsap.to(canvasContainerRef.current, {
+        // scale: 0.5,
+        x: "-30%", // Move left
+        y: "40%",  // Move down
+        duration: 1,
+        ease: "power2.out"
+      })
+    }
+  }, [shouldStartTakeOffAnimation])
+
   return (
     <div ref={containerRef} className="absolute inset-0" style={{ pointerEvents: 'auto' }}>
-      <canvas
-        ref={canvasRef}
+      <div 
+        ref={canvasContainerRef} 
         className="w-full h-full"
-        style={{
-          background: 'transparent',
-          cursor: 'grab',
-          touchAction: 'none'
+        data-canvas-container
+        style={{ 
+          transformOrigin: 'center center',
+          transform: 'scale(1) translate(-30%, 40%)', // Initial scale and position
+          opacity: opacity,
+          transition: 'opacity 0.3s ease-in-out'
         }}
-        onMouseDown={(e) => e.currentTarget.style.cursor = 'grabbing'}
-        onMouseUp={(e) => e.currentTarget.style.cursor = 'grab'}
-        onMouseLeave={(e) => e.currentTarget.style.cursor = 'grab'}
-      />
+      >
+        <canvas
+          ref={canvasRef}
+          className="w-full h-full"
+          style={{
+            background: 'transparent',
+            cursor: 'grab',
+            touchAction: 'none'
+          }}
+          onMouseDown={(e) => e.currentTarget.style.cursor = 'grabbing'}
+          onMouseUp={(e) => e.currentTarget.style.cursor = 'grab'}
+          onMouseLeave={(e) => e.currentTarget.style.cursor = 'grab'}
+        />
+      </div>
     </div>
   )
 }

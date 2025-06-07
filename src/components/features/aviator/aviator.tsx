@@ -12,6 +12,7 @@ import { useEffect, useState } from "react"
 import BettingPanel from "./BettingPanel"
 import GameDisplay from "./GameDisplay"
 import LastRoundsPanel from "./LastRoundsPanel"
+import gsap from "gsap"
 
 // Game phases enum
 enum GamePhase {
@@ -31,7 +32,7 @@ type AviatorProps = {
 
 export default function Aviator({ className, roundRecord, token }: AviatorProps) {
   const { gameType } = useGameType();
-  const { gameTimeLeft, isPlaceOver, placeTimeLeft, isGameOver } = useGameState(roundRecord);
+  const { isPlaceOver, placeTimeLeft, isGameOver } = useGameState(roundRecord);
   const aviator = useAviator({
     type: gameType,
     token: token,
@@ -40,136 +41,15 @@ export default function Aviator({ className, roundRecord, token }: AviatorProps)
 
   const { isMobile } = useWindowSize();
 
-  const [, setMultiplier] = useState(1.0)
-  const [, setGamePhase] = useState<GamePhase>(GamePhase.WAITING)
 
   const [shouldShowBlast, setShouldShowBlast] = useState(false)
   const [isParallaxMoving, setIsParallaxMoving] = useState(false)
   const [hasTriggeredFlying, setHasTriggeredFlying] = useState(false)
-  const [shouldStartTakeOffAnimation, setShouldStartTakeOffAnimation] = useState(false)
+  const [canvasOpacity, setCanvasOpacity] = useState(1)
 
   // Mobile responsiveness state
   const [showLastRounds, setShowLastRounds] = useState(false)
 
-  // Generate random crash multiplier (weighted towards lower values)
-  const generateCrashMultiplier = (): number => {
-    const random = Math.random()
-
-    // Heavily weighted probability distribution to keep average under 2.5x
-    if (random < 0.7) {
-      // 70% chance: 1.00x - 2.00x (average ~1.5x)
-      return 1.0 + Math.random() * 1.0
-    } else if (random < 0.9) {
-      // 20% chance: 2.00x - 4.00x (average ~3.0x)
-      return 2.0 + Math.random() * 2.0
-    } else if (random < 0.98) {
-      // 8% chance: 4.00x - 7.00x (average ~5.5x)
-      return 4.0 + Math.random() * 3.0
-    } else {
-      // 2% chance: 7.00x - 10.00x (average ~8.5x)
-      return 7.0 + Math.random() * 3.0
-    }
-  }
-
-  // Main game simulation logic
-  useEffect(() => {
-    let phaseTimer: NodeJS.Timeout
-    let multiplierInterval: NodeJS.Timeout
-
-    const startBettingPhase = () => {
-      console.log("🎯 Starting betting phase")
-
-      // Ensure clean state for new round
-      clearInterval(multiplierInterval)
-      clearTimeout(phaseTimer)
-
-      setGamePhase(GamePhase.BETTING_OPEN)
-      setMultiplier(1.0)
-      setShouldShowBlast(false) // Ensure blast is off for new round
-      setIsParallaxMoving(false) // Stop parallax movement
-      setHasTriggeredFlying(false) // Reset flying trigger
-    }
-
-    const startGamePhase = () => {
-      console.log("🚀 Starting game phase")
-      setGamePhase(GamePhase.GAME_RUNNING)
-
-      // Generate target crash multiplier
-      const targetMultiplier = generateCrashMultiplier()
-
-      // Determine if plane will crash or fly away
-      // 10% chance to fly away, but only if target multiplier is >= 3.0x
-      const willFlyAway = Math.random() < 0.10 && targetMultiplier >= 3.0
-
-      console.log(`🎲 Target multiplier: ${targetMultiplier.toFixed(2)}x, Will fly away: ${willFlyAway}`)
-
-      const gameStartTime = Date.now()
-
-      // Start multiplier growth
-      multiplierInterval = setInterval(() => {
-        setMultiplier(prev => {
-          const newValue = Number.parseFloat((prev + 0.01).toFixed(2))
-
-          // Check if we should end the game
-          if (!willFlyAway && newValue >= targetMultiplier) {
-            // Normal crash
-            clearInterval(multiplierInterval)
-            endGame(targetMultiplier, Date.now() - gameStartTime, "crashed")
-            return targetMultiplier
-          } else if (willFlyAway && newValue >= targetMultiplier + 1.0) {
-            // Plane flies away at target + 1x (making it more achievable)
-            clearInterval(multiplierInterval)
-            endGame(newValue, Date.now() - gameStartTime, "flew_away")
-            return newValue
-          }
-
-          return newValue
-        })
-      }, 100) // Update every 100ms for smooth animation
-    }
-
-    const endGame = (finalMultiplier: number, duration: number, status: "crashed" | "flew_away") => {
-      console.log(`🏁 Game ended: ${finalMultiplier.toFixed(2)}x - ${status}`)
-
-      // Clear any remaining intervals immediately
-      clearInterval(multiplierInterval)
-
-      setGamePhase(GamePhase.GAME_ENDED)
-
-      // Show blast animation if crashed or trigger fly away animation
-      if (status === "crashed") {
-        setShouldShowBlast(true)
-      } else if (status === "flew_away") {
-        // Trigger plane fly away animation
-      }
-
-      // Wait 10 seconds before starting next round
-      phaseTimer = setTimeout(() => {
-        setGamePhase(GamePhase.WAITING)
-
-        // Only reset shouldShowBlast if the GameDisplay component will handle setting it to false when done
-        if (status === "flew_away") {
-          setShouldShowBlast(false)
-        }
-
-        // Reset other game states for the new round
-        setMultiplier(1.0)
-
-        // Brief waiting period before next betting phase
-        setTimeout(() => {
-          startBettingPhase()
-        }, 1000)
-      }, 10000)
-    }
-
-    // Start the first betting phase
-    startBettingPhase()
-
-    return () => {
-      clearTimeout(phaseTimer)
-      clearInterval(multiplierInterval)
-    }
-  }, []) // Empty dependency array - only run once on mount
 
   // Handle game state changes based on roundRecord
   useEffect(() => {
@@ -178,38 +58,74 @@ export default function Aviator({ className, roundRecord, token }: AviatorProps)
     if (!isPlaceOver && placeTimeLeft.seconds <= 2 && placeTimeLeft.seconds > 0 && !hasTriggeredFlying) {
       console.log("🛫 Starting flying sequence - 2 seconds before game start")
       setIsParallaxMoving(true) // Start parallax movement
-      setShouldStartTakeOffAnimation(true) // Start plane takeoff animation
       setHasTriggeredFlying(true)
     }
 
-    // Stop animation 2 seconds after round ends
-    if (isGameOver && shouldStartTakeOffAnimation) {
-      console.log("🛬 Game ended, stopping animation in 2 seconds")
-      const stopTimer = setTimeout(() => {
-        console.log("🛑 Stopping plane animation")
-        setShouldStartTakeOffAnimation(false)
-        setIsParallaxMoving(false) // Also stop parallax movement
-      }, 2000) // 2-second delay after round ends
-
-      return () => clearTimeout(stopTimer)
+    // Stop animation immediately when game ends
+    if (isGameOver && isParallaxMoving) {
+      console.log("🛬 Game ended, stopping animation immediately")
+      setIsParallaxMoving(false) // Stop parallax movement immediately
     }
 
     // Reset flying trigger when new round starts
     if (!isPlaceOver && placeTimeLeft.raw > 10) {
       setHasTriggeredFlying(false)
-      setShouldStartTakeOffAnimation(false) // Reset animation trigger
     }
+  }, [isPlaceOver, isGameOver, placeTimeLeft.raw, hasTriggeredFlying, isParallaxMoving])
 
-    // Handle phase transitions based on game state
-    if (isPlaceOver && !isGameOver) {
-      setGamePhase(GamePhase.BETTING_CLOSED)
-      // Game should start automatically based on roundRecord timing
-    } else if (!isPlaceOver) {
-      setGamePhase(GamePhase.BETTING_OPEN)
-    } else if (isGameOver) {
-      setGamePhase(GamePhase.GAME_ENDED)
+  // Monitor backend events for crash/fly-away
+  useEffect(() => {
+    if (aviator.data.length > 0) {
+      const latestItem = aviator.data[aviator.data.length - 1]
+      
+      if (latestItem.status === "crashed") {
+        console.log(`💥 PLANE CRASHED at ${latestItem.multiplier.toFixed(2)}x multiplier! (Backend Event)`)
+        setShouldShowBlast(true) // Trigger blast video
+        setCanvasOpacity(0) // Hide canvas during blast
+        
+        // Reset canvas opacity after 5 seconds
+        setTimeout(() => {
+          console.log("🎨 Resetting canvas opacity after blast")
+          setCanvasOpacity(1)
+        }, 5000)
+        
+      } else if (latestItem.status === "flew_away") {
+        console.log(`🚀 PLANE FLEW AWAY at ${latestItem.multiplier.toFixed(2)}x multiplier! (Backend Event)`)
+        // Plane flew away - no blast needed
+        setShouldShowBlast(false)
+        
+        // Find the canvas container element for fly-away animation
+        const canvasContainer = document.querySelector('[data-canvas-container]') as HTMLElement
+        if (canvasContainer) {
+          console.log("✈️ Starting fly-away animation")
+          
+          // Animate canvas to scale down to 0 and move to top-right over 1 second
+          gsap.to(canvasContainer, {
+            scale: 0,
+            x: "50%", // Move to right
+            y: "-50%", // Move to top
+            duration: 1,
+            ease: "power2.in",
+            onComplete: () => {
+              console.log("✈️ Plane flew away completely")
+            }
+          })
+          
+          // Reset canvas after 5 seconds
+          setTimeout(() => {
+            console.log("🔄 Resetting canvas position after fly-away")
+            gsap.to(canvasContainer, {
+              scale: 1,
+              x: "-30%", // Back to original position
+              y: "40%", // Back to original position
+              duration: 0.5,
+              ease: "power2.out"
+            })
+          }, 5000)
+        }
+      }
     }
-  }, [isPlaceOver, isGameOver, placeTimeLeft.raw, hasTriggeredFlying, shouldStartTakeOffAnimation])
+  }, [aviator.data]) // Monitor aviator.data changes from backend
 
   const toggleLastRounds = () => {
     setShowLastRounds(!showLastRounds)
@@ -239,7 +155,7 @@ export default function Aviator({ className, roundRecord, token }: AviatorProps)
               shouldShowBlast={shouldShowBlast}
               setShouldShowBlast={setShouldShowBlast}
               isParallaxMoving={isParallaxMoving}
-              shouldStartTakeOffAnimation={shouldStartTakeOffAnimation}
+              canvasOpacity={canvasOpacity}
             />
 
             <BettingPanel roundRecord={roundRecord} aviator={aviator} multiplier={aviator.data[aviator.data.length - 1]?.multiplier ?? 1} />

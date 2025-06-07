@@ -10,9 +10,10 @@ interface GameDisplayProps {
   setShouldShowBlast?: (isPlaying: boolean) => void
   isParallaxMoving?: boolean
   shouldStartTakeOffAnimation?: boolean
+  canvasOpacity?: number
 }
 
-const GameDisplay = ({ multiplier, shouldShowBlast = false, setShouldShowBlast, isParallaxMoving = false, shouldStartTakeOffAnimation = false }: GameDisplayProps) => {
+const GameDisplay = ({ multiplier, shouldShowBlast = false, setShouldShowBlast, isParallaxMoving = false, canvasOpacity = 1 }: GameDisplayProps) => {
 
     const [isBlastPlaying, setIsBlastPlaying] = useState(false)
 
@@ -35,7 +36,7 @@ const GameDisplay = ({ multiplier, shouldShowBlast = false, setShouldShowBlast, 
       <div className="relative flex-1">
         <div className="absolute inset-0 ">
           <ParallaxImage multiplier={multiplier} isMoving={isParallaxMoving} />
-          <AviatorCanvas multiplier={multiplier} shouldStartTakeOffAnimation={shouldStartTakeOffAnimation} />
+          <AviatorCanvas multiplier={multiplier} shouldStartTakeOffAnimation={isParallaxMoving} opacity={canvasOpacity} />
           <BlastVideo isPlaying={isBlastPlaying} setIsBlastPlaying={handleBlastComplete} />
           
           <div className="absolute bottom-0 left-[50%] translate-x-[-50%] flex items-center justify-center pointer-events-none">
