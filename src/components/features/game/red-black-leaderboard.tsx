@@ -21,6 +21,7 @@ const RedBlackLeaderBoard = ({ roundRecord, className }: Props) => {
     const { stocks: leaderboardData } = useLeaderboard(roundRecord);
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const { isGameOver } = useGameState(roundRecord);
+
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord.id);
 
     useEffect(() => {

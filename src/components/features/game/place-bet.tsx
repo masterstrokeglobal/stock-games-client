@@ -31,6 +31,7 @@ type Props = {
 const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
   const t = useTranslations("game");
   const sectionRef = useRef<HTMLDivElement>(null);
+
   const { data: advanceData, isSuccess: isAdvanceSuccess } = useGetAdvancePlacements({ roundId: roundRecord.id.toString() });
   const { data, isSuccess } = useGetMyPlacements({ roundId: roundRecord.id.toString() });
 
