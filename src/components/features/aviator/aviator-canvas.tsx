@@ -1,10 +1,9 @@
 "use client"
 
+import { gsap } from "gsap"
 import { useEffect, useRef } from "react"
 import * as THREE from "three"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
-import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js"
-import { gsap } from "gsap"
 
 interface AviatorCanvasProps {
   multiplier: number
@@ -12,7 +11,7 @@ interface AviatorCanvasProps {
   opacity?: number
 }
 
-const AviatorCanvas = ({ multiplier, shouldStartTakeOffAnimation = false, opacity = 1 }: AviatorCanvasProps) => {
+const AviatorCanvas = ({  shouldStartTakeOffAnimation = false, opacity = 1 }: AviatorCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasContainerRef = useRef<HTMLDivElement>(null)

@@ -41,13 +41,7 @@ const StockProgressChart = () => {
         if (!userPlacements || userPlacements.length === 0) return 0;
         return userPlacements.reduce((sum, placement) => sum + placement.bettedAmount, 0);
     }, [userPlacements]);
-    
-    const generateDataPoint = (previousValue: number): number => {
-        const volatility = 0.02;
-        const trend = Math.random() - 0.5;
-        const change = previousValue * volatility * trend;
-        return Math.max(previousValue + change, totalBettedAmount);
-    };
+
     
     useEffect(() => {
         if (!roundRecord || isGameOver) return;

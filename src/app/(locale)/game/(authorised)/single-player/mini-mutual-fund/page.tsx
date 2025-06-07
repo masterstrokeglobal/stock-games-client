@@ -3,7 +3,7 @@ import Navbar from "@/components/features/game/navbar";
 import StockSelectionGridSinglePlayer from "@/components/features/game/single-player/mmf/mini-mutual-fund-bet-single-player";
 import StockProgressChart from "@/components/features/game/single-player/mmf/mmf-stock-chart";
 import { useHorseRaceSound } from "@/context/audio-context";
-import { useCurrentGame, useIsPlaceOver } from "@/hooks/use-current-game";
+import { useCurrentGame } from "@/hooks/use-current-game";
 import { useRoundRecordGameType } from "@/hooks/use-game-type";
 import useWindowSize from "@/hooks/use-window-size";
 import { useSinglePlayerGameStore } from "@/store/single-player-game-store";
@@ -20,7 +20,6 @@ const GamePage = () => {
     const [roundRecordGameType] = useRoundRecordGameType();
     const { roundRecord: roundRecordData, isLoading: isRoundLoading } = useCurrentGame(roundRecordGameType);
     useHorseRaceSound(roundRecordData);
-    const isPlaceOver = useIsPlaceOver(roundRecordData);
 
     // Game store integration
     const {

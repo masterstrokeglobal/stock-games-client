@@ -15,13 +15,7 @@ import LastRoundsPanel from "./LastRoundsPanel"
 import gsap from "gsap"
 
 // Game phases enum
-enum GamePhase {
-  BETTING_OPEN = "BETTING_OPEN",
-  BETTING_CLOSED = "BETTING_CLOSED",
-  GAME_RUNNING = "GAME_RUNNING",
-  GAME_ENDED = "GAME_ENDED",
-  WAITING = "WAITING"
-}
+
 
 
 type AviatorProps = {

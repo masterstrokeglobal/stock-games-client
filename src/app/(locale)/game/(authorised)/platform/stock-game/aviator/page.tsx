@@ -8,7 +8,7 @@ import { useMarketSelector, useStockSelectorAviator } from '@/hooks/use-market-s
 import { MarketItem } from '@/models/market-item';
 import { RoundRecordGameType } from '@/models/round-record';
 import { useAviatorToken } from '@/react-query/aviator-queries';
-import { useMemo, useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 const StockSlot = () => {
     const { marketSelected } = useMarketSelector();
     const { stockSelectedAviator } = useStockSelectorAviator();

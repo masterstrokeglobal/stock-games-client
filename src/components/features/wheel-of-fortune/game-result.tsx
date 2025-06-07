@@ -1,7 +1,6 @@
 import { useGetWheelOfFortuneRoundResult } from '@/react-query/wheel-of-fortune-queries';
 import { useEffect, useState } from 'react';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Alert, AlertDescription } from "@/components/ui/alert";
 interface GameResultDialogProps {
   open: boolean;
@@ -28,10 +27,10 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
 
 import { AlertCircle, Loader2 } from "lucide-react";
 
-import Image from "next/image";
+import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { cn, INR } from "@/lib/utils";
 import { Separator } from "@radix-ui/react-separator";
-import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
+import Image from "next/image";
 
 type GameResultProps = {
     showDialog: boolean;

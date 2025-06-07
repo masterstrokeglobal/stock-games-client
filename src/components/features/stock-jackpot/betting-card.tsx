@@ -1,15 +1,14 @@
 "use client"
 
-import FavoriteMarketItem from "@/components/common/favorite-markitem"
 import { Card } from "@/components/ui/card"
 import { useIsPlaceOver } from "@/hooks/use-current-game"
 import { RankedMarketItem } from "@/hooks/use-leadboard"
 import { cn, formatRupee } from "@/lib/utils"
 import { RoundRecord } from "@/models/round-record"
+import { StockJackpotPlacementType } from "@/models/stock-slot-jackpot"
 import { useCreateStockSlotGameRecord, useGetMyStockSlotGameRecord } from "@/react-query/game-record-queries"
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 import { useCallback, useMemo, useState } from "react"
-import { StockJackpotPlacementType } from "@/models/stock-slot-jackpot"
 
 interface BettingCardProps {
   globalBetAmount: number,

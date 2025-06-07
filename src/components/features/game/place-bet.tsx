@@ -32,14 +32,14 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
   const t = useTranslations("game");
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  const { data: advanceData, isSuccess: isAdvanceSuccess } = useGetAdvancePlacements({ roundId: roundRecord.id.toString() });
-  const { data, isSuccess } = useGetMyPlacements({ roundId: roundRecord.id.toString() });
+  const { data: advanceData } = useGetAdvancePlacements({ roundId: roundRecord.id.toString() });
+  const { data } = useGetMyPlacements({ roundId: roundRecord.id.toString() });
 
   const advancePlacements: GameRecord[] = useMemo(() => {
     return advanceData?.data.map((item: any) => new GameRecord(item)) || [];
   }, [advanceData]);
 
-  const { redBets, blackBets, placements } = useMemo(() => {
+  const { redBets, blackBets } = useMemo(() => {
     const placements: GameRecord[] | undefined = data?.data.map((item: any) => new GameRecord(item));
 
     if (!placements) return { placements: [], redBets: 0, blackBets: 0 };
@@ -163,17 +163,6 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
     }).length;
   }, [advancePlacements, advanceBets]);
 
-
-
-  const advanceBetsas = useMemo(() => {
-    return advanceBets.filter(bet => {
-      return advancePlacements.some(
-        p => p.placementType === PlacementType.ROUND_RANGE &&
-          p.startRound === bet.start &&
-          p.endRound === bet.end
-      );
-    });
-  }, [advancePlacements]);
 
 
 

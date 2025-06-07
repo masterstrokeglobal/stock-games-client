@@ -4,13 +4,11 @@ import { useGameState, useShowResults } from "@/hooks/use-current-game";
 import { useGameType } from "@/hooks/use-game-type";
 import useNSEAvailable from "@/hooks/use-nse-available";
 import { cn } from "@/lib/utils";
-import { PlacementType } from "@/models/game-record";
 import MarketItem, { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { SinglePlayerGamePlacement } from "@/models/singleplayer-game-placement";
 import User from "@/models/user";
 import { useCreateSinglePlayerRouletteBet, useGetMyCurrentPlacement } from "@/react-query/game-record-queries";
-import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import GameResultDialog from "../game/result-dialog";
 
@@ -22,7 +20,6 @@ type Props = {
 };
 
 const SinglePlayerRouletteGame = ({ roundRecord, globalBetAmount, children }: Props) => {
-    const t = useTranslations("game");
     const [cardsFlipped, setCardsFlipped] = useState<boolean[]>([false, false, false, false]);
     const gameState = useGameState(roundRecord);
     const isNSEAvailable = useNSEAvailable();
@@ -202,7 +199,6 @@ const SinglePlayerRouletteGame = ({ roundRecord, globalBetAmount, children }: Pr
 export default SinglePlayerRouletteGame;
 
 const CardComponent = ({
-    market,
     index,
     gameState,
     cardsFlipped,

@@ -1,7 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Clock, Play, Square, Triangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuthStore } from '@/context/auth-context';
 import { useGameState, useIsPlaceOver, useShowResults } from '@/hooks/use-current-game';
@@ -14,8 +11,9 @@ import User from '@/models/user';
 import { useCreateSinglePlayerRouletteBet, useGetCurrentRoundPlacements } from '@/react-query/game-record-queries';
 import { useStockBettingStore } from '@/store/betting-store';
 import { useSinglePlayerGameStore } from '@/store/single-player-game-store';
+import { Clock, Play, Square, Triangle } from 'lucide-react';
 import Link from 'next/link';
-import { CurrentGameState } from '../../contants';
+import { useMemo } from 'react';
 import GameResultDialog from '../../result-dialog';
 import BetInputForm from './mini-mutual-fund-place';
 
