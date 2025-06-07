@@ -86,8 +86,8 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
                             <span className="text-lg">
                                 {(() => {
                                     const price = parseFloat(stockPrice[stock.code ?? '']?.toString() || '0').toFixed(2);
-                                    const lastDigit = price.slice(-1);
-                                    const restOfPrice = price.slice(0, -1);
+                                    const lastDigit = price.slice(-2, -1);
+                                    const restOfPrice = price.slice(0, -2);
                                     return (
                                         <>
                                             {restOfPrice}
