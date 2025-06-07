@@ -91,7 +91,7 @@ const MultiplayerRouletteGame = ({ lobbyRound, lobby, result }: Props) => {
     const boardChips = gameState.isPlaceOver ? bettedChips : [...bettedChips, ...chips];
 
     return (
-        <div className="max-w-4xl mx-auto lg:px-4 px-2 py-2  ">
+        <div className="max-w-4xl mx-auto lg:px-4 px-2 py-2">
             <div className="relative rounded-xl lg:flex-row flex-col flex gap-8 border-brown-800">
                 <div className='lg:w-6/12'>
                     <h1 className='text-xl lg:text-left text-center mt-2 mb-4 leading-none text-white font-semibold'>

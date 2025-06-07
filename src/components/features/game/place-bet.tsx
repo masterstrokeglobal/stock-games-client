@@ -65,7 +65,7 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
 
   const fancyRounds = [
     {
-      Description: "Next Round Winner",
+      Description: `Next Round Winner ${currentRound + 1}`,
       start: currentRound + 1,
       end: currentRound + 1,
     },
@@ -143,33 +143,33 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
       .filter(placement => {
         // Check if placement matches any fancy round
         const matchesFancyRound = fancyRounds.some(
-          round => placement.placementType === PlacementType.ROUND_RANGE && 
-                  placement.startRound === round.start && 
-                  placement.endRound === round.end
+          round => placement.placementType === PlacementType.ROUND_RANGE &&
+            placement.startRound === round.start &&
+            placement.endRound === round.end
         );
         return matchesFancyRound;
       }).length
-     
+
   }, [advancePlacements, fancyRounds]);
 
   const advanceBetCount = useMemo(() => {
     return advanceBets.filter(bet => {
       return advancePlacements.some(
-        p => p.placementType === PlacementType.ROUND_RANGE && 
-             p.startRound === bet.start && 
-             p.endRound === bet.end
+        p => p.placementType === PlacementType.ROUND_RANGE &&
+          p.startRound === bet.start &&
+          p.endRound === bet.end
       );
     }).length;
   }, [advancePlacements, advanceBets]);
 
 
-  
+
   const advanceBetsas = useMemo(() => {
     return advanceBets.filter(bet => {
       return advancePlacements.some(
-        p => p.placementType === PlacementType.ROUND_RANGE && 
-             p.startRound === bet.start && 
-             p.endRound === bet.end
+        p => p.placementType === PlacementType.ROUND_RANGE &&
+          p.startRound === bet.start &&
+          p.endRound === bet.end
       );
     });
   }, [advancePlacements]);
@@ -256,29 +256,40 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
                     {t("fancy-bets")}
                   </span>
                   <div className="text-white text-sm ml-auto space-x-2">
-                   {fancyBetCount > 0 && <span className="bg-orange-500 px-2 py-1 rounded-md">
-                        {fancyBetCount} bets
-                      </span>}
+                    {fancyBetCount > 0 && <span className="bg-orange-500 px-2 py-1 rounded-md">
+                      {fancyBetCount} bets
+                    </span>}
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
-                  <div className="text-black space-y-3 p-4">
+                  <div className="text-black w-full space-y-3 p-4">
+                    <div className="flex  items-center gap-2">
+                      <div className="flex-1"/>
+                      <div className="flex  justify-end gap-2">
+                        <div className="text-white w-24  text-center font-medium">
+                          Red
+                        </div>
+                        <div className="text-white w-24 text-center font-medium">
+                          Black
+                        </div>
+                      </div>
+                    </div>
                     {fancyRounds.map(({ start, end, Description }, index) => {
                       const redBetAmount = advancePlacements
                         .filter(p => p.placementType === PlacementType.ROUND_RANGE && p.startRound === start && p.endRound === end && p.placedValues?.includes("Red"))
                         .reduce((sum, p) => sum + p.amount, 0);
-                      
+
                       const blackBetAmount = advancePlacements
                         .filter(p => p.placementType === PlacementType.ROUND_RANGE && p.startRound === start && p.endRound === end && p.placedValues?.includes("Black"))
                         .reduce((sum, p) => sum + p.amount, 0);
-                      
-                      const totalBets =  advancePlacements
-                      .filter(p => p.placementType === PlacementType.ROUND_RANGE && p.startRound === start && p.endRound === end)
-                      .length;
+
+                      const totalBets = advancePlacements
+                        .filter(p => p.placementType === PlacementType.ROUND_RANGE && p.startRound === start && p.endRound === end)
+                        .length;
 
                       return (
                         <div key={index} className="flex items-center gap-4 px-2">
-                          <div className="flex-1 text-sm text-zinc-200"> 
+                          <div className="flex-1 text-sm text-zinc-200">
                             {Description}
 
                             {totalBets > 0 && <span className=" text-white"> ({totalBets} bets)</span>}
@@ -289,6 +300,10 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
                               className="rounded-md px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all"
                             >
                               {redBetAmount > 0 ? `Rs. ${redBetAmount}` : "1.77x"}
+
+                              {
+                                redBetAmount > 0 && <span className="text-white text-xs backdrop-blur-sm p-1 rounded-sm">1.77x</span>
+                              }
                             </button>
                             <button
                               onClick={() => handleRangeBet(start, end, BLACK_NUMBERS)}
@@ -313,25 +328,36 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
                     {t("advance-bets")}
                   </span>
                   <div className="text-white text-sm space-x-2 ml-auto mr-2">
-                    {advanceBetCount > 0 && <span className="bg-red-500 px-2 py-1 rounded-md">  
+                    {advanceBetCount > 0 && <span className="bg-red-500 px-2 py-1 rounded-md">
                       {advanceBetCount} bets
-                    </span>}  
+                    </span>}
                   </div>
                 </AccordionTrigger>
                 <AccordionContent>
                   <div className="space-y-3 p-4">
+                  <div className="flex  items-center gap-2">
+                      <div className="flex-1"/>
+                      <div className="flex  justify-end gap-2">
+                        <div className="text-white w-24  text-center font-medium">
+                          Yes
+                        </div>
+                        <div className="text-white w-24 text-center font-medium">
+                          No
+                        </div>
+                      </div>
+                    </div>
                     {advanceBets.map(({ start, end, Description }, index) => {
                       const redBetAmount = advancePlacements
                         .filter(p => p.placementType === PlacementType.ROUND_RANGE && p.startRound === start && p.endRound === end && p.placeValue === "Red")
                         .reduce((sum, p) => sum + p.amount, 0);
-                      
+
                       const blackBetAmount = advancePlacements
                         .filter(p => p.placementType === PlacementType.ROUND_RANGE && p.startRound === start && p.endRound === end && p.placeValue === "Black")
                         .reduce((sum, p) => sum + p.amount, 0);
-                      
+
                       return (
                         <div key={index} className="flex items-center gap-4 px-2">
-                          <div className="flex-1 text-sm text-zinc-400">
+                          <div className="flex-1 text-sm text-zinc-200">
                             {Description}
                           </div>
                           <div className="flex gap-2">

@@ -163,7 +163,7 @@ export const SinglePlayerGames : Game[] = [
     {
         title: "Guess First Four",
         gameType: LobbyGameType.GUESS_FIRST_FOUR,
-        link: `/game/single-player?roundRecordGameType=${LobbyGameType.GUESS_FIRST_FOUR}`,
+        link: `/game/single-player/four-group?roundRecordGameType=${LobbyGameType.GUESS_FIRST_FOUR}`,
         description: "Select a stock you think will be among the top 4 performers",
         rules: [
             "Choose from 16 available stocks",
@@ -176,7 +176,7 @@ export const SinglePlayerGames : Game[] = [
     {
         title: "Guess Last Four",
         gameType: LobbyGameType.GUESS_LAST_FOUR,
-        link: `/game/single-player?roundRecordGameType=${LobbyGameType.GUESS_LAST_FOUR}`,
+        link: `/game/single-player/four-group?roundRecordGameType=${LobbyGameType.GUESS_LAST_FOUR}`,
         description: "Select a stock you think will be among the bottom 4 performers",
         rules: [
             "Choose from 16 available stocks",
