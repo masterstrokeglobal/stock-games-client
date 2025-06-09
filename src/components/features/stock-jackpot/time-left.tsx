@@ -53,7 +53,7 @@ const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, cla
                   ? "text-red-800" 
                   : "text-red-900"
               )}
-              initial={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 1, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
@@ -65,9 +65,9 @@ const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, cla
               <AnimatePresence mode="wait">
                 <motion.div
                   key={displayNumber}
-                  initial={{ y: 50, opacity: 0 }}
+                  initial={{ y: 50, opacity: 1 }}
                   animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -50, opacity: 0 }}
+                  exit={{ y: -50, opacity: 1 }}
                   transition={{
                     y: { type: "spring", stiffness: 300, damping: 30 },
                     opacity: { duration: 0.2 }
