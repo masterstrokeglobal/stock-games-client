@@ -31,7 +31,7 @@ const WheelOfFortune = () => {
 
     useEffect(() => {
         if (!roundRecord) return;
-        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 2000;
+        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime();
 
         const timer = setTimeout(() => {
             refetch();

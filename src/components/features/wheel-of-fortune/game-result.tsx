@@ -7,27 +7,8 @@ interface GameResultDialogProps {
   roundRecordId: number;
 }
 
-const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
-  const [showDialog, setShowDialog] = useState(open);
-  const { data, isLoading, isError } = useGetWheelOfFortuneRoundResult(roundRecordId, open);
+import { AlertCircle, Loader2, X } from "lucide-react";
 
-  useEffect(() => {
-    if (open) {
-      setTimeout(()=>{
-        setShowDialog(open);
-      }, 2000)
-    }
-  }, [open]);
-
-  return (
-    <GameResult showDialog={showDialog} setShowDialog={setShowDialog} isLoading={isLoading} isError={isError} data={data} />
-  );
-};
-
-
-import { AlertCircle, Loader2 } from "lucide-react";
-
-import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { cn, INR } from "@/lib/utils";
 import { Separator } from "@radix-ui/react-separator";
 import Image from "next/image";
@@ -40,97 +21,115 @@ type GameResultProps = {
     data: any;
 }
 
+const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
+  const [showDialog, setShowDialog] = useState(false);
+  const { data, isLoading, isError } = useGetWheelOfFortuneRoundResult(roundRecordId, open);
+
+  useEffect(() => {
+    if (open) {
+      // Show the toast immediately when open is true
+      setShowDialog(true);
+      
+      // Auto-dismiss after 5 seconds
+      const timer = setTimeout(() => {
+        setShowDialog(false);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    } else {
+      setShowDialog(false);
+    }
+  }, [open]);
+
+  return (
+    <GameResult showDialog={showDialog} setShowDialog={setShowDialog} isLoading={isLoading} isError={isError} data={data} />
+  );
+};
+
 const GameResult = ({ showDialog, setShowDialog, isLoading, isError, data }: GameResultProps) => {
     const isWin = data && Number(data.netProfitLoss) > 0;
 
-    return <Sheet open={showDialog} onOpenChange={setShowDialog} >
-        <SheetContent side="bottom" className=" bg-primary-game text-white border-t border-gray-600">
-            <div className="py-4">
+    if (!showDialog) return null;
+
+    return (
+        <div className={cn(
+            "fixed top-10 right-4 z-50 w-80 max-w-[90vw] bg-primary-game text-white border border-gray-600 rounded-lg shadow-2xl transition-all duration-300 ease-in-out",
+            showDialog ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
+        )}>
+            {/* Close button */}
+            <button
+                onClick={() => setShowDialog(false)}
+                className="absolute top-2 right-2 p-1 rounded-full hover:bg-gray-700 transition-colors"
+            >
+                <X className="h-4 w-4 text-gray-400 hover:text-white" />
+            </button>
+
+            <div className="p-4">
                 {isLoading ? (
-                    <div className="flex flex-col items-center justify-center p-8 space-y-4">
-                        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-                        <p className="text-gray-600">Loading results...</p>
-                        <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                            Checkout Game
-                        </button>
+                    <div className="flex flex-col items-center justify-center space-y-4">
+                        <Loader2 className="h-6 w-6 animate-spin text-blue-500" />
+                        <p className="text-gray-400 text-sm">Loading results...</p>
                     </div>
                 ) : isError ? (
-                    <>
-                        <Alert variant="destructive">
-                            <AlertCircle className="h-4 w-4" />
-                            <AlertDescription>
-                                Failed to load round results. Please try again.
-                            </AlertDescription>
-                        </Alert>
-                        <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                            Checkout Game
-                        </button>
-                    </>
+                    <Alert variant="destructive" className="border-red-600 bg-red-900/20">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription className="text-red-400">
+                            Failed to load round results.
+                        </AlertDescription>
+                    </Alert>
                 ) : data ? (
-                    <div className="space-y-4">
-                        {/* Display the image and message */}
-                        <div className="space-y-4 mb-4">
+                    <div className="space-y-3">
+                        {/* Header with image and message */}
+                        <div className="text-center space-y-2">
                             <Image
                                 src={isWin ? '/won.png' : '/lost.png'}
                                 alt={isWin ? 'You Won!' : 'Better Luck Next Time'}
-                                width={100}
-                                height={100}
-                                className="rounded-full md:w-32 w-24 mx-auto"
+                                width={60}
+                                height={60}
+                                className="rounded-full mx-auto"
                             />
-                            <p className={cn("text-2xl font-bold text-center",
-                                isWin ? 'text-yellow-600' : 'text-gray-100'
+                            <p className={cn("text-lg font-bold",
+                                isWin ? 'text-yellow-400' : 'text-gray-300'
                             )}>
-                                {isWin ? 'Congratulations! You won!' : 'Better luck next time!'}
+                                {isWin ? 'You Won!' : 'Better Luck Next Time!'}
                             </p>
                         </div>
 
-                        <div className="text-center flex justify-between rounded-lg">
-                            <p className="">Total Bet Amount</p>
-                            <p className="text-xl">{INR(data.totalPlaced)}</p>
+                        {/* Results summary */}
+                        <div className="space-y-2 text-sm">
+                            <div className="flex justify-between">
+                                <span className="text-gray-400">Total Bet:</span>
+                                <span>{INR(data.totalPlaced)}</span>
+                            </div>
+
+                            <div className="flex justify-between">
+                                <span className="text-gray-400">Winnings:</span>
+                                <span>{INR(data.amountWon)}</span>
+                            </div>
+
+                            <div className="flex justify-between">
+                                <span className="text-gray-400">Platform Fees:</span>
+                                <span className="text-red-400">- {INR(data.platformFeeAmount)}</span>
+                            </div>
+
+                            <Separator className="my-2 bg-gray-600" />
+
+                            <div className="flex justify-between font-bold">
+                                <span>Profit/Loss:</span>
+                                <span className={isWin ? 'text-green-400' : 'text-red-400'}>
+                                    {INR(data.netProfitLoss)}
+                                </span>
+                            </div>
                         </div>
-
-                        <div className="text-center flex justify-between rounded-lg">
-                            <p className="">Total Winnings</p>
-                            <p className="text-xl">{INR(data.amountWon)}</p>
-                        </div>
-
-                        <div className="text-center flex justify-between rounded-lg">
-                            <p className="">Platform Fees</p>
-                            <p className="text-xl">- {INR(data.platformFeeAmount)}</p>
-                        </div>
-
-                        <div className="text-center flex justify-between rounded-lg">
-                            <p className="">Net Winning</p>
-                            <p className="text-xl">{INR(data.netWinning)}</p>
-                        </div>
-
-                        <div className="text-center flex justify-between rounded-lg">
-                            <p className="">Profit/Loss</p>
-                            <p className={`text-xl ${isWin ? 'text-green-600' : 'text-red-600'}`}>
-                                {INR(data.netProfitLoss)}
-                            </p>
-                        </div>
-
-                        <Separator />
-
-                        <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                            Play Again
-                        </button>
                     </div>
                 ) : (
-                    <>
-                        <p className="text-gray-600 text-center">No results available.</p>
-                        <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                            Play Again
-                        </button>
-                    </>
+                    <div className="text-center">
+                        <p className="text-gray-400 text-sm">No results available</p>
+                    </div>
                 )}
             </div>
-        </SheetContent>
-    </Sheet>
-
-}
-
-
+        </div>
+    );
+};
 
 export default WheelOfFortuneResultDialog;

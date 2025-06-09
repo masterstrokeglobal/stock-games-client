@@ -209,6 +209,7 @@ const MarketSection = ({ globalBetAmount, betSlipOpen, searchQuery, setBetSlipOp
 
 const StockCard = ({ stock, className, amount }: { stock?: RankedMarketItem, className?: string, amount?: number }) => {
   if (!stock) return null;
+  console.log("stock individual",stock)
   return (
     <div className="relative">
       <div className={cn(
@@ -216,10 +217,14 @@ const StockCard = ({ stock, className, amount }: { stock?: RankedMarketItem, cla
         className
       )} style={{ background: 'linear-gradient(135deg, #fff 0%, #f0f0f0 100%)' }}>
         <div className="h-full flex flex-col items-center justify-center gap-1">
-          <span className="text-black text-[8px] md:text-[10px] lg:text-xs font-bold truncate w-full">{stock.name}</span>
+          <span className="text-black text-[8px] md:text-[10px] lg:text-xs text-center font-bold truncate w-full">{stock.name}</span>
 
-          <span className={cn("text-black md:text-xs text-[8px] whitespace-nowrap font-bold truncate w-full", Number(stock.change_percent) >= 0 ? "text-green-600" : "text-red-600")}>
-            {stock.currency}   {stock.price}
+          <span className={cn("text-black flex flex-col items-center text-center md:text-xs text-[8px] whitespace-nowrap font-bold truncate w-full", Number(stock.change_percent) >= 0 ? "text-green-600" : "text-red-600")}>
+            {stock.currency} 
+          </span>
+
+          <span className={cn("text-black flex flex-col items-center text-center md:text-xs text-[8px] whitespace-nowrap font-bold truncate w-full", Number(stock.change_percent) >= 0 ? "text-green-600" : "text-red-600")}>
+               {stock.price}
           </span>
           <div className={`text-[8px] md:text-[10px] lg:text-sm font-bold flex items-center gap-0.5 ${Number(stock.change_percent) >= 0 ? "text-green-600" : "text-red-600"
             }`}>
@@ -259,6 +264,10 @@ const StockCardStack = ({ roundRecord }: { roundRecord: RoundRecord }) => {
 
   const highStocks = bettedMarketItems?.filter((item) => item.placement === StockJackpotPlacementType.HIGH) || [];
   const lowStocks = bettedMarketItems?.filter((item) => item.placement === StockJackpotPlacementType.LOW) || [];
+
+
+  console.log("stock high",highStocks)
+  console.log("stock low",lowStocks)
 
   return (<div className="absolute p-2 left-1/2 -translate-x-1/2  md:bottom-[calc(45%+1rem)] bottom-[calc(33%+1rem)] z-10 w-full  md:max-w-xl sm:max-w-sm max-w-[280px]  ">
     <div style={{ transform: 'perspective(1000px) rotateX(15deg)' }} className=" origin-center mx-auto flex z-10 gap-2 md:gap-4 h-fit w-full" >

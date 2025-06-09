@@ -14,7 +14,8 @@ const LoginPage = () => {
     const loginUser = (data: LoginFormValues) => {
         mutate(data, {
             onSuccess: () => {
-                router.push("/game/platform");
+                // router.push("/game/platform");
+                router.back();
             }
         });
     }

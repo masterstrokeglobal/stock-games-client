@@ -37,24 +37,18 @@ export default function WheelOfFortuneGameBoard({ roundRecord, amount, className
   console.log(roundRecord)
 
   return (
-    <div className={cn("flex flex-col items-center justify-center w-full h-full bg-amber-800 p-4 pt-20 rounded-lg bg-center relative", className)}>
+    <div className={cn("flex  flex-col items-center justify-center w-full h-full bg-amber-800 p-4 pt-20 rounded-lg bg-center relative", className)}>
       {children}
       <img src="/images/wodden-board.jpg" alt="wodden-board" className="w-full h-full object-fill absolute top-0 left-0 z-0" />
 
 
       {/* Color Cards Grid */}
-      <div className="flex flex-wrap w-full max-w-4xl gap-2 md:p-4 justify-center">
-        {/* Top row - 3 cards */}
-        <div className="flex w-full gap-2 mb-2">
-          <ColorCard color={WheelColor.COLOR1} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} />
-          <ColorCard color={WheelColor.COLOR2} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} />
-          <ColorCard color={WheelColor.COLOR3} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} />
-        </div>
-        {/* Bottom row - 2 cards */}
-        <div className="flex gap-2" style={{ width: 'calc(66.666% - 0.25rem)' }}>
-          <ColorCard color={WheelColor.COLOR4} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} />
+      <div className="flex flex-wrap w-full max-w-4xl gap-2 md:p-4 mb-8 justify-center">
           <ColorCard color={WheelColor.COLOR5} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} />
-        </div>
+          <ColorCard color={WheelColor.COLOR4} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} />
+          <ColorCard color={WheelColor.COLOR3} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} />
+          <ColorCard color={WheelColor.COLOR2} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} />
+          <ColorCard color={WheelColor.COLOR1} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} />
       </div>
 
       {/* Total Bet Display */}
@@ -66,6 +60,7 @@ export default function WheelOfFortuneGameBoard({ roundRecord, amount, className
     </div>
   );
 }
+
 const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick, roundRecord }: { color: WheelColor, colorBets?: Record<WheelColor, number>, winningColor?: WheelColor, isPending: boolean, roundRecord: RoundRecord, handleColorClick: (color: WheelColor) => void }) => {
   const config = WHEEL_COLOR_CONFIG[color];
   const myBetAmount = colorBets?.[color] || 0;
@@ -78,7 +73,7 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
   return (
     <div
       className={cn(
-        "flex-1 min-h-64 z-10 rounded-lg flex flex-col cursor-pointer transition-all duration-300 relative group",
+        "flex-1 min-w-[190px] max-w-[190px] min-h-64 max-h-full z-10 rounded-lg flex flex-col cursor-pointer transition-all duration-300 relative group",
         isPending ? 'opacity-70 pointer-events-none' : 'hover:shadow-lg hover:scale-105',
         isWinner ? `border-2 ${config.borderColor} shadow-custom-glow` : ''
       )}
@@ -115,10 +110,13 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
           </div>
           <div className="bg-amber-100 flex-1 rounded-b-lg flex flex-col items-center justify-start  relative w-full">
 
-            <ul className="gap-1 w-full py-4  p-2">
-              {roundRecord.getMarketsByColor(color).map((market,index) => (
-                <li key={market.id} className="text-sm  font-medium text-gray-700">
-                 {index + 1}. {market.name}
+            <ul className="gap-1 w-full py-4 p-2 ">
+              {roundRecord.getMarketsByColor(color).map((market, index) => (
+                <li 
+                  key={market.id} 
+                  className="text-sm font-medium pb-2 text-gray-700 pl-6 -indent-3"
+                >
+                  {index + 1}. {market.name?.slice(0,17)}
                 </li>
               ))}
             </ul>
@@ -135,22 +133,6 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
         </div>
       </div>
 
-      {/* Back side with stocks */}
-      {/* <div 
-        className={cn(
-          "absolute inset-0 w-full h-full bg-amber-100 rounded-lg p-4 transition-transform duration-500",
-          isFlipped ? '' : 'rotate-y-180'
-        )}
-        style={{
-          backfaceVisibility: 'hidden',
-          transform: isFlipped ? '' : 'rotateY(180deg)'
-        }}
-      >
-        <div className="h-full overflow-y-auto">
-          <h3 className={cn("text-center font-bold mb-2", config.textColor)}>Stocks in {config.name}</h3>
-         
-        </div>
-      </div> */}
     </div>
   );
 };
