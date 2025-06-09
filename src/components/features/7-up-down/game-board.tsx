@@ -46,7 +46,7 @@ const MarketItemDisplay: React.FC<{ items: RankedMarketItem[], isPositive: boole
     
     // Calculate how many columns and rows we can fit
     const maxColumns = Math.floor(containerWidth / (itemSize + minSpacing));
-    const maxRows = Math.floor(containerHeight / (itemSize + minSpacing));
+    // const maxRows = Math.floor(containerHeight / (itemSize + minSpacing));
     
     // Use fewer columns to spread items more
     const effectiveColumns = Math.min(maxColumns, Math.max(2, Math.ceil(Math.sqrt(itemCount * 0.8))));

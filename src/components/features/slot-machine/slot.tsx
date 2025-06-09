@@ -28,7 +28,7 @@ export const Slot = ({ roundRecord }: { roundRecord: RoundRecord }) => {
             localStocks.slice(0, 5).forEach((stock: any, index: any) => {
                 if (stock.price) {
                     const price = parseFloat(stock.price).toFixed(2);
-                    const [integerPart, decimalPart] = price.split('.');
+                    const [, decimalPart] = price.split('.');
                     const firstDecimalDigit = decimalPart ? parseInt(decimalPart[0]) : 0;
                     newStockStates[index] = firstDecimalDigit;
                 }
