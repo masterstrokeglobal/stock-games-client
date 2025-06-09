@@ -12,7 +12,8 @@ const GoogleLoginButton = () => {
             googleSignIn({ googleToken: token, companyId: COMPANYID }, {
                 
                 onSuccess: () => {
-                    router.push("/game/platform");
+                    // router.push("/game/platform");
+                    router.back();
                 }
             });
         }
