@@ -8,29 +8,25 @@ import { useMarketSelector, useStockSelectorAviator } from '@/hooks/use-market-s
 import { MarketItem } from '@/models/market-item';
 import { RoundRecordGameType } from '@/models/round-record';
 import { useAviatorToken } from '@/react-query/aviator-queries';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 const StockSlot = () => {
     const { marketSelected } = useMarketSelector();
     const { stockSelectedAviator } = useStockSelectorAviator();
     const { roundRecord, isLoading } = useCurrentGame(RoundRecordGameType.AVIATOR);
     const { isLoading: isTokenLoading, data: token } = useAviatorToken();
 
-    const [isstockPresent, setIsstockPresent] = useState(true);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsstockPresent(roundRecord?.market.some((item: MarketItem) => item.id == Number(stockSelectedAviator)) ?? false);
-        }, 5000);
-
-        return () => clearTimeout(timer);
+    const isStockPresent = useMemo(() => {
+        const isStockPresent = roundRecord?.market.some((item: MarketItem) => item.id == Number(stockSelectedAviator)) ?? false;
+        return isStockPresent;
     }, [roundRecord, stockSelectedAviator]);
+
 
     if (!marketSelected) return <MarketSelector variant='aviator' className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Avaiator" />
 
+
     if (isLoading || !roundRecord || isTokenLoading || token == null) return <GameLoadingScreen className='min-h-[calc(100svh-100px)]' />
 
-
-    if (stockSelectedAviator == null || !isstockPresent) return <StockSelectorAviator roundRecord={roundRecord} className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Stock Selector Avaiator" />
+    if (stockSelectedAviator == null || !isStockPresent) return <StockSelectorAviator roundRecord={roundRecord} className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Stock Selector Avaiator" />
 
     return (
         <Aviator className='-mx-4 md:-mx-12 -mt-5' roundRecord={roundRecord} token={token} />

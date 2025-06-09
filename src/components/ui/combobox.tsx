@@ -71,7 +71,6 @@ export function ComboboxSelect({
         <Command>
           <CommandInput placeholder="Search Option..." />
           <CommandEmpty>No option found.</CommandEmpty>
-          <ScrollArea className="h-[200px]">
             <CommandGroup>
               <CommandList>
 
@@ -95,7 +94,6 @@ export function ComboboxSelect({
                 ))}
               </CommandList>
             </CommandGroup>
-          </ScrollArea>
         </Command>
       </PopoverContent>
     </Popover>

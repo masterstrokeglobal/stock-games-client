@@ -122,6 +122,7 @@ const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: 
     useEffect(() => {
         const wsManager = WebSocketManager.getInstance();
         const ws = wsManager.getSocket(type);
+        let timer: NodeJS.Timeout;
         setSocket(ws);
 
         // Send register event when connected
@@ -165,6 +166,7 @@ const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: 
             if (event.type === WebSocketEventType.ROUND_CREATED) {
                 const round = event.round.roundRecord;
                 toast.success("new Round Select Your Market");
+            timer = setTimeout(() => {
                 queryClient.setQueryData(["current-round-record", type, RoundRecordGameType.AVIATOR], () => {
                     return {
                         data: {
@@ -172,6 +174,7 @@ const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: 
                         }
                     }
                 });
+            }, 2000);
             }
         };
         const onError = (newError: string) => setError(newError);
@@ -180,6 +183,9 @@ const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: 
 
         return () => {
             wsManager.removeListener(type, onMessage, onError);
+            if (timer) {
+                clearTimeout(timer);
+            }
         };
     }, [type, token]);
 

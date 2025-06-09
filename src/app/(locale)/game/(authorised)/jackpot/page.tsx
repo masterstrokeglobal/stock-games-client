@@ -60,11 +60,10 @@ export default function Home() {
             <div className="relative h-full w-full md:min-h-[700px]   sm:min-h-[600px] min-h-[400px]  bg-contain bg-no-repeat bg-center">
               <div className="absolute bottom-0 w-full h-fit ">
                 <div className='absolute left-1/2 -translate-x-1/2 bottom-[calc(100%-2vw)] md:h-[60%] h-3/4 z-10 flex max-w-sm items-end justify-center'>
-                  <img src="/images/dice-game/lady.gif" alt="dice-bg" className='w-auto h-full mt-20' />
+                  <img src="/images/jackpot/lady4.gif" alt="dice-bg" className='w-auto h-full mt-20' />
                 </div>
                 <img src="/images/jackpot/table.png" className=" w-full sm:mx-auto   h-full  relative z-10  md:max-w-6xl sm:max-w-2xl max-w-xl" />
                 {roundRecord && <StockCardStack roundRecord={roundRecord} />}
-
               </div>
             </div>
             <BettingChips
@@ -217,7 +216,7 @@ const StockCard = ({ stock, className, amount }: { stock?: RankedMarketItem, cla
         className
       )} style={{ background: 'linear-gradient(135deg, #fff 0%, #f0f0f0 100%)' }}>
         <div className="h-full flex flex-col items-center justify-center gap-1">
-          <span className="text-black text-[8px] md:text-[10px] lg:text-xs font-bold truncate w-full">herororooo</span>
+          <span className="text-black text-[8px] md:text-[10px] lg:text-xs font-bold truncate w-full">{stock.name}</span>
 
           <span className={cn("text-black md:text-xs text-[8px] whitespace-nowrap font-bold truncate w-full", Number(stock.change_percent) >= 0 ? "text-green-600" : "text-red-600")}>
             {stock.currency}   {stock.price}
