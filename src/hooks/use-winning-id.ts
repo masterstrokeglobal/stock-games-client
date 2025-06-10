@@ -9,21 +9,20 @@ const useWinningId = (roundRecord: RoundRecord | null) => {
 
     useEffect(() => {
         if (!roundRecord) return;
-        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 3000;
-
+        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 2000;
         const timer = setTimeout(() => {
             refetch();
         }, resultFetchTime);
         return () => clearTimeout(timer);
     }, [roundRecord, refetch]);
 
-    const winningMarketId: number[] | null = useMemo(() => {
+    const roundRecordWithWinningId: RoundRecord | null = useMemo(() => {
         if (!isSuccess) return null;
-        if (roundRecord?.id == data?.data?.id) return (data.data as RoundRecord).winningId || null;
+        if (roundRecord?.id == data?.data?.id) return new RoundRecord(data.data as RoundRecord) || null;
         return null;
     }, [data, isSuccess, roundRecord]);
 
-    return winningMarketId;
+    return roundRecordWithWinningId;
 };
 
 export default useWinningId;

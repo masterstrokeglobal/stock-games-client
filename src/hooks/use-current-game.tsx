@@ -9,6 +9,7 @@ interface FormattedTime {
     seconds: number;
     formatted: string;      // "MM:SS" format
     shortFormat: string;    // "1m 30s" format
+    shortFormatNoMinutes: string;    // "30s" format
     longFormat: string;     // "1 minute 30 seconds" format
     raw: number;           // milliseconds
 }
@@ -32,6 +33,7 @@ const formatTime = (ms: number): FormattedTime => {
         seconds: remainingSeconds,
         formatted: `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`,
         shortFormat: `${minutes}m ${remainingSeconds}s`,
+        shortFormatNoMinutes: `${minutes > 0 ? minutes + "m " : ""}${remainingSeconds}`,
         longFormat: `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ${remainingSeconds} ${remainingSeconds === 1 ? 'second' : 'seconds'}`,
         raw: ms
     };
@@ -111,7 +113,7 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         return roundRecord;
     }, [data?.data?.roundRecords?.[0], isSuccess]);
 
-    console.log("Current Round Record:", roundRecord);
+
 
     useEffect(() => {
 

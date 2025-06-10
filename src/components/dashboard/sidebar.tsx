@@ -75,6 +75,12 @@ const adminMenuItems: MenuItem[] = [
         link: '/dashboard/coin-toss-pair'
     },
 
+    {
+        name: "Slot Pair",
+        icon: Repeat1,
+        link: '/dashboard/slot-pair'
+    }
+
 ];
 
 const companyMenuItems: MenuItem[] = [

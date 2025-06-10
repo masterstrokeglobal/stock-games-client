@@ -18,7 +18,7 @@ export enum RoundRecordGameType {
     WHEEL_OF_FORTUNE = "wheel_of_fortune",
     AVIATOR = "aviator",
     DICE = "dice",
-    RED_BLACK = "red_black",    
+    RED_BLACK = "red_black",
 }
 
 export const WHEEL_COLOR_SEQUENCE = [
@@ -148,6 +148,7 @@ export class RoundRecord {
     slotValues: { [code: string]: { upperValue: number; lowerValue: number } } | null;
     deletedAt?: Date;
     initialValues: Record<string, number> | null;
+    finalDifferences: Record<string, number> | null;
     winningSide?: HeadTailPlacementType;
     marketColors: {
         color: WheelColor;
@@ -172,6 +173,7 @@ export class RoundRecord {
         this.updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
         this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : undefined;
         this.initialValues = data.initialValues || null;
+        this.finalDifferences = data.finalDifferences || null;
         this.coinTossPair = data.coinTossPair ? new CoinTossPair(data.coinTossPair) : undefined;
         this.winningSide = data.winningSide || undefined;
         this.marketColors = data.marketColors || [];
@@ -187,7 +189,7 @@ export class RoundRecord {
 
     getMarketsByColor(color: WheelColor): MarketItem[] {
         return this.marketColors.filter(item => item.color === color).map(item => this.market.find(market => market.id === item.marketId)).filter(item => item !== undefined) as MarketItem[];
-    }   
+    }
     marketColorConfig(marketId: number): ColorConfig | undefined {
         const color = this.marketColor(marketId);
         if (!color) return undefined;
@@ -261,14 +263,14 @@ export class RoundRecord {
     }
 
     get sequenceMarketItems(): MarketItem[] {
-       const marketItems = IndexwithColorBands.map(item => this.market[item.index]);
-       return marketItems.filter(item => item !== undefined) as MarketItem[];
+        const marketItems = IndexwithColorBands.map(item => this.market[item.index]);
+        return marketItems.filter(item => item !== undefined) as MarketItem[];
     }
-    
+
 
     get gameDuration(): number {
-         // in seconds 
-         return Math.floor((this.endTime.getTime() - this.startTime.getTime()) / 1000);
+        // in seconds 
+        return Math.floor((this.endTime.getTime() - this.startTime.getTime()) / 1000);
     }
 
     get placementDuration(): number {
@@ -276,4 +278,16 @@ export class RoundRecord {
         return Math.floor((this.placementEndTime.getTime() - this.placementStartTime.getTime()) / 1000);
     }
 
+    changePercentage(marketId: number): number {
+        const market = this.market.find(item => item.id === marketId);
+        if (!market) return 0;
+        const initialPrice = this.getInitialPrice(market.code || "");
+        const finalPrice = this.finalDifferences?.[market.code || ""] || 0;
+        if (initialPrice === 0) return 0;
+        return parseFloat((((finalPrice - initialPrice) / initialPrice) * 100).toFixed(2));
+    }
+
+    get finalPricesPresent(): boolean {
+        return Object.keys(this.finalDifferences || {}).length > 0;
+    }
 }

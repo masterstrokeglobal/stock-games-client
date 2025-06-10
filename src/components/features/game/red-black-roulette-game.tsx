@@ -125,7 +125,7 @@ const RedBlackRouletteGame = ({ roundRecord, globalBetAmount, handleGlobalBetAmo
             </div>
           </div>
         </div>
-        <BettingChips globalBetAmount={globalBetAmount} showBetting={true} handleGlobalBetAmountChange={handleGlobalBetAmountChange} />
+        <BettingChips globalBetAmount={globalBetAmount} showBetting={true} className="bottom-0 left-1/2 -translate-x-1/2 w-full absolute" handleGlobalBetAmountChange={handleGlobalBetAmountChange} />
       </div>
 
       <GameResultDialog

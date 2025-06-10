@@ -7,18 +7,18 @@ import { useEffect, useState } from "react"
 const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, className?: string }) => {
   const { gameTimeLeft, isPlaceOver, placeTimeLeft } = useGameState(roundRecord)
   const statusText = isPlaceOver ? "Betting Closed" : "Betting Open"
-  const [displayNumber, setDisplayNumber] = useState(0)
+  const [displayNumber, setDisplayNumber] = useState("")
   
   const timePercent = !isPlaceOver
     ? Math.min(100, Math.max(0, (placeTimeLeft.seconds / roundRecord.placementDuration) * 100))
     : Math.min(100, Math.max(0, (gameTimeLeft.seconds / roundRecord.gameDuration) * 100))
 
   useEffect(() => {
-    const currentTime = !isPlaceOver ? placeTimeLeft.seconds : gameTimeLeft.seconds
+    const currentTime = !isPlaceOver ? placeTimeLeft.shortFormatNoMinutes : gameTimeLeft.shortFormatNoMinutes
     setDisplayNumber(currentTime)
-  }, [isPlaceOver, placeTimeLeft.seconds, gameTimeLeft.seconds])
+  }, [isPlaceOver, placeTimeLeft, gameTimeLeft])
 
-  const isUrgent = displayNumber <= 10
+  const isUrgent = Number(displayNumber) <= 10
 
   return (
     <div className={cn(className)}>

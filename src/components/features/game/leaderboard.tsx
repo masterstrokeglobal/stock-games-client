@@ -120,7 +120,7 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                                     {winnerMarketItem.name}
                                 </td>
                                 <td className="p-2  text-right text-game-text">
-                                    {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : "Rs."}
+                                    {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : roundRecord.type === SchedulerType.USA_MARKET ? "$" : "Rs."}
                                     {winnerMarketItem.price ? formatPrice(winnerMarketItem.price) : "-"}
                                 </td>
                                 <td className={cn(
@@ -165,7 +165,7 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                                     {marketItem.name}
                                 </td>
                                 <td className="p-2  text-right whitespace-nowrap text-game-text">
-                                    {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : "Rs."}
+                                    {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : roundRecord.type === SchedulerType.USA_MARKET ? "$" : "Rs."}
                                     {marketItem.price ? formatPrice(marketItem.price) : "-"}
                                 </td>
                                 <td className={cn(

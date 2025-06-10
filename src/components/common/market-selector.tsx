@@ -22,6 +22,7 @@ const MarketSelector = ({ title, className, roundRecordType = RoundRecordGameTyp
     const { setGameType } = useGameType();
 
     const { userDetails } = useAuthStore();
+    console.log("roundRecordType", roundRecordType)
 
     const currentUser = userDetails as User;
     const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
@@ -50,7 +51,7 @@ const MarketSelector = ({ title, className, roundRecordType = RoundRecordGameTyp
             title: "CRYPTO",
             subtitle: "Digital Currency",
             available: true,
-            allowed: isCryptoAllowed,
+            allowed: RoundRecordGameType.SEVEN_UP_DOWN == roundRecordType ? false : isCryptoAllowed,
             color: "from-orange-400 to-red-500",
             icon: "₿"
         },

@@ -1,6 +1,6 @@
 import { LobbyGameType } from "@/models/lobby";
 
-export const LOBBY_GAMES : Game[] = [
+export const LOBBY_GAMES: Game[] = [
     {
         title: "Guess First Four",
         gameType: LobbyGameType.GUESS_FIRST_FOUR,
@@ -81,7 +81,7 @@ export const LOBBY_GAMES : Game[] = [
 ] as const;
 
 
-export const StockDerbyGames : Game[] = [
+export const StockDerbyGames: Game[] = [
     {
         title: "NSE Market",
         link: "/game?gameType=nse",
@@ -121,7 +121,7 @@ export const StockDerbyGames : Game[] = [
         image: "/images/banner/7-up.png",
         description: "14 stocks choosing will more than 7 go up or down"
     }
-,
+    ,
     // coin head tail
     {
         title: "Coin Head Tail",
@@ -129,7 +129,7 @@ export const StockDerbyGames : Game[] = [
         image: "/images/banner/coin-toss.png",
         description: "Guess the side of the coin"
     }
-    , 
+    ,
     {
         title: "Wheel of Fortune",
         link: "/game/platform/stock-game/wheel-of-fortune",
@@ -144,24 +144,24 @@ export const StockDerbyGames : Game[] = [
         description: "Guess the side of the coin"
     },
     {
-        
-        title:"Red Black",
+
+        title: "Red Black",
         link: "/game/redblack",
-        image:"/images/redvsblack.png",
-        description:"Guess Red or Black"
+        image: "/images/redvsblack.png",
+        description: "Guess Red or Black"
     },
-  {
+    {
         title: "Aviator",
         link: "/game/platform/stock-game/aviator",
         image: "/images/banner/aviator.png",
         description: "Guess the side of the coin"
     }
-   
+
 ]
 
-export const SinglePlayerGames : Game[] = [
+export const SinglePlayerGames: Game[] = [
     {
-        title: "Guess First Four",
+        title: "Akbar,Romeo Walter and Mario",
         gameType: LobbyGameType.GUESS_FIRST_FOUR,
         link: `/game/single-player/four-group?roundRecordGameType=${LobbyGameType.GUESS_FIRST_FOUR}`,
         description: "Select a stock you think will be among the top 4 performers",

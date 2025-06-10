@@ -44,11 +44,11 @@ export const Slot = ({ roundRecord }: { roundRecord: RoundRecord }) => {
                     <SlotCanvas stockStates={stockStates} />
                 </div>
 
-                <div className="h-[300px] w-fit absolute z-10 bottom-[0px] right-[0px] hidden sm:block">
-                    <img src="/images/dice-game/lady.gif" alt="slot-machine-bg" className="w-full h-full object-contain" />
+                <div className="h-[250px] w-fit absolute z-10 bottom-[0px] right-[0px] hidden sm:block">
+                    <img src="/images/jackpot/lady5.gif" alt="slot-machine-bg" className="w-full h-full object-contain" />
                 </div>
-                <div className="h-[300px] w-fit absolute z-10 bottom-[0px] left-[0px] scale-x-[-1] hidden sm:block">
-                    <img src="/images/dice-game/lady.gif" alt="slot-machine-bg" className="w-full h-full object-contain" />
+                <div className="h-[250px] w-fit absolute z-10 bottom-[0px] left-[0px] scale-x-[-1] hidden sm:block">
+                    <img src="/images/jackpot/lady5.gif" alt="slot-machine-bg" className="w-full h-full object-contain" />
                 </div>
 
                 <div className="h-[500px] w-full relative z-10">

@@ -24,7 +24,7 @@ type AviatorProps = {
   token: string
 }
 
-export default function Aviator({ className, roundRecord, token }: AviatorProps) {
+export default function   Aviator({ className, roundRecord, token }: AviatorProps) {
   const { gameType } = useGameType();
   const { isPlaceOver, placeTimeLeft, isGameOver } = useGameState(roundRecord);
   const aviator = useAviator({

@@ -9,7 +9,7 @@ import BettingChips from "@/components/features/slot-jackpot/betting-chips"
 import { BetSlip } from "@/components/features/stock-jackpot/bet-slip"
 import { BettingCard } from "@/components/features/stock-jackpot/betting-card"
 import TimeDisplay from "@/components/features/stock-jackpot/time-left"
-import { Tabs } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useCurrentGame, usePlacementOver, useShowResults } from "@/hooks/use-current-game"
 import { useGameType } from "@/hooks/use-game-type"
 import { RankedMarketItem, useLeaderboard } from "@/hooks/use-leadboard"
@@ -21,6 +21,10 @@ import { StockJackpotPlacementType } from "@/models/stock-slot-jackpot"
 import { useGetMyFavorites } from "@/react-query/favorite-market-item-queries"
 import { useGetMyStockSlotGameRecord } from "@/react-query/game-record-queries"
 import { Triangle } from "lucide-react"
+import useNSEAvailable from "@/hooks/use-nse-available"
+import useUSAMarketAvailable from "@/hooks/use-usa-available"
+import { useAuthStore } from "@/context/auth-context"
+import User from "@/models/user"
 
 
 export default function Home() {
@@ -41,26 +45,26 @@ export default function Home() {
     <div className="flex flex-col min-h-screen  relative bg-[url('/images/game-bg-pattern.png')] bg-repeat bg-center text-white  mx-auto">
       <Navbar />
 
-      <Tabs className="flex-1  mt-8  py-6 w-full" value={tab} onValueChange={(value) => setTab(value as SchedulerType)}>
+      <Tabs className="flex-1  w-full" value={tab} onValueChange={(value) => setTab(value as SchedulerType)}>
         {isDesktop &&
           <MarketSection
             searchQuery={searchQuery}
             globalBetAmount={globalBetAmount}
             betSlipOpen={betSlipOpen}
-            className="absolute top-12 right-0 max-w-sm h-fit z-10"
+            className="absolute top-12 left-0 max-w-sm h-fit z-20"
             setSearchQuery={setSearchQuery}
             setBetSlipOpen={setBetSlipOpen}
           />
         }
         {/* Global Bet Amount and Search Section */}
         {roundRecord && <TimeDisplay className="fixed top-14 left-1/2 -translate-x-1/2 z-50  w-full max-w-sm" roundRecord={roundRecord} />}
-        <div className="w-full mb-8 ">
+        <div className="w-full">
           <div className="grid relative grid-cols-1  gap-6  rounded-lg  pt-20  ">
             <img src="/images/jackpot/bg.png" className=" w-full absolute top-0 left-0 object-cover  mx-auto  h-full " />
             <div className="relative h-full w-full md:min-h-[700px]   sm:min-h-[600px] min-h-[400px]  bg-contain bg-no-repeat bg-center">
               <div className="absolute bottom-0 w-full h-fit ">
                 <div className='absolute left-1/2 -translate-x-1/2 bottom-[calc(100%-2vw)] md:h-[60%] h-3/4 z-10 flex max-w-sm items-end justify-center'>
-                  <img src="/images/jackpot/lady4.gif" alt="dice-bg" className='w-auto h-full mt-20' />
+                  <img src="/images/jackpot/lady4.gif" alt="dice-bg" className='w-auto h-full mt-20 scale-x-[-1]' />
                 </div>
                 <img src="/images/jackpot/table.png" className=" w-full sm:mx-auto   h-full  relative z-10  md:max-w-6xl sm:max-w-2xl max-w-xl" />
                 {roundRecord && <StockCardStack roundRecord={roundRecord} />}
@@ -84,15 +88,15 @@ export default function Home() {
         </div>
 
 
-{ !isDesktop &&
-  <MarketSection
-  searchQuery={searchQuery}
-  globalBetAmount={globalBetAmount}
-  betSlipOpen={betSlipOpen}
-  setSearchQuery={setSearchQuery}
-  setBetSlipOpen={setBetSlipOpen}
-/>
-  }
+        {!isDesktop &&
+          <MarketSection
+            searchQuery={searchQuery}
+            globalBetAmount={globalBetAmount}
+            betSlipOpen={betSlipOpen}
+            setSearchQuery={setSearchQuery}
+            setBetSlipOpen={setBetSlipOpen}
+          />
+        }
       </Tabs>
 
       <BettingAmoutMobile
@@ -122,49 +126,45 @@ const MarketSection = ({ globalBetAmount, betSlipOpen, searchQuery, setBetSlipOp
     });
   }, [roundRecord, myFavorites, searchQuery]);
 
+  const { userDetails } = useAuthStore();
+  const currentUser = userDetails as User;
+
+  const isNSEAvailable = useNSEAvailable();
+  const isUSAMarketAvailable = useUSAMarketAvailable();
+
+  const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
+  const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO);
+  const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
+
+
+
   if (!roundRecord) return <div className="text-center py-8 text-gray-400 bg-primary/5 rounded-lg border border-primary/10">No markets found matching your search.</div>
 
   return (
-    <div className={cn("relative w-full", className)}>
-      {/* <div className={cn(" mt-12  px-4 max-w-7xl mx-auto")}>
-        <h2 className="text-lg font-bold flex items-center ">
-          {title}
-        </h2>
-        <div className="flex justify-between flex-col md:flex-row gap-4 items-start my-6">
-          <div className="relative w-full md:max-w-md">
-            <Input
-              type="text"
-              placeholder="Search stocks, crypto, markets..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-primary focus-visible:ring-2 focus-visible:ring-secondary h-10 pl-12 text-white"
-            />
-            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-              <SearchIcon className="h-5 w-5 text-gray-400 group-hover:text-gray-300 transition-colors duration-200" />
-            </div>
-          </div>
-
-          <TabsList className="w-full md:max-w-md flex gap-4">
-            <TabsTrigger value={SchedulerType.NSE} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">NSE</TabsTrigger>
-            <TabsTrigger value={SchedulerType.CRYPTO} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">Crypto</TabsTrigger>
-            <TabsTrigger value={SchedulerType.USA_MARKET} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">US Stock</TabsTrigger>
+    <div className={cn("relative w-full bg-black/70 backdrop-blur-sm", className)}>
+      <div className={cn(" max-w-7xl  px-4 pt-4 mx-auto")}>
+        <div className="flex justify-between flex-col md:flex-row items-start ">
+          <TabsList className="w-full md:max-w-md flex gap-2">
+            <TabsTrigger value={SchedulerType.NSE} disabled={!isNSEAllowed || !isNSEAvailable} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">NSE</TabsTrigger>
+            <TabsTrigger value={SchedulerType.CRYPTO} disabled={!isCryptoAllowed} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">Crypto</TabsTrigger>
+            <TabsTrigger value={SchedulerType.USA_MARKET} disabled={!isUSAMarketAllowed || !isUSAMarketAvailable} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">US Stock</TabsTrigger>
           </TabsList>
         </div>
-      </div> */}
+      </div>
 
       {roundRecord.market.length === 0 ? (
         <div className="text-center py-8 text-gray-400 bg-primary/5 rounded-lg border border-primary/10">
           No markets found matching your search.
         </div>
       ) : (
-        <div className="grid grid-cols-1  max-w-7xl mx-auto px-4 ">
+        <div className="grid grid-cols-1  max-w-7xl mx-auto  ">
           {sortedMarketItems?.slice(0, 4).map((marketItem: any) => (
             <BettingCard
               key={marketItem.id}
               roundRecord={roundRecord}
               globalBetAmount={globalBetAmount}
               marketItem={marketItem}
-              className="w-full first:rounded-t-xl last:rounded-b-xl"
+              className="w-full bg-transparent"
             />
           ))}
 
@@ -209,7 +209,7 @@ const MarketSection = ({ globalBetAmount, betSlipOpen, searchQuery, setBetSlipOp
 
 const StockCard = ({ stock, className, amount }: { stock?: RankedMarketItem, className?: string, amount?: number }) => {
   if (!stock) return null;
-  console.log("stock individual",stock)
+  console.log("stock individual", stock)
   return (
     <div className="relative">
       <div className={cn(
@@ -220,11 +220,11 @@ const StockCard = ({ stock, className, amount }: { stock?: RankedMarketItem, cla
           <span className="text-black text-[8px] md:text-[10px] lg:text-xs text-center font-bold truncate w-full">{stock.name}</span>
 
           <span className={cn("text-black flex flex-col items-center text-center md:text-xs text-[8px] whitespace-nowrap font-bold truncate w-full", Number(stock.change_percent) >= 0 ? "text-green-600" : "text-red-600")}>
-            {stock.currency} 
+            {stock.currency}
           </span>
 
           <span className={cn("text-black flex flex-col items-center text-center md:text-xs text-[8px] whitespace-nowrap font-bold truncate w-full", Number(stock.change_percent) >= 0 ? "text-green-600" : "text-red-600")}>
-               {stock.price}
+            {stock.price}
           </span>
           <div className={`text-[8px] md:text-[10px] lg:text-sm font-bold flex items-center gap-0.5 ${Number(stock.change_percent) >= 0 ? "text-green-600" : "text-red-600"
             }`}>
@@ -264,10 +264,6 @@ const StockCardStack = ({ roundRecord }: { roundRecord: RoundRecord }) => {
 
   const highStocks = bettedMarketItems?.filter((item) => item.placement === StockJackpotPlacementType.HIGH) || [];
   const lowStocks = bettedMarketItems?.filter((item) => item.placement === StockJackpotPlacementType.LOW) || [];
-
-
-  console.log("stock high",highStocks)
-  console.log("stock low",lowStocks)
 
   return (<div className="absolute p-2 left-1/2 -translate-x-1/2  md:bottom-[calc(45%+1rem)] bottom-[calc(33%+1rem)] z-10 w-full  md:max-w-xl sm:max-w-sm max-w-[280px]  ">
     <div style={{ transform: 'perspective(1000px) rotateX(15deg)' }} className=" origin-center mx-auto flex z-10 gap-2 md:gap-4 h-fit w-full" >
