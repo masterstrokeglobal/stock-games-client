@@ -1,7 +1,7 @@
 "use client"
 
 import { gsap } from "gsap"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import * as THREE from "three"
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js"
 
@@ -11,10 +11,11 @@ interface AviatorCanvasProps {
   opacity?: number
 }
 
-const AviatorCanvas = ({  shouldStartTakeOffAnimation = false, opacity = 1 }: AviatorCanvasProps) => {
+const AviatorCanvas = ({ multiplier, shouldStartTakeOffAnimation = false, opacity = 1 }: AviatorCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasContainerRef = useRef<HTMLDivElement>(null)
+  const [isModelLoaded, setIsModelLoaded] = useState(false)
   const sceneRef = useRef<{
     scene: THREE.Scene
     camera: THREE.PerspectiveCamera
@@ -193,6 +194,9 @@ const AviatorCanvas = ({  shouldStartTakeOffAnimation = false, opacity = 1 }: Av
           sceneRef.current.centerPosition = centerPosition
           sceneRef.current.flyAwayPosition = flyAwayPosition
         }
+        
+        // Mark model as loaded
+        setIsModelLoaded(true)
       },
       (progress) => {
         console.log('Loading progress:', (progress.loaded / progress.total * 100) + '%')
@@ -256,7 +260,8 @@ const AviatorCanvas = ({  shouldStartTakeOffAnimation = false, opacity = 1 }: Av
   }, [])
 
   useEffect(() => {
-    if (!sceneRef.current?.plane || !sceneRef.current?.actions) return
+    // Only proceed if model is loaded
+    if (!isModelLoaded || !sceneRef.current?.plane || !sceneRef.current?.actions) return
 
     if (shouldStartTakeOffAnimation) {
       // Find and play the "Take 001" animation
@@ -285,13 +290,15 @@ const AviatorCanvas = ({  shouldStartTakeOffAnimation = false, opacity = 1 }: Av
         })
       }
     }
-  }, [shouldStartTakeOffAnimation])
+  }, [shouldStartTakeOffAnimation, isModelLoaded])
 
   useEffect(() => {
     if (!canvasContainerRef.current) return
 
-    if (shouldStartTakeOffAnimation) {
-      // Scale up to full size and move to center when animation starts
+    const isGameActive = multiplier > 1.0
+    
+    if (shouldStartTakeOffAnimation || isGameActive) {
+      // Scale up to full size and move to center when animation starts OR when game is active (multiplier > 1)
       console.log("📈 Scaling canvas to full size and centering")
       gsap.to(canvasContainerRef.current, {
         // scale: 1,
@@ -311,7 +318,7 @@ const AviatorCanvas = ({  shouldStartTakeOffAnimation = false, opacity = 1 }: Av
         ease: "power2.out"
       })
     }
-  }, [shouldStartTakeOffAnimation])
+  }, [shouldStartTakeOffAnimation, multiplier])
 
   return (
     <div ref={containerRef} className="absolute inset-0" style={{ pointerEvents: 'auto' }}>

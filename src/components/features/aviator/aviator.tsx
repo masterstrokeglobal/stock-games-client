@@ -49,7 +49,10 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
   useEffect(() => {
     console.log("🎯 isPlaceOver", isPlaceOver, placeTimeLeft)
     // Trigger flying sequence when 2 seconds left in betting phase
-    if (!isPlaceOver && placeTimeLeft.seconds <= 2 && placeTimeLeft.seconds > 0 && !hasTriggeredFlying) {
+    if (
+      (!isPlaceOver && placeTimeLeft.seconds <= 2 && placeTimeLeft.seconds > 0 && !hasTriggeredFlying)
+      || (isPlaceOver && !hasTriggeredFlying)
+    ) {
       console.log("🛫 Starting flying sequence - 2 seconds before game start")
       setIsParallaxMoving(true) // Start parallax movement
       setHasTriggeredFlying(true)
@@ -71,28 +74,28 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
   useEffect(() => {
     if (aviator.data.length > 0) {
       const latestItem = aviator.data[aviator.data.length - 1]
-      
+
       if (latestItem.status === "crashed") {
         console.log(`💥 PLANE CRASHED at ${latestItem.multiplier.toFixed(2)}x multiplier! (Backend Event)`)
         setShouldShowBlast(true) // Trigger blast video
         setCanvasOpacity(0) // Hide canvas during blast
-        
+
         // Reset canvas opacity after 5 seconds
         setTimeout(() => {
           console.log("🎨 Resetting canvas opacity after blast")
           setCanvasOpacity(1)
         }, 5000)
-        
+
       } else if (latestItem.status === "flew_away") {
         console.log(`🚀 PLANE FLEW AWAY at ${latestItem.multiplier.toFixed(2)}x multiplier! (Backend Event)`)
         // Plane flew away - no blast needed
         setShouldShowBlast(false)
-        
+
         // Find the canvas container element for fly-away animation
         const canvasContainer = document.querySelector('[data-canvas-container]') as HTMLElement
         if (canvasContainer) {
           console.log("✈️ Starting fly-away animation")
-          
+
           // Animate canvas to scale down to 0 and move to top-right over 1 second
           gsap.to(canvasContainer, {
             scale: 0,
@@ -104,7 +107,7 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
               console.log("✈️ Plane flew away completely")
             }
           })
-          
+
           // Reset canvas after 5 seconds
           setTimeout(() => {
             console.log("🔄 Resetting canvas position after fly-away")

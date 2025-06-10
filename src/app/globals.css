@@ -673,3 +673,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   background: linear-gradient(0deg, rgba(91, 41, 2, 1) 0%, rgba(45, 17, 0, 1) 41%, rgba(0, 0, 0, 1) 100%);
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#5B2902", endColorstr="#000000", GradientType=0);
 }
+
+.flip-alter-image:nth-child(even) {
+  transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+}
