@@ -1,4 +1,3 @@
-import { SchedulerType } from '@/models/market-item';
 import { RoundRecord, RoundRecordGameType } from '@/models/round-record';
 import { useGetCurrentRoundRecord } from '@/react-query/round-record-queries';
 import { useQueryClient, UseQueryResult } from '@tanstack/react-query';
@@ -125,8 +124,9 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         // adding 2 seconds delay for round creation
         let timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 8000;
 
-        if ((roundRecord.roundRecordGameType === RoundRecordGameType.STOCK_SLOTS || roundRecord.roundRecordGameType === RoundRecordGameType.STOCK_JACKPOT) && roundRecord.type === SchedulerType.NSE ) {
-            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 18000;
+
+        if (roundRecord.roundRecordGameType !== RoundRecordGameType.DERBY) {
+            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 5000;
         }
 
         const gameEnd = setTimeout(() => {

@@ -21,7 +21,7 @@ interface Dice3DProps {
 const StockDisplay = ({ stock, className, isSecondCube, roundRecord }: { stock?: RankedMarketItem, className?: string, isSecondCube?: boolean, roundRecord: RoundRecord | null }) => {
 
   if (!stock) return null;
-  const changePercentageText = roundRecord?.finalPricesPresent ? `${roundRecord.changePercentage(stock?.id || 0)}%` : `${Number(stock?.change_percent) >= 0 ? '+' : ''}${stock?.change_percent ??"-"}% `;
+  const changePercentageText = roundRecord?.finalPricesPresent ? `${roundRecord.changePercentage(stock?.id || 0)}%` : `${Number(stock?.change_percent) >= 0 ? '+' : ''}${stock?.change_percent ?? "-"}% `;
   const changePercentage = roundRecord?.finalPricesPresent ? roundRecord.changePercentage(stock?.id || 0) : stock?.change_percent;
 
   return (
@@ -197,7 +197,6 @@ const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, winningM
     ? items.findIndex(item => winningMarketId?.includes(item.id || 0))
     : -1;
 
-  console.log(items[winningIndex]);
   // Calculate the rotation needed to show the winning face
   const getWinningRotation = () => {
     if (winningIndex === -1) return '';
@@ -214,7 +213,6 @@ const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, winningM
     return rotations[winningIndex as keyof typeof rotations] || '';
   };
 
-  console.log(getWinningRotation(),winningIndex, items[winningIndex]);
   // Determine if we should show the winning face
   const shouldShowWinningFace = !isRolling && winningMarketId !== undefined && winningIndex !== -1;
 
