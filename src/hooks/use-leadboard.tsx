@@ -13,7 +13,17 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
     const [stocks, setStocks] = useState<RankedMarketItem[]>(roundRecord?.market as RankedMarketItem[] || []);
     const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected'>('disconnected');
     const socketRef = useRef<WebSocket | null>(null);
-    const latestDataRef = useRef<RankedMarketItem[]>(roundRecord?.market as RankedMarketItem[] || []);
+    const latestDataRef = useRef<RankedMarketItem[]>(roundRecord?.market.map((item) => ({
+        ...item,
+        change_percent: '0',
+        price: roundRecord?.initialValues?.[item.bitcode?.toLocaleLowerCase() as string] || 0,
+        initialPrice: roundRecord?.initialValues?.[item.bitcode?.toLocaleLowerCase() as string] || 0,
+        stream: item.stream,
+        bitcode: item.bitcode,
+        codeName: item.codeName,
+        currency: item.currency,
+        horse: item.horse,
+    })) as RankedMarketItem[] || []);
     const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
     const initialPricesRef = useRef<Map<string, number>>(new Map());
     const roundEndCheckRef = useRef<NodeJS.Timeout>();
@@ -125,6 +135,9 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
 
                                 latestDataRef.current = latestDataRef.current.map(stock => {
                                     if (stock.bitcode === streamData.s) {
+                                        if(changePercent === undefined || changePercent === "NaN") {
+                                            return stock;
+                                        }
                                         return {
                                             ...stock,
                                             price: currentPrice,
@@ -139,6 +152,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                                     }
                                     return stock;
                                 });
+
                                 if (getRoundStatus() === 'tracking') {
                                     latestDataRef.current = calculateRanks(latestDataRef.current);
                                 }

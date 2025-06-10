@@ -207,9 +207,14 @@ const MarketSection = ({ globalBetAmount, betSlipOpen, searchQuery, setBetSlipOp
 }
 
 
-const StockCard = ({ stock, className, amount }: { stock?: RankedMarketItem, className?: string, amount?: number }) => {
+const StockCard = ({ stock, className, amount,roundRecord }: { stock?: RankedMarketItem, className?: string, amount?: number,roundRecord?: RoundRecord }) => {
   if (!stock) return null;
-  console.log("stock individual", stock)
+
+  
+  const initialPrice = roundRecord?.initialValues?.[stock.bitcode?.toLocaleLowerCase() as string];
+  
+  const price = stock.price ? stock.price : initialPrice;
+
   return (
     <div className="relative">
       <div className={cn(
@@ -224,11 +229,11 @@ const StockCard = ({ stock, className, amount }: { stock?: RankedMarketItem, cla
           </span>
 
           <span className={cn("text-black flex flex-col items-center text-center md:text-xs text-[8px] whitespace-nowrap font-bold truncate w-full", Number(stock.change_percent) >= 0 ? "text-green-600" : "text-red-600")}>
-            {stock.price}
+            {price ? price.toFixed(2) : "-"}
           </span>
           <div className={`text-[8px] md:text-[10px] lg:text-sm font-bold flex items-center gap-0.5 ${Number(stock.change_percent) >= 0 ? "text-green-600" : "text-red-600"
             }`}>
-            {Number(stock.change_percent) >= 0 ? (
+            {stock.change_percent !== undefined && Number(stock.change_percent) >= 0 ? (
               <>
                 <Triangle className="md:w-4 md:h-4 w-3 h-3 text-green-600 fill-green-600 flex-shrink-0" />
               </>
@@ -238,11 +243,9 @@ const StockCard = ({ stock, className, amount }: { stock?: RankedMarketItem, cla
           </div>
         </div>
       </div>
-      {amount && (
-        <div className=" bg-amber-500 text-white text-[8px] md:text-xs  text-center w-fit mx-auto px-2 py-0.5 rounded-full font-bold shadow-lg">
-          ₹{amount}
-        </div>
-      )}
+      <div className=" bg-amber-500 text-white text-[8px] md:text-xs  text-center w-fit mx-auto px-2 py-0.5 rounded-full font-bold shadow-lg">
+        {amount ? `₹${amount}` : "-"}
+      </div>
     </div>
   )
 }
@@ -273,7 +276,7 @@ const StockCardStack = ({ roundRecord }: { roundRecord: RoundRecord }) => {
         <div className="flex-1 gap-2 md:gap-4 flex justify-around">
           {lowStocks.length > 0 ? (
             lowStocks.map((item) => (
-              <StockCard key={item.id} stock={item.stock} amount={item.amount} />
+              <StockCard key={item.id} stock={item.stock} amount={item.amount} roundRecord={roundRecord} />
             ))
           ) : (
             <div className="text-center border border-dashed border-gray-400  p-2 text-gray-400 text-xs md:text-sm rounded-lg">No stocks selected</div>
@@ -286,7 +289,7 @@ const StockCardStack = ({ roundRecord }: { roundRecord: RoundRecord }) => {
         <div className="flex-1 gap-2 md:gap-4 flex justify-around">
           {highStocks.length > 0 ? (
             highStocks.map((item) => (
-              <StockCard key={item.id} stock={item.stock} amount={item.amount} />
+              <StockCard key={item.id} stock={item.stock} amount={item.amount} roundRecord={roundRecord} />
             ))
           ) : (
             <div className="text-center text-gray-400 text-[10px] md:text-sm border border-dashed border-gray-400  md:p-2 p-1 rounded-lg">No stocks selected</div>
