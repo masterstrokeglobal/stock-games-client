@@ -161,7 +161,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
             <div className="flex items-center justify-center gap-4">
 
             </div>
-            <div className="flex items-center mt-4 justify-center max-w-sm mx-auto flex-1 gap-2 bg-[#1B1B1B] border-2 border-[#E3B872] px-2 py-1 rounded-md">
+            <div className="flex items-center mt-4 justify-center max-w-sm mx-auto flex-1 gap-2 fontse bg-gradient-to-b font-semibold from-[#E3B872] to-[#FFD700] text-[#1B1B1B] px-2 py-1 rounded-md">
                 TotalBet :
                 <span className="text-lg">₹{totalBetAmount}</span>
             </div>

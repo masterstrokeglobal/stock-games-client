@@ -22,7 +22,7 @@ const CoinHeadTail = () => {
 
     useEffect(() => {
         if (!roundRecord) return;
-        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 3000;
+        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 2000;
 
         const timer = setTimeout(() => {
             refetch();

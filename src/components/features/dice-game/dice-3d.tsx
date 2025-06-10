@@ -4,6 +4,7 @@ import { MarketItem } from '@/models/market-item';
 import { cn } from '@/lib/utils';
 import { usePlacementOver } from '@/hooks/use-current-game';
 import { RankedMarketItem, useLeaderboard } from '@/hooks/use-leadboard';
+import useWindowSize from '@/hooks/use-window-size';
 interface DiceFaceProps {
   marketItem: MarketItem;
   className: string;
@@ -44,7 +45,8 @@ const StockDisplay = ({ stock, className, isSecondCube, roundRecord }: { stock?:
   );
 };
 
-const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, roundRecordWithWinningId }) => {
+export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, roundRecordWithWinningId }) => {
+  const { isMobile } = useWindowSize();
   const marketItems = roundRecord.market;
   const { stocks } = useLeaderboard(roundRecord);
   const isPlaceOver = usePlacementOver(roundRecord);
@@ -74,25 +76,29 @@ const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, roundRecor
               <StockDisplay key={stock?.id} stock={stock} className='flex-1 rounded-r-xl w-full' roundRecord={roundRecordWithWinningId} />
             ))}
           </div>
-          <Cube
-            marketItems={firstCube}
-            isRolling={isRolling}
-            winningMarketId={roundRecordWithWinningId?.winningId}
-            isLoading={isWaitingForResults}
-          />
+          {!isMobile &&
+            <Cube
+              marketItems={firstCube}
+              isRolling={isRolling}
+              winningMarketId={roundRecordWithWinningId?.winningId}
+              isLoading={isWaitingForResults}
+            />
+          }
         </div>
         <div className=' absolute left-1/2 -translate-x-1/2 h-full z-10'>
           <img src="/images/dice-game/lady.gif" alt="dice-bg" className='h-full w-auto object-contain' />
         </div>
         <div className="flex  sm:pl-24 pl-12   flex-row bg-[url('/images/dice-game/dice-bg.jpg')]  bg-cover bg-center flex-1 h-full gap-2 items-center justify-between animate-slide-right relative">
-          <Cube
-            marketItems={secondCube}
-            className='delay-1000'
-            isRolling={isRolling}
-            isSecondCube
-            winningMarketId={roundRecordWithWinningId?.winningId}
-            isLoading={isWaitingForResults}
-          />
+          {!isMobile &&
+            <Cube
+              marketItems={secondCube}
+              className='delay-1000'
+              isRolling={isRolling}
+              isSecondCube
+              winningMarketId={roundRecordWithWinningId?.winningId}
+              isLoading={isWaitingForResults}
+            />
+          }
           <div className='flex flex-col  h-full absolute right-0 top-0 w-fit self-end'>
             {marketItemsStocks.slice(6, 12).map((stock) => (
               <StockDisplay key={stock?.id} stock={stock} className='flex-1 rounded-l-xl w-full' isSecondCube roundRecord={roundRecordWithWinningId} />
@@ -186,7 +192,7 @@ interface CubeProps {
   isLoading?: boolean;
 }
 
-const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, winningMarketId, isLoading, isSecondCube }) => {
+export const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, winningMarketId, isLoading, isSecondCube }) => {
   // Ensure we have at least 6 market items, if not, repeat the available ones
   const items = marketItems.length >= 6
     ? marketItems.slice(0, 6)

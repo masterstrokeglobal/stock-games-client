@@ -59,9 +59,9 @@ export default function Home() {
         {/* Global Bet Amount and Search Section */}
         {roundRecord && <TimeDisplay className="fixed top-14 left-1/2 -translate-x-1/2 z-50  w-full max-w-sm" roundRecord={roundRecord} />}
         <div className="w-full">
-          <div className="grid relative grid-cols-1  gap-6  rounded-lg  pt-20  ">
-            <img src="/images/jackpot/bg.png" className=" w-full absolute top-0 left-0 object-cover  mx-auto  h-full " />
-            <div className="relative h-full w-full md:min-h-[700px]   sm:min-h-[600px] min-h-[400px]  bg-contain bg-no-repeat bg-center">
+          <div className="grid relative grid-cols-1  gap-6  rounded-lg overflow-hidden pt-20  ">
+            <img src="/images/jackpot/bg.png" className=" w-full absolute sm:top-0 top-12 left-0 object-cover  mx-auto h-full " />
+            <div className="relative h-full w-full md:min-h-[700px]   sm:min-h-[600px] min-h-[350px]  bg-contain bg-no-repeat bg-center">
               <div className="absolute bottom-0 w-full h-fit ">
                 <div className='absolute left-1/2 -translate-x-1/2 bottom-[calc(100%-2vw)] md:h-[60%] h-3/4 z-10 flex max-w-sm items-end justify-center'>
                   <img src="/images/jackpot/lady4.gif" alt="dice-bg" className='w-auto h-full mt-20 scale-x-[-1]' />
@@ -78,7 +78,7 @@ export default function Home() {
             />
           </div>
 
-          <div className="md:hidden block w-full mb-8 bg-amber-600/20">
+          <div className="md:hidden block w-full  bg-black/70">
             <BettingChips
               showBetting={!isPlacementOver}
               globalBetAmount={globalBetAmount}
@@ -218,10 +218,10 @@ const StockCard = ({ stock, className, amount,roundRecord }: { stock?: RankedMar
   return (
     <div className="relative">
       <div className={cn(
-        "w-10 md:w-16 lg:w-20 h-14 md:h-16 lg:h-20 bg-white rounded-lg shadow-lg relative transform hover:scale-105 transition-transform cursor-pointer md:p-2 p-1",
+        "w-10 md:w-16 lg:w-20 min-h-14 md:h-16 lg:h-20 bg-white rounded-lg shadow-lg relative transform hover:scale-105 transition-transform cursor-pointer md:p-2 p-1",
         className
       )} style={{ background: 'linear-gradient(135deg, #fff 0%, #f0f0f0 100%)' }}>
-        <div className="h-full flex flex-col items-center justify-center gap-1">
+        <div className="h-full flex flex-col items-center justify-center sm:gap-1">
           <span className="text-black text-[8px] md:text-[10px] lg:text-xs text-center font-bold truncate w-full">{stock.name}</span>
 
           <span className={cn("text-black flex flex-col items-center text-center md:text-xs text-[8px] whitespace-nowrap font-bold truncate w-full", Number(stock.change_percent) >= 0 ? "text-green-600" : "text-red-600")}>
@@ -279,7 +279,7 @@ const StockCardStack = ({ roundRecord }: { roundRecord: RoundRecord }) => {
               <StockCard key={item.id} stock={item.stock} amount={item.amount} roundRecord={roundRecord} />
             ))
           ) : (
-            <div className="text-center border border-dashed border-gray-400  p-2 text-gray-400 text-xs md:text-sm rounded-lg">No stocks selected</div>
+            <div className="text-center border border-dashed border-gray-400  md:p-2 p-1 text-gray-400 text-[10px] md:text-sm rounded-lg">No stocks selected</div>
           )}
         </div>
       </div>

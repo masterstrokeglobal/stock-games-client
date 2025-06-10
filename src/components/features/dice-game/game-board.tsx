@@ -1,8 +1,10 @@
 import { usePlacementOver } from '@/hooks/use-current-game';
+import useWindowSize from '@/hooks/use-window-size';
 import { cn } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
 import { useCreateDiceGamePlacement, useGetMyCurrentRoundDiceGamePlacement } from '@/react-query/dice-game-queries';
 import { PropsWithChildren } from 'react';
+import { Cube } from './dice-3d';
 
 interface GameBoardProps extends PropsWithChildren<PropsWithClassName> {
     roundRecord: RoundRecord;
@@ -53,7 +55,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount }: GameBo
 
 
     return (
-        <div className={cn("bg-gradient-to-b bg-[url('/images/dice-game/board-bg.jpg')] bg-cover bg-center from-gray-900 via-gray-800 to-black md:p-8 p-4 pt-14 md:pt-24  border border-yellow-600/30 shadow-2xl", className)}>
+        <div className={cn("bg-gradient-to-b bg-[url('/images/dice-game/board-bg.jpg')] bg-cover bg-center from-gray-900 via-gray-800 to-black md:p-8 p-4 pt-8 md:pt-24  border border-yellow-600/30 shadow-2xl", className)}>
             {/* Header */}
             {children}
 
@@ -135,5 +137,49 @@ const BetButton = ({ number, multiplier, betAmounts, handleBetSelect }: { number
                 </div>
             )}
         </button>
+    );
+};
+
+
+export const MobileDice = ({ className = '', roundRecord, roundRecordWithWinningId }: { className?: string, roundRecord: RoundRecord, roundRecordWithWinningId: RoundRecord | null }) => {
+    const { isMobile } = useWindowSize();
+    const marketItems = roundRecord.market;
+    const isPlaceOver = usePlacementOver(roundRecord);
+    const isRolling = isPlaceOver && roundRecordWithWinningId?.winningId == null;
+
+    const firstCube = marketItems.slice(0, 6);
+    const secondCube = marketItems.slice(6, 12);
+
+
+    // Check if we're waiting for winning data
+    const isWaitingForResults = !isRolling && (!roundRecordWithWinningId?.winningId || roundRecordWithWinningId?.winningId.length === 0);
+
+    if (!isMobile) return null;
+
+    return (
+        <div className={`font-sans  bg-cover bg-center overflow-visible ${className}`} style={{ height: '10rem' }}>
+            <div className="flex justify-center  relative  h-full items-center">
+                <div className="flex sm:pr-24  flex-row  flex-1 h-full gap-2 items-center justify-end animate-slide-left relative">
+
+                    <Cube
+                        marketItems={firstCube}
+                        isRolling={isRolling}
+                        winningMarketId={roundRecordWithWinningId?.winningId}
+                        isLoading={isWaitingForResults}
+                    />
+                </div>
+
+                <div className="flex  sm:pl-24 pl-12   flex-row bg-cover bg-center flex-1 h-full gap-2 items-center justify-between animate-slide-right relative">
+                    <Cube
+                        marketItems={secondCube}
+                        className='delay-1000'
+                        isRolling={isRolling}
+                        isSecondCube
+                        winningMarketId={roundRecordWithWinningId?.winningId}
+                        isLoading={isWaitingForResults}
+                    />
+                </div>
+            </div>
+        </div>
     );
 };

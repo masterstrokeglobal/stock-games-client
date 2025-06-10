@@ -5,7 +5,7 @@ import MarketSelector from '@/components/common/market-selector';
 import StockGameHeader from '@/components/common/stock-game-header';
 import { BettingArea } from '@/components/features/dice-game/betting-area';
 import Dice3D from '@/components/features/dice-game/dice-3d';
-import BettingGrid from '@/components/features/dice-game/game-board';
+import BettingGrid, { MobileDice } from '@/components/features/dice-game/game-board';
 import { useCurrentGame } from '@/hooks/use-current-game';
 import { useMarketSelector } from '@/hooks/use-market-selector';
 import useWinningId from '@/hooks/use-winning-id';
@@ -19,8 +19,6 @@ const WheelOfFortune = () => {
 
     const roundRecordWithWinningId = useWinningId(roundRecord);
 
-    console.log(roundRecordWithWinningId?.finalPricesPresent,roundRecordWithWinningId?.finalDifferences ,roundRecordWithWinningId?.winningId);
-
 
     if (!marketSelected) return <MarketSelector className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Dice Game Market" />
 
@@ -30,9 +28,10 @@ const WheelOfFortune = () => {
         <section className="flex flex-col  items-start justify-start min-h-[calc(100svh-100px)] -mx-4">
             <div className="flex flex-col h-fit max-w-2xl w-full  bg-gray-900 border border-gray-600 sm:rounded-lg rounded-none mx-auto  text-white overflow-hidden">
                 <StockGameHeader onBack={() => setMarketSelected(false)} title="Dice Game" />
-                <Dice3D className='h-36' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId}/>
-                <BettingGrid className='relative pt-32' roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={roundRecordWithWinningId?.winningId || null} >
+                <Dice3D className='h-36' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
+                <BettingGrid className='relative sm:pt-32 pt-20' roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={roundRecordWithWinningId?.winningId || null} >
                     <TimeDisplay className="absolute top-0 left-1/2 -translate-x-1/2 z-10 w-full max-w-sm  " roundRecord={roundRecord} />
+                    <MobileDice roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
                 </BettingGrid>
                 <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
             </div>

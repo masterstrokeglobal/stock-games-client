@@ -144,7 +144,8 @@ const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: 
             if (event.type === WebSocketEventType.CASH_OUT_SUCCESS) {
                 toast.success("Cash out successful");
                 queryClient.invalidateQueries({ queryKey: ["aviator-my-placement", roundRecord.id] });
-                queryClient.invalidateQueries({predicate: (query) =>query.queryKey[0] === "user" && query.queryKey[1] == 'wallet'});            }
+                queryClient.invalidateQueries({ predicate: (query) => query.queryKey[0] === "user" && query.queryKey[1] == 'wallet' });
+            }
             if (event.type === WebSocketEventType.ITEMS_STATUS) {
                 const selectedMarketItem = roundRecord.market.find((item: MarketItem) => stockSelectedAviator === item.id?.toString());
 
@@ -166,15 +167,15 @@ const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: 
             if (event.type === WebSocketEventType.ROUND_CREATED) {
                 const round = event.round.roundRecord;
                 toast.success("new Round Select Your Market");
-            timer = setTimeout(() => {
-                queryClient.setQueryData(["current-round-record", type, RoundRecordGameType.AVIATOR], () => {
-                    return {
-                        data: {
-                            roundRecords: [round]
+                timer = setTimeout(() => {
+                    queryClient.setQueryData(["current-round-record", type, RoundRecordGameType.AVIATOR], () => {
+                        return {
+                            data: {
+                                roundRecords: [round]
+                            }
                         }
-                    }
-                });
-            }, 2000);
+                    });
+                }, 2000);
             }
         };
         const onError = (newError: string) => setError(newError);
