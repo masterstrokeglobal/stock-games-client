@@ -3,7 +3,7 @@
 import TimeDisplay from "@/components/common/bet-locked-banner"
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
 import useAviator from "@/hooks/use-aviator"
-import { useGameType } from "@/hooks/use-market-selector"
+import { useGameType, useStockSelectorAviator } from "@/hooks/use-market-selector"
 import useWindowSize from "@/hooks/use-window-size"
 import { useGameState } from "@/hooks/use-current-game"
 import { cn } from "@/lib/utils"
@@ -26,6 +26,7 @@ type AviatorProps = {
 
 export default function   Aviator({ className, roundRecord, token }: AviatorProps) {
   const { gameType } = useGameType();
+  const { setStockSelectedAviator } = useStockSelectorAviator();
   const { isPlaceOver, placeTimeLeft, isGameOver } = useGameState(roundRecord);
   const aviator = useAviator({
     type: gameType,
@@ -56,6 +57,8 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
       console.log("🛫 Starting flying sequence - 2 seconds before game start")
       setIsParallaxMoving(true) // Start parallax movement
       setHasTriggeredFlying(true)
+      localStorage.setItem("gameEnded", "false")
+      console.log("🎯 gameEnded 2", localStorage.getItem("gameEnded"))
     }
 
     // Stop animation immediately when game ends
@@ -72,7 +75,9 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
 
   // Monitor backend events for crash/fly-away
   useEffect(() => {
-    if (aviator.data.length > 0) {
+    if (aviator.data.length > 0 && localStorage.getItem("gameEnded") === "false") {
+      localStorage.setItem("gameEnded", "true")
+      console.log("🎯 gameEnded", localStorage.getItem("gameEnded"))
       const latestItem = aviator.data[aviator.data.length - 1]
 
       if (latestItem.status === "crashed") {
@@ -105,6 +110,9 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
             ease: "power2.in",
             onComplete: () => {
               console.log("✈️ Plane flew away completely")
+              // Clear the aviatorStockId URL parameter to go to the stock selection screen
+              setStockSelectedAviator(null);
+              console.log("🔄 Cleared aviatorStockId - redirecting to stock selection")
             }
           })
 
@@ -116,10 +124,16 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
               x: "-30%", // Back to original position
               y: "40%", // Back to original position
               duration: 0.5,
-              ease: "power2.out"
+              onComplete: () => {
+                setStockSelectedAviator(null);
+                console.log("🔄 Cleared aviatorStockId - redirecting to stock selection")
+              }
             })
-          }, 5000)
+          },3000)
         }
+      } else {
+        localStorage.setItem("gameEnded", "false")
+        console.log("🎯 gameEnded 3", localStorage.getItem("gameEnded"))
       }
     }
   }, [aviator.data]) // Monitor aviator.data changes from backend
