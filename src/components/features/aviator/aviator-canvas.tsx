@@ -304,6 +304,8 @@ const AviatorCanvas = ({ multiplier, shouldStartTakeOffAnimation = false, opacit
         // scale: 1,
         x: "0%",
         y: "0%",
+        /// make the plane face up
+        rotation: -15,
         duration: 1,
         ease: "power2.out"
       })
@@ -314,6 +316,7 @@ const AviatorCanvas = ({ multiplier, shouldStartTakeOffAnimation = false, opacit
         // scale: 0.5,
         x: "-30%", // Move left
         y: "40%",  // Move down
+        rotation: 0,
         duration: 1,
         ease: "power2.out"
       })
@@ -328,7 +331,7 @@ const AviatorCanvas = ({ multiplier, shouldStartTakeOffAnimation = false, opacit
         data-canvas-container
         style={{ 
           transformOrigin: 'center center',
-          transform: 'scale(1) translate(-30%, 40%)', // Initial scale and position
+          transform: 'scale(1) translate(-30%, 40%) rotate(0deg)', // Initial scale and position
           opacity: opacity,
           transition: 'opacity 0.3s ease-in-out'
         }}
