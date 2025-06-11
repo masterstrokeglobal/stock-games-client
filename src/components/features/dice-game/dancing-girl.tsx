@@ -1,6 +1,6 @@
+import { OrbitControls, useAnimations, useGLTF } from '@react-three/drei'
+import { Canvas, PrimitiveProps } from '@react-three/fiber'
 import { Suspense, useEffect, useRef } from 'react'
-import { useGLTF, useAnimations, OrbitControls } from '@react-three/drei'
-import { Canvas, PrimitiveProps, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
 function Model(props: Partial<PrimitiveProps>) {
