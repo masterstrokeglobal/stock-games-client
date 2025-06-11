@@ -94,7 +94,7 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
         setTimeout(() => {
           localStorage.setItem("blastPlaying", "false")
           setStockSelectedAviator(null);
-        }, 2000)
+        }, 3000)
 
         // Reset canvas opacity after 5 seconds
         setTimeout(() => {
