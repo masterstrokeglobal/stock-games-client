@@ -12,7 +12,8 @@ const GoogleLoginButton = () => {
             googleSignIn({ googleToken: token, companyId: COMPANYID }, {
                 
                 onSuccess: () => {
-                    router.push("/game/platform");
+                    // router.push("/game/platform");
+                    router.back();
                 }
             });
         }
@@ -24,7 +25,6 @@ const GoogleLoginButton = () => {
                 className: "w-full !h-12"
             }}
             onSuccess={(credentialResponse) => {
-                console.log(credentialResponse);
                 if (credentialResponse.credential) {
                     handleGoogleLogin(credentialResponse.credential);
                 }

@@ -21,10 +21,10 @@ const WalletBalanceCard = ({ wallet }: Props) => {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                         <div className="shadow-custom-glow h-fit w-fit mr-2 rounded-full">
-                            <img 
-                                src="/coin.svg" 
-                                alt={t('main.alt')} 
-                                className="w-8 h-8" 
+                            <img
+                                src="/coin.svg"
+                                alt={t('main.alt')}
+                                className="w-8 h-8"
                             />
                         </div>
                         <span className="text-white text-xl font-bold">
@@ -38,10 +38,10 @@ const WalletBalanceCard = ({ wallet }: Props) => {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
                         <div className="shadow-custom-glow h-fit w-fit mr-2 rounded-full">
-                            <img 
-                                src="/coin.svg" 
-                                alt={t('bonus.alt')} 
-                                className="w-8 h-8" 
+                            <img
+                                src="/coin.svg"
+                                alt={t('bonus.alt')}
+                                className="w-8 h-8"
                             />
                         </div>
                         <span className="text-white text-xl font-bold">

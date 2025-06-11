@@ -5,6 +5,7 @@ import { useAuthStore } from "@/context/auth-context";
 import { StepperProvider, useStepper } from "@/context/stepper-context";
 import User from "@/models/user";
 import { useGameUserRegister, useGameUserResendOTP, useGameUserVerify } from "@/react-query/game-user-queries";
+import { useVisitorData } from "@fingerprintjs/fingerprintjs-pro-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
@@ -14,6 +15,12 @@ const RegisterPage = () => {
     const referenceCode = params.get("refferal") ?? null;
     const [userId, setUserId] = useState<string | null>(null);
     const { userDetails } = useAuthStore();
+    
+  const { data: visitorData } = useVisitorData(
+    { extendedResult: true },
+    { immediate: true }
+  )
+
     const router = useRouter();
 
     const { mutate, isPending } = useGameUserRegister();
@@ -43,6 +50,10 @@ const RegisterPage = () => {
             payload.phone = data.email;
         }
 
+        if (visitorData) {
+            payload.visitorId = visitorData.visitorId;
+        }
+        
         mutate(payload, {
             onSuccess: (data) => {
                 const user = new User(data.data);

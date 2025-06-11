@@ -18,7 +18,7 @@ const WithdrawalFormPage = () => {
     const wallet = useMemo(() => {
         if (isLoading) return new Wallet();
         return new Wallet(data?.data?.wallet);
-    }, [data]);
+    }, [data,isLoading]);
 
     const onSubmit = async (data: WithdrawFormValues) => {
         // Ensure amount is converted to integer

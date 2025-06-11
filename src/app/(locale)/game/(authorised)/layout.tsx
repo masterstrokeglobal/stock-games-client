@@ -8,28 +8,29 @@ import { useRouter } from "next/navigation";
 import { PropsWithChildren, useEffect } from "react";
 
 const GameLayout = ({ children }: PropsWithChildren) => {
-    const { loading, userDetails } = useAuthStore();
-    const router = useRouter();
-    useGameUserLogin();
+  const { loading, userDetails } = useAuthStore();
+  const router = useRouter();
+  useGameUserLogin();
 
-    useEffect(() => {
-        if (!loading && !(userDetails instanceof User)) {
-            router.push("/game/auth/login");
-        }
-    }, [userDetails, loading]);
-
-    if (loading || !(userDetails instanceof User)) {
-        return <GameLoadingScreen className="h-screen" />;
+  useEffect(() => {
+    if (!loading && !(userDetails instanceof User)) {
+      router.push("/game/auth/login");
     }
+  }, [userDetails, loading]);
 
-    return <>
-        <Head>
-            <link rel="icon" href={userDetails?.company?.logo ?? "/logo.png"} />
-            <title>{userDetails?.company?.name ?? "--"}</title>
-        </Head>
+  if (loading || !(userDetails instanceof User)) {
+    return <GameLoadingScreen className="h-screen" />;
+  }
 
+  return (
+    <>
+      <Head>
+        <link rel="icon" href={userDetails?.company?.logo ?? "/logo.png"} />
+        <title>{userDetails?.company?.name ?? "--"}</title>
+      </Head>
         <div className="bg-background-game">{children}</div>
     </>
+  );
 };
 
 export default GameLayout;

@@ -23,6 +23,9 @@ const TierPage = () => {
         loginPoints: tier.loginPoints,
         firstGamePoints: tier.firstGamePoints,
         gamesRequired: tier.gamesRequired,
+        weeklyWithdrawLimit: tier.weeklyWithdrawLimit,
+        dailyWithdrawLimit: tier.dailyWithdrawLimit,
+        monthlyWithdrawLimit: tier.monthlyWithdrawLimit,
         pointsPerHundredRupees: tier.pointsPerHundredRupees,
     }
 

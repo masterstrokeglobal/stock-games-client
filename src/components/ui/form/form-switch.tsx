@@ -1,6 +1,7 @@
-"use client"
-import { Control, FieldPath, FieldValues } from "react-hook-form"
+"use client";
 
+// FormSwitch.tsx
+import { Control, FieldPath, FieldValues } from "react-hook-form";
 import {
   FormControl,
   FormDescription,
@@ -12,7 +13,7 @@ import { Switch } from "@/components/ui/switch"
 import { cn } from "@/lib/utils"
 function FormSwitch<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >({
   control,
   name,
@@ -20,11 +21,12 @@ function FormSwitch<
   label,
   className,
 }: {
-  label?: string
-  control: Control<TFieldValues>
-  className?: string
-  name: TName
-  description?: string
+  label?: string;
+  control: Control<TFieldValues>;
+  className?: string;
+  name: TName;
+  description?: string;
+  game?: boolean;
 } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <FormField
@@ -48,4 +50,4 @@ function FormSwitch<
   )
 }
 
-export default FormSwitch
+export default FormSwitch;

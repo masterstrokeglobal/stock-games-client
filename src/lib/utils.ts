@@ -1,4 +1,5 @@
 import { PlacementType } from "@/models/game-record";
+import { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
@@ -75,7 +76,6 @@ export const getPlacementString = (bet: { market: number[], placementType: Place
   }
 }
 
-export const COMPANYID = Number(process.env.NEXT_PUBLIC_COMPANY_ID) ?? 4
 
 export const HIGHLIGHT_APP_KEY = process.env.NEXT_PUBLIC_HIGHLIGHT_APP_KEY
 
@@ -180,7 +180,7 @@ export const secondNames: string[] = [
 ];
 
 
-export const INR = (rupees: string) => {
+export const INR = (rupees: string | number) => {
   // convert number into RUpees
   const number = Number(rupees);
 
@@ -189,6 +189,13 @@ export const INR = (rupees: string) => {
     currency: 'INR'
   }).format(number);
 }
+
+export const RED_BLACK_ROULETTE_NUMBERS = [
+  { number: 1, color: 'red' }, { number: 2, color: 'red' }, { number: 3, color: 'red' }, { number: 4, color: 'red' },
+  { number: 5, color: 'red' }, { number: 6, color: 'red' }, { number: 7, color: 'red' }, { number: 8, color: 'red' },
+  { number: 9, color: 'black' }, { number: 10, color: 'black' }, { number: 11, color: 'black' }, { number: 12, color: 'black' },
+  { number: 13, color: 'black' }, { number: 14, color: 'black' }, { number: 15, color: 'black' }, { number: 16, color: 'black' }
+];
 
 export const ROULETTE_NUMBERS = [
   { number: 1, color: 'red' }, { number: 2, color: 'black' }, { number: 3, color: 'red' }, { number: 4, color: 'black' },
@@ -213,6 +220,17 @@ export const googleAuth = () => {
 
 export const RED_NUMBERS = [1, 3, 6, 8, 9, 11, 14, 16];
 export const BLACK_NUMBERS = [2, 4, 5, 7, 10, 12, 13, 15];
+export const  deepClone = (obj: any) => {
+  return JSON.parse(JSON.stringify(obj));
+}
+
+export const COMPANYID = Number(process.env.NEXT_PUBLIC_COMPANY_ID) ?? 4;
+
+export const PLATFORMFEES = 4
+
+export const LOBBY_PLATFORM_FEES = 10
+
+export const LEVERAGE_MULTIPLIER = 10;
 
 export const randomUsername = () => {
   return indianNames[Math.floor(Math.random() * indianNames.length)] + " " + secondNames[Math.floor(Math.random() * secondNames.length)];
@@ -225,8 +243,15 @@ export const randomNumber = (min: number, max: number, multiple: number) => {
 }
 
 
+export const formatRupee = (rupees: number) => {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR'
+  }).format(rupees);
+}
+
 export const checkCasinoAllowed = (companyId: number) => {
-  return companyId === 21;
+  return companyId === 4;
 }
 
 // Generate current time in 12-hour format (HH:MM AM/PM)
@@ -281,3 +306,11 @@ export const baseTheme = {
 export const decodeUrlString = (encoded: string): string => {
   return decodeURIComponent(encoded);
 }
+
+
+export const schedulerTypeOptions = Object.values(SchedulerType).map((type) => ({
+  label: type,
+  value: type
+}));
+
+

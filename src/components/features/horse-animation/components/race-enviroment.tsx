@@ -1,18 +1,22 @@
+import MarketItem from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import {
     OrbitControls,
     PerspectiveCamera
 } from "@react-three/drei";
 import { Physics } from "@react-three/rapier";
-import { Ground } from "./Ground";
 import FenceRow from "./fence-row";
+import { Ground } from "./Ground";
 import HorseAnimation from "./horse-animation";
 import MovingPeople from "./people-model";
 type Props = {
     roundRecord: RoundRecord;
+    filteredMarket?: MarketItem[];
+
 };
 const HorseRaceEnvironment = ({
-    roundRecord
+    roundRecord,
+    filteredMarket
 }: Props) => {
 
     return (
@@ -35,12 +39,11 @@ const HorseRaceEnvironment = ({
                 shadow-mapSize-height={1024}
             />  
             <Physics>
-                <Ground />
-
                 <MovingPeople position={[120, -2, 0]} rotation={[0,40.8, 0]} scale={[15, 15, 15]} />
                 <FenceRow x={-35} count={1000} spacing={16}   />
                 <FenceRow x={85} count={1000} spacing={16}  />
-                <HorseAnimation roundRecord={roundRecord} />
+                <HorseAnimation roundRecord={roundRecord} filteredMarket={filteredMarket} />
+                <Ground />
             </Physics>
         </>
     );

@@ -17,6 +17,9 @@ const tierFormSchema = z.object({
     minPoints: z.coerce.number().min(0),
     gamesRequired: z.coerce.number().min(0),
     redeemablePoints: z.coerce.number().min(0),
+    weeklyWithdrawLimit: z.coerce.number().min(0),
+    dailyWithdrawLimit: z.coerce.number().min(0),
+    monthlyWithdrawLimit: z.coerce.number().min(0),
     loginPoints: z.coerce.number().min(0),
     firstGamePoints: z.coerce.number().min(0),
     pointsPerHundredRupees: z.coerce.number().min(0),
@@ -34,7 +37,7 @@ const TierForm = ({ onSubmit, defaultValues, isLoading }: Props) => {
     const [redeemEnabled, setRedeemEnabled] = useState(defaultValues?.redeemablePoints !== 0)
     const [loginEnabled, setLoginEnabled] = useState(defaultValues?.loginPoints !== 0)
     const [firstGameEnabled, setFirstGameEnabled] = useState(defaultValues?.firstGamePoints !== 0)
-    const [pointsPerHundredEnabled, setPointsPerHundredEnabled] = useState(defaultValues?.pointsPerHundredRupees !==    0)
+    const [pointsPerHundredEnabled, setPointsPerHundredEnabled] = useState(defaultValues?.pointsPerHundredRupees !== 0)
 
     const form = useForm<TierFormSchema>({
         resolver: zodResolver(tierFormSchema),
@@ -161,6 +164,35 @@ const TierForm = ({ onSubmit, defaultValues, isLoading }: Props) => {
                     </div>
                 </div>
             </Card>
+
+            <Card className="p-6 space-y-6">
+                <h3 className="text-lg font-semibold">Withdrawal Limits</h3>
+                <div className="space-y-4">
+                    <FormInput
+                        type="number"
+                        label="Weekly Withdrawal Limit"
+                        control={form.control}
+                        name="weeklyWithdrawLimit"
+                        description="Maximum amount that can be withdrawn in a week"
+                    />
+                    <FormInput
+                        type="number"
+                        label="Daily Withdrawal Limit"
+                        control={form.control}
+                        name="dailyWithdrawLimit"
+                        description="Maximum amount that can be withdrawn in a day"
+                    />
+
+                    <FormInput
+                        type="number"
+                        label="Monthly Withdrawal Limit"
+                        control={form.control}
+                        name="monthlyWithdrawLimit"
+                        description="Maximum amount that can be withdrawn in a month"
+                    />
+                </div>
+            </Card>
+
 
             <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? <>

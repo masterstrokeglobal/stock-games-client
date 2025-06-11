@@ -88,4 +88,12 @@ export const gameUserAPI = {
   googleLoginCallback: async () => {
     return api.get("/auth/google/callback");
   },
+
+  toggleFavoriteMarket: async (payload: {marketId: string}) => {
+    return api.post("/favourite", payload);
+  },
+
+  getFavoriteMarket: async () => {
+    return api.get("/favourite");
+  },
 };

@@ -4,7 +4,7 @@ import * as THREE from "three";
 
 type HorseNumberProps = {
   position: [number, number, number];
-  number: number;
+  number: number|string;
   color?: string;
 };
 

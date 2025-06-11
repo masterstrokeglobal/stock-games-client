@@ -8,9 +8,12 @@
         "title": "Stock Derby",
         "game-over": "Game Over",
         "demoLogin": "🚀 Demo Login",
+        "color": "Color",
         "bet": "Bet",
         "undo": "Undo Bet",
         "game-ends-in": "Game ends in",
+        "game-starts-in": "Game starts in",
+        "game-loops-in": "Game loops in",
         "current-bets": "Current Bets",
         "leaderboard": "Leaderboard",
         "rank": "Rank",
@@ -33,7 +36,14 @@
         "place-starts-in": "Place starts in",
         "place-ends-in": "Place ends in",
         "clear-all": "Clear All",
-        "repeat-bet": "Repeat Bet"
+        "repeat-bet": "Repeat Bet",
+        "red": "Red",
+        "black": "Black",
+        "no-fancy-bets": "No fancy bets can be placed now",
+        "fancy-bets": "Fancy Bets",
+        "advance-bets": "Advance Bets",
+        "yes" :"Yes",
+        "no" : "No"
     },
     "last-round-winner": {
         "title": "Last Round Winner",
@@ -472,7 +482,7 @@
         }
     },
     "round-detail": {
-        "title": "Round  Details",
+        "title": "Round Details",
         "round": {
             "details": "Round Information",
             "start-time": "Start Time",

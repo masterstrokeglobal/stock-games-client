@@ -55,7 +55,7 @@ const LastRoundWinner = () => {
 
 
     return (
-        <div>
+        <div className=" md:m-auto mx-auto md:w-full w-[calc(80%)]">
             <h2 className="text-md pl-2 text-white mt-2 py-1 font-semibold mb-2 text-game-text game-box-gradient  w-full ">
                 {t("title")}
             </h2>

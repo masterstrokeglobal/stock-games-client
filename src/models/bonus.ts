@@ -2,7 +2,10 @@ import Company from "./company";
 
 
 export enum BonusCategory {
+    JOINING = "joining",
     SIGNUP = "signup",
+    REFERRAL = "referral",
+    LOSEBACK = "loseback",
     DEPOSIT = "deposit",
 }
 

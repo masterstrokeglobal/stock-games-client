@@ -5,15 +5,25 @@ import { useFrame } from "@react-three/fiber";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import HorseModel from "./horse-model";
-
+import MarketItem from "@/models/market-item";
 
 
 type Props = {
     roundRecord: RoundRecord;
+    filteredMarket?: MarketItem[]; // Pass filtered horses
 };
 
-const HorseAnimation = React.memo(({ roundRecord }: Props) => {
-    const numberOfHorses = roundRecord.market.length;
+const MAX_Z_POSITION = 60;
+const MIN_Z_POSITION = -60;
+
+const controlZPosition = (z: number) => {
+    if (z > MAX_Z_POSITION) return MAX_Z_POSITION;
+    if (z < MIN_Z_POSITION) return MIN_Z_POSITION;
+    return z;
+};
+
+const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
+    const numberOfHorses = (filteredMarket && filteredMarket.length > 0) ? filteredMarket.length : roundRecord.market.length;
     const animationProgressRef = useRef(0);
     const horsesRef = useRef<(THREE.Object3D | null)[]>([]);
 
@@ -32,18 +42,23 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
         })),
         [numberOfHorses]);
 
-    // Optimize position generation with memoization
     const generateNewPositions = useMemo(() => {
-        return roundRecord.market.map((horse, index) => {
+        const marketToRender = filteredMarket && filteredMarket.length > 0
+            ? roundRecord.market.filter(stock =>
+                filteredMarket.some(filteredStock => filteredStock.id === stock.id))
+            : roundRecord.market;
+
+        return marketToRender.map((horse, index) => {
             const currentHorse = stocks.find(stock => stock.horse === horse.horse);
-            const zBasedOnRank = currentHorse?.rank ? -(currentHorse.rank * 12) + 30 : 0;
+
+            const zBasedOnRank = currentHorse?.rank ? -(currentHorse.rank * 8) + 60 : 0;
 
             return {
                 x: -15 + (index) * 4 + (Math.random() * 20),
-                z: zBasedOnRank,
+                z: controlZPosition(zBasedOnRank),
             };
         });
-    }, [stocks, roundRecord.market]);
+    }, [stocks, roundRecord.market, filteredMarket]);
 
     // Reduce effect dependencies and optimize transition logic
     useEffect(() => {
@@ -61,7 +76,6 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
                 if (horse && currentPositions[index] && targetPositions[index]) {
                     const currentPos = currentPositions[index];
                     const targetPos = targetPositions[index];
-
                     // Use lerp for smoother interpolation
                     horse.position.x = THREE.MathUtils.lerp(currentPos.x, targetPos.x, progress);
                     horse.position.z = THREE.MathUtils.lerp(currentPos.z, targetPos.z, progress);
@@ -95,25 +109,32 @@ const HorseAnimation = React.memo(({ roundRecord }: Props) => {
     });
 
     // Memoize horses rendering data
-    const horses = useMemo(() =>
-        roundRecord.market.map((stock, index) => {
-            const initialPos = currentPositions[index] || initialPositions[index];
+    const horses = useMemo(() => {
+        const marketToRender = filteredMarket && filteredMarket.length > 0
+            ? roundRecord.market.filter(stock =>
+                filteredMarket.some(filteredStock => filteredStock.id === stock.id))
+            : roundRecord.market;
+
+        return marketToRender.map((stock, index) => {
+            const currentHorse = stocks.find(s => s.horse === stock.horse);
+            const initialPos = currentPositions[index] || initialPositions[index] || { x: 0 };
             return {
                 position: [initialPos.x, 0, initialPos.z],
                 scale: [.2, .2, .2],
                 speed: 1 + Math.random() * 0.2,
                 horseNumber: stock.horse,
+                rank: currentHorse?.rank || index + 1,
             };
-        }),
-        [numberOfHorses, currentPositions, initialPositions]);
+        });
+    }, [roundRecord.market, currentPositions, initialPositions, filteredMarket, stocks]);
 
     return (
         <>
             {horses.map((horse, index) => (
                 <HorseModel
-                    key={index}
-                    ref={(el) => {
-                        horsesRef.current[index] = el as unknown as THREE.Object3D | null;
+                    key={horse.horseNumber}
+                    ref={(el: THREE.Object3D | null) => {
+                        horsesRef.current[index] = el;
                     }}
                     number={horse.horseNumber == 17 ? 0 : horse.horseNumber!}
                     color={ROULETTE_COLORS[index].color}

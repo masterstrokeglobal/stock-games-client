@@ -69,6 +69,17 @@ const adminMenuItems: MenuItem[] = [
         link: '/dashboard/round-records'
     },
 
+    {
+        name: "Coin Toss Pair",
+        icon: Repeat1,
+        link: '/dashboard/coin-toss-pair'
+    },
+
+    {
+        name: "Slot Pair",
+        icon: Repeat1,
+        link: '/dashboard/slot-pair'
+    }
 
 ];
 

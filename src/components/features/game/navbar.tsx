@@ -4,15 +4,18 @@ import Logo from "@/components/common/logo";
 import { MuteButton } from "@/components/common/mute-button";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import GameTimings from "./game-timings";
 import UserMenuNavbar from "./user-menu-navbar";
-const Navbar = () => {
+type Props = {
+    className?: string
+}
+const Navbar = ({ className }: Props) => {
     const { isLoggedIn } = useAuthStore();
 
-
     return (
-    <nav className="items-center md:px-6 px-4 z-50 border-b-2 border-accent-secondary  flex fixed top-0 justify-between font-semibold w-full h-14 bg--game bg-primary-game">
+    <nav className={cn("items-center md:px-6 px-4 z-50 border-b-2 border-accent-secondary  flex fixed top-0 justify-between font-semibold w-full h-14 bg--game bg-primary-game", className)}>
             <div className="flex items-center space-x-4 ">
                 <Link href="/game/platform">
                     <span className="md:text-xl text-sm font-semibold flex items-end">

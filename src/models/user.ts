@@ -17,7 +17,11 @@ class User {
     depositBonusPercentage!: number;
     placementNotAllowed: SchedulerType[];
     company?: Company;
+    weeklyWithdrawLimit?: number;
+    dailyWithdrawLimit?: number;
+    monthlyWithdrawLimit?: number;
     createdAt?: Date;
+    notes?: string;
     demoUser?: boolean;
     updatedAt?: Date;
     deletedAt?: Date;
@@ -29,6 +33,7 @@ class User {
         this.username = params.username;
         this.email = params.email;
         this.phone = params.phone;
+        this.notes = params.notes;
         this.password = params.password;
         this.googleId = params.googleId;
         this.depositBonusPercentage = params.depositBonusPercentage??0;
@@ -36,7 +41,9 @@ class User {
         this.isVerified = params.isVerified;
         this.profileImage = params.profileImage;
         this.demoUser = params.demoUser;
-
+        this.weeklyWithdrawLimit = params.weeklyWithdrawLimit;
+        this.dailyWithdrawLimit = params.dailyWithdrawLimit;
+        this.monthlyWithdrawLimit = params.monthlyWithdrawLimit;
         if (params.company) {
             this.company = new Company(params.company);
         }

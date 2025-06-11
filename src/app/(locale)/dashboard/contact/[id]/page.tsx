@@ -19,7 +19,7 @@ const EditContactPage = () => {
         if (isSuccess && data?.data) return new Contact(data?.data);
 
         return null;
-    }, [data]);
+    }, [data,isSuccess]);
 
     const onSubmit = (updatedData: any) => {
         mutate({
@@ -32,7 +32,6 @@ const EditContactPage = () => {
         });
     };
 
-    console.log("contact", contact);
     if (isLoading && contact == null) return <LoadingScreen>Loading contact...</LoadingScreen>;
 
     return (

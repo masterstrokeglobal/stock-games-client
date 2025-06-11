@@ -217,7 +217,7 @@ export const useDemoLogin = () => {
     },
     onError: (error: any) => {
       toast.error(
-        error.response?.data.message ?? "Error logging in with Google"
+        error.response?.data.message ?? "Error logging in with Demo"
       );
     },
   });
@@ -232,7 +232,6 @@ export const useCaptcha = () => {
     refetchOnMount: false, // Prevent refetch on mount unless needed
   });
 };
-
 
 // Get User Tier Hook
 export const useGetUserTier = () => {

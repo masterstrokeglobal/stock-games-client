@@ -12,6 +12,7 @@ const config: Config = {
 		extend: {
 			fontFamily: {
 				jersey: ['var(--font-jersey-10)', 'sans-serif'],
+				'keania-one': ['"Keania One"', 'sans-serif'],
 			},
 			animation: {
 				marquee: 'marquee 6s linear infinite',

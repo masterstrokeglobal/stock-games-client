@@ -1,5 +1,5 @@
 import { useAnimations, useGLTF, useTexture } from "@react-three/drei";
-import { forwardRef, useEffect, useRef, useMemo } from "react";
+import { forwardRef, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { clone } from "three/examples/jsm/utils/SkeletonUtils.js";
 import HorseNumber from "./horse-number";
@@ -16,15 +16,15 @@ type BullModelProps = {
 const BullModel = forwardRef<THREE.Group, BullModelProps>(
   ({ position, scale, color, number }, ref) => {
     const group = useRef<THREE.Group>(null);
-    const { scene, animations } = useGLTF("./bull-anim.glb");
+    const { scene, animations } = useGLTF("/bull-anim.glb");
     const { isMobile } = useWindowSize();
 
     const texture = useTexture(
        color === "red"
-        ? "./texture-red.jpg"
+        ? "/texture-red.jpg"
         : color === "green"
-        ? "./texture-golden.jpg"
-        : "./texture-black.png"
+        ? "/texture-golden.jpg"
+        : "/texture-black.png"
     );
 
     const clonedScene = useMemo(() => clone(scene), [scene]);

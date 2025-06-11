@@ -34,7 +34,7 @@ const GameIdPage = () => {
         <div className="flex flex-col min-h-screen bg-primary-game text-white">
             <Navbar />
             <main className="container mx-auto pt-14 ">
-                 <iframe src={game.redirectUrl} className="w-full min-h-[calc(100vh-4rem)]" />
+                <iframe src={game.redirectUrl} className="w-full min-h-[calc(100vh-4rem)]" />
             </main>
         </div>
     )

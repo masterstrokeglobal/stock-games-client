@@ -26,8 +26,8 @@ export const bonusFormSchema = z.object({
     active: z.boolean().default(false),
     frequency: z.nativeEnum(BonusFrequency, {
         errorMap: () => ({ message: "Please select a valid frequency" }),
-    }).optional().nullable().optional(),
-    maxCount: z.coerce.number().min(1, "Max count must be at least 1").default(1).optional().nullable(),
+    }).optional().nullable(),
+    maxCount: z.coerce.number().min(1, "Max count must be at least 1").default(1),
     percentage: z.boolean().default(true),
 }).superRefine((data, ctx) => {
     // Validate that endDate is after startDate if both exist
@@ -149,6 +149,22 @@ const BonusForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         control={form.control}
                         name="endDate"
                         label="End Date"
+                    />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormSelect
+                        control={form.control}
+                        name="frequency"
+                        label="Frequency of Deposit"
+                        options={frequencyOptions}
+                    />
+
+                    <FormInput
+                        control={form.control}
+                        name="maxCount"
+                        type="number"
+                        label="Max Count"
                     />
                 </div>
                 {values.category === BonusCategory.DEPOSIT && (

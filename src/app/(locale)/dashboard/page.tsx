@@ -35,7 +35,7 @@ function HomePage() {
                 router.push('/dashboard/affiliate/profile');
             }
         }
-    }, [userDetails, router]);
+    }, [userDetails, router,loading]);
     return (
         <LoadingScreen className="min-h-screen" />
     )

@@ -32,7 +32,6 @@ const GamePage = () => {
     const { isMobile } = useWindowSize();
     useHorseRaceSound(roundRecord);
 
-
     return (<>
         <section className={cn("bg-background-game pt-14 md:min-h-screen ", isMobile && "bg-background-secondary")}>
             <Navbar />

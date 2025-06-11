@@ -28,5 +28,4 @@ export class Advertisement {
         this.active = params.active;
         this.updatedAt = params.updatedAt;
     }
-
 }   

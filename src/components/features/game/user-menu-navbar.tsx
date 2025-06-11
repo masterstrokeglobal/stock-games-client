@@ -18,11 +18,12 @@ const UserMenuNavbar = () => {
 
     const user = userDetails as User;
     return (
-        <>
-            <div className="text-top-bar-text text-xs space-y-1 font-medium">
+        <div className="text-top-bar-text text-xs flex space-y-1 justify-center font-medium">
+            <div className="flex flex-col justify-center ">
                 <div>Bonus: {wallet.bonusBalance}</div>
                 <div>Bal: {wallet.mainBalance}</div>
             </div>
+
             <Link href="/game/user-menu">
                 <button className="  md:px-4 md:h-12 h-10 text-game-text justify-center  md:aspect-auto aspect-square space-x-3 flex items-center md:py-2 p-1 rounded-md">
                     <Avatar className="size-6" p-6>
@@ -33,7 +34,7 @@ const UserMenuNavbar = () => {
                     </Avatar>
                 </button>
             </Link>
-        </>
+        </div>
     )
 }
 

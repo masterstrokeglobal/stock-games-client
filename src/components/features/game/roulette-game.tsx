@@ -189,8 +189,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
         });
 
     };
-
-
+  
     const handleZeroBet = () => {
         if (gameState.isPlaceOver || isPlacingBet) return;
         if (!verifyBetAmount(betAmount)) return;
@@ -215,7 +214,6 @@ const RouletteGame = ({ roundRecord }: Props) => {
     const oddNumbers = Array.from({ length: 8 }, (_, i) => (i * 2) + 1);
 
     const handleBoardClick = (e: React.MouseEvent) => {
-        console.log("handleBoardClick", gameState.isPlaceOver, isPlacingBet);
         if (gameState.isPlaceOver || isPlacingBet) return;
         if (!verifyBetAmount(betAmount)) return;
         const bet = getBetTypeFromClick(e, boardRef);
@@ -251,7 +249,6 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
     const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO);
-
     const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
 
     const isNotAllowedToPlaceBet = currentUser.isNotAllowedToPlaceOrder(roundRecord.type);
@@ -424,9 +421,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                     <TabsTrigger disabled={!isUSAMarketAvailable} className={cn("flex-1 h-8", !isUSAMarketAvailable && '!cursor-not-allowed')} value="usa_market">USA Market</TabsTrigger>
                                 )}
                             </TabsList>
-
                             <GameHeader gameState={gameState} />
-
                             <BettingControls
                                 isLoading={isPlacingBet}
                                 betAmount={betAmount}

@@ -55,10 +55,8 @@ export default function GamingAppInterface() {
 
     if (!isCasinoAllowed) notFound();
 
-    console.log(filter)
     const areFiltersApplied = filter.search || filter.category !== "all" || filter.provider !== "all";
 
-    console.log(areFiltersApplied)
     return (
         <>
             <main className=" md:mx-auto w-full md:px-4 mt-10">

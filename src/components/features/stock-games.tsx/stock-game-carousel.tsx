@@ -50,19 +50,19 @@ export default function StockGameCarousel() {
                         </CarouselItem>
                     )}
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
-                        <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
-                            <Image src="/images/stock-game/stock-jackpot.png" alt="coming-soon" className="w-full h-full object-cover" width={500} height={500} />
-                        </div>
-                    </CarouselItem>
-
-                    <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
-                        <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
-                            <Image src="/images/ad3.jpg" alt="coming-soon" className="w-full h-full object-top" width={500} height={500} />
-                            <div className="absolute bottom-0 left-0 w-full h-fit bg-gradient-to-b pt-4 from-transparent to-black text-white p-4">
-                                <h3 className="md:text-lg text-sm font-bold text-center">Coming Soon</h3>
+                        <Link href="/game/jackpot">
+                            <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
+                                <Image src="/images/stock-game/stock-jackpot.png" alt="coming-soon" className="w-full h-full object-cover" width={500} height={500} />
                             </div>
-                        </div>
-                    </CarouselItem>                
+                        </Link>
+                    </CarouselItem>
+                    <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
+                        <Link href="/game/platform/stock-game/stock-slot">
+                            <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
+                                <Image src="/images/ad3.jpg" alt="coming-soon" className="w-full h-full object-top" width={500} height={500} />
+                            </div>
+                        </Link>
+                    </CarouselItem>
                 </CarouselContent>
             </div>
         </Carousel>

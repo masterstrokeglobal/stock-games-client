@@ -1,9 +1,8 @@
 "use client";
 
-import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
+import * as React from "react";
 
-import { cn } from "@/lib/utils";
 import {
   Command,
   CommandEmpty,
@@ -17,8 +16,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import { Button } from "./button";
-import { ScrollArea } from "../ui/scroll-area";
 
 type Option = {
   label: React.ReactNode;
@@ -71,7 +70,6 @@ export function ComboboxSelect({
         <Command>
           <CommandInput placeholder="Search Option..." />
           <CommandEmpty>No option found.</CommandEmpty>
-          <ScrollArea className="h-[200px]">
             <CommandGroup>
               <CommandList>
 
@@ -95,7 +93,6 @@ export function ComboboxSelect({
                 ))}
               </CommandList>
             </CommandGroup>
-          </ScrollArea>
         </Command>
       </PopoverContent>
     </Popover>

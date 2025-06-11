@@ -33,23 +33,24 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
         const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 4000;
 
         const timer = setTimeout(() => {
-            console.log('refetching');
             refetch();
         }, resultFetchTime);
 
         return () => clearTimeout(timer);
     }, [roundRecord, refetch]);
 
-    const winnerNumber = useMemo(() => {
-        if (!isSuccess) return null;
+    const winnerNumbers:number[] = useMemo(() => {
+        if (!isSuccess) return [];
         const winningId = data.data?.winningId;
 
-        if (!winningId) return 0;
+        if (!winningId) return [];
 
-        const winningNumber = roundRecord.market.find((item) => item.id === winningId);
-        if (!winningNumber) return null;
-        return winningNumber.horse;
+        const winningNumbers = roundRecord.market.filter((item) => winningId.includes(item.id));
+        if (!winningNumbers) return [];
+        const winningNumbersArray = winningNumbers.map((item) => item.horse).filter((item) => item !== undefined) as number[];
+        return winningNumbersArray;
     }, [data, isSuccess]);
+
 
     useEffect(() => {
         if (sectionRef.current) {
@@ -72,7 +73,7 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
         return "text-game-text";
     };
 
-    const winnerMarketItem = leaderboardData.find((item) => item.horse === winnerNumber);
+    const winnerMarketItems = leaderboardData.filter((item) => winnerNumbers.includes(item.horse!));
 
     return (
         <section
@@ -107,10 +108,10 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                         </tr>
                     </thead>
                     <tbody className="bg-background-game">
-                        {winnerMarketItem && (
-                            <tr className="border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden">
+                        {winnerMarketItems.map((winnerMarketItem) => (
+                            <tr className="border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden" key={winnerMarketItem.horse}>
                                 <td className="p-2  text-game-text">
-                                    <img src="/rank-1.svg" alt="Rank 1" className="w-8 h-8" />
+                                    <img src="/crown.png" alt="Rank 1" className="w-8 h-8" />
                                 </td>
                                 <td className="p-2  text-game-text">
                                     {winnerMarketItem.horse}
@@ -119,7 +120,7 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                                     {winnerMarketItem.name}
                                 </td>
                                 <td className="p-2  text-right text-game-text">
-                                    {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : "Rs."}
+                                    {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : roundRecord.type === SchedulerType.USA_MARKET ? "$" : "Rs."}
                                     {winnerMarketItem.price ? formatPrice(winnerMarketItem.price) : "-"}
                                 </td>
                                 <td className={cn(
@@ -129,23 +130,23 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                                     {parseFloat(winnerMarketItem.change_percent) > 0 ? '+' : ''}
                                     {winnerMarketItem.change_percent ?? 0}%</td>
                             </tr>
-                        )}
+                        ))}
 
-                        {leaderboardData.filter((item) => item.horse !== winnerNumber).map((marketItem, index) => (
+                        {leaderboardData.filter((item) => !winnerNumbers.includes(item.horse!)).map((marketItem, index) => (
                             <tr
                                 key={index}
 
-                                className={cn("border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden", (index === 0 && winnerNumber == 0) ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm")}
+                                className={cn("border-b last:border-none rounded-lg border-[#DADCE00D] overflow-hidden", (index === 0 && winnerNumbers[0] == 0) ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm")}
                             >
                                 <td className="p-2  text-game-text">
 
-                                    {(index === 0 && winnerNumber == 0 && !isGameOver) ? (
+                                    {(index === 0 && winnerNumbers.includes(0) && !isGameOver) ? (
                                         <img
                                             src="/rank-1.svg"
                                             alt="Rank 1"
                                             className="w-8 h-8"
                                         />
-                                    ) : winnerNumber == marketItem.horse ? (
+                                    ) : winnerNumbers.includes(marketItem.horse!) ? (
                                         <img
                                             src="/rank-1.svg"
                                             alt="Rank 1"
@@ -153,7 +154,7 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                                         />
                                     ) : (
                                         <span className="text-game-text">
-                                            {(winnerNumber == 0 && !isGameOver) ? (index + 1) : "-"}
+                                            {(winnerNumbers.includes(0) && !isGameOver) ? (index + 1) : "-"}
                                         </span>
                                     )}
                                 </td>
@@ -164,7 +165,7 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                                     {marketItem.name}
                                 </td>
                                 <td className="p-2  text-right whitespace-nowrap text-game-text">
-                                    {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : "Rs."}
+                                    {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : roundRecord.type === SchedulerType.USA_MARKET ? "$" : "Rs."}
                                     {marketItem.price ? formatPrice(marketItem.price) : "-"}
                                 </td>
                                 <td className={cn(

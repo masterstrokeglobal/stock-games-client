@@ -4,17 +4,17 @@ import FormInput from "@/components/ui/form/form-input";
 import FormPassword from "@/components/ui/form/form-password";
 import FormProvider from "@/components/ui/form/form-provider";
 import { Separator } from "@/components/ui/separator";
+import { useCaptcha } from "@/react-query/game-user-queries";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { RefreshCcwIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import AuthTabs from "./auth-tabs";
 import DemoUserLogin from "./demo-user-login";
 import GoogleLoginButton from "./google-login-button";
-import { useCaptcha } from "@/react-query/game-user-queries";
-import { useEffect } from "react";
-import { RefreshCcwIcon } from "lucide-react";
-import AuthTabs from "./auth-tabs";
 
 export const createLoginSchema = (t: any) =>
   z.object({
@@ -43,6 +43,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
     resolver: zodResolver(createLoginSchema(t)),
     defaultValues,
   });
+
   const { control, handleSubmit } = form;
   const { data, error, isLoading: isCaptchaLoading, refetch } = useCaptcha();
   const captchaSvg = data?.data.svg || "";
@@ -97,7 +98,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <p className="text-white text-sm font-medium">{t("labels.captcha")}</p>
-               
+
               </div>
               <div className="flex flex-row gap-3">
                 <div
@@ -114,9 +115,9 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                   inputClassName="h-10"
                   required
                   placeholder={t("labels.captcha")}
-                /> 
-                
-                 <Button
+                />
+
+                <Button
                   type="button"
                   title={t("refresh-captcha")}
                   variant="secondary"
@@ -150,7 +151,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
         <Separator className="my-3 flex-1 bg-white/20" />
       </div>
 
-      <div className="flex gap-2 flex-col md:flex-row">
+      <div className="flex gap-2 md:flex-row flex-col">
         <GoogleLoginButton />
         <DemoUserLogin className="h-10" />
       </div>

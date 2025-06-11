@@ -39,8 +39,6 @@ const CompanyProfitLoss = () => {
         setFilters({ ...filters, page: newPage });
     }
 
-
-    console.log(companyId);
     return (
         <section className="container-main min-h-[60vh] my-12 space-y-12">
             <LedgerReport companyId={companyId?.toString()} />

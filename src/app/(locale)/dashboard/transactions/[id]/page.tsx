@@ -50,7 +50,7 @@ const EditTransactionPage = () => {
     const withdrawldetails = useMemo(() => {
         if (transaction.type != TransactionType.WITHDRAWAL) return null;
         return new WithdrawDetailsRecord(data?.data?.transaction.withdrawDetails);
-    }, [data]);
+    }, [data, transaction]);
 
     if (isLoading) return <LoadingScreen>Loading transaction...</LoadingScreen>;
 

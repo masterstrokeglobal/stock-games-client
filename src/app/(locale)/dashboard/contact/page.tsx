@@ -44,7 +44,7 @@ const ContactTable = () => {
 
     const totalPages = useMemo(() => {
         return Math.ceil(data?.data?.count / 10) || 1;
-    }, [data, isSuccess]);
+    }, [data]);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFilters(prev => ({ ...prev, search: e.target.value, page: 1 }));

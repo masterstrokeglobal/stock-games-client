@@ -7,7 +7,7 @@ import { ArrowDownCircle, ArrowUpCircle } from "lucide-react";
 const BettingCard = ({ record }: { record: GameRecord }) => {
 
     /*     const getPlacementString = (bet: GameRecord) => {
-    
+
             const HorseNumbers = bet.market.map((number) => {
                 const horseNumber = bet.market.find((market) => market === number);
                 return horseNumber || 0;

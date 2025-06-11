@@ -101,7 +101,3 @@ export default function GamingAppInterface({ children }: PropsWithChildren) {
         </div>
     )
 }
-
-
-
-

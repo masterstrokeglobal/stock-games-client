@@ -1,5 +1,6 @@
 import { roundRecordsAPI } from "@/lib/axios/round-record-API";
 import { SchedulerType } from "@/models/market-item";
+import { RoundRecordGameType } from "@/models/round-record";
 import { useQuery } from "@tanstack/react-query";
 
 /**
@@ -14,13 +15,16 @@ export const useGetAllRoundRecords = (filter: any) => {
 };
 
 export const useGetCurrentRoundRecord = (
-    type: SchedulerType
+    type: SchedulerType,
+    roundRecordGameType: RoundRecordGameType
 ) => {
     return useQuery({
-        queryKey: ["current-round-record", type],
+        queryKey: ["current-round-record", type, roundRecordGameType],
+        staleTime: 1000 * 60 * 60 * 24,
         queryFn: () => {
             return roundRecordsAPI.getAllRoundRecords({
                 type: type,
+                roundRecordGameType: roundRecordGameType,
                 limit: 1,
                 startTime: new Date(),
                 page: 1,
@@ -32,10 +36,10 @@ export const useGetCurrentRoundRecord = (
  * Hook to get a specific round record by ID.
  * @param roundRecordId - ID of the round record to fetch
  */
-export const useGetRoundRecordById = (roundRecordId: number) => {
+export const useGetRoundRecordById = (roundRecordId?: number) => {
     return useQuery({
         queryKey: ["round-record", roundRecordId],
-        queryFn: () => roundRecordsAPI.getRoundRecordById(roundRecordId),
+        queryFn:  roundRecordId ? () => roundRecordsAPI.getRoundRecordById(roundRecordId) : undefined,
         enabled: !!roundRecordId, // Prevents the query from running if the ID is falsy
     });
 };

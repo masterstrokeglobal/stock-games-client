@@ -40,6 +40,13 @@ type TawkMessengerReactProps = {
   onLoad?: () => void;
 }
 
+
+
+ type Market = "NSE" | "Crypto" | "US Stocks"
+ type BetDirection = "up" | "down"
+ type BetType = "single-digit" | "double-digit"
+
+
 declare module '@tawk.to/tawk-messenger-react' {
 
   export type TawkMessengerReactComponent<T = any> = React.ComponentType<T>

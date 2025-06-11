@@ -15,7 +15,7 @@ const formatDateTime = (date?: Date) => (date ? dayjs(date).format("MMM DD, YYYY
 const RoundRecordCard: FC<RoundRecordCardProps> = ({ roundRecord }) => {
 
     const winnerName = useMemo(() => {
-        const market  = roundRecord.market.find(m => m.id === roundRecord.winningId)?.name;
+        const market  = roundRecord.market.find(m => m.id === roundRecord.winningId?.[0])?.name;
         return market ?? "N/A";
     }, [roundRecord.market, roundRecord.winningId]);
     return (

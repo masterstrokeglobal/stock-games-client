@@ -7,6 +7,9 @@ export class Tier {
     redeemablePoints: number;
     gamesRequired: number;
     loginPoints: number;
+    weeklyWithdrawLimit: number;
+    dailyWithdrawLimit: number;
+    monthlyWithdrawLimit: number;
     firstGamePoints: number;
     pointsPerHundredRupees: number;
     createdAt: Date;
@@ -22,6 +25,9 @@ export class Tier {
         this.loginPoints = params.loginPoints;
         this.firstGamePoints = params.firstGamePoints;
         this.pointsPerHundredRupees = params.pointsPerHundredRupees;
+        this.weeklyWithdrawLimit = params.weeklyWithdrawLimit;
+        this.dailyWithdrawLimit = params.dailyWithdrawLimit;
+        this.monthlyWithdrawLimit = params.monthlyWithdrawLimit;
         this.createdAt = params.createdAt;
         this.updatedAt = params.updatedAt;
     }

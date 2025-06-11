@@ -30,7 +30,7 @@ const HolidayTable = () => {
 
     const totalPages = useMemo(() => {
         return Math.ceil(data?.data?.count / 10) || 1;
-    }, [data, isSuccess]);
+    }, [data]);
 
     const handleDateChange = (date: Date) => {
         setDate(date);

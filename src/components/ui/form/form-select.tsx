@@ -27,6 +27,7 @@ function FormGroupSelect<
   label,
   placeholder,
   options,
+  labelClassName,
   className,
   disabled,
   ...props
@@ -35,6 +36,7 @@ function FormGroupSelect<
   control: Control<TFieldValues>;
   options: { value: string; label: string }[];
   className?: string;
+  labelClassName?: string;
   name: TName;
   description?: string;
 
@@ -45,7 +47,7 @@ function FormGroupSelect<
       name={name}
       render={({ field }) => (
         <FormItem {...props}>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel className={labelClassName}>{label}</FormLabel>
           <Select disabled={disabled} onValueChange={field.onChange} value={field.value}>
             <FormControl>
               <SelectTrigger className={cn("w-full capitalize ", className)}>
