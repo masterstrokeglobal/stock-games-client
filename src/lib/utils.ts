@@ -251,7 +251,7 @@ export const formatRupee = (rupees: number) => {
 }
 
 export const checkCasinoAllowed = (companyId: number) => {
-  return companyId === 4;
+  return companyId === 21;
 }
 
 // Generate current time in 12-hour format (HH:MM AM/PM)
