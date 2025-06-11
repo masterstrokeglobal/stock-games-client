@@ -31,7 +31,7 @@ const secondRow = [
     { number: 12, multiplier: '2x' }
 ];
 
-const GameBoard = ({ children, className, roundRecord, globalBetAmount }: GameBoardProps) => {
+const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningMarketId }: GameBoardProps) => {
     const { data: placements } = useGetMyCurrentRoundDiceGamePlacement(roundRecord.id);
     const createPlacement = useCreateDiceGamePlacement();
     const isPlaceOver = usePlacementOver(roundRecord);
@@ -42,7 +42,6 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount }: GameBo
     }, {} as Record<number, number>) || {};
 
     const handleBetSelect = (number: number) => {
-
         if (globalBetAmount <= 0 || isPlaceOver) return;
 
         createPlacement.mutate({
@@ -52,7 +51,28 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount }: GameBo
         });
     };
 
+    // Calculate winning sum from market items
+    const getWinningSum = () => {
+        if (!winningMarketId || winningMarketId.length === 0) return null;
 
+        let sum = 0;
+
+        // For each winning market ID, find its index in the market array and add (index + 1)
+        winningMarketId.forEach(winningId => {
+            const marketIndex = roundRecord.market.findIndex(market => market.id === winningId);
+            if (marketIndex !== -1) {
+                console.log(roundRecord.market[marketIndex],marketIndex)
+                const value =  ((marketIndex + 1) % 6) == 0 ? 6 : ((marketIndex + 1) % 6);
+                console.log(value);
+            sum = value + sum;// Index + 1 represents the dice face value
+            }
+        });
+
+        return sum > 0 ? sum : null;
+    };
+
+    const winningSum = getWinningSum();
+    console.log("sunmm",winningSum);
 
     return (
         <div className={cn("bg-gradient-to-b bg-[url('/images/dice-game/board-bg.jpg')] bg-cover bg-center from-gray-900 via-gray-800 to-black md:p-8 p-4 pt-8 md:pt-24  border border-yellow-600/30 shadow-2xl", className)}>
@@ -65,7 +85,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount }: GameBo
                 <div className="flex justify-center md:gap-3 gap-1">
                     {firstRow.map((bet) => (
                         <BetButton
-                            isWinner={false}
+                            isWinner={winningSum === bet.number}
                             betAmounts={betAmounts}
                             handleBetSelect={handleBetSelect}
                             key={bet.number}
@@ -79,7 +99,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount }: GameBo
                 <div className="flex justify-center md:gap-3 gap-1">
                     {secondRow.map((bet) => (
                         <BetButton
-                            isWinner={false}
+                            isWinner={winningSum === bet.number}
                             betAmounts={betAmounts}
                             handleBetSelect={handleBetSelect}
                             key={bet.number}
@@ -95,24 +115,30 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount }: GameBo
 
 export default GameBoard;
 
-
-
-const BetButton = ({ number, multiplier, betAmounts, handleBetSelect }: { number: number, multiplier: string, isWinner: boolean, betAmounts: Record<number, number>, handleBetSelect: (number: number) => void }) => {
+const BetButton = ({ number, multiplier, betAmounts, handleBetSelect, isWinner }: {
+    number: number,
+    multiplier: string,
+    isWinner: boolean,
+    betAmounts: Record<number, number>,
+    handleBetSelect: (number: number) => void
+}) => {
     const amountBet = betAmounts[number] || 0;
     const hasBet = amountBet > 0;
 
     return (
         <button
             onClick={() => handleBetSelect(number)}
-            className={`
-                relative w-20 h-20 rounded-lg border-2 transition-all duration-200 
-                flex flex-col items-center justify-center group hover:scale-105
-                ${hasBet
-                    ? 'border-yellow-400 bg-gradient-to-b from-yellow-500/20 to-yellow-600/30 shadow-lg shadow-yellow-500/25'
-                    : 'border-yellow-600/50 bg-gradient-to-b from-gray-800/80 to-gray-900/90 hover:border-yellow-500/70'
+            className={cn(
+                "relative w-20 h-20 rounded-lg border-2 transition-all duration-200 flex flex-col items-center justify-center group hover:scale-105 backdrop-blur-sm",
+                {
+                    // Winner styles
+                    'border-4 border-yellow-400 bg-gradient-to-b from-yellow-400/40 to-yellow-600/50 shadow-lg shadow-yellow-400/50 animate-pulse': isWinner,
+                    // Has bet styles (when not winner)
+                    'border-yellow-400 bg-gradient-to-b from-yellow-500/20 to-yellow-600/30 shadow-lg shadow-yellow-500/25': hasBet && !isWinner,
+                    // Default styles
+                    'border-yellow-600/50 bg-gradient-to-b from-gray-800/80 to-gray-900/90 hover:border-yellow-500/70': !hasBet && !isWinner
                 }
-                backdrop-blur-sm
-            `}
+            )}
         >
             {/* Decorative corners */}
             <div className="absolute top-1 left-1 w-2 h-2 border-l-2 border-t-2 border-yellow-500/60 rounded-tl"></div>
@@ -120,8 +146,18 @@ const BetButton = ({ number, multiplier, betAmounts, handleBetSelect }: { number
             <div className="absolute bottom-1 left-1 w-2 h-2 border-l-2 border-b-2 border-yellow-500/60 rounded-bl"></div>
             <div className="absolute bottom-1 right-1 w-2 h-2 border-r-2 border-b-2 border-yellow-500/60 rounded-br"></div>
 
+            {/* Crown emoji for winner */}
+            {isWinner && (
+                <div className="absolute -top-2 -right-2 text-2xl animate-bounce">
+                    👑
+                </div>
+            )}
+
             {/* Number */}
-            <span className="text-2xl font-bold text-white mb-1 group-hover:text-yellow-300 transition-colors">
+            <span className={cn(
+                "text-2xl font-bold mb-1 group-hover:text-yellow-300 transition-colors",
+                isWinner ? "text-yellow-300" : "text-white"
+            )}>
                 {number}
             </span>
 
@@ -130,18 +166,21 @@ const BetButton = ({ number, multiplier, betAmounts, handleBetSelect }: { number
                 {multiplier}
             </span>
 
-            {/* Bet Amount Display */}
+            {/* Bet Amount Display - Poker Chip Style */}
             {hasBet && (
-                <div className="absolute -top-3 -right-3 bg-yellow-400 text-black text-xs font-bold px-2 py-1 rounded-full">
-                    ₹{amountBet}
+                <div className="absolute -top-3 -left-3 bg-gradient-to-br from-yellow-400 via-amber-500 to-yellow-600 aspect-square z-20 border-2 border-dashed border-amber-800 rounded-full p-1 flex justify-center items-center text-[10px] text-center w-10 h-10 shadow-[0_4px_8px_rgba(217,119,6,0.6)] ring-1 ring-yellow-300 ring-opacity-50">
+                    <span className="font-bold text-amber-900 drop-shadow-sm">₹{amountBet}</span>
                 </div>
             )}
         </button>
     );
 };
 
-
-export const MobileDice = ({ className = '', roundRecord, roundRecordWithWinningId }: { className?: string, roundRecord: RoundRecord, roundRecordWithWinningId: RoundRecord | null }) => {
+export const MobileDice = ({ className = '', roundRecord, roundRecordWithWinningId }: {
+    className?: string,
+    roundRecord: RoundRecord,
+    roundRecordWithWinningId: RoundRecord | null
+}) => {
     const { isMobile } = useWindowSize();
     const marketItems = roundRecord.market;
     const isPlaceOver = usePlacementOver(roundRecord);
@@ -150,17 +189,15 @@ export const MobileDice = ({ className = '', roundRecord, roundRecordWithWinning
     const firstCube = marketItems.slice(0, 6);
     const secondCube = marketItems.slice(6, 12);
 
-
     // Check if we're waiting for winning data
     const isWaitingForResults = !isRolling && (!roundRecordWithWinningId?.winningId || roundRecordWithWinningId?.winningId.length === 0);
 
     if (!isMobile) return null;
 
     return (
-        <div className={`font-sans  bg-cover bg-center overflow-visible ${className}`} style={{ height: '10rem' }}>
-            <div className="flex justify-center  relative  h-full items-center">
-                <div className="flex sm:pr-24  flex-row  flex-1 h-full gap-2 items-center justify-end animate-slide-left relative">
-
+        <div className={`font-sans bg-cover bg-center overflow-visible ${className}`} style={{ height: '10rem' }}>
+            <div className="flex justify-center relative h-full items-center">
+                <div className="flex sm:pr-24 flex-row flex-1 h-full gap-2 items-center justify-end animate-slide-left relative">
                     <Cube
                         marketItems={firstCube}
                         isRolling={isRolling}
@@ -169,7 +206,7 @@ export const MobileDice = ({ className = '', roundRecord, roundRecordWithWinning
                     />
                 </div>
 
-                <div className="flex  sm:pl-24 pl-12   flex-row bg-cover bg-center flex-1 h-full gap-2 items-center justify-between animate-slide-right relative">
+                <div className="flex sm:pl-24 pl-12 flex-row bg-cover bg-center flex-1 h-full gap-2 items-center justify-between animate-slide-right relative">
                     <Cube
                         marketItems={secondCube}
                         className='delay-1000'
