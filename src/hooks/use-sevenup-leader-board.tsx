@@ -220,7 +220,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
         socket.onopen = () => {
             console.log(`Connected to ${marketType} WebSocket`);
             // Check if all required sockets are connected for multi-market scenario
-            if (roundRecord?.type === SchedulerType.NSE && roundRecord.roundRecordGameType === RoundRecordGameType.SEVEN_UP_DOWN) {
+            if (roundRecord?.roundRecordGameType === RoundRecordGameType.SEVEN_UP_DOWN) {
                 const allConnected = Array.from(socketsRef.current.values()).every(s => s.readyState === WebSocket.OPEN);
                 if (allConnected) {
                     setConnectionStatus('connected');
