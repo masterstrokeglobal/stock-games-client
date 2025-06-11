@@ -63,8 +63,37 @@ export default function StockGameCarousel() {
                             </div>
                         </Link>
                     </CarouselItem>
+                    <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
+                        <Link href="/game/platform/stock-game/7-up-7-down">
+                            <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
+                                <Image src="/images/banner/7-up.png" alt="coming-soon" className="w-full h-full object-top" width={500} height={500} />
+                            </div>
+                        </Link>
+                    </CarouselItem>
+                    <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
+                        <Link href="/game/platform/stock-game/coin-head-tail">
+                            <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
+                                <Image src="/images/banner/coin-toss.png" alt="coming-soon" className="w-full h-full object-top" width={500} height={500} />
+                            </div>
+                        </Link>
+                    </CarouselItem>
+                    <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
+                        <Link href="/game/platform/stock-game/wheel-of-fortune">
+                            <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
+                                <Image src="/images/banner/wheel-of-fortune.png" alt="coming-soon" className="w-full h-full object-top" width={500} height={500} />
+                            </div>
+                        </Link>
+                    </CarouselItem>
+                    <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
+                        <Link href="/game/platform/stock-game/dice-game">
+                            <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
+                                <Image src="/images/banner/dice-game.png" alt="coming-soon" className="w-full h-full object-top" width={500} height={500} />
+                            </div>
+                        </Link>
+                    </CarouselItem>
                 </CarouselContent>
             </div>
         </Carousel>
     )
 }
+
