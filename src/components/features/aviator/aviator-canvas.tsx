@@ -119,7 +119,7 @@ const AviatorCanvas = ({ multiplier, shouldStartTakeOffAnimation = false, opacit
       '/models/aviator/plane.glb',
       (gltf) => {
         plane = gltf.scene
-        plane.scale.set(2, 2, 2)
+        plane.scale.set(1.7, 1.7, 1.7)
 
         // Center the plane model
         const box = new THREE.Box3().setFromObject(plane)
