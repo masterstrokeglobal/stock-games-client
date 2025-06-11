@@ -178,17 +178,17 @@ const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: 
                 }, 2000);
             }
         };
+
         const onError = (newError: string) => setError(newError);
+            wsManager.addListener(type, onMessage, onError);
 
-        wsManager.addListener(type, onMessage, onError);
-
-        return () => {
-            wsManager.removeListener(type, onMessage, onError);
-            if (timer) {
-                clearTimeout(timer);
-            }
-        };
-    }, [type, token]);
+            return () => {
+                wsManager.removeListener(type, onMessage, onError);
+                if (timer) {
+                    clearTimeout(timer);
+                }
+            };
+        }, [type, token]);
 
 
     const placeBet = (amount: number) => {

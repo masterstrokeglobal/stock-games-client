@@ -75,15 +75,26 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
 
   // Monitor backend events for crash/fly-away
   useEffect(() => {
-    if (aviator.data.length > 0 && localStorage.getItem("gameEnded") === "false") {
+    if (aviator.data.length > 0 
+      // && localStorage.getItem("gameEnded") === "false"
+    ) {
       localStorage.setItem("gameEnded", "true")
       console.log("🎯 gameEnded", localStorage.getItem("gameEnded"))
       const latestItem = aviator.data[aviator.data.length - 1]
 
       if (latestItem.status === "crashed") {
         console.log(`💥 PLANE CRASHED at ${latestItem.multiplier.toFixed(2)}x multiplier! (Backend Event)`)
-        setShouldShowBlast(true) // Trigger blast video
+        if (localStorage.getItem("blastPlaying") !== "true") {
+          setShouldShowBlast(true) // Trigger blast video
+          localStorage.setItem("blastPlaying", "true")
+        }
         setCanvasOpacity(0) // Hide canvas during blast
+        // redirecting from the blast 
+        console.log("🔄 Cleared aviatorStockId Crashed - redirecting to stock selection")
+        setTimeout(() => {
+          localStorage.setItem("blastPlaying", "false")
+          setStockSelectedAviator(null);
+        }, 2000)
 
         // Reset canvas opacity after 5 seconds
         setTimeout(() => {
@@ -109,10 +120,9 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
             duration: 1,
             ease: "power2.in",
             onComplete: () => {
-              console.log("✈️ Plane flew away completely")
-              // Clear the aviatorStockId URL parameter to go to the stock selection screen
+              // redirecting from the blast 
+              console.log("🔄 Cleared aviatorStockId Flew Away - redirecting to stock selection")
               setStockSelectedAviator(null);
-              console.log("🔄 Cleared aviatorStockId - redirecting to stock selection")
             }
           })
 
@@ -129,7 +139,7 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
                 console.log("🔄 Cleared aviatorStockId - redirecting to stock selection")
               }
             })
-          },3000)
+          }, 3000)
         }
       } else {
         localStorage.setItem("gameEnded", "false")
