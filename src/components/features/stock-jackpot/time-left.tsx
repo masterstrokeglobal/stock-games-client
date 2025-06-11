@@ -35,9 +35,11 @@ const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, cla
           <motion.div
             className={cn(
               "absolute bottom-0 left-0 h-2 rounded-bl-3xl shadow-lg transition-all duration-300",
+              isPlaceOver ?
               isUrgent 
                 ? "bg-gradient-to-r from-red-600 to-red-500 shadow-red-500/50" 
                 : "bg-gradient-to-r from-red-900 to-red-800 shadow-red-900/50"
+                :"bg-gradient-to-r from-emerald-900 to-emerald-800 shadow-emerald-900/5"
             )}
             initial={{ width: "0%" }}
             animate={{ width: `${timePercent}%` }}
@@ -51,7 +53,7 @@ const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, cla
                 "font-bold tracking-widest text-sm uppercase transition-colors duration-300",
                 isPlaceOver 
                   ? "text-red-800" 
-                  : "text-red-900"
+                  : "text-emerald-800"
               )}
               initial={{ opacity: 1, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -74,9 +76,12 @@ const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, cla
                   }}
                   className={cn(
                     "text-4xl font-black tracking-wider transition-all duration-300",
+                    isPlaceOver?
                     isUrgent 
                       ? "text-red-800" 
                       : "text-red-900"
+                      :"text-emerald-800"
+
                   )}
                 >
                   {displayNumber}

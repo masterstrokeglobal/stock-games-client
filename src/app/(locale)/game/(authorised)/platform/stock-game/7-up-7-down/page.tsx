@@ -24,7 +24,7 @@ const SevenUpSevenDown = () => {
         <StockGameHeader onBack={() => setMarketSelected(false)} title="7 Up & 7 Down" />
         <StockPriceDisplay roundRecord={roundRecord} />
         <GameBoard roundRecord={roundRecord} amount={betAmount}>
-          <TimeDisplay className="absolute top-0 left-0 w-full " roundRecord={roundRecord} />
+          <TimeDisplay className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-sm" roundRecord={roundRecord} />
         </GameBoard>
         <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
       </div>

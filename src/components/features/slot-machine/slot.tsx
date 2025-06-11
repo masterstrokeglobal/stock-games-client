@@ -3,6 +3,7 @@ import { SlotCanvas } from "./slot-canvas";
 import { useLeaderboard } from "@/hooks/use-leadboard";
 import { RoundRecord } from "@/models/round-record";
 import { useGameState } from "@/hooks/use-current-game";
+import { cn } from "@/lib/utils";
 
 export const Slot = ({ roundRecord }: { roundRecord: RoundRecord }) => {
 
@@ -68,7 +69,7 @@ export const Slot = ({ roundRecord }: { roundRecord: RoundRecord }) => {
                 </div>
 
                 <div className="absolute z-20 top-[420px] left-[49.5%] translate-x-[-50%] translate-y-[-50%]  text-center">
-                    <h1 className="text-lg uppercase font-bold keania-one-regular text-yellow-400 drop-shadow-lg">
+                    <h1 className={cn("text-lg uppercase font-bold keania-one-regular  drop-shadow-lg",isPlaceOver?"text-red-600":"text-yellow-500")}>
                         {statusText}
                     </h1>
                 </div>
