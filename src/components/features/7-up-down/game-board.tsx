@@ -1,5 +1,5 @@
 import { useIsPlaceOver } from '@/hooks/use-current-game';
-import { RankedMarketItem, useLeaderboard } from '@/hooks/use-leadboard';
+import { RankedMarketItem } from '@/hooks/use-leadboard';
 import { INR } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
 import { SevenUpDownPlacementType } from '@/models/seven-up-down';
@@ -140,12 +140,11 @@ const MarketItemDisplay: React.FC<{ items: RankedMarketItem[], isPositive: boole
   );
 };
 
-export const GameBoard: React.FC<PropsWithChildren<{ roundRecord: RoundRecord, amount: number }>> = ({ roundRecord, children, amount }) => {
+export const GameBoard: React.FC<PropsWithChildren<{ roundRecord: RoundRecord, amount: number, marketItems: RankedMarketItem[] }>> = ({ roundRecord, children, amount, marketItems }) => {
   const { mutate } = useCreateSevenUpDownPlacement();
   const isPlaceOver = useIsPlaceOver(roundRecord);
   const { data: currentRoundPlacements } = useGetMyCurrentRoundSevenUpDownPlacement(roundRecord.id);
 
-  const {stocks:marketItems} = useLeaderboard(roundRecord);
 
   const positiveItems = marketItems.filter(item => parseFloat(item.change_percent) > 0);
   const negativeItems = marketItems.filter(item => parseFloat(item.change_percent) <= 0 || item.change_percent == undefined);

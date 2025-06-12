@@ -1,9 +1,9 @@
+import { RankedMarketItem } from '@/hooks/use-sevenup-leader-board';
+import { cn } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
 import { ArrowUpIcon } from "@radix-ui/react-icons";
 import React from 'react';
 import CryptoStockChart from './animated-chart';
-import { cn } from '@/lib/utils';
-import { RankedMarketItem, useLeaderboard } from '@/hooks/use-sevenup-leader-board';
 interface StockPriceProps {
   rankedMarketItem: RankedMarketItem;
 }
@@ -22,9 +22,8 @@ const StockPrice: React.FC<StockPriceProps> = ({ rankedMarketItem }) => {
   );
 };
 
-export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord }> = ({ roundRecord }) => {
+export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, stocks: RankedMarketItem[] }> = ({ roundRecord, stocks }) => {
 
-  const { stocks } = useLeaderboard(roundRecord);
 
   const sortedStocks = stocks.sort((a, b) => parseFloat(b.change_percent) - parseFloat(a.change_percent));
 
