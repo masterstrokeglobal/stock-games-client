@@ -41,7 +41,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
 
 
     return (
-        <div className="w-full max-w-xs mx-auto bg-transparent text-game-text p-0 rounded-2xl">
+        <div className="w-full xl:max-w-xs xl:mx-auto bg-transparent text-game-text md:p-0 px-4 rounded-2xl">
             {/* Top Tabs using shadcn */}
             <Tabs defaultValue="bet" className="w-full">
                 <div className="flex justify-center mb-6">

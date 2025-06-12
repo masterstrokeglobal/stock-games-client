@@ -2,7 +2,8 @@ import MarketItem from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import {
     OrbitControls,
-    PerspectiveCamera
+    PerspectiveCamera,
+    Sky
 } from "@react-three/drei";
 import { Physics } from "@react-three/rapier";
 import FenceRow from "./fence-row";
@@ -21,8 +22,8 @@ const HorseRaceEnvironment = ({
 
     return (
         <>
-            <PerspectiveCamera makeDefault fov={70} zoom={13} position={[-380, 70,0]} />
-        
+        <PerspectiveCamera makeDefault fov={70} zoom={9} position={[-380, 70,0]} />
+        <Sky/>
             <ambientLight intensity={1} />
             <OrbitControls 
                 enableRotate={false}

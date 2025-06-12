@@ -1,10 +1,11 @@
 "use client";
-import { useIsPlaceOver } from "@/hooks/use-current-game";
+import { useGameState, useIsPlaceOver } from "@/hooks/use-current-game";
 import MarketItem from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { Canvas } from "@react-three/fiber";
 import { useTranslations } from "next-intl";
 import HorseRaceEnvironment from "./components/race-enviroment";
+import { cn } from "@/lib/utils";
 
 type Props = {
   roundRecord: RoundRecord;
@@ -17,29 +18,30 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
   const isPlaceOver = useIsPlaceOver(roundRecord);
 
   return isPlaceOver ? (
-    <Suspense fallback={<GameLoadingScreen className="h-96" loadingImageClassName="w-10 h-auto" />}>
-      <div className="game-gradient-card-parent h-full">
-        <Canvas className="bg-white h-full  md:rounded-sm">
+    <Suspense fallback={<GameLoadingScreen className="md:h-96 h-[500px]" loadingImageClassName="w-10 h-auto" />}>
+      <div className="game-gradient-card-parent md:h-96 h-64">
+        <Canvas className="bg-white md:rounded-sm">
           <PixelRatioManager />
           <HorseRaceEnvironment roundRecord={roundRecord} filteredMarket={filteredMarket} />
         </Canvas>
       </div>
     </Suspense>
   ) : (
-    <RacePreparation />
+    <RacePreparation roundRecord={roundRecord} />
   );
 }
 
 
-function RacePreparation() {
+function RacePreparation( {className,roundRecord}: {className?: string,roundRecord:RoundRecord} ) {
   const t = useTranslations("game");
+  const gameState = useGameState(roundRecord);
 
   return (
-    <div className="w-full  game-gradient-card-parent  overflow-hidden  relative text-game-text  h-full  text-center shadow-2xl">
+    <div className= {cn("w-full  game-gradient-card-parent  overflow-hidden  relative text-game-text md:h-96 h-64   text-center shadow-2xl", className)}>
       <img src="/images/roulette/game-prep.png" className="w-full h-full rounded-sm object-cover " />
-        <div className="rounded-xl p-4 absolute top-0 left-0 right-0">
-          <p className="text-white text-xl mb-2">{t('race-begin')}
-          </p>
+        <div className="rounded-xl p-4 absolute md:top-4 md:left-4 md:translate-x-0 md:translate-y-0  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <p className="text-white text-xl mb-2">{t('race-begin')}</p>
+          <div className="flex flex-col gap-2 text-white text-xl game-time-text"> {gameState.placeTimeLeft.formatted}</div>
         </div>
     </div>
   );

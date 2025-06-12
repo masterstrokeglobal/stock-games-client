@@ -50,13 +50,13 @@ const LastRoundWinner = () => {
 
 
     return (
-        <div className=" md:m-auto mx-auto md:w-full w-[calc(80%)]">
-            <h2 className="text-md pl-2 text-white mt-2 py-1 font-semibold mb-2 text-game-text game-box-gradient  w-full ">
+        <div className=" w-full">
+            <h2 className="text-md pl-2 text-white mt-2 py-1 font-semibold mb-2 text-game-text   w-full ">
                 {t("title")}
             </h2>
             {rounds.length > 0 ? (
                 <table className="min-w-full">
-                    <thead className="bg-primary-game">
+                    <thead className="bg-[#002357] relative">
                         <div className="gradient-line" />
                         <tr className="flex">
                             <th className="p-2 text-sm text-left text-game-secondary rounded-tl-lg flex-1">

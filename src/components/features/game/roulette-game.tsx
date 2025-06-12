@@ -38,9 +38,10 @@ enum PlacementType {
 type Props = {
     roundRecord: RoundRecord;
     previousRoundId?: string;
+    className?: string;
 };
 
-const RouletteGame = ({ roundRecord }: Props) => {
+const RouletteGame = ({ roundRecord, className }: Props) => {
 
     const t = useTranslations("game");
     const [betAmount, setBetAmount] = useState<number>(100);
@@ -252,10 +253,10 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     return (
         <>
-            <div className="mx-auto  lg:pr-4  py-2 rounded-sm  bg-primary-game h-full ">
+            <div className={cn("mx-auto  lg:pr-4  md:py-2 md:rounded-sm  bg-primary-game h-full ", className)}>
                 <div className="relative rounded-xl lg:flex-row w-full flex-col flex border-brown-800">
                     <div className='lg:w-7/12 max-w-2xl mx-auto w-full'>
-                        <h1 className='text-xl lg:text-left text-center py-2  mx-4 leading-none text-game-secondary relative font-semibold '>
+                        <h1 className='text-xl text-left  md:py-2 py-4  md:mx-4 md:px-0 px-4 mb-2    leading-none text-game-secondary relative font-semibold '>
                             {gameState.isPlaceOver ? t("betting-closed") : t("place-your-bets")}
                             <div className="gradient-line absolute bottom-0 left-0 w-full" />
                         </h1>
@@ -264,26 +265,26 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             onValueChange={(value) => setTab(value as SchedulerType)}
                             className="w-full relative  z-10 mb-6"
                         >
-                            <TabsList className="w-full flex lg:hidden h-10 p-1 bg-[#000B27]">
+                            <TabsList className="w-full flex lg:hidden h-10 p-1 bg-[#000B27] border-[#15FFFE] border rounded-sm">
                                 {isNSEAllowed && (
-                                    <TabsTrigger 
-                                        disabled={!isNSEAvailable} 
+                                    <TabsTrigger
+                                        disabled={!isNSEAvailable}
                                         className={cn(
                                             "flex-1 h-8 text-[#29FEFE]",
                                             !isNSEAvailable && 'cursor-not-allowed',
                                             "data-[state=active]:bg-[#00214E]"
-                                        )} 
+                                        )}
                                         value="nse"
                                     >
                                         NSE
                                     </TabsTrigger>
                                 )}
                                 {isCryptoAllowed && (
-                                    <TabsTrigger 
+                                    <TabsTrigger
                                         className={cn(
                                             "flex-1 h-8 text-[#29FEFE]",
                                             "data-[state=active]:bg-[#00214E]"
-                                        )} 
+                                        )}
                                         value="crypto"
                                     >
                                         Crypto
@@ -427,15 +428,15 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             onValueChange={(value) => setTab(value as SchedulerType)}
                             className="w-full relative z-10 mt-2 flex flex-col h-full"
                         >
-                            <TabsList className="w-full hidden lg:flex text-[#29FEFE]  bg-[#000B27] ">
+                            <TabsList className="w-full hidden overflow-hidden lg:flex text-[#29FEFE]  bg-[#000B27]   border-[#15FFFE] border rounded-sm">
                                 {isNSEAllowed && (
-                                    <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8 text-[#29FEFE] data-[state=active]:bg-[#00214E]", !isNSEAvailable && '!cursor-not-allowed')} value="nse">NSE</TabsTrigger>
+                                    <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8 bg-[#000B27] text-[#29FEFE] data-[state=active]:bg-[#00214E]", !isNSEAvailable && '!cursor-not-allowed')} value="nse">NSE</TabsTrigger>
                                 )}
                                 {isCryptoAllowed && (
-                                    <TabsTrigger className={cn("flex-1 h-8 text-[#29FEFE] data-[state=active]:bg-[#00214E]")} value="crypto">Crypto</TabsTrigger>
+                                    <TabsTrigger className={cn("flex-1 h-8 bg-[#000B27] text-[#29FEFE]  data-[state=active]:bg-[#00214E]")} value="crypto">Crypto</TabsTrigger>
                                 )}
                                 {isUSAMarketAllowed && (
-                                    <TabsTrigger disabled={!isUSAMarketAvailable} className={cn("flex-1 h-8 text-[#29FEFE] data-[state=active]:bg-[#00214E]", !isUSAMarketAvailable && '!cursor-not-allowed')} value="usa_market">USA Market</TabsTrigger>
+                                    <TabsTrigger disabled={!isUSAMarketAvailable} className={cn("flex-1 h-8 bg-[#000B27] text-[#29FEFE] data-[state=active]:bg-[#00214E]", !isUSAMarketAvailable && '!cursor-not-allowed')} value="usa_market">USA Market</TabsTrigger>
                                 )}
                             </TabsList>
                             <GameHeaderBackground gameState={gameState} className="flex-1" />

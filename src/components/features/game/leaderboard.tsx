@@ -75,8 +75,6 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
 
     const winnerMarketItems = leaderboardData.filter((item) => winnerNumbers.includes(item.horse!));
 
-    console.log((winnerNumbers.includes(0) && isGameOver));
-
     return (
         <section
             ref={sectionRef}
@@ -85,8 +83,8 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
             <div className="game-gradient-card md:rounded-sm">
                 <LeaderboardHeader />
                 <ScrollArea
-                    className="h-full"
-                    style={{ height: isMobile ? "fit-content" : `${scrollAreaHeight}px` }}
+                    className=" md:h-full h-64"
+                    style={{ height: isMobile ? "300px" : `${scrollAreaHeight}px` }}
                     type="auto"
                 >
                     <table className="min-w-full mb-12 relative  ">
@@ -149,18 +147,18 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                                             <img
                                                 src="/rank-1.png"
                                                 alt="Rank 1"
-                                                className="w-8 h-8"
+                                                className="w-8 h-8 mx-auto"
                                             />
                                         ) : winnerNumbers.includes(marketItem.horse!) ? (
                                             <img
                                                 src="/rank-1.svg"
                                                 alt="Rank 1"
-                                                className="size-8"
+                                                className="size-8 mx-auto"
                                             />
                                         ) : (
-                                            <span className="text-game-secondary">
+                                            <div className="text-game-secondary w-full text-center">
                                                 {!isGameOver ? (index + 1) : "-"}
-                                            </span>
+                                            </div>
                                         )}
                                     </td>
                                     <td className="p-2  ">
