@@ -1,5 +1,6 @@
 import { SchedulerType } from "@/models/market-item";
 import { useQueryState } from "nuqs";
+import { useEffect } from "react";
 
 
 export const useMarketSelector = () => {
@@ -23,6 +24,10 @@ export const useGameType = () => {
 
 export const useStockSelectorAviator = () => {
     const [stockSelectedAviator, setStockSelectedAviator] = useQueryState<string | null>("aviatorStockId", { defaultValue: null, parse: (value) => value as string | null });
+
+    useEffect(() => {
+        console.log("🎯 stockSelectedAviator", stockSelectedAviator)
+    }, [stockSelectedAviator])
 
     return {
         stockSelectedAviator,
