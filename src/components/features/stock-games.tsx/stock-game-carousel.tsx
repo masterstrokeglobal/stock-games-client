@@ -5,6 +5,7 @@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { checkCasinoAllowed, COMPANYID } from "@/lib/utils"
 import { SchedulerType } from "@/models/market-item"
+import AutoScroll from "embla-carousel-auto-scroll"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -13,7 +14,7 @@ export default function StockGameCarousel() {
     const isCasinoAllowed = checkCasinoAllowed(COMPANYID);
 
     return (
-        <Carousel className="w-full">
+        <Carousel opts={{ loop: true }} plugins={[AutoScroll({ active: true, stopOnInteraction: false, stopOnFocusIn: false, stopOnMouseEnter: true, direction: "forward", speed: 3 })]} className="w-full">
             <div className="space-y-4">
                 <div className="flex items-center justify-between">
                     <h2 className="md:text-2xl text-base font-bold">Stock Games</h2>
