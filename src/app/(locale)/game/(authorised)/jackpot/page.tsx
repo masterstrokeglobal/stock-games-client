@@ -146,7 +146,7 @@ const MarketSection = ({ globalBetAmount, betSlipOpen, searchQuery, setBetSlipOp
         <div className="flex justify-between flex-col md:flex-row items-start ">
           <TabsList className="w-full md:max-w-md flex gap-2">
             <TabsTrigger value={SchedulerType.NSE} disabled={!isNSEAllowed || !isNSEAvailable} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">NSE</TabsTrigger>
-            <TabsTrigger value={SchedulerType.CRYPTO} disabled={!isCryptoAllowed} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">Crypto</TabsTrigger>
+            {isCryptoAllowed && <TabsTrigger value={SchedulerType.CRYPTO} disabled={!isCryptoAllowed} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">Crypto</TabsTrigger>}
             <TabsTrigger value={SchedulerType.USA_MARKET} disabled={!isUSAMarketAllowed || !isUSAMarketAvailable} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">US Stock</TabsTrigger>
           </TabsList>
         </div>
@@ -207,12 +207,12 @@ const MarketSection = ({ globalBetAmount, betSlipOpen, searchQuery, setBetSlipOp
 }
 
 
-const StockCard = ({ stock, className, amount,roundRecord }: { stock?: RankedMarketItem, className?: string, amount?: number,roundRecord?: RoundRecord }) => {
+const StockCard = ({ stock, className, amount, roundRecord }: { stock?: RankedMarketItem, className?: string, amount?: number, roundRecord?: RoundRecord }) => {
   if (!stock) return null;
 
-  
+
   const initialPrice = roundRecord?.initialValues?.[stock.bitcode?.toLocaleLowerCase() as string];
-  
+
   const price = stock.price ? stock.price : initialPrice;
 
   return (

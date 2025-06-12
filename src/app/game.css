@@ -1,0 +1,63 @@
+.game-gradient-card {
+    border-radius: 4px;
+    background: linear-gradient(122deg, #00366F 10.44%, #00123A 50.05%);
+}
+
+
+.game-gradient-card-parent {
+    padding: 1px;
+    border-radius: 4px;
+    overflow: hidden;
+    background-image: linear-gradient(130.15deg, #29FEFE 0%, #013169 100.64%);
+}
+
+@media (max-width: 768px) {
+    .game-gradient-card-parent {
+        padding: 0;
+        border-radius: 0;
+        background-image: none;
+    }
+}
+
+.game-gradient-card-header {
+    background: #002357;
+    border-image: linear-gradient(130.15deg, #29FEFE 0%, #013169 100.64%);
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+}
+
+
+.game-gradient-border {
+    border-image: linear-gradient(130.15deg, #29FEFE 0%, #013169 100.64%);
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+
+.gradient-line {
+    position: absolute;
+    height: 1px;
+    width: 100%;
+    background-image: linear-gradient(130.15deg, #29FEFE 0%, #013169 100.64%);
+}
+
+.game-time-text {
+    color: #FFF;
+    text-shadow: 4px 4px 50px #15FFFE;
+    font-size: 50px;
+    font-style: normal;
+    font-weight: 700;
+    padding: 10px;
+    line-height: normal;
+}
+
+@media (max-width: 768px) {
+    .game-gradient-border {
+        border-radius: 0;
+    }
+
+    .game-gradient-card {
+        border-radius: 0;
+    }
+
+}

@@ -40,7 +40,7 @@ export const roundRecordsAPI = {
     getLastRoundWinner: async (type: SchedulerType) => {
         return api.get(`/round-records/round-winners`, {
             params: {
-                type
+                type,
             }
         });
     }

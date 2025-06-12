@@ -129,7 +129,7 @@ const ActionColumn = ({ user }: { user: User }) => {
     <AlertDialog>
       <div className="flex space-x-4 w-36 justify-end">
         <Link href={`/dashboard/users/${user.id}`}>
-          <Button size="icon" variant="ghost" aria-label="View User">
+          <Button size="icon" variant="ghost" aria-label="View Userid">
             <Eye className="w-5 h-5" />
           </Button>
         </Link>
@@ -197,37 +197,6 @@ export type AffiliateUser = {
     balance: number;
 }
 
-// // New sortable header creator
-// const CreateSortableHeader = ({ label, field }: { label: string, field: string }) => {
-//   const [sortBy, setSortBy] = useQueryState('sortBy', {
-//     defaultValue: JSON.stringify([]),
-//   });
-
-//   const currentSort = sortBy;
-
-//   const isSorted = currentSort.includes(field);
-//   const sortOrder = isSorted ? (currentSort.includes(`${field}_ASC`) ? 'ASC' : 'DESC') : null;
-
-//   const toggleSort = () => {
-//     const newOrder = !isSorted || sortOrder === 'DESC' ? 'ASC' : 'DESC';
-//     setSortBy(`${field}_${newOrder}`);
-//   };
-
-//   return (
-//     <Button
-//       variant="ghost"
-//       onClick={toggleSort}
-//       className="flex items-center space-x-2"
-//     >
-//       <span>{label}</span>
-//       {isSorted ? (
-//         sortOrder === 'ASC' ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
-//       ) : (
-//         <ArrowUpDown className="w-4 h-4" />
-//       )}
-//     </Button>
-//   );
-// };
 
 export const affiliateUserColumns: ColumnDef<AffiliateUser>[] = [
   {

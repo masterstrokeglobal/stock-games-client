@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl';
-import React, { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-const AnimatedEyes = () => {
+export const AnimatedEyes = () => {
 
     const [eyePosition, setEyePosition] = useState({ x: 0, y: 0 });
     const eyesRef = useRef<HTMLDivElement>(null);
@@ -79,7 +79,7 @@ const LeaderboardHeader = () => {
             const now = new Date();
             const minuteOfDay = now.getHours() * 60 + now.getMinutes();
 
-      
+
             const baseValue = 600; // Center of the range
             const amplitude = 200; // How much it fluctuates (±200 from baseValue)
             const fullCycle = 120; // Complete cycle every 120 minutes (2 hours)
@@ -123,12 +123,11 @@ const LeaderboardHeader = () => {
     }, [number, targetNumber]);
 
     return (
-        <div className='flex justify-between  pr-3 '>
-            <h2 className="text-xl font-semibold flex-1 mb-4 game-header-highlight pl-2 b text-game-text">
+        <div className='flex justify-between    pr-3 py-2'>
+            <h2 className="text-xl font-semibold flex-1  pl-2 b text-white">
                 {t("leaderboard")}
             </h2>
             <div className="flex justify-between items-center">
-                <AnimatedEyes />
                 <span className="text-md font-semibold text-game-secondary ml-2">
                     {number} viewing
                 </span>

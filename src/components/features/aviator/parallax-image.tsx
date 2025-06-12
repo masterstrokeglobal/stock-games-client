@@ -256,7 +256,7 @@ export default function ParallaxImage({ multiplier, isMoving = false }: Parallax
       </div>
 
       {/* Parallax Object Layers */}
-      {layerConfigs.map((layer, index) => {
+      {layerConfigs.map((layer) => {
         const containerRef = containerRefs[layer.ref as keyof typeof containerRefs]
         const objects = layerObjectsMap[layer.ref] || [] // Use stable objects from state
         

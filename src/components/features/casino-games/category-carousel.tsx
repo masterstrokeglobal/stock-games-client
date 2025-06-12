@@ -5,6 +5,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import type { GameCategory } from "@/models/casino-games"
 import { GameTypeEnum } from "@/models/casino-games"
 import { useGetCasinoGames } from "@/react-query/casino-games-queries"
+import AutoScroll from "embla-carousel-auto-scroll"
 
 interface CategoryCarouselProps {
     categoryId?: GameCategory,
@@ -13,10 +14,11 @@ interface CategoryCarouselProps {
     slot?: boolean,
     liveGame?: boolean,
     title: string,
-    type?: GameTypeEnum
+    type?: GameTypeEnum,
+    direction?: "forward" | "backward"
 }
 
-export default function CategoryCarousel({ categoryId, title, popular, new: isNew, slot, liveGame, type }: CategoryCarouselProps) {
+export default function CategoryCarousel({ categoryId, title, popular, new: isNew, slot, liveGame, type,direction }: CategoryCarouselProps) {
     const { data, isLoading } = useGetCasinoGames({
         limit: 100,
         popular,
@@ -47,7 +49,7 @@ export default function CategoryCarousel({ categoryId, title, popular, new: isNe
     }
 
     return (
-        <Carousel className="w-full">
+        <Carousel opts={{ loop: true }} plugins={[AutoScroll({ active: true, stopOnInteraction: false, stopOnFocusIn: false, stopOnMouseEnter: true , direction: direction || "forward", speed: 3 })]} className="w-full">
             <div className="space-y-4">
                 <div className="flex items-center justify-between">
                     <h2 className="md:text-2xl text-base font-bold">{title}</h2>

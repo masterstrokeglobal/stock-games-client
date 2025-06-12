@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
-import ParticlesContainer from "@/components/ui/solar-particle";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuthStore } from "@/context/auth-context";
 import { useGameState, useShowResults } from "@/hooks/use-current-game";
 import { useGameType } from "@/hooks/use-game-type";
 import useNSEAvailable from "@/hooks/use-nse-available";
 import { useRouletteBetting } from "@/hooks/use-roulette-betting";
+import useUSAMarketAvailable from "@/hooks/use-usa-available";
 import { BLACK_NUMBERS, cn, getPlacementString, RED_NUMBERS } from "@/lib/utils";
 import GameRecord from "@/models/game-record";
 import { SchedulerType } from "@/models/market-item";
@@ -21,9 +21,7 @@ import { Bet, Chip } from "./contants";
 import GameResultDialog from "./result-dialog";
 import { BettingControls } from "./roulette-chips";
 import { RouletteBettingGrid } from "./roulette-grid";
-import { GameHeader } from "./roulette-header";
-import useUSAMarketAvailable from "@/hooks/use-usa-available";
-import useWindowSize from "@/hooks/use-window-size";
+import { GameHeaderBackground } from "./roulette-header";
 enum PlacementType {
     SINGLE = "single",
     SPLIT = "split",
@@ -40,12 +38,12 @@ enum PlacementType {
 type Props = {
     roundRecord: RoundRecord;
     previousRoundId?: string;
+    className?: string;
 };
 
-const RouletteGame = ({ roundRecord }: Props) => {
+const RouletteGame = ({ roundRecord, className }: Props) => {
 
     const t = useTranslations("game");
-    const { isMobile } = useWindowSize();
     const [betAmount, setBetAmount] = useState<number>(100);
     const gameState = useGameState(roundRecord);
     const isNSEAvailable = useNSEAvailable();
@@ -189,7 +187,6 @@ const RouletteGame = ({ roundRecord }: Props) => {
         });
 
     };
-  
     const handleZeroBet = () => {
         if (gameState.isPlaceOver || isPlacingBet) return;
         if (!verifyBetAmount(betAmount)) return;
@@ -255,33 +252,50 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
     return (
         <>
-            {!isMobile && <ParticlesContainer />}
-            <div className="mx-auto  lg:pr-4  py-2 bg-background-secondary h-full ">
+            <div className={cn("mx-auto  lg:pr-4  md:py-2 md:rounded-sm  bg-primary-game h-full ", className)}>
                 <div className="relative rounded-xl lg:flex-row w-full flex-col flex border-brown-800">
                     <div className='lg:w-7/12 max-w-2xl mx-auto w-full'>
-                        <h1 className='text-xl lg:text-left text-center mt-2 mb-4 leading-none text-game-text font-semibold game-header-highlight lg:pl-4 pl-2   '>
+                        <h1 className='text-xl text-left  md:py-2 py-4  md:mx-4 md:px-0 px-4 mb-2    leading-none text-game-secondary relative font-semibold '>
                             {gameState.isPlaceOver ? t("betting-closed") : t("place-your-bets")}
+                            <div className="gradient-line absolute bottom-0 left-0 w-full" />
                         </h1>
                         <Tabs
                             value={tab}
                             onValueChange={(value) => setTab(value as SchedulerType)}
-                            className="w-full relative z-10 mb-6"
+                            className="w-full relative  z-10 mb-6"
                         >
-                            <TabsList className="w-full flex lg:hidden h-10 p-1 bg-tertiary">
-
+                            <TabsList className="w-full flex lg:hidden h-10 p-1 bg-[#000B27] border-[#15FFFE] border rounded-sm">
                                 {isNSEAllowed && (
-                                    <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && 'cursor-not-allowed')} value="nse">NSE</TabsTrigger>
+                                    <TabsTrigger
+                                        disabled={!isNSEAvailable}
+                                        className={cn(
+                                            "flex-1 h-8 text-[#29FEFE]",
+                                            !isNSEAvailable && 'cursor-not-allowed',
+                                            "data-[state=active]:bg-[#00214E]"
+                                        )}
+                                        value="nse"
+                                    >
+                                        NSE
+                                    </TabsTrigger>
                                 )}
                                 {isCryptoAllowed && (
-                                    <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
+                                    <TabsTrigger
+                                        className={cn(
+                                            "flex-1 h-8 text-[#29FEFE]",
+                                            "data-[state=active]:bg-[#00214E]"
+                                        )}
+                                        value="crypto"
+                                    >
+                                        Crypto
+                                    </TabsTrigger>
                                 )}
                                 {isUSAMarketAllowed && isUSAMarketAvailable && (
-                                    <TabsTrigger disabled={!isUSAMarketAvailable} className={cn("flex-1 h-8", !isUSAMarketAvailable && 'cursor-not-allowed')} value="usa_market">USA Market</TabsTrigger>
+                                    <TabsTrigger disabled={!isUSAMarketAvailable} className={cn("flex-1 h-8 text-[#29FEFE] data-[state=active]:bg-[#00214E]", !isUSAMarketAvailable && 'cursor-not-allowed')} value="usa_market">USA Market</TabsTrigger>
                                 )}
                             </TabsList>
                         </Tabs>
 
-                        <div className={cn("relative w-full game-box-background p-4  ", gameState.isPlaceOver || isNotAllowedToPlaceBet ? 'cursor-not-allowed opacity-100' : 'cursor-crosshair')}>
+                        <div className={cn("relative w-full  p-4  ", gameState.isPlaceOver || isNotAllowedToPlaceBet ? 'cursor-not-allowed opacity-100' : 'cursor-crosshair')}>
                             {isNotAllowedToPlaceBet && (<div className="absolute top-0 left-0 w-full text-center h-full z-40 bg-black bg-opacity-80">
                                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                                     <span className="text-game-text text-lg opacity-100  font-semibold">{t("betting-not-allowed")}</span>
@@ -309,7 +323,7 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                         disabled={gameState.isPlaceOver || isNotAllowedToPlaceBet}
                                         onClick={handleZeroBet}
                                         variant="game-secondary"
-                                        className="col-span-1 w-10 relative  bg-yellow-600 justify-center gap-4 text-white ml-2 h-full "
+                                        className="col-span-1 w-10 relative bg-[linear-gradient(177deg,#FFC857_-0.32%,#7F5E1B_50.24%,#FFC857_100.79%)] justify-center gap-4 text-white ml-2 h-full "
                                     >
                                         <span className="rotate-text">
                                             0 &nbsp;
@@ -325,11 +339,11 @@ const RouletteGame = ({ roundRecord }: Props) => {
 
                             </div>
 
-                            <div className="grid grid-cols-4 gap-2 mt-2">
+                            <div className="grid grid-cols-2 gap-2 mt-2">
                                 <div className="relative">
                                     <Button
-                                        variant="game-secondary"
-                                        className="h-full w-full flex items-center justify-center relative border  text-game-text  bg-secondary-game border-primary"
+                                        variant="game-tertiary"
+                                        className="h-full w-full flex items-center justify-center relative"
                                         onClick={() => handleSideBet(first8Numbers)}
                                     >
                                         <span >1 to 8</span>
@@ -338,34 +352,11 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                         <ButtonChip amount={getBetForPosition(PlacementType.DOUBLE_STREET, first8Numbers)!.amount} />
                                     )}
                                 </div>
+
                                 <div className="relative">
                                     <Button
-                                        variant="game-secondary"
-                                        className="h-full w-full flex items-center justify-center relative  border bg-secondary-game border-primary"
-                                        onClick={() => handleColorBet(RED_NUMBERS)}
-                                    >
-                                        <span className="size-5  routelette-piece-red !border-game-text border rotate-45" />
-                                    </Button>
-                                    {getBetForPosition(PlacementType.COLOR, RED_NUMBERS) && (
-                                        <ButtonChip amount={getBetForPosition(PlacementType.COLOR, RED_NUMBERS)!.amount} />
-                                    )}
-                                </div>
-                                <div className="relative">
-                                    <Button
-                                        variant="game-secondary"
-                                        className="h-full w-full flex items-center justify-center relative  border bg-secondary-game border-primary"
-                                        onClick={() => handleColorBet(BLACK_NUMBERS)}
-                                    >
-                                        <span className="size-5  routelette-piece-black rotate-45 !border-game-text border" />
-                                    </Button>
-                                    {getBetForPosition(PlacementType.COLOR, BLACK_NUMBERS) && (
-                                        <ButtonChip amount={getBetForPosition(PlacementType.COLOR, BLACK_NUMBERS)!.amount} />
-                                    )}
-                                </div>
-                                <div className="relative">
-                                    <Button
-                                        variant="game-secondary"
-                                        className="h-full w-full flex items-center justify-center relative  border  text-game-text bg-secondary-game border-primary"
+                                        variant="game-tertiary"
+                                        className="h-full w-full flex items-center justify-center relative"
                                         onClick={() => handleSideBet(second8Numbers)}
                                     >
                                         <span >9 to 16</span>
@@ -379,8 +370,34 @@ const RouletteGame = ({ roundRecord }: Props) => {
                             <div className="grid grid-cols-2 gap-2 mt-4">
                                 <div className="relative">
                                     <Button
-                                        variant="game-secondary"
-                                        className="h-10 w-full routelette-piece-black"
+                                        variant="game-quaternary"
+                                        className="h-full w-full flex items-center justify-center relative"
+                                        onClick={() => handleColorBet(RED_NUMBERS)}
+                                    >
+                                        <span className="size-5  routelette-piece-red !border-game-text rounded-none rotate-45" />
+                                    </Button>
+                                    {getBetForPosition(PlacementType.COLOR, RED_NUMBERS) && (
+                                        <ButtonChip amount={getBetForPosition(PlacementType.COLOR, RED_NUMBERS)!.amount} />
+                                    )}
+                                </div>
+                                <div className="relative">
+                                    <Button
+                                        variant="game-quaternary"
+                                        className="h-full w-full flex items-center justify-center relative"
+                                        onClick={() => handleColorBet(BLACK_NUMBERS)}
+                                    >
+                                        <span className="size-5  routelette-piece-black rotate-45 !border-game-text rounded-none" />
+                                    </Button>
+                                    {getBetForPosition(PlacementType.COLOR, BLACK_NUMBERS) && (
+                                        <ButtonChip amount={getBetForPosition(PlacementType.COLOR, BLACK_NUMBERS)!.amount} />
+                                    )}
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 mt-4">
+                                <div className="relative">
+                                    <Button
+                                        variant="game-tertiary"
+                                        className="h-10 w-full "
                                         onClick={() => handleSpecialBet(PlacementType.EVEN_ODD, evenNumbers)}
                                     >
                                         EVEN
@@ -391,8 +408,8 @@ const RouletteGame = ({ roundRecord }: Props) => {
                                 </div>
                                 <div className="relative">
                                     <Button
-                                        variant="game-secondary"
-                                        className="h-10 w-full routelette-piece-black"
+                                        variant="game-tertiary"
+                                        className="h-10 w-full "
                                         onClick={() => handleSpecialBet(PlacementType.EVEN_ODD, oddNumbers)}
                                     >
                                         ODD
@@ -408,20 +425,20 @@ const RouletteGame = ({ roundRecord }: Props) => {
                         <Tabs
                             value={tab}
                             onValueChange={(value) => setTab(value as SchedulerType)}
-                            className="w-full relative z-10 mt-2"
+                            className="w-full relative z-10 mt-2 flex flex-col h-full"
                         >
-                            <TabsList className="w-full hidden lg:flex  bg-tertiary ">
+                            <TabsList className="w-full hidden overflow-hidden lg:flex text-[#29FEFE]  bg-[#000B27]   border-[#15FFFE] border rounded-sm">
                                 {isNSEAllowed && (
-                                    <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8", !isNSEAvailable && '!cursor-not-allowed')} value="nse">NSE</TabsTrigger>
+                                    <TabsTrigger disabled={!isNSEAvailable} className={cn("flex-1 h-8 bg-[#000B27] text-[#29FEFE] data-[state=active]:bg-[#00214E]", !isNSEAvailable && '!cursor-not-allowed')} value="nse">NSE</TabsTrigger>
                                 )}
                                 {isCryptoAllowed && (
-                                    <TabsTrigger className="flex-1 h-8" value="crypto">Crypto</TabsTrigger>
+                                    <TabsTrigger className={cn("flex-1 h-8 bg-[#000B27] text-[#29FEFE]  data-[state=active]:bg-[#00214E]")} value="crypto">Crypto</TabsTrigger>
                                 )}
                                 {isUSAMarketAllowed && (
-                                    <TabsTrigger disabled={!isUSAMarketAvailable} className={cn("flex-1 h-8", !isUSAMarketAvailable && '!cursor-not-allowed')} value="usa_market">USA Market</TabsTrigger>
+                                    <TabsTrigger disabled={!isUSAMarketAvailable} className={cn("flex-1 h-8 bg-[#000B27] text-[#29FEFE] data-[state=active]:bg-[#00214E]", !isUSAMarketAvailable && '!cursor-not-allowed')} value="usa_market">USA Market</TabsTrigger>
                                 )}
                             </TabsList>
-                            <GameHeader gameState={gameState} />
+                            <GameHeaderBackground gameState={gameState} className="flex-1" />
                             <BettingControls
                                 isLoading={isPlacingBet}
                                 betAmount={betAmount}

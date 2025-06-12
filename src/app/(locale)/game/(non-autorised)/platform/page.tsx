@@ -45,16 +45,16 @@ const PlatformPage = () => {
             {isCasinoAllowed && (
                 <>
                     <CasinoProvidersCarousel title="Game Providers" />
-                    <CategoryCarousel title="Hot Games" popular={true} />
-                    <CategoryCarousel title="Crash Games" type={GameTypeEnum.CRASH_GAME} />
-                    <CategoryCarousel title="Game Show" type={GameTypeEnum.GAME_SHOW} />
-                    <CategoryCarousel title="Instant Win" type={GameTypeEnum.INSTANT_WIN} />
-                    <CategoryCarousel title="Live Dealer" type={GameTypeEnum.LIVE_DEALER} />
-                    <CategoryCarousel title="Table Games" type={GameTypeEnum.TABLE_GAMES} />
-                    <CategoryCarousel title="Slots" type={GameTypeEnum.SLOTS} />
-                    <CategoryCarousel title="Shooting" type={GameTypeEnum.SHOOTING} />
-                    <CategoryCarousel title="Lottery" type={GameTypeEnum.LOTTERY} />
-                    <CategoryCarousel title="New Released" new={true} />
+                    <CategoryCarousel title="New Released" new={true} direction="backward" />
+                    <CategoryCarousel title="Hot Games" popular={true} direction="forward" />
+                    <CategoryCarousel title="Crash Games" type={GameTypeEnum.CRASH_GAME} direction="backward" />
+                    <CategoryCarousel title="Game Show" type={GameTypeEnum.GAME_SHOW} direction="forward" />
+                    <CategoryCarousel title="Instant Win" type={GameTypeEnum.INSTANT_WIN} direction="backward" />
+                    <CategoryCarousel title="Live Dealer" type={GameTypeEnum.LIVE_DEALER} direction="forward" />
+                    <CategoryCarousel title="Table Games" type={GameTypeEnum.TABLE_GAMES} direction="backward" />
+                    <CategoryCarousel title="Slots" type={GameTypeEnum.SLOTS} direction="forward" />
+                    <CategoryCarousel title="Shooting" type={GameTypeEnum.SHOOTING} direction="backward" />
+                    <CategoryCarousel title="Lottery" type={GameTypeEnum.LOTTERY} direction="forward" />
                 </>
             )}
 

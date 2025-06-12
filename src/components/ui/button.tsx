@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -21,6 +22,8 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         success: "bg-green-500 text-white shadow-sm hover:bg-green-600",
         "game-secondary": "bg-tertiary text-white justify-start border border-[#EFF8FF17]",
+        "game-tertiary": "bg-primary-game text-white justify-start border border-[#0053B7]",
+        "game-quaternary": "bg-[#0053B7] text-white justify-start border border-[#00214E]",
         game: "bg-gradient-to-b from-[var(--bet-button-start)] via-[var(--bet-button-mid)] to-[var(--bet-button-end)] border border-[var(--bet-button-border)] text-white h-14"
       },
       size: {

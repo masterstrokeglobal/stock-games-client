@@ -3,6 +3,7 @@ import User from "@/models/user";
 import api from "./instance";
 import { COMPANYID } from "../utils";
 import UserIpLog from "@/models/user-ip-logs";
+import { UserWithdrawlLimitFormSchema } from "@/components/features/user/user-withdrawl-form";
 export type GetUserIpLogsParams = {
     userId: string;
     page: number;
@@ -52,6 +53,18 @@ export const userAPI = {
     },
     removeAgentUserPlacementNotAllowed: async (data: { placementNotAllowed: SchedulerType, userId: string }) => {
         return api.post(`/user/remove-agent-placement-not-allowed/${data.userId}`, data);
+    },
+
+    updateUserWithdrawlLimit: async (data: { userId: string, withdrawlLimit: UserWithdrawlLimitFormSchema }) => {
+        return api.patch(`user/withdraw-limit/${data.userId}`, data.withdrawlLimit);
+    },
+
+    addUserNote: async (data: { userId: string, notes: string }) => {
+        return api.post(`user/notes/${data.userId}`, data);
+    },
+    
+    getUserNotes: async (userId: number) => {
+        return api.get(`user/notes/${userId}`);
     },
 
     getUserIpLogs: async ({ userId, page, limit, startDate, endDate }: GetUserIpLogsParams) => {

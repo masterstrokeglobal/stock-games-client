@@ -1,14 +1,23 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started 
+<<<<<<< HEAD
   
 First, run a development server:     
             
 ```bash 
 pnpm dev
 ```
+=======
+   
+First, run a development server:     
+            
+```bash    
+pnpm dev   
+```  
+>>>>>>> main
 ```bash
-pnpm dev  
+pnpm dev   
 ``` 
   
 Open [http://localhost:3000](http://localhost:3000).    
@@ -51,28 +60,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ```
 
 ```
-{
-"radius": "0.2rem;",
-"primary": "#000000",
-"gameText": "#010101",
-"tertiary": "#000614",
-"highlight": "#fafafa",
-"secondary": "#f9b800",
-"highlight2": "#00000",
-"borderColor": "rgba(0, 0, 0, 0.31)",
-"backgroundGame": "#FAFAFA",
-"bet-button-end": "#FFCC2A",
-"bet-button-mid": "#FFCC2A",
-"redGradientEnd": "#f9b900",
-"bet-button-start": "#FFCC2A",
-"blackGradientEnd": "#ffffff",
-"innerShadowColor": "rgba(255, 240, 180, 0.1)",
-"redGradientStart": "#f9b900",
-"bet-button-border": "#F0B940",
-"blackGradientStart": "#ffffff",
-"gameHeaderHighlight": "linear-gradient(to right, white, transparent)",
-"gameBoxGradient": "linear-gradient(to right, black, transparent)"
-}
-
+{"radius":"0.5rem;","primary":"#001e34","gameText":"#07171F","tertiary":"#000000","secondary":"#ADEBFF","chip-color":"#f78a32","borderColor":"rgba(85, 176, 255, 0.31)","input-field":"#000000","top-bar-text":"#FFFFFF","backgroundGame":"#FFFFFF","bet-button-end":"#279BFF","bet-button-mid":"#4DAAFF","last-winner-bg":"#a0b1c3","redGradientEnd":"#ad0707","accent-secondary":"#5fd9ed","bet-button-start":"#0D7FE1","blackGradientEnd":"#000000","innerShadowColor":"rgba(208, 232, 253, 0.05)","redGradientStart":"#ad0707","bet-button-border":"#55B0FF","gameTextSecondary":"#FFFFFF","blackGradientStart":"#000000","gameHeaderHighlight":"linear-gradient(to right, #fafafa, transparent)","secondary-background":"#003459","input-field-background":"#ffffff"}
 
 ```

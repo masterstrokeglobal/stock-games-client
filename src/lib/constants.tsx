@@ -88,12 +88,12 @@ export const StockDerbyGames: Game[] = [
         image: "/images/nse.png",
         description: "Rouletter game on live NSE stocks",
     },
-    {
-        title: "Crypto Market",
-        link: "/game?gameType=crypto",
-        image: "/images/crypto.png",
-        description: "Rouletter game on live crypto currencies",
-    },
+    // {
+    //     title: "Crypto Market",
+    //     link: "/game?gameType=crypto",
+    //     image: "/images/crypto.png",
+    //     description: "Rouletter game on live crypto currencies",
+    // },
     {
         title: "US Market",
         link: "/game?gameType=usa_market",
@@ -143,19 +143,19 @@ export const StockDerbyGames: Game[] = [
         image: "/images/banner/dice-game.png",
         description: "Guess the side of the coin"
     },
-    {
+    // {
 
-        title: "Red Black",
-        link: "/game/redblack",
-        image: "/images/redvsblack.png",
-        description: "Guess Red or Black"
-    },
-    {
-        title: "Aviator",
-        link: "/game/platform/stock-game/aviator",
-        image: "/images/banner/aviator.png",
-        description: "Guess the side of the coin"
-    }
+    //     title: "Red Black",
+    //     link: "/game/redblack",
+    //     image: "/images/redvsblack.png",
+    //     description: "Guess Red or Black"
+    // },
+    // {
+    //     title: "Aviator",
+    //     link: "/game/platform/stock-game/aviator",
+    //     image: "/images/banner/aviator.png",
+    //     description: "Guess the side of the coin"
+    // }
 
 ]
 

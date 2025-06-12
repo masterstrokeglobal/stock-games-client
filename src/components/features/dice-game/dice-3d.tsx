@@ -86,7 +86,7 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
           }
         </div>
         <div className=' absolute left-1/2 -translate-x-1/2 h-full z-10'>
-          <img src="/images/dice-game/lady.gif" alt="dice-bg" className='h-full w-auto object-contain' />
+          <img src="/images/dice-game/dancing-2.gif" alt="dice-bg" className='h-full w-auto object-contain' />
         </div>
         <div className="flex  sm:pl-24 pl-12   flex-row bg-[url('/images/dice-game/dice-bg.jpg')]  bg-cover bg-center flex-1 h-full gap-2 items-center justify-between animate-slide-right relative">
           {!isMobile &&

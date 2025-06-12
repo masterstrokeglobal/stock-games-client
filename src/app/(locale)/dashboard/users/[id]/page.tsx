@@ -6,6 +6,8 @@ import TransactionTable from "@/components/features/transaction/transaction-tabl
 import PlacementManagement from "@/components/features/user/placement-allowed";
 import UserCard from "@/components/features/user/user-card"; // Assuming you have a UserCard component
 import UserEarningsCard from "@/components/features/user/user-earning";
+import UserUpdateNote from "@/components/features/user/user-update-note";
+import UserUpdateWithdrawl from "@/components/features/user/user-update-withdrawl";
 import { Separator } from "@/components/ui/separator";
 import { useAuthStore } from "@/context/auth-context";
 import Admin, { AdminRole } from "@/models/admin";
@@ -27,6 +29,7 @@ const ViewUserPage = () => {
     };
 
 
+
     const userDetails = useMemo(() => {
         if (isSuccess) {
             return new User(data?.data); // Assuming userDetails is the correct data path
@@ -36,8 +39,11 @@ const ViewUserPage = () => {
 
     const user = currentUser as Admin;
 
+    const isAdmin = user.role === AdminRole.COMPANY_ADMIN || user.role === AdminRole.SUPER_ADMIN;
+
     if (isLoading) return <LoadingScreen className="h-[60vh]">Loading user...</LoadingScreen>; // Show loading screen if loading
 
+    console.log(userDetails);
     return (
         <section className="container-main min-h-[60vh]">
             <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between">
@@ -47,9 +53,19 @@ const ViewUserPage = () => {
             <main className="mt-4">
                 {userDetails && <UserCard user={userDetails} />} {/* Render UserCard if data exists */}
             </main>
+            
+            {isAdmin && userDetails && <main className="mt-4">
+                <UserUpdateNote user={userDetails} />
+            </main>}
+
             {(!user.isAgent && userDetails) && <main className="mt-4" >
                 <PlacementManagement user={userDetails} />
             </main>}
+
+            {isAdmin && userDetails && <main className="mt-4">
+                <UserUpdateWithdrawl user={userDetails} />
+            </main>}
+
 
             {(!user.isAgent && userDetails && userDetails.company?.depositBonusPercentageEnabled) && <UpdateAgentBonusPercentageForm defaultValues={{ depositBonusPercentage: userDetails.depositBonusPercentage }} onSubmit={updateUserBonusPercentage} isLoading={isPending} />}
             <UserEarningsCard userId={id.toString()} /> {/* Render UserEarningsCard with user ID */}

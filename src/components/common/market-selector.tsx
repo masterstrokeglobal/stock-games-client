@@ -22,7 +22,6 @@ const MarketSelector = ({ title, className, roundRecordType = RoundRecordGameTyp
     const { setGameType } = useGameType();
 
     const { userDetails } = useAuthStore();
-    console.log("roundRecordType", roundRecordType)
 
     const currentUser = userDetails as User;
     const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);

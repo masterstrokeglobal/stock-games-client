@@ -10,6 +10,49 @@ interface GameHeaderProps {
     className?: string;
 }
 
+export const GameHeaderBackground: React.FC<GameHeaderProps> = ({ gameState, className }) => {
+    const t = useTranslations('game');
+    const getTime = () => {
+        if (gameState.isGameOver) {
+            return "00:00";
+        }
+        return gameState.isPlaceOver
+            ? gameState.gameTimeLeft.formatted
+            : gameState.placeTimeLeft.formatted;
+    };
+
+    // // Gradient background style matching the image
+    // const gradientStyle: React.CSSProperties = {
+    //     background: "radial-gradient(ellipse at center, #07305B 0%, #00143A 100%)",
+    // };
+
+    return (
+        <header
+            className={cn(
+                'text-center hidden lg:flex flex-col items-center justify-center  w-full relative',
+                className
+            )}
+        >
+            <div className="mb-2">
+                <span
+                
+                    className="inline-block px-3 py-1 text-white text-2xl font-semibold rounded bg-transparent  tracking-wide"
+                    style={{ letterSpacing: "0.04em" }}
+                >
+                    {gameState.isPlaceOver ? t("game-ends-in") : t("round-starts-in")}
+                </span>
+            </div>
+            <p
+            style={{
+                textShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
+            }}
+                className='text-5xl font-bold text-white  mt-2 relative'>
+            {/* <div style={gradientStyle} className='absolute top-0 left-0 h-full w-auto aspect-square' /> */}
+                {getTime()}
+            </p>
+        </header>
+    );
+}
 
 export const GameHeader: React.FC<GameHeaderProps> = ({ gameState, className }) => {
 

@@ -22,8 +22,8 @@ const useUSAMarketAvailable = () => {
       const etDay = now.getUTCDay();
       
       // Market hours: 9:30 AM - 4:00 PM ET, Monday-Friday
-      const marketOpenHour = 9;
-      const marketOpenMinute = 30;
+      const marketOpenHour = 10;
+      const marketOpenMinute = 0;
       const marketCloseHour = 16;
       const marketCloseMinute = 0;
       

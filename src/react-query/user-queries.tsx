@@ -195,3 +195,46 @@ export const useGetUserIpLogs = (filter: GetUserIpLogsParams) => {
     });
 }
 
+
+export const useUpdateUserWithdrawlLimit = () => {
+    return useMutation({
+        mutationFn: userAPI.updateUserWithdrawlLimit,
+        onSuccess: () => {
+            toast.success("User withdrawl limit updated successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error updating user withdrawl limit");
+        },
+    });
+}
+
+
+export const useAddUserNote = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: userAPI.addUserNote,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "users" && query.queryKey[1] === "notes";
+                },
+            });
+            toast.success("User note added successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error adding user note");
+        },
+    });
+}
+
+
+export const useGetUserNotes = (userId?: number) => {
+    return useQuery<string, Error>({
+        queryKey: ["users", "notes", userId],
+        queryFn: userId ? async () => {
+            const response = await userAPI.getUserNotes(userId);
+            return response.data.data;
+        } : undefined,
+        enabled: !!userId,
+    });
+}

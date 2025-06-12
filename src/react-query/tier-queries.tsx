@@ -46,7 +46,7 @@ export const useUpdateTier = () => {
 
 export const useGetTierById = (id: string) => {
     return useQuery<Tier, Error>({
-        queryKey: ["tier", id],
+        queryKey: ["tiers", id],
         queryFn: async () => {
             const response = await tierAPI.getTierById(id);
             return new Tier(response.data);
