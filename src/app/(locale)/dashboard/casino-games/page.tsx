@@ -74,7 +74,7 @@ const CasinoGames = () => {
     });
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFilter({ ...filter, search: e.target.value });
+        setFilter({ ...filter, search: e.target.value, page: 1 });
     };
 
     const changePage = (newPage: number) => {
@@ -103,7 +103,7 @@ const CasinoGames = () => {
                         placeholder="Select Provider"
                         value={filter.provider?.toString()}
                         className="min-w-40"
-                        onValueChange={(value) => setFilter({ ...filter, provider: value as ProviderEnum })}
+                        onValueChange={(value) => setFilter({ ...filter, provider: value as ProviderEnum, page: 1 })}
                     />
 
                     <ComboboxSelect
@@ -111,7 +111,7 @@ const CasinoGames = () => {
                         defaultValue={filter.category?.toString()}
                         placeholder="Select Category"
                         value={filter.category?.toString()}
-                        onValueChange={(value) => setFilter({ ...filter, category: value as GameCategory })}
+                        onValueChange={(value) => setFilter({ ...filter, category: value as GameCategory, page: 1 })}
                         className="min-w-40"
                     />
 
@@ -120,7 +120,7 @@ const CasinoGames = () => {
                         defaultValue={filter.type?.toString()}
                         placeholder="Select Type"
                         value={filter.type?.toString()}
-                        onValueChange={(value) => setFilter({ ...filter, type: value as GameTypeEnum })}
+                        onValueChange={(value) => setFilter({ ...filter, type: value as GameTypeEnum, page: 1 })}
                         className="min-w-40"
                     />
                     <Select onValueChange={(value) => setFilter({ ...filter, limit: parseInt(value) })} value={filter.limit.toString()}>
