@@ -36,8 +36,8 @@ export const timeOptions = [
 
 export const getPlacementString = (bet: { market: number[], placementType: PlacementType }, round: RoundRecord) => {
 
-  const HorseNumbers = bet.market.map((number) => {
-    const horseNumber = round.market.find((market) => market.id === number)?.horse;
+  const HorseNumbers = bet.market?.map((number) => {
+    const horseNumber = round.market?.find((market) => market.id === number)?.horse;
     return horseNumber || 0;
   }).sort((a, b) => a - b);
 

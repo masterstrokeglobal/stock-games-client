@@ -5,6 +5,7 @@ import { setUserLocale } from '@/services/locale';
 import { useTransition } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '../ui/select';
 import { cn } from '@/lib/utils';
+import { ChevronDown } from 'lucide-react';
 type Props = {
   defaultValue: string;
   items: Array<{ value: string; label: string }>;
@@ -30,8 +31,9 @@ export default function LocaleSwitcherSelect({
   return (
     <div className={className}>
       <Select defaultValue={defaultValue} onValueChange={onChange} disabled={isPending}>
-        <SelectTrigger className={cn("w-full border text-game-text border-[#EFF8FF17] h-11 rounded-md", selectClassName)}  >
+        <SelectTrigger showCaret={false} className={cn("w-full border rounded-full text-white border-[#29FEFE] bg-[#003662E5] h-11 ", selectClassName)}  >
           {items.find((item) => item.value === defaultValue)?.label}
+          <ChevronDown className='fill-white stroke-none' />
         </SelectTrigger>
         <SelectContent>
           {items.map(({ value, label }) => (

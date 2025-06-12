@@ -59,10 +59,8 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
 
   const gameState = useGameState(roundRecord);
   const currentRound = roundRecord.todayCount || -1;
-  const { mutate: mutateGameRecord, isPending: isPlacingBet } =
-    useCreateGameRecord();
-  const { mutate: mutateAdvanceGameRecord, isPending: isAdvancePlacingBet } =
-    useCreateAdvanceGameRecord();
+  const { mutate: mutateGameRecord, isPending: isPlacingBet } = useCreateGameRecord();
+  const { mutate: mutateAdvanceGameRecord, isPending: isAdvancePlacingBet } = useCreateAdvanceGameRecord();
 
   const fancyRounds = [
     {

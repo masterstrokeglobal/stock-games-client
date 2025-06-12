@@ -1,7 +1,5 @@
-import ParticlesContainer from "@/components/ui/particle";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGameType } from "@/hooks/use-game-type";
-import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { useLastRoundWinner } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
@@ -9,8 +7,6 @@ import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 const LastWinners = ({ className }: PropsWithClassName) => {
-
-    const { isMobile } = useWindowSize();
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
 
@@ -20,9 +16,8 @@ const LastWinners = ({ className }: PropsWithClassName) => {
             setScrollAreaHeight(sectionHeight);
         }
     }, []);
-    return <section ref={sectionRef} className={cn("bg-background-last-winner relative w-full h-full ", className)}>
-        {!isMobile && <ParticlesContainer className="w-full h-full" />}
-        <ScrollArea style={{ height: `${scrollAreaHeight}px` }} type="auto">
+    return <section ref={sectionRef} className={cn("game-gradient-card-parent relative w-full h-full ", className)}>
+        <ScrollArea style={{ height: `${scrollAreaHeight}px` }} className="game-gradient-card md:rounded-sm" type="auto">
             <LastRoundWinner />
         </ScrollArea>
     </section>;
@@ -62,6 +57,7 @@ const LastRoundWinner = () => {
             {rounds.length > 0 ? (
                 <table className="min-w-full">
                     <thead className="bg-primary-game">
+                        <div className="gradient-line" />
                         <tr className="flex">
                             <th className="p-2 text-sm text-left text-game-secondary rounded-tl-lg flex-1">
                                 {t("time")}
@@ -70,15 +66,16 @@ const LastRoundWinner = () => {
                                 {t("winner")}
                             </th>
                         </tr>
+                        <div className="gradient-line" />
                     </thead>
-                    <tbody className="text-game-text">
+                    <tbody className="text-game-secondary">
                         {rounds.map((round, index) => (
                             <tr key={index} className="flex">
-                                <td className="p-2 text-sm text-game-text flex-1">
+                                <td className="p-2 text-sm flex-1">
                                     {dayjs(round.startTime).format("hh:mm A")} ({round.roundNumber})
                                 </td>
-                                <td className="p-2 text-sm text-game-text flex-1 px-2">
-                                    <span className={cn("w-16 mx-auto font-semibold flex items-center justify-center", round.winningColor === "red" ? "justify-start text-red-500" : "justify-end text-black", round.winningNumber === 0 ? "justify-center text-yellow-600" : "")}>
+                                <td className="p-2 text-sm flex-1 px-2">
+                                    <span className={cn("w-16 mx-auto font-semibold flex items-center justify-center", round.winningColor === "red" ? "justify-start text-red-500" : "justify-end  text-white", round.winningNumber === 0 ? "justify-center text-yellow-600" : "")}>
                                         &nbsp; {round.winningNumber} &nbsp;
                                     </span>
                                 </td>

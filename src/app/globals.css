@@ -80,7 +80,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     --routelette-black-gradient-end: #2268A4;
     --routelette-red-gradient-start: #0D7FE1;
     --routelette-red-gradient-end: #279BFF;
-    --routelette-border-color: rgba(85, 176, 255, 0.31);
+    --routelette-border-color: rgba(2, 23, 43, 1);
     --routelette-inner-shadow-color: rgba(208, 232, 253, 0.05);
 
     /* Common properties */
@@ -88,7 +88,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     --routelette-inner-shadow: 0px 0px 5.4px 6px var(--routelette-inner-shadow-color) inset;
 
     /* Gradients */
-    --routelette-black-gradient: linear-gradient(180deg, var(--routelette-black-gradient-start) 0%, var(--routelette-black-gradient-end) 100%);
+    --routelette-black-gradient: linear-gradient(97deg, #151D24 38.64%, #4D5155 54.57%, #02172B 61.06%);
     --routelette-red-gradient: linear-gradient(180deg, var(--routelette-red-gradient-start) 0%, var(--routelette-red-gradient-end) 100%);
     --background-game: #253e78;
     --game-text: #FFFFFF;
@@ -150,6 +150,20 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   body {
     @apply bg-background text-foreground overflow-x-hidden;
   }
+
+  .game-gradient-border {
+    border-bottom: 1px solid;
+    border-image-source: linear-gradient(90deg, #29FEFE 0%, #013169 100%);
+  }
+}
+
+.gradient-border {
+  border: 2px solid transparent;
+  border-image: linear-gradient(130.15deg, #29FEFE 0%, #013169 100.64%);
+}
+
+.gradient-background {
+  background-image: linear-gradient(130.15deg, #29FEFE 0%, #013169 100.64%);
 }
 
 .game-box-background {
@@ -159,28 +173,31 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   /* Adjust the value as needed */
 }
 
-.game-header-highlight{
+.game-header-highlight {
   background: var(--game-header-highlight);
   padding: 5px;
 }
 
-.game-box-gradient{
+.game-box-gradient {
   background: var(--game-box-gradient);
 }
 
 /* Applying the variables to the classes */
 .routelette-piece-black {
-  background: var(--routelette-black-gradient);
+  background-color: rgba(2, 23, 43, 1);
+  padding: 2px;
+  background-image: var(--routelette-black-gradient);
   border: var(--routelette-border);
   box-shadow: var(--routelette-inner-shadow);
-  color:var(--game-text-secondary);
+  color: var(--game-text-secondary);
 }
 
 .routelette-piece-red {
-  background: var(--routelette-red-gradient);
-  border: var(--routelette-border);
-  box-shadow: var(--routelette-inner-shadow);
-  color:var(--game-text-secondary);
+  padding: 2px;
+  background: linear-gradient(90deg, #9E252E 0%, #000E37 100%);
+  border: 1px solid #023A78;
+  border-radius: 5px;
+  color: var(--game-text-secondary);
 }
 
 .roulette-piece-black-select {
@@ -248,37 +265,38 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
 }
-.widget-visible{
+
+.widget-visible {
   display: block;
 }
 
 
 .animate-gradient-bg {
-  background: linear-gradient(
-    -45deg,
-    #001f3f,
-    #003366,
-    #004c99,
-    #005ce6,
-    #007bff,
-    #3399ff,
-    #66b2ff,
-    #80d4ff,
-    #66b2ff,
-    #3399ff,
-    #007bff,
-    #005ce6,
-    #004c99,
-    #003366,
-    #001f3f
-  );
+  background: linear-gradient(-45deg,
+      #001f3f,
+      #003366,
+      #004c99,
+      #005ce6,
+      #007bff,
+      #3399ff,
+      #66b2ff,
+      #80d4ff,
+      #66b2ff,
+      #3399ff,
+      #007bff,
+      #005ce6,
+      #004c99,
+      #003366,
+      #001f3f);
   background-size: 600% 600%;
   animation: gradientBG 6s ease-in-out infinite, pulseGlow 3s ease-in-out infinite;
 }
@@ -287,24 +305,31 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   0% {
     background-position: 0% 50%;
   }
+
   25% {
     background-position: 50% 100%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   75% {
     background-position: 50% 0%;
   }
+
   100% {
     background-position: 0% 50%;
   }
 }
 
 @keyframes pulseGlow {
-  0%, 100% {
+
+  0%,
+  100% {
     filter: brightness(1);
   }
+
   50% {
     filter: brightness(1.2);
   }
@@ -318,6 +343,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   color: black;
   opacity: 0.6;
 }
+
 input[type="date"]::-webkit-calendar-picker-indicator.dark {
   color: white;
 }
@@ -329,7 +355,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 
 .gold-button {
-  background: linear-gradient(145deg, #ff3c3c, #ff7a00); /* Reversed gradient */
+  background: linear-gradient(145deg, #ff3c3c, #ff7a00);
+  /* Reversed gradient */
   color: white;
   border: none;
   border-radius: 50px;
@@ -337,7 +364,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   transition: transform 0.2s ease;
- 
+
 }
 
 .options-button {
@@ -381,25 +408,29 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   from {
     transform: translateX(0);
   }
+
   to {
     transform: translateX(calc(-100% - var(--gap)));
   }
 }
+
 @keyframes marquee-vertical {
   from {
     transform: translateY(0);
   }
+
   to {
     transform: translateY(calc(-100% - var(--gap)));
   }
 }
+
 .text-shadow-3d {
   text-shadow: 3px 3px 0 #000000,
-      6px 6px 0 #000000, 9px 9px #000000,
-      12px 12px 0 #000000;
+    6px 6px 0 #000000, 9px 9px #000000,
+    12px 12px 0 #000000;
 }
 
-/* From Uiverse.io by MuhammadHasann */ 
+/* From Uiverse.io by MuhammadHasann */
 .gradient-card {
   --white: hsl(0, 0%, 100%);
   --black: hsl(240, 15%, 9%);
@@ -414,11 +445,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
   padding: 1rem;
   background-color: hsla(240, 15%, 9%, 1);
-  background-image: radial-gradient(
-      at 88% 40%,
+  background-image: radial-gradient(at 88% 40%,
       hsla(240, 15%, 9%, 1) 0px,
-      transparent 85%
-    ),
+      transparent 85%),
     radial-gradient(at 49% 30%, hsla(240, 15%, 9%, 1) 0px, transparent 85%),
     radial-gradient(at 14% 26%, hsla(240, 15%, 9%, 1) 0px, transparent 85%),
     radial-gradient(at 0% 64%, hsla(263, 93%, 56%, 1) 0px, transparent 85%),
@@ -441,11 +470,9 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
   width: calc(100% + 2px);
   height: calc(100% + 2px);
-  background-image: linear-gradient(
-    0deg,
-    hsl(0, 0%, 100%) -50%,
-    hsl(0, 0%, 40%) 100%
-  );
+  background-image: linear-gradient(0deg,
+      hsl(0, 0%, 100%) -50%,
+      hsl(0, 0%, 40%) 100%);
 
   border-radius: 1rem;
 }
@@ -463,13 +490,11 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
   width: 200%;
   height: 10rem;
-  background-image: linear-gradient(
-    0deg,
-    hsla(0, 0%, 100%, 0) 0%,
-    hsl(277, 95%, 60%) 40%,
-    hsl(277, 95%, 60%) 60%,
-    hsla(0, 0%, 40%, 0) 100%
-  );
+  background-image: linear-gradient(0deg,
+      hsla(0, 0%, 100%, 0) 0%,
+      hsl(277, 95%, 60%) 40%,
+      hsl(277, 95%, 60%) 60%,
+      hsla(0, 0%, 40%, 0) 100%);
 
   animation: rotate 8s linear infinite;
 }
@@ -481,7 +506,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 
-/* From Uiverse.io by AnthonyPreite */ 
+/* From Uiverse.io by AnthonyPreite */
 .main__heading {
   font-weight: 600;
   font-size: 2.25em;
@@ -529,7 +554,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   font-weight: 700;
 }
 
-.flow > * + * {
+.flow>*+* {
   margin-top: var(--flow-space, 1.25em);
 }
 
@@ -560,7 +585,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   transition: all ease-in-out 0.3s;
 }
 
-.card:hover > .cta {
+.card:hover>.cta {
   outline: none;
   background-color: #0d0d0d;
 }
@@ -599,18 +624,22 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     transform-origin: center;
     transform: rotateX(0deg) rotateY(0deg);
   }
+
   25% {
     transform-origin: center;
     transform: rotateX(90deg) rotateY(90deg);
   }
+
   50% {
     transform-origin: center;
     transform: rotateX(180deg) rotateY(180deg);
   }
+
   75% {
     transform-origin: center;
     transform: rotateX(270deg) rotateY(270deg);
   }
+
   100% {
     transform-origin: center;
     transform: rotateX(360deg) rotateY(360deg);
@@ -622,18 +651,22 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     transform-origin: center;
     transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
   }
+
   25% {
     transform-origin: center;
     transform: rotateX(90deg) rotateY(90deg) rotateZ(90deg);
   }
+
   50% {
     transform-origin: center;
     transform: rotateX(180deg) rotateY(180deg) rotateZ(180deg);
   }
+
   75% {
     transform-origin: center;
     transform: rotateX(270deg) rotateY(270deg) rotateZ(270deg);
   }
+
   100% {
     transform-origin: center;
     transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
@@ -643,7 +676,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 * {
   /* Firefox */
   scrollbar-width: thin;
-  scrollbar-color: #555 #1a1a1a05; /* thumb and track */
+  scrollbar-color: #555 #1a1a1a05;
+  /* thumb and track */
 }
 
 *::-webkit-scrollbar {
@@ -658,14 +692,15 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 *::-webkit-scrollbar-thumb {
   background-color: #555;
   border-radius: 10px;
-  border: 2px solid #1a1a1a;
+  border: 2px solid #1a1a1a;
 }
 
-.watch-timer{
+.watch-timer {
   position: absolute;
   top: 0;
   right: 0;
 }
+
 .slotmachine-gradient {
   background: #5B2902;
   background: -webkit-linear-gradient(0deg, rgba(91, 41, 2, 1) 0%, rgba(45, 17, 0, 1) 41%, rgba(0, 0, 0, 1) 100%);
@@ -678,3 +713,5 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   transform: scaleX(-1);
   -webkit-transform: scaleX(-1);
 }
+
+

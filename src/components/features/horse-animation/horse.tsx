@@ -18,10 +18,12 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
 
   return isPlaceOver ? (
     <Suspense fallback={<GameLoadingScreen className="h-96" loadingImageClassName="w-10 h-auto" />}>
-      <Canvas>
-        <PixelRatioManager />
-        <HorseRaceEnvironment roundRecord={roundRecord}  filteredMarket={filteredMarket}/>
-      </Canvas>
+      <div className="game-gradient-card-parent h-full">
+        <Canvas className="bg-white h-full  md:rounded-sm">
+          <PixelRatioManager />
+          <HorseRaceEnvironment roundRecord={roundRecord} filteredMarket={filteredMarket} />
+        </Canvas>
+      </div>
     </Suspense>
   ) : (
     <RacePreparation />
@@ -33,12 +35,12 @@ function RacePreparation() {
   const t = useTranslations("game");
 
   return (
-    <div className="w-full  bg-secondary-game  relative text-game-text rounded-2xl h-full p-6 text-center shadow-2xl">
-      <video src="/images/loading.mp4" autoPlay muted loop className="w-full h-auto absolute -top-1/4 left-0 object-cover" />
-      <div className="rounded-xl p-4">
-        <p className="text-white text-xl mb-2">{t('race-begin')}
-        </p>
-      </div>
+    <div className="w-full  game-gradient-card-parent  overflow-hidden  relative text-game-text  h-full  text-center shadow-2xl">
+      <img src="/images/roulette/game-prep.png" className="w-full h-full rounded-sm object-cover " />
+        <div className="rounded-xl p-4 absolute top-0 left-0 right-0">
+          <p className="text-white text-xl mb-2">{t('race-begin')}
+          </p>
+        </div>
     </div>
   );
 }

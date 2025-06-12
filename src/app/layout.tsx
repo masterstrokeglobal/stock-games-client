@@ -9,6 +9,7 @@ import { Poppins } from 'next/font/google';
 import Script from 'next/script';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import "./globals.css";
+import "./game.css"
 import "./shuffle.css";
 
 const poppins = Poppins({
