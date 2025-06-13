@@ -31,7 +31,7 @@ export default function BetControl({
   ]
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full">
       <div className={`flex items-center bg-gray-900 rounded-lg ${disabled ? 'opacity-50' : ''}`}>
         <div className="bg-yellow-400 rounded-full px-2 py-1 m-2">
           <span className="text-xs font-bold">₹</span>

@@ -98,7 +98,7 @@ type WebSocketData = {
         | { type: WebSocketEventType.BET_PLACED; bet: { userId: number; companyId: number; roundId: number; amount: number; marketItem: number; placementId: number; timestamp: number } }
         | { type: WebSocketEventType.CASH_OUT_SUCCESS; cashOut: { userId: number; companyId: number; roundId: number; marketItem: number; amount: number; multiplier: number; payout: number; timestamp: number } }
         | { type: WebSocketEventType.ERROR; error: string }
-        | { type: WebSocketEventType.ROUND_CREATED; round: { roundId: number; roundRecord: RoundRecord } }
+        | { type: WebSocketEventType.ROUND_CREATED; round: { roundId: number; roundRecord: RoundRecord; items?: Array<{ code: string; initialPrice: number; currentPrice: number; multiplier: number; delta: number; status: "active" | "crashed" | "flew_away"; growthRate: number }> } }
         | { type: WebSocketEventType.BETTING_ENDED; roundId: number }
         | { type: WebSocketEventType.ROUND_UPDATE; roundId: number; items: { code: string; initialPrice: number; currentPrice: number; multiplier: number; delta: number; status: "active" | "crashed" | "flew_away"; growthRate: number }[]; progress: number }
         | { type: WebSocketEventType.ITEMS_STATUS; roundId: number; items: Record<string, { status: "active" | "crashed" | "flew_away"; multiplier: number }> }
@@ -119,6 +119,22 @@ const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: 
     const [socket, setSocket] = useState<WebSocket | null>(null);
     const [data, setData] = useState<ItemStatus[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [planeStatus, setPlaneStatus] = useState<Map<string, { status: "active" | "crashed" | "flew_away"; multiplier: number }> | null>(null);
+
+    useEffect(() => {
+        if (planeStatus === null) {
+            // get the items from teh round record and set the plane status to active and multiplier to 1
+            const items: [string, { status: "active" | "crashed" | "flew_away"; multiplier: number }][] = roundRecord.market
+                .filter((item) => item.code) // Filter out items with undefined code
+                .map((item) => [
+                    item.code!,
+                    { status: "active" as const, multiplier: 1 }
+                ]);
+            setPlaneStatus(new Map(items));
+        }
+    }, [planeStatus]);
+
+
     useEffect(() => {
         const wsManager = WebSocketManager.getInstance();
         const ws = wsManager.getSocket(type);
@@ -135,7 +151,16 @@ const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: 
         }
 
         const onMessage = (event: WebSocketData) => {
-            console.log("event", event);
+            // update the plane status here 
+            if (event.type === WebSocketEventType.ITEMS_STATUS) {
+                setPlaneStatus(() => {
+                    const newPlaneStatus = new Map<string, { status: "active" | "crashed" | "flew_away"; multiplier: number }>();
+                    Object.entries(event.items).forEach(([code, item]) => {
+                        newPlaneStatus.set(code, { status: item.status, multiplier: item.multiplier });
+                    });
+                    return newPlaneStatus;
+                });
+            }
             if (event.type === WebSocketEventType.BET_PLACED) {
                 toast.success("Bet placed successfully");
                 queryClient.invalidateQueries({ queryKey: ["aviator-my-placement", roundRecord.id] });
@@ -162,10 +187,28 @@ const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: 
 
             if (event.type === WebSocketEventType.ROUND_ENDED) {
                 toast.success("Round ended");
+                // Reset plane status when round ends
+                setPlaneStatus(null);
+                setData([]);
             }
 
             if (event.type === WebSocketEventType.ROUND_CREATED) {
                 const round = event.round.roundRecord;
+                
+                // Update plane status from the items in ROUND_CREATED event
+                if (event.round.items && Array.isArray(event.round.items)) {
+                    setPlaneStatus(() => {
+                        const newPlaneStatus = new Map<string, { status: "active" | "crashed" | "flew_away"; multiplier: number }>();
+                        event.round.items!.forEach((item) => {
+                            newPlaneStatus.set(item.code, { 
+                                status: item.status || "active", 
+                                multiplier: item.multiplier || 1 
+                            });
+                        });
+                        return newPlaneStatus;
+                    });
+                }
+                
                 toast.success("new Round Select Your Market");
                 timer = setTimeout(() => {
                     queryClient.setQueryData(["current-round-record", type, RoundRecordGameType.AVIATOR], () => {
@@ -176,6 +219,12 @@ const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: 
                         }
                     });
                 }, 2000);
+            }
+
+            if (event.type === WebSocketEventType.BETTING_ENDED) {
+                console.log("Betting phase ended for round:", event.roundId);
+                // Optionally handle betting ended - planes should start flying
+                // The actual multiplier updates will come through ITEMS_STATUS events
             }
         };
         const onError = (newError: string) => setError(newError);
@@ -203,7 +252,7 @@ const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: 
             socket.send(JSON.stringify({ type: WebSocketEventType.CASH_OUT, roundId: roundRecord.id, jwtToken: token }));
         }
     }
-    return { socket, data, error, placeBet, cashOut } as AviatorHookReturn;
+    return { socket, data, error, placeBet, cashOut, planeStatus } as AviatorHookReturn;
 };
 
 export default useAviator;
@@ -215,5 +264,6 @@ export type AviatorHookReturn = {
     error: string | null;
     placeBet: (amount: number) => void;
     cashOut: () => void;
+    planeStatus: Map<string, { status: "active" | "crashed" | "flew_away"; multiplier: number }> | null;
 }
 
