@@ -44,7 +44,7 @@ export default function BettingPanel({
   return (
     <div className="bottom-0 bg-gradient-to-r from-blue-900/90 via-purple-900/90 to-blue-900/90 backdrop-blur-md border border-blue-400/50 shadow-xl left-0 right-0 p-4">
       <div className="bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-lg p-4">
-        <div className="w-full flex">
+        <div className="w-full flex flex-col">
           <BetControl
             onCashOut={aviator.cashOut}
             betAmount={betAmount}
@@ -89,8 +89,7 @@ function OtherPlanes({aviator, roundRecord}: {aviator: AviatorHookReturn, roundR
 
 
   return (
-    <div className="flex flex-col gap-2 ml-4 min-w-6xl">
-      <h3 className="text-sm font-medium text-gray-200 mb-2 drop-shadow-md">Other Planes</h3>
+    <div className="flex mt-4 flex-col gap-2 ml-4 min-w-6xl">
       <div className="flex flex-wrap gap-2 max-h-64 overflow-y-auto">
         {filteredPlanes.map((stock) => {
           const codeToCheck = gameType === SchedulerType.CRYPTO ? stock.code : stock.codeName;

@@ -82,6 +82,8 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
     }
   }, [isPlaceOver, isGameOver, placeTimeLeft.raw, hasTriggeredFlying, isParallaxMoving])
 
+
+
   // Monitor backend events for crash/fly-away
   useEffect(() => {
     if (aviator.data.length > 0 && localStorage.getItem("gameEnded") === "false") {
@@ -153,7 +155,7 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
 
   return (
     <div className={cn("min-h-[calc(100svh-70px)] bg-gradient-to-b from-purple-600 to-pink-500  overflow-hidden", className)}>
-      <div className="flex relative flex-col h-[calc(100svh-70px)]">
+      <div className="flex relative flex-col max-h-[calc(150vh)]  min-h-[calc(150svh)] lg:min-h-[calc(120svh)] lg:max-h-[calc(120vh)]">
 
         <TimeDisplay 
           roundRecord={roundRecord} 

@@ -301,7 +301,7 @@ const AviatorCanvas = ({ multiplier, shouldStartTakeOffAnimation = false, opacit
       // Scale up to full size and move to center when animation starts OR when game is active (multiplier > 1)
       console.log("📈 Scaling canvas to full size and centering")
       gsap.to(canvasContainerRef.current, {
-        // scale: 1,
+        scale: 1,
         x: "0%",
         y: "0%",
         /// make the plane face up
@@ -313,9 +313,9 @@ const AviatorCanvas = ({ multiplier, shouldStartTakeOffAnimation = false, opacit
       // Scale down to half size and move to bottom-left initially or when resetting
       console.log("📉 Scaling canvas to half size and moving to bottom-left")
       gsap.to(canvasContainerRef.current, {
-        // scale: 0.5,
+        scale: 0.8,
         x: "-30%", // Move left
-        y: "40%",  // Move down
+        y: "30%",  // Move down
         rotation: 0,
         duration: 1,
         ease: "power2.out"
