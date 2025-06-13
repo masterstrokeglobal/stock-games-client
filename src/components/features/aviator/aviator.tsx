@@ -159,7 +159,6 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
           roundRecord={roundRecord} 
           className="fixed top-14 left-1/2 -translate-x-1/2 z-50  w-full max-w-md" 
           isAviator 
-          currentStockName={currentStock?.name}
         />
         {/* Mobile Last Rounds Toggle Button */}
         {isMobile && (

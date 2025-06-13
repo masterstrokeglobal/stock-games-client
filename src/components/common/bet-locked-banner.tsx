@@ -5,13 +5,11 @@ import { RoundRecord } from "@/models/round-record"
 const TimeDisplay = ({
   roundRecord,
   className,
-  isAviator,
-  currentStockName
+  isAviator
 }: {
   roundRecord: RoundRecord,
   className?: string,
-  isAviator?: boolean,
-  currentStockName?: string
+  isAviator?: boolean
 }) => {
   const { gameTimeLeft, isPlaceOver, placeTimeLeft, isGameOver } = useGameState(roundRecord)
   const statusText = isPlaceOver ? isGameOver ? "Game Over" : "Betting Closed" : "Betting Open"
@@ -34,16 +32,6 @@ const TimeDisplay = ({
           <span
             className="text-white flex gap-8 font-bold text-xl tracking-wider relative z-10"
           >
-
-            {/* Current Stock Name for Aviator */}
-            {isAviator && currentStockName && (
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                <span className="text-blue-200 text-sm font-medium">
-                  {currentStockName}
-                </span>
-              </div>
-            )}
             <div
               className="text-white flex gap-8 font-bold text-xl tracking-wider relative z-10 transition-opacity duration-500"
               style={{
