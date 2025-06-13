@@ -22,19 +22,16 @@ const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, cla
 
   return (
     <div className={cn(className)}>
-      {/* Outer glow effect */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-500/30 to-yellow-500/30 rounded-b-3xl blur-lg" />
+        <div className="absolute inset-0 bg-gradient-to-r from-amber-500/30 to-yellow-500/30 rounded-b-2xl blur-md" />
         
-        <div className="relative bg-gradient-to-b from-amber-500 via-yellow-500 to-amber-600 h-18 rounded-b-3xl shadow-2xl flex items-center justify-center overflow-hidden border-2 border-amber-700">
+        <div className="relative bg-gradient-to-b from-amber-500 via-yellow-500 to-amber-600 h-14 sm:h-18 rounded-b-2xl shadow-xl flex items-center justify-center overflow-hidden border border-amber-700">
           
-          {/* Inner shadow for depth */}
-          <div className="absolute inset-0 rounded-b-3xl shadow-inner shadow-amber-800/50" />
+          <div className="absolute inset-0 rounded-b-2xl shadow-inner shadow-amber-800/50" />
 
-          {/* Progress bar with golden glow */}
           <motion.div
             className={cn(
-              "absolute bottom-0 left-0 h-2 rounded-bl-3xl shadow-lg transition-all duration-300",
+              "absolute bottom-0 left-0 h-1.5 sm:h-2 rounded-bl-2xl shadow-lg transition-all duration-300",
               isPlaceOver ?
               isUrgent 
                 ? "bg-gradient-to-r from-red-600 to-red-500 shadow-red-500/50" 
@@ -46,11 +43,10 @@ const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, cla
             transition={{ duration: 0.5 }}
           />
 
-          <div className="flex flex-col items-center justify-center gap-1 z-10">
-            {/* Status text with golden styling */}
+          <div className="flex flex-col items-center justify-center gap-0.5 sm:gap-1 z-10">
             <motion.span
               className={cn(
-                "font-bold tracking-widest text-sm uppercase transition-colors duration-300",
+                "font-bold tracking-wider text-xs sm:text-sm uppercase transition-colors duration-300",
                 isPlaceOver 
                   ? "text-red-800" 
                   : "text-emerald-800"
@@ -62,8 +58,7 @@ const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, cla
               {statusText}
             </motion.span>
 
-            {/* Casino-style number with golden glow */}
-            <div className="h-10 overflow-hidden">
+            <div className="h-8 sm:h-10 overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={displayNumber}
@@ -75,13 +70,12 @@ const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, cla
                     opacity: { duration: 0.2 }
                   }}
                   className={cn(
-                    "text-4xl font-black tracking-wider transition-all duration-300",
+                    "text-2xl sm:text-4xl font-black tracking-wider transition-all duration-300",
                     isPlaceOver?
                     isUrgent 
                       ? "text-red-800" 
                       : "text-red-900"
                       :"text-emerald-800"
-
                   )}
                 >
                   {displayNumber}
@@ -90,9 +84,8 @@ const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, cla
             </div>
           </div>
 
-          {/* Subtle corner accents */}
-          <div className="absolute top-3 left-3 w-2 h-2 rounded-full bg-amber-700 opacity-60" />
-          <div className="absolute top-3 right-3 w-2 h-2 rounded-full bg-amber-700 opacity-60" />
+          <div className="absolute top-2 sm:top-3 left-2 sm:left-3 w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-amber-700 opacity-60" />
+          <div className="absolute top-2 sm:top-3 right-2 sm:right-3 w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-amber-700 opacity-60" />
         </div>
       </div>
     </div>

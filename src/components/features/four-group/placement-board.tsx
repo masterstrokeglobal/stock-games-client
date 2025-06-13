@@ -17,9 +17,10 @@ type Props = {
     previousRoundId?: string;
     globalBetAmount: number;
     children?: React.ReactNode;
+    showCards?: boolean;
 };
 
-const SinglePlayerRouletteGame = ({ roundRecord, globalBetAmount, children }: Props) => {
+const SinglePlayerRouletteGame = ({ roundRecord, globalBetAmount, children, showCards = true }: Props) => {
     const [cardsFlipped, setCardsFlipped] = useState<boolean[]>([false, false, false, false]);
     const gameState = useGameState(roundRecord);
     const isNSEAvailable = useNSEAvailable();
@@ -173,8 +174,9 @@ const SinglePlayerRouletteGame = ({ roundRecord, globalBetAmount, children }: Pr
                             )}
                         </TabsList>
                     </Tabs>
+                    {showCards && (
                     <div className="rounded-2xl ">
-                        <div className="grid grid-cols-3 lg:grid-cols-8 md:gap-6 gap-2 justify-items-center">
+                        <div className="grid grid-cols-4 lg:grid-cols-8 md:gap-6 gap-2 justify-items-center">
                             {roundRecord.market.slice(0, 16).map((market, index) => (
                                 <CardComponent
                                     key={index}
@@ -187,8 +189,9 @@ const SinglePlayerRouletteGame = ({ roundRecord, globalBetAmount, children }: Pr
                                     getBetForCard={getBetForCard}
                                 />
                             ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
             {previousRoundId && <GameResultDialog key={String(showResults)} open={showResults} roundRecordId={previousRoundId} />}
@@ -197,7 +200,6 @@ const SinglePlayerRouletteGame = ({ roundRecord, globalBetAmount, children }: Pr
 };
 
 export default SinglePlayerRouletteGame;
-
 const CardComponent = ({
     index,
     gameState,
@@ -229,7 +231,7 @@ const CardComponent = ({
     return (
         <div
             className={cn(
-                "relative max-w-32  w-full h-44  perspective-1000 cursor-pointer transition-all duration-300 hover:scale-105",
+                "relative max-w-24 sm:max-w-28 md:max-w-32 w-full h-32 sm:h-36 md:h-44 perspective-1000 cursor-pointer transition-all duration-300 hover:scale-105",
                 gameState.isPlaceOver && "cursor-not-allowed"
             )}
             onClick={() => handleCardClick(index)}
@@ -243,7 +245,7 @@ const CardComponent = ({
                 {/* Card Back */}
                 <div className="absolute inset-0 backface-hidden rounded-xl bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 border-2 border-yellow-400 shadow-2xl">
                     <div className="w-full h-full flex items-center justify-center">
-                        <div className="text-6xl text-yellow-400 opacity-80">🎰</div>
+                        <div className="text-4xl sm:text-5xl md:text-6xl text-yellow-400 opacity-80">🎰</div>
                     </div>
                     <div className="absolute inset-2 border border-yellow-400/30 rounded-lg"></div>
                 </div>
@@ -256,30 +258,30 @@ const CardComponent = ({
                     isWinner && "border-green-400 shadow-green-400/50",
                     !hasBet && !isWinner && "border-gray-300"
                 )}>
-                    <div className="w-full h-full flex flex-col items-center justify-center p-4">
-                        <div className={cn("text-6xl mb-2", card.color)}>
+                    <div className="w-full h-full flex flex-col items-center justify-center p-2 sm:p-3 md:p-4">
+                        <div className={cn("text-4xl sm:text-5xl md:text-6xl mb-1 sm:mb-2", card.color)}>
                             {card.suit}
                         </div>
 
-                        <div className="text-xs text-gray-600 mt-2 text-center">
+                        <div className="text-[10px] sm:text-xs text-gray-600 mt-1 sm:mt-2 text-center">
                             {roundRecord.market[index]?.codeName || `Stock ${index + 1}`}
                         </div>
-                        <div className={cn("text-sm font-bold text-center", card.color)}>
+                        <div className={cn("text-xs sm:text-sm font-bold text-center", card.color)}>
                             {roundRecord.market[index]?.name}
                         </div>
                     </div>
 
                     {/* Bet Chip */}
                     {hasBet && (
-                        <div className="absolute -top-2 -right-2 bg-yellow-500 text-black text-xs rounded-full w-8 h-8 flex items-center justify-center font-bold border-2 border-yellow-300 shadow-lg">
+                        <div className="absolute -top-2 -right-2 bg-yellow-500 text-black text-[10px] sm:text-xs rounded-full w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 flex items-center justify-center font-bold border-2 border-yellow-300 shadow-lg">
                             {hasBet.amount}
                         </div>
                     )}
 
                     {/* Winner Crown */}
                     {isWinner && (
-                        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                            <div className="text-3xl">👑</div>
+                        <div className="absolute -top-2 sm:-top-3 left-1/2 transform -translate-x-1/2">
+                            <div className="text-2xl sm:text-3xl">👑</div>
                         </div>
                     )}
 

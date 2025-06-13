@@ -16,7 +16,8 @@
         "leaderboard": "లీడర్‌బోర్డ్",
         "rank": "ర్యాంక్",
         "please-wait": "దయచేసి వేచి ఉండండి...",
-        "bull": "ఎద్దు",
+        "bull": "గేదె",
+        "cards": "కార్డులు",
         "horse": "గుర్రం",
         "price": "ధర",
         "betting-not-allowed": "బెట్టింగ్ అనుమతించబడదు",
@@ -387,7 +388,7 @@
             "password-min": "పాస్‌వర్డ్ కనీసం 6 అక్షరాలు ఉండాలి",
             "password-max": "పాస్‌వర్డ్ 20 అక్షరాల కంటే ఎక్కువ ఉండకూడదు",
             "password-required": "పాస్‌వర్డ్ అవసరం",
-            "confirm-password-required": "మీ పాస్‌వర్డ్‌ని నిర్ధారించండి",
+            "confirm-password-required": "మీ పాస్‌వర్డ్‌ని నిర్ధారణ అవసరం",
             "passwords-mismatch": "పాస్‌వర్డ్‌లు సరిపోలడం లేదు"
         },
         "buttons": {

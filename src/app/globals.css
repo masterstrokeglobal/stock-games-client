@@ -625,18 +625,22 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     transform-origin: center;
     transform: rotateX(0deg) rotateY(0deg);
   }
+
   25% {
     transform-origin: center;
     transform: rotateX(90deg) rotateY(90deg);
   }
+
   50% {
     transform-origin: center;
     transform: rotateX(180deg) rotateY(180deg);
   }
+
   75% {
     transform-origin: center;
     transform: rotateX(270deg) rotateY(270deg);
   }
+
   100% {
     transform-origin: center;
     transform: rotateX(360deg) rotateY(360deg);
@@ -648,18 +652,22 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
     transform-origin: center;
     transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
   }
+
   25% {
     transform-origin: center;
     transform: rotateX(90deg) rotateY(90deg) rotateZ(90deg);
   }
+
   50% {
     transform-origin: center;
     transform: rotateX(180deg) rotateY(180deg) rotateZ(180deg);
   }
+
   75% {
     transform-origin: center;
     transform: rotateX(270deg) rotateY(270deg) rotateZ(270deg);
   }
+
   100% {
     transform-origin: center;
     transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
@@ -693,6 +701,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   top: 0;
   right: 0;
 }
+
 .slotmachine-gradient {
   background: #5B2902;
   background: -webkit-linear-gradient(0deg, rgba(91, 41, 2, 1) 0%, rgba(45, 17, 0, 1) 41%, rgba(0, 0, 0, 1) 100%);
@@ -707,3 +716,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 }
 
 
+.textStroke-white {
+  -webkit-text-fill-color: white;
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: black;
+}
