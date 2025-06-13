@@ -122,7 +122,7 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
             onComplete: () => {
               console.log("✈️ Plane flew away completely")
               // Clear the aviatorStockId URL parameter to go to the stock selection screen
-              setStockSelectedAviator(null);
+              // setStockSelectedAviator(null);
               console.log("🔄 Cleared aviatorStockId - redirecting to stock selection")
             }
           })
@@ -136,7 +136,7 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
               y: "40%", // Back to original position
               duration: 0.5,
               onComplete: () => {
-                setStockSelectedAviator(null);
+                // setStockSelectedAviator(null);
                 console.log("🔄 Cleared aviatorStockId - redirecting to stock selection")
               }
             })
@@ -176,6 +176,7 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
         <div className="flex flex-1 overflow-hidden flex-col lg:flex-row relative">
           {/* Game Content */}
           <div className="flex-1 relative flex flex-col min-h-[60vh] lg:min-h-0">
+
             <GameDisplay
               multiplier={currentMultiplier}
               shouldShowBlast={shouldShowBlast}
@@ -183,6 +184,7 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
               isParallaxMoving={isParallaxMoving}
               canvasOpacity={canvasOpacity}
               stockName={currentStock?.name}
+              planeStatus={currentStock ? aviator.planeStatus?.get(gameType === SchedulerType.CRYPTO ? currentStock.code ?? "" : currentStock.codeName ?? "")?.status : undefined}
             />
 
             <BettingPanel roundRecord={roundRecord} aviator={aviator} multiplier={currentMultiplier} />

@@ -120,7 +120,7 @@ export default function BlastVideo({ isPlaying, setIsBlastPlaying }: BlastVideoP
       {/* Video element */}
       <video 
         ref={videoRef}
-        src="/videos/Blast.webm" 
+        src="/videos/aviator/Blast.webm" 
         muted 
         preload="auto"
         playsInline
