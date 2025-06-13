@@ -139,6 +139,7 @@ export class RoundRecord {
     gameType: RoundRecordGameType;
     type: SchedulerType;
     roundRecordGameType: RoundRecordGameType;
+    winningMarkets: MarketItem[];
     winningId?: number[];
     coinTossPair?: CoinTossPair;
     todayCount?: number;
@@ -170,6 +171,7 @@ export class RoundRecord {
         this.roundRecordGameType = data.roundRecordGameType || RoundRecordGameType.DERBY;
         this.gameType = data.gameType || RoundRecordGameType.DERBY;
         this.createdAt = data.createdAt ? new Date(data.createdAt) : new Date();
+        this.winningMarkets = data.winningMarkets?.map((item: any) => new MarketItem(item)) || [];
         this.updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
         this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : undefined;
         this.initialValues = data.initialValues || null;
@@ -289,5 +291,10 @@ export class RoundRecord {
 
     get finalPricesPresent(): boolean {
         return Object.keys(this.finalDifferences || {}).length > 0;
+    }
+
+    get winnersNames(): string[] {
+        const names = this.market.filter(item => this.winningId?.includes(item.id || 0)).map(item => item.name);
+        return names.filter(item => item !== undefined) as string[];
     }
 }
