@@ -7,15 +7,13 @@ import { useGameType, useStockSelectorAviator } from "@/hooks/use-market-selecto
 import useWindowSize from "@/hooks/use-window-size"
 import { useGameState } from "@/hooks/use-current-game"
 import { cn } from "@/lib/utils"
+import { SchedulerType } from "@/models/market-item"
 import { RoundRecord } from "@/models/round-record"
 import { useEffect, useState } from "react"
 import BettingPanel from "./BettingPanel"
 import GameDisplay from "./GameDisplay"
 import LastRoundsPanel from "./LastRoundsPanel"
 import gsap from "gsap"
-
-// Game phases enum
-
 
 
 type AviatorProps = {
@@ -26,7 +24,7 @@ type AviatorProps = {
 
 export default function   Aviator({ className, roundRecord, token }: AviatorProps) {
   const { gameType } = useGameType();
-  const { setStockSelectedAviator } = useStockSelectorAviator();
+  const { stockSelectedAviator, setStockSelectedAviator } = useStockSelectorAviator();
   const { isPlaceOver, placeTimeLeft, isGameOver } = useGameState(roundRecord);
   const aviator = useAviator({
     type: gameType,
@@ -36,6 +34,17 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
 
   const { isMobile } = useWindowSize();
 
+  // Get current stock information
+  const currentStock = roundRecord.market.find(stock => stock.id === Number(stockSelectedAviator));
+
+  // Get the current multiplier for the selected plane from planeStatus
+  const getCurrentMultiplier = () => {
+    if (!currentStock || !aviator.planeStatus) return 1;
+    const codeToCheck = gameType === SchedulerType.CRYPTO ? currentStock.code : currentStock.codeName;
+    return aviator.planeStatus.get(codeToCheck ?? "")?.multiplier ?? 1;
+  };
+
+  const currentMultiplier = getCurrentMultiplier();
 
   const [shouldShowBlast, setShouldShowBlast] = useState(false)
   const [isParallaxMoving, setIsParallaxMoving] = useState(false)
@@ -146,7 +155,12 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
     <div className={cn("min-h-[calc(100svh-70px)] bg-gradient-to-b from-purple-600 to-pink-500  overflow-hidden", className)}>
       <div className="flex relative flex-col h-[calc(100svh-70px)]">
 
-        <TimeDisplay roundRecord={roundRecord} className="fixed top-14 left-1/2 -translate-x-1/2 z-50  w-full max-w-md" isAviator />
+        <TimeDisplay 
+          roundRecord={roundRecord} 
+          className="fixed top-14 left-1/2 -translate-x-1/2 z-50  w-full max-w-md" 
+          isAviator 
+          currentStockName={currentStock?.name}
+        />
         {/* Mobile Last Rounds Toggle Button */}
         {isMobile && (
           <button
@@ -162,14 +176,15 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
           {/* Game Content */}
           <div className="flex-1 relative flex flex-col min-h-[60vh] lg:min-h-0">
             <GameDisplay
-              multiplier={aviator.data[aviator.data.length - 1]?.multiplier ?? 1}
+              multiplier={currentMultiplier}
               shouldShowBlast={shouldShowBlast}
               setShouldShowBlast={setShouldShowBlast}
               isParallaxMoving={isParallaxMoving}
               canvasOpacity={canvasOpacity}
+              stockName={currentStock?.name}
             />
 
-            <BettingPanel roundRecord={roundRecord} aviator={aviator} multiplier={aviator.data[aviator.data.length - 1]?.multiplier ?? 1} />
+            <BettingPanel roundRecord={roundRecord} aviator={aviator} multiplier={currentMultiplier} />
           </div>
           <div className="lg:w-96 h-[40vh] lg:h-auto">
             {isMobile ? (
