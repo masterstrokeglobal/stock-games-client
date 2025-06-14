@@ -112,14 +112,15 @@ type ItemStatus = {
     multiplier: number;
 }
 
-const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: string, roundRecord: RoundRecord }) => {
+const useAviator = ({ type, token, roundRecord, onSelectedPlaneCrash }: { type: SchedulerType, token: string, roundRecord: RoundRecord, onSelectedPlaneCrash?: (crashed: boolean) => void }) => {
 
     const queryClient = useQueryClient();
-    const { stockSelectedAviator } = useStockSelectorAviator();
+    const { stockSelectedAviator, setStockSelectedAviator } = useStockSelectorAviator();
     const [socket, setSocket] = useState<WebSocket | null>(null);
     const [data, setData] = useState<ItemStatus[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [planeStatus, setPlaneStatus] = useState<Map<string, { status: "active" | "crashed" | "flew_away"; multiplier: number }> | null>(null);
+    const [crashedState, setCrashedState] = useState<Map<string, { status: "crashed" | "flew_away" }> | null>(null);
 
     useEffect(() => {
         if (planeStatus === null) {
@@ -133,6 +134,44 @@ const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: 
             setPlaneStatus(new Map(items));
         }
     }, [planeStatus]);
+
+    // Track plane status changes using localStorage
+    useEffect(() => {
+        if (planeStatus && stockSelectedAviator) {
+            const previousStates = JSON.parse(localStorage.getItem('previousPlaneStates') || '{}');
+            const currentStates: Record<string, { status: "active" | "crashed" | "flew_away"; multiplier: number }> = {};
+            
+            // Get the currently selected stock
+            const selectedStock = roundRecord.market.find(stock => stock.id === Number(stockSelectedAviator));
+            const selectedStockCode = selectedStock?.code || selectedStock?.codeName;
+            
+            planeStatus.forEach((value, code) => {
+                currentStates[code] = value;
+                
+                // Check if this is a new crash or flew away event
+                if (value.status === "crashed" || value.status === "flew_away") {
+                    const prevState = previousStates[code];
+                    if (!prevState || prevState.status === "active") {
+                        const isSelectedPlane = code === selectedStockCode;
+                        console.log(`sarthak Plane ${code} has ${value.status} at multiplier ${value.multiplier} ${isSelectedPlane ? '(SELECTED PLANE)' : '(OTHER PLANE)'}`);
+                        
+                        // If this is the selected plane and it crashed, notify the parent component
+                        if (isSelectedPlane && value.status === "crashed" && onSelectedPlaneCrash) {
+                            onSelectedPlaneCrash(true);
+                        }
+                    }
+                }
+            });
+
+            // Update localStorage with current states
+            localStorage.setItem('previousPlaneStates', JSON.stringify(currentStates));
+        }
+    }, [planeStatus, stockSelectedAviator, roundRecord.market, onSelectedPlaneCrash]);
+
+    useEffect(() => {
+            console.log("crashedState", crashedState);
+    }, [crashedState]);
+
 
 
     useEffect(() => {
@@ -187,28 +226,15 @@ const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: 
 
             if (event.type === WebSocketEventType.ROUND_ENDED) {
                 toast.success("Round ended");
-                // Reset plane status when round ends
+                // Reset plane status and crashed planes tracking when round ends
                 setPlaneStatus(null);
                 setData([]);
             }
 
             if (event.type === WebSocketEventType.ROUND_CREATED) {
                 const round = event.round.roundRecord;
-                
-                // Update plane status from the items in ROUND_CREATED event
-                if (event.round.items && Array.isArray(event.round.items)) {
-                    setPlaneStatus(() => {
-                        const newPlaneStatus = new Map<string, { status: "active" | "crashed" | "flew_away"; multiplier: number }>();
-                        event.round.items!.forEach((item) => {
-                            newPlaneStatus.set(item.code, { 
-                                status: item.status || "active", 
-                                multiplier: item.multiplier || 1 
-                            });
-                        });
-                        return newPlaneStatus;
-                    });
-                }
-                
+
+
                 toast.success("new Round Select Your Market");
                 timer = setTimeout(() => {
                     queryClient.setQueryData(["current-round-record", type, RoundRecordGameType.AVIATOR], () => {
@@ -218,6 +244,31 @@ const useAviator = ({ type, token, roundRecord }: { type: SchedulerType, token: 
                             }
                         }
                     });
+
+                    // Update plane status from the items in ROUND_CREATED event
+                    if (event.round.items && Array.isArray(event.round.items)) {
+                        setPlaneStatus(() => {
+                            const newPlaneStatus = new Map<string, { status: "active" | "crashed" | "flew_away"; multiplier: number }>();
+                            event.round.items!.forEach((item) => {
+                                newPlaneStatus.set(item.code, {
+                                    status: item.status || "active",
+                                    multiplier: item.multiplier || 1
+                                });
+                            });
+                            return newPlaneStatus;
+                        });
+                        setCrashedState(() => {
+                            const newCrashedState = new Map<string, { status: "crashed" | "flew_away" }>();
+                            event.round.items!.forEach((item) => {
+                                if (item.status === "crashed" || item.status === "flew_away") {
+                                    newCrashedState.set(item.code, { status: item.status });
+                                }
+                            });
+                            return newCrashedState;
+                        });
+                    }
+
+                    setStockSelectedAviator(null)
                 }, 2000);
             }
 

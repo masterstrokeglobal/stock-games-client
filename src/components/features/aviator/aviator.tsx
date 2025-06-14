@@ -26,10 +26,32 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
   const { gameType } = useGameType();
   const { stockSelectedAviator, setStockSelectedAviator } = useStockSelectorAviator();
   const { isPlaceOver, placeTimeLeft, isGameOver } = useGameState(roundRecord);
+  
+  const [shouldShowBlast, setShouldShowBlast] = useState(false)
+  const [isParallaxMoving, setIsParallaxMoving] = useState(false)
+  const [hasTriggeredFlying, setHasTriggeredFlying] = useState(false)
+  const [canvasOpacity, setCanvasOpacity] = useState(1)
+
+  // Callback to handle when selected plane crashes
+  const handleSelectedPlaneCrash = (crashed: boolean) => {
+    if (crashed) {
+      console.log("💥 SELECTED PLANE CRASHED - Triggering blast video!");
+      setShouldShowBlast(true);
+      setCanvasOpacity(0);
+      
+      // Reset canvas opacity after blast video
+      setTimeout(() => {
+        console.log("🎨 Resetting canvas opacity after blast");
+        setCanvasOpacity(1);
+      }, 5000);
+    }
+  };
+
   const aviator = useAviator({
     type: gameType,
     token: token,
-    roundRecord: roundRecord
+    roundRecord: roundRecord,
+    onSelectedPlaneCrash: handleSelectedPlaneCrash
   });
 
   const { isMobile } = useWindowSize();
@@ -45,11 +67,6 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
   };
 
   const currentMultiplier = getCurrentMultiplier();
-
-  const [shouldShowBlast, setShouldShowBlast] = useState(false)
-  const [isParallaxMoving, setIsParallaxMoving] = useState(false)
-  const [hasTriggeredFlying, setHasTriggeredFlying] = useState(false)
-  const [canvasOpacity, setCanvasOpacity] = useState(1)
 
   // Mobile responsiveness state
   const [showLastRounds, setShowLastRounds] = useState(false)
@@ -82,72 +99,20 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
     }
   }, [isPlaceOver, isGameOver, placeTimeLeft.raw, hasTriggeredFlying, isParallaxMoving])
 
-
-
-  // Monitor backend events for crash/fly-away
+  // Handle round end - play blast video when round ends regardless of selected plane
   useEffect(() => {
-    if (aviator.data.length > 0 && localStorage.getItem("gameEnded") === "false") {
-      localStorage.setItem("gameEnded", "true")
-      console.log("🎯 gameEnded", localStorage.getItem("gameEnded"))
-      const latestItem = aviator.data[aviator.data.length - 1]
-
-      if (latestItem.status === "crashed") {
-        console.log(`💥 PLANE CRASHED at ${latestItem.multiplier.toFixed(2)}x multiplier! (Backend Event)`)
-        setShouldShowBlast(true) // Trigger blast video
-        setCanvasOpacity(0) // Hide canvas during blast
-
-        // Reset canvas opacity after 5 seconds
-        setTimeout(() => {
-          console.log("🎨 Resetting canvas opacity after blast")
-          setCanvasOpacity(1)
-        }, 5000)
-
-      } else if (latestItem.status === "flew_away") {
-        console.log(`🚀 PLANE FLEW AWAY at ${latestItem.multiplier.toFixed(2)}x multiplier! (Backend Event)`)
-        // Plane flew away - no blast needed
-        setShouldShowBlast(false)
-
-        // Find the canvas container element for fly-away animation
-        const canvasContainer = document.querySelector('[data-canvas-container]') as HTMLElement
-        if (canvasContainer) {
-          console.log("✈️ Starting fly-away animation")
-
-          // Animate canvas to scale down to 0 and move to top-right over 1 second
-          gsap.to(canvasContainer, {
-            scale: 0,
-            x: "50%", // Move to right
-            y: "-50%", // Move to top
-            duration: 1,
-            ease: "power2.in",
-            onComplete: () => {
-              console.log("✈️ Plane flew away completely")
-              // Clear the aviatorStockId URL parameter to go to the stock selection screen
-              // setStockSelectedAviator(null);
-              console.log("🔄 Cleared aviatorStockId - redirecting to stock selection")
-            }
-          })
-
-          // Reset canvas after 5 seconds
-          setTimeout(() => {
-            console.log("🔄 Resetting canvas position after fly-away")
-            gsap.to(canvasContainer, {
-              scale: 1,
-              x: "-30%", // Back to original position
-              y: "40%", // Back to original position
-              duration: 0.5,
-              onComplete: () => {
-                // setStockSelectedAviator(null);
-                console.log("🔄 Cleared aviatorStockId - redirecting to stock selection")
-              }
-            })
-          },3000)
-        }
-      } else {
-        localStorage.setItem("gameEnded", "false")
-        console.log("🎯 gameEnded 3", localStorage.getItem("gameEnded"))
-      }
+    if (isGameOver) {
+      console.log("🎯 Round ended - Triggering blast video");
+      setShouldShowBlast(true);
+      setCanvasOpacity(0);
+      
+      // Reset canvas opacity after blast video
+      setTimeout(() => {
+        console.log("🎨 Resetting canvas opacity after round end blast");
+        setCanvasOpacity(1);
+      }, 5000);
     }
-  }, [aviator.data]) // Monitor aviator.data changes from backend
+  }, [isGameOver]);
 
   const toggleLastRounds = () => {
     setShowLastRounds(!showLastRounds)

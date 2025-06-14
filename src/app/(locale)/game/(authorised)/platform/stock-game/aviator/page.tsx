@@ -33,14 +33,13 @@ const StockSlot = () => {
 
     if (!marketSelected) return <MarketSelector variant='aviator' className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Avaiator" />
 
-
     if (isLoading || !roundRecord || isTokenLoading || token == null) return <GameLoadingScreen className='min-h-[calc(100svh-100px)]' />
 
     // if (stockSelectedAviator == null || !isStockPresent) return <StockSelectorAviator token={token} roundRecord={roundRecord} className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Stock Selector Avaiator" />
 
-    return (
-        <Aviator className='-mx-4 md:-mx-12 -mt-5' roundRecord={roundRecord} token={token} />
-    );
+    if (stockSelectedAviator !== null || isStockPresent) return <Aviator className='-mx-4 md:-mx-12 -mt-5' roundRecord={roundRecord} token={token} />
+
+    return <></>
 };
 
 export default StockSlot;

@@ -18,43 +18,63 @@ interface GameDisplayProps {
 
 const GameDisplay = ({ multiplier, shouldShowBlast = false, setShouldShowBlast, isParallaxMoving = false, canvasOpacity = 1, stockName, planeStatus }: GameDisplayProps) => {
 
-    const [isBlastPlaying, setIsBlastPlaying] = useState(false)
-    const [isCurrentPlaneCrashed, setIsCurrentPlaneCrashed] = useState(false)
+  const [isBlastPlaying, setIsBlastPlaying] = useState(false)
+  const [isCurrentPlaneCrashed, setIsCurrentPlaneCrashed] = useState(false)
+  const [isParallaxVisible, setIsParallaxVisible] = useState(true)
+  const [blastOpacity, setBlastOpacity] = useState(0)
 
-    // Update crash state when plane status changes
-    useEffect(() => {
-      if (planeStatus === "crashed" || planeStatus === "flew_away") {
-        setIsCurrentPlaneCrashed(true)
-      } else {
-        setIsCurrentPlaneCrashed(false)
-      }
-    }, [planeStatus])
 
-    // Control blast video from parent component
-    useEffect(() => {
-      if (shouldShowBlast) {
-        setIsBlastPlaying(true)
-      }
-    }, [shouldShowBlast])
-
-    // Handle blast video completion
-    const handleBlastComplete = (isPlaying: boolean) => {
-      setIsBlastPlaying(isPlaying)
-      if (!isPlaying && setShouldShowBlast) {
-        setShouldShowBlast(false)
-      }
+  // Update crash state when plane status changes
+  useEffect(() => {
+    if (planeStatus === "crashed" || planeStatus === "flew_away") {
+      setIsCurrentPlaneCrashed(true)
+    } else {
+      setIsCurrentPlaneCrashed(false)
     }
+  }, [planeStatus])
 
-    return (
-      <div className="relative flex-1">
-        <div className="absolute inset-0 ">
+  useEffect(() => {
+    if (!isCurrentPlaneCrashed) {
+      setIsParallaxVisible(true)
+      setBlastOpacity(0)
+    }
+  }, [isCurrentPlaneCrashed])
+
+
+  // Control blast video from parent component
+  useEffect(() => {
+    if (shouldShowBlast) {
+      setIsBlastPlaying(true)
+      setTimeout(() => {
+        setIsParallaxVisible(false)
+      }, 2000)
+    }
+  }, [shouldShowBlast])
+
+  // Handle blast video completion
+  const handleBlastComplete = (isPlaying: boolean) => {
+    setIsBlastPlaying(isPlaying)
+    if (!isPlaying && setShouldShowBlast) {
+      setShouldShowBlast(false)
+    }
+  }
+
+  return (
+    <div className="relative flex-1">
+      <div className="absolute inset-0 ">
         <LoaderAviator />
 
-        {!isCurrentPlaneCrashed && (<>
+        {isParallaxVisible && (
           <ParallaxImage multiplier={multiplier} isMoving={isParallaxMoving} />
+        )}
+
+        {!isCurrentPlaneCrashed && (<>
           <AviatorCanvas multiplier={multiplier} shouldStartTakeOffAnimation={isParallaxMoving} opacity={canvasOpacity} />
-          <BlastVideo isPlaying={isBlastPlaying} setIsBlastPlaying={handleBlastComplete} />
         </>)}
+
+        {isParallaxVisible && (
+          <BlastVideo blastOpacity={blastOpacity} setBlastOpacity={setBlastOpacity} isBlastPlaying={isBlastPlaying} setIsBlastPlaying={handleBlastComplete} />
+        )}
 
         <div className="absolute bottom-[10px] left-[50%] translate-x-[-50%] flex flex-col items-center justify-center pointer-events-none">
           <div className="bg-gradient-to-r from-blue-900/90 via-purple-900/90 to-blue-900/90 backdrop-blur-md rounded-xl border border-blue-400/50 shadow-xl px-6 py-2 min-w-[180px] flex flex-col items-center">
