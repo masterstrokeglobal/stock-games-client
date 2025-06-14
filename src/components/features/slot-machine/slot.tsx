@@ -5,7 +5,7 @@ import { RoundRecord } from "@/models/round-record";
 import { useGameState } from "@/hooks/use-current-game";
 import { cn } from "@/lib/utils";
 
-export const Slot = ({ roundRecord }: { roundRecord: RoundRecord }) => {
+export const Slot = ({ roundRecord,winningIdRoundRecord }: { roundRecord: RoundRecord,winningIdRoundRecord:RoundRecord | null }) => {
 
     const { gameTimeLeft, isPlaceOver, placeTimeLeft } = useGameState(roundRecord)
 
@@ -23,7 +23,7 @@ export const Slot = ({ roundRecord }: { roundRecord: RoundRecord }) => {
         if (stocks.length > 0) {
             const newStockStates= [...stockStates]
 
-            let localStocks: any = stocks
+            let localStocks: any = winningIdRoundRecord?.sortedMarketItems ? winningIdRoundRecord.sortedMarketItems : stocks
             localStocks = localStocks.sort((a: any, b: any) => a.name.localeCompare(b.name))
 
             localStocks.slice(0, 5).forEach((stock: any, index: any) => {
@@ -36,7 +36,7 @@ export const Slot = ({ roundRecord }: { roundRecord: RoundRecord }) => {
             })
             setStockStates(newStockStates)
         }
-    }, [stocks])
+    }, [stocks, winningIdRoundRecord])
 
     return (
         <div className="flex flex-1 w-full flex-col h-[500px] items-center justify-center">

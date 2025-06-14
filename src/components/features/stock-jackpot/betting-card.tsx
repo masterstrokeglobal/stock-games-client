@@ -27,14 +27,12 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
   const { mutate: createStockSlotGameRecord, isPending: isPlacingBet } = useCreateStockSlotGameRecord();
 
   const [upPlaced, downPlaced] = useMemo(() => {
-    const isUpPlaced = stockSlotPlacements?.find((placement) => placement.placement === "high" && placement.round.id === roundRecord.id && placement.marketItem.id === marketItem.id)
-    const isDownPlaced = stockSlotPlacements?.find((placement) => placement.placement === "low" && placement.round.id === roundRecord.id && placement.marketItem.id === marketItem.id)
+    const isUpPlaced = stockSlotPlacements?.filter((placement) => placement.placement === "high" && placement.round.id === roundRecord.id && placement.marketItem.id === marketItem.id).reduce((acc, placement) => acc + placement.amount, 0)
+    const isDownPlaced = stockSlotPlacements?.filter((placement) => placement.placement === "low" && placement.round.id === roundRecord.id && placement.marketItem.id === marketItem.id).reduce((acc, placement) => acc + placement.amount, 0)
     return [isUpPlaced, isDownPlaced]
   }, [stockSlotPlacements, roundRecord.id, marketItem.id])
 
   const onAddToBetSlip = useCallback((direction: StockJackpotPlacementType) => {
-    if (upPlaced && direction === StockJackpotPlacementType.HIGH) return;
-    if (downPlaced && direction === StockJackpotPlacementType.LOW) return;
     if (!roundRecord.id || !marketItem.id) return;
 
     createStockSlotGameRecord({
@@ -57,8 +55,8 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
 
   const initialPrice = roundRecord.getInitialPrice(marketItem.bitcode ?? "")
 
-  const upWinAmount = (upPlaced?.amount ?? 0) * 1.96
-  const downWinAmount = (downPlaced?.amount ?? 0) * 1.96
+  const upWinAmount = (upPlaced ?? 0) * 1.96
+  const downWinAmount = (downPlaced ?? 0) * 1.96
 
   const bettingOpen = !isPlaceOver && !isPlacingBet;
 
@@ -73,9 +71,11 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
         <div className="flex gap-4 mt-2 w-full flex-1">
           <div className="flex-1 relative">
             {downPlaced ? (
-              <div className="w-full h-8 md:h-10 bg-red-900/40 rounded-lg border-2 border-red-500/50 flex items-center justify-center">
-                <span className="text-white font-bold text-sm md:text-base">{formatRupee(downWinAmount)}</span>
-              </div>
+              <button disabled={isPlacingBet || isPlaceOver} onClick={() => onAddToBetSlip(StockJackpotPlacementType.LOW)} className="w-full h-8 md:h-10 bg-red-900/40 rounded-lg border-2 border-red-500/50 flex items-center justify-center">
+                <span className="text-white font-bold text-sm md:text-base">
+                  {isPlacingBet ? "Placing..." : formatRupee(downWinAmount)}
+                </span>
+              </button>
             ) : (
               <button
                 disabled={isPlacingBet || isPlaceOver}
@@ -101,9 +101,11 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
 
           <div className="flex-1 relative">
             {upPlaced ? (
-              <div className="w-full h-8 md:h-10 bg-green-900/40 rounded-lg border-2 border-green-500/50 flex items-center justify-center">
-                <span className="text-white font-bold text-sm md:text-base">{formatRupee(upWinAmount)}</span>
-              </div>
+              <button disabled={isPlacingBet || isPlaceOver} onClick={() => onAddToBetSlip(StockJackpotPlacementType.HIGH)} className="w-full h-8 md:h-10 bg-green-900/40 rounded-lg border-2 border-green-500/50 flex items-center justify-center">
+                <span className="text-white font-bold text-sm md:text-base">
+                  {isPlacingBet ? "Placing..." : formatRupee(upWinAmount)}
+                </span>
+              </button>
             ) : (
               <button
                 disabled={isPlacingBet || isPlaceOver}

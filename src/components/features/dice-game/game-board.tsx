@@ -64,7 +64,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
                 console.log(roundRecord.market[marketIndex],marketIndex)
                 const value =  ((marketIndex + 1) % 6) == 0 ? 6 : ((marketIndex + 1) % 6);
                 console.log(value);
-            sum = value + sum;// Index + 1 represents the dice face value
+                sum = value + sum;// Index + 1 represents the dice face value
             }
         });
 
@@ -72,10 +72,9 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
     };
 
     const winningSum = getWinningSum();
-    console.log("sunmm",winningSum);
 
     return (
-        <div className={cn("bg-gradient-to-b bg-[url('/images/dice-game/board-bg.jpg')] bg-cover bg-center from-gray-900 via-gray-800 to-black md:p-8 p-4 pt-8 md:pt-24  border border-yellow-600/30 shadow-2xl", className)}>
+        <div className={cn("bg-gradient-to-b bg-[url('/images/dice-game/board-bg-2.png')] bg-cover bg-center from-gray-900 via-gray-800 to-black md:p-8 p-4 pt-8 md:pt-24  border border-yellow-600/30 shadow-2xl", className)}>
             {/* Header */}
             {children}
 
@@ -125,26 +124,33 @@ const BetButton = ({ number, multiplier, betAmounts, handleBetSelect, isWinner }
     const amountBet = betAmounts[number] || 0;
     const hasBet = amountBet > 0;
 
+    // Colors from the image:
+    // - Deep green background: #13311c (approx)
+    // - Gold border: #e6b85c (approx)
+    // - Red outer border: #a13a2f (approx)
+    // - Text: off-white/yellowish (#e6b85c), white for number, gold for multiplier
+
     return (
         <button
             onClick={() => handleBetSelect(number)}
             className={cn(
-                "relative w-20 h-20 rounded-lg border-2 transition-all duration-200 flex flex-col items-center justify-center group hover:scale-105 backdrop-blur-sm",
+                "relative w-20 h-20 rounded-[8px] border-[3px] transition-all duration-200 flex flex-col items-center justify-center group hover:scale-105",
+                "bg-gradient-to-b from-[#001607] to-[#13311c] border-[#e6b85c] shadow-[0_0_0_4px_#a13a2f] outline outline-2 outline-[#a13a2f] outline-offset-[-6px]",
                 {
                     // Winner styles
-                    'border-4 border-yellow-400 bg-gradient-to-b from-yellow-400/40 to-yellow-600/50 shadow-lg shadow-yellow-400/50 animate-pulse': isWinner,
+                    'border-[4px] border-[#e0aa2f] bg-gradient-to-b from-[#e0aa2f]/60 to-[#e6b85c]/80 shadow-lg shadow-[#e0aa2f]/40 animate-pulse duration-1000 infinite ease-in-out scale-110': isWinner,
                     // Has bet styles (when not winner)
-                    'border-yellow-400 bg-gradient-to-b from-yellow-500/20 to-yellow-600/30 shadow-lg shadow-yellow-500/25': hasBet && !isWinner,
+                    'border-[#e6b85c] bg-gradient-to-b from-[#e6b85c]/10 to-[#13311c]/90 shadow-lg shadow-[#e6b85c]/20': hasBet && !isWinner,
                     // Default styles
-                    'border-yellow-600/50 bg-gradient-to-b from-gray-800/80 to-gray-900/90 hover:border-yellow-500/70': !hasBet && !isWinner
+                    'border-[#e6b85c] bg-[#13311c] hover:border-[#ffe066]': !hasBet && !isWinner
                 }
             )}
         >
-            {/* Decorative corners */}
-            <div className="absolute top-1 left-1 w-2 h-2 border-l-2 border-t-2 border-yellow-500/60 rounded-tl"></div>
-            <div className="absolute top-1 right-1 w-2 h-2 border-r-2 border-t-2 border-yellow-500/60 rounded-tr"></div>
-            <div className="absolute bottom-1 left-1 w-2 h-2 border-l-2 border-b-2 border-yellow-500/60 rounded-bl"></div>
-            <div className="absolute bottom-1 right-1 w-2 h-2 border-r-2 border-b-2 border-yellow-500/60 rounded-br"></div>
+            {/* Decorative corners - gold corners */}
+            <div className="absolute top-1 left-1 w-2 h-2 border-l-2 border-t-2 border-[#e0aa2f] rounded-tl"></div>
+            <div className="absolute top-1 right-1 w-2 h-2 border-r-2 border-t-2 border-[#e0aa2f] rounded-tr"></div>
+            <div className="absolute bottom-1 left-1 w-2 h-2 border-l-2 border-b-2 border-[#e0aa2f] rounded-bl"></div>
+            <div className="absolute bottom-1 right-1 w-2 h-2 border-r-2 border-b-2 border-[#e0aa2f] rounded-br"></div>
 
             {/* Crown emoji for winner */}
             {isWinner && (
@@ -155,14 +161,15 @@ const BetButton = ({ number, multiplier, betAmounts, handleBetSelect, isWinner }
 
             {/* Number */}
             <span className={cn(
-                "text-2xl font-bold mb-1 group-hover:text-yellow-300 transition-colors",
-                isWinner ? "text-yellow-300" : "text-white"
+                "text-2xl font-bold mb-1 transition-colors",
+                isWinner ? "text-white" : "text-[#e6b85c]",
+                "drop-shadow-[0_2px_2px_rgba(0,0,0,0.4)]"
             )}>
                 {number}
             </span>
 
             {/* Multiplier */}
-            <span className="text-xs font-semibold text-yellow-400 bg-black/40 px-2 py-0.5 rounded">
+            <span className="text-xs font-semibold text-[#e6b85c] bg-transparent px-2 py-0.5 rounded">
                 {multiplier}
             </span>
 

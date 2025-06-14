@@ -6,30 +6,28 @@ import Navbar from "@/components/features/game/navbar"
 import SlotResultDialog from "@/components/features/game/slot-result-dialog"
 import { BettingAmoutMobile } from "@/components/features/slot-jackpot/betting-amout"
 import BettingChips from "@/components/features/slot-jackpot/betting-chips"
-import { BetSlip } from "@/components/features/stock-jackpot/bet-slip"
 import { BettingCard } from "@/components/features/stock-jackpot/betting-card"
 import TimeDisplay from "@/components/features/stock-jackpot/time-left"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useAuthStore } from "@/context/auth-context"
 import { useCurrentGame, usePlacementOver, useShowResults } from "@/hooks/use-current-game"
 import { useGameType } from "@/hooks/use-game-type"
 import { RankedMarketItem, useLeaderboard } from "@/hooks/use-leadboard"
+import useNSEAvailable from "@/hooks/use-nse-available"
+import useUSAMarketAvailable from "@/hooks/use-usa-available"
 import useWindowSize from "@/hooks/use-window-size"
+import useWinningId from "@/hooks/use-winning-id"
 import { cn } from "@/lib/utils"
 import { SchedulerType } from "@/models/market-item"
 import { RoundRecord, RoundRecordGameType } from "@/models/round-record"
 import { StockJackpotPlacementType } from "@/models/stock-slot-jackpot"
+import User from "@/models/user"
 import { useGetMyFavorites } from "@/react-query/favorite-market-item-queries"
 import { useGetMyStockSlotGameRecord } from "@/react-query/game-record-queries"
 import { Triangle } from "lucide-react"
-import useNSEAvailable from "@/hooks/use-nse-available"
-import useUSAMarketAvailable from "@/hooks/use-usa-available"
-import { useAuthStore } from "@/context/auth-context"
-import User from "@/models/user"
 
 
 export default function Home() {
-  // State for bet slip
-  const [betSlipOpen, setBetSlipOpen] = useState(false)
   const [globalBetAmount, setGlobalBetAmount] = useState(100)
   const [searchQuery, setSearchQuery] = useState("");
   const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
@@ -37,6 +35,7 @@ export default function Home() {
   const { isDesktop } = useWindowSize()
   const isPlacementOver = usePlacementOver(roundRecord);
 
+  const roundRecordWithWinningId = useWinningId(roundRecord);
   // Function to update global bet amount
   const handleGlobalBetAmountChange = (amount: number) => {
     setGlobalBetAmount(amount)
@@ -50,10 +49,8 @@ export default function Home() {
           <MarketSection
             searchQuery={searchQuery}
             globalBetAmount={globalBetAmount}
-            betSlipOpen={betSlipOpen}
             className="absolute top-12 left-0 max-w-sm h-fit z-20"
             setSearchQuery={setSearchQuery}
-            setBetSlipOpen={setBetSlipOpen}
           />
         }
         {/* Global Bet Amount and Search Section */}
@@ -67,7 +64,7 @@ export default function Home() {
                   <img src="/images/jackpot/lady4.gif" alt="dice-bg" className='w-auto h-full mt-20 scale-x-[-1]' />
                 </div>
                 <img src="/images/jackpot/table.png" className=" w-full sm:mx-auto   h-full  relative z-10  md:max-w-6xl sm:max-w-2xl max-w-xl" />
-                {roundRecord && <StockCardStack roundRecord={roundRecord} />}
+                {roundRecord && <StockCardStack roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />}
               </div>
             </div>
             <BettingChips
@@ -92,9 +89,7 @@ export default function Home() {
           <MarketSection
             searchQuery={searchQuery}
             globalBetAmount={globalBetAmount}
-            betSlipOpen={betSlipOpen}
             setSearchQuery={setSearchQuery}
-            setBetSlipOpen={setBetSlipOpen}
           />
         }
       </Tabs>
@@ -110,7 +105,7 @@ export default function Home() {
 }
 
 
-const MarketSection = ({ globalBetAmount, betSlipOpen, searchQuery, setBetSlipOpen, className }: { searchQuery: string, globalBetAmount: number, betSlipOpen: boolean, className?: string, setSearchQuery: Dispatch<SetStateAction<string>>, setBetSlipOpen: Dispatch<SetStateAction<boolean>> }) => {
+const MarketSection = ({ globalBetAmount, searchQuery, className }: { searchQuery: string, globalBetAmount: number, className?: string, setSearchQuery: Dispatch<SetStateAction<string>> }) => {
   const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
   const { data: stockSlotPlacements } = useGetMyStockSlotGameRecord(roundRecord?.id);
   const { showResults, previousRoundId } = useShowResults(roundRecord, stockSlotPlacements as any);
@@ -132,7 +127,7 @@ const MarketSection = ({ globalBetAmount, betSlipOpen, searchQuery, setBetSlipOp
   const isNSEAvailable = useNSEAvailable();
   const isUSAMarketAvailable = useUSAMarketAvailable();
 
-  const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
+  const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE); 
   const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO);
   const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
 
@@ -197,11 +192,6 @@ const MarketSection = ({ globalBetAmount, betSlipOpen, searchQuery, setBetSlipOp
       )
       }
 
-      <BetSlip
-        roundRecord={roundRecord}
-        open={betSlipOpen}
-        setOpen={setBetSlipOpen}
-      />
     </div>
   )
 }
@@ -250,20 +240,35 @@ const StockCard = ({ stock, className, amount, roundRecord }: { stock?: RankedMa
   )
 }
 
-const StockCardStack = ({ roundRecord }: { roundRecord: RoundRecord }) => {
+const StockCardStack = ({ roundRecord, roundRecordWithWinningId }: { roundRecord: RoundRecord, roundRecordWithWinningId: RoundRecord | null }) => {
 
   const { stocks: marketItems } = useLeaderboard(roundRecord);
   const { data: myStockSlotJackpotGameRecord } = useGetMyStockSlotGameRecord(roundRecord?.id);
 
   const bettedMarketItems = useMemo(() => {
-    const bettedMarketItems = myStockSlotJackpotGameRecord?.filter((record) => record.placement === StockJackpotPlacementType.HIGH || record.placement === StockJackpotPlacementType.LOW)
-    return bettedMarketItems?.map((record) => {
-      return {
-        ...record,
-        stock: marketItems?.find((item) => item.id === record.marketItem.id)
+    const bettedMarketItems = myStockSlotJackpotGameRecord?.filter((record) => record.placement === StockJackpotPlacementType.HIGH || record.placement === StockJackpotPlacementType.LOW);
+
+    const sortedMarketItems = roundRecordWithWinningId?.sortedMarketItems || marketItems;
+    
+    // Group by marketItem.id and placement type
+    const groupedBets = bettedMarketItems?.reduce((acc, record) => {
+      const key = `${record.marketItem.id}-${record.placement}`;
+      if (!acc[key]) {
+        acc[key] = {
+          ...record,
+          amount: 0
+        };
       }
-    })
-  }, [myStockSlotJackpotGameRecord, roundRecord, marketItems])
+      acc[key].amount += record.amount;
+      return acc;
+    }, {} as Record<string, any>);
+
+    // Convert grouped bets back to array and add stock info
+    return Object.values(groupedBets || {}).map((record) => ({
+      ...record,
+      stock: sortedMarketItems?.find((item) => item.id === record.marketItem.id)
+    }));
+  }, [myStockSlotJackpotGameRecord, roundRecord, marketItems, roundRecordWithWinningId])
 
   const highStocks = bettedMarketItems?.filter((item) => item.placement === StockJackpotPlacementType.HIGH) || [];
   const lowStocks = bettedMarketItems?.filter((item) => item.placement === StockJackpotPlacementType.LOW) || [];

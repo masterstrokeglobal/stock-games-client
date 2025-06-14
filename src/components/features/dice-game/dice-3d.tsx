@@ -26,7 +26,7 @@ const StockDisplay = ({ stock, className, isSecondCube, roundRecord }: { stock?:
   const changePercentage = roundRecord?.finalPricesPresent ? roundRecord.changePercentage(stock?.id || 0) : stock?.change_percent;
 
   return (
-    <div className={cn("flex flex-col justify-between items-center border-b border-white/10  text-[10px] relative z-20 text-white/90 py-0.5 px-1 bg-black/70 backdrop-blur-sm  hover:bg-black transition-colors w-full", className)}>
+    <div className={cn("flex flex-col justify-between items-center border-b border-white/10  text-[10px] relative z-20 text-white/90 py-0.5 px-1 bg-gradient-to-b from-[#001607] to-[#13311c] backdrop-blur-sm  hover:bg-[#13311c] transition-colors w-full", className)}>
       <div className="flex items-center justify-between w-full px-1 gap-0.5 min-w-0">
         <span className="font-medium truncate max-w-[60px]">{stock?.codeName}</span>
         <span className={cn("text-[10px]  font-bold bg-white/10 text-amber-600 px-0.5 rounded-full flex-shrink-0", isSecondCube && "order-first")}>
@@ -70,7 +70,7 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
   return (
     <div className={`font-sans  bg-cover bg-center overflow-visible ${className}`} style={{ height: '14rem' }}>
       <div className="flex justify-center  relative  h-full items-center">
-        <div className="flex sm:pr-24 pr-12 flex-row bg-[url('/images/dice-game/dice-bg.jpg')] pr-1 bg-cover bg-center flex-1 h-full gap-2 items-center justify-end animate-slide-left relative">
+        <div className="flex sm:pr-24 pr-12 flex-row bg-[url('/images/dice-game/dice-bg-2.png')] pr-1 bg-cover bg-center flex-1 h-full gap-2 items-center justify-end animate-slide-left relative">
           <div className='flex flex-col  absolute left-0 top-0 h-full w-fit'>
             {marketItemsStocks.slice(0, 6).map((stock) => (
               <StockDisplay key={stock?.id} stock={stock} className='flex-1 rounded-r-xl w-full' roundRecord={roundRecordWithWinningId} />
@@ -88,7 +88,7 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
         <div className=' absolute left-1/2 -translate-x-1/2 h-full z-10'>
           <img src="/images/dice-game/dancing-2.gif" alt="dice-bg" className='h-full w-auto object-contain' />
         </div>
-        <div className="flex  sm:pl-24 pl-12   flex-row bg-[url('/images/dice-game/dice-bg.jpg')]  bg-cover bg-center flex-1 h-full gap-2 items-center justify-between animate-slide-right relative">
+        <div className="flex  sm:pl-24 pl-12   flex-row bg-[url('/images/dice-game/dice-bg-2.png')]  bg-cover bg-center flex-1 h-full gap-2 items-center justify-between animate-slide-right relative">
           {!isMobile &&
             <Cube
               marketItems={secondCube}
@@ -164,11 +164,11 @@ const DiceFace: React.FC<DiceFaceProps> = ({ marketItem, className, number, isWi
       style={{
         width: '80px',
         height: '80px',
-        background: isWinning ? 'linear-gradient(to right, #ffd700, #ffa500)' : 'linear-gradient(to right, #ffd700, #ffa500)',
+        background: isWinning ? 'linear-gradient(to right, #ffffff, #f0f0f0)' : 'linear-gradient(to right, #ffffff, #f0f0f0)',
         border: '2px solid',
-        borderImage: 'linear-gradient(90deg, #b8860b 0%, #daa520 50%, #b8860b 100%) 1',
+        borderImage: 'linear-gradient(90deg, #d3d3d3 0%, #e0e0e0 50%, #d3d3d3 100%) 1',
         borderRadius: '8px',
-        boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 8px 32px rgba(255, 215, 0, 0.15)'
+        boxShadow: '0 0 20px rgba(128, 128, 128, 0.3), 0 8px 32px rgba(128, 128, 128, 0.15)'
       }}
     >
       {renderDots(number)}

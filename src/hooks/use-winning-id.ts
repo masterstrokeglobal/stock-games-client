@@ -9,9 +9,10 @@ const useWinningId = (roundRecord: RoundRecord | null) => {
 
     useEffect(() => {
         if (!roundRecord) return;
-        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 2000;
+        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 500;
         const timer = setTimeout(() => {
             refetch();
+            console.log("refetching");
         }, resultFetchTime);
         return () => clearTimeout(timer);
     }, [roundRecord, refetch]);

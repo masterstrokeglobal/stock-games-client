@@ -1,6 +1,5 @@
-import { useIsPlaceOver } from '@/hooks/use-current-game';
+import { usePlacementOver } from '@/hooks/use-current-game';
 import { RankedMarketItem } from '@/hooks/use-leadboard';
-import { INR } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
 import { SevenUpDownPlacementType } from '@/models/seven-up-down';
 import { useCreateSevenUpDownPlacement, useGetMyCurrentRoundSevenUpDownPlacement } from '@/react-query/7-up-down';
@@ -140,18 +139,24 @@ const MarketItemDisplay: React.FC<{ items: RankedMarketItem[], isPositive: boole
   );
 };
 
-export const GameBoard: React.FC<PropsWithChildren<{ roundRecord: RoundRecord, amount: number, marketItems: RankedMarketItem[] }>> = ({ roundRecord, children, amount, marketItems }) => {
+export const GameBoard: React.FC<PropsWithChildren<{ roundRecord: RoundRecord, amount: number, marketItems: RankedMarketItem[], roundRecordWithWinningId: RoundRecord | null }>> = ({ roundRecord, children, amount, marketItems, roundRecordWithWinningId }) => {
   const { mutate } = useCreateSevenUpDownPlacement();
-  const isPlaceOver = useIsPlaceOver(roundRecord);
+  const isPlaceOver = usePlacementOver(roundRecord);
   const { data: currentRoundPlacements } = useGetMyCurrentRoundSevenUpDownPlacement(roundRecord.id);
 
+  const sortedMarketItems = roundRecordWithWinningId?.sortedMarketItems || marketItems;
 
-  const positiveItems = marketItems.filter(item => parseFloat(item.change_percent) > 0);
-  const negativeItems = marketItems.filter(item => parseFloat(item.change_percent) <= 0 || item.change_percent == undefined);
-
+  const positiveItems = sortedMarketItems.filter(item => parseFloat(item.change_percent) > 0);
+  const negativeItems = sortedMarketItems.filter(item => parseFloat(item.change_percent) <= 0 || item.change_percent == undefined);
+  
+  console.log(roundRecordWithWinningId?.sortedMarketItems, positiveItems.length, negativeItems.length);
   const upBets = currentRoundPlacements?.filter(p => p.placement === SevenUpDownPlacementType.UP) || [];
   const downBets = currentRoundPlacements?.filter(p => p.placement === SevenUpDownPlacementType.DOWN) || [];
   const sevenBets = currentRoundPlacements?.filter(p => p.placement === SevenUpDownPlacementType.SEVEN) || [];
+
+  const totalUpBets = upBets.reduce((acc, bet) => acc + bet.amount, 0);
+  const totalDownBets = downBets.reduce((acc, bet) => acc + bet.amount, 0);
+  const totalSevenBets = sevenBets.reduce((acc, bet) => acc + bet.amount, 0);
 
   const handleBoardClick = (type: SevenUpDownPlacementType) => {
     if (isPlaceOver) return;
@@ -173,18 +178,17 @@ export const GameBoard: React.FC<PropsWithChildren<{ roundRecord: RoundRecord, a
           <div className="text-sm text-yellow-400">1:2</div>
           
           {!isPlaceOver ? (
-            upBets.map((bet, i) => (
+            totalUpBets > 0 && (
               <div 
-                key={i}
-                className="absolute p-1 aspect-square rounded-full bg-chip flex items-center justify-center text-xs font-bold"
+                className="absolute p-2 aspect-square rounded-full bg-[url('/images/seven-up-down/coin.png')] bg-cover bg-center flex items-center justify-center text-xs font-bold text-gray-50"
                 style={{
                   right: '10px',
-                  top: `${10 + (i * 40)}px`
+                  top: `10px`
                 }}
               >
-                {bet.amount}
+                {totalUpBets}
               </div>
-            ))
+            )
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">
               <MarketItemDisplay items={positiveItems} isPositive={true} />
@@ -196,7 +200,7 @@ export const GameBoard: React.FC<PropsWithChildren<{ roundRecord: RoundRecord, a
         <div onClick={() => handleBoardClick(SevenUpDownPlacementType.SEVEN)} className="absolute cursor-pointer hover:bg-red-950 left-1/2 top-1/2 hover:scale-[1.02] transition-all duration-300 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-red-900 rounded-full border-2 border-yellow-500 flex flex-col items-center justify-center z-10">
           <div className="text-4xl font-bold text-yellow-400">7</div>
           <div className="text-sm text-yellow-400">1:4</div>
-          {!isPlaceOver && sevenBets.length > 0 && <div className="text-xs text-white aspect-square rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-chip w-fit">{INR(sevenBets.reduce((acc, bet) => acc + bet.amount, 0))}</div>}
+          {!isPlaceOver && totalSevenBets > 0 && <div className="text-[10px] bg-[url('/images/seven-up-down/coin.png')] text-gray-50 flex items-center justify-center aspect-square p-1 rounded-full absolute top-1/2 right-0 -translate-y-1/2 bg-chip w-fit">{totalSevenBets}</div>}
         </div>
 
         {/* 2-6 Area */}
@@ -205,18 +209,17 @@ export const GameBoard: React.FC<PropsWithChildren<{ roundRecord: RoundRecord, a
           <div className="text-sm text-yellow-400">1:2</div>
 
           {!isPlaceOver ? (
-            downBets.map((bet, i) => (
+            totalDownBets > 0 && (
               <div 
-                key={i}
-                className="absolute z-100 px-2 h-auto aspect-square rounded-full bg-chip flex items-center justify-center text-xs font-bold"
+                className="absolute z-100 px-2 h-auto aspect-square rounded-full bg-[url('/images/seven-up-down/coin.png')] bg-cover bg-center flex items-center justify-center text-xs font-bold text-gray-50"
                 style={{
                   right: '10px',
-                  bottom: `${10 + (i * 40)}px`
+                  bottom: `10px`
                 }}
               >
-                {bet.amount}
+                {totalDownBets}
               </div>
-            ))
+            )
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">
               <MarketItemDisplay items={negativeItems} isPositive={false} />
