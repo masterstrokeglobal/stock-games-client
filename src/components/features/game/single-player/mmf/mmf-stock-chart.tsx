@@ -17,10 +17,11 @@ interface ChartDataPoint {
 const StockProgressChart = () => {
     const { roundRecord } = useSinglePlayerGameStore();
     const { stocks: leaderboardData } = useLeaderboard(roundRecord!);
-    const { isGameOver } = useGameState(roundRecord);
+    const { isGameOver, isPlaceOver } = useGameState(roundRecord);
     const { data: placementsData, isSuccess } = useGetCurrentRoundPlacements(roundRecord?.id.toString());
     
     const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
+    const [currentRoundId, setCurrentRoundId] = useState<number | null>(null);
 
     const [highestValue, setHighestValue] = useState(0);
     const [lowestValue, setLowestValue] = useState(0);
@@ -42,43 +43,90 @@ const StockProgressChart = () => {
         return userPlacements.reduce((sum, placement) => sum + placement.bettedAmount, 0);
     }, [userPlacements]);
 
+    // Reset chart data when a new round starts
+    useEffect(() => {
+        if (!roundRecord) return;
+        
+        // Check if this is a new round
+        if (roundRecord.id !== currentRoundId) {
+            console.log('New round detected, resetting chart data');
+            setChartData([]);
+            setHighestValue(0);
+            setLowestValue(0);
+            setCurrentRoundId(roundRecord.id);
+            
+            // Clear any existing interval
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+        }
+    }, [roundRecord?.id, currentRoundId]);
     
     useEffect(() => {
-        if (!roundRecord || isGameOver) return;
+        if (!roundRecord || isGameOver) {
+            // Clear interval when game is over
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+            return;
+        }
         
-        const initialData: ChartDataPoint[] = [{
-            time: Date.now(),
-            value: totalPotentialReturn
-        }];
+        // Only start populating data during trading period (when isPlaceOver is true but isGameOver is false)
+        if (!isPlaceOver) {
+            // Clear interval during betting phase
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+            return;
+        }
         
-        setChartData(initialData);
-        setHighestValue(totalPotentialReturn);
-        setLowestValue(totalPotentialReturn);
-        
-        intervalRef.current = setInterval(() => {
-            setChartData(prevData => {
-                const newValue = totalPotentialReturn;
-                
-                setHighestValue(prev => Math.max(prev, newValue));
-                
-                const newPoint: ChartDataPoint = {
+        // Trading period has started - begin populating chart data
+        if (!intervalRef.current) {
+            console.log('Trading period started, beginning chart data population');
+            
+            // Initialize chart with first data point if empty
+            if (chartData.length === 0) {
+                const initialData: ChartDataPoint[] = [{
                     time: Date.now(),
-                    value: newValue
-                };
-                
-                const updatedData = [...prevData, newPoint];
-                return updatedData.length > 20 ? updatedData.slice(-20) : updatedData;
-            });
-        }, 3000);
+                    value: totalPotentialReturn
+                }];
+                setChartData(initialData);
+                setHighestValue(totalPotentialReturn);
+                setLowestValue(totalPotentialReturn);
+            }
+            
+            intervalRef.current = setInterval(() => {
+                setChartData(prevData => {
+                    const newValue = totalPotentialReturn;
+                    
+                    setHighestValue(prev => Math.max(prev, newValue));
+                    setLowestValue(prev => Math.min(prev, newValue));
+                    
+                    const newPoint: ChartDataPoint = {
+                        time: Date.now(),
+                        value: newValue
+                    };
+                    
+                    const updatedData = [...prevData, newPoint];
+                    return updatedData;
+
+                    // return updatedData.length > 20 ? updatedData.slice(-20) : updatedData;
+                });
+            }, 500);
+        }
         
         return () => {
             if (intervalRef.current) {
                 clearInterval(intervalRef.current);
+                intervalRef.current = null;
             }
         };
-    }, [roundRecord, isGameOver, totalPotentialReturn, totalBettedAmount]);
+    }, [roundRecord, isGameOver, isPlaceOver, totalPotentialReturn, totalBettedAmount, chartData.length]);
 
-    console.log(chartData);
+    console.log('Chart data:', chartData, 'Trading period:', isPlaceOver && !isGameOver);
     
     const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
         if (active && payload && payload.length) {
@@ -90,7 +138,7 @@ const StockProgressChart = () => {
                         {new Date(label).toLocaleTimeString()}
                     </p>
                     <p className="text-white font-bold text-lg">
-                        ₹{data.value.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                        ₹{data.value.toLocaleString('en-IN', { maximumFractionDigits: 6 })}
                     </p>
                     <p className={cn("text-sm", profit >= 0 ? "text-green-400" : "text-red-400")}>
                         P/L: ₹{profit.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
@@ -106,6 +154,10 @@ const StockProgressChart = () => {
         const first = chartData[0].value;
         const last = chartData[chartData.length - 1].value;
         return ((last - first) / first) * 100;
+    }, [chartData]);
+
+    useEffect(() => {
+        console.log("chart Data", chartData);
     }, [chartData]);
     
     if (!roundRecord) return null;
@@ -135,9 +187,10 @@ const StockProgressChart = () => {
                     />
                     
                     <YAxis
-                        tickFormatter={(value) => `₹${(value / 1000).toFixed(0)}K`}
+                        tickFormatter={(value) => `₹${(value / 1000).toFixed(6)}K`}
                         stroke="#6B7280"
                         tick={{ fill: "#9CA3AF", fontSize: 12 }}
+                        domain={[lowestValue, highestValue]}
                     />
                     
                     <Tooltip active content={<CustomTooltip />} />

@@ -43,7 +43,7 @@ const GamePage = () => {
             {!isMobile && <main className="grid grid-cols-12 grid-rows-5 gap-4 h-full p-4">
                 <div
                     style={borderStyle}
-                    className="xl:col-span-12 col-span-4 row-span-2 rounded-2xl bg-green-900">
+                    className="col-span-12  row-span-2 rounded-2xl bg-green-900">
                     <StockProgressChart />
                 </div>
                 <div
