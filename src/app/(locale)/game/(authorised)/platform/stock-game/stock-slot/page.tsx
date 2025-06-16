@@ -3,17 +3,17 @@ import GameLoadingScreen from '@/components/common/game-loading-screen';
 import MarketSelector from '@/components/common/market-selector';
 import StockGameHeader from '@/components/common/stock-game-header';
 import { BettingArea } from '@/components/features/slot-game/betting-area';
+import { Slot } from '@/components/features/slot-machine/slot';
 import { useCurrentGame } from '@/hooks/use-current-game';
 import { useMarketSelector } from '@/hooks/use-market-selector';
+import useWinningId from '@/hooks/use-winning-id';
 import { RoundRecordGameType } from '@/models/round-record';
 import { useState } from 'react';
-import { Slot } from '@/components/features/slot-machine/slot';
-import useWinningId from '@/hooks/use-winning-id';
 
 const StockSlot = () => {
     const { marketSelected, setMarketSelected } = useMarketSelector();
     const { roundRecord, isLoading } = useCurrentGame(RoundRecordGameType.STOCK_JACKPOT);
-
+   
     const [betAmount, setBetAmount] = useState<number>(100);
 
     const winningIdRoundRecord = useWinningId(roundRecord);
@@ -26,7 +26,7 @@ const StockSlot = () => {
         <section className="flex flex-col md:mx-auto -mx-4 items-center justify-center min-h-[calc(100svh-80px)] h-fit">
             <div className="flex flex-col  max-w-2xl h-fit w-full md:mx-auto md:mt-0 -mt-6 bg-gray-900 border border-gray-600 md:rounded-lg text-white overflow-hidden">
                 <StockGameHeader onBack={() => setMarketSelected(false)} title="Stock Slot" />
-                <div className='flex flex-col flex-1 h-fit max-h-[500px] items-center justify-center'>
+                <div className='flex flex-col flex-1 h-fit  items-center justify-center'>
                     <Slot roundRecord={roundRecord} winningIdRoundRecord={winningIdRoundRecord} />
                 </div>
                 <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />

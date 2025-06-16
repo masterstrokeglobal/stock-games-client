@@ -14,16 +14,18 @@ export const useStockGamePlacements = (roundId: number) => {
     });
 };
 
-export const useGetMySlotGamePlacement = (roundId: number) => {
+export const useGetMySlotGamePlacement = (roundId?: number) => {
     return useQuery <{data:StockGamePlacement[], count:number}>({
         queryKey: ["my-slot-jackpot", roundId],
         queryFn: async () => {
+            if (!roundId) return { data: [], count: 0 };
             const response = await slotGameAPI.getMySlotJackpotGameRecord(roundId);
             return {
                 data: response.data.data.map((item: any) => new StockGamePlacement(item)),
                 count: response.data.count
             }
-        }
+        },
+        enabled: !!roundId
     });
 };
 

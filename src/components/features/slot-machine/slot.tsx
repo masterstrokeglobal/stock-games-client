@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { SlotCanvas } from "./slot-canvas";
 import { useLeaderboard } from "@/hooks/use-leadboard";
 import { RoundRecord } from "@/models/round-record";
 import { useGameState } from "@/hooks/use-current-game";
-import { cn } from "@/lib/utils";
+import { cn, INR, slotWinningMultiplier } from "@/lib/utils";
+import { useGetMySlotGamePlacement } from "@/react-query/slot-game-queries";
 
 export const Slot = ({ roundRecord,winningIdRoundRecord }: { roundRecord: RoundRecord,winningIdRoundRecord:RoundRecord | null }) => {
 
@@ -14,6 +15,13 @@ export const Slot = ({ roundRecord,winningIdRoundRecord }: { roundRecord: RoundR
     const [time, setTime] = useState<string>("00")
     const statusText = isPlaceOver ? "Betting Closed" : "Betting Open"
     const { stocks } = useLeaderboard(roundRecord)
+
+    const { data: myPlacementData } = useGetMySlotGamePlacement(roundRecord?.id);
+
+    const totalBetAmount = useMemo(() => {
+        return myPlacementData?.data?.reduce((acc, curr) => acc + curr.amount, 0);
+    }, [myPlacementData])
+
 
     useEffect(() => {
         setTime(!isPlaceOver ? placeTimeLeft.seconds.toString().padStart(2, "0") : gameTimeLeft.seconds.toString().padStart(2, "0") || "00")
@@ -39,8 +47,26 @@ export const Slot = ({ roundRecord,winningIdRoundRecord }: { roundRecord: RoundR
     }, [stocks, winningIdRoundRecord])
 
     return (
-        <div className="flex flex-1 w-full flex-col h-[500px] items-center justify-center">
-            <div className="flex-1 w-full h-[500px]  relative z-0 slotmachine-gradient">
+        <div className="flex flex-1 w-full flex-col items-center justify-center slotmachine-gradient">
+           
+           <div className="flex items-start justify-center md:gap-4 mb-4 w-full px-2">
+            {
+                slotWinningMultiplier.map((item) => (
+            
+           <div key={item.multiplier} className="flex flex-col flex-1 items-center justify-center gap-1 sm:gap-2 bg-[#1B1B1B] border-x-2 border-b-2 border-[#E3B872] px-1 sm:px-2 py-1 rounded-b-md">
+           <div className="flex items-center gap-1 sm:gap-2 justify-between whitespace-nowrap w-full">
+                        <span className="text-gray-300 text-xs">{item.count} Match</span>
+                        <span className="text-yellow-400 font-bold text-xs sm:text-sm">x{item.multiplier}</span>
+                    </div>
+                    <div className="text-gray-400 text-xs sm:text-sm">
+                         {totalBetAmount ? `Win ${INR(totalBetAmount * item.multiplier,true)}` : " "}
+                    </div>
+                </div>
+            ))}
+            </div>
+
+            <div className="flex-1 w-full h-[500px]  relative z-0 ">
+                
                 <div className="canvas-container absolute z-[-1] left-[50%] translate-x-[-50%] top-[240px] translate-y-[-50%] w-[270px] h-[187px]">
                     <SlotCanvas stockStates={stockStates} />
                 </div>

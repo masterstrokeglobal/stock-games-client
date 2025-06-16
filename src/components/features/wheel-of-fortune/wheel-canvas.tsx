@@ -759,8 +759,6 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
     // in i need to update something what i want you to do is shift the array to right i need the zero number to become 5th and 20th to be 0th 
     const shiftedNames = [...names.slice(-5), ...names.slice(0, -5)];
     setMarketNames(shiftedNames);
-    console.log("Updated market names array :", names);
-    console.log("Updated market names array shifted:", shiftedNames);
   }, [stocks]);
 
   if (!roundRecord || stocks.length === 0) {

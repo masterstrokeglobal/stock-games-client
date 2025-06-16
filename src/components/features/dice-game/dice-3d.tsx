@@ -19,17 +19,17 @@ interface Dice3DProps {
   roundRecordWithWinningId: RoundRecord | null;
 }
 
-const StockDisplay = ({ stock, className, isSecondCube, roundRecord }: { stock?: RankedMarketItem, className?: string, isSecondCube?: boolean, roundRecord: RoundRecord | null }) => {
+const StockDisplay = ({ stock, className, isSecondCube, roundRecord,winner }: { stock?: RankedMarketItem, className?: string, isSecondCube?: boolean, roundRecord: RoundRecord | null , winner:boolean}) => {
 
   if (!stock) return null;
   const changePercentageText = roundRecord?.finalPricesPresent ? `${roundRecord.changePercentage(stock?.id || 0)}%` : `${Number(stock?.change_percent) >= 0 ? '+' : ''}${stock?.change_percent ?? "-"}% `;
   const changePercentage = roundRecord?.finalPricesPresent ? roundRecord.changePercentage(stock?.id || 0) : stock?.change_percent;
 
   return (
-    <div className={cn("flex flex-col justify-between items-center border-b border-white/10  text-[10px] relative z-20 text-white/90 py-0.5 px-1 bg-gradient-to-b from-[#001607] to-[#13311c] backdrop-blur-sm  hover:bg-[#13311c] transition-colors w-full", className)}>
+  <div className={cn("flex flex-col justify-between items-center border-b border-white/10  text-[10px] relative z-20 text-white/90 py-0.5 px-1 bg-gradient-to-b from-[#001607] to-[#13311c] backdrop-blur-sm  hover:bg-[#13311c] transition-colors w-full", winner && "from-amber-600 to-amber-700", className)}>
       <div className="flex items-center justify-between w-full px-1 gap-0.5 min-w-0">
         <span className="font-medium truncate max-w-[60px]">{stock?.codeName}</span>
-        <span className={cn("text-[10px]  font-bold bg-white/10 text-amber-600 px-0.5 rounded-full flex-shrink-0", isSecondCube && "order-first")}>
+        <span className={cn("text-[10px]  font-bold bg-white/10 text-amber-600 px-0.5 rounded-full flex-shrink-0", winner && "text-white", isSecondCube && "order-first")}>
           {stock?.horse ? stock?.horse % 6 === 0 ? 6 : stock?.horse % 6 : ''}
         </span>
       </div>
@@ -63,6 +63,13 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
     });
   }, [marketItems, stocks]);
 
+  const firstCubeStocks = useMemo(() => {
+    return marketItemsStocks.slice(0, 6).sort((a, b) => parseFloat(b?.change_percent || '0') - parseFloat(a?.change_percent || '0'));
+  }, [marketItemsStocks]);
+
+  const secondCubeStocks = useMemo(() => {
+    return marketItemsStocks.slice(6, 12).sort((a, b) => parseFloat(b?.change_percent || '0') - parseFloat(a?.change_percent || '0'));
+  }, [marketItemsStocks]);
 
   // Check if we're waiting for winning data
   const isWaitingForResults = !isRolling && (!roundRecordWithWinningId?.winningId || roundRecordWithWinningId?.winningId.length === 0);
@@ -72,8 +79,8 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
       <div className="flex justify-center  relative  h-full items-center">
         <div className="flex sm:pr-24 pr-12 flex-row bg-[url('/images/dice-game/dice-bg-2.png')] pr-1 bg-cover bg-center flex-1 h-full gap-2 items-center justify-end animate-slide-left relative">
           <div className='flex flex-col  absolute left-0 top-0 h-full w-fit'>
-            {marketItemsStocks.slice(0, 6).map((stock) => (
-              <StockDisplay key={stock?.id} stock={stock} className='flex-1 rounded-r-xl w-full' roundRecord={roundRecordWithWinningId} />
+            {firstCubeStocks.map((stock, index) => (
+              <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1 rounded-r-xl w-full' roundRecord={roundRecordWithWinningId} />
             ))}
           </div>
           {!isMobile &&
@@ -100,8 +107,8 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
             />
           }
           <div className='flex flex-col  h-full absolute right-0 top-0 w-fit self-end'>
-            {marketItemsStocks.slice(6, 12).map((stock) => (
-              <StockDisplay key={stock?.id} stock={stock} className='flex-1 rounded-l-xl w-full' isSecondCube roundRecord={roundRecordWithWinningId} />
+            {secondCubeStocks.map((stock, index) => (
+              <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1 rounded-l-xl w-full' isSecondCube roundRecord={roundRecordWithWinningId} />
             ))}
           </div>
         </div>
@@ -210,8 +217,8 @@ export const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, w
     const rotations = {
       0: 'rotateX(0deg) rotateY(0deg)',      // front
       5: 'rotateX(0deg) rotateY(180deg)',    // back
-      2: 'rotateX(0deg) rotateY(90deg)',     // right
-      3: 'rotateX(0deg) rotateY(-90deg)',    // left
+      3: 'rotateX(0deg) rotateY(90deg)',     // right
+      2: 'rotateX(0deg) rotateY(-90deg)',    // left
       1: 'rotateX(-90deg) rotateY(0deg)',    // top
       4: 'rotateX(90deg) rotateY(0deg)'      // bottom
     };

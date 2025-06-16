@@ -329,8 +329,13 @@ export class RoundRecord {
         });
         return sortedMarketItems;
     }
+
     get winnersNames(): string[] {
         const names = this.market.filter(item => this.winningId?.includes(item.id || 0)).map(item => item.name);
         return names.filter(item => item !== undefined) as string[];
+    }
+
+    getColorByMarketId(marketId: number): WheelColor | undefined {
+        return this.marketColors.find(item => item.marketId === marketId)?.color || undefined;
     }
 }

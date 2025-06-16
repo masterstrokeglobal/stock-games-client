@@ -31,7 +31,7 @@ const WheelOfFortune = () => {
 
     useEffect(() => {
         if (!roundRecord) return;
-        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime();
+        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() +2000;
 
         const timer = setTimeout(() => {
             refetch();
@@ -46,7 +46,6 @@ const WheelOfFortune = () => {
     }, [data, isSuccess, roundRecord]);
 
 
-
     if (!marketSelected) return <MarketSelector className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Wheel of Fortune Market" />
 
     if (isLoading || !roundRecord) return <GameLoadingScreen className='min-h-[calc(100svh-100px)]' />
@@ -56,7 +55,7 @@ const WheelOfFortune = () => {
             <div className="flex flex-col min-h-screen max-w-2xl w-full mx-auto bg-gray-900 border border-gray-600 md:rounded-lg text-white overflow-hidden">
                 <StockGameHeader onBack={() => setMarketSelected(false)} title="Wheel of Fortune" />
                 <StockPriceDisplay roundRecord={roundRecord} winningMarketId={winningMarketId} />
-                <GameBoard roundRecord={roundRecord} amount={betAmount}>
+                <GameBoard roundRecord={roundRecord} amount={betAmount} winningId={winningMarketId}>
                     <TimeDisplay className="absolute top-0 left-1/2 -translate-x-1/2 z-10 w-full max-w-sm  " roundRecord={roundRecord} />
                 </GameBoard>
                 <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />

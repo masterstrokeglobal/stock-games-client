@@ -63,7 +63,7 @@ export default function Home() {
                 <div className='absolute left-1/2 -translate-x-1/2 bottom-[calc(100%-2vw)] md:h-[60%] h-3/4 z-10 flex max-w-sm items-end justify-center'>
                   <img src="/images/jackpot/lady4.gif" alt="dice-bg" className='w-auto h-full mt-20 scale-x-[-1]' />
                 </div>
-                <img src="/images/jackpot/table.png" className=" w-full sm:mx-auto   h-full  relative z-10  md:max-w-6xl sm:max-w-2xl max-w-xl" />
+                <img src="/images/jackpot/table.png" className=" w-full sm:mx-auto h-full  relative z-10  md:max-w-6xl sm:max-w-2xl max-w-xl" />
                 {roundRecord && <StockCardStack roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />}
               </div>
             </div>
@@ -236,6 +236,16 @@ const StockCard = ({ stock, className, amount, roundRecord }: { stock?: RankedMa
       <div className=" bg-amber-500 text-white text-[8px] md:text-xs  text-center w-fit mx-auto px-2 py-0.5 rounded-full font-bold shadow-lg">
         {amount ? `₹${amount}` : "-"}
       </div>
+      <div className="  text-white text-[8px] md:text-[10px]   text-center w-full ">
+        {amount && initialPrice ? <div className="flex flex-col items-center justify-center">
+          <span className="text-white   text-center w-full ">
+            Your Bet
+          </span>
+          <span className="text-white text-center w-full ">
+            {stock.currency} {initialPrice}
+          </span>
+        </div> : ""}
+      </div>
     </div>
   )
 }
@@ -273,7 +283,7 @@ const StockCardStack = ({ roundRecord, roundRecordWithWinningId }: { roundRecord
   const highStocks = bettedMarketItems?.filter((item) => item.placement === StockJackpotPlacementType.HIGH) || [];
   const lowStocks = bettedMarketItems?.filter((item) => item.placement === StockJackpotPlacementType.LOW) || [];
 
-  return (<div className="absolute p-2 left-1/2 -translate-x-1/2  md:bottom-[calc(45%+1rem)] bottom-[calc(33%+1rem)] z-10 w-full  md:max-w-xl sm:max-w-sm max-w-[280px]  ">
+  return (<div className="absolute p-2 left-1/2 -translate-x-1/2  md:bottom-[calc(40%+1rem)] bottom-[calc(20%+1rem)] z-10 w-full  md:max-w-xl sm:max-w-sm max-w-[280px]  ">
     <div style={{ transform: 'perspective(1000px) rotateX(15deg)' }} className=" origin-center mx-auto flex z-10 gap-2 md:gap-4 h-fit w-full" >
 
       <div className="flex-1 gap-2 md:gap-4 flex flex-col">

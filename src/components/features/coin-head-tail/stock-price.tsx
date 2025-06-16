@@ -1,5 +1,5 @@
 import { useIsPlaceOver } from '@/hooks/use-current-game';
-import { RankedMarketItem, useLeaderboard } from '@/hooks/use-leadboard';
+import { RankedMarketItem } from '@/hooks/use-leadboard';
 import { cn } from '@/lib/utils';
 import { HeadTailPlacementType } from '@/models/head-tail';
 import { RoundRecord } from '@/models/round-record';
@@ -8,16 +8,17 @@ import React from 'react';
 
 interface StockPriceProps {
   rankedMarketItem: RankedMarketItem;
+  winning:boolean;
 }
 
-const StockPrice: React.FC<StockPriceProps> = ({ rankedMarketItem }) => {
+export const StockPrice: React.FC<StockPriceProps> = ({ rankedMarketItem, winning }) => {
 
   if (rankedMarketItem == null) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="bg-black flex text-xs flex-row rounded-b-xl  justify-between px-4 items-center gap-2 p-2">
+    <div className={cn("bg-black flex text-xs flex-row rounded-b-xl  justify-between px-4 items-center gap-2 p-2", winning && "bg-amber-500")}>
       <div className="flex flex-col gap-2">
         <span>{rankedMarketItem.name}</span>
         <span>Price: <b>
@@ -39,17 +40,12 @@ const StockPrice: React.FC<StockPriceProps> = ({ rankedMarketItem }) => {
 };
 
 export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, winningSide: HeadTailPlacementType | null }> = ({ roundRecord, winningSide }) => {
-  const { stocks } = useLeaderboard(roundRecord);
 
   const isPlaceOver = useIsPlaceOver(roundRecord);
 
   return (
     <div className="flex flex-col justify-center  bg-[url('/images/coin-face/wodenboard.jpeg')] bg-cover items-start ">
-      <div className="w-full grid grid-cols-2 gap-2 ">
-        {stocks.map((stock) => (
-          <StockPrice key={stock.id} rankedMarketItem={stock} />
-        ))}
-      </div>
+    
       <div className='sm:h-64 h-52 w-full'>
         <CoinFlipVideo isFlipping={isPlaceOver} resultOutcome={winningSide ?? undefined} />
       </div>

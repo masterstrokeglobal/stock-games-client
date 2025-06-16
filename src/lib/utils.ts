@@ -316,3 +316,21 @@ export const schedulerTypeOptions = Object.values(SchedulerType).map((type) => (
 }));
 
 
+export const slotWinningMultiplier = [
+  {
+    multiplier: 2,
+    count: 2
+  },
+  {
+    multiplier: 3,
+    count: 3
+  },
+  {
+    multiplier: 4,
+    count: 4
+  },
+  {
+    multiplier: 5,
+    count: 5
+  },
+]
