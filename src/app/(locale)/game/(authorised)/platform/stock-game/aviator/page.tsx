@@ -1,15 +1,13 @@
 "use client"
 import GameLoadingScreen from '@/components/common/game-loading-screen';
 import MarketSelector from '@/components/common/market-selector';
-import StockSelectorAviator from '@/components/common/stock-selector-aviator';
 import Aviator from '@/components/features/aviator/aviator';
-import useAviator from '@/hooks/use-aviator';
 import { useCurrentGame } from '@/hooks/use-current-game';
-import { useGameType, useMarketSelector, useStockSelectorAviator } from '@/hooks/use-market-selector';
+import { useMarketSelector, useStockSelectorAviator } from '@/hooks/use-market-selector';
 import { MarketItem } from '@/models/market-item';
 import { RoundRecordGameType } from '@/models/round-record';
 import { useAviatorToken } from '@/react-query/aviator-queries';
-import { useMemo, useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 const StockSlot = () => {
     const { marketSelected } = useMarketSelector();
     const { stockSelectedAviator, setStockSelectedAviator } = useStockSelectorAviator();

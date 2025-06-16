@@ -1,4 +1,4 @@
-import { RankedMarketItem, useLeaderboard } from "@/hooks/use-leadboard";
+import { RankedMarketItem } from "@/hooks/use-leadboard";
 import { cn } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
 import { SinglePlayerGamePlacement } from "@/models/singleplayer-game-placement";

@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/select";
 import { roundRecordsAPI } from "@/lib/axios/round-record-API";
 import { SchedulerType } from "@/models/market-item";
-import { RoundRecord } from "@/models/round-record";
+import { RoundRecord, RoundRecordGameType } from "@/models/round-record";
 import { useGetWinningReport } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
@@ -35,6 +35,7 @@ type Filter = {
 const RoundRecordTable = () => {
     const [page, setPage] = useState(1);
     const [type, setType] = useState<string>("all");
+    const [roundRecordType, setRoundRecordType] = useState<RoundRecordGameType | "all">("all");
     const [isDownload, setIsDownload] = useState(false);
     const [filter, setFilter] = useState<Filter>({
         timeFrom: dayjs().startOf("day").toISOString(),
@@ -45,11 +46,13 @@ const RoundRecordTable = () => {
     const params: {
         page: number;
         type?: string;
+        roundRecordGameType?: RoundRecordGameType;
         startTime: string;
         endTime: string;
     } = {
         page: page,
         type: type === "all" ? undefined : type,
+        roundRecordGameType: roundRecordType === "all" ? undefined : roundRecordType,
         startTime: filter.timeFrom,
         endTime: filter.timeTo,
     };
@@ -88,7 +91,7 @@ const RoundRecordTable = () => {
     };
 
     // Memoize round records
-    const roundRecords = useMemo(() => {
+    const roundRecords: RoundRecord[] = useMemo(() => {
         if (isSuccess && data?.data?.rounds) {
             return data.data.rounds.map((record: any) => new RoundRecord(record));
         }
@@ -105,6 +108,7 @@ const RoundRecordTable = () => {
         setPage(newPage);
     };
 
+    console.log(roundRecords.map(item => item.winningId));
     return (
         <section className="container-main min-h-[60vh] my-12">
             <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between">
@@ -147,6 +151,24 @@ const RoundRecordTable = () => {
                                 <SelectItem value="all">All Types</SelectItem>
                                 {
                                     Object.values(SchedulerType).map((item) => (
+                                        <SelectItem key={item} value={item} className="capitalize">{item.split("_").join(" ")}</SelectItem>
+                                    ))
+                                }
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+
+                    {/* Round Record Type Filter */}
+                    <Select value={roundRecordType} onValueChange={(val) => setRoundRecordType(val as RoundRecordGameType)}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="All Types" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectLabel>Round Record Types</SelectLabel>
+                                <SelectItem value="all">All Types</SelectItem>
+                                {
+                                    Object.values(RoundRecordGameType).map((item) => (
                                         <SelectItem key={item} value={item} className="capitalize">{item.split("_").join(" ")}</SelectItem>
                                     ))
                                 }

@@ -69,7 +69,7 @@ const roundRecordColumns: ColumnDef<RoundRecord>[] = [
         accessorKey: "winnerName",
         cell: ({ row }) => (
             <span className="text-[#6B7280]">
-                {row.original.winningMarket?.name || "-"}
+                {row.original.winningMarkets.map(item => item.name).join(", ") || "-"}
             </span>
         ),
     },

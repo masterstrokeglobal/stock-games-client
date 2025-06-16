@@ -3,9 +3,9 @@
 import TimeDisplay from "@/components/common/bet-locked-banner"
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
 import useAviator from "@/hooks/use-aviator"
+import { useGameState } from "@/hooks/use-current-game"
 import { useGameType, useStockSelectorAviator } from "@/hooks/use-market-selector"
 import useWindowSize from "@/hooks/use-window-size"
-import { useGameState } from "@/hooks/use-current-game"
 import { cn } from "@/lib/utils"
 import { SchedulerType } from "@/models/market-item"
 import { RoundRecord } from "@/models/round-record"
@@ -13,7 +13,6 @@ import { useEffect, useState } from "react"
 import BettingPanel from "./BettingPanel"
 import GameDisplay from "./GameDisplay"
 import LastRoundsPanel from "./LastRoundsPanel"
-import gsap from "gsap"
 
 
 type AviatorProps = {
@@ -24,7 +23,7 @@ type AviatorProps = {
 
 export default function   Aviator({ className, roundRecord, token }: AviatorProps) {
   const { gameType } = useGameType();
-  const { stockSelectedAviator, setStockSelectedAviator } = useStockSelectorAviator();
+  const { stockSelectedAviator } = useStockSelectorAviator();
   const { isPlaceOver, placeTimeLeft, isGameOver } = useGameState(roundRecord);
   
   const [shouldShowBlast, setShouldShowBlast] = useState(false)
