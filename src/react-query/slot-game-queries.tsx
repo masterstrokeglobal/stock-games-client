@@ -38,7 +38,7 @@ export const useCreateStockGamePlacement = () => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
                     return query.queryKey[0] === "slot-jackpot" ||
-                        query.queryKey[0] === "my-slot-jackpot";
+                        query.queryKey[0] === "my-slot-jackpot" || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
                 }
             });
             toast.success("Bet placed successfully");

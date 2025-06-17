@@ -46,8 +46,7 @@ const CoinHeadTail = () => {
             <div className="flex flex-col h-fit max-w-2xl w-full mx-auto bg-gray-900 border border-gray-600 sm:rounded-lg text-white overflow-hidden">
                 <StockGameHeader onBack={() => setMarketSelected(false)} title="Coin Head Tail" />
                 <StockPriceDisplay roundRecord={roundRecord} winningSide={winningSide} />
-                <GameBoard roundRecord={roundRecord} amount={betAmount}>
-                </GameBoard>
+                <GameBoard roundRecord={roundRecord} amount={betAmount} winningSide={winningSide}/>
                 <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
             </div>
         </section>

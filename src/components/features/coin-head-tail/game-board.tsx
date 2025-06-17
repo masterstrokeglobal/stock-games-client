@@ -13,7 +13,7 @@ type Props = {
   amount: number;
   className?: string;
   children?: React.ReactNode;
-  winningSide?: HeadTailPlacementType;
+  winningSide: HeadTailPlacementType | null;
 }
 
 export default function CoinFlipGame({ roundRecord, amount, className, winningSide }: Props) {
@@ -72,7 +72,7 @@ export default function CoinFlipGame({ roundRecord, amount, className, winningSi
               "min-h-64 z-10 rounded-md flex flex-col cursor-pointer transition-all duration-300",
               isPending ? 'opacity-70 pointer-events-none' : 'hover:shadow-lg hover:scale-105',
               hasHeadBet ? "border-4 rounded-lg border-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.8)]" : "",
-              winningSide === HeadTailPlacementType.HEAD ? 'border-4 border-amber-400 animate-ping shadow-[0_0_20px_rgba(251,191,36,0.8)]' : ''
+              winningSide === HeadTailPlacementType.HEAD ? 'border-4 border-amber-400 animate-pulse shadow-[0_0_20px_rgba(251,191,36,0.8)]' : ''
             )}
             onClick={() => handleCardClick(HeadTailPlacementType.HEAD)}
           >
@@ -121,7 +121,7 @@ export default function CoinFlipGame({ roundRecord, amount, className, winningSi
               isPending ? 'opacity-70 pointer-events-none' : 'hover:shadow-lg hover:scale-105',
               hasTailBet ? "border-4 rounded-lg border-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.8)]" : "",
 
-              winningSide === HeadTailPlacementType.TAIL ? 'border-4 border-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.8)]' : ''
+              winningSide === HeadTailPlacementType.TAIL ? 'border-4 animate-pulse  border-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.8)]' : ''
             )}
             onClick={() => handleCardClick(HeadTailPlacementType.TAIL)}
           >

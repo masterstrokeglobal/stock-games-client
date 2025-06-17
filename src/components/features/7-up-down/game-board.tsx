@@ -5,6 +5,7 @@ import { SevenUpDownPlacementType } from '@/models/seven-up-down';
 import { useCreateSevenUpDownPlacement, useGetMyCurrentRoundSevenUpDownPlacement } from '@/react-query/7-up-down';
 import React, { PropsWithChildren } from 'react';
 import { StockPrice } from './StockPriceDisplay';
+import { cn } from '@/lib/utils';
 
 const MarketItemDisplay: React.FC<{ items: RankedMarketItem[], isPositive: boolean }> = ({ items, isPositive }) => {
   // Calculate non-overlapping positions with more dynamic movement
@@ -163,6 +164,8 @@ export const GameBoard: React.FC<PropsWithChildren<{ roundRecord: RoundRecord, a
 
   const sortedStocksWithWinningId = roundRecordWithWinningId?.sortedMarketItems || null;
 
+  const positiveStocks = sortedStocksWithWinningId?.filter(item => parseFloat(item.change_percent) > 0).length;
+
   const stocksToDisplay = sortedStocksWithWinningId || sortedStocks;
 
   const handleBoardClick = (type: SevenUpDownPlacementType) => {
@@ -187,7 +190,7 @@ export const GameBoard: React.FC<PropsWithChildren<{ roundRecord: RoundRecord, a
         <div className="relative z-0 h-[20rem] w-full ">
 
           {/* 8-12 Area */}
-          <div onClick={() => handleBoardClick(SevenUpDownPlacementType.UP)} className="absolute inset-x-0 top-0 h-[10rem] hover:scale-[1.02] cursor-pointer transition-all duration-300 bg-yellow-500 bg-opacity-20 rounded-t-3xl border-yellow-500 border-2 flex flex-col items-center justify-start pt-4">
+          <div onClick={() => handleBoardClick(SevenUpDownPlacementType.UP)} className={cn("absolute inset-x-0 top-0 h-[10rem] hover:scale-[1.02] cursor-pointer transition-all duration-300 bg-yellow-500 bg-opacity-20 rounded-t-3xl border-yellow-500 border-2 flex flex-col items-center justify-start pt-4", positiveStocks  && positiveStocks > 7 ? "animate-pulse" : "")}>
             <div className="text-2xl font-bold text-yellow-400">8~14</div>
             <div className="text-sm text-yellow-400">1:2</div>
 
@@ -211,14 +214,14 @@ export const GameBoard: React.FC<PropsWithChildren<{ roundRecord: RoundRecord, a
           </div>
 
           {/* Center 7 Area */}
-          <div onClick={() => handleBoardClick(SevenUpDownPlacementType.SEVEN)} className="absolute cursor-pointer hover:bg-red-950 left-1/2 top-1/2 hover:scale-[1.02] transition-all duration-300 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-red-900 rounded-full border-2 border-yellow-500 flex flex-col items-center justify-center z-10">
+          <div onClick={() => handleBoardClick(SevenUpDownPlacementType.SEVEN)} className={cn("absolute cursor-pointer hover:bg-red-950 left-1/2 top-1/2 hover:scale-[1.02] transition-all duration-300 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-red-900 rounded-full border-2 border-yellow-500 flex flex-col items-center justify-center z-10", positiveStocks  && positiveStocks == 7 ? "animate-pulse" : "")}>
             <div className="text-4xl font-bold text-yellow-400">7</div>
             <div className="text-sm text-yellow-400">1:2</div>
             {!isPlaceOver && totalSevenBets > 0 && <div className="text-[10px] bg-[url('/images/seven-up-down/coin.png')] text-gray-50 flex items-center justify-center aspect-square p-1 rounded-full absolute top-1/2 right-0 -translate-y-1/2 bg-chip w-fit">{totalSevenBets}</div>}
           </div>
 
           {/* 2-6 Area */}
-          <div onClick={() => handleBoardClick(SevenUpDownPlacementType.DOWN)} className="absolute inset-x-0 bottom-0 cursor-pointer hover:scale-[1.02] transition-all duration-300 h-[10rem] bg-yellow-500 bg-opacity-20 rounded-b-3xl border-2 border-yellow-500 flex flex-col items-center justify-end py-4">
+          <div onClick={() => handleBoardClick(SevenUpDownPlacementType.DOWN)} className={cn("absolute inset-x-0 bottom-0 cursor-pointer hover:scale-[1.02] transition-all duration-300 h-[10rem] bg-yellow-500 bg-opacity-20 rounded-b-3xl border-2 border-yellow-500 flex flex-col items-center justify-end py-4", positiveStocks  && positiveStocks > 2 && positiveStocks < 7 ? "animate-pulse" : "")}>
             <div className="text-2xl font-bold text-yellow-400">0~6</div>
             <div className="text-sm text-yellow-400">1:2</div>
 

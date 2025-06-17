@@ -35,9 +35,9 @@ const StockDisplay = ({ stock, className, isSecondCube, roundRecord,winner }: { 
       </div>
       <span className={cn(
         "font-bold px-0.5 rounded flex-shrink-0",
-        Number(changePercentage) >= 0
+      changePercentage ?   Number(changePercentage) > 0
           ? 'text-green-400 bg-green-400/10'
-          : 'text-red-400 bg-red-400/10'
+          : 'text-red-400 bg-red-400/10' : "text-white bg-white/10"
       )}>
         {changePercentageText}
       </span>
@@ -58,28 +58,33 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
 
   const marketItemsStocks = useMemo(() => {
     return marketItems.map((item) => {
-      const stock = stocks.find((stock) => stock.id === item.id);
+      const stock = roundRecordWithWinningId?.finalPricesPresent ? roundRecordWithWinningId.sortedMarketItems?.find((stock) => stock.id === item.id) : stocks.find((stock) => stock.id === item.id);
       return stock;
     });
-  }, [marketItems, stocks]);
+  }, [marketItems, stocks, roundRecordWithWinningId]);
 
   const firstCubeStocks = useMemo(() => {
-    return marketItemsStocks.slice(0, 6).sort((a, b) => parseFloat(b?.change_percent || '0') - parseFloat(a?.change_percent || '0'));
+    return  marketItemsStocks.slice(0, 6).sort((a, b) => (b?.change_percent==undefined ? -100 : parseFloat(b?.change_percent)) - (a?.change_percent==undefined ? -100 : parseFloat(a?.change_percent)));
   }, [marketItemsStocks]);
 
   const secondCubeStocks = useMemo(() => {
-    return marketItemsStocks.slice(6, 12).sort((a, b) => parseFloat(b?.change_percent || '0') - parseFloat(a?.change_percent || '0'));
+    return marketItemsStocks.slice(6, 12).sort((a, b) => (b?.change_percent==undefined ? -100 : parseFloat(b?.change_percent)) - (a?.change_percent==undefined ? -100 : parseFloat(a?.change_percent)));
   }, [marketItemsStocks]);
+
+  console.log(roundRecordWithWinningId?.winningId, [...firstCubeStocks, ...secondCubeStocks].map((stock) => `${stock?.codeName} ${stock?.change_percent}`));
 
   // Check if we're waiting for winning data
   const isWaitingForResults = !isRolling && (!roundRecordWithWinningId?.winningId || roundRecordWithWinningId?.winningId.length === 0);
+
+
+  console.log(firstCubeStocks[0]?.change_percent, firstCubeStocks[0]?.codeName, secondCubeStocks[0]?.change_percent, secondCubeStocks[0]?.codeName, roundRecordWithWinningId?.initialValues, roundRecordWithWinningId?.finalDifferences);
 
   return (
     <div className={`font-sans  bg-cover bg-center overflow-visible ${className}`} style={{ height: '14rem' }}>
       <div className="flex justify-center  relative  h-full items-center">
         <div className="flex sm:pr-24 pr-12 flex-row bg-[url('/images/dice-game/dice-bg-2.png')] pr-1 bg-cover bg-center flex-1 h-full gap-2 items-center justify-end animate-slide-left relative">
           <div className='flex flex-col  absolute left-0 top-0 h-full w-fit'>
-            {firstCubeStocks.map((stock, index) => (
+            {firstCubeStocks?.map((stock, index) => (
               <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1 rounded-r-xl w-full' roundRecord={roundRecordWithWinningId} />
             ))}
           </div>
@@ -107,7 +112,7 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
             />
           }
           <div className='flex flex-col  h-full absolute right-0 top-0 w-fit self-end'>
-            {secondCubeStocks.map((stock, index) => (
+            {secondCubeStocks?.map((stock, index) => (
               <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1 rounded-l-xl w-full' isSecondCube roundRecord={roundRecordWithWinningId} />
             ))}
           </div>

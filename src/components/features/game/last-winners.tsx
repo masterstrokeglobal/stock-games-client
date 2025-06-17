@@ -1,21 +1,13 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGameType } from "@/hooks/use-game-type";
 import { cn } from "@/lib/utils";
 import { useLastRoundWinner } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 const LastWinners = ({ className }: PropsWithClassName) => {
     const sectionRef = useRef<HTMLDivElement | null>(null);
-    const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
 
-    useEffect(() => {
-        if (sectionRef.current) {
-            const sectionHeight = sectionRef.current.offsetHeight;
-            setScrollAreaHeight(sectionHeight);
-        }
-    }, []);
     return <section ref={sectionRef} className={cn("game-gradient-card-parent relative w-full h-full ", className)}>
         <div className="game-gradient-card md:rounded-sm h-full">
             <LastRoundWinner />

@@ -287,7 +287,7 @@ export class RoundRecord {
         const initialPrice = this.getInitialPrice(market.code || "");
         const finalPrice = this.finalDifferences?.[market.code || ""] || 0;
         if (initialPrice === 0) return 0;
-        return parseFloat((((finalPrice - initialPrice) / initialPrice) * 100).toFixed(2));
+        return parseFloat((((finalPrice - initialPrice) / initialPrice) * 100).toFixed(6));
     }
 
     get finalPricesPresent(): boolean {

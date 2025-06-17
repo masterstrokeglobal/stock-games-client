@@ -3,14 +3,14 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useGameState } from "@/hooks/use-current-game";
 import { useLeaderboard } from "@/hooks/use-leadboard";
+import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { useGetRoundRecordById } from "@/react-query/round-record-queries";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import LeaderboardHeader from "./leaderboard-header";
-import useWindowSize from "@/hooks/use-window-size";
 
 
 // Enhanced interface for ranked market items

@@ -11,8 +11,16 @@ const useWinningId = (roundRecord: RoundRecord | null) => {
         if (!roundRecord) return;
         const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 500;
         const timer = setTimeout(() => {
-            refetch();
-            console.log("refetching");
+            refetch().then((result) => {
+                const isResultPresent = result.data?.data?.winningId;
+                if (isResultPresent) {
+                    clearTimeout(timer);
+                }
+                else {
+                    refetch();
+                    clearTimeout(timer);
+                }
+            });
         }, resultFetchTime);
         return () => clearTimeout(timer);
     }, [roundRecord, refetch]);

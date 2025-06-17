@@ -10,7 +10,7 @@ export const useCreateDiceGamePlacement = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === "dice-game" || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
+                    return query.queryKey[0] === "dice-game" || query.queryKey[0] === "myPlacements" || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
                 },
             });
             toast.success("Bet Placed Successfully");
@@ -34,7 +34,7 @@ export const useGetMyCurrentRoundDiceGamePlacement = (roundId: number) => {
 
 export const useGetCurrentRoundDiceGamePlacement = (roundId: number) => {
     return useQuery<DicePlacement[]>({
-        queryKey: ["dice-game", "current-round-placements", roundId],
+        queryKey: ["dice-game", "myPlacements", roundId],
         queryFn: async () => {
             const { data } = await diceGameAPI.getCurrentRoundDiceGamePlacement(roundId);
             return data.data.map((placement: any) => new DicePlacement(placement));
