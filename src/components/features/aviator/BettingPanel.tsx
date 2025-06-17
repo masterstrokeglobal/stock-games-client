@@ -89,8 +89,8 @@ function OtherPlanes({aviator, roundRecord}: {aviator: AviatorHookReturn, roundR
 
 
   return (
-    <div className="flex mt-4 flex-col gap-2 ml-4 min-w-6xl">
-      <div className="flex flex-wrap gap-2 max-h-64 overflow-y-auto">
+    <div className="flex mt-4 flex-col gap-2 ml-4 min-w-6xl overflow-hidden">
+      <div className="flex flex-wrap gap-2 max-h-64 overflow-hidden scrollbar-hide">
         {filteredPlanes.map((stock) => {
           const codeToCheck = gameType === SchedulerType.CRYPTO ? stock.code : stock.codeName;
           const statusData = planeStatus?.get(codeToCheck ?? "");
