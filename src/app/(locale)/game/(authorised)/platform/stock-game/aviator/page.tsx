@@ -19,13 +19,22 @@ const StockSlot = () => {
         return isStockPresent;
     }, [roundRecord, stockSelectedAviator]);
 
-    // Automatically select the first stock when market is selected and roundRecord is available
+    // Automatically select the first stock when market is available and ensure current selection is valid
     useEffect(() => {
-        if (marketSelected && roundRecord && roundRecord.market.length > 0 && !stockSelectedAviator) {
-            const firstStock = roundRecord.market[0];
-            if (firstStock.id) {
-                setStockSelectedAviator(firstStock.id.toString());
+        if (marketSelected && roundRecord && roundRecord.market.length > 0) {
+            const currentStockId = Number(stockSelectedAviator);
+            const isCurrentStockValid = roundRecord.market.some((item: MarketItem) => item.id === currentStockId);
+            
+            // If no stock is selected or current selection is invalid, select the first available stock
+            if (!stockSelectedAviator || !isCurrentStockValid) {
+                const firstStock = roundRecord.market[0];
+                if (firstStock.id) {
+                    setStockSelectedAviator(firstStock.id.toString());
+                }
             }
+        } else if (marketSelected && roundRecord && roundRecord.market.length === 0) {
+            // Clear selection if market becomes empty
+            setStockSelectedAviator(null);
         }
     }, [marketSelected, roundRecord, stockSelectedAviator, setStockSelectedAviator]);
 
