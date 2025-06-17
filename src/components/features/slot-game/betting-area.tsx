@@ -169,7 +169,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
         {
             previousRoundId && (
                 <SlotGameResultDialog
-                    key={String(previousRoundId)}
+                    key={String(showResults)}
                     open={showResults}
                     roundRecordId={previousRoundId}
                 />
