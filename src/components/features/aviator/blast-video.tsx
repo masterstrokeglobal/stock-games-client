@@ -11,14 +11,6 @@ interface BlastVideoProps {
 export default function BlastVideo({ isBlastPlaying, setIsBlastPlaying, blastOpacity, setBlastOpacity }: BlastVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
 
-  // set a time out for 3 second and play the video please
-  useEffect(() => {
-    setTimeout(() => {
-      setIsBlastPlaying(true)
-      console.log("🎬 Blast video is playing")
-    }, 3000)
-  }, [])
-
   useEffect(() => {
     const video = videoRef.current
     if (!video) return

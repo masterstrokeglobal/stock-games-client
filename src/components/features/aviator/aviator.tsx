@@ -113,6 +113,12 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
     }
   }, [isGameOver]);
 
+  // Reset blast video state when switching planes
+  useEffect(() => {
+    console.log("🔄 Selected plane changed, resetting blast video state");
+    setShouldShowBlast(false);
+  }, [stockSelectedAviator]);
+
   const toggleLastRounds = () => {
     setShowLastRounds(!showLastRounds)
   }

@@ -45,18 +45,26 @@ const GameDisplay = ({ multiplier, shouldShowBlast = false, setShouldShowBlast, 
   useEffect(() => {
     if (shouldShowBlast) {
       setIsBlastPlaying(true)
+      console.log("🎬 Blast video is playing here", true)
       setTimeout(() => {
         setIsParallaxVisible(false)
       }, 2000)
+    } else {
+      // Reset blast video state when shouldShowBlast becomes false
+      setIsBlastPlaying(false)
+      setIsParallaxVisible(true)
+      setBlastOpacity(0)
+      console.log("🎬 Blast video reset due to shouldShowBlast = false")
     }
   }, [shouldShowBlast])
 
   // Handle blast video completion
   const handleBlastComplete = (isPlaying: boolean) => {
-    setIsBlastPlaying(isPlaying)
-    if (!isPlaying && setShouldShowBlast) {
-      setShouldShowBlast(false)
-    }
+      console.log("🎬 Blast video is complete", isPlaying)
+      setIsBlastPlaying(isPlaying)
+      if (!isPlaying && setShouldShowBlast) {
+        setShouldShowBlast(false)
+      }
   }
 
   return (
