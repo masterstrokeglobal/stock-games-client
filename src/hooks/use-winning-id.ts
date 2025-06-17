@@ -9,7 +9,7 @@ const useWinningId = (roundRecord: RoundRecord | null) => {
 
     useEffect(() => {
         if (!roundRecord) return;
-        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 500;
+        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime();
         const timer = setTimeout(() => {
             refetch().then((result) => {
                 const isResultPresent = result.data?.data?.winningId;

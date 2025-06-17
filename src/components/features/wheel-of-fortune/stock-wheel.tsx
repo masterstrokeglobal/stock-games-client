@@ -1,5 +1,5 @@
 "use client";
-import { RoundRecord } from "@/models/round-record";
+import { RoundRecord, WHEEL_COLOR_CONFIG } from "@/models/round-record";
 import { WheelCanvas } from "./wheel-canvas";
 import React, { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -43,10 +43,11 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
         }
     }, [winningMarketId]);
 
-    const winningColor:any= useMemo(() => {
+    const winningColor= useMemo(() => {
         if (!winningMarketId || !roundRecord) return null;
-        const market = roundRecord.getColorByMarketId(winningMarketId[0] as unknown as number);
-        return market || null;
+        const color = roundRecord.getColorByMarketId(winningMarketId[0] as unknown as number);
+        const config = color ? WHEEL_COLOR_CONFIG[color] : null;
+        return config || null;
       }, [winningMarketId, roundRecord]);
     
     if (!roundRecord) {
@@ -56,9 +57,6 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
             </div>
         );
     }
-
-
-
     
     return (
         <div className={`flex flex-col items-center w-full relative gap-6 ${className || ""}`}>

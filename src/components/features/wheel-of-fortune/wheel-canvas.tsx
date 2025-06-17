@@ -77,13 +77,11 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         loader.load(
           url,
           (gltf) => {
-            console.log('Model loaded successfully');
             resolve(gltf.scene);
           },
           (progress) => {
             const percentage = progress.total > 0 ? (progress.loaded / progress.total * 100) : 0;
             setLoadingProgress(percentage);
-            console.log('Model loading progress:', percentage + '%');
           },
           (error: unknown) => {
             console.error('Model loading error:', error);
@@ -101,7 +99,6 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
   // HDRI Environment Loader function with fixed logic
   const loadHDRIEnvironment = useCallback(async (scene: THREE.Scene, renderer: THREE.WebGLRenderer, hdriUrl: string): Promise<void> => {
     try {
-      console.log('Attempting to load HDRI from:', hdriUrl);
       
       const fileExtension = hdriUrl.split('.').pop()?.toLowerCase();
       
@@ -113,7 +110,6 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
           loader.load(
             hdriUrl,
             (texture) => {
-              console.log('HDR texture loaded successfully');
               texture.mapping = THREE.EquirectangularReflectionMapping;
               texture.colorSpace = THREE.LinearSRGBColorSpace;
               scene.environment = texture;
@@ -143,7 +139,6 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
           loader.load(
             hdriUrl,
             (texture) => {
-              console.log('EXR texture loaded successfully');
               texture.mapping = THREE.EquirectangularReflectionMapping;
               texture.colorSpace = THREE.LinearSRGBColorSpace;
               scene.environment = texture;
@@ -172,7 +167,6 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
           textureLoader.load(
             hdriUrl,
             (texture) => {
-              console.log('Regular texture loaded as environment');
               texture.mapping = THREE.EquirectangularReflectionMapping;
               texture.colorSpace = THREE.SRGBColorSpace;
               scene.environment = texture;
@@ -379,7 +373,6 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
             const angleDifference = Math.abs(360 -newDegrees - targetRotationRef.current);
             
             if (angleDifference <= tolerance) {
-              console.log("Target rotation reached! Current:", newDegrees, "Target:", targetRotationRef.current);
               // Clear the target and stop spinning immediately
               targetRotationRef.current = null;
               // Stop immediately by setting speed to 0
@@ -475,15 +468,12 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
     
     // Handle stopping logic
     if (!isSpinning && winningMarketId) {
-      console.log("winning MarketID", winningMarketId);
-      console.log("winner in round record", roundRecord);
+
       
       // Find the actual index in the markets array
       if (winningMarketId && winningMarketId.length > 0) {
         const marketIndex = roundRecord?.market?.findIndex(market => market.id === winningMarketId[0]);
-        console.log("winner market index in array:", marketIndex);
-        console.log("current wheel rotation (degrees):", wheelRotationDegrees);
-        
+       
         // Calculate the target rotation where winning market should be at top (0 degrees)
         if (marketIndex !== undefined && marketIndex >= 0 && roundRecord?.market) {
           const totalMarkets = roundRecord.market.length;
@@ -492,7 +482,6 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
           const winningMarketAngle = (marketIndex / totalMarkets) * 360 + offset;
           const targetRotation = (360 - winningMarketAngle) % 360;
           // const targetRotation = (winningMarketAngle + 90) % 360 ;
-          console.log("target rotation to win (degrees):", targetRotation);
           
           // Set the target rotation - the animation loop will handle stopping
           targetRotationRef.current = targetRotation;
@@ -703,7 +692,6 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
                 // Add text group to spinning objects so it rotates with the wheel
                 spinningObjects.push(textGroup);
                 
-                console.log('Added market names text group to spinning objects');
               }
             } catch (error) {
               console.error('Failed to create market names text:', error);
@@ -714,7 +702,6 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
             spinningObjectsRef.current = spinningObjects;
             sceneRef.current.add(model);
             modelRef.current = model;
-            console.log('Model loaded successfully');
           }
         }
 

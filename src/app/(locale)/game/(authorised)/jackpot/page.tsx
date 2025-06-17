@@ -201,10 +201,11 @@ const StockCard = ({ stock, className, amount, roundRecord }: { stock?: RankedMa
   if (!stock) return null;
 
 
-  const initialPrice = roundRecord?.initialValues?.[stock.bitcode?.toLocaleLowerCase() as string];
+  const initialPrice = roundRecord?.getInitialPrice(stock.bitcode as string);
 
   const price = stock.price ? stock.price : initialPrice;
 
+  console.log(amount , initialPrice ,roundRecord?.initialValues);
   return (
     <div className="relative">
       <div className={cn(
