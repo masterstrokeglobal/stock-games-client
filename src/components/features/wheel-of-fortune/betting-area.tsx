@@ -98,7 +98,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
               onClick={() => setBetAmount(amount)}
             >
               <div className="flex items-center">
-                <span className="text-sm">{INR(amount)}</span>
+                <span className="text-sm">{INR(amount, true)}</span>
               </div>
               <div className={cn(
                 "absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%]",

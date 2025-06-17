@@ -26,6 +26,10 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
   const isPlaceOver = useIsPlaceOver(roundRecord);
   const coinValues = userDetails?.company?.coinValues;
 
+  const totalUpAmount = placements?.filter(p => p.placement === SevenUpDownPlacementType.UP).reduce((acc, bet) => acc + bet.amount, 0) ?? 0;
+  const totalDownAmount = placements?.filter(p => p.placement === SevenUpDownPlacementType.DOWN).reduce((acc, bet) => acc + bet.amount, 0) ?? 0;
+  const totalSevenAmount = placements?.filter(p => p.placement === SevenUpDownPlacementType.SEVEN).reduce((acc, bet) => acc + bet.amount, 0) ?? 0;
+
   const showResult = useShowResults(roundRecord, placements ?? []);
 
   if (isPlaceOver && placements?.length) {
@@ -33,38 +37,15 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
       <div className="w-full bg-[#1a1b2e] text-white p-6">
         <div className="flex flex-col gap-3">
           <h3 className="text-xl font-semibold text-blue-400 mb-2">Your Bets</h3>
-          {placements.map((placement, index) => (
-            <div key={index} className="flex items-center justify-between bg-[#2a2b3e] p-4 rounded-xl border-2 border-blue-500/30 hover:border-blue-400 transition-all duration-300 shadow-lg hover:shadow-blue-500/20">
-              <div className="flex items-center gap-3">
-                <div className="bg-gradient-to-br from-blue-500/30 to-purple-500/30 p-3 rounded-lg">
-                  <div className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-                    {placement.placement === SevenUpDownPlacementType.UP && '8-12'}
-                    {placement.placement === SevenUpDownPlacementType.DOWN && '1-6'}
-                    {placement.placement === SevenUpDownPlacementType.SEVEN && '7'}
-                  </div>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-sm text-blue-200 opacity-70">
-                    {placement.placement === SevenUpDownPlacementType.UP && 'Up Bet'}
-                    {placement.placement === SevenUpDownPlacementType.DOWN && 'Down Bet'}
-                    {placement.placement === SevenUpDownPlacementType.SEVEN && 'Seven Bet'}
-                  </span>
-                  <span className="text-xs text-blue-300/50">
-                    {placement.placement === SevenUpDownPlacementType.SEVEN ? '1:4' : '1:2'}
-                  </span>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-                  <span className="text-lg font-bold">₹</span>
-                </div>
-                <div className="flex flex-col items-end">
-                  <span className="text-lg font-bold text-blue-300">₹{placement.amount}</span>
-                  <span className="text-xs text-blue-300/50">Placed</span>
-                </div>
-              </div>
-            </div>
-          ))}
+          {totalUpAmount > 0 && (
+            <PlacementCard placement={{placement: SevenUpDownPlacementType.UP, amount: totalUpAmount}} />
+          )}
+          {totalDownAmount > 0 && (
+            <PlacementCard placement={{placement: SevenUpDownPlacementType.DOWN, amount: totalDownAmount}} />
+          )}
+          {totalSevenAmount > 0 && (
+            <PlacementCard placement={{placement: SevenUpDownPlacementType.SEVEN, amount: totalSevenAmount}} />
+          )}
         </div>
       </div>
     );
@@ -101,7 +82,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
             onClick={() => setBetAmount(amount)}
           >
             <div className="flex   items-center">
-              <span className="text-sm">{INR(amount)}</span>
+              <span className="text-sm">{INR(amount, true)}</span>
             </div>
             <div className={cn(
               "absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%]",
@@ -115,3 +96,39 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
     </>
   );
 };
+
+
+const PlacementCard = ({ placement }: { placement: {placement: SevenUpDownPlacementType, amount: number} }) => {
+  return (
+    <div  className="flex items-center justify-between bg-[#2a2b3e] p-4 rounded-xl border-2 border-blue-500/30 hover:border-blue-400 transition-all duration-300 shadow-lg hover:shadow-blue-500/20">
+    <div className="flex items-center gap-3">
+      <div className="bg-gradient-to-br from-blue-500/30 to-purple-500/30 p-3 rounded-lg">
+        <div className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+          {placement.placement === SevenUpDownPlacementType.UP && '8-12'}
+          {placement.placement === SevenUpDownPlacementType.DOWN && '1-6'}
+          {placement.placement === SevenUpDownPlacementType.SEVEN && '7'}
+        </div>
+      </div>
+      <div className="flex flex-col">
+        <span className="text-sm text-blue-200 opacity-70">
+          {placement.placement === SevenUpDownPlacementType.UP && 'Up Bet'}
+          {placement.placement === SevenUpDownPlacementType.DOWN && 'Down Bet'}
+          {placement.placement === SevenUpDownPlacementType.SEVEN && 'Seven Bet'}
+        </span>
+        <span className="text-xs text-blue-300/50">
+          {placement.placement === SevenUpDownPlacementType.SEVEN ? '1:2' : '1:2'}
+        </span>
+      </div>
+    </div>
+    <div className="flex items-center gap-3">
+      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+        <span className="text-lg font-bold">₹</span>
+      </div>
+      <div className="flex flex-col items-end">
+        <span className="text-lg font-bold text-blue-300">₹{placement.amount}</span>
+        <span className="text-xs text-blue-300/50">Placed</span>
+      </div>
+    </div>
+  </div>
+  )
+}

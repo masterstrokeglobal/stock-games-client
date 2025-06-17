@@ -1,3 +1,4 @@
+import { RankedMarketItem } from "@/hooks/use-leadboard";
 import { CoinTossPair } from "./coin-toss-pair";
 import { HeadTailPlacementType } from "./head-tail";
 import MarketItem, { SchedulerType } from "./market-item";
@@ -286,15 +287,55 @@ export class RoundRecord {
         const initialPrice = this.getInitialPrice(market.code || "");
         const finalPrice = this.finalDifferences?.[market.code || ""] || 0;
         if (initialPrice === 0) return 0;
-        return parseFloat((((finalPrice - initialPrice) / initialPrice) * 100).toFixed(2));
+        return parseFloat((((finalPrice - initialPrice) / initialPrice) * 100).toFixed(6));
     }
 
     get finalPricesPresent(): boolean {
         return Object.keys(this.finalDifferences || {}).length > 0;
     }
 
+    get sortedMarketItems(): RankedMarketItem[] | null {
+        if (!this.initialValues || !this.finalDifferences) return null;
+
+        const initialPrices = this.initialValues;
+        const finalPrices = this.finalDifferences;
+        const sortedMarketItems: RankedMarketItem[] = this.market.sort((a, b) => {
+            const initialPriceA = initialPrices?.[a.code || ""] || 0;
+            const initialPriceB = initialPrices?.[b.code || ""] || 0;
+            const finalPriceA = finalPrices?.[a.code || ""] || 0;
+            const finalPriceB = finalPrices?.[b.code || ""] || 0;
+            const changePercentageA = ((finalPriceA - initialPriceA) / initialPriceA) * 100;
+            const changePercentageB = ((finalPriceB - initialPriceB) / initialPriceB) * 100;
+            return changePercentageB - changePercentageA;
+        }).map(item => {
+
+            const change_percent = ((finalPrices?.[item.code || ""] || 0) - (initialPrices?.[item.code || ""] || 0)) / (initialPrices?.[item.code || ""] || 0) * 100;
+
+            return ({
+                ...item,
+                change_percent: change_percent,
+                rank: 0,
+                price: finalPrices?.[item.code || ""] || 0,
+                codeName: item.name || "",
+                stream: item.stream || "",
+                bitcode: item.code || "",
+                id: item.id || 0,
+                type: item.type || SchedulerType.NSE,
+                active: item.active || true,
+                horse: item.horse || 0,
+                name: item.name || "",
+                currency: item.currency || "",
+            } as unknown as RankedMarketItem);
+        });
+        return sortedMarketItems;
+    }
+
     get winnersNames(): string[] {
         const names = this.market.filter(item => this.winningId?.includes(item.id || 0)).map(item => item.name);
         return names.filter(item => item !== undefined) as string[];
+    }
+
+    getColorByMarketId(marketId: number): WheelColor | undefined {
+        return this.marketColors.find(item => item.marketId === marketId)?.color || undefined;
     }
 }

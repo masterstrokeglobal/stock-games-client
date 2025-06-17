@@ -1,7 +1,8 @@
 "use client";
 import { RoundRecord } from "@/models/round-record";
 import { WheelCanvas } from "./wheel-canvas";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface WheelOfFortuneProps {
     className?: string;
@@ -42,6 +43,11 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
         }
     }, [winningMarketId]);
 
+    const winningColor:any= useMemo(() => {
+        if (!winningMarketId || !roundRecord) return null;
+        const market = roundRecord.getColorByMarketId(winningMarketId[0] as unknown as number);
+        return market || null;
+      }, [winningMarketId, roundRecord]);
     
     if (!roundRecord) {
         return (
@@ -51,6 +57,9 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
         );
     }
 
+
+
+    
     return (
         <div className={`flex flex-col items-center w-full relative gap-6 ${className || ""}`}>
             <div className="h-[500px] w-full">
@@ -64,7 +73,7 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
             </div>
 
             {showResult && displayWinner && winningMarketId && winningMarketId.length > 0 && (
-                <div className="w-full  max-w-md border-2 border-amber-700 bg-amber-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 ">
+                <div className={cn("w-full  max-w-md border-2 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 ", winningColor ?`${winningColor.bgColor}` : "")}>
                     <p className="text-center font-medium">
                         Winner:{" "}
                         <span className="font-bold text-amber-700">

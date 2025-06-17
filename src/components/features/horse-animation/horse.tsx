@@ -18,8 +18,8 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
   const isPlaceOver = useIsPlaceOver(roundRecord);
 
   return isPlaceOver ? (
-    <Suspense fallback={<GameLoadingScreen className="md:h-96 h-[500px]" loadingImageClassName="w-10 h-auto" />}>
-      <div className="game-gradient-card-parent md:h-96 h-64">
+    <Suspense fallback={<GameLoadingScreen className="md:h-full h-[500px]" loadingImageClassName="w-10 h-auto" />}>
+      <div className="game-gradient-card-parent md:h-full h-64 overflow-hidden">
         <Canvas className="bg-white md:rounded-sm">
           <PixelRatioManager />
           <HorseRaceEnvironment roundRecord={roundRecord} filteredMarket={filteredMarket} />
@@ -37,9 +37,9 @@ function RacePreparation( {className,roundRecord}: {className?: string,roundReco
   const gameState = useGameState(roundRecord);
 
   return (
-    <div className= {cn("w-full  game-gradient-card-parent  overflow-hidden  relative text-game-text md:h-96 h-64   text-center shadow-2xl", className)}>
+    <div className= {cn("w-full  game-gradient-card-parent overflow-hidden relative text-game-text md:h-full h-64 text-center shadow-2xl", className)}>
       <img src="/images/roulette/game-prep.png" className="w-full h-full rounded-sm object-cover " />
-        <div className="rounded-xl p-4 absolute md:top-4 md:left-4 md:translate-x-0 md:translate-y-0  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="rounded-xl p-4 absolute md:top-16  w-fit  md:left-0 md:w-1/2 md:translate-x-0 md:translate-y-0  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <p className="text-white text-xl mb-2">{t('race-begin')}</p>
           <div className="flex flex-col gap-2 text-white text-xl game-time-text"> {gameState.placeTimeLeft.formatted}</div>
         </div>

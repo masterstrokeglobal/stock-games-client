@@ -14,16 +14,18 @@ export const useStockGamePlacements = (roundId: number) => {
     });
 };
 
-export const useGetMySlotGamePlacement = (roundId: number) => {
+export const useGetMySlotGamePlacement = (roundId?: number) => {
     return useQuery <{data:StockGamePlacement[], count:number}>({
         queryKey: ["my-slot-jackpot", roundId],
         queryFn: async () => {
+            if (!roundId) return { data: [], count: 0 };
             const response = await slotGameAPI.getMySlotJackpotGameRecord(roundId);
             return {
                 data: response.data.data.map((item: any) => new StockGamePlacement(item)),
                 count: response.data.count
             }
-        }
+        },
+        enabled: !!roundId
     });
 };
 
@@ -36,7 +38,7 @@ export const useCreateStockGamePlacement = () => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
                     return query.queryKey[0] === "slot-jackpot" ||
-                        query.queryKey[0] === "my-slot-jackpot";
+                        query.queryKey[0] === "my-slot-jackpot" || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
                 }
             });
             toast.success("Bet placed successfully");

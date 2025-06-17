@@ -19,25 +19,25 @@ interface Dice3DProps {
   roundRecordWithWinningId: RoundRecord | null;
 }
 
-const StockDisplay = ({ stock, className, isSecondCube, roundRecord }: { stock?: RankedMarketItem, className?: string, isSecondCube?: boolean, roundRecord: RoundRecord | null }) => {
+const StockDisplay = ({ stock, className, isSecondCube, roundRecord,winner }: { stock?: RankedMarketItem, className?: string, isSecondCube?: boolean, roundRecord: RoundRecord | null , winner:boolean}) => {
 
   if (!stock) return null;
   const changePercentageText = roundRecord?.finalPricesPresent ? `${roundRecord.changePercentage(stock?.id || 0)}%` : `${Number(stock?.change_percent) >= 0 ? '+' : ''}${stock?.change_percent ?? "-"}% `;
   const changePercentage = roundRecord?.finalPricesPresent ? roundRecord.changePercentage(stock?.id || 0) : stock?.change_percent;
 
   return (
-    <div className={cn("flex flex-col justify-between items-center border-b border-white/10  text-[10px] relative z-20 text-white/90 py-0.5 px-1 bg-black/70 backdrop-blur-sm  hover:bg-black transition-colors w-full", className)}>
+  <div className={cn("flex flex-col justify-between items-center border-b border-white/10  text-[10px] relative z-20 text-white/90 py-0.5 px-1 bg-gradient-to-b from-[#001607] to-[#13311c] backdrop-blur-sm  hover:bg-[#13311c] transition-colors w-full", winner && "from-amber-600 to-amber-700", className)}>
       <div className="flex items-center justify-between w-full px-1 gap-0.5 min-w-0">
         <span className="font-medium truncate max-w-[60px]">{stock?.codeName}</span>
-        <span className={cn("text-[10px]  font-bold bg-white/10 text-amber-600 px-0.5 rounded-full flex-shrink-0", isSecondCube && "order-first")}>
+        <span className={cn("text-[10px]  font-bold bg-white/10 text-amber-600 px-0.5 rounded-full flex-shrink-0", winner && "text-white", isSecondCube && "order-first")}>
           {stock?.horse ? stock?.horse % 6 === 0 ? 6 : stock?.horse % 6 : ''}
         </span>
       </div>
       <span className={cn(
         "font-bold px-0.5 rounded flex-shrink-0",
-        Number(changePercentage) >= 0
+      changePercentage ?   Number(changePercentage) > 0
           ? 'text-green-400 bg-green-400/10'
-          : 'text-red-400 bg-red-400/10'
+          : 'text-red-400 bg-red-400/10' : "text-white bg-white/10"
       )}>
         {changePercentageText}
       </span>
@@ -58,22 +58,34 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
 
   const marketItemsStocks = useMemo(() => {
     return marketItems.map((item) => {
-      const stock = stocks.find((stock) => stock.id === item.id);
+      const stock = roundRecordWithWinningId?.finalPricesPresent ? roundRecordWithWinningId.sortedMarketItems?.find((stock) => stock.id === item.id) : stocks.find((stock) => stock.id === item.id);
       return stock;
     });
-  }, [marketItems, stocks]);
+  }, [marketItems, stocks, roundRecordWithWinningId]);
 
+  const firstCubeStocks = useMemo(() => {
+    return  marketItemsStocks.slice(0, 6).sort((a, b) => (b?.change_percent==undefined ? -100 : parseFloat(b?.change_percent)) - (a?.change_percent==undefined ? -100 : parseFloat(a?.change_percent)));
+  }, [marketItemsStocks]);
+
+  const secondCubeStocks = useMemo(() => {
+    return marketItemsStocks.slice(6, 12).sort((a, b) => (b?.change_percent==undefined ? -100 : parseFloat(b?.change_percent)) - (a?.change_percent==undefined ? -100 : parseFloat(a?.change_percent)));
+  }, [marketItemsStocks]);
+
+  console.log(roundRecordWithWinningId?.winningId, [...firstCubeStocks, ...secondCubeStocks].map((stock) => `${stock?.codeName} ${stock?.change_percent}`));
 
   // Check if we're waiting for winning data
   const isWaitingForResults = !isRolling && (!roundRecordWithWinningId?.winningId || roundRecordWithWinningId?.winningId.length === 0);
 
+
+  console.log(firstCubeStocks[0]?.change_percent, firstCubeStocks[0]?.codeName, secondCubeStocks[0]?.change_percent, secondCubeStocks[0]?.codeName, roundRecordWithWinningId?.initialValues, roundRecordWithWinningId?.finalDifferences);
+
   return (
     <div className={`font-sans  bg-cover bg-center overflow-visible ${className}`} style={{ height: '14rem' }}>
       <div className="flex justify-center  relative  h-full items-center">
-        <div className="flex sm:pr-24 pr-12 flex-row bg-[url('/images/dice-game/dice-bg.jpg')] pr-1 bg-cover bg-center flex-1 h-full gap-2 items-center justify-end animate-slide-left relative">
+        <div className="flex sm:pr-24 pr-12 flex-row bg-[url('/images/dice-game/dice-bg-2.png')] pr-1 bg-cover bg-center flex-1 h-full gap-2 items-center justify-end animate-slide-left relative">
           <div className='flex flex-col  absolute left-0 top-0 h-full w-fit'>
-            {marketItemsStocks.slice(0, 6).map((stock) => (
-              <StockDisplay key={stock?.id} stock={stock} className='flex-1 rounded-r-xl w-full' roundRecord={roundRecordWithWinningId} />
+            {firstCubeStocks?.map((stock, index) => (
+              <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1 rounded-r-xl w-full' roundRecord={roundRecordWithWinningId} />
             ))}
           </div>
           {!isMobile &&
@@ -88,7 +100,7 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
         <div className=' absolute left-1/2 -translate-x-1/2 h-full z-10'>
           <img src="/images/dice-game/dancing-2.gif" alt="dice-bg" className='h-full w-auto object-contain' />
         </div>
-        <div className="flex  sm:pl-24 pl-12   flex-row bg-[url('/images/dice-game/dice-bg.jpg')]  bg-cover bg-center flex-1 h-full gap-2 items-center justify-between animate-slide-right relative">
+        <div className="flex  sm:pl-24 pl-12   flex-row bg-[url('/images/dice-game/dice-bg-2.png')]  bg-cover bg-center flex-1 h-full gap-2 items-center justify-between animate-slide-right relative">
           {!isMobile &&
             <Cube
               marketItems={secondCube}
@@ -100,8 +112,8 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
             />
           }
           <div className='flex flex-col  h-full absolute right-0 top-0 w-fit self-end'>
-            {marketItemsStocks.slice(6, 12).map((stock) => (
-              <StockDisplay key={stock?.id} stock={stock} className='flex-1 rounded-l-xl w-full' isSecondCube roundRecord={roundRecordWithWinningId} />
+            {secondCubeStocks?.map((stock, index) => (
+              <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1 rounded-l-xl w-full' isSecondCube roundRecord={roundRecordWithWinningId} />
             ))}
           </div>
         </div>
@@ -164,11 +176,11 @@ const DiceFace: React.FC<DiceFaceProps> = ({ marketItem, className, number, isWi
       style={{
         width: '80px',
         height: '80px',
-        background: isWinning ? 'linear-gradient(to right, #ffd700, #ffa500)' : 'linear-gradient(to right, #ffd700, #ffa500)',
+        background: isWinning ? 'linear-gradient(to right, #ffffff, #f0f0f0)' : 'linear-gradient(to right, #ffffff, #f0f0f0)',
         border: '2px solid',
-        borderImage: 'linear-gradient(90deg, #b8860b 0%, #daa520 50%, #b8860b 100%) 1',
+        borderImage: 'linear-gradient(90deg, #d3d3d3 0%, #e0e0e0 50%, #d3d3d3 100%) 1',
         borderRadius: '8px',
-        boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 8px 32px rgba(255, 215, 0, 0.15)'
+        boxShadow: '0 0 20px rgba(128, 128, 128, 0.3), 0 8px 32px rgba(128, 128, 128, 0.15)'
       }}
     >
       {renderDots(number)}
@@ -210,8 +222,8 @@ export const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, w
     const rotations = {
       0: 'rotateX(0deg) rotateY(0deg)',      // front
       5: 'rotateX(0deg) rotateY(180deg)',    // back
-      2: 'rotateX(0deg) rotateY(90deg)',     // right
-      3: 'rotateX(0deg) rotateY(-90deg)',    // left
+      3: 'rotateX(0deg) rotateY(90deg)',     // right
+      2: 'rotateX(0deg) rotateY(-90deg)',    // left
       1: 'rotateX(-90deg) rotateY(0deg)',    // top
       4: 'rotateX(90deg) rotateY(0deg)'      // bottom
     };

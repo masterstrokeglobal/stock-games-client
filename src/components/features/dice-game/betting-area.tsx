@@ -27,6 +27,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
   const showResult = useShowResults(roundRecord, placements ?? []);
 
+
   if (isPlaceOver && placements?.length) {
     // Aggregate placements by number
     const aggregatedPlacements = placements.reduce((acc, placement) => {
@@ -45,33 +46,36 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
     return (
       <>
-        <div className="w-full bg-[#1a1b2e] text-white p-6">
+        <div className="w-full p-6 bg-[url('/images/dice-game/dice-bg-2.png')]" >
           <div className="flex flex-col gap-3">
-            <h3 className="text-xl font-semibold text-amber-400 mb-2">Your Bets</h3>
+            <h3 className="text-xl font-semibold text-[#e6b85c] mb-2">Your Bets</h3>
             {Object.values(aggregatedPlacements).map((aggregated, index) => (
-              <div key={index} className="flex items-center justify-between bg-[#2a2b3e] p-4 rounded-xl border-2 border-amber-500/30 hover:border-amber-400 transition-all duration-300 shadow-lg hover:shadow-amber-500/20">
+              <div
+                key={index}
+                className="flex items-center justify-between bg-[#14311c]  p-4  border-2 border-[#e6b85c] shadow-md"
+              >
                 <div className="flex items-center gap-3">
-                  <div className="bg-gradient-to-br from-amber-500/30 to-red-500/30 p-3 rounded-lg">
-                    <div className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-red-400">
+                  <div className="bg-gradient-to-br from-[#e6b85c]/90 to-[#e6b85c]/100 p-3 text-white border rounded-sm border-[#e6b85c]">
+                    <div className="text-lg font-bold text-white">
                       {aggregated.number}
                     </div>
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-sm text-amber-200 opacity-70">
+                    <span className="text-sm text-[#e6b85c] opacity-80">
                       Number {aggregated.number}
                     </span>
-                    <span className="text-xs text-amber-300/50">
+                    <span className="text-xs text-[#e6b85c]/70">
                       {aggregated.count} bet{aggregated.count > 1 ? 's' : ''}
                     </span>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-red-500 flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.3)]">
-                    <span className="text-lg font-bold">₹</span>
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#e6b85c] to-[#ffb84c] flex items-center justify-center border-2 border-[#e6b85c] shadow-[0_0_10px_#e6b85c80]">
+                    <span className="text-lg font-bold text-[#7a1c18]">₹</span>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-lg font-bold text-amber-300">₹{aggregated.totalAmount}</span>
-                    <span className="text-xs text-amber-300/50">Total</span>
+                    <span className="text-lg font-bold text-[#e6b85c]">₹{aggregated.totalAmount}</span>
+                    <span className="text-xs text-[#e6b85c]/70">Total</span>
                   </div>
                 </div>
               </div>
@@ -84,11 +88,17 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
   }
   return (
     <>
-      <div className="w-full bg-[#1a1b2e] text-white p-6">
+      <div
+        className="w-full p-6  bg-[url('/images/dice-game/dice-bg-2.png')] bg-cover bg-center ">
         <div className="flex justify-center relative mb-4">
-          <div className="mr-2 absolute left-3 top-3 bottom-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-red-500 flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.5)]">
-              <span className="text-lg">₹</span>
+          <div className="mr-2 absolute left-3 top-3 bottom-2 flex items-center">
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center border-2 border-[#e6b85c] shadow-[0_0_10px_#e6b85c80]"
+              style={{
+                background: "linear-gradient(135deg, #e6b85c 60%, #ffb84c 100%)"
+              }}
+            >
+              <span className="text-lg text-[#7a1c18] font-bold">₹</span>
             </div>
           </div>
           <Input
@@ -98,7 +108,13 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
             placeholder="Enter bet amount"
             value={betAmount}
             onChange={(e) => setBetAmount(Number(e.target.value))}
-            className="p-2 rounded-2xl pl-14 h-14 border-2 border-amber-500/50 text-white text-xl bg-[#2a2b3e] focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all"
+            className={cn(
+              "p-2 rounded-none pl-14 h-14 border-2 text-[#e6b85c] text-xl bg-[#14311c] focus:border-[#e6b85c] focus:ring-2 focus:ring-[#e6b85c]/30 transition-all",
+              "border-[#e6b85c] placeholder-[#e6b85c]/60"
+            )}
+            style={{
+              boxShadow: "0 0 0 4px #7a1c18"
+            }}
           />
         </div>
 
@@ -106,14 +122,21 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
           {coinValues?.map((amount) => (
             <Button
               className={cn(
-                'rounded-full  transition-all duration-200 relative group overflow-hidden',
-                betAmount === amount ? 'bg-gradient-to-br from-amber-400 to-red-500 shadow-[0_0_15px_rgba(245,158,11,0.3)]' : 'bg-[#2a2b3e] hover:bg-[#3a3b4e]'
+                'rounded-full transition-all flex-1 duration-200 relative group overflow-hidden border-2 border-[#e6b85c] font-bold',
+                betAmount === amount
+                  ? 'bg-gradient-to-br from-[#e6b85c] to-[#ffb84c] text-[#7a1c18] shadow-[0_0_10px_#e6b85c80]'
+                  : 'bg-[#14311c] text-[#e6b85c] hover:bg-[#1e4d2b]'
               )}
               key={amount}
               onClick={() => setBetAmount(amount)}
+              style={{
+                minWidth: 64,
+                minHeight: 40,
+                boxShadow: betAmount === amount ? "0 0 0 4px #7a1c18" : undefined
+              }}
             >
               <div className="flex items-center">
-                <span className="text-sm">{INR(amount)}</span>
+                <span className="text-base">{INR(amount, true)}</span>
               </div>
               <div className={cn(
                 "absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%]",

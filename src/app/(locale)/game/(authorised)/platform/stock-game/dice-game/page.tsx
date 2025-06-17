@@ -1,5 +1,5 @@
 "use client"
-import TimeDisplay from '@/components/common/bet-locked-banner';
+import { DiceGameTimeDisplay } from '@/components/common/bet-locked-banner';
 import GameLoadingScreen from '@/components/common/game-loading-screen';
 import MarketSelector from '@/components/common/market-selector';
 import StockGameHeader from '@/components/common/stock-game-header';
@@ -30,7 +30,7 @@ const WheelOfFortune = () => {
                 <StockGameHeader onBack={() => setMarketSelected(false)} title="Dice Game" />
                 <Dice3D className='h-36' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
                 <BettingGrid className='relative sm:pt-32 pt-20' roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={roundRecordWithWinningId?.winningId || null} >
-                    <TimeDisplay className="absolute top-0 left-1/2 -translate-x-1/2 z-10 w-full max-w-sm  " roundRecord={roundRecord} />
+                    <DiceGameTimeDisplay className="absolute top-0 left-1/2 -translate-x-1/2 z-10 w-full max-w-sm  " roundRecord={roundRecord} />
                     <MobileDice roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
                 </BettingGrid>
                 <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />

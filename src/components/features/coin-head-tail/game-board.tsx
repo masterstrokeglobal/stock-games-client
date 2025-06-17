@@ -2,6 +2,10 @@ import { cn, INR } from '@/lib/utils';
 import { HeadTailPlacementType } from '@/models/head-tail';
 import { RoundRecord } from '@/models/round-record';
 import { useCreateHeadTailPlacement, useGetMyCurrentRoundHeadTailPlacement } from '@/react-query/head-tail-queries';
+import { useLeaderboard } from '@/hooks/use-sevenup-leader-board';
+import { StockPrice } from './stock-price';
+import TimeDisplay from '@/components/common/bet-locked-banner';
+import { useMemo } from 'react';
 
 
 type Props = {
@@ -9,12 +13,13 @@ type Props = {
   amount: number;
   className?: string;
   children?: React.ReactNode;
-  winningSide?: HeadTailPlacementType;
+  winningSide: HeadTailPlacementType | null;
 }
 
-export default function CoinFlipGame({ roundRecord, amount, className, children, winningSide }: Props) {
+export default function CoinFlipGame({ roundRecord, amount, className, winningSide }: Props) {
 
   const { mutate: createHeadTailPlacement, isPending } = useCreateHeadTailPlacement();
+  const { stocks } = useLeaderboard(roundRecord);
 
   const { data: placements } = useGetMyCurrentRoundHeadTailPlacement(roundRecord.id);
 
@@ -35,9 +40,22 @@ export default function CoinFlipGame({ roundRecord, amount, className, children,
   const hasHeadBet = myHeadAmount > 0;
   const hasTailBet = myTailAmount > 0;
 
+  
+  const headStock=  useMemo(() => stocks.find((item) => item.id === roundRecord.coinTossPair?.head?.id), [stocks, roundRecord.coinTossPair?.head?.id]);
+  const tailStock=  useMemo(() => stocks.find((item) => item.id === roundRecord.coinTossPair?.tail?.id), [stocks, roundRecord.coinTossPair?.tail?.id]);
+  
+  const winningStock = stocks.sort((a, b) => parseFloat(b.change_percent) - parseFloat(a.change_percent))[0];
+
+
   return (
-    <div className={cn("flex flex-col items-center justify-center w-full h-full bg-amber-800 p-4 pt-20 rounded-lg bg-center relative", className)}>
-      {children}
+    <div className={cn("flex flex-col items-center justify-center w-full h-full bg-amber-800 p-4 md:pt-20 pt-32 rounded-lg bg-center relative", className)}>
+      <div className='grid sm:grid-cols-3 grid-cols-2 w-full z-10 absolute top-0 left-0'>
+
+        {headStock && <StockPrice key={headStock.id}  rankedMarketItem={headStock} winning={ winningSide ? winningSide === HeadTailPlacementType.HEAD : winningStock?.id === headStock?.id} />}
+        <TimeDisplay className='col-span-2 sm:col-span-1 sm:order-none order-last' roundRecord={roundRecord} />
+        {tailStock && <StockPrice key={tailStock.id} rankedMarketItem={tailStock} winning={ winningSide ? winningSide === HeadTailPlacementType.TAIL : winningStock?.id === tailStock?.id} />}
+
+      </div>
       <img src="/images/wodden-board.jpg" alt="wodden-board" className="w-full h-full object-fill absolute top-0 left-0 z-0" />
       <div className="flex w-full max-w-md gap-4 p-4">
         {/* HEAD CARD */}
@@ -48,13 +66,13 @@ export default function CoinFlipGame({ roundRecord, amount, className, children,
               <span className="font-bold text-amber-900 drop-shadow-sm">{myHeadAmount}</span>
             </div>
           )}
-          
+
           <div
             className={cn(
               "min-h-64 z-10 rounded-md flex flex-col cursor-pointer transition-all duration-300",
               isPending ? 'opacity-70 pointer-events-none' : 'hover:shadow-lg hover:scale-105',
-              hasHeadBet ? "border-4 rounded-lg border-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.8)]":"",
-              winningSide === HeadTailPlacementType.HEAD ? 'border-4 border-amber-400 animate-ping shadow-[0_0_20px_rgba(251,191,36,0.8)]' : ''
+              hasHeadBet ? "border-4 rounded-lg border-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.8)]" : "",
+              winningSide === HeadTailPlacementType.HEAD ? 'border-4 border-amber-400 animate-pulse shadow-[0_0_20px_rgba(251,191,36,0.8)]' : ''
             )}
             onClick={() => handleCardClick(HeadTailPlacementType.HEAD)}
           >
@@ -96,14 +114,14 @@ export default function CoinFlipGame({ roundRecord, amount, className, children,
               <span className="font-bold text-amber-900 drop-shadow-sm">{myTailAmount}</span>
             </div>
           )}
-          
+
           <div
             className={cn(
               "min-h-64 z-10 rounded-md flex flex-col cursor-pointer transition-all duration-300",
               isPending ? 'opacity-70 pointer-events-none' : 'hover:shadow-lg hover:scale-105',
-              hasTailBet ? "border-4 rounded-lg border-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.8)]":"",
+              hasTailBet ? "border-4 rounded-lg border-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.8)]" : "",
 
-              winningSide === HeadTailPlacementType.TAIL ? 'border-4 border-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.8)]' : ''
+              winningSide === HeadTailPlacementType.TAIL ? 'border-4 animate-pulse  border-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.8)]' : ''
             )}
             onClick={() => handleCardClick(HeadTailPlacementType.TAIL)}
           >

@@ -3,13 +3,13 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useGameState } from "@/hooks/use-current-game";
 import { useLeaderboard } from "@/hooks/use-leadboard";
+import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { useGetRoundRecordById } from "@/react-query/round-record-queries";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useRef, useState } from "react";
-import useWindowSize from "@/hooks/use-window-size";
+import { useEffect, useMemo, useRef } from "react";
 import LeaderboardHeader from "./leaderboard-header";
 
 
@@ -23,7 +23,6 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
     const t = useTranslations("game");
     const { stocks: leaderboardData } = useLeaderboard(roundRecord);
     const sectionRef = useRef<HTMLDivElement | null>(null);
-    const [scrollAreaHeight, setScrollAreaHeight] = useState<number>(0);
     const { isGameOver } = useGameState(roundRecord);
     const { isMobile } = useWindowSize();
 
@@ -52,12 +51,11 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
     }, [data, isSuccess]);
 
 
-    useEffect(() => {
-        if (sectionRef.current) {
-            const sectionHeight = sectionRef.current.offsetHeight;
-            setScrollAreaHeight(sectionHeight);
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (sectionRef.current) {
+    //         const sectionHeight = sectionRef.current.offsetHeight;
+    //     }
+    // }, []);
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('en-US', {
@@ -78,18 +76,17 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
     return (
         <section
             ref={sectionRef}
-            className={cn("md:rounded-sm h-full game-gradient-card-parent overflow-hidden w-full", className)}
+            className={cn("md:rounded-sm h-full game-gradient-card-parent !pb-0.5 overflow-hidden w-full", className)}
         >
-            <div className="game-gradient-card md:rounded-sm">
+            <div className="game-gradient-card md:rounded-sm h-full">
                 <LeaderboardHeader />
                 <ScrollArea
-                    className=" md:h-full h-64"
-                    style={{ height: isMobile ? "300px" : `${scrollAreaHeight}px` }}
+                    style={{ height: isMobile ? "300px" : "100%" }}
                     type="auto"
                 >
                     <table className="min-w-full mb-12 relative  ">
                         <div className="gradient-line " />
-                        <thead className="game-gradient-card-header py-2">
+                        <thead className="game-gradient-card-header sticky top-0 py-2">
                             <tr className="gradient-line"/>
                             <tr className="text-game-text text-sm ">
                                 <th className="p-2 py-3 text-left w-12 text-white">

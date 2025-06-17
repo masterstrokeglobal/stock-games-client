@@ -180,13 +180,15 @@ export const secondNames: string[] = [
 ];
 
 
-export const INR = (rupees: string | number) => {
+export const INR = (rupees: string | number, nodecimal: boolean = false) => {
   // convert number into RUpees
   const number = Number(rupees);
 
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
-    currency: 'INR'
+    currency: 'INR',
+    minimumFractionDigits: nodecimal ? 0 : 2,
+    maximumFractionDigits: nodecimal ? 0 : 2
   }).format(number);
 }
 
@@ -314,3 +316,21 @@ export const schedulerTypeOptions = Object.values(SchedulerType).map((type) => (
 }));
 
 
+export const slotWinningMultiplier = [
+  {
+    multiplier: 2,
+    count: 2
+  },
+  {
+    multiplier: 3,
+    count: 3
+  },
+  {
+    multiplier: 4,
+    count: 4
+  },
+  {
+    multiplier: 5,
+    count: 5
+  },
+]

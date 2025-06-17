@@ -2,6 +2,7 @@ import { cn, INR } from '@/lib/utils';
 import { RoundRecord, WHEEL_COLOR_CONFIG } from '@/models/round-record';
 import { WheelColor } from '@/models/wheel-of-fortune-placement';
 import { useCreateWheelOfFortunePlacement, useGetMyCurrentRoundWheelOfFortunePlacement } from '@/react-query/wheel-of-fortune-queries';
+import { useMemo } from 'react';
 
 // Color configuration mapping
 
@@ -10,10 +11,10 @@ type Props = {
   amount: number;
   className?: string;
   children?: React.ReactNode;
-  winningColor?: WheelColor;
+  winningId: number[] | null;
 }
 
-export default function WheelOfFortuneGameBoard({ roundRecord, amount, className, children, winningColor }: Props) {
+export default function WheelOfFortuneGameBoard({ roundRecord, amount, className, children, winningId = null }: Props) {
 
   const { mutate: createWheelPlacement, isPending } = useCreateWheelOfFortunePlacement();
   const { data: placements } = useGetMyCurrentRoundWheelOfFortunePlacement(roundRecord.id);
@@ -32,6 +33,12 @@ export default function WheelOfFortuneGameBoard({ roundRecord, amount, className
     return acc;
   }, {} as Record<WheelColor, number>);
 
+
+  const winningColor= useMemo(() => {
+    if (!winningId) return null;
+    const market = roundRecord.getColorByMarketId(winningId[0] as unknown as number);
+    return market || null;
+  }, [winningId, roundRecord]);
 
 
   return (
@@ -58,19 +65,17 @@ export default function WheelOfFortuneGameBoard({ roundRecord, amount, className
   );
 }
 
-const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick, roundRecord }: { color: WheelColor, colorBets?: Record<WheelColor, number>, winningColor?: WheelColor, isPending: boolean, roundRecord: RoundRecord, handleColorClick: (color: WheelColor) => void }) => {
+const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick, roundRecord }: { color: WheelColor, colorBets?: Record<WheelColor, number>, winningColor: WheelColor | null, isPending: boolean, roundRecord: RoundRecord, handleColorClick: (color: WheelColor) => void }) => {
   const config = WHEEL_COLOR_CONFIG[color];
   const myBetAmount = colorBets?.[color] || 0;
   const isWinner = winningColor === color;
-
-
 
   return (
     <div
       className={cn(
         "flex-1 min-w-[190px] sm:max-w-[190px]  h-full min-h-52 z-10 rounded-lg flex flex-col cursor-pointer transition-all duration-300 relative group",
         isPending ? 'opacity-70 pointer-events-none' : 'hover:shadow-lg hover:scale-105',
-        isWinner ? `border-2 ${config.borderColor} shadow-custom-glow` : ''
+        isWinner ? `border-2 ${config.borderColor} border-dashed border-amber-700  shadow-custom-glow animate-pulse  ` : ''
       )}
       style={{
         perspective: '1000px',
@@ -93,7 +98,7 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
             1:{config.multiplier}
           </div>
         </div>
-        <div className="bg-amber-100 flex-1 rounded-b-lg flex flex-col items-center justify-start  relative w-full">
+        <div className={cn("bflex-1 rounded-b-lg flex flex-col items-center justify-start  relative w-full", isWinner ? config.bgColor : 'bg-amber-100')}>
 
           <ul className="gap-1 w-full py-4 p-2 ">
             {roundRecord.getMarketsByColor(color).map((market, index) => (

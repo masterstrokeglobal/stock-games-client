@@ -10,7 +10,7 @@ export const useCreateSevenUpDownPlacement = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === "sevenUpDown";
+                    return query.queryKey[0] === "sevenUpDown" || query.queryKey[0] === "myPlacements" || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
                 },
             });
             toast.success("Bet placed successfully");

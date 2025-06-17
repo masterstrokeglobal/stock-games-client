@@ -2,7 +2,6 @@
 import GameLoadingScreen from '@/components/common/game-loading-screen';
 import MarketSelector from '@/components/common/market-selector';
 import StockGameHeader from '@/components/common/stock-game-header';
-import TimeDisplay from '@/components/common/bet-locked-banner';
 import { BettingArea } from '@/components/features/coin-head-tail/betting-area';
 import GameBoard from '@/components/features/coin-head-tail/game-board';
 import { StockPriceDisplay } from '@/components/features/coin-head-tail/stock-price';
@@ -47,9 +46,7 @@ const CoinHeadTail = () => {
             <div className="flex flex-col h-fit max-w-2xl w-full mx-auto bg-gray-900 border border-gray-600 sm:rounded-lg text-white overflow-hidden">
                 <StockGameHeader onBack={() => setMarketSelected(false)} title="Coin Head Tail" />
                 <StockPriceDisplay roundRecord={roundRecord} winningSide={winningSide} />
-                <GameBoard roundRecord={roundRecord} amount={betAmount}>
-                    <TimeDisplay className="absolute top-0 left-1/2 -translate-x-1/2 z-10 w-full max-w-sm  " roundRecord={roundRecord} />
-                </GameBoard>
+                <GameBoard roundRecord={roundRecord} amount={betAmount} winningSide={winningSide}/>
                 <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
             </div>
         </section>
