@@ -277,9 +277,6 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: any
             const adjustedEndTime = gameEnd + 3000;
             const EMD_TIME = 30000;
             
-
-            console.log(now-adjustedEndTime);
-
             if (now >= adjustedEndTime - EMD_TIME) {
                 setShowResults(false);
                 if (roundRecord.id !== previousRoundId) {

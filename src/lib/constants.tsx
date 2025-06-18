@@ -118,7 +118,7 @@ export const StockDerbyGames: Game[] = [
     {
         title: "7 Up Down",
         link: "/game/platform/stock-game/7-up-7-down",
-        image: "/images/banner/7-up.png",
+        image: "/images/banner/7-up-game.png",
         description: "14 stocks choosing will more than 7 go up or down"
     }
     ,

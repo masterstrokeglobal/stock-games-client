@@ -74,7 +74,7 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
                 <div className={cn("w-full  max-w-md border-2 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 ", winningColor ?`${winningColor.bgColor}` : "")}>
                     <p className="text-center font-medium">
                         Winner:{" "}
-                        <span className="font-bold text-amber-700">
+                        <span className="font-bold text-white">
                             {roundRecord.market.find(
                                 (market) => market.id === winningMarketId?.[0]
                             )?.name}

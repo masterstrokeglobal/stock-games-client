@@ -51,7 +51,7 @@ export default function StockGameCarousel() {
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href="/game/platform/stock-game/7-up-7-down">
                             <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
-                                <Image src="/images/banner/7-up.png" alt="coming-soon" className="w-full h-full object-top" width={500} height={500} />
+                                <Image src="/images/banner/7-up-game.png" alt="coming-soon" className="w-full h-full object-top" width={500} height={500} />
                             </div>
                         </Link>
                     </CarouselItem>

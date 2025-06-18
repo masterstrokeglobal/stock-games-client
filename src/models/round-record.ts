@@ -307,16 +307,16 @@ export class RoundRecord {
             const changePercentageA = ((finalPriceA - initialPriceA) / initialPriceA) * 100;
             const changePercentageB = ((finalPriceB - initialPriceB) / initialPriceB) * 100;
             return changePercentageB - changePercentageA;
-        }).map(item => {
+        }).map((item, index) => {
 
             const change_percent = ((finalPrices?.[item.code || ""] || 0) - (initialPrices?.[item.code || ""] || 0)) / (initialPrices?.[item.code || ""] || 0) * 100;
 
             return ({
                 ...item,
                 change_percent: change_percent,
-                rank: 0,
+                rank: index + 1,
                 price: finalPrices?.[item.code || ""] || 0,
-                codeName: item.name || "",
+                codeName: item.codeName || "",
                 stream: item.stream || "",
                 bitcode: item.code || "",
                 id: item.id || 0,

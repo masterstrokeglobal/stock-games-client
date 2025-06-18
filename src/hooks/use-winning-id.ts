@@ -4,16 +4,18 @@ import { RoundRecord } from "@/models/round-record";
 import { useGetRoundRecordById } from "@/react-query/round-record-queries";
 import { useEffect } from "react";
 
-const useWinningId = (roundRecord: RoundRecord | null) => {
+const useWinningId = (roundRecord: RoundRecord | null,timeToFetch:number=500) => {
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord?.id);
 
     useEffect(() => {
         if (!roundRecord) return;
-        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime();
+        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + timeToFetch;
         const timer = setTimeout(() => {
             refetch().then((result) => {
                 const isResultPresent = result.data?.data?.winningId;
+                console.log("isResultPresent",isResultPresent);
                 if (isResultPresent) {
+                    console.log("result present",result.data?.data?.winningId);
                     clearTimeout(timer);
                 }
                 else {

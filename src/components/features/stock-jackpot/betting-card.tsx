@@ -55,8 +55,8 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
 
   const initialPrice = roundRecord.getInitialPrice(marketItem.bitcode ?? "")
 
-  const upWinAmount = (upPlaced ?? 0) * 1.96
-  const downWinAmount = (downPlaced ?? 0) * 1.96
+  const upWinAmount = (upPlaced ?? 0) * 1.92;
+  const downWinAmount = (downPlaced ?? 0) * 1.92;
 
   const bettingOpen = !isPlaceOver && !isPlacingBet;
 
