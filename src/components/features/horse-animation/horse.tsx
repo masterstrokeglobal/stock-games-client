@@ -20,7 +20,7 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
   return isPlaceOver ? (
     <Suspense fallback={<GameLoadingScreen className="md:h-full h-[500px]" loadingImageClassName="w-10 h-auto" />}>
       <div className="game-gradient-card-parent md:h-full h-64 overflow-hidden">
-        <Canvas className="bg-white md:rounded-sm">
+        <Canvas className="bg-[] md:rounded-sm">
           <PixelRatioManager />
           <HorseRaceEnvironment roundRecord={roundRecord} filteredMarket={filteredMarket} />
         </Canvas>

@@ -10,11 +10,14 @@ import FenceRow from "./fence-row";
 import { Ground } from "./Ground";
 import HorseAnimation from "./horse-animation";
 import MovingPeople from "./people-model";
+
 type Props = {
     roundRecord: RoundRecord;
     filteredMarket?: MarketItem[];
 
 };
+
+
 const HorseRaceEnvironment = ({
     roundRecord,
     filteredMarket
@@ -23,14 +26,14 @@ const HorseRaceEnvironment = ({
     return (
         <>
         <PerspectiveCamera makeDefault fov={70} zoom={9} position={[-380, 70,0]} />
-        <Sky/>
-            <ambientLight intensity={1} />
+          
+      <Sky sunPosition={[0, 20, 0]} azimuth={180} distance={1000}/>
+      <ambientLight intensity={1} />
             <OrbitControls 
-                enableRotate={false}
+                enableRotate={true}
                 maxPolarAngle={Math.PI / 2 - 0.1 - .02}
                 minPolarAngle={Math.PI / 2 - 0.1}
-                maxDistance={1000}
-                target={[0, 8, 0]} // <-- move this up to pan the view upward
+                target={[0, 15, 0]} // <-- move this up to pan the view upward
 
                 />
             <directionalLight

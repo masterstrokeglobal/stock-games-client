@@ -1,11 +1,11 @@
 import { usePlacementOver } from '@/hooks/use-current-game';
 import { RankedMarketItem } from '@/hooks/use-leadboard';
+import { cn } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
 import { SevenUpDownPlacementType } from '@/models/seven-up-down';
 import { useCreateSevenUpDownPlacement, useGetMyCurrentRoundSevenUpDownPlacement } from '@/react-query/7-up-down';
-import React, { PropsWithChildren, useRef, useEffect, useState, useMemo, useCallback } from 'react';
+import React, { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StockPrice } from './StockPriceDisplay';
-import { cn } from '@/lib/utils';
 
 interface ItemPosition {
   x: number;
@@ -86,7 +86,7 @@ const MarketItemDisplay: React.FC<{
     initializeFloatPatterns();
   }, [initializeFloatPatterns]);
 
-  // Optimized position calculation
+  // Optimized position calculation with strict section boundaries
   const calculatePositions = useCallback(() => {
     if (!memoizedItems.length) return;
 
@@ -103,9 +103,9 @@ const MarketItemDisplay: React.FC<{
       const positiveItems = memoizedItems.filter(item => parseFloat(item.change_percent || '0') > 0);
       const negativeItems = memoizedItems.filter(item => parseFloat(item.change_percent || '0') <= 0);
 
-      // Generate grid positions for each group
+      // Generate grid positions for each group with stricter boundaries
       const posPositions = generateGridPositions(positiveItems.length, 20, 90, 5, 35, true);
-      const negPositions = generateGridPositions(negativeItems.length, 20, 90, 65, 90, true);
+      const negPositions = generateGridPositions(negativeItems.length, 20, 90, 65, 95, true);
 
       // Assign positions
       const newPositions = new Map<string, ItemPosition>();
@@ -115,9 +115,13 @@ const MarketItemDisplay: React.FC<{
         const priceChange = parseFloat(item.change_percent || '0');
         const prevPos = previousPositions.get(item.codeName);
         
+        // Ensure positive items NEVER go below 40% (strict upper section)
+        const yPosition = posPositions[i]?.y ?? 10;
+        const clampedY = Math.max(5, Math.min(yPosition, 35)); // Max 35% to ensure safe margin
+        
         newPositions.set(item.codeName, {
           x: posPositions[i]?.x ?? 25,
-          y: Math.min(posPositions[i]?.y ?? 10, 35),
+          y: clampedY,
           moveDistance: Math.min(Math.abs(priceChange) * 0.4, 4),
           isPositive: true,
           changedSection: prevPos ? prevPos.isPositive !== true : false
@@ -129,9 +133,13 @@ const MarketItemDisplay: React.FC<{
         const priceChange = parseFloat(item.change_percent || '0');
         const prevPos = previousPositions.get(item.codeName);
         
+        // Ensure negative items NEVER go above 60% (strict lower section)
+        const yPosition = negPositions[i]?.y ?? 70;
+        const clampedY = Math.min(95, Math.max(yPosition, 65)); // Min 65% to ensure safe margin
+        
         newPositions.set(item.codeName, {
           x: negPositions[i]?.x ?? 25,
-          y: Math.max(negPositions[i]?.y ?? 70, 65),
+          y: clampedY,
           moveDistance: Math.min(Math.abs(priceChange) * 0.4, 4),
           isPositive: false,
           changedSection: prevPos ? prevPos.isPositive !== false : false
@@ -173,6 +181,9 @@ const MarketItemDisplay: React.FC<{
         
         const floatPattern = floatPatternsRef.current.get(item.codeName) || 0;
         
+        // Double-check position to prevent section crossing
+        const finalY = isPositive ? Math.min(position.y, 35) : Math.max(position.y, 65);
+        
         // Simplified animation logic to prevent conflicts
         const getAnimationStyle = () => {
           if (showResults) {
@@ -196,7 +207,7 @@ const MarketItemDisplay: React.FC<{
             style={{
               backgroundColor: isPositive ? 'rgb(34, 197, 94)' : 'rgb(239, 68, 68)',
               left: `${position.x}%`,
-              top: `${position.y}%`,
+              top: `${finalY}%`,
               transform: 'translate(-50%, -50%) scale(1)',
               animation: getAnimationStyle(),
               zIndex: 20,
