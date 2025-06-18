@@ -27,7 +27,14 @@ const HorseRaceEnvironment = ({
         <>
         <PerspectiveCamera makeDefault fov={70} zoom={9} position={[-380, 70,0]} />
           
-      <Sky sunPosition={[0, 20, 0]} azimuth={180} distance={1000}/>
+      <Sky
+        turbidity={0.6}
+        rayleigh={0.656}
+        mieCoefficient={0.07}
+        mieDirectionalG={0.115}
+        azimuth={180}
+        sunPosition={[0, 100, 0]}
+      />
       <ambientLight intensity={1} />
             <OrbitControls 
                 enableRotate={true}
