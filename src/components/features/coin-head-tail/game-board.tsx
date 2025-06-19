@@ -13,11 +13,12 @@ type Props = {
   amount: number;
   className?: string;
   children?: React.ReactNode;
-  winningSide: HeadTailPlacementType | null;
+  roundRecordWithWinningSide: RoundRecord | null;
 }
 
-export default function CoinFlipGame({ roundRecord, amount, className, winningSide }: Props) {
+export default function CoinFlipGame({ roundRecord, amount, className, roundRecordWithWinningSide }: Props) {
 
+  const winningSide = roundRecordWithWinningSide?.winningSide ?? null;
   const { mutate: createHeadTailPlacement, isPending } = useCreateHeadTailPlacement();
   const { stocks } = useLeaderboard(roundRecord);
 
@@ -41,10 +42,10 @@ export default function CoinFlipGame({ roundRecord, amount, className, winningSi
   const hasTailBet = myTailAmount > 0;
 
   
-  const headStock=  useMemo(() => stocks.find((item) => item.id === roundRecord.coinTossPair?.head?.id), [stocks, roundRecord.coinTossPair?.head?.id]);
-  const tailStock=  useMemo(() => stocks.find((item) => item.id === roundRecord.coinTossPair?.tail?.id), [stocks, roundRecord.coinTossPair?.tail?.id]);
+  const headStock=  useMemo(() => roundRecordWithWinningSide?.finalPricesPresent ? roundRecordWithWinningSide.sortedMarketItems?.find((item) => item.id === roundRecord.coinTossPair?.head?.id) : stocks.find((item) => item.id === roundRecord.coinTossPair?.head?.id), [stocks, roundRecord.coinTossPair?.head?.id, roundRecordWithWinningSide]);
+  const tailStock=  useMemo(() => roundRecordWithWinningSide?.finalPricesPresent ? roundRecordWithWinningSide.sortedMarketItems?.find((item) => item.id === roundRecord.coinTossPair?.tail?.id) : stocks.find((item) => item.id === roundRecord.coinTossPair?.tail?.id), [stocks, roundRecord.coinTossPair?.tail?.id, roundRecordWithWinningSide]);
   
-  const winningStock = stocks.sort((a, b) => parseFloat(b.change_percent) - parseFloat(a.change_percent))[0];
+  const winningStock = roundRecordWithWinningSide?.finalPricesPresent ? roundRecordWithWinningSide.sortedMarketItems?.[0] : stocks.sort((a, b) => parseFloat(b.change_percent) - parseFloat(a.change_percent))[0];
 
 
   return (
@@ -76,7 +77,7 @@ export default function CoinFlipGame({ roundRecord, amount, className, winningSi
             )}
             onClick={() => handleCardClick(HeadTailPlacementType.HEAD)}
           >
-            <div className="bg-green-600 rounded-t-md p-3 text-center">
+            <div className="bg-blue-600 rounded-t-md p-3 text-center">
               <span className="text-white text-2xl font-bold">HEAD</span>
             </div>
 
@@ -87,7 +88,7 @@ export default function CoinFlipGame({ roundRecord, amount, className, winningSi
               <div className="w-20 h-20 rounded-full flex items-center justify-center">
                 <img src="/images/coin-face/head.png" alt="head" className="w-full h-full object-fill" />
               </div>
-              <div className="mt-4 text-amber-900 font-bold">1:1.96</div>
+              <div className="mt-4 text-amber-900 font-bold">1:2</div>
 
               {/* Stats Container */}
               <div className="absolute bottom-0 left-0 right-0 bg-amber-50 bg-opacity-80 p-2 rounded-b-md">
@@ -98,7 +99,7 @@ export default function CoinFlipGame({ roundRecord, amount, className, winningSi
                   </div>
                   <div className="text-xs font-semibold text-amber-900">
                     <span>Win:</span>
-                    <span className="block font-bold">{INR(myHeadAmount * 1.96)}</span>
+                    <span className="block font-bold">{INR(myHeadAmount * 2)}</span>
                   </div>
                 </div>
               </div>
@@ -125,7 +126,7 @@ export default function CoinFlipGame({ roundRecord, amount, className, winningSi
             )}
             onClick={() => handleCardClick(HeadTailPlacementType.TAIL)}
           >
-            <div className="bg-red-600 rounded-t-md p-3 text-center">
+            <div className="bg-slate-600 rounded-t-md p-3 text-center">
               <span className="text-white text-2xl font-bold">TAIL</span>
             </div>
             <div className="bg-amber-100 flex-1 rounded-b-md flex flex-col items-center justify-start px-4 pb-4 relative">
@@ -135,7 +136,7 @@ export default function CoinFlipGame({ roundRecord, amount, className, winningSi
               <div className="w-20 h-20 rounded-full flex items-center justify-center">
                 <img src="/images/coin-face/tail.png" alt="tail" className="w-full h-full object-fill" />
               </div>
-              <div className="mt-4 text-amber-900 font-bold">1:1.96</div>
+              <div className="mt-4 text-amber-900 font-bold">1:2</div>
 
               {/* Stats Container */}
               <div className="absolute bottom-0 left-0 right-0 w-full bg-amber-50 bg-opacity-80 p-2 rounded-b-md">
@@ -146,7 +147,7 @@ export default function CoinFlipGame({ roundRecord, amount, className, winningSi
                   </div>
                   <div className="text-xs font-semibold text-amber-900">
                     <span>Win:</span>
-                    <span className="block font-bold">{INR(myTailAmount * 1.96)}</span>
+                    <span className="block font-bold">{INR(myTailAmount * 2)}</span>
                   </div>
                 </div>
               </div>

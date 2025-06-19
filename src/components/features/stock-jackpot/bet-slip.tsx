@@ -54,14 +54,14 @@ export function BetSlip({ roundRecord, open, setOpen }: BetSlipProps) {
                         <span>Price Down</span>
                       </>
                     )}
-                    <span className="ml-auto font-bold">1.96</span>
+                    <span className="ml-auto font-bold">2</span>
                   </div>
 
                   <div className="flex items-center"> 
                     <div className="flex-1 ml-3">
                       <label className="text-xs text-gray-400 mb-1 block">Potential Win</label>
                       <div className="bg-[#2A2F42] border border-[#3A3F52] rounded p-2 capitalize text-white">
-                     from {stockSlotPlacement.amount} to {(stockSlotPlacement.amount * 1.96).toFixed(2)}
+                     from {stockSlotPlacement.amount} to {(stockSlotPlacement.amount * 2).toFixed(2)}
                       </div>
                     </div>
                   </div>
@@ -77,9 +77,9 @@ export function BetSlip({ roundRecord, open, setOpen }: BetSlipProps) {
               <span className="text-gray-400">Total Stake:</span>
               <span className="font-bold text-white">{stockSlotPlacements?.reduce((acc, placement) => acc + placement.amount, 0).toFixed(2)}</span>
             </div>
-            <div className="flex justify-between mb-4">
+            <div className="flex justify-between mb-4"> 
               <span className="text-gray-400">Potential Win:</span>
-              <span className="font-bold text-green-400">{stockSlotPlacements?.reduce((acc, placement) => acc + placement.amount, 0) * 1.96 }</span>
+              <span className="font-bold text-green-400">{stockSlotPlacements?.reduce((acc, placement) => acc + placement.amount, 0) * 2 }</span>
             </div>
           </div>
         )}

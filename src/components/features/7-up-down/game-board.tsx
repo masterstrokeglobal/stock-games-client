@@ -59,6 +59,52 @@ function generateGridPositions(count: number, xStart: number, xEnd: number, ySta
   return positions;
 }
 
+// Enhanced position generation with collision detection for results
+function generateNonOverlappingPositions(
+  count: number, 
+  xStart: number, 
+  xEnd: number, 
+  yStart: number, 
+  yEnd: number, 
+  minDistance = 8
+) {
+  const positions: { x: number, y: number }[] = [];
+  const maxAttempts = count * 50;
+  let attempts = 0;
+  
+  while (positions.length < count && attempts < maxAttempts) {
+    const x = xStart + Math.random() * (xEnd - xStart);
+    const y = yStart + Math.random() * (yEnd - yStart);
+    
+    // Check if this position conflicts with existing positions
+    const hasCollision = positions.some(pos => {
+      const distance = Math.sqrt(Math.pow(x - pos.x, 2) + Math.pow(y - pos.y, 2));
+      return distance < minDistance;
+    });
+    
+    if (!hasCollision) {
+      positions.push({ x, y });
+    }
+    
+    attempts++;
+  }
+  
+  // Fill remaining positions with fallback spiral pattern
+  while (positions.length < count) {
+    const angle = (positions.length * 2.4) % (2 * Math.PI);
+    const radius = 5 + (positions.length * 2);
+    const centerX = (xStart + xEnd) / 2;
+    const centerY = (yStart + yEnd) / 2;
+    
+    const x = Math.max(xStart, Math.min(xEnd, centerX + Math.cos(angle) * radius));
+    const y = Math.max(yStart, Math.min(yEnd, centerY + Math.sin(angle) * radius));
+    
+    positions.push({ x, y });
+  }
+  
+  return positions;
+}
+
 const MarketItemDisplay: React.FC<{ 
   items: RankedMarketItem[], 
   showResults: boolean,
@@ -86,7 +132,7 @@ const MarketItemDisplay: React.FC<{
     initializeFloatPatterns();
   }, [initializeFloatPatterns]);
 
-  // Optimized position calculation with strict section boundaries
+  // Optimized position calculation with collision detection for results
   const calculatePositions = useCallback(() => {
     if (!memoizedItems.length) return;
 
@@ -103,9 +149,18 @@ const MarketItemDisplay: React.FC<{
       const positiveItems = memoizedItems.filter(item => parseFloat(item.change_percent || '0') > 0);
       const negativeItems = memoizedItems.filter(item => parseFloat(item.change_percent || '0') <= 0);
 
-      // Generate grid positions for each group with stricter boundaries
-      const posPositions = generateGridPositions(positiveItems.length, 20, 90, 5, 35, true);
-      const negPositions = generateGridPositions(negativeItems.length, 20, 90, 65, 95, true);
+      let posPositions: { x: number, y: number }[];
+      let negPositions: { x: number, y: number }[];
+
+      if (showResults) {
+        // Use non-overlapping positions for results display
+        posPositions = generateNonOverlappingPositions(positiveItems.length, 20, 90, 5, 35, 10);
+        negPositions = generateNonOverlappingPositions(negativeItems.length, 20, 90, 65, 95, 10);
+      } else {
+        // Use regular grid positions during game
+        posPositions = generateGridPositions(positiveItems.length, 20, 90, 5, 35, true);
+        negPositions = generateGridPositions(negativeItems.length, 20, 90, 65, 95, true);
+      }
 
       // Assign positions
       const newPositions = new Map<string, ItemPosition>();
@@ -148,7 +203,7 @@ const MarketItemDisplay: React.FC<{
 
       positionsRef.current = newPositions;
     });
-  }, [memoizedItems]);
+  }, [memoizedItems, showResults]);
 
   useEffect(() => {
     calculatePositions();
@@ -184,10 +239,11 @@ const MarketItemDisplay: React.FC<{
         // Double-check position to prevent section crossing
         const finalY = isPositive ? Math.min(position.y, 35) : Math.max(position.y, 65);
         
-        // Simplified animation logic to prevent conflicts
+        // Enhanced animation logic with staggered results
         const getAnimationStyle = () => {
           if (showResults) {
-            return `resultPulse 2s ease-in-out infinite, float${floatPattern} 2s ease-in-out infinite`;
+            const staggerDelay = (Array.from(positionsRef.current.keys()).indexOf(item.codeName || '') * 0.1);
+            return `resultPulse 2s ease-in-out infinite ${staggerDelay}s, float${floatPattern} 2s ease-in-out infinite ${staggerDelay}s`;
           }
           
           if (position.changedSection) {
@@ -202,7 +258,9 @@ const MarketItemDisplay: React.FC<{
             key={item.codeName}
             className={cn(
               "px-1.5 text-[9px] py-0.5 rounded-full text-white absolute will-change-transform transition-all duration-700 ease-out",
-              showResults && "animate-pulse shadow-lg ring-2 ring-white/30"
+              showResults && "animate-pulse shadow-lg ring-2 ring-white/30",
+              // Add higher z-index for results to prevent overlap issues
+              showResults ? "z-30" : "z-20"
             )}
             style={{
               backgroundColor: isPositive ? 'rgb(34, 197, 94)' : 'rgb(239, 68, 68)',
@@ -210,7 +268,6 @@ const MarketItemDisplay: React.FC<{
               top: `${finalY}%`,
               transform: 'translate(-50%, -50%) scale(1)',
               animation: getAnimationStyle(),
-              zIndex: 20,
               '--move-distance': `${position.moveDistance}px`,
               '--float-distance': showResults ? '3px' : '2px',
               backfaceVisibility: 'hidden',
@@ -221,6 +278,8 @@ const MarketItemDisplay: React.FC<{
               // Force hardware acceleration
               WebkitTransform: 'translateZ(0)',
               transformStyle: 'preserve-3d',
+              // Ensure proper spacing in results mode
+              minWidth: showResults ? '40px' : 'auto',
             } as React.CSSProperties}
           >
             <div className="font-medium whitespace-nowrap">{item.codeName}</div>

@@ -104,8 +104,8 @@ const PlacementCard = ({ placement }: { placement: {placement: SevenUpDownPlacem
     <div className="flex items-center gap-3">
       <div className="bg-gradient-to-br from-blue-500/30 to-purple-500/30 p-3 rounded-lg">
         <div className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-          {placement.placement === SevenUpDownPlacementType.UP && '8-12'}
-          {placement.placement === SevenUpDownPlacementType.DOWN && '1-6'}
+          {placement.placement === SevenUpDownPlacementType.UP && '8-14'}
+          {placement.placement === SevenUpDownPlacementType.DOWN && '0-6'}
           {placement.placement === SevenUpDownPlacementType.SEVEN && '7'}
         </div>
       </div>

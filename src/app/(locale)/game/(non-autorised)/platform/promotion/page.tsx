@@ -15,7 +15,7 @@ const PromotionPage = () => {
     const activeBonus = useMemo(() => {
         if (isLoading) return null;
         return data?.map((bonus: any) => new Bonus(bonus));
-    }, [data]);
+    }, [data, isLoading]);
 
     return (
         <section className="flex flex-col min-h-screen bg-primary-game text-white p-4 mx-auto">

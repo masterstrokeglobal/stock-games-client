@@ -49,7 +49,7 @@ export default function Home() {
           <MarketSection
             searchQuery={searchQuery}
             globalBetAmount={globalBetAmount}
-            className="absolute top-12 left-0 max-w-sm h-fit z-20"
+            className="absolute top-12 left-0 max-w-sm h-96 overflow-y-auto z-20 rounded-b-lg"
             setSearchQuery={setSearchQuery}
           />
         }
@@ -83,7 +83,6 @@ export default function Home() {
             />
           </div>
         </div>
-
 
         {!isDesktop &&
           <MarketSection
@@ -137,7 +136,7 @@ const MarketSection = ({ globalBetAmount, searchQuery, className }: { searchQuer
 
   return (
     <div className={cn("relative w-full bg-black/70 backdrop-blur-sm", className)}>
-      <div className={cn(" max-w-7xl  px-4 pt-4 mx-auto")}>
+      <div className={cn(" max-w-7xl  sticky top-0 z-10 bg-black/90 backdrop-blur-sm   px-4 py-4 mx-auto")}>
         <div className="flex justify-between flex-col md:flex-row items-start ">
           <TabsList className="w-full md:max-w-md flex gap-2">
             <TabsTrigger value={SchedulerType.NSE} disabled={!isNSEAllowed || !isNSEAvailable} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">NSE</TabsTrigger>
@@ -153,7 +152,7 @@ const MarketSection = ({ globalBetAmount, searchQuery, className }: { searchQuer
         </div>
       ) : (
         <div className="grid grid-cols-1  max-w-7xl mx-auto  ">
-          {sortedMarketItems?.slice(0, 4).map((marketItem: any) => (
+          {sortedMarketItems?.map((marketItem: any) => (
             <BettingCard
               key={marketItem.id}
               roundRecord={roundRecord}
@@ -162,23 +161,6 @@ const MarketSection = ({ globalBetAmount, searchQuery, className }: { searchQuer
               className="w-full bg-transparent"
             />
           ))}
-
-          {/* {showMore && sortedMarketItems && sortedMarketItems?.length > 4 && (
-            <>
-              {sortedMarketItems?.slice(4).map((marketItem: any) => (
-                <BettingCard
-                  key={marketItem.id}
-                  roundRecord={roundRecord}
-                  globalBetAmount={globalBetAmount}
-                  marketItem={marketItem}
-                />
-              ))}
-            </>
-          )}
-
-          <Button variant="game-secondary" onClick={() => setShowMore(!showMore)} className="w-full text-center flex justify-center">
-            {showMore ? "Show Less" : "Show More"}
-          </Button> */}
         </div>
       )}
 
@@ -279,7 +261,7 @@ const StockCardStack = ({ roundRecord, roundRecordWithWinningId }: { roundRecord
       ...record,
       stock: sortedMarketItems?.find((item) => item.id === record.marketItem.id)
     }));
-  }, [myStockSlotJackpotGameRecord, roundRecord, marketItems, roundRecordWithWinningId])
+  }, [myStockSlotJackpotGameRecord, marketItems, roundRecordWithWinningId])
 
   const highStocks = bettedMarketItems?.filter((item) => item.placement === StockJackpotPlacementType.HIGH) || [];
   const lowStocks = bettedMarketItems?.filter((item) => item.placement === StockJackpotPlacementType.LOW) || [];

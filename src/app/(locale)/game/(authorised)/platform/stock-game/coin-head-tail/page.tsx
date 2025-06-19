@@ -7,35 +7,16 @@ import GameBoard from '@/components/features/coin-head-tail/game-board';
 import { StockPriceDisplay } from '@/components/features/coin-head-tail/stock-price';
 import { useCurrentGame } from '@/hooks/use-current-game';
 import { useMarketSelector } from '@/hooks/use-market-selector';
-import { HeadTailPlacementType } from '@/models/head-tail';
+import useWinningId from '@/hooks/use-winning-id';
 import { RoundRecordGameType } from '@/models/round-record';
-import { useGetRoundRecordById } from '@/react-query/round-record-queries';
-import { useEffect, useMemo, useState } from 'react';
+import { useState } from 'react';
 
 const CoinHeadTail = () => {
     const { marketSelected, setMarketSelected } = useMarketSelector();
     const [betAmount, setBetAmount] = useState<number>(100);
     const { roundRecord, isLoading } = useCurrentGame(RoundRecordGameType.HEAD_TAIL);
 
-    const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord?.id);
-
-    useEffect(() => {
-        if (!roundRecord) return;
-        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 2000;
-
-        const timer = setTimeout(() => {
-            refetch();
-        }, resultFetchTime);
-        return () => clearTimeout(timer);
-    }, [roundRecord, refetch]);
-
-    const winningSide: HeadTailPlacementType | null = useMemo(() => {
-        if (!isSuccess) return null;
-
-        if (roundRecord?.id == data?.data?.id) return data.data?.winningSide;
-        return null;
-    }, [data, isSuccess, roundRecord]);
-
+    const roundRecordWithWinningSide = useWinningId(roundRecord);
 
     if (isLoading || !roundRecord) return <GameLoadingScreen className='min-h-[calc(100svh-100px)]' />
 
@@ -45,8 +26,8 @@ const CoinHeadTail = () => {
         <section className="flex flex-col  items-center justify-center min-h-[calc(100svh-100px)] -mx-4">
             <div className="flex flex-col h-fit max-w-2xl w-full mx-auto bg-gray-900 border border-gray-600 sm:rounded-lg text-white overflow-hidden">
                 <StockGameHeader onBack={() => setMarketSelected(false)} title="Coin Head Tail" />
-                <StockPriceDisplay roundRecord={roundRecord} winningSide={winningSide} />
-                <GameBoard roundRecord={roundRecord} amount={betAmount} winningSide={winningSide}/>
+                <StockPriceDisplay roundRecord={roundRecord} winningSide={roundRecordWithWinningSide?.winningSide ?? null} />
+                <GameBoard roundRecord={roundRecord} amount={betAmount} roundRecordWithWinningSide={roundRecordWithWinningSide}/>
                 <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
             </div>
         </section>

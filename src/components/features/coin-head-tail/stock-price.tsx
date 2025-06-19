@@ -18,7 +18,7 @@ export const StockPrice: React.FC<StockPriceProps> = ({ rankedMarketItem, winnin
   }
 
   return (
-    <div className={cn("bg-black flex text-xs flex-row rounded-b-xl  justify-between px-4 items-center gap-2 p-2", winning && "bg-amber-500")}>
+    <div className={cn("bg-red-500 flex text-xs flex-row rounded-b-xl  justify-between px-4 items-center gap-2 p-2", winning && "bg-green-500")}>
       <div className="flex flex-col gap-2">
         <span>{rankedMarketItem.name}</span>
         <span>Price: <b>
@@ -26,13 +26,13 @@ export const StockPrice: React.FC<StockPriceProps> = ({ rankedMarketItem, winnin
         </b></span>
       </div>
       <div className="flex flex-col gap-2">
-        <span className='t'>Current Price:<b>
+        <span className='text-white'>Current Price:<b>
           {rankedMarketItem.price}
         </b>
         </span>
-        <div className={cn("flex gap-2", parseFloat(rankedMarketItem.change_percent) > 0 ? 'text-green-500' : 'text-red-500')} >
-          <ArrowUpIcon className={cn(parseFloat(rankedMarketItem.change_percent) > 0 ? 'text-green-500' : 'text-red-500 rotate-180')} />
-          <span> {rankedMarketItem.change_percent} %</span>
+        <div className={cn("flex gap-2", parseFloat(rankedMarketItem.change_percent) > 0 ? 'text-white' : 'text-white')} >
+          <ArrowUpIcon className={cn(parseFloat(rankedMarketItem.change_percent) > 0 ? 'text-white' : 'text-white rotate-180')} />
+          <span> {parseFloat(rankedMarketItem.change_percent ?? "0").toFixed(6)} %</span>
         </div>
       </div>
     </div>
@@ -80,14 +80,14 @@ const CoinFlipVideo = ({ isFlipping, resultOutcome }: { isFlipping: boolean, res
         ref={headRef}
         src="/videos/head.webm"
         muted
-        loop
+        loop={false}
         className={`absolute left-1/2 -translate-x-1/2 bg-transparent  w-3/4 h-fit ${resultOutcome === HeadTailPlacementType.HEAD ? 'opacity-100' : 'opacity-0'}`}
       />
       <video
         ref={tailRef}
         src="/videos/tail.webm"
         muted
-        loop
+        loop={false}
         className={`absolute inset-0 left-1/2 -translate-x-1/2 bg-transparent  w-3/4 h-fit ${resultOutcome === HeadTailPlacementType.TAIL ? 'opacity-100' : 'opacity-0'}`}
       />
       <video

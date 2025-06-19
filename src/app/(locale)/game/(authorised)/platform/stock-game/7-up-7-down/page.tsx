@@ -17,7 +17,7 @@ const SevenUpSevenDown = () => {
   const [betAmount, setBetAmount] = useState<number>(100);
   const { roundRecord, isLoading } = useCurrentGame(RoundRecordGameType.SEVEN_UP_DOWN);
   const { stocks } = useLeaderboard(roundRecord);
-  const roundRecordWithWinningId = useWinningId(roundRecord);
+  const roundRecordWithWinningId = useWinningId(roundRecord,0);
 
 
   if (!marketSelected) return <MarketSelector className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="7 Up 7 Down Market" />
