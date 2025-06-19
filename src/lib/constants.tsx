@@ -103,14 +103,14 @@ export const StockDerbyGames: Game[] = [
     {
         title: "Stock Jackpot",
         link: "/game/jackpot",
-        image: "/images/ad1.webp",
+        image: "/images/stock-game/stock-jackpot.png",
         description: "Guess Price Movement"
     },
     {
 
         title: "Stock Slot",
         link: "/game/platform/stock-game/stock-slot",
-        image: "/images/ad3.png",
+        image: "/images/stock-slot.png",
         description: "Guess Last Price Digit and win"
     },
 

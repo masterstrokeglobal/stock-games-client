@@ -29,7 +29,7 @@ const WheelOfFortune = () => {
         <section className="flex flex-col  items-start justify-start min-h-[calc(100svh-100px)] -mx-4">
             <div className="flex flex-col h-fit max-w-2xl w-full relative  bg-gray-900 border border-gray-600 sm:rounded-lg rounded-none mx-auto  text-white overflow-hidden">
                 <StockGameHeader onBack={() => setMarketSelected(false)} title="Dice Game" />
-                <MaintainceScreen />
+                <MaintainceScreen  />
                 <Dice3D className='h-36' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
                 <BettingGrid className='relative sm:pt-32 pt-20' roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={roundRecordWithWinningId?.winningId || null} >
                     <DiceGameTimeDisplay className="absolute top-0 left-1/2 -translate-x-1/2 z-10 w-full max-w-sm  " roundRecord={roundRecord} />

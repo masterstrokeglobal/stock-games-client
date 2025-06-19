@@ -4,14 +4,13 @@ import DataTable from "@/components/ui/data-table-server";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import React, { useState } from "react";
-
 import casinoGamesColumns from "@/columns/casino-games";
 import { useGetCasinoGames } from "@/react-query/casino-games-queries";
 import { GameCategory, GameTypeEnum, ProviderEnum } from "@/models/casino-games";
 import { ComboboxSelect } from "@/components/ui/combobox";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const providerOptions : {label: string, value: string}[] = Object.values(ProviderEnum).map((provider) => ({
+const providerOptions: { label: string, value: string }[] = Object.values(ProviderEnum).map((provider) => ({
     label: provider.split("_").join(" ").charAt(0).toUpperCase() + provider.split("_").join(" ").slice(1),
     value: provider
 })).sort((a, b) => a.label.localeCompare(b.label));
@@ -22,7 +21,7 @@ providerOptions.unshift({
 })
 
 
-const CategoryOptions : {label: string, value: string}[] = Object.values(GameCategory).map((category) => ({
+const CategoryOptions: { label: string, value: string }[] = Object.values(GameCategory).map((category) => ({
     label: category.split("_").join(" ").charAt(0).toUpperCase() + category.split("_").join(" ").slice(1),
     value: category
 })).sort((a, b) => a.label.localeCompare(b.label));
@@ -33,7 +32,7 @@ CategoryOptions.unshift({
 })
 
 
-const typeOptions : {label: string, value: string}[] = Object.values(GameTypeEnum).map((type) => ({
+const typeOptions: { label: string, value: string }[] = Object.values(GameTypeEnum).map((type) => ({
     label: type.split("_").join(" ").charAt(0).toUpperCase() + type.split("_").join(" ").slice(1),
     value: type
 })).sort((a, b) => a.label.localeCompare(b.label));
@@ -129,10 +128,10 @@ const CasinoGames = () => {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                            <SelectLabel>Limit</SelectLabel>
-                            <SelectItem value="10">10</SelectItem>
-                            <SelectItem value="50">50</SelectItem>
-                            <SelectItem value="100">100</SelectItem>
+                                <SelectLabel>Limit</SelectLabel>
+                                <SelectItem value="10">10</SelectItem>
+                                <SelectItem value="50">50</SelectItem>
+                                <SelectItem value="100">100</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>

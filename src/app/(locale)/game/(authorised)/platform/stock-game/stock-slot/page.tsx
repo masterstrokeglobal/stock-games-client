@@ -31,7 +31,7 @@ const StockSlot = () => {
                 <div className='flex flex-col flex-1 h-fit  items-center justify-center'>
                     <Slot roundRecord={roundRecord} winningIdRoundRecord={winningIdRoundRecord} />
                 </div>
-                <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
+                <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} winningIdRoundRecord={winningIdRoundRecord} />
             </div>
         </section>
     );

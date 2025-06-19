@@ -9,7 +9,7 @@ interface StockGameHeaderProps {
 
 const StockGameHeader = ({ onBack, title, className }: StockGameHeaderProps) => {
     return (
-        <header className={cn("border-b border-accent-secondary w-full py-2  z-50", className)}>
+        <header className={cn("border-b border-accent-secondary w-full py-2  z-[35]", className)}>
             <div className="flex items-center justify-between">
                 <Button
                     onClick={onBack}

@@ -13,9 +13,7 @@ const useWinningId = (roundRecord: RoundRecord | null,timeToFetch:number=500) =>
         const timer = setTimeout(() => {
             refetch().then((result) => {
                 const isResultPresent = result.data?.data?.winningId;
-                console.log("isResultPresent",isResultPresent);
                 if (isResultPresent) {
-                    console.log("result present",result.data?.data?.winningId);
                     clearTimeout(timer);
                 }
                 else {

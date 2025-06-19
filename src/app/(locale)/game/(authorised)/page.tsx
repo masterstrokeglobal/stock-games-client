@@ -1,6 +1,5 @@
 "use client";
 import GameLoadingScreen from "@/components/common/game-loading-screen";
-import GameMaintenanceMarquee from "@/components/common/game-maintainaince-screen";
 import AdvertismentDialog from "@/components/features/advertisement/advertismemnt-dialog";
 import CurrentBets from "@/components/features/game/current-bets";
 import LastWinners from "@/components/features/game/last-winners";
@@ -11,8 +10,6 @@ import GameHeaderMobile from "@/components/features/game/roulette-mobile-header"
 import HorseRace from "@/components/features/horse-animation/horse";
 import { useHorseRaceSound } from "@/context/audio-context";
 import { useCurrentGame, useIsPlaceOver } from "@/hooks/use-current-game";
-import { useGameType } from "@/hooks/use-game-type";
-import useSchedularInactive from "@/hooks/use-schedular-inactive";
 import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
@@ -29,8 +26,6 @@ const GamePage = () => {
     const { roundRecord, isLoading } = useCurrentGame();
     const { isMobile } = useWindowSize();
     useHorseRaceSound(roundRecord);
-    const [gameType] = useGameType();
-    const { isActive, isFetching } = useSchedularInactive(gameType);
 
     if (isLoading) return <GameLoadingScreen className="h-screen" />;
     return (<>
@@ -45,7 +40,6 @@ const GamePage = () => {
                     className="lg:col-span-5 col-span-4 row-span-6 rounded-sm ">
                     {roundRecord && <LeaderBoard roundRecord={roundRecord} />}
                 </div>
-
                 <div
                     className="lg:col-span-7 col-span-8 bg-las relative  row-span-5 h-fit   rounded-sm overflow-y-auto game-gradient-card-parent">
                     {roundRecord && <RouletteGame roundRecord={roundRecord} />}

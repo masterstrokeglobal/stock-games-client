@@ -10,7 +10,6 @@ import Link from "next/link"
 
 export default function StockGameCarousel() {
 
-
     return (
         <Carousel opts={{ loop: true }} plugins={[AutoScroll({ active: true, stopOnInteraction: false, stopOnFocusIn: false, stopOnMouseEnter: true, direction: "forward", speed: 3 })]} className="w-full">
             <div className="space-y-4">
@@ -22,16 +21,14 @@ export default function StockGameCarousel() {
                     </div>
                 </div>
                 <CarouselContent>
+
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href={`/game?gameType=${SchedulerType.NSE}`} className="w-full">
                             <div className="rounded-xl overflow-hidden  relative shadow-lg shadow-green-900/30">
                                 <Image src="/images/stock-game/nse.png" alt="stock-roulette" className="w-full h-auto object-contain" width={500} height={500} />
-
                             </div>
                         </Link>
                     </CarouselItem>
-
-                    
 
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href={`/game?gameType=${SchedulerType.USA_MARKET}`} className="w-full">
@@ -40,7 +37,6 @@ export default function StockGameCarousel() {
                             </div>
                         </Link>
                     </CarouselItem>
-
 
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href="/game/jackpot">
@@ -65,6 +61,7 @@ export default function StockGameCarousel() {
                             </div>
                         </Link>
                     </CarouselItem>
+
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href="/game/platform/stock-game/coin-head-tail">
                             <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
@@ -72,6 +69,7 @@ export default function StockGameCarousel() {
                             </div>
                         </Link>
                     </CarouselItem>
+
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href="/game/platform/stock-game/wheel-of-fortune">
                             <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
