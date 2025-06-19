@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { ArrowUpDown, Building, Clock, CoinsIcon, Contact2, DollarSign, GamepadIcon, GiftIcon, Home, ImageUpIcon, LucideIcon, MedalIcon, PieChart, Repeat1, ShipWheelIcon, Users } from 'lucide-react';
+import { ArrowUpDown, Building, ChevronsRightLeftIcon, Clock, CoinsIcon, Contact2, DollarSign, GamepadIcon, GiftIcon, Home, ImageUpIcon, LucideIcon, MedalIcon, PieChart, Repeat1, ShipWheelIcon, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -85,8 +85,12 @@ const adminMenuItems: MenuItem[] = [
         icon: ArrowUpDown,
         link: '/dashboard/jackpot-pair'
     }
-
-
+    ,
+    {
+        name: "Seven Up Down Pair",
+        icon: ChevronsRightLeftIcon,
+        link: '/dashboard/seven-up-down-pair'
+    }
 ];
 
 const companyMenuItems: MenuItem[] = [
