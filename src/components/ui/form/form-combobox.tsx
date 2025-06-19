@@ -18,12 +18,14 @@ function FormComboboxSelect<
   name,
   label,
   options,
+  errorMessage,
 }: {
   label?: string;
   control: Control<TFieldValues>;
   options: { value: string; label: string }[];
   className?: string;
   onSearchInputChange?: (value: string) => void;
+  errorMessage?: string;
   name: TName;
   description?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>) {
@@ -43,6 +45,7 @@ function FormComboboxSelect<
             value={field.value}
           />
           <FormMessage />
+          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
         </FormItem>
       )}
     />

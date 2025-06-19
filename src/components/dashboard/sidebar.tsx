@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Building, Clock, CoinsIcon, Contact2, DollarSign, GamepadIcon, GiftIcon, Home, ImageUpIcon, LucideIcon, MedalIcon, PieChart, Repeat1, Users } from 'lucide-react';
+import { ArrowUpDown, Building, Clock, CoinsIcon, Contact2, DollarSign, GamepadIcon, GiftIcon, Home, ImageUpIcon, LucideIcon, MedalIcon, PieChart, Repeat1, ShipWheelIcon, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -71,15 +71,21 @@ const adminMenuItems: MenuItem[] = [
 
     {
         name: "Coin Toss Pair",
-        icon: Repeat1,
+        icon: CoinsIcon,
         link: '/dashboard/coin-toss-pair'
     },
 
     {
         name: "Slot Pair",
-        icon: Repeat1,
+        icon: ShipWheelIcon,
         link: '/dashboard/slot-pair'
+    },
+    {
+        name: "Jackpot Pair",
+        icon: ArrowUpDown,
+        link: '/dashboard/jackpot-pair'
     }
+
 
 ];
 
