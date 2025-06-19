@@ -23,10 +23,8 @@ const WheelOfFortune = () => {
     } = useCurrentGame(RoundRecordGameType.WHEEL_OF_FORTUNE);
 
 
-    const roundRecordWithWinningId = useWinningId(roundRecord,1500);
+    const roundRecordWithWinningId = useWinningId(roundRecord);
     const winningMarketId = roundRecordWithWinningId?.winningId || null;
-
-
 
     if (!marketSelected) return <MarketSelector className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Wheel of Fortune Market" />
 

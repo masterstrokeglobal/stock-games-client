@@ -25,8 +25,8 @@ const SevenUpSevenDown = () => {
   if (isLoading || !roundRecord) return <GameLoadingScreen className='min-h-[calc(100svh-100px)]' />
 
   return (
-    <section className="flex flex-col items-center justify-center min-h-[calc(100svh-100px)] md:mx-auto -mx-4">
-      <div className="flex flex-col min-h-screen relative md:rounded-lg border border-gray-700  max-w-2xl w-full mx-auto bg-gray-900 text-white overflow-hidden">
+    <section className="flex flex-col items-center justify-center h-fit md:mx-auto -mx-4">
+      <div className="flex flex-col  relative md:rounded-lg border border-gray-700  max-w-2xl w-full mx-auto bg-gray-900 text-white overflow-hidden">
         <StockGameHeader onBack={() => setMarketSelected(false)} title="7 Up & 7 Down" />
         <MaintainceScreen />
         <GameBoard roundRecord={roundRecord} amount={betAmount} marketItems={stocks} roundRecordWithWinningId={roundRecordWithWinningId}>

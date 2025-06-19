@@ -8,6 +8,7 @@ import { RoundRecord, WHEEL_COLOR_CONFIG } from '@/models/round-record';
 import { useGetMyCurrentRoundWheelOfFortunePlacement } from "@/react-query/wheel-of-fortune-queries";
 import React from 'react';
 import WheelOfFortuneResultDialog from "./game-result";
+import { WheelColor } from "@/models/wheel-of-fortune-placement";
   
 interface BettingAreaProps {
   betAmount: number;
@@ -28,25 +29,30 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
   const showResult = useShowResults(roundRecord, placements ?? []);
 
 
+  const   placementsAggregated = placements?.reduce((acc, placement) => {
+    acc[placement.placementColor] = (acc[placement.placementColor] || 0) + placement.amount;
+    return acc;
+  }, {} as Record<WheelColor, number>) ?? {};
+
   if (isPlaceOver && placements?.length) {
     return (
       <>
         <div className="w-full bg-[#1a1b2e] text-white p-6">
           <div className="flex flex-col gap-3">
             <h3 className="text-xl font-semibold text-amber-400 mb-2">Your Bets</h3>
-            {placements.map((placement, index) => (
-              <div key={index} className="flex items-center justify-between bg-[#2a2b3e] p-4 rounded-xl border-2 border-amber-500/30 hover:border-amber-400 transition-all duration-300 shadow-lg hover:shadow-amber-500/20">
+            {Object.entries(placementsAggregated).map(([color, amount ], index) => (
+              <div key={index} className="flex items-center justify-between bg-[#2a2b3e] p-4 rounded-xl border-2 transition-all duration-300 shadow-lg hover:shadow-amber-500/20">
                 <div className="flex items-center gap-3">
-                  <div className="bg-gradient-to-br from-amber-500/30 to-red-500/30 p-3 rounded-lg">
-                    <div className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-red-400">
-                      {WHEEL_COLOR_CONFIG[placement.placementColor].name}
+                  <div className={cn("p-3 rounded-lg",WHEEL_COLOR_CONFIG[color as WheelColor].bgColor)}>
+                    <div className="text-lg font-bold text-white">
+                      {WHEEL_COLOR_CONFIG[color as WheelColor].name}
                     </div>
                   </div>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col"> 
                     <span className="text-sm text-amber-200 opacity-70">
-                      {placement.placementColor} Bet
+                      {WHEEL_COLOR_CONFIG[color as WheelColor].name} Bet
                     </span>
-                    <span className="text-xs text-amber-300/50">1:{WHEEL_COLOR_CONFIG[placement.placementColor].multiplier}</span>
+                    <span className="text-xs text-amber-300/50">1:{WHEEL_COLOR_CONFIG[color as WheelColor].multiplier}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -54,7 +60,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
                     <span className="text-lg font-bold">₹</span>
                   </div>
                   <div className="flex flex-col items-end">
-                    <span className="text-lg font-bold text-amber-300">₹{placement.amount}</span>
+                    <span className="text-lg font-bold text-amber-300">₹{amount as number}</span>
                     <span className="text-xs text-amber-300/50">Placed</span>
                   </div>
                 </div>
