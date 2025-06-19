@@ -4,13 +4,12 @@ import { COMPANYID } from "@/lib/utils";
 import { Scheduler } from "@/models/schedular";
 import { useMemo } from "react";
 
-const useSchedularInactive = (schedulerType: SchedulerType) => {
+const useSchedularCheck = () => {
     const { data, isSuccess, isFetching } = useGetSchedulers({
         page: 1,
         search: "",
         limit: 1000,
         companyId: COMPANYID.toString(),
-        type: schedulerType
     });
 
     const schedulers = useMemo(() => {
@@ -22,28 +21,34 @@ const useSchedularInactive = (schedulerType: SchedulerType) => {
         return [];
     }, [data, isSuccess]);
 
-    const isActive = useMemo(() => {
+    const schedulerStatus = useMemo(() => {
         const now = new Date();
+        const statusMap: Record<SchedulerType, boolean> = {} as Record<SchedulerType, boolean>;
 
-        return schedulers?.some((scheduler) => {
+        schedulers?.forEach((scheduler) => {
+            if (!scheduler.type) return;
+
             if (!scheduler.startDate || !scheduler.endDate || !scheduler.startTime || !scheduler.endTime) {
-                return false;
+                statusMap[scheduler.type] = false;
+                return;
             }
 
             // Check if current date falls within the scheduler's date range first
             const currentDate = now;
             const isWithinDateRange = currentDate >= scheduler.startDate && currentDate <= scheduler.endDate;
 
-
             if (!isWithinDateRange) {
-                return false;
+                statusMap[scheduler.type] = false;
+                return;
             }
-   
-            return scheduler.createRound ;
+
+            statusMap[scheduler.type] = scheduler.createRound ?? false;
         });
+
+        return statusMap;
     }, [schedulers]);
 
-    return { schedulers, isFetching, isActive };
+    return { schedulers, isFetching, schedulerStatus };
 };
 
-export default useSchedularInactive;    
+export default useSchedularCheck;

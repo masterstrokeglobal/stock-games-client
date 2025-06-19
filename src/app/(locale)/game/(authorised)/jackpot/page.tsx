@@ -2,6 +2,7 @@
 
 import { Dispatch, SetStateAction, useMemo, useState } from "react"
 
+import GameLoadingScreen from "@/components/common/game-loading-screen"
 import Navbar from "@/components/features/game/navbar"
 import SlotResultDialog from "@/components/features/game/slot-result-dialog"
 import { BettingAmoutMobile } from "@/components/features/slot-jackpot/betting-amout"
@@ -14,6 +15,7 @@ import { useCurrentGame, usePlacementOver, useShowResults } from "@/hooks/use-cu
 import { useGameType } from "@/hooks/use-game-type"
 import { RankedMarketItem, useLeaderboard } from "@/hooks/use-leadboard"
 import useNSEAvailable from "@/hooks/use-nse-available"
+import useSchedularInactive from "@/hooks/use-schedular-inactive"
 import useUSAMarketAvailable from "@/hooks/use-usa-available"
 import useWindowSize from "@/hooks/use-window-size"
 import useWinningId from "@/hooks/use-winning-id"
@@ -30,7 +32,7 @@ import { Triangle } from "lucide-react"
 export default function Home() {
   const [globalBetAmount, setGlobalBetAmount] = useState(100)
   const [searchQuery, setSearchQuery] = useState("");
-  const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
+  const { roundRecord, isLoading } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
   const [tab, setTab] = useGameType();
   const { isDesktop } = useWindowSize()
   const isPlacementOver = usePlacementOver(roundRecord);
@@ -40,11 +42,13 @@ export default function Home() {
   const handleGlobalBetAmountChange = (amount: number) => {
     setGlobalBetAmount(amount)
   }
+
+  if (isLoading) return <GameLoadingScreen className='min-h-[100svh]' />
   return (
     <div className="flex flex-col min-h-screen  relative bg-[url('/images/game-bg-pattern.png')] bg-repeat bg-center text-white  mx-auto">
       <Navbar />
-
       <Tabs className="flex-1  w-full" value={tab} onValueChange={(value) => setTab(value as SchedulerType)}>
+
         {isDesktop &&
           <MarketSection
             searchQuery={searchQuery}
@@ -119,6 +123,9 @@ const MarketSection = ({ globalBetAmount, searchQuery, className }: { searchQuer
       return !bFavorite ? -1 : !aFavorite ? 1 : 0;
     });
   }, [roundRecord, myFavorites, searchQuery]);
+  const [gameType] = useGameType();
+
+  const { isActive, isFetching } = useSchedularInactive(gameType);
 
   const { userDetails } = useAuthStore();
   const currentUser = userDetails as User;
@@ -126,7 +133,7 @@ const MarketSection = ({ globalBetAmount, searchQuery, className }: { searchQuer
   const isNSEAvailable = useNSEAvailable();
   const isUSAMarketAvailable = useUSAMarketAvailable();
 
-  const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE); 
+  const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
   const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO);
   const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
 
@@ -146,23 +153,30 @@ const MarketSection = ({ globalBetAmount, searchQuery, className }: { searchQuer
         </div>
       </div>
 
+
       {roundRecord.market.length === 0 ? (
         <div className="text-center py-8 text-gray-400 bg-primary/5 rounded-lg border border-primary/10">
           No markets found matching your search.
         </div>
-      ) : (
-        <div className="grid grid-cols-1  max-w-7xl mx-auto  ">
-          {sortedMarketItems?.map((marketItem: any) => (
-            <BettingCard
-              key={marketItem.id}
-              roundRecord={roundRecord}
-              globalBetAmount={globalBetAmount}
-              marketItem={marketItem}
-              className="w-full bg-transparent"
-            />
-          ))}
-        </div>
-      )}
+      ) :
+        !isActive && !isFetching ? (
+          <div className="text-center p-8 text-gray-400 bg-primary/5 rounded-lg border border-primary/10">
+            Game is under maintenance. Please try again later.
+          </div>
+        ) :
+          (
+            <div className="grid grid-cols-1  max-w-7xl mx-auto  ">
+              {sortedMarketItems?.map((marketItem: any) => (
+                <BettingCard
+                  key={marketItem.id}
+                  roundRecord={roundRecord}
+                  globalBetAmount={globalBetAmount}
+                  marketItem={marketItem}
+                  className="w-full bg-transparent"
+                />
+              ))}
+            </div>
+          )}
 
 
       {previousRoundId && (
@@ -187,7 +201,6 @@ const StockCard = ({ stock, className, amount, roundRecord }: { stock?: RankedMa
 
   const price = stock.price ? stock.price : initialPrice;
 
-  console.log(amount , initialPrice ,roundRecord?.initialValues);
   return (
     <div className="relative">
       <div className={cn(
@@ -242,7 +255,7 @@ const StockCardStack = ({ roundRecord, roundRecordWithWinningId }: { roundRecord
     const bettedMarketItems = myStockSlotJackpotGameRecord?.filter((record) => record.placement === StockJackpotPlacementType.HIGH || record.placement === StockJackpotPlacementType.LOW);
 
     const sortedMarketItems = roundRecordWithWinningId?.sortedMarketItems || marketItems;
-    
+
     // Group by marketItem.id and placement type
     const groupedBets = bettedMarketItems?.reduce((acc, record) => {
       const key = `${record.marketItem.id}-${record.placement}`;

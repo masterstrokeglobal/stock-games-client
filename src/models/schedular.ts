@@ -15,9 +15,9 @@ export class Scheduler {
 
     constructor(params: Partial<Scheduler> = {}) {
         this.id = params.id;
-        this.startDate = params.startDate;
+        this.startDate = params.startDate ? new Date(params.startDate) : undefined;
         this.companyId = params.companyId;
-        this.endDate = params.endDate;
+        this.endDate = params.endDate ? new Date(params.endDate) : undefined;
         this.startTime = params.startTime;
         this.endTime = params.endTime;
         this.type = params.type;

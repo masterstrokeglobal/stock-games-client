@@ -28,12 +28,12 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
     <Suspense fallback={<GameLoadingScreen className="md:h-full h-[500px]" loadingImageClassName="w-10 h-auto" />}>
       <div className="game-gradient-card-parent md:h-full h-64 overflow-hidden relative">
         {/* Camera Change Button */}
-        <button
+        {/* <button
           onClick={handleCameraChange}
           className="absolute top-4 right-4 z-10 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-3 py-2 rounded-lg transition-all duration-200 border border-white/30"
         >
           {cameraView === 'side' ? 'Top View' : 'Side View'}
-        </button>
+        </button> */}
         
         <Canvas className="bg-gradient-to-b from-sky-300   to-blue-400/85 md:rounded-sm">
           <PixelRatioManager />

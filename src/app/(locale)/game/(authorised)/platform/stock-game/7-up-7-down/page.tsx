@@ -1,6 +1,7 @@
 "use client"
 import TimeDisplay from '@/components/common/bet-locked-banner';
 import GameLoadingScreen from '@/components/common/game-loading-screen';
+import MaintainceScreen from '@/components/common/maintaince-screen';
 import MarketSelector from '@/components/common/market-selector';
 import StockGameHeader from '@/components/common/stock-game-header';
 import { BettingArea } from '@/components/features/7-up-down/BettingArea';
@@ -25,8 +26,9 @@ const SevenUpSevenDown = () => {
 
   return (
     <section className="flex flex-col items-center justify-center min-h-[calc(100svh-100px)] md:mx-auto -mx-4">
-      <div className="flex flex-col min-h-screen md:rounded-lg border border-gray-700  max-w-2xl w-full mx-auto bg-gray-900 text-white overflow-hidden">
+      <div className="flex flex-col min-h-screen relative md:rounded-lg border border-gray-700  max-w-2xl w-full mx-auto bg-gray-900 text-white overflow-hidden">
         <StockGameHeader onBack={() => setMarketSelected(false)} title="7 Up & 7 Down" />
+        <MaintainceScreen />
         <GameBoard roundRecord={roundRecord} amount={betAmount} marketItems={stocks} roundRecordWithWinningId={roundRecordWithWinningId}>
           <TimeDisplay className="absolute top-0 left-1/2 -translate-x-1/2 md:max-w-sm max-w-[200px] w-full" roundRecord={roundRecord} />
         </GameBoard>

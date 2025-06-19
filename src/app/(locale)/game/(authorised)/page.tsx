@@ -1,5 +1,6 @@
 "use client";
 import GameLoadingScreen from "@/components/common/game-loading-screen";
+import GameMaintenanceMarquee from "@/components/common/game-maintainaince-screen";
 import AdvertismentDialog from "@/components/features/advertisement/advertismemnt-dialog";
 import CurrentBets from "@/components/features/game/current-bets";
 import LastWinners from "@/components/features/game/last-winners";
@@ -10,6 +11,8 @@ import GameHeaderMobile from "@/components/features/game/roulette-mobile-header"
 import HorseRace from "@/components/features/horse-animation/horse";
 import { useHorseRaceSound } from "@/context/audio-context";
 import { useCurrentGame, useIsPlaceOver } from "@/hooks/use-current-game";
+import { useGameType } from "@/hooks/use-game-type";
+import useSchedularInactive from "@/hooks/use-schedular-inactive";
 import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
@@ -26,11 +29,14 @@ const GamePage = () => {
     const { roundRecord, isLoading } = useCurrentGame();
     const { isMobile } = useWindowSize();
     useHorseRaceSound(roundRecord);
+    const [gameType] = useGameType();
+    const { isActive, isFetching } = useSchedularInactive(gameType);
 
     if (isLoading) return <GameLoadingScreen className="h-screen" />;
     return (<>
         <section className={cn("bg-background-game pt-14 md:min-h-screen")}>
             <Navbar />
+            {!isActive && !isFetching && <GameMaintenanceMarquee />}
             {!isMobile && <main className="grid grid-cols-12 grid-rows-12 mt-4  md:gap-4 gap-2 md:max-h-[1100px] px-4 pb-4">
                 <div
                     className="lg:col-span-7 col-span-8 row-span-4 rounded-sm  overflow-hidden">
@@ -88,7 +94,7 @@ const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
         {isPlaceOver && <LeaderBoard roundRecord={roundRecord} />}
         {isPlaceOver && <RouletteGame roundRecord={roundRecord} />}
         {isPlaceOver && <CurrentBets className="mb-4" round={roundRecord} />}
-        { isPlaceOver && <LastWinners className="h-96 rounded-none" />}
+        {isPlaceOver && <LastWinners className="h-96 rounded-none" />}
     </section>
 }
 

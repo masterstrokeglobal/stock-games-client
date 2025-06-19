@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
 import User from "@/models/user";
 import { RoundRecordGameType } from "@/models/round-record";
+import useSchedularCheck from "@/hooks/use-schedular-check";
 
 type MarketSelectorProps = {
     title: string;
@@ -19,6 +20,7 @@ const MarketSelector = ({ title, className, roundRecordType = RoundRecordGameTyp
     const isUSAMarketAvailable = useUSAMarketAvailable();
 
     const { setMarketSelected } = useMarketSelector();
+    const { schedulerStatus } = useSchedularCheck();
     const { setGameType } = useGameType();
 
     const { userDetails } = useAuthStore();
@@ -40,7 +42,7 @@ const MarketSelector = ({ title, className, roundRecordType = RoundRecordGameTyp
             id: SchedulerType.NSE,
             title: "NSE",
             subtitle: "National Stock Exchange",
-            available: isNSEAvailable,
+            available: isNSEAvailable && schedulerStatus[SchedulerType.NSE],
             allowed: isNSEAllowed,
             color: "from-blue-400 to-blue-600",
             icon: "📈"
@@ -49,7 +51,7 @@ const MarketSelector = ({ title, className, roundRecordType = RoundRecordGameTyp
             id: SchedulerType.CRYPTO,
             title: "CRYPTO",
             subtitle: "Digital Currency",
-            available: true,
+            available: schedulerStatus[SchedulerType.CRYPTO],
             allowed: RoundRecordGameType.SEVEN_UP_DOWN == roundRecordType ? false : isCryptoAllowed,
             color: "from-orange-400 to-red-500",
             icon: "₿"
@@ -58,7 +60,7 @@ const MarketSelector = ({ title, className, roundRecordType = RoundRecordGameTyp
             id: SchedulerType.USA_MARKET,
             title: "USA",
             subtitle: "US Stock Market",
-            available: isUSAMarketAvailable,
+            available: schedulerStatus[SchedulerType.USA_MARKET] && isUSAMarketAvailable,
             allowed: isUSAMarketAllowed,
             color: "from-green-400 to-emerald-600",
             icon: "🇺🇸"
@@ -67,8 +69,8 @@ const MarketSelector = ({ title, className, roundRecordType = RoundRecordGameTyp
             id: SchedulerType.MCX,
             title: "MCX",
             subtitle: "MCX Stock Market",
-            available: true,
-            allowed: isMCXAllowed,
+            available: schedulerStatus[SchedulerType.MCX],
+            allowed: isMCXAllowed && schedulerStatus[SchedulerType.MCX],
         }
     ];
 
