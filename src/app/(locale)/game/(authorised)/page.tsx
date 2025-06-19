@@ -36,7 +36,6 @@ const GamePage = () => {
     return (<>
         <section className={cn("bg-background-game pt-14 md:min-h-screen")}>
             <Navbar />
-            {!isActive && !isFetching && <GameMaintenanceMarquee />}
             {!isMobile && <main className="grid grid-cols-12 grid-rows-12 mt-4  md:gap-4 gap-2 md:max-h-[1100px] px-4 pb-4">
                 <div
                     className="lg:col-span-7 col-span-8 row-span-4 rounded-sm  overflow-hidden">
