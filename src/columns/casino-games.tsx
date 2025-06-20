@@ -19,7 +19,7 @@ const casinoGamesColumns: ColumnDef<CasinoGames>[] = [
         header: "Game Image",
         accessorKey: "gameImage",
         cell: ({ row }) => {
-            return <img src={row.original.imageUrl} alt={row.original.name} className="w-10 h-10 rounded-md" />
+            return  <img src={row.original.imageUrl} alt={row.original.name} className="w-10 h-10 rounded-md" />
         }
     },
     {

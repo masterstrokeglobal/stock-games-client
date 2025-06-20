@@ -73,7 +73,7 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord, result }:
                         <span className="absolute inset-0 mx-1 flex items-start justify-end text-game-text-secondary text-2xl font-bold">
                             {number}
                         </span>
-                        {winningNumbers.includes(number) && <img className='z-40 relative' src='/crown.png' alt="Winner" />}
+                        {winningNumbers.includes(number) && <img className='z-40  max-w-14 flex items-center justify-center absolute top-[calc(50%+5px)] left-1/2 -translate-x-1/2 -translate-y-1/2' src='/crown.png' alt="Winner" />}
                     </div>
                 </div>
             ))}

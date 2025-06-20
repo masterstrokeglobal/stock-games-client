@@ -3,15 +3,12 @@
 
 
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
-import { checkCasinoAllowed, COMPANYID } from "@/lib/utils"
 import { SchedulerType } from "@/models/market-item"
 import AutoScroll from "embla-carousel-auto-scroll"
 import Image from "next/image"
 import Link from "next/link"
 
 export default function StockGameCarousel() {
-
-    const isCasinoAllowed = checkCasinoAllowed(COMPANYID);
 
     return (
         <Carousel opts={{ loop: true }} plugins={[AutoScroll({ active: true, stopOnInteraction: false, stopOnFocusIn: false, stopOnMouseEnter: true, direction: "forward", speed: 3 })]} className="w-full">
@@ -24,11 +21,11 @@ export default function StockGameCarousel() {
                     </div>
                 </div>
                 <CarouselContent>
+
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href={`/game?gameType=${SchedulerType.NSE}`} className="w-full">
                             <div className="rounded-xl overflow-hidden  relative shadow-lg shadow-green-900/30">
                                 <Image src="/images/stock-game/nse.png" alt="stock-roulette" className="w-full h-auto object-contain" width={500} height={500} />
-
                             </div>
                         </Link>
                     </CarouselItem>
@@ -41,15 +38,6 @@ export default function StockGameCarousel() {
                         </Link>
                     </CarouselItem>
 
-                    {isCasinoAllowed && (
-                        <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
-                            <Link href={`/game/casino/18480`} className="w-full">
-                                <div className="rounded-xl overflow-hidden  aspect-square  relative ">
-                                    <img src="/images/stock-game/stock-market.png" alt="coming-soon" className="w-full h-auto object-contain" width={500} height={500} />
-                                </div>
-                            </Link>
-                        </CarouselItem>
-                    )}
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href="/game/jackpot">
                             <div className="rounded-xl overflow-hidden border aspect-square border-blue-700 relative shadow-lg shadow-blue-900">
@@ -57,20 +45,23 @@ export default function StockGameCarousel() {
                             </div>
                         </Link>
                     </CarouselItem>
+                    
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href="/game/platform/stock-game/stock-slot">
                             <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
-                                <Image src="/images/ad3.jpg" alt="coming-soon" className="w-full h-full object-top" width={500} height={500} />
+                                <Image src="/images/stock-slot.png" alt="coming-soon" className="w-full h-full object-top" width={500} height={500} />
                             </div>
                         </Link>
                     </CarouselItem>
+
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href="/game/platform/stock-game/7-up-7-down">
                             <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
-                                <Image src="/images/banner/7-up.png" alt="coming-soon" className="w-full h-full object-top" width={500} height={500} />
+                                <Image src="/images/banner/7-up-game.png" alt="coming-soon" className="w-full h-full object-top" width={500} height={500} />
                             </div>
                         </Link>
                     </CarouselItem>
+
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href="/game/platform/stock-game/coin-head-tail">
                             <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
@@ -78,6 +69,7 @@ export default function StockGameCarousel() {
                             </div>
                         </Link>
                     </CarouselItem>
+
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href="/game/platform/stock-game/wheel-of-fortune">
                             <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">

@@ -6,23 +6,43 @@ import { Canvas } from "@react-three/fiber";
 import { useTranslations } from "next-intl";
 import HorseRaceEnvironment from "./components/race-enviroment";
 import { cn } from "@/lib/utils";
+import { Suspense, useEffect, useState } from "react";
+import GameLoadingScreen from "@/components/common/game-loading-screen";
+import useWindowSize from "@/hooks/use-window-size";
+import { useThree } from "@react-three/fiber";
 
 type Props = {
   roundRecord: RoundRecord;
   filteredMarket?: MarketItem[];
-
 };
 
 export default function HorseRace({ roundRecord, filteredMarket }: Props) {
-
+  const [cameraView, setCameraView] = useState<'side' | 'top'>('side');
   const isPlaceOver = useIsPlaceOver(roundRecord);
+
+  const handleCameraChange = () => {
+    setCameraView(prev => prev === 'side' ? 'top' : 'side');
+  };
 
   return isPlaceOver ? (
     <Suspense fallback={<GameLoadingScreen className="md:h-full h-[500px]" loadingImageClassName="w-10 h-auto" />}>
-      <div className="game-gradient-card-parent md:h-full h-64 overflow-hidden">
-        <Canvas className="bg-white md:rounded-sm">
+      <div className="game-gradient-card-parent md:h-full h-64 overflow-hidden relative">
+        {/* Camera Change Button */}
+        {/* <button
+          onClick={handleCameraChange}
+          className="absolute top-4 right-4 z-10 bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-3 py-2 rounded-lg transition-all duration-200 border border-white/30"
+        >
+          {cameraView === 'side' ? 'Top View' : 'Side View'}
+        </button> */}
+        
+        <Canvas className="bg-gradient-to-b from-sky-300   to-blue-400/85 md:rounded-sm">
           <PixelRatioManager />
-          <HorseRaceEnvironment roundRecord={roundRecord} filteredMarket={filteredMarket} />
+          <HorseRaceEnvironment 
+            roundRecord={roundRecord} 
+            filteredMarket={filteredMarket} 
+            changeCameraView={handleCameraChange}
+            currentCameraView={cameraView}
+          />
         </Canvas>
       </div>
     </Suspense>
@@ -46,11 +66,6 @@ function RacePreparation( {className,roundRecord}: {className?: string,roundReco
     </div>
   );
 }
-
-import GameLoadingScreen from "@/components/common/game-loading-screen";
-import useWindowSize from "@/hooks/use-window-size";
-import { useThree } from "@react-three/fiber";
-import { Suspense, useEffect } from "react";
 
 const PixelRatioManager = () => {
   const { gl } = useThree();

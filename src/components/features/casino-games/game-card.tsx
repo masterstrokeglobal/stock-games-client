@@ -11,7 +11,7 @@ export default function GameCard({ game }: GameCardProps) {
   return (
     // tab active add border and shadow 
     <Link href={`/game/casino/${game.id}`} >
-      <Card className="relative overflow-hidden aspect-[336/440] border-none rounded-xl group cursor-pointer transition-transform duration-300 hover:scale-105">
+      <Card className="relative overflow-hidden aspect-[336/440] border-none rounded-xl group pb-1 cursor-pointer transition-transform duration-300 hover:scale-105">
 
       <img
           src={game.imageUrl || "/placeholder.svg?height=400&width=300"}
@@ -29,8 +29,8 @@ export default function GameCard({ game }: GameCardProps) {
           alt={game.name}
           className="w-full h-auto aspect-square z-20 relative"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/100 via-black/40 to-transparent md:opacity-0 md:flex hidden group-hover:opacity-100 transition-opacity duration-300 flex items-end md:p-4 p-2">
-          <h3 className="text-white font-semibold md:text-md text-sm tracking-wide">{game.name}</h3>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/100 via-black/40 to-transparent md:opacity-0 md:flex  group-hover:opacity-100 transition-opacity duration-300 flex items-end md:px-4 px-2 md:pb-2 pb-1">
+          <h3 className="text-white font-semibold md:text-sm text-xs tracking-wide line-clamp-2">{game.name}</h3>
         </div>
       </Card>
     </Link>

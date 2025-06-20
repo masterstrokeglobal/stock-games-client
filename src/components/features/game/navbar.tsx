@@ -19,7 +19,7 @@ const Navbar = ({ className }: Props) => {
             <div className="flex items-center space-x-4 ">
                 <Link href="/game/platform">
                     <span className="md:text-xl text-sm font-semibold flex items-end">
-                        <Logo />
+                        <Logo className="h-14 py-0" />
                     </span>
                 </Link>
                 {isLoggedIn && <GameTimings />}

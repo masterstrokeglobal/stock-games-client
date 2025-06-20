@@ -52,7 +52,7 @@ const UserTable = () => {
 
     const totalPages = useMemo(() => {
         return Math.ceil(data?.data?.count / limit) || 1;
-    }, [data, isSuccess, limit]);
+    }, [data, limit]);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);

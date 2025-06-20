@@ -44,7 +44,7 @@ const AdvertisementTable = () => {
 
     const totalPages = useMemo(() => {
         return Math.ceil(data?.data?.count / 10) || 1;
-    }, [data, isSuccess]);
+    }, [data]);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);

@@ -40,7 +40,6 @@ const GamePage = () => {
                     className="lg:col-span-5 col-span-4 row-span-6 rounded-sm ">
                     {roundRecord && <LeaderBoard roundRecord={roundRecord} />}
                 </div>
-
                 <div
                     className="lg:col-span-7 col-span-8 bg-las relative  row-span-5 h-fit   rounded-sm overflow-y-auto game-gradient-card-parent">
                     {roundRecord && <RouletteGame roundRecord={roundRecord} />}
@@ -88,7 +87,7 @@ const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
         {isPlaceOver && <LeaderBoard roundRecord={roundRecord} />}
         {isPlaceOver && <RouletteGame roundRecord={roundRecord} />}
         {isPlaceOver && <CurrentBets className="mb-4" round={roundRecord} />}
-        { isPlaceOver && <LastWinners className="h-96 rounded-none" />}
+        {isPlaceOver && <LastWinners className="h-96 rounded-none" />}
     </section>
 }
 

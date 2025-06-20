@@ -16,7 +16,7 @@ const GameLayout = ({ children }: PropsWithChildren) => {
     if (!loading && !(userDetails instanceof User)) {
       router.push("/game/auth/login");
     }
-  }, [userDetails, loading]);
+  }, [userDetails, loading, router]);
 
   if (loading || !(userDetails instanceof User)) {
     return <GameLoadingScreen className="h-screen" />;

@@ -14,21 +14,21 @@ interface GameBoardProps extends PropsWithChildren<PropsWithClassName> {
 
 // First row: numbers 2-7
 const firstRow = [
-    { number: 2, multiplier: '2x' },
-    { number: 3, multiplier: '2x' },
-    { number: 4, multiplier: '2x' },
-    { number: 5, multiplier: '2x' },
-    { number: 6, multiplier: '2x' },
-    { number: 7, multiplier: '2x' }
+    { number: 2, multiplier: '11x' },
+    { number: 3, multiplier: '11x' },
+    { number: 4, multiplier: '11x' },
+    { number: 5, multiplier: '11x' },
+    { number: 6, multiplier: '11x' },
+    { number: 7, multiplier: '11x' }
 ];
 
 // Second row: numbers 8-12 (reversed for visual balance)
 const secondRow = [
-    { number: 8, multiplier: '2x' },
-    { number: 9, multiplier: '2x' },
-    { number: 10, multiplier: '2x' },
-    { number: 11, multiplier: '2x' },
-    { number: 12, multiplier: '2x' }
+    { number: 8, multiplier: '11x' },
+    { number: 9, multiplier: '11x' },
+    { number: 10, multiplier: '11x' },
+    { number: 11, multiplier: '11x' },
+    { number: 12, multiplier: '11x' }
 ];
 
 const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningMarketId }: GameBoardProps) => {

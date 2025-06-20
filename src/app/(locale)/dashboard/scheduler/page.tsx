@@ -35,7 +35,7 @@ const SchedulerTable = () => {
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);
-        setPage(1); // Reset to first page on search
+        setPage(1); 
     };
 
     const changePage = (newPage: number) => {

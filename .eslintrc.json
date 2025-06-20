@@ -3,8 +3,9 @@
     "next/core-web-vitals",
     "next/typescript"
   ],
-    "rules": {
+  "rules": {
     "@typescript-eslint/no-explicit-any": 0,
-    "@typescript-eslint/no-this-alias": 0
+    "@typescript-eslint/no-this-alias": 0,
+    "@next/next/no-img-element": 0
   }
 }
