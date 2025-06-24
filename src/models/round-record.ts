@@ -79,7 +79,6 @@ export const IndexwithColorBands = [
 ];
 
 
-
 export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
     [WheelColor.COLOR1]: {
         name: 'RED',
@@ -90,7 +89,7 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
         shadowColor: 'shadow-red-500/50',
         shadow: "0px 0px 30px 0px rgba(244, 67, 54, 1)",
         actualColor: '#F44336', // Vibrant red (most frequent - 7 items)
-        multiplier: 2
+        multiplier: 3
     },
     [WheelColor.COLOR2]: {
         name: 'GREEN',
@@ -101,7 +100,7 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
         shadowColor: 'shadow-green-500/50',
         shadow: "0px 0px 30px 0px rgba(76, 175, 80, 1)",
         actualColor: '#4CAF50', // Vibrant green (6 items)
-        multiplier: 2
+        multiplier: 3
     },
     [WheelColor.COLOR3]: {
         name: 'BLUE',
@@ -112,7 +111,7 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
         borderColor: 'border-blue-600',
         shadowColor: 'shadow-blue-500/50',
         actualColor: '#2196F3', // Bright blue (4 items)
-        multiplier: 2
+        multiplier: 5
     },
     [WheelColor.COLOR4]: {
         name: 'PURPLE',
@@ -123,7 +122,7 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
         shadowColor: 'shadow-[#6C2784]/50',
         shadow: "0px 0px 30px 0px #6C2784",
         actualColor: '#6C2784', // Main purple
-        multiplier: 2
+        multiplier: 7
     },
     [WheelColor.COLOR5]: {
         name: 'GOLDEN',
@@ -134,7 +133,7 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
         shadowColor: 'shadow-yellow-400/50',
         shadow: "0px 0px 30px 0px rgba(255, 215, 0, 1)",
         actualColor: '#FFD700', // Golden yellow (1 item - rarest)
-        multiplier: 2
+        multiplier: 21
     },
     [WheelColor.COLOR6]: {
         name: 'WHITE',

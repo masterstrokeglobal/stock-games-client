@@ -1,13 +1,12 @@
-import { useGameState, usePlacementOver } from '@/hooks/use-current-game';
-import { RoundRecord } from '@/models/round-record';
-import React from 'react';
-import StockWheel from './stock-wheel';
-import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-import GameSettingsPopover from './game-menu';
 import { Button } from '@/components/ui/button';
+import { useGameState, usePlacementOver } from '@/hooks/use-current-game';
+import { cn } from '@/lib/utils';
+import { RoundRecord } from '@/models/round-record';
 import { MenuIcon } from 'lucide-react';
+import React from 'react';
+import GameSettingsPopover from './game-menu';
+import StockWheel from './stock-wheel';
 
 
 export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, className?: string, winningMarketId: number[] | null }> = ({ roundRecord, winningMarketId, className }) => {
@@ -60,14 +59,6 @@ export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, className?:
           <GameTimer roundRecord={roundRecord} />
         </div>
       </div>
-      {isSpinning && (
-        <DotLottieReact
-          className="absolute z-15 scale-[200%] top-0 left-0 w-full h-full z-10 pointer-events-none"
-          src="/animation/sparkle-lottie.json"
-          autoplay
-          loop
-        />
-      )}
       <div className='relative z-20'>
         <StockWheel roundRecord={roundRecord} winningMarketId={winningMarketId} isSpinning={isSpinning} />
       </div>
