@@ -1,8 +1,8 @@
 "use client";
-import { RoundRecord, WHEEL_COLOR_CONFIG } from "@/models/round-record";
-import { WheelCanvas } from "./wheel-canvas";
-import React, { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
+import { RoundRecord, WHEEL_COLOR_CONFIG } from "@/models/round-record";
+import React, { useEffect, useMemo, useState } from "react";
+import { WheelCanvas } from "./wheel-canvas";
 
 interface WheelOfFortuneProps {
     className?: string;
@@ -60,7 +60,7 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
     
     return (
         <div className={`flex flex-col items-center w-full relative gap-6 ${className || ""}`}>
-            <div className="h-[500px] w-full">
+            <div className="md:min-h-[450px] xs:min-h-[360px] min-h-[200px] w-full">
                 <WheelCanvas
                     isSpinning={isSpinning}
                     roundRecord={roundRecord}
@@ -71,15 +71,25 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
             </div>
 
             {showResult && displayWinner && winningMarketId && winningMarketId.length > 0 && (
-                <div className={cn("w-full  max-w-md border-2 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 ", winningColor ?`${winningColor.bgColor}` : "")}>
-                    <p className="text-center font-medium">
-                        Winner:{" "}
-                        <span className="font-bold text-white">
-                            {roundRecord.market.find(
+                <div style={{
+                    backgroundImage: winningColor ? winningColor.backgroundGradient : "transparent",
+                    boxShadow: winningColor ? winningColor.shadow : "none",
+                }} className={cn("w-full  max-w-md rounded-md absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 border-2", winningColor ? winningColor.borderColor : "")}>
+                    <div className="text-center font-medium uppercase">
+                        <h3 className="text-xl font-semibold italic uppercase tracking-wider">
+                        Winner
+                        </h3>
+                        <hr className={cn(" border-t-2 my-4 mx-[25%]", winningColor ? winningColor.borderColor : "")}/>
+                        <p   className="text-white text-xl font-medium">
+                            {winningColor?.name}
+                        </p>
+                        <p className=" text-white text-lg font-light tracking-widest">
+                            ({roundRecord.market.find(
                                 (market) => market.id === winningMarketId?.[0]
-                            )?.name}
-                        </span>
-                    </p>
+                            )?.name})
+                            
+                        </p>
+                    </div>
                 </div>
             )}
         </div>

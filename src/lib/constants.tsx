@@ -132,14 +132,14 @@ export const StockDerbyGames: Game[] = [
     ,
     {
         title: "Wheel of Fortune",
-        link: "/game/platform/stock-game/wheel-of-fortune",
+        link: "/game/single-player/wheel-of-fortune",
         image: "/images/banner/wheel-of-fortune.png",
         description: "Guess the side of the coin"
     }
     ,
     {
         title: "Dice Game",
-        link: "/game/platform/stock-game/dice-game",
+        link: "/game/single-player/dice-game",
         image: "/images/banner/dice-game.png",
         description: "Guess the side of the coin"
     },

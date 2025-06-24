@@ -80,14 +80,15 @@ export const IndexwithColorBands = [
 
 
 
-
 export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
     [WheelColor.COLOR1]: {
         name: 'RED',
         bgColor: 'bg-red-500',
         textColor: 'text-white',
+        backgroundGradient: 'linear-gradient(90.33deg, rgba(175, 2, 45, 0.85) 1.64%, rgba(84, 0, 6, 0.85) 115.74%)',
         borderColor: 'border-red-600',
         shadowColor: 'shadow-red-500/50',
+        shadow: "0px 0px 30px 0px rgba(244, 67, 54, 1)",
         actualColor: '#F44336', // Vibrant red (most frequent - 7 items)
         multiplier: 2
     },
@@ -95,8 +96,10 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
         name: 'GREEN',
         bgColor: 'bg-green-500',
         textColor: 'text-white',
+        backgroundGradient: 'linear-gradient(90deg, #1B5E20 0%, #1B5E20 100%)',
         borderColor: 'border-green-600',
         shadowColor: 'shadow-green-500/50',
+        shadow: "0px 0px 30px 0px rgba(76, 175, 80, 1)",
         actualColor: '#4CAF50', // Vibrant green (6 items)
         multiplier: 2
     },
@@ -104,6 +107,8 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
         name: 'BLUE',
         bgColor: 'bg-blue-500',
         textColor: 'text-white',
+        shadow: "0px 0px 30px 0px rgba(33, 150, 243, 1)",
+        backgroundGradient: 'linear-gradient(90deg, #0D47A1 0%, #0D47A1 100%)',
         borderColor: 'border-blue-600',
         shadowColor: 'shadow-blue-500/50',
         actualColor: '#2196F3', // Bright blue (4 items)
@@ -111,19 +116,34 @@ export const WHEEL_COLOR_CONFIG: Record<WheelColor, ColorConfig> = {
     },
     [WheelColor.COLOR4]: {
         name: 'PURPLE',
-        bgColor: 'bg-fuchsia-600',
-        textColor: 'text-white',
-        borderColor: 'border-fuchsia-700',
-        shadowColor: 'shadow-fuchsia-500/50',
-        actualColor: '#E91E63', // Bright magenta-pink (3 items)
+        bgColor: 'bg-[#6C2784]', // Custom purple from image
+        textColor: 'text-[#B9A9D0]', // Muted light gray from image
+        backgroundGradient: 'linear-gradient(180deg, #6C2784 0%, #4B1760 100%)', // Deep purple gradient
+        borderColor: '#CD71FF',
+        shadowColor: 'shadow-[#6C2784]/50',
+        shadow: "0px 0px 30px 0px #6C2784",
+        actualColor: '#6C2784', // Main purple
         multiplier: 2
     },
     [WheelColor.COLOR5]: {
         name: 'GOLDEN',
         bgColor: 'bg-yellow-400',
         textColor: 'text-yellow-900',
+        backgroundGradient: 'linear-gradient(90deg, #BE6401 0%, #5B3307 100%)   ',
         borderColor: 'border-yellow-500',
         shadowColor: 'shadow-yellow-400/50',
+        shadow: "0px 0px 30px 0px rgba(255, 215, 0, 1)",
+        actualColor: '#FFD700', // Golden yellow (1 item - rarest)
+        multiplier: 2
+    },
+    [WheelColor.COLOR6]: {
+        name: 'WHITE',
+        backgroundGradient: 'linear-gradient(90.33deg, rgba(175, 2, 45, 0.85) 1.64%, rgba(84, 0, 6, 0.85) 115.74%)',
+        bgColor: 'bg-white',
+        textColor: 'text-black',
+        borderColor: 'border-white',
+        shadowColor: 'shadow-yellow-400/50',
+        shadow: "0px 0px 30px 0px rgba(255, 255, 255, 1)",
         actualColor: '#FFD700', // Golden yellow (1 item - rarest)
         multiplier: 2
     }

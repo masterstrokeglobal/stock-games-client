@@ -32,12 +32,12 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
   const spinningObjectsRef = useRef<THREE.Object3D[]>([]);
   const textGroupRef = useRef<THREE.Group | null>(null);
   const isInitializedRef = useRef<boolean>(false);
-  
+
   // GSAP animation state
   const currentSpeedRef = useRef<number>(0);
   const spinTweenRef = useRef<gsap.core.Tween | null>(null);
   const isAnimatingRef = useRef<boolean>(false);
-  
+
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -99,13 +99,13 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
   // HDRI Environment Loader function with fixed logic
   const loadHDRIEnvironment = useCallback(async (scene: THREE.Scene, renderer: THREE.WebGLRenderer, hdriUrl: string): Promise<void> => {
     try {
-      
+
       const fileExtension = hdriUrl.split('.').pop()?.toLowerCase();
-      
+
       if (fileExtension === 'hdr') {
         const { RGBELoader } = await import('three/examples/jsm/loaders/RGBELoader.js');
         const loader = new RGBELoader();
-        
+
         return new Promise<void>((resolve) => {
           loader.load(
             hdriUrl,
@@ -114,11 +114,11 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
               texture.colorSpace = THREE.LinearSRGBColorSpace;
               scene.environment = texture;
               scene.background = texture;
-              
+
               renderer.toneMapping = THREE.ACESFilmicToneMapping;
               renderer.toneMappingExposure = 1.0;
               renderer.outputColorSpace = THREE.SRGBColorSpace;
-              
+
               resolve();
             },
             (progress) => {
@@ -134,7 +134,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
       } else if (fileExtension === 'exr') {
         const { EXRLoader } = await import('three/examples/jsm/loaders/EXRLoader.js');
         const loader = new EXRLoader();
-        
+
         return new Promise<void>((resolve) => {
           loader.load(
             hdriUrl,
@@ -142,11 +142,11 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
               texture.mapping = THREE.EquirectangularReflectionMapping;
               texture.colorSpace = THREE.LinearSRGBColorSpace;
               scene.environment = texture;
-              
+
               renderer.toneMapping = THREE.ACESFilmicToneMapping;
               renderer.toneMappingExposure = 1.0;
               renderer.outputColorSpace = THREE.SRGBColorSpace;
-              
+
               resolve();
             },
             (progress) => {
@@ -162,7 +162,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
       } else {
         // Try to load as a regular texture
         const textureLoader = new THREE.TextureLoader();
-        
+
         return new Promise<void>((resolve) => {
           textureLoader.load(
             hdriUrl,
@@ -170,11 +170,11 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
               texture.mapping = THREE.EquirectangularReflectionMapping;
               texture.colorSpace = THREE.SRGBColorSpace;
               scene.environment = texture;
-              
+
               renderer.toneMapping = THREE.ACESFilmicToneMapping;
               renderer.toneMappingExposure = 1.0;
               renderer.outputColorSpace = THREE.SRGBColorSpace;
-              
+
               resolve();
             },
             undefined,
@@ -196,22 +196,22 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
     try {
       const { FontLoader } = await import('three/examples/jsm/loaders/FontLoader.js');
       const { TextGeometry } = await import('three/examples/jsm/geometries/TextGeometry.js');
-      
+
       const fontLoader = new FontLoader();
-      
+
       return new Promise<THREE.Group>((resolve) => {
         fontLoader.load(
           'https://threejs.org/examples/fonts/helvetiker_bold.typeface.json',
           (font) => {
             const textGroup = new THREE.Group();
             textGroup.name = 'MarketNamesGroup';
-            
+
             const totalMarkets = markets.length;
-            const offset =  Math.PI/48;
-            
+            const offset = Math.PI / 48;
+
             markets.forEach((market, index) => {
-              const angle = (index / totalMarkets) * Math.PI * 2 + offset ;
-              
+              const angle = (index / totalMarkets) * Math.PI * 2 + offset;
+
               // Create initial text geometry with placeholder
               const textGeometry = new TextGeometry('Loading...', {
                 font: font,
@@ -224,42 +224,42 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
                 bevelOffset: 0,
                 bevelSegments: 8
               });
-              
+
               textGeometry.computeBoundingBox();
               const boundingBox = textGeometry.boundingBox!;
               const textWidth = boundingBox.max.x - boundingBox.min.x;
               const textHeight = boundingBox.max.y - boundingBox.min.y;
-              
+
               textGeometry.translate(-textWidth / 2 - 0.27, -textHeight / 2, 0);
-              
+
               const textMaterial = new THREE.MeshPhysicalMaterial({
                 color: 0x000000,
-                metalness:1,
+                metalness: 1,
                 // roughness: 0.5,
                 // clearcoat: 1,
                 // clearcoatRoughness: 0.1,
                 polygonOffset: true,
                 polygonOffsetFactor: 1,
               });
-              
+
               const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-              
+
               const radiusOnFace = 1.2;
               textMesh.position.set(
                 Math.cos(angle) * radiusOnFace,
                 Math.sin(angle) * radiusOnFace,
                 0.05
               );
-              
+
               textMesh.rotation.z = angle;
               (textMesh as any).marketData = market;
               (textMesh as any).marketIndex = index; // Store index for updates
               (textMesh as any).font = font; // Store font for recreation
               (textMesh as any).angle = angle; // Store angle for positioning
-              
+
               textGroup.add(textMesh);
             });
-            
+
             resolve(textGroup);
           },
           undefined,
@@ -287,17 +287,17 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
       if (child instanceof THREE.Mesh && (child as any).marketIndex !== undefined) {
         const meshIndex = (child as any).marketIndex;
         const originalText = marketNames[meshIndex] || `Market ${meshIndex + 1}`;
-        
+
         // Truncate text if longer than 7 characters
-        const newText = originalText.length > 6 
-          ? originalText.substring(0, 5) + '.' 
+        const newText = originalText.length > 6
+          ? originalText.substring(0, 5) + '.'
           : originalText;
-        
+
         // Check if text needs updating
         if ((child as any).currentText !== newText) {
-          
+
           const font = (child as any).font;
-          
+
           if (font) {
             // Create new geometry
             const newGeometry = new TextGeometry(newText, {
@@ -311,19 +311,19 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
               bevelOffset: 0,
               bevelSegments: 8
             });
-            
+
             newGeometry.computeBoundingBox();
             const boundingBox = newGeometry.boundingBox!;
             const textWidth = boundingBox.max.x - boundingBox.min.x;
             const textHeight = boundingBox.max.y - boundingBox.min.y;
-            
+
             newGeometry.translate(-textWidth / 2 - 0.27, -textHeight / 2, 0);
-            
+
             // Dispose old geometry and update
             if (child.geometry) child.geometry.dispose();
             child.geometry = newGeometry;
             (child as any).currentText = newText;
-            
+
           }
         }
       }
@@ -341,12 +341,12 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
       // Update text meshes with current market names
       updateTextMeshes();
 
-     const multiplier = 50
-      
+      const multiplier = 50
+
       // Apply rotation to spinning objects using current speed
       if (Math.abs(currentSpeedRef.current) > 0 && spinningObjectsRef.current.length > 0) {
         const rotationIncrement = currentSpeedRef.current * delta * multiplier;
-        
+
         spinningObjectsRef.current.forEach((obj: THREE.Object3D) => {
           // Handle different objects with potentially different rotation directions
           if (obj.name === 'Plates009') {
@@ -357,21 +357,21 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
             obj.rotation.z += rotationIncrement;
           }
         });
-        
+
         // Update rotation state
         setWheelRotationDegrees(() => {
           const newDegrees = Math.abs((spinningObjectsRef.current[2].rotation.z * 180) / Math.PI % 360);
           if (typeof window !== 'undefined') {
             localStorage.setItem('wheelRotationDegrees', newDegrees.toString());
           }
-          
+
           // Check if we've reached the target rotat          // const degreesIncrement = (rotationIncrement * 180) / Math.PI; // Convert radians to degrees
           // const newDegrees = (prevDegrees + degreesIncrement) % 360;
           // console.log("newDegrees",  newDegrees);ion (within tolerance)
           if (targetRotationRef.current !== null && isSpinning) {
             const tolerance = 5; // degrees tolerance
-            const angleDifference = Math.abs(360 -newDegrees - targetRotationRef.current);
-            
+            const angleDifference = Math.abs(360 - newDegrees - targetRotationRef.current);
+
             if (angleDifference <= tolerance) {
               // Clear the target and stop spinning immediately
               targetRotationRef.current = null;
@@ -389,7 +389,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
               }
             }
           }
-          
+
           return newDegrees;
         });
       }
@@ -446,11 +446,11 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
       const currentTime = new Date().getTime();
       const placementEndTime = new Date(roundRecord.placementEndTime).getTime();
       const gameEndTime = new Date(roundRecord.endTime).getTime();
-      
+
       // Ensure we're in the correct time window for spinning
       const isBettingClosed = currentTime >= placementEndTime;
       const isGameStillActive = currentTime < gameEndTime;
-      
+
       // Only start spinning if all conditions are met
       if (isSpinning && isBettingClosed && isGameStillActive && !winningMarketId) {
         startSpinning();
@@ -465,15 +465,15 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
       startSpinning();
       targetRotationRef.current = null;
     }
-    
+
     // Handle stopping logic
     if (!isSpinning && winningMarketId) {
 
-      
+
       // Find the actual index in the markets array
       if (winningMarketId && winningMarketId.length > 0) {
         const marketIndex = roundRecord?.market?.findIndex(market => market.id === winningMarketId[0]);
-       
+
         // Calculate the target rotation where winning market should be at top (0 degrees)
         if (marketIndex !== undefined && marketIndex >= 0 && roundRecord?.market) {
           const totalMarkets = roundRecord.market.length;
@@ -482,7 +482,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
           const winningMarketAngle = (marketIndex / totalMarkets) * 360 + offset;
           const targetRotation = (360 - winningMarketAngle) % 360;
           // const targetRotation = (winningMarketAngle + 90) % 360 ;
-          
+
           // Set the target rotation - the animation loop will handle stopping
           targetRotationRef.current = targetRotation;
         } else {
@@ -516,12 +516,12 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
       spinTweenRef.current.kill();
       spinTweenRef.current = null;
     }
-    
+
     if (frameRef.current) {
       cancelAnimationFrame(frameRef.current);
       frameRef.current = null;
     }
-    
+
     if (rendererRef.current) {
       rendererRef.current.dispose();
       rendererRef.current = null;
@@ -548,7 +548,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
     textGroupRef.current = null;
     spinningObjectsRef.current = [];
     isInitializedRef.current = false;
-    
+
     // Reset animation state
     currentSpeedRef.current = 0;
     isAnimatingRef.current = false;
@@ -557,11 +557,11 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
   // Setup effect
   useEffect(() => {
     let isMounted = true;
-    
+
     const initializeScene = async () => {
       // Clean up any existing scene first
       cleanup();
-      
+
       if (!canvasRef.current || !isMounted) return;
 
       try {
@@ -585,7 +585,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         camera.lookAt(0, 0, 0);
 
         // Renderer
-        const renderer = new THREE.WebGLRenderer({ 
+        const renderer = new THREE.WebGLRenderer({
           canvas: canvas,
           antialias: true,
           alpha: true,
@@ -638,14 +638,14 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
         // Load model
         if (modelUrl && isMounted) {
           const model = await loadGLBModel(modelUrl);
-          
+
           if (!isMounted || !sceneRef.current) return;
-          
+
           // Center and scale the model
           const box = new THREE.Box3().setFromObject(model);
           const center = box.getCenter(new THREE.Vector3());
           const size = box.getSize(new THREE.Vector3());
-          
+
           model.position.set(-center.x, -center.y, -center.z);
           const maxDim = Math.max(size.x, size.y, size.z);
           const scale = 3.5 / maxDim;
@@ -655,16 +655,16 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
           // Find spinning objects
           const objectsToSpin = ['InnerLight', 'Plates009', 'WheelStopper'];
           const spinningObjects: THREE.Object3D[] = [];
-          
+
           model.traverse((child) => {
             if (objectsToSpin.includes(child.name)) {
               spinningObjects.push(child);
             }
-            
+
             if (child instanceof THREE.Mesh) {
               child.castShadow = true;
               child.receiveShadow = true;
-              
+
               if (child.material) {
                 if (Array.isArray(child.material)) {
                   child.material.forEach(mat => {
@@ -680,7 +680,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
               }
             }
           });
-          
+
           // Create and add market names text
           if (stocks.length > 0 && isMounted) {
             try {
@@ -688,16 +688,16 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
               if (isMounted && sceneRef.current) {
                 sceneRef.current.add(textGroup);
                 textGroupRef.current = textGroup;
-                
+
                 // Add text group to spinning objects so it rotates with the wheel
                 spinningObjects.push(textGroup);
-                
+
               }
             } catch (error) {
               console.error('Failed to create market names text:', error);
             }
           }
-          
+
           if (isMounted && sceneRef.current) {
             spinningObjectsRef.current = spinningObjects;
             sceneRef.current.add(model);
@@ -732,7 +732,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
     if (!isLoading && !error) {
       animate();
     }
-    
+
     return () => {
       if (frameRef.current) {
         cancelAnimationFrame(frameRef.current);
@@ -757,14 +757,14 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
   }
 
   return (
-    <div className="relative flex h-full w-full items-center justify-center min-h-[400px] min-w-[400px]">
-      <canvas 
+    <div className="relative flex  items-center justify-center md:min-h-[450px] xs:min-h-[360px] min-h-[300px] md:min-w-[450px] xs:min-w-[360px] min-w-[300px]">
+      <canvas
         ref={canvasRef}
-        className="w-full h-full max-h-full max-w-full"
+        className="w-full h-full max-h-full aspect-square max-w-full"
       />
-      
+
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="absolute inset-0 flex items-center justify-center">
           <div className="flex flex-col items-center space-y-2">
             <div className="text-white">Loading 3D model...</div>
             {loadingProgress > 0 && (
@@ -773,12 +773,12 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
           </div>
         </div>
       )}
-      
+
       {error && (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="text-red-400 text-center p-4">
             <div>Error: {error}</div>
-            <button 
+            <button
               onClick={() => {
                 setError(null);
                 setIsLoading(true);

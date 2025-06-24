@@ -674,6 +674,33 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   }
 }
 
+/* Mobile responsive dice */
+@media (max-width: 768px) {
+  .dice-front {
+    transform: translateZ(20px);
+  }
+
+  .dice-back {
+    transform: rotateY(180deg) translateZ(20px);
+  }
+
+  .dice-right {
+    transform: rotateY(90deg) translateZ(20px);
+  }
+
+  .dice-left {
+    transform: rotateY(-90deg) translateZ(20px);
+  }
+
+  .dice-top {
+    transform: rotateX(90deg) translateZ(20px);
+  }
+
+  .dice-bottom {
+    transform: rotateX(-90deg) translateZ(20px);
+  }
+}
+
 * {
   /* Firefox */
   scrollbar-width: thin;

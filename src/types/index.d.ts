@@ -1,5 +1,5 @@
-
-type PropsWithClassName = {
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+type PropsWithClassName<T = {}> = T & {
   className?: string;
 };
 

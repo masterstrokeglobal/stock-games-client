@@ -2,7 +2,8 @@ import { usePlacementOver } from '@/hooks/use-current-game';
 import useWindowSize from '@/hooks/use-window-size';
 import { cn } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
-import { useCreateDiceGamePlacement, useGetMyCurrentRoundDiceGamePlacement } from '@/react-query/dice-game-queries';
+import { useCreateDiceGamePlacement } from '@/react-query/dice-game-queries';
+import Image from 'next/image';
 import { PropsWithChildren } from 'react';
 import { Cube } from './dice-3d';
 
@@ -32,14 +33,9 @@ const secondRow = [
 ];
 
 const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningMarketId }: GameBoardProps) => {
-    const { data: placements } = useGetMyCurrentRoundDiceGamePlacement(roundRecord.id);
     const createPlacement = useCreateDiceGamePlacement();
     const isPlaceOver = usePlacementOver(roundRecord);
 
-    const betAmounts = placements?.reduce((acc, placement) => {
-        acc[placement.number] = (acc[placement.number] || 0) + placement.amount;
-        return acc;
-    }, {} as Record<number, number>) || {};
 
     const handleBetSelect = (number: number) => {
         if (globalBetAmount <= 0 || isPlaceOver) return;
@@ -61,8 +57,8 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
         winningMarketId.forEach(winningId => {
             const marketIndex = roundRecord.market.findIndex(market => market.id === winningId);
             if (marketIndex !== -1) {
-                console.log(roundRecord.market[marketIndex],marketIndex)
-                const value =  ((marketIndex + 1) % 6) == 0 ? 6 : ((marketIndex + 1) % 6);
+                console.log(roundRecord.market[marketIndex], marketIndex)
+                const value = ((marketIndex + 1) % 6) == 0 ? 6 : ((marketIndex + 1) % 6);
                 console.log(value);
                 sum = value + sum;// Index + 1 represents the dice face value
             }
@@ -74,18 +70,17 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
     const winningSum = getWinningSum();
 
     return (
-        <div className={cn("bg-gradient-to-b bg-[url('/images/dice-game/board-bg-2.png')] bg-cover bg-center from-gray-900 via-gray-800 to-black md:p-8 p-4 pt-8 md:pt-24  border border-yellow-600/30 shadow-2xl", className)}>
+        <div className={cn("flex flex-col justify-center items-center gap-4 p-4", className)}>
             {/* Header */}
             {children}
 
             {/* Betting Grid */}
-            <div className="space-y-4">
+            <div className="space-y-4 w-full">
                 {/* First Row */}
-                <div className="flex justify-center md:gap-3 gap-1">
+                <div className="flex md:justify-center justify-between w-full md:gap-3 gap-1">
                     {firstRow.map((bet) => (
                         <BetButton
                             isWinner={winningSum === bet.number}
-                            betAmounts={betAmounts}
                             handleBetSelect={handleBetSelect}
                             key={bet.number}
                             number={bet.number}
@@ -95,11 +90,10 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
                 </div>
 
                 {/* Second Row */}
-                <div className="flex justify-center md:gap-3 gap-1">
+                <div className="flex md:justify-center sm:justify-around justify-between xs:px-10 px-2 w-full md:gap-3 gap-2">
                     {secondRow.map((bet) => (
                         <BetButton
                             isWinner={winningSum === bet.number}
-                            betAmounts={betAmounts}
                             handleBetSelect={handleBetSelect}
                             key={bet.number}
                             number={bet.number}
@@ -114,71 +108,45 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
 
 export default GameBoard;
 
-const BetButton = ({ number, multiplier, betAmounts, handleBetSelect, isWinner }: {
+const BetButton = ({ number, multiplier, handleBetSelect, isWinner }: {
     number: number,
     multiplier: string,
     isWinner: boolean,
-    betAmounts: Record<number, number>,
     handleBetSelect: (number: number) => void
 }) => {
-    const amountBet = betAmounts[number] || 0;
-    const hasBet = amountBet > 0;
-
-    // Colors from the image:
-    // - Deep green background: #13311c (approx)
-    // - Gold border: #e6b85c (approx)
-    // - Red outer border: #a13a2f (approx)
-    // - Text: off-white/yellowish (#e6b85c), white for number, gold for multiplier
 
     return (
         <button
             onClick={() => handleBetSelect(number)}
             className={cn(
-                "relative w-20 h-20 rounded-[8px] border-[3px] transition-all duration-200 flex flex-col items-center justify-center group hover:scale-105",
-                "bg-gradient-to-b from-[#001607] to-[#13311c] border-[#e6b85c] shadow-[0_0_0_4px_#a13a2f] outline outline-2 outline-[#a13a2f] outline-offset-[-6px]",
-                {
-                    // Winner styles
-                    'border-[4px] border-[#e0aa2f] bg-gradient-to-b from-[#e0aa2f]/60 to-[#e6b85c]/80 shadow-lg shadow-[#e0aa2f]/40 animate-pulse duration-1000 infinite ease-in-out scale-110': isWinner,
-                    // Has bet styles (when not winner)
-                    'border-[#e6b85c] bg-gradient-to-b from-[#e6b85c]/10 to-[#13311c]/90 shadow-lg shadow-[#e6b85c]/20': hasBet && !isWinner,
-                    // Default styles
-                    'border-[#e6b85c] bg-[#13311c] hover:border-[#ffe066]': !hasBet && !isWinner
-                }
+                "relative z-10 w-14  h-9 md:w-20 md:h-14 py-2 rounded-[8px] transition-all duration-200 flex flex-col items-center justify-center group hover:scale-105",
+                isWinner && "border-2 border-[#4467CC]"
             )}
         >
-            {/* Decorative corners - gold corners */}
-            <div className="absolute top-1 left-1 w-2 h-2 border-l-2 border-t-2 border-[#e0aa2f] rounded-tl"></div>
-            <div className="absolute top-1 right-1 w-2 h-2 border-r-2 border-t-2 border-[#e0aa2f] rounded-tr"></div>
-            <div className="absolute bottom-1 left-1 w-2 h-2 border-l-2 border-b-2 border-[#e0aa2f] rounded-bl"></div>
-            <div className="absolute bottom-1 right-1 w-2 h-2 border-r-2 border-b-2 border-[#e0aa2f] rounded-br"></div>
+            <div className='absolute top-0 left-0 blur-[2px] rounded-[8px] w-full h-full bg-gradient-to-b from-[#1294E2] to-[#1294E2]' />
 
             {/* Crown emoji for winner */}
-            {isWinner && (
-                <div className="absolute -top-2 -right-2 text-2xl animate-bounce">
-                    👑
-                </div>
-            )}
+            {
+                isWinner && (
+                    <div className="absolute -top-10 -right-9 rotate-12 ">
+                        <Image src="/images/dice-game/crown.png" alt="crown" width={64} height={64} />
+                    </div>
+                )
+            }
+
 
             {/* Number */}
             <span className={cn(
-                "text-2xl font-bold mb-1 transition-colors",
-                isWinner ? "text-white" : "text-[#e6b85c]",
+                "text-sm md:text-xl font-bold blur-0 md:mb-1 leading-none transition-colors text-white",
                 "drop-shadow-[0_2px_2px_rgba(0,0,0,0.4)]"
             )}>
                 {number}
             </span>
 
             {/* Multiplier */}
-            <span className="text-xs font-semibold text-[#e6b85c] bg-transparent px-2 py-0.5 rounded">
+            <span className="text-[10px] md:text-xs blur-0 font-semibold leading-none text-white bg-transparent px-2 py-0.5 rounded">
                 {multiplier}
             </span>
-
-            {/* Bet Amount Display - Poker Chip Style */}
-            {hasBet && (
-                <div className="absolute -top-3 -left-3 bg-gradient-to-br from-yellow-400 via-amber-500 to-yellow-600 aspect-square z-20 border-2 border-dashed border-amber-800 rounded-full p-1 flex justify-center items-center text-[10px] text-center w-10 h-10 shadow-[0_4px_8px_rgba(217,119,6,0.6)] ring-1 ring-yellow-300 ring-opacity-50">
-                    <span className="font-bold text-amber-900 drop-shadow-sm">₹{amountBet}</span>
-                </div>
-            )}
         </button>
     );
 };

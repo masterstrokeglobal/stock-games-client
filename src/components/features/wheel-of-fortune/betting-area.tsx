@@ -4,102 +4,46 @@ import { Input } from "@/components/ui/input";
 import { useAuthStore } from '@/context/auth-context';
 import { useIsPlaceOver, useShowResults } from '@/hooks/use-current-game';
 import { cn, INR } from '@/lib/utils';
-import { RoundRecord, WHEEL_COLOR_CONFIG } from '@/models/round-record';
+import { RoundRecord } from '@/models/round-record';
 import { useGetMyCurrentRoundWheelOfFortunePlacement } from "@/react-query/wheel-of-fortune-queries";
+import { Minus, Plus } from "lucide-react";
 import React from 'react';
 import WheelOfFortuneResultDialog from "./game-result";
-import { WheelColor } from "@/models/wheel-of-fortune-placement";
-  
+
 interface BettingAreaProps {
   betAmount: number;
   roundRecord: RoundRecord;
   setBetAmount: (amount: number) => void;
+  className?: string;
 }
 
 export const BettingArea: React.FC<BettingAreaProps> = ({
   betAmount,
   setBetAmount,
-  roundRecord
+  roundRecord,
+  className
 }) => {
   const { userDetails } = useAuthStore();
-  const { data: placements } = useGetMyCurrentRoundWheelOfFortunePlacement(roundRecord.id);
   const isPlaceOver = useIsPlaceOver(roundRecord);
+  const { data: placements } = useGetMyCurrentRoundWheelOfFortunePlacement(roundRecord.id);
   const coinValues = userDetails?.company?.coinValues;
-
   const showResult = useShowResults(roundRecord, placements ?? []);
 
-
-  const   placementsAggregated = placements?.reduce((acc, placement) => {
-    acc[placement.placementColor] = (acc[placement.placementColor] || 0) + placement.amount;
-    return acc;
-  }, {} as Record<WheelColor, number>) ?? {};
-
-  if (isPlaceOver && placements?.length) {
-    return (
-      <>
-        <div className="w-full bg-[#1a1b2e] text-white p-6">
-          <div className="flex flex-col gap-3">
-            <h3 className="text-xl font-semibold text-amber-400 mb-2">Your Bets</h3>
-            {Object.entries(placementsAggregated).map(([color, amount ], index) => (
-              <div key={index} className="flex items-center justify-between bg-[#2a2b3e] p-4 rounded-xl border-2 transition-all duration-300 shadow-lg hover:shadow-amber-500/20">
-                <div className="flex items-center gap-3">
-                  <div className={cn("p-3 rounded-lg",WHEEL_COLOR_CONFIG[color as WheelColor].bgColor)}>
-                    <div className="text-lg font-bold text-white">
-                      {WHEEL_COLOR_CONFIG[color as WheelColor].name}
-                    </div>
-                  </div>
-                  <div className="flex flex-col"> 
-                    <span className="text-sm text-amber-200 opacity-70">
-                      {WHEEL_COLOR_CONFIG[color as WheelColor].name} Bet
-                    </span>
-                    <span className="text-xs text-amber-300/50">1:{WHEEL_COLOR_CONFIG[color as WheelColor].multiplier}</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-red-500 flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.3)]">
-                    <span className="text-lg font-bold">₹</span>
-                  </div>
-                  <div className="flex flex-col items-end">
-                    <span className="text-lg font-bold text-amber-300">₹{amount as number}</span>
-                    <span className="text-xs text-amber-300/50">Placed</span>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <WheelOfFortuneResultDialog key={String(showResult.showResults)} open={showResult.showResults} roundRecordId={showResult.previousRoundId ?? 0} />
-      </>
-    );
-  }
+  const handleDecreaseBetAmount = () => {
+    setBetAmount(betAmount - 100);
+  };
+  const handleIncreaseBetAmount = () => {
+    setBetAmount(betAmount + 100);
+  };
 
   return (
     <>
-      <div className="w-full bg-[#1a1b2e] text-white p-6">
-        <div className="flex justify-center relative mb-4">
-          <div className="mr-2 absolute left-3 top-3 bottom-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-red-500 flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.5)]">
-              <span className="text-lg">₹</span>
-            </div>
-          </div>
-          <Input
-            type="number"
-            min={userDetails?.company?.minPlacement}
-            max={userDetails?.company?.maxPlacement}
-            placeholder="Enter bet amount"
-            value={betAmount}
-            onChange={(e) => setBetAmount(Number(e.target.value))}
-            className="p-2 rounded-2xl pl-14 h-14 border-2 border-amber-500/50 text-white text-xl bg-[#2a2b3e] focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 transition-all"
-          />
-        </div>
-
-        <div className="grid grid-cols-4 gap-2 w-full">
+      <div className={cn("w-full flex flex-col justify-between bg-[#1a1b2e] text-white ", className)}>
+        <div className="grid grid-cols-2 gap-2 w-full">
           {coinValues?.map((amount) => (
             <Button
               className={cn(
-                'rounded-full transition-all duration-200 relative group overflow-hidden',
-                betAmount === amount ? 'bg-gradient-to-br from-amber-400 to-red-500 shadow-[0_0_15px_rgba(245,158,11,0.3)]' : 'bg-[#2a2b3e] hover:bg-[#3a3b4e]'
-              )}
+                'rounded-md transition-all py-4 h-12 duration-200 relative group overflow-hidden bg-[#366D51] border-2 border-[#5DA69A] hover:bg-[#366D51] hover:border-[#5DA69A] ')}
               key={amount}
               onClick={() => setBetAmount(amount)}
             >
@@ -112,6 +56,32 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
               )} />
             </Button>
           ))}
+        </div>
+        <div className="flex justify-center relative mb-4">
+          <Button onClick={handleDecreaseBetAmount} className="rounded-full absolute left-2 top-2  h-8 w-10 px-0 flex items-center justify-center bg-[#366D51] border border-[#5DA69A]">
+            <Minus className="size-6" />
+          </Button>
+          <Input
+            type="number"
+            min={userDetails?.company?.minPlacement}
+            max={userDetails?.company?.maxPlacement}
+            placeholder="Enter bet amount"
+            disabled={isPlaceOver}
+            value={betAmount}
+            onChange={(e) => setBetAmount(Number(e.target.value))}
+            className="p-2 rounded-full h-12 border-2 text-center bg-transparent border-[#5DA69A] text-white text-xl  focus:border-[#5DA69A] focus:ring-2 focus:ring-[#5DA69A]/20 transition-all"
+          />
+          <Button onClick={handleIncreaseBetAmount} className="rounded-full absolute right-2 top-2  h-8 w-10 px-0 flex items-center justify-center bg-[#366D51] border border-[#5DA69A]">
+            <Plus className="size-6" />
+          </Button>
+        </div>
+        <div style={{borderColor: '#5DA69A', boxShadow: '0px 0px 5.7px 0px rgba(93, 166, 154, 1)'}} className="flex py-4 rounded-lg text-lg justify-center text-white  relative z-[11] items-center w-full flex-col bg-[#324241] border-2 border-[#5DA69A]  gap-4">
+          <span className="text-lg uppercase font-semibold tracking-wider">
+            Total Bet
+          </span>
+          <span>
+            {INR(betAmount, true)}
+          </span>
         </div>
       </div>
       <WheelOfFortuneResultDialog key={String(showResult.showResults)} open={showResult.showResults} roundRecordId={showResult.previousRoundId ?? 0} />

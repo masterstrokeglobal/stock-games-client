@@ -1,3 +1,4 @@
+import { RoundRecordGameType } from "@/models/round-record";
 import { COMPANYID } from "../utils";
 import api from "./instance";
 
@@ -96,4 +97,12 @@ export const gameUserAPI = {
   getFavoriteMarket: async () => {
     return api.get("/favourite");
   },
+
+  getUserGameHistory: async ({ page, roundRecordGameType }: { page: number, roundRecordGameType: RoundRecordGameType }) => {
+    return api.get(`/user/game-history/round-record-game-type/${roundRecordGameType}`, { params: { page } });
+  },
+
+  getUserGameHistoryByRoundId: async (roundId: string) => {
+    return api.get(`/user/game-history/${roundId}`);
+  }
 };

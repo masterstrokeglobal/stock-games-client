@@ -39,7 +39,7 @@ export const useGetCurrentRoundRecord = (
 export const useGetRoundRecordById = (roundRecordId?: number) => {
     return useQuery({
         queryKey: ["round-record", roundRecordId],
-        queryFn:  roundRecordId ? () => roundRecordsAPI.getRoundRecordById(roundRecordId) : undefined,
+        queryFn: roundRecordId ? () => roundRecordsAPI.getRoundRecordById(roundRecordId) : undefined,
         enabled: !!roundRecordId, // Prevents the query from running if the ID is falsy
     });
 };
@@ -97,3 +97,13 @@ export const useLastRoundWinner = (type: SchedulerType) => {
     });
 }
 
+
+export const useGetWheelOfFortuneHistory = ({ page, limit, type }: { page: number, limit: number, type: SchedulerType }) => {
+    return useQuery({
+        queryKey: ["wheel-of-fortune-history", page, limit, type],
+        queryFn: async () => {
+            const response = await roundRecordsAPI.getWheelOfFortuneHistory({ page, limit, type });
+            return response.data;
+        },
+    });
+}   

@@ -14,7 +14,7 @@ interface WindowSize {
 }
 
 // Tailwind default breakpoints
-const BREAKPOINTS = {
+export const BREAKPOINTS = {
     sm: 640,   // Mobile
     md: 768,   // Tablet
     lg: 1024,  // Desktop

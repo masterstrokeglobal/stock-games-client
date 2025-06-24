@@ -1,4 +1,4 @@
-import { RoundRecord } from "./round-record";
+import { RoundRecord, WHEEL_COLOR_CONFIG } from "./round-record";
 import { Transaction } from "./transaction";
 import User from "./user";
 
@@ -8,16 +8,19 @@ export enum WheelColor {
     COLOR3 = "color3",
     COLOR4 = "color4",
     COLOR5 = "color5",
+    COLOR6 = "color6",
 }
 
 
 export interface ColorConfig {
     name: string;
     bgColor: string;
+    backgroundGradient: string;
     textColor: string;
     borderColor: string;
     shadowColor: string;
-    actualColor: string;
+    shadow: string;
+    actualColor: string;        
     multiplier: number;
 }
 
@@ -49,6 +52,14 @@ export class WheelOfFortunePlacement {
 
     getPlacementColor() {
         return this.placementColor;
+    }
+
+    get colorName(): string {
+        return WHEEL_COLOR_CONFIG[this.placementColor].name;
+    }
+
+    get colorConfig(): ColorConfig {
+        return WHEEL_COLOR_CONFIG[this.placementColor];
     }
 
     getAmount() {
