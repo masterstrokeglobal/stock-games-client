@@ -38,7 +38,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
   return (
     <>
-      <div className={cn("w-full flex flex-col justify-between gap-4 bg-[#1a1b2e] text-white ", className)}>
+      <div className={cn("w-full flex flex-col font-montserrat tracking-wide justify-between gap-4  text-white ", className)}>
         <div className="grid grid-cols-2 gap-2 w-full">
           {coinValues?.map((amount) => (
             <Button
@@ -76,10 +76,10 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
           </Button>
         </div>
         <div style={{borderColor: '#5DA69A', boxShadow: '0px 0px 5.7px 0px rgba(93, 166, 154, 1)'}} className="flex py-4 rounded-lg text-lg justify-center text-white  relative z-[11] items-center w-full flex-col bg-[#324241] border-2 border-[#5DA69A]  gap-4">
-          <span className="text-lg uppercase font-semibold tracking-wider">
+          <span className="text-lg uppercase font-bold tracking-wider">
             Total Bet
           </span>
-          <span>
+          <span className="font-bold">
             {INR(betAmount, true)}
           </span>
         </div>

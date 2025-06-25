@@ -130,12 +130,13 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
       onClick={() => handleColorClick(color)}
     >
       <div className="h-full flex-1 flex flex-col">
-        <div style={{borderColor: currentColorConfig?.borderColor}} className={cn("rounded-t-lg p-2 text-white border-b flex justify-center gap-2 items-center text-center w-full")}>
-          <span className="text-lg font-bold">{config.name}</span>
-          <div className="font-bold">
+        <div className={cn("rounded-t-lg px-2 py-3 font-konkhmer-sleokchher tracking-wider text-white  flex justify-center gap-2 items-center text-center w-full")}>
+          <span className="text-lg ">{config.name}</span>
+          <div>
             1:{config.multiplier}
           </div>
         </div>
+          <div style={{background: currentColorConfig?.borderColor}} className='w-3/4 h-0.5  mx-auto ' />
         <div className={cn("flex-1 rounded-b-lg flex flex-col items-center justify-start relative w-full")}>
           <ul className="gap-1 w-full py-4">
             {roundRecord.getMarketsByColor(color).map((market, index) => {
@@ -148,8 +149,8 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
                 <li
                   key={market.id}
                   className={cn(
-                    "text-sm font-medium py-1 text-white  px-2 flex items-center justify-between border-b border-amber-700/20 gap-2",
-                    isTopStock && "bg-amber-300 border border-amber-400  px-2"
+                    "text-sm  tracking-wider py-1 text-white  px-2 flex items-center justify-between  gap-2",
+                    isTopStock && "bg-amber-300/80 border border-amber-400  px-2"
                   )}
                 >
                   <span className='text-xs whitespace-nowrap truncate line-clamp-1 block flex-1'>{index + 1}. {market.name?.slice(0, 17)}</span>
@@ -157,7 +158,7 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
                     "flex items-center gap-1 text-xs font-bold",
                     isPositive ? "text-green-600" : "text-red-600"
                   )}>
-                    {isPositive ? <TriangleUpGlow className='size-5' /> : <TriangleDownGlow className='size-5' />} {changePercent.toFixed(5)}%
+                    {isPositive ? <TriangleUpGlow className='size-5' /> : <TriangleDownGlow className='size-5 font-montserrat' />} {changePercent.toFixed(5)}%
                   </span>
                 </li>
               );
@@ -166,7 +167,7 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
 
           <div className="w-full mt-auto p-2 rounded-b-lg">
             <div className="flex flex-col items-center">
-              <div  style={{color: currentColorConfig?.textColor}} className="text-lg font-semibold flex items-center gap-1 text-center">
+              <div  style={{color: currentColorConfig?.textColor}} className="text-lg font-semibold font-konkhmer-sleokchher flex items-center gap-1 text-center">
                 <span className="font-bold">{INR(myBetAmount * config.multiplier)}</span>
               </div>
             </div>

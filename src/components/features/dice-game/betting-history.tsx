@@ -10,6 +10,7 @@ import { X, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useWindowSize from "@/hooks/use-window-size";
+import Image from "next/image";
 
 // Status indicator for Win/Loss
 const StatusIndicator = ({ isWinner }: { isWinner: boolean }) => (
@@ -144,15 +145,15 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
-            <DialogContent showButton={false} className="max-w-3xl xs:w-[95vw] bg-[#140538] w-full p-0 border-none  backdrop-blur-md max-h-[80vh]">
+            <DialogContent showButton={false} className="max-w-3xl xs:w-[95vw] bg-[#140538] w-full p-0 border-none  backdrop-blur-md ">
                 <div
                     style={{
                         background: 'linear-gradient(180deg, #1B1E4B 0%, #23245A 100%)',
                     }}
-                    className="w-full border border-[#2E3A6A] rounded-xl shadow-2xl overflow-hidden max-h-[80vh] flex flex-col"
+                    className="w-full border border-[#4061C0] rounded-xl shadow-2xl overflow-hidden max-h-[80vh] flex flex-col"
                 >
                     {/* Header */}
-                    <div className="flex items-center border-b border-[#2E3A6A] bg-[#140538] justify-between px-6 py-4 flex-shrink-0">
+                    <div className="flex items-center border-b border-[#4467CC] bg-[#140538] justify-between px-6 py-4 flex-shrink-0">
                         <div className="flex items-center text-white text-center text-lg flex-1 justify-center font-bold w-full">
                             Betting History
                         </div>
@@ -172,14 +173,16 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                             </button>
                         </div>
                     </div>
-                    <div className=" py-4 flex-1 px-4 overflow-hidden bg-[#140538] flex flex-col">
-                        <ScrollArea className="h-[80vh]">
+                    <div className=" py-4 flex-1 relative px-4  overflow-hidden border-x-[1.5rem] border-b-[1.5rem]  border-[#140538] flex flex-col">
+                        <Image src="/images/dice-game/table-bg.png" alt="dice-1" fill />
+                        <div className="absolute top-0 left-0 w-full h-full backdrop-blur-sm bg-[#520B8E] bg-opacity-30"/>
+                        <ScrollArea className="h-[60vh] flex flex-col">
                             {/* Desktop Table */}
                             {!isMobile && (
-                                <div className="overflow-x-auto bg-[#00225F] p-4 hidden md:block flex-1">
-                                    <table className="min-w-full text-sm text-left text-white max-h-[60vh] overflow-y-auto">
+                                <div className="overflow-x-auto flex-1 hidden md:block">
+                                    <table className="min-w-full  h-full text-sm text-left text-white max-h-[60vh] overflow-y-auto">
                                         <thead>
-                                            <tr className="bg-[#003883] dice-header text-[#A3A8D6] text-base">
+                                            <tr className="bg-[#003883] dice-header  text-[#A3A8D6] text-base">
                                                 <th className="px-4 py-3 font-semibold ">Round</th>
                                                 <th className="px-4 py-3 font-semibold">Amount</th>
                                                 <th className="px-4 py-3 font-semibold">Number</th>
@@ -191,7 +194,7 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                         <tbody>
                                             {history.length === 0 && (
                                                 <tr>
-                                                    <td colSpan={5} className="px-4 py-3 text-center text-white">No data found</td>
+                                                    <td colSpan={6} className="px-4 py-3 text-center text-white">No data found</td>
                                                 </tr>
                                             )}
                                             {history?.map((row, idx) => (
@@ -221,8 +224,8 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                             )}
                             {/* Mobile Card List */}
                             {isMobile && <MobileBettingHistory history={history} />}
-                            <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
                         </ScrollArea>
+                        <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
                     </div>
                 </div>
             </DialogContent>

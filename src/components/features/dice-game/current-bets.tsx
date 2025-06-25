@@ -19,7 +19,7 @@ const CurrentBets = ({ roundRecord, className, tableClassName }: { roundRecord: 
 
 const NoBets = () => {
     return (
-        <div className="text-white space-y-2 text-center flex flex-col items-center py-4 justify-center h-full">
+        <div className="text-white space-y-2 text-center flex flex-col items-center py-4 justify-center h-64">
             <Image src="/images/dice-game/no-bets.png" alt="No Bets" className="w-auto h-full aspect-square " width={100} height={100} />
             <p className="text-lg font-semibold max-w-sm px-12">{`You haven't placed
                 any bets yet`}</p>
@@ -31,6 +31,7 @@ const BetsTable = ({ placements, tableClassName }: { placements: DicePlacement[]
         <div className="md:rounded-sm h-full !pb-0.5 overflow-hidden w-full">
             <div className="md:rounded-sm h-full">
                 <ScrollArea
+                    scrollThumbClassName="bg-[#4467CC]"
                     type="auto"
                     className={cn("h-full", tableClassName)}
                 >

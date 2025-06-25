@@ -79,7 +79,6 @@ const SinglePlayerRouletteGame = ({ roundRecord }: Props) => {
         const bet = getBetTypeFromClick(e, boardRef);
         if (!bet) return;
 
-        console.log(bet.numbers);
         const markets = bet.numbers.map((number) => roundRecord.market[number - 1]?.id).filter((id) => id !== undefined);
         mutate({
             roundId: roundRecord.id,

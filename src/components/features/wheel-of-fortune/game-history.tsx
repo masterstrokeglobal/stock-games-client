@@ -67,6 +67,7 @@ const GameHistoryDialog = ({ children }: GameHistoryDialogProps) => {
     const { data: userGameHistory, isLoading } = useGetWheelOfFortuneHistory({ page, limit: 10, type: gameType });
 
     const { history, totalPages } = useMemo(() => {
+        console.log(userGameHistory);
         const history: History[] = userGameHistory?.roundRecords || [];
         const totalPages = Math.ceil(userGameHistory?.count / 10);
         return { history, totalPages };
@@ -136,7 +137,7 @@ const GameHistoryDialog = ({ children }: GameHistoryDialogProps) => {
                                                     <span
                                                         className="px-3 py-1 rounded-full font-semibold"
                                                         style={{
-                                                            background: WHEEL_COLOR_CONFIG[row.winningColor].actualColor,
+                                                            background: WHEEL_COLOR_CONFIG[row.winningColor].chipColor,
                                                             color: "#fff",
                                                             minWidth: 60,
                                                             display: "inline-block",

@@ -103,7 +103,7 @@ export const useGetWheelOfFortuneHistory = ({ page, limit, type }: { page: numbe
         queryKey: ["wheel-of-fortune-history", page, limit, type],
         queryFn: async () => {
             const response = await roundRecordsAPI.getWheelOfFortuneHistory({ page, limit, type });
-            return response.data.roundRecords
+            return response.data
         },
     });
 }   

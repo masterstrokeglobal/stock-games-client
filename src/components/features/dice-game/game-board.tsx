@@ -2,10 +2,11 @@ import { usePlacementOver } from '@/hooks/use-current-game';
 import useWindowSize from '@/hooks/use-window-size';
 import { cn } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
-import { useCreateDiceGamePlacement } from '@/react-query/dice-game-queries';
+import { BetErrorToast, useCreateDiceGamePlacement } from '@/react-query/dice-game-queries';
 import Image from 'next/image';
 import { PropsWithChildren } from 'react';
 import { Cube } from './dice-3d';
+import { toast } from 'sonner';
 
 interface GameBoardProps extends PropsWithChildren<PropsWithClassName> {
     roundRecord: RoundRecord;
@@ -38,8 +39,14 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
 
 
     const handleBetSelect = (number: number) => {
-        if (globalBetAmount <= 0 || isPlaceOver) return;
-
+        if (globalBetAmount <= 0 || isPlaceOver) {
+            toast.custom((t) => (
+                <BetErrorToast onClose={() => toast.dismiss(t)} />
+            ), {
+                position: 'bottom-right'
+            });
+            return;
+        }
         createPlacement.mutate({
             roundId: roundRecord.id,
             amount: globalBetAmount,
@@ -57,9 +64,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
         winningMarketId.forEach(winningId => {
             const marketIndex = roundRecord.market.findIndex(market => market.id === winningId);
             if (marketIndex !== -1) {
-                console.log(roundRecord.market[marketIndex], marketIndex)
                 const value = ((marketIndex + 1) % 6) == 0 ? 6 : ((marketIndex + 1) % 6);
-                console.log(value);
                 sum = value + sum;// Index + 1 represents the dice face value
             }
         });
@@ -133,7 +138,6 @@ const BetButton = ({ number, multiplier, handleBetSelect, isWinner }: {
                     </div>
                 )
             }
-
 
             {/* Number */}
             <span className={cn(

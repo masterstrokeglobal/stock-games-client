@@ -17,6 +17,7 @@ export interface ColorConfig {
     bgColor: string;
     backgroundGradient: string;
     textColor: string;
+    chipColor: string;
     borderColor: string;
     shadowColor: string;
     shadow: string;

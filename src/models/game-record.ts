@@ -18,7 +18,6 @@ class GameRecord {
     deletedAt?: Date;
 
     constructor(params: Partial<GameRecord>) {
-        console.log(params, "params");
         this.id = params.id;
         this.roundId = params.roundId ?? 0;
         this.userId = params.userId!;

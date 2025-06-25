@@ -4,7 +4,7 @@ import { useGameState, usePlacementOver } from '@/hooks/use-current-game';
 import { cn } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
 import { MenuIcon } from 'lucide-react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import GameSettingsPopover from './game-menu';
 import StockWheel from './stock-wheel';
 
@@ -27,13 +27,11 @@ export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, className?:
   return (
     <div className={cn("flex flex-col justify-between items-center relative z-0 ", className)}>
         <div className='md:hidden flex gap-2 w-full mb-4 px-4  justify-between items-center text-white'>
-          <Badge className='bg-red-600 h-6 sm:h-8 text-sm sm:text-base tracking-wider block md:hidden uppercase text-white'>
-            <span className='size-1.5 sm:size-2 bg-white rounded-full mr-1.5 sm:mr-2' />
+          <Badge className='bg-red-600 flex items-center  h-6 sm:h-8 text-sm sm:text-base tracking-wider md:hidden uppercase text-white'>
+            <div className='size-1.5 sm:size-2 bg-white rounded-full mr-1.5 sm:mr-2' />
             Live
           </Badge>
-          <div className='flex items-center gap-2'> 
-            312 viewing
-          </div>
+          <Viewers />
           <GameSettingsPopover>
             <Button style={{
               boxShadow: '0px 0px 5.4px 0px rgba(72, 131, 121, 1)',
@@ -43,16 +41,14 @@ export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, className?:
           </GameSettingsPopover>
         </div>
       <div className='flex items-center w-full  relative justify-between gap-2'>
-        <Badge className='bg-red-600 h-6 sm:h-8 text-sm sm:text-base absolute top-0 left-2 tracking-wider hidden md:block uppercase text-white'>
-          <span className='size-1.5 sm:size-2 bg-white rounded-full mr-1.5 sm:mr-2' />
+        <Badge className='bg-red-600  items-center  h-6 sm:h-8 text-sm sm:text-base absolute top-0 left-2 tracking-wider hidden md:flex uppercase text-white'>
+          <div className='size-1.5 sm:size-2 bg-white rounded-full mr-1.5 sm:mr-2' />
           Live
         </Badge>
         <div className='w-full flex items-center justify-center gap-2 flex-col'>
           <h1
-            style={{
-              textShadow: '0px 0px 20px rgba(53, 71, 68, 1), 0px 0px 40px rgba(53, 71, 68, 0.8), 0px 0px 60px rgba(53, 71, 68, 0.6);',
-            }}
-            className='md:text-3xl sm:text-2xl text-xl font-bold tracking-wider text-white flex-1 text-center'
+           
+            className='md:text-3xl xl:text-4xl fortune-glow font-konkhmer-sleokchher tracking-widest  sm:text-2xl text-xl font-bold  text-white flex-1 text-center'
           >
             WHEEL OF FORTUNE
           </h1>
@@ -75,10 +71,43 @@ const GameTimer = ({ roundRecord }: { roundRecord: RoundRecord }) => {
   return (
     <div>
 
-      <span className='bg-[#203C2D] font-josefin text-white px-2 py-1 border border-[#498C80] rounded-md'>
-        {statusText} {`${timeLeft.minutes.toString().padStart(2, '0')}:${timeLeft.seconds.toString().padStart(2, '0')}`}
+      <span className='bg-[#203C2D]  xl:text-3xl md:text-2xl sm:text-xl text-lg font-jersy-20 text-[#5DB98A] font-josefin  font-medium px-2 py-1 border border-[#498C80] rounded-md'>
+        {statusText} {`${timeLeft.minutes.toString().padStart(2, '0')} : ${timeLeft.seconds.toString().padStart(2, '0')}`}
       </span>
 
     </div>
   );
 };
+
+export const Viewers = () => {
+  const [viewerCount, setViewerCount] = useState(500);
+  const [direction, setDirection] = useState(1); // 1 for increasing, -1 for decreasing
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setViewerCount(prevCount => {
+        const change = Math.floor(Math.random() * 10) + 1; // Random change between 1-10
+        let newCount = prevCount + (direction * change);
+        
+        // Reverse direction when hitting boundaries
+        if (newCount >= 600) {
+          setDirection(-1);
+          newCount = 600;
+        } else if (newCount <= 400) {
+          setDirection(1);
+          newCount = 400;
+        }
+        
+        return newCount;
+      });
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [direction]);
+
+  return (
+    <div className='flex items-center gap-2'> 
+      {viewerCount} viewing
+    </div>
+  )
+}

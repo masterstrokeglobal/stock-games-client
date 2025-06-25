@@ -312,21 +312,33 @@ export const usePlacementOver = (roundRecord: RoundRecord | null) => {
         const checkPlaceOver = () => {
             const now = new Date().getTime();
             const placeEnd = new Date(roundRecord.placementEndTime).getTime();
-
-            if (now >= placeEnd != isPlaceOver)
-                setIsPlaceOver(now >= placeEnd);
+            
+            // Reset to false if placement time is still available
+            if (now < placeEnd) {
+                setIsPlaceOver(false);
+            } else if (now >= placeEnd && !isPlaceOver) {
+                setIsPlaceOver(true);
+            }
         };
 
-        // Initial check
-        checkPlaceOver();
+        // Calculate time until placement ends
+        const now = new Date().getTime();
+        const placeEnd = new Date(roundRecord.placementEndTime).getTime();
+        const timeUntilPlaceEnd = Math.max(0, placeEnd - now);
 
-        // Set up an interval to check periodically, but less frequently
+        // Use both interval and timeout for better reliability
         const intervalId = setInterval(checkPlaceOver, 1000); // Check every second
+
+        // Set timeout for when placement should end
+        const timeoutId = setTimeout(() => {
+            setIsPlaceOver(true);
+        }, timeUntilPlaceEnd);
 
         return () => {
             clearInterval(intervalId);
+            clearTimeout(timeoutId);
         };
-    }, [roundRecord]); // Only re-run when roundRecord changes
+    }, [roundRecord]); 
 
     return isPlaceOver;
 };

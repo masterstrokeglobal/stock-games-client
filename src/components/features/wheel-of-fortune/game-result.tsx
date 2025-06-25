@@ -28,7 +28,6 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
         return data.placements.reduce((acc: number, placement: any) => acc + placement.amountWon, 0);
     }, [data]);
 
-    const isWin = netProfitLoss > 0;
 
     const totalPlaced = useMemo(() => {
         if (!data) return 0;
@@ -37,19 +36,25 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
 
     const netWinning = netProfitLoss - totalPlaced;
 
+    const isWin = netWinning > 0;
+
     return (
-        <Dialog defaultOpen={open}>
+        <Dialog defaultOpen={open} >
             <DialogContent
                 showButton={false}
-                className={cn(" border-2 shadow-2xl backdrop-blur-md max-w-md mx-auto", isWin ? "border-[#2be37c]" : "border-red-600")}
+                className={cn(" border-2 shadow-2xl backdrop-blur-md max-w-md mx-auto", isWin ? "border-[#0FDB00]" : "border-[#FF0000]")}
                 style={{
-                    boxShadow: "0 0 24px 0 #2be37c80",
-                    background: "linear-gradient(299.61deg, rgba(1, 14, 2, 0.8) -20.13%, rgba(48, 63, 61, 0.8) 100.88%)",
-                    minWidth: 340,
+                    boxShadow: isWin 
+                        ? "0px 0px 35.1px 0px rgba(6, 92, 0, 1)" 
+                        : "0px 0px 35.1px 0px rgba(171, 0, 0, 1)",
+                    background: "linear-gradient(299.61deg, rgba(1, 14, 2, 0.4) -20.13%, rgba(48, 63, 61, 0.4) 100.88%)",
+
                 }}
+
+
             >
                 <DialogHeader>
-                    <DialogTitle className="text-center text-white text-xl font-bold tracking-widest">
+                    <DialogTitle className="text-center text-white text-xl font-bold tracking-widest font-russo-one">
                         RESULT
                     </DialogTitle>
                     <DialogClose asChild>
@@ -75,7 +80,7 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
                         <div className="grid grid-cols-3 gap-2 font-medium border-b border-[#AFE7CC]  text-[#AFE7CC] pb-2">
                             <div className="text-left">COLOR BETTED</div>
                             <div className="text-center">BET INR</div>
-                            <div className="text-right">RESULT</div>
+                            <div className="text-center">RESULT</div>
                         </div>
                         <div className="space-y-2 mb-6">
                             {data.placements.map((placement: any, idx: number) => {
@@ -85,17 +90,17 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
                                         <div className="flex items-center">
                                             <span
                                                 style={{
-                                                    backgroundColor: colorConfig.actualColor,
+                                                    backgroundColor: colorConfig.chipColor,
                                                 }}
-                                                className={cn("px-3 py-1 rounded-full text-xs font-bold border border-white/20")}
+                                                className={cn("px-3 py-1 rounded-full text-white text-xs font-bold")}
                                             >
                                                 {colorConfig.name}
                                             </span>
                                         </div>
-                                        <div className="text-center text-white font-medium">
+                                        <div className="text-center text-white font-medium font-montserrat">
                                             {INR(placement.amountPlaced, true)}
                                         </div>
-                                        <div className="text-right">
+                                        <div className="text-right font-montserrat">
                                             {placement.isWinner ? (
                                                 <span className="text-green-400 font-bold flex items-center gap-1">
                                                     Won <TriangleUpGlow />
@@ -116,22 +121,24 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
                             <div
                                 className={cn(
                                     "rounded-lg px-6 py-3 text-center border-2",
-                                    netWinning >= 0
-                                        ? "bg-[#101c13] border-[#2be37c]"
-                                        : "bg-red-900/20 border-red-600"
+                                    isWin                                        ? "bg-[#0983002E] border-[#2be37c]"
+                                        : "bg-[#67000057] border-[#FF0000]"
                                 )}
                                 style={{
-                                    boxShadow: netWinning >= 0
+                                    boxShadow: isWin
                                         ? "0 0 8px 0 #2be37c80"
                                         : "0 0 8px 0 rgba(239, 68, 68, 0.5)"
                                 }}
                             >
-                                <span className={cn("block text-lg font-bold tracking-wide", netWinning >= 0 ? "text-[#2be37c]" : "text-red-400")}>
-                                    Net Result : {netWinning >= 0 ? (
-                                        <span className="text-[#2be37c]">₹ {netWinning}</span>
-                                    ) : (
-                                        <span className="text-red-400">₹ {Math.abs(netWinning)}</span>
-                                    )}
+                                <span 
+                                    className={cn("block text-lg font-bold tracking-wide text-white")}
+                                    style={{
+                                        textShadow: isWin 
+                                            ? "0px 0px 10.4px rgba(46, 183, 36, 1)"
+                                            : "0px 0px 10.4px rgba(255, 0, 0, 1)"
+                                    }}
+                                >
+                                    Net Result : ₹ {Math.abs(netWinning)}
                                 </span>
                             </div>
                         </div>

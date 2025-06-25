@@ -3,15 +3,14 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import useWindowSize from "@/hooks/use-window-size";
+import { cn } from "@/lib/utils";
 import { RoundRecordGameType, WHEEL_COLOR_CONFIG } from '@/models/round-record';
 import { WheelColor } from "@/models/wheel-of-fortune-placement";
 import { useGetUserGameHistory } from '@/react-query/game-user-queries';
-import { cn } from "@/lib/utils";
 import dayjs from "dayjs";
-import { X, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
+import { ChevronLeft, ChevronRight, RefreshCw, X } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
-import { ScrollArea } from "@/components/ui/scroll-area";
-import useWindowSize from "@/hooks/use-window-size";
 
 // Mobile-specific component for bet history
 const MobileBettingHistory = ({ history }: { history: History[] }) => {
@@ -23,7 +22,7 @@ const MobileBettingHistory = ({ history }: { history: History[] }) => {
             {history.map((row, idx) => (
                 <div
                     key={idx}
-                    className="rounded-2xl border overflow-hidden  space-y-2 border-[#5C8983] bg-[#2B4643] shadow-md"
+                    className="rounded-2xl max-h-[80svh] border overflow-hidden  space-y-2 border-[#5C8983] bg-[#2B4643] shadow-md"
                 >
                     <div className="flex justify-between items-center px-4 py-2 bg-[#242D2D] mb-2">
                         <div className="font-semibold text-white text-base">
@@ -39,7 +38,7 @@ const MobileBettingHistory = ({ history }: { history: History[] }) => {
                                 <span
                                     className="px-2 py-0.5 rounded-full ml-2  font-semibold text-xs"
                                     style={{
-                                        background: WHEEL_COLOR_CONFIG[row.colorBetted].actualColor,
+                                        background: WHEEL_COLOR_CONFIG[row.colorBetted].chipColor,
                                         color: "#fff",
                                         minWidth: 48,
                                         display: "inline-block",
@@ -56,7 +55,7 @@ const MobileBettingHistory = ({ history }: { history: History[] }) => {
                                 <span
                                     className="px-2 py-0.5 rounded-full ml-2  font-semibold text-xs"
                                     style={{
-                                        background: WHEEL_COLOR_CONFIG[row.winningColor].actualColor,
+                                        background: WHEEL_COLOR_CONFIG[row.winningColor].chipColor,
                                         color: "#fff",
                                         minWidth: 48,
                                         display: "inline-block",
@@ -140,11 +139,11 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
-            <DialogContent showButton={false} className="max-w-7xl xs:w-[90vw] w-full p-0 border-none bg-transparent backdrop-blur-md max-h-[80vh]">
+            <DialogContent showButton={false} className="max-w-7xl xs:w-[90vw] w-full p-0 border-none bg-transparent backdrop-blur-md h-fit ">
                 <div style={{
                     background: 'linear-gradient(0deg, rgba(31, 41, 41, 0.9) 0%, rgba(43, 70, 67, 0.9) 90.29%)',
                 }}
-                    className="w-full border backdrop-blur-md border-[#5C8983] rounded-3xl shadow-2xl overflow-hidden max-h-[80vh] flex flex-col">
+                    className="w-full border backdrop-blur-md border-[#5C8983] rounded-3xl shadow-2xl overflow-hidden flex flex-col">
                     {/* Header */}
                     <div className="flex items-center border-b border-[#5C8983] bg-[#366D51] justify-between p-6 pb-4 flex-shrink-0">
                         <div className="flex items-center text-white text-lg font-medium space-x-3">
@@ -167,12 +166,11 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                         </div>
                     </div>
                     <div className="p-6 flex-1 overflow-hidden flex flex-col">
-                        <ScrollArea className="h-[80svh]">
                             {/* Desktop Table */}
                             {!isMobile && <div className="overflow-x-auto hidden md:block flex-1">
-                                <div className="min-w-full text-sm text-left text-white max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#5C8983] scrollbar-track-transparent">
+                                <div className="min-w-full text-sm text-left text-white max-h-[60svh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#5C8983] scrollbar-track-transparent">
                                     {/* Header */}
-                                    <div className="border-b mb-4 border-[#5C8983] text-base flex sticky top-0 bg-[#366D51] z-10">
+                                    <div className="border-b mb-4 border-[#5C8983] backdrop-blur-lg text-base flex sticky top-0  z-10">
                                         <div className="px-4 py-3 font-semibold flex-1">Date</div>
                                         <div className="px-4 py-3 font-semibold flex-1">Time</div>
                                         <div className="px-4 py-3 font-semibold flex-1">Color Betted</div>
@@ -189,15 +187,15 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                             key={idx}
                                             className="text-white flex"
                                         >
-                                            <div className={cn("px-4 py-3 flex-1", `${idx % 2 === 0 ? "bg-[#28533D] rounded-l-full" : ""}`)}>{dayjs(row.createdAt).format("DD/MM/YYYY")}</div>
-                                            <div className={cn("px-4 py-3 flex-1", `${idx % 2 === 0 ? "bg-[#28533D]" : ""}`)}>{dayjs(row.createdAt).format("HH:mm A")}</div>
-                                            <div className={cn("px-4 py-3 flex-1", `${idx % 2 === 0 ? "bg-[#28533D]" : ""}`)}>
+                                            <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D] rounded-l-full" : ""}`)}>{dayjs(row.createdAt).format("DD/MM/YYYY")}</div>
+                                            <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D]" : ""}`)}>{dayjs(row.createdAt).format("HH:mm A")}</div>
+                                            <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D]" : ""}`)}>
                                                 <span
                                                     className="px-3 py-1 rounded-full font-semibold"
                                                     style={{
-                                                        background: WHEEL_COLOR_CONFIG[row.colorBetted].actualColor,
+                                                        background: WHEEL_COLOR_CONFIG[row.colorBetted].chipColor,
                                                         color: "#fff",
-                                                        minWidth: 60,
+                                                        minWidth: 60,   
                                                         display: "inline-block",
                                                         textAlign: "center"
                                                     }}
@@ -205,11 +203,11 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                                     {WHEEL_COLOR_CONFIG[row.colorBetted].name}
                                                 </span>
                                             </div>
-                                            <div className={cn("px-4 py-3 flex-1", `${idx % 2 === 0 ? "bg-[#28533D]" : ""}`)}>
+                                            <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D]" : ""}`)}>
                                                 <span
                                                     className="px-3 py-1 rounded-full font-semibold"
                                                     style={{
-                                                        background: WHEEL_COLOR_CONFIG[row.winningColor].actualColor,
+                                                        background: WHEEL_COLOR_CONFIG[row.winningColor].chipColor,
                                                         color: "#fff",
                                                         minWidth: 60,
                                                         display: "inline-block",
@@ -219,8 +217,10 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                                     {WHEEL_COLOR_CONFIG[row.winningColor].name}
                                                 </span>
                                             </div>
-                                            <div className={cn("px-4 py-3 flex-1", `${idx % 2 === 0 ? "bg-[#28533D]" : ""}`)}>{row.amount}</div>
-                                            <div className={cn("px-4 py-3 flex-1", `${idx % 2 === 0 ? "bg-[#28533D] rounded-r-full" : ""}`)}>{row.netProfitLoss > 0 ? `+${row.netProfitLoss}` : row.netProfitLoss}</div>
+                                            <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D]" : ""}`)}>{row.amount}</div>
+                                            <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D] rounded-r-full" : ""}`)}>
+                                                {row.netProfitLoss > 0 ? `+Rs.${row.netProfitLoss}` : row.netProfitLoss < 0 ? `-Rs.${Math.abs(row.netProfitLoss)}` : `Rs.${row.netProfitLoss}`}
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
@@ -228,7 +228,6 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                             {/* Mobile Card List */}
                             {isMobile && <MobileBettingHistory history={history} />}
                             <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
-                        </ScrollArea>
                     </div>
                 </div>
             </DialogContent>

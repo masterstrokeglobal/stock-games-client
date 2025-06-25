@@ -1,4 +1,4 @@
-import {
+    import {
     Dialog,
     DialogContent,
     DialogTrigger,
@@ -43,9 +43,9 @@ const HowToPlayDialog: React.FC<HowToPlayDialogProps> = ({
                 <div
                     style={{
                         background:
-                            "linear-gradient(0deg, rgba(31, 41, 41, 0.9) 0%, rgba(43, 70, 67, 0.9) 90.29%)",
+                            "linear-gradient(0deg, rgba(31, 41, 41, 0.7) 0%, rgba(43, 70, 67, 0.7) 90.29%)",
                     }}
-                    className="w-full border backdrop-blur-md border-[#5C8983] rounded-2xl shadow-2xl overflow-hidden"
+                    className="w-full border backdrop-blur-sm border-[#5C8983] rounded-2xl shadow-2xl overflow-hidden"
                 >
                     {/* Header */}
                     <div className="flex items-center border-b border-[#5C8983] bg-[#366D51] justify-between p-6 pb-4">

@@ -78,7 +78,6 @@ const StockProgressChart = () => {
         };
     }, [roundRecord, isGameOver, totalPotentialReturn, totalBettedAmount]);
 
-    console.log(chartData);
     
     const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
         if (active && payload && payload.length) {

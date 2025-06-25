@@ -18,12 +18,14 @@ export const useCreateDiceGamePlacement = () => {
             });
             toast.custom((t) => (
                 <BetSuccessToast onClose={() => toast.dismiss(t)} betAmount={amount} betNumber={number} />
-            ),{
+            ), {
                 position: 'bottom-right'
             });
         },
-        onError: (error: any) => {
-            toast.error(error.response?.data.message ?? "Error placing bet",{
+        onError: () => {
+              toast.custom((t) => (
+                <BetErrorToast onClose={() => toast.dismiss(t)} />
+            ), {
                 position: 'bottom-right'
             });
         },
@@ -38,26 +40,26 @@ export const BetSuccessToast = ({ className, onClose, betAmount, betNumber }: Pr
 }>) => {
     return (
         <div className={cn("flex items-center p-4 bg-gradient-to-t from-blue-500 via-cyan-400 to-green-400 text-white rounded-lg shadow-lg min-w-[320px] relative", className)} >
-           
+
 
             {/* Content */}
             <div className="flex items-center gap-4 ">
                 {/* Character illustration */}
-             
-             
+
+
 
                 {/* Text content */}
                 <div className="flex-1">
-                     {/* Close button */}
-            <button
-                onClick={onClose}
-                className="w-6 h-6  mb-4 rounded-full flex items-center justify-center text-[#013FCF] transition-colors"
-            >
-                <XCircle/>
-            </button>
-                    <h3  style={{textShadow: '1px 1px 0px #4467CC, -1px -1px 0px #4467CC, 1px -1px 0px #4467CC, -1px 1px 0px #4467CC'}}      className="text-lg font-bold  text-white ">Bet Placed Successfully</h3>
-                    <p 
-                     style={{textShadow: '1px 1px 0px #4467CC, -1px -1px 0px #4467CC, 1px -1px 0px #4467CC, -1px 1px 0px #4467CC'}}    className="text-base opacity-90 text-white">{betNumber} for ₹ {betAmount}</p>
+                    {/* Close button */}
+                    <button
+                        onClick={onClose}
+                        className="w-6 h-6  mb-4 rounded-full flex items-center justify-center text-[#013FCF] transition-colors"
+                    >
+                        <XCircle />
+                    </button>
+                    <h3 style={{ textShadow: '1px 1px 0px #4467CC, -1px -1px 0px #4467CC, 1px -1px 0px #4467CC, -1px 1px 0px #4467CC' }} className="text-lg font-bold  text-white ">Bet Placed Successfully</h3>
+                    <p
+                        style={{ textShadow: '1px 1px 0px #4467CC, -1px -1px 0px #4467CC, 1px -1px 0px #4467CC, -1px 1px 0px #4467CC' }} className="text-base opacity-90 text-white">{betNumber} for ₹ {betAmount}</p>
                 </div>
                 <div className="flex-shrink-0">
                     <img src="/images/dice-game/toast-lady.png" alt="lady" className="h-32 absolute bottom-1/4 right-0" />
@@ -66,6 +68,32 @@ export const BetSuccessToast = ({ className, onClose, betAmount, betNumber }: Pr
         </div>
     )
 }
+
+export const BetErrorToast = ({ className, onClose }: PropsWithClassName<{
+    onClose: () => void
+}>) => {
+    return (
+        <div
+            style={{ background: 'linear-gradient(171.89deg, #FF9285 5.45%, #D9330D 49.61%, #B9090C 93.76%)' }}
+            className={cn("flex items-center p-4  text-white rounded-lg shadow-lg min-w-[320px] relative", className)} >
+            <div className="flex items-center gap-4">
+                <div className="flex-1">
+                    <button
+                        onClick={onClose}
+                        className="w-6 h-6  mb-4 rounded-full flex items-center justify-center  transition-colors"
+                    >
+                        <XCircle />
+                    </button>
+                    <h3 className="text-lg font-bold  text-white ">Time’s up! No more bets</h3>
+                </div>
+                <div className="flex-shrink-0">
+                    <img src="/images/dice-game/toast-error.png" alt="lady" className="h-32 absolute bottom-1/4 right-0" />
+                </div>
+            </div>
+        </div>
+    )
+}
+
 
 export const useGetMyCurrentRoundDiceGamePlacement = (roundId: number) => {
     return useQuery<DicePlacement[]>({

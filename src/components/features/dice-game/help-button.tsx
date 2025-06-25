@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import BettingHistoryDialog from "./betting-history";
 import HowToPlayDialog from "./how-to-play";
 import Link from "next/link";
+import DemoVideoDialog from "./demo-video";
 
 const HelpButton = () => {
     return (
@@ -13,16 +14,16 @@ const HelpButton = () => {
             </BettingHistoryDialog>
             <HowToPlayDialog>
                 <Button className="w-full h-11 bg-[#0C309E] hover:bg-[#0C309E]/80 dice-header ">
-                    How to Play?
+                Game Rules
                 </Button>
             </HowToPlayDialog>
-            <HowToPlayDialog>
+            <DemoVideoDialog    >
                 <Button className="w-full h-11 bg-[#0C309E] hover:bg-[#0C309E]/80 dice-header ">
                     Demo Video
                 </Button>
-            </HowToPlayDialog>
+            </DemoVideoDialog>
             <Button className="w-full h-11 bg-[#0C309E] hover:bg-[#0C309E]/80 dice-header ">
-                <Link href="/game/contact" className="w-full h-full ">
+                <Link href="/game/contact" className="w-full h-full flex items-center justify-center">
                     Support
                 </Link>
             </Button>

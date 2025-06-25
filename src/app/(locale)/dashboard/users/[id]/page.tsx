@@ -43,7 +43,6 @@ const ViewUserPage = () => {
 
     if (isLoading) return <LoadingScreen className="h-[60vh]">Loading user...</LoadingScreen>; // Show loading screen if loading
 
-    console.log(userDetails);
     return (
         <section className="container-main min-h-[60vh]">
             <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between">

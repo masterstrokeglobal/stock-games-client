@@ -10,6 +10,7 @@ interface WindowSize {
     isMobile: boolean;
     isTablet: boolean;
     isDesktop: boolean;
+    isMd: boolean;
     device: DeviceType;
 }
 
@@ -27,6 +28,7 @@ export const useWindowSize = (): WindowSize => {
         isMobile: false,
         isTablet: false,
         isDesktop: false,
+        isMd: false,
         device: 'mobile'
     });
 
@@ -40,6 +42,7 @@ export const useWindowSize = (): WindowSize => {
             const isMobile = width < BREAKPOINTS.lg;
             const isTablet = width >= BREAKPOINTS.sm && width < BREAKPOINTS.lg;
             const isDesktop = width >= BREAKPOINTS.lg;
+            const isMd = width <= BREAKPOINTS.md;
 
             let device: DeviceType = 'mobile';
             if (isDesktop) device = 'desktop';
@@ -48,6 +51,7 @@ export const useWindowSize = (): WindowSize => {
             setWindowSize({
                 width,
                 height,
+                isMd,
                 isMobile,
                 isTablet,
                 isDesktop,

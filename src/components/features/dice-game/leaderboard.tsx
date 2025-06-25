@@ -59,8 +59,8 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
 
     const getChangeColor = (changePercent: string) => {
         const change = parseFloat(changePercent);
-        if (change > 0) return "text-green-500";
-        if (change < 0) return "text-red-500";
+        if (change > 0) return "text-[#4FFF83]";
+        if (change < 0) return "text-[#FF0000]";
         return "text-game-secondary";
     };
 
@@ -76,6 +76,7 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                     Leaderboard
                 </header>
                 <ScrollArea
+                    scrollThumbClassName="bg-[#4467CC]"
                     style={{ height: isMobile ? "300px" : "100%" }}
                     type="auto"
                 >
@@ -126,17 +127,17 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                                 >
                                     <td className="p-2">
 
-                                        {(index === 0  && !isGameOver) ? (
+                                        {(index === 0 && !isGameOver) ? (
                                             <img
-                                                src="/rank-1.png"
+                                                src="/images/dice-game/winner.png"
                                                 alt="Rank 1"
-                                                className="w-8 h-8 mx-auto"
+                                                className="h-8 w-auto mx-auto"
                                             />
                                         ) : winnerNumbers.includes(marketItem.horse!) ? (
                                             <img
-                                                src="/rank-1.svg"
+                                                src="/images/dice-game/winner.svg"
                                                 alt="Rank 1"
-                                                className="size-8 mx-auto"
+                                                className="h-8 w-auto mx-auto"
                                             />
                                         ) : (
                                             <div className="text-game-secondary w-full text-center">
@@ -164,7 +165,7 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                     </table>
 
                     <div className="h-8" />
-                    <ScrollBar orientation="horizontal" />
+                    <ScrollBar orientation="horizontal" scrollThumbClassName="bg-[#4467CC80]" />
                 </ScrollArea>
             </div>
         </section>
