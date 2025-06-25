@@ -38,7 +38,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
   return (
     <>
-      <div className={cn("w-full flex flex-col justify-between bg-[#1a1b2e] text-white ", className)}>
+      <div className={cn("w-full flex flex-col justify-between gap-4 bg-[#1a1b2e] text-white ", className)}>
         <div className="grid grid-cols-2 gap-2 w-full">
           {coinValues?.map((amount) => (
             <Button

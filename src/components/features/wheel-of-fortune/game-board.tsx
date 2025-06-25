@@ -92,19 +92,15 @@ export default function WheelOfFortuneGameBoard({ roundRecord, amount, className
 
 
   return (
-      <div className={cn("flex items-center justify-center w-full h-full  bg-center relative", className)}>
+      <div className={cn("flex items-center justify-between w-full h-full  bg-center relative", className)}>
       {children}
       {/* Color Cards Grid */}
-      <div className=" md:grid md:grid-cols-5 flex flex-wrap gap-2 justify-center w-full">
-        <div className="flex col-span-3 flex-row flex-wrap gap-2 flex-2/3 w-full sm:w-auto sm:flex-row lg:flex-row lg:flex-wrap lg:justify-center">
+      <div className="  flex flex-wrap gap-2 justify-center w-full">
           <ColorCard color={WheelColor.COLOR5} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
           <ColorCard color={WheelColor.COLOR4} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
           <ColorCard color={WheelColor.COLOR3} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
-        </div>
-        <div className="flex col-span-2 flex-row gap-2 flex-wrap flex-1 w-full sm:w-auto sm:flex-row lg:flex-row lg:flex-wrap lg:justify-center">
           <ColorCard color={WheelColor.COLOR2} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
           <ColorCard color={WheelColor.COLOR1} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
-        </div>
       </div>
     </div>
   );
@@ -124,19 +120,15 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
         background: currentColorConfig?.bgColor,
         border: `2px solid ${currentColorConfig?.borderColor}`,
         color: currentColorConfig?.textColor,
-        perspective: '1000px',
-        transformStyle: 'preserve-3d'
       }}
       className={cn(
-        "flex-1  z-10 rounded-lg flex flex-col cursor-pointer transition-all duration-300 relative group",
+        "z-10 rounded-lg min-w-52 flex-1 flex flex-col cursor-pointer transition-all duration-300 relative group",
         isPending ? 'opacity-70 pointer-events-none' : 'hover:shadow-lg',
         isWinner ? `border-2 ${config.borderColor} border-dashed border-amber-700 shadow-custom-glow animate-pulse` : ''
       )}
 
       onClick={() => handleColorClick(color)}
     >
-      
-
       <div className="h-full flex-1 flex flex-col">
         <div style={{borderColor: currentColorConfig?.borderColor}} className={cn("rounded-t-lg p-2 text-white border-b flex justify-center gap-2 items-center text-center w-full")}>
           <span className="text-lg font-bold">{config.name}</span>
@@ -160,7 +152,7 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
                     isTopStock && "bg-amber-300 border border-amber-400  px-2"
                   )}
                 >
-                  <span className='text-xs whitespace-nowrap truncate line-clamp-1'>{index + 1}. {market.name?.slice(0, 17)}</span>
+                  <span className='text-xs whitespace-nowrap truncate line-clamp-1 block flex-1'>{index + 1}. {market.name?.slice(0, 17)}</span>
                   <span className={cn(
                     "flex items-center gap-1 text-xs font-bold",
                     isPositive ? "text-green-600" : "text-red-600"
