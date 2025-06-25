@@ -6,7 +6,7 @@ import {
 import { RoundRecordGameType } from '@/models/round-record';
 import { useGetUserGameHistory } from '@/react-query/game-user-queries';
 import dayjs from "dayjs";
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useWindowSize from "@/hooks/use-window-size";
@@ -123,7 +123,7 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
     const [open, setOpen] = useState(false);
     const [page, setPage] = useState(1);
     const { isMobile } = useWindowSize();
-    const { data: userGameHistory } = useGetUserGameHistory({ page, roundRecordGameType: RoundRecordGameType.DICE });
+    const { data: userGameHistory, refetch } = useGetUserGameHistory({ page, roundRecordGameType: RoundRecordGameType.DICE });
 
     const { history, totalPages } = useMemo(() => {
         const history: History[] = userGameHistory?.data || [];
@@ -133,6 +133,10 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
 
     const handlePageChange = (newPage: number) => {
         setPage(newPage);
+    };
+
+    const handleRefresh = () => {
+        refetch();
     };
 
     return (
@@ -152,12 +156,21 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                         <div className="flex items-center text-white text-center text-lg flex-1 justify-center font-bold w-full">
                             Betting History
                         </div>
-                        <button
-                            onClick={() => setOpen(false)}
-                            className="text-white hover:text-gray-200 transition-colors"
-                        >
-                            <X size={24} />
-                        </button>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={handleRefresh}
+                                className="p-2 rounded-lg bg-[#23245A] text-white hover:bg-[#2E3A6A] transition-colors"
+                                title="Refresh"
+                            >
+                                <RefreshCw size={20} />
+                            </button>
+                            <button
+                                onClick={() => setOpen(false)}
+                                className="text-white hover:text-gray-200 transition-colors"
+                            >
+                                <X size={24} />
+                            </button>
+                        </div>
                     </div>
                     <div className=" py-4 flex-1 px-4 overflow-hidden bg-[#140538] flex flex-col">
                         <ScrollArea className="h-[80vh]">

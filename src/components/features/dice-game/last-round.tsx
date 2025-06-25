@@ -4,7 +4,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
-import { useLastRoundWinner } from "@/react-query/round-record-queries";
+import { useGetDiceLast10RoundDetails } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
 import { useEffect, useRef } from "react";
 
@@ -16,7 +16,7 @@ type Props = {
 
 const LastRoundWinner = ({ roundRecord, className }: Props) => {
     const sectionRef = useRef<HTMLDivElement | null>(null);
-    const { data, isSuccess, refetch } = useLastRoundWinner(roundRecord.type);
+    const { data, isSuccess, refetch } = useGetDiceLast10RoundDetails();
     const { isMobile } = useWindowSize();
 
     useEffect(() => {
@@ -58,8 +58,8 @@ const LastRoundWinner = ({ roundRecord, className }: Props) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {isSuccess && data.data && data.data.length > 0 ? (
-                                data.data.slice(0, 10).map((round: any) => (
+                            {isSuccess && data && data.length > 0 ? (
+                                data.slice(0, 10).map((round) => (
                                     <tr 
                                         key={round.id} 
                                         className="border-b last:border-none text-game-secondary border-[#DADCE00D] overflow-hidden"
@@ -73,7 +73,7 @@ const LastRoundWinner = ({ roundRecord, className }: Props) => {
                                         </td>
                                         <td className="p-2">
                                             <span className="text-game-secondary text-sm">
-                                                {dayjs(round.startTime).format("DD/MM/YYYY HH:mm")}
+                                                {dayjs(round.createdAt).format("DD/MM/YYYY HH:mm A")}
                                             </span>
                                         </td>
                                         <td className="p-2 text-right">
