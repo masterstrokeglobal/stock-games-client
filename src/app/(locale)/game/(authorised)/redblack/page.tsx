@@ -26,7 +26,7 @@ const borderStyle = {
 
 const GamePage = () => {
   const [globalBetAmount, setGlobalBetAmount] = useState(100);
-  const { roundRecord } = useCurrentGame(RoundRecordGameType.RED_BLACK);
+  const { roundRecord } = useCurrentGame();
   useHorseRaceSound(roundRecord);
 
   return (

@@ -36,7 +36,7 @@ export const gameRecordAPI = {
   },
 
   getAdvancePlacements: async (filter: any) => {
-    return api.get("/game-records/my-advance-placements", {
+    return api.get("/advance-game-records", {
       params: filter
     });
   },
