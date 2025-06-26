@@ -8,7 +8,10 @@ export default function GamingAppInterface() {
         <div className="flex flex-col min-h-screen bg-primary-game text-white   mx-auto">
 
             <GameAdsCarousel />
+
             <CasinoCarousel games={StockDerbyGames} title="Stock Games" />
+            {/* <CasinoCarousel games={SinglePlayerGames} title="Single Player Games" />
+            <CasinoCarousel games={LOBBY_GAMES} title="Multiplayer Games" /> */}
         </div>
     )
 }

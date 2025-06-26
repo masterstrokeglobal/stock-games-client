@@ -143,8 +143,6 @@ export const StockDerbyGames: Game[] = [
         image: "/images/banner/dice-game.png",
         description: "Guess the side of the coin"
     },
-    // {
-
     //     title: "Red Black",
     //     link: "/game/redblack",
     //     image: "/images/redvsblack.png",

@@ -119,7 +119,7 @@ const AviatorCanvas = ({ multiplier, shouldStartTakeOffAnimation = false, opacit
       '/models/aviator/plane.glb',
       (gltf) => {
         plane = gltf.scene
-        plane.scale.set(2, 2, 2)
+        plane.scale.set(1.7, 1.7, 1.7)
 
         // Center the plane model
         const box = new THREE.Box3().setFromObject(plane)
@@ -301,9 +301,11 @@ const AviatorCanvas = ({ multiplier, shouldStartTakeOffAnimation = false, opacit
       // Scale up to full size and move to center when animation starts OR when game is active (multiplier > 1)
       console.log("📈 Scaling canvas to full size and centering")
       gsap.to(canvasContainerRef.current, {
-        // scale: 1,
+        scale: 1,
         x: "0%",
         y: "0%",
+        /// make the plane face up
+        rotation: -15,
         duration: 1,
         ease: "power2.out"
       })
@@ -311,9 +313,10 @@ const AviatorCanvas = ({ multiplier, shouldStartTakeOffAnimation = false, opacit
       // Scale down to half size and move to bottom-left initially or when resetting
       console.log("📉 Scaling canvas to half size and moving to bottom-left")
       gsap.to(canvasContainerRef.current, {
-        // scale: 0.5,
+        scale: 0.8,
         x: "-30%", // Move left
-        y: "40%",  // Move down
+        y: "30%",  // Move down
+        rotation: 0,
         duration: 1,
         ease: "power2.out"
       })
@@ -328,7 +331,7 @@ const AviatorCanvas = ({ multiplier, shouldStartTakeOffAnimation = false, opacit
         data-canvas-container
         style={{ 
           transformOrigin: 'center center',
-          transform: 'scale(1) translate(-30%, 40%)', // Initial scale and position
+          transform: 'scale(1) translate(-30%, 40%) rotate(0deg)', // Initial scale and position
           opacity: opacity,
           transition: 'opacity 0.3s ease-in-out'
         }}

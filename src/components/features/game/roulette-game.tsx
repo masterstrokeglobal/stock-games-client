@@ -187,7 +187,6 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
         });
 
     };
-
     const handleZeroBet = () => {
         if (gameState.isPlaceOver || isPlacingBet) return;
         if (!verifyBetAmount(betAmount)) return;

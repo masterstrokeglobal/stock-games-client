@@ -4,7 +4,6 @@ import AdvertismentDialog from "@/components/features/advertisement/advertismemn
 import CurrentBets from "@/components/features/game/current-bets";
 import LastWinners from "@/components/features/game/last-winners";
 import LeaderBoard from "@/components/features/game/leaderboard";
-import Navbar from "@/components/features/game/navbar";
 import RouletteGame from "@/components/features/game/roulette-game";
 import GameHeaderMobile from "@/components/features/game/roulette-mobile-header";
 import HorseRace from "@/components/features/horse-animation/horse";
@@ -14,6 +13,7 @@ import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
 import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
+import Navbar from "@/components/features/game/navbar";
 
 declare global {
     interface Window {

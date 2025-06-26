@@ -7,6 +7,7 @@ export type DeviceType = 'mobile' | 'tablet' | 'desktop';
 interface WindowSize {
     width: number;
     height: number;
+    isMobileSmall: boolean;
     isMobile: boolean;
     isTablet: boolean;
     isDesktop: boolean;
@@ -25,6 +26,7 @@ export const useWindowSize = (): WindowSize => {
     const [windowSize, setWindowSize] = useState<WindowSize>({
         width: 0,
         height: 0,
+        isMobileSmall: false,
         isMobile: false,
         isTablet: false,
         isDesktop: false,
@@ -40,6 +42,7 @@ export const useWindowSize = (): WindowSize => {
 
             // Determine device type based on width
             const isMobile = width < BREAKPOINTS.lg;
+            const isMobileSmall = width < BREAKPOINTS.md;
             const isTablet = width >= BREAKPOINTS.sm && width < BREAKPOINTS.lg;
             const isDesktop = width >= BREAKPOINTS.lg;
             const isMd = width <= BREAKPOINTS.md;
@@ -51,6 +54,7 @@ export const useWindowSize = (): WindowSize => {
             setWindowSize({
                 width,
                 height,
+                isMobileSmall,
                 isMd,
                 isMobile,
                 isTablet,

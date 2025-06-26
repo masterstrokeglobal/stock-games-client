@@ -1,57 +1,51 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 
 interface BlastVideoProps {
-  isPlaying: boolean
+  isBlastPlaying: boolean
   setIsBlastPlaying: (isPlaying: boolean) => void
+
+  blastOpacity: number
+  setBlastOpacity: (opacity: number) => void
 }
 
-export default function BlastVideo({ isPlaying, setIsBlastPlaying }: BlastVideoProps) {
+export default function BlastVideo({ isBlastPlaying, setIsBlastPlaying, blastOpacity, setBlastOpacity }: BlastVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
-  const [opacity, setOpacity] = useState(0)
 
   useEffect(() => {
-    if (isPlaying && videoRef.current) {
-      // Fade in (0.1 seconds)
-      setTimeout(() => {
-        setOpacity(1)
-      }, 100)
+    const video = videoRef.current
+    if (!video) return
 
-      // Set playback rate to 3x and play
-      videoRef.current.playbackRate = 2
-      videoRef.current.currentTime = 0
-      videoRef.current.play()
+    if (isBlastPlaying) {
+      setBlastOpacity(1)
+      video.currentTime = 0
+      video.playbackRate = 2
+      video.play()
 
-      // When video ends, fade out
       const handleVideoEnd = () => {
-          setOpacity(0)
-          setIsBlastPlaying(false)
+        setBlastOpacity(0)
+        setIsBlastPlaying(false)
       }
 
-      videoRef.current.addEventListener('ended', handleVideoEnd)
-
-      return () => {
-        if (videoRef.current) {
-          videoRef.current.removeEventListener('ended', handleVideoEnd)
-        }
-      }
+      video.addEventListener('ended', handleVideoEnd)
+      return () => video.removeEventListener('ended', handleVideoEnd)
     } else {
-      // Fade out immediately when not playing
-      setOpacity(0)
-      if (videoRef.current) {
-        videoRef.current.pause()
-      }
+      setBlastOpacity(0)
+      video.pause()
+      video.currentTime = 0
     }
-  }, [isPlaying, setIsBlastPlaying])
+  }, [isBlastPlaying])
 
   return (
     <div 
-      className="absolute inset-0 transition-opacity duration-100 ease-in-out"
-      style={{ opacity }}
+      className="absolute inset-0 transition-opacity duration-100 ease-in-out z-50"
+      style={{ opacity: blastOpacity }}
     >
       <video 
         ref={videoRef}
-        src="/videos/Blast.webm" 
+        src="/videos/aviator/Blast.webm" 
         muted 
+        preload="auto"
+        playsInline
         className="w-full h-full object-cover"
       />
     </div>

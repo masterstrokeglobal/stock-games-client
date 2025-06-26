@@ -4,10 +4,10 @@ import Logo from "@/components/common/logo";
 import { MuteButton } from "@/components/common/mute-button";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import GameTimings from "./game-timings";
 import UserMenuNavbar from "./user-menu-navbar";
-import { cn } from "@/lib/utils";
 type Props = {
     className?: string
 }
