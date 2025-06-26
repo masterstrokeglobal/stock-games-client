@@ -39,7 +39,7 @@ export const useGetCurrentRoundRecord = (
 export const useGetRoundRecordById = (roundRecordId?: number) => {
     return useQuery({
         queryKey: ["round-record", roundRecordId],
-        queryFn:  roundRecordId ? () => roundRecordsAPI.getRoundRecordById(roundRecordId) : undefined,
+        queryFn: roundRecordId ? () => roundRecordsAPI.getRoundRecordById(roundRecordId) : undefined,
         enabled: !!roundRecordId, // Prevents the query from running if the ID is falsy
     });
 };
@@ -97,3 +97,32 @@ export const useLastRoundWinner = (type: SchedulerType) => {
     });
 }
 
+
+export const useGetWheelOfFortuneHistory = ({ page, limit, type }: { page: number, limit: number, type: SchedulerType }) => {
+    return useQuery({
+        queryKey: ["wheel-of-fortune-history", page, limit, type],
+        queryFn: async () => {
+            const response = await roundRecordsAPI.getWheelOfFortuneHistory({ page, limit, type });
+            return response.data
+        },
+    });
+}   
+
+type DiceLast10RoundDetails = {
+    id: number;
+    type: SchedulerType;
+    createdAt: string;
+    winningNumber: number;
+}
+
+    export const useGetDiceLast10RoundDetails = () => {
+        const THIRTY_SECONDS = 1000 * 30;
+        return useQuery({
+            queryKey: ["dice-last-10-round-details"],
+            queryFn: async () => {
+                const response = await roundRecordsAPI.getDiceLast10RoundDetails();
+                return response.data.roundRecords as DiceLast10RoundDetails[];
+            },
+            refetchInterval: THIRTY_SECONDS,
+        });
+    }

@@ -43,5 +43,11 @@ export const roundRecordsAPI = {
                 type,
             }
         });
-    }
+    },
+    getWheelOfFortuneHistory: async ({ page, limit, type }: { page: number, limit: number, type: SchedulerType }) => {
+        return api.get(`/round-records/wheel-of-fortune/history`, { params: { page, limit, type } });
+    },
+    getDiceLast10RoundDetails: async () => {
+        return api.get("/round-records/dice/history");
+    },
 };

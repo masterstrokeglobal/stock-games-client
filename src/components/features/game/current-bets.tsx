@@ -25,8 +25,6 @@ const CurrentBets = ({ className, round }: Props) => {
 
     const sectionRef = useRef<HTMLDivElement | null>(null);
 
-
-
     const totalAmount = useMemo(() => {
         return currentBetsData.reduce((acc, bet) => acc + bet.amount, 0);
     }, [currentBetsData]);
@@ -111,7 +109,6 @@ const CurrentBets = ({ className, round }: Props) => {
             <div className="flex gap-4 md:flex-row flex-col h-full">
                 <div className="max-h-96 w-full flex-1 md:rounded-sm overflow-hidden game-gradient-card-parent">
                     <BetTable title={t("current-bets")} data={currentBetsData} showTotal={true} />
-
                 </div>
                 <div className="max-h-96 w-full flex-1 md:rounded-sm overflow-hidden game-gradient-card-parent">
                     <BetTable title={t("top-bets")} data={Array.from({ length: 10 }).map(() => ({}))} />

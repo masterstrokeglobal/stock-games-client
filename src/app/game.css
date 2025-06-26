@@ -61,3 +61,40 @@
     }
 
 }
+
+.dice-header {
+    box-shadow: 6px 5px 4.8px 0px rgba(0, 0, 0, 0.25) inset;
+}
+
+.dice-input {
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+}
+
+
+.fortune-glow {
+    color: #fff;
+    text-align: center;
+    -webkit-animation: glow 1s ease-in-out infinite alternate;
+    -moz-animation: glow 1s ease-in-out infinite alternate;
+    animation: glow 1s ease-in-out infinite alternate;
+    text-shadow: 0 0 5px rgba(53, 71, 68, 1), 0 0 10px rgba(53, 71, 68, 1), 0 0 15px rgba(53, 71, 68, 1), 0 0 20px rgba(53, 71, 68, 1), 0 0 25px rgba(53, 71, 68, 1), 0 0 30px rgba(53, 71, 68, 1), 0 0 35px rgba(53, 71, 68, 1);
+}
+
+
+.sansation-light {
+    font-family: "Sansation", sans-serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.sansation-regular {
+    font-family: "Sansation", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.sansation-bold {
+    font-family: "Sansation", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}

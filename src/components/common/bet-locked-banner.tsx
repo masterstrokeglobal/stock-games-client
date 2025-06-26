@@ -53,12 +53,14 @@ export const DiceGameTimeDisplay = ({ roundRecord, className, isAviator }: { rou
   const statusText = isPlaceOver ? isGameOver ? "Game Over" : "Betting Closed" : "Betting Open"
 
   return (<div className={cn(className)}>
-  <div className={cn("bg-gradient-to-r h-14 rounded-b-full shadow-lg flex items-center justify-center relative overflow-hidden", isPlaceOver ? "from-red-800 to-red-600 via-red-800" : "from-[#001607] to-[#13311c]  ")}>
+  <div style={{
+    boxShadow: "20px 20px 100px 8px rgba(68, 103, 204, 1)"
+  }} className={cn("py-2 px-4 border rounded-md mx-auto border-[#4467CC80] flex items-center justify-center relative overflow-hidden")}>
       {/* Inner content with highlight effect */}
 
       <div className="flex flex-col items-center justify-center">
         {/* Text content */}
-        <span className="text-[#e6b85c] font-bold tracking-wider relative z-10 mr-2">
+        <span className="text-white font-bold tracking-wider relative z-10 mr-2">
           {statusText}
         </span>
 

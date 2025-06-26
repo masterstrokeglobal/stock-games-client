@@ -1,6 +1,7 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started 
+<<<<<<< HEAD
   
 First, run a development server:     
             
@@ -8,6 +9,14 @@ First, run a development server:
 pnpm dev
 ```
 =======
+=======
+   
+First, run a development server:      
+            
+```bash 
+pnpm dev     
+```  
+>>>>>>> main
    
 >>>>>>> main
 Open [http://localhost:3000](http://localhost:3000).    v

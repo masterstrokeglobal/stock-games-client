@@ -28,7 +28,7 @@ export default function RootLayout({
                 <UserProvider >
                     <QueryClientProvider client={queryClient}>
                         <ThemeManager />
-                        <Toaster toastOptions={{ duration: 1500 }} position="top-right" richColors />
+                        <Toaster toastOptions={{ duration: 1500 }} expand={true} visibleToasts={3} position="top-right" richColors />
                         {children}
                         <ReactQueryDevtools initialIsOpen={false} />
                     </QueryClientProvider>

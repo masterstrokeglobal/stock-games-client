@@ -1,10 +1,11 @@
+import { RankedMarketItem, useLeaderboard } from '@/hooks/use-sevenup-leader-board';
 import { cn, INR } from '@/lib/utils';
 import { RoundRecord, WHEEL_COLOR_CONFIG } from '@/models/round-record';
 import { WheelColor } from '@/models/wheel-of-fortune-placement';
-import { RankedMarketItem, useLeaderboard } from '@/hooks/use-sevenup-leader-board';
 import { useCreateWheelOfFortunePlacement, useGetMyCurrentRoundWheelOfFortunePlacement } from '@/react-query/wheel-of-fortune-queries';
 import { useMemo } from 'react';
-import { Triangle } from 'lucide-react';
+import TriangleDownGlow from '../common/triangle-down-glow';
+import TriangleUpGlow from '../common/triangle-up-glow';
 
 // Color configuration mapping
 
@@ -16,9 +17,44 @@ type Props = {
   roundRecordWithWinningId: RoundRecord | null;
 }
 
-export default function WheelOfFortuneGameBoard({ roundRecord, amount, className, children, roundRecordWithWinningId}: Props) {
 
-  const {stocks} = useLeaderboard(roundRecord);
+export const colorConfig: { color: WheelColor, bgColor: string, borderColor: string, textColor: string }[] = [
+  {
+      color: WheelColor.COLOR5,
+      bgColor: 'linear-gradient(341.3deg, rgba(141, 96, 24, 0.273) 1.58%, rgba(255, 162, 0, 0.56) 97.92%)',
+    borderColor: '#FFC857',
+    textColor: '#FFC857',
+  },
+
+  {
+    color: WheelColor.COLOR4,
+    bgColor: 'linear-gradient(341.3deg, rgba(94, 4, 179, 0.28) 1.58%, rgba(132, 0, 183, 0.7) 97.92%)',
+    borderColor: '#CD71FF',
+    textColor: '#CD71FF',
+  },
+  {
+    color: WheelColor.COLOR3,
+    bgColor: 'linear-gradient(341.3deg, rgba(1, 103, 182, 0.273) 1.58%, rgba(0, 129, 229, 0.7) 97.92%)',
+    borderColor: '#0076FF',
+    textColor: '#0076FF',
+  },
+  {
+    color: WheelColor.COLOR2,
+    bgColor: 'linear-gradient(341.3deg, rgba(0, 163, 10, 0.273) 1.58%, rgba(0, 164, 10, 0.7) 97.92%)',
+    borderColor: '#0ED700',
+    textColor: '#0ED700',
+  },
+  {   
+    color: WheelColor.COLOR1,
+    bgColor: 'linear-gradient(341.3deg, rgba(209, 2, 20, 0.273) 1.58%, rgba(239, 0, 20, 0.7) 97.92%)',
+    borderColor: '#FF0909  ',
+    textColor: '#FF0909',
+  },
+]
+
+export default function WheelOfFortuneGameBoard({ roundRecord, amount, className, children, roundRecordWithWinningId }: Props) {
+
+  const { stocks } = useLeaderboard(roundRecord);
   const { mutate: createWheelPlacement, isPending } = useCreateWheelOfFortunePlacement();
   const { data: placements } = useGetMyCurrentRoundWheelOfFortunePlacement(roundRecord.id);
 
@@ -48,7 +84,7 @@ export default function WheelOfFortuneGameBoard({ roundRecord, amount, className
   }, {} as Record<WheelColor, number>);
 
 
-  const winningColor= useMemo(() => {
+  const winningColor = useMemo(() => {
     if (!winningId) return null;
     const market = roundRecord.getColorByMarketId(winningId[0] as unknown as number);
     return market || null;
@@ -56,63 +92,52 @@ export default function WheelOfFortuneGameBoard({ roundRecord, amount, className
 
 
   return (
-    <div className={cn("flex  flex-col items-center justify-center w-full h-full bg-amber-800 p-4 pt-20 rounded-lg bg-center relative", className)}>
+      <div className={cn("flex items-center justify-between w-full h-full  bg-center relative", className)}>
       {children}
-      <img src="/images/wodden-board.jpg" alt="wodden-board" className="w-full h-full object-fill absolute top-0 left-0 z-0" />
-
       {/* Color Cards Grid */}
-      <div className="flex flex-wrap w-full max-w-4xl gap-2 md:p-4 mb-8 justify-center">
-        <ColorCard color={WheelColor.COLOR5} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
-        <ColorCard color={WheelColor.COLOR4} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
-        <ColorCard color={WheelColor.COLOR3} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
-        <ColorCard color={WheelColor.COLOR2} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
-        <ColorCard color={WheelColor.COLOR1} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
-      </div>
-
-      {/* Total Bet Display */}
-      <div className="mt-4 bg-amber-100 rounded-lg p-3 z-10">
-        <div className="text-amber-900 font-bold text-center">
-          Total Bet: {colorBets ? INR(Object.values(colorBets).reduce((sum, amount) => sum + amount, 0)) : '0'}
-        </div>
+      <div className="  flex flex-wrap gap-2 justify-center w-full">
+          <ColorCard color={WheelColor.COLOR5} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
+          <ColorCard color={WheelColor.COLOR4} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
+          <ColorCard color={WheelColor.COLOR3} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
+          <ColorCard color={WheelColor.COLOR2} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
+          <ColorCard color={WheelColor.COLOR1} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
       </div>
     </div>
   );
 }
 const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick, roundRecord, marketItemsStocks }: { color: WheelColor, colorBets?: Record<WheelColor, number>, winningColor: WheelColor | null, isPending: boolean, roundRecord: RoundRecord, handleColorClick: (color: WheelColor) => void, marketItemsStocks: RankedMarketItem[] }) => {
   const config = WHEEL_COLOR_CONFIG[color];
+  const currentColorConfig = colorConfig.find(c => c.color === color);
   const myBetAmount = colorBets?.[color] || 0;
   const isWinner = winningColor === color;
 
   // Get the top performing stock from marketItemsStocks
-  const topStock = marketItemsStocks.sort((a, b) => (b?.change_percent==undefined ? -100 : parseFloat(b?.change_percent)) - (a?.change_percent==undefined ? -100 : parseFloat(a?.change_percent)))[0];
+  const topStock = marketItemsStocks.sort((a, b) => (b?.change_percent == undefined ? -100 : parseFloat(b?.change_percent)) - (a?.change_percent == undefined ? -100 : parseFloat(a?.change_percent)))[0];
 
   return (
     <div
+      style={{
+        background: currentColorConfig?.bgColor,
+        border: `2px solid ${currentColorConfig?.borderColor}`,
+        color: currentColorConfig?.textColor,
+      }}
       className={cn(
-        "flex-1 min-w-[190px] sm:max-w-[190px] h-full min-h-52 z-10 rounded-lg flex flex-col cursor-pointer transition-all duration-300 relative group",
-        isPending ? 'opacity-70 pointer-events-none' : 'hover:shadow-lg hover:scale-105',
+        "z-10 rounded-lg min-w-52 flex-1 flex flex-col cursor-pointer transition-all duration-300 relative group",
+        isPending ? 'opacity-70 pointer-events-none' : 'hover:shadow-lg',
         isWinner ? `border-2 ${config.borderColor} border-dashed border-amber-700 shadow-custom-glow animate-pulse` : ''
       )}
-      style={{
-        perspective: '1000px',
-        transformStyle: 'preserve-3d'
-      }}
+
       onClick={() => handleColorClick(color)}
     >
-      {myBetAmount > 0 && (
-        <div className="absolute top-0 left-0 bg-amber-500 aspect-square z-20 border-2 border-dashed border-amber-700 rounded-full p-1 flex justify-center gap-2 items-center text-[10px] text-center w-fit">
-          <span className="font-bold">{myBetAmount}</span>
-        </div>
-      )}
-
       <div className="h-full flex-1 flex flex-col">
-        <div className={cn(config.bgColor, "rounded-t-lg p-2 flex justify-center gap-2 items-center text-center w-full")}>
-          <span className="text-white text-lg font-bold">{config.name}</span>
-          <div className="font-bold">
+        <div className={cn("rounded-t-lg px-2 py-3 font-konkhmer-sleokchher tracking-wider text-white  flex justify-center gap-2 items-center text-center w-full")}>
+          <span className="text-lg ">{config.name}</span>
+          <div>
             1:{config.multiplier}
           </div>
         </div>
-        <div className={cn("flex-1 rounded-b-lg flex flex-col items-center justify-start relative w-full", isWinner ? config.bgColor : 'bg-amber-100')}>
+          <div style={{background: currentColorConfig?.borderColor}} className='w-3/4 h-0.5  mx-auto ' />
+        <div className={cn("flex-1 rounded-b-lg flex flex-col items-center justify-start relative w-full")}>
           <ul className="gap-1 w-full py-4">
             {roundRecord.getMarketsByColor(color).map((market, index) => {
               const stock = marketItemsStocks.find(s => s.id === market.id);
@@ -124,26 +149,25 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
                 <li
                   key={market.id}
                   className={cn(
-                    "text-sm font-medium py-1 text-gray-700  px-2 flex items-center justify-between border-b border-amber-700/20 gap-2",
-                    isTopStock && "bg-amber-300 border border-amber-400  px-2"
+                    "text-sm  tracking-wider py-1 text-white  px-2 flex items-center justify-between  gap-2",
+                    isTopStock && "bg-amber-300/80 border border-amber-400  px-2"
                   )}
                 >
-                  <span className='text-xs whitespace-nowrap truncate line-clamp-1'>{index + 1}. {market.name?.slice(0, 17)}</span>
+                  <span className='text-xs whitespace-nowrap truncate line-clamp-1 block flex-1'>{index + 1}. {market.name?.slice(0, 17)}</span>
                   <span className={cn(
                     "flex items-center gap-1 text-xs font-bold",
                     isPositive ? "text-green-600" : "text-red-600"
                   )}>
-                    {isPositive ? <Triangle className='size-3 fill-green-600' /> : <Triangle className='size-3 fill-red-600 rotate-180' />} {changePercent.toFixed(5)}%
+                    {isPositive ? <TriangleUpGlow className='size-5' /> : <TriangleDownGlow className='size-5 font-montserrat' />} {changePercent.toFixed(5)}%
                   </span>
                 </li>
               );
             })}
           </ul>
 
-          <div className="w-full mt-auto bg-amber-50 bg-opacity-80 p-2 rounded-b-lg">
+          <div className="w-full mt-auto p-2 rounded-b-lg">
             <div className="flex flex-col items-center">
-              <div className="text-xs font-semibold flex items-center gap-1 text-amber-900 text-center">
-                <img src="/images/coin.png" alt="bet" className="w-4 h-4" />
+              <div  style={{color: currentColorConfig?.textColor}} className="text-lg font-semibold font-konkhmer-sleokchher flex items-center gap-1 text-center">
                 <span className="font-bold">{INR(myBetAmount * config.multiplier)}</span>
               </div>
             </div>
@@ -153,5 +177,4 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
     </div>
   );
 };
-
 

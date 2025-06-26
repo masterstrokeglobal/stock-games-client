@@ -5,7 +5,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Analytics } from "@vercel/analytics/react";
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from "next-intl/server";
-import { Poppins } from 'next/font/google';
+import { Inter, Jersey_10, Jersey_20, Konkhmer_Sleokchher, Montserrat, Poppins, Russo_One} from 'next/font/google';
 import Script from 'next/script';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import "./globals.css";
@@ -17,7 +17,42 @@ const poppins = Poppins({
   subsets: ['latin'],
 });
 
+const KonkhmerSleokchher = Konkhmer_Sleokchher({
+  weight: ['400'],
+  subsets: ['latin'],
+  variable: '--font-konkhmer-sleokchher',
+});
 
+
+const jersy2 = Jersey_20 ({
+  weight: ['400'],
+  subsets: ['latin'],
+  variable: '--font-jersy-20',
+});
+
+const jersy10 = Jersey_10({
+  weight: ['400'],
+  subsets: ['latin'],
+  variable: '--font-jersy-10',
+});
+
+const RussoOne = Russo_One({
+  weight: ['400'],
+  subsets: ['latin'],
+  variable: '--font-russo-one',
+});
+
+const montserrat = Montserrat({
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  subsets: ['latin'],
+  variable: '--font-montserrat',
+});
+
+const inter = Inter({
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+  subsets: ['latin'],
+  variable: '--font-inter',
+});
 
 import {
   FpjsProvider
@@ -75,11 +110,12 @@ export default async function RootLayout({
               <link rel="preconnect" href="https://fonts.googleapis.com" />
               <link rel="preload" href="https://fonts.googleapis.com/css2?family=Keania+One:wght@400&display=swap" as="style" />
               <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Keania+One:wght@400&display=swap" />
+              <link href="https://fonts.googleapis.com/css2?family=Sansation:wght@300;400;700&display=swap" rel="stylesheet" />
               <link rel="icon" href="/favicon.ico" />
               <link rel="manifest" href="/manifest.json" />
             </head>
             <body
-              className={`${poppins.className} antialiased`}
+              className={`${poppins.className} antialiased ${KonkhmerSleokchher.variable} ${jersy2.variable} ${jersy10.variable} ${RussoOne.variable} ${montserrat.variable} ${inter.variable}`}
             >
               <NuqsAdapter>
                 <NextIntlClientProvider messages={messages}>

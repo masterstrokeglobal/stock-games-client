@@ -50,9 +50,6 @@ export const AdvertismentForm = ({ defaultValues, onSubmit, className, isLoading
 
     const adType = form.watch("type");
 
-    const values = form.watch();
-
-    console.log(form.formState.errors, "errors", values)
 
     return (
         <FormProvider methods={form} onSubmit={form.handleSubmit(onSubmit)} className={cn("space-y-5", className)}>

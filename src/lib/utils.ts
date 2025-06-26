@@ -184,12 +184,15 @@ export const INR = (rupees: string | number, nodecimal: boolean = false) => {
   // convert number into RUpees
   const number = Number(rupees);
 
-  return new Intl.NumberFormat('en-IN', {
+  const formatted = new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',
     minimumFractionDigits: nodecimal ? 0 : 2,
     maximumFractionDigits: nodecimal ? 0 : 2
   }).format(number);
+
+  // Add a space between the currency symbol and the number
+  return formatted.replace('₹', '₹ ');
 }
 
 export const RED_BLACK_ROULETTE_NUMBERS = [

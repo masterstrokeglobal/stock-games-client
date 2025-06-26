@@ -45,7 +45,7 @@ export default function StockGameCarousel() {
                             </div>
                         </Link>
                     </CarouselItem>
-                    
+
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href="/game/platform/stock-game/stock-slot">
                             <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
@@ -71,20 +71,20 @@ export default function StockGameCarousel() {
                     </CarouselItem>
 
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
-                        <Link href="/game/platform/stock-game/wheel-of-fortune">
+                        <Link href="/game/single-player/wheel-of-fortune">
                             <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
                                 <Image src="/images/banner/wheel-of-fortune.png" alt="coming-soon" className="w-full h-full object-top" width={500} height={500} />
                             </div>
                         </Link>
                     </CarouselItem>
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
-                        <Link href="/game/platform/stock-game/dice-game">
+                        <Link href="/game/single-player/dice-game">
                             <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
                                 <Image src="/images/banner/dice-game.png" alt="coming-soon" className="w-full h-full object-top" width={500} height={500} />
                             </div>
                         </Link>
                     </CarouselItem>
-                    <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">  
+                    <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href="/game/redblack">
                             <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
                                 <Image src="/images/redvsblack.png" alt="coming-soon" className="w-full h-full object-top" width={500} height={500} />
@@ -99,7 +99,7 @@ export default function StockGameCarousel() {
                             </div>
                         </Link>
                     </CarouselItem>
-           </CarouselContent>
+                </CarouselContent>
             </div>
         </Carousel>
     )

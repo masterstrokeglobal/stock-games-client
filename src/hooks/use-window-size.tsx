@@ -11,11 +11,12 @@ interface WindowSize {
     isMobile: boolean;
     isTablet: boolean;
     isDesktop: boolean;
+    isMd: boolean;
     device: DeviceType;
 }
 
 // Tailwind default breakpoints
-const BREAKPOINTS = {
+export const BREAKPOINTS = {
     sm: 640,   // Mobile
     md: 768,   // Tablet
     lg: 1024,  // Desktop
@@ -29,6 +30,7 @@ export const useWindowSize = (): WindowSize => {
         isMobile: false,
         isTablet: false,
         isDesktop: false,
+        isMd: false,
         device: 'mobile'
     });
 
@@ -43,6 +45,7 @@ export const useWindowSize = (): WindowSize => {
             const isMobileSmall = width < BREAKPOINTS.md;
             const isTablet = width >= BREAKPOINTS.sm && width < BREAKPOINTS.lg;
             const isDesktop = width >= BREAKPOINTS.lg;
+            const isMd = width <= BREAKPOINTS.md;
 
             let device: DeviceType = 'mobile';
             if (isDesktop) device = 'desktop';
@@ -52,6 +55,7 @@ export const useWindowSize = (): WindowSize => {
                 width,
                 height,
                 isMobileSmall,
+                isMd,
                 isMobile,
                 isTablet,
                 isDesktop,

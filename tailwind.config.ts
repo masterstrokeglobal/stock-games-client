@@ -1,3 +1,4 @@
+import { Jersey_10 } from "next/font/google";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -13,6 +14,13 @@ const config: Config = {
 			fontFamily: {
 				jersey: ['var(--font-jersey-10)', 'sans-serif'],
 				'keania-one': ['"Keania One"', 'sans-serif'],
+				'sansation': ['"Sansation"', 'sans-serif'],
+				'sansation-light': ['"Sansation"', 'sans-serif'],
+				'konkhmer-sleokchher': ['var(--font-konkhmer-sleokchher)', 'sans-serif'],
+				'jersy-20': ['var(--font-jersy-20)', 'sans-serif'],
+				'jersy-10': ['var(--font-jersy-10)', 'sans-serif'],				  
+				'russo-one': ['var(--font-russo-one)', 'sans-serif'],
+				'montserrat': ['var(--font-montserrat)', 'sans-serif'],
 			},
 			animation: {
 				marquee: 'marquee 6s linear infinite',

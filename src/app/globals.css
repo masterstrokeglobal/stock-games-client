@@ -7,6 +7,9 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+  /* *{
+    border: 1px solid red;
+  } */
 
 
 
@@ -674,6 +677,33 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   }
 }
 
+/* Mobile responsive dice */
+@media (max-width: 768px) {
+  .dice-front {
+    transform: translateZ(20px);
+  }
+
+  .dice-back {
+    transform: rotateY(180deg) translateZ(20px);
+  }
+
+  .dice-right {
+    transform: rotateY(90deg) translateZ(20px);
+  }
+
+  .dice-left {
+    transform: rotateY(-90deg) translateZ(20px);
+  }
+
+  .dice-top {
+    transform: rotateX(90deg) translateZ(20px);
+  }
+
+  .dice-bottom {
+    transform: rotateX(-90deg) translateZ(20px);
+  }
+}
+
 * {
   /* Firefox */
   scrollbar-width: thin;
@@ -720,4 +750,14 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   -webkit-text-fill-color: white;
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: black;
+
+.remove-spin::-webkit-outer-spin-button,
+.remove-spin::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.remove-spin[type=number] {
+  -moz-appearance: textfield;
 }

@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { gameUserAPI } from "@/lib/axios/game-user-API"; // Adjust the path as needed
 import { useAuthStore } from "@/context/auth-context";
 import User from "@/models/user";
+import { RoundRecordGameType } from "@/models/round-record";
 
 // Fetch current user's profile
 export const useGameUserProfile = () => {
@@ -243,3 +244,24 @@ export const useGetUserTier = () => {
     },
   });
 };
+
+
+export const useGetUserGameHistory = ({ page, roundRecordGameType }: { page: number, roundRecordGameType: RoundRecordGameType }) => {
+  return useQuery({
+    queryKey: ["userGameHistory", page, roundRecordGameType],
+    queryFn: async () => {
+      const response = await gameUserAPI.getUserGameHistory({ page, roundRecordGameType } );
+      return response.data;
+    },
+  });
+};
+
+export const useGetUserGameHistoryByRoundId = (roundId: string) => {
+  return useQuery({
+    queryKey: ["userGameHistoryByRoundId", roundId],
+    queryFn: async () => {
+      const response = await gameUserAPI.getUserGameHistoryByRoundId(roundId);
+      return response.data;
+    },
+  });
+};      

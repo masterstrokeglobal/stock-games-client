@@ -39,9 +39,8 @@ function FormMultiInput<
     name: name as any,
   });
 
-  const [_, setFocusedIndex] = useState<number | null>(null);
+  const [, setFocusedIndex] = useState<number | null>(null);
 
-  console.log(_);
   return (
     <FormField
       control={control}

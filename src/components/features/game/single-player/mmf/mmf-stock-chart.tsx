@@ -126,8 +126,7 @@ const StockProgressChart = () => {
         };
     }, [roundRecord, isGameOver, isPlaceOver, totalPotentialReturn, totalBettedAmount, chartData.length]);
 
-    console.log('Chart data:', chartData, 'Trading period:', isPlaceOver && !isGameOver);
-    
+
     const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>) => {
         if (active && payload && payload.length) {
             const data = payload[0].payload as ChartDataPoint;
