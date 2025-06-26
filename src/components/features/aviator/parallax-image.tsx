@@ -129,15 +129,22 @@ export default function ParallaxImage({ multiplier, isMoving = false }: Parallax
       ease: "power1.out",
     })
 
-    // Update each layer's Y position based on its altitude range
+    // Update each layer's Y position based on its altitude range with realistic movement
     layerConfigs.forEach(layer => {
       const containerRef = containerRefs[layer.ref as keyof typeof containerRefs]
       if (containerRef.current) {
         // Calculate layer-specific Y position based on altitude range
         const altitudeMin = layer.altitudeRange[0]
         const altitudeMax = layer.altitudeRange[1]
+        const avgAltitude = (altitudeMin + altitudeMax) / 2
+        
+        // Higher altitude objects move much less (more distant)
+        // Lower altitude objects move more (closer to camera)
+        const altitudeMovementFactor = avgAltitude > 0.8 
+          ? 1 - (avgAltitude * 0.9) // Very reduced movement for space/planets
+          : 1 - (avgAltitude * 0.6) // Moderate reduction for other objects
         const layerProgress = altitudeMin + (altitudeMax - altitudeMin) * progress
-        const layerTranslateY = -(1 - layerProgress) * maxMoveY
+        const layerTranslateY = -(1 - layerProgress) * maxMoveY * altitudeMovementFactor
 
         gsap.to(containerRef.current, {
           y: layerTranslateY,
@@ -162,6 +169,7 @@ export default function ParallaxImage({ multiplier, isMoving = false }: Parallax
         ))}
         <div
           className="bottom-0 left-0 w-[3520px] h-[563px] absolute bg-[url('/images/aviator/grass.png')] bg-cover bg-no-repeat flip-alter-image"
+          style={{ zIndex: 100 }} // Ensure grass stays at ground level
         />
       </div>
 
