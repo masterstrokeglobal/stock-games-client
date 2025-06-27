@@ -193,7 +193,7 @@ const DiceFace: React.FC<DiceFaceProps> = ({ marketItem, className, number, isWi
       {renderDots(number)}
       <div className="absolute bottom-0 left-0 right-0 text-center">
         <span className={cn(
-          "sm:text-[8px] text-[6px] selection:bg-transparent text-black font-medium z-10 relative tracking-wider rotate-15 block",
+          "sm:text-[8px] text-[6px] truncate max-w-full selection:bg-transparent text-black font-medium z-10 relative tracking-wider rotate-15 block",
         )} style={{ textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
           {marketItem.codeName}
         </span>
