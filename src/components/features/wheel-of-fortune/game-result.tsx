@@ -49,10 +49,7 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
                         : "0px 0px 35.1px 0px rgba(171, 0, 0, 1)",
                     background: "linear-gradient(299.61deg, rgba(1, 14, 2, 0.4) -20.13%, rgba(48, 63, 61, 0.4) 100.88%)",
 
-                }}
-
-
-            >
+                }}>
                 <DialogHeader>
                     <DialogTitle className="text-center text-white text-xl font-bold tracking-widest font-russo-one">
                         RESULT

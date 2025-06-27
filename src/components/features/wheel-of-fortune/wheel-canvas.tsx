@@ -758,15 +758,36 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
 
   return (
     <div className="relative flex  items-center justify-center md:min-h-[450px] xs:min-h-[360px] min-h-[300px] md:min-w-[450px] xs:min-w-[360px] min-w-[300px]">
+
+
+      {!isLoading && (
+        <img
+          className="absolute z-10 bottom-[-22%] left-[53%] -translate-x-1/2 h-auto w-[190%] max-w-none"
+          src="/images/wheel-of-fortune/wheel_shadow.png" alt="" />
+      )}
+
       <canvas
         ref={canvasRef}
-        className="w-full h-full max-h-full aspect-square max-w-full"
+        className="relative z-20 w-full h-full max-h-full aspect-square max-w-full"
       />
+
+      {!isLoading && (
+        <img
+          className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2  w-[23%] aspect-square z-30"
+          src="/images/wheel-of-fortune/bet.png" alt="" />
+      )}
+
+      {!isLoading && (
+        <img
+          className="absolute top-[8%] left-[50%] -translate-x-1/2 w-[9%] h-auto z-30"
+          src="/images/wheel-of-fortune/pin.png" alt="" />
+      )}
+
 
       {isLoading && (
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="flex flex-col items-center space-y-2">
-            <div className="text-white">Loading 3D model...</div>
+            <div className="text-white">Loading Wheel...</div>
             {loadingProgress > 0 && (
               <div className="text-white text-sm">{Math.round(loadingProgress)}%</div>
             )}
