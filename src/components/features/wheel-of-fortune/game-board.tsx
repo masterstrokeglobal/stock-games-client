@@ -130,7 +130,7 @@ const ColorCard = ({ color, colorBets, winningColor, isPending, handleColorClick
       onClick={() => handleColorClick(color)}
     >
       <div className="h-full flex-1 flex flex-col">
-        <div className={cn("rounded-t-lg px-2 py-3 font-konkhmer-sleokchher tracking-wider text-white  flex justify-center gap-2 items-center text-center w-full")}>
+        <div style={{color: 'white', textShadow: `0px 0px 40px ${currentColorConfig?.borderColor}, 0px 0px 20px ${currentColorConfig?.borderColor}`}} className={cn("rounded-t-lg px-2 py-3 font-konkhmer-sleokchher tracking-wider text-white  flex justify-center gap-2 items-center text-center w-full")}>
           <span className="text-lg ">{config.name}</span>
           <div>
             1:{config.multiplier}

@@ -37,6 +37,7 @@ const HowToPlayDialog: React.FC<HowToPlayDialogProps> = ({
                 {children}
             </DialogTrigger>
             <DialogContent
+                overlayClassName="bg-gradient-to-b from-[rgba(12,21,24,0.6)] via-[rgba(12,21,24,0.6)] to-[rgba(54,109,81,0.6)]"
                 showButton={false}
                 className="max-w-lg w-full p-0 border-none bg-transparent backdrop-blur-md"
             >

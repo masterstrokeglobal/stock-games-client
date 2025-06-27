@@ -74,8 +74,8 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
               className={cn(
                 'rounded-full border-none transition-all flex-1 duration-200 relative group overflow-hidden border-2 font-bold',
                 betAmount === amount
-                  ? 'bg-[#2259ff] text-white'
-                  : 'bg-[#0D329F] border border-[#4467CC80] text-white hover:bg-[#0D329F]/80'
+                  ? 'bg-[#0D329F] text-white'
+                  : 'bg-[#1193E1] border border-[#4467CC80] text-white hover:bg-[#0D329F]/80'
               )}
               key={amount}
               onClick={() => setBetAmount(amount)}

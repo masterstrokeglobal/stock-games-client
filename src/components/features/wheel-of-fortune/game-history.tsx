@@ -90,7 +90,7 @@ const GameHistoryDialog = ({ children }: GameHistoryDialogProps) => {
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
-            <DialogContent showButton={false} className="max-w-4xl min-h-[500px] w-full p-0 border-none bg-transparent backdrop-blur-md ">
+            <DialogContent showButton={false} overlayClassName="bg-gradient-to-b from-[rgba(12,21,24,0.6)] via-[rgba(12,21,24,0.6)] to-[rgba(54,109,81,0.6)]" className="max-w-4xl min-h-[500px] w-full p-0 border-none bg-transparent backdrop-blur-md ">
                 <div style={{
                     background: 'linear-gradient(0deg, rgba(31, 41, 41, 0.9) 0%, rgba(43, 70, 67, 0.9) 90.29%)',
                 }}

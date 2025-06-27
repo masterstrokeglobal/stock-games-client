@@ -36,13 +36,13 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
 
     const netWinning = netProfitLoss - totalPlaced;
 
-    const isWin = netWinning > 0;
+    const isWin = netWinning < 0;
 
     return (
         <Dialog defaultOpen={open} >
             <DialogContent
                 showButton={false}
-                className={cn(" border-2 shadow-2xl backdrop-blur-md max-w-md mx-auto", isWin ? "border-[#0FDB00]" : "border-[#FF0000]")}
+                className={cn(" border-2 shadow-2xl backdrop-blur-md max-w-md mx-auto", isWin ? "border-[#2be37c]" : "border-[#FF0000]")}
                 style={{
                     boxShadow: isWin 
                         ? "0px 0px 35.1px 0px rgba(6, 92, 0, 1)" 

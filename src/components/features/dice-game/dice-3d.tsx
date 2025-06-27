@@ -31,7 +31,7 @@ const StockDisplay = ({ stock, className, isSecondCube, roundRecord, winner, isL
   return (
     <div className={cn("flex flex-col justify-between items-center rounded-none  text-[10px] relative z-20 text-white/90 py-0.5 px-1 transition-colors w-full", className)}>
       <div className="flex items-center justify-between w-full px-1 gap-0.5 min-w-0">
-        <span className="font-medium truncate max-w-[60px]">{stock?.codeName}</span>
+        <span className="font-medium truncate max-w-[60px] font-inter">{stock?.codeName}</span>
         <span className={cn("text-[10px] border border-white/10 w-4 h-4 aspect-square font-bold flex items-center justify-center px-0.5 rounded-full flex-shrink-0", winner && "text-white", isSecondCube && "order-first")}>
           {horse}
         </span>
@@ -43,8 +43,8 @@ const StockDisplay = ({ stock, className, isSecondCube, roundRecord, winner, isL
           : 'text-[#FF0000]' : "text-white "
       )}>
 
-        <TriangleIcon className={cn(changePercentage ? Number(changePercentage) > 0 ? 'text-[#4FFF83] rotate-180' :
-          'text-[#FF0000]' : 'text-white rotate-90')} />
+        <TriangleIcon className={cn(changePercentage ? Number(changePercentage) > 0 ? 'text-[#4FFF83] ' :
+          'text-[#FF0000] rotate-180' : 'text-white rotate-90')} />
         {changePercentageText}
       </span>
       {!isLast && <div className={cn('h-px bg-[#4467CC80]  w-full')} />}
@@ -82,7 +82,7 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
 
 
   return (
-    <div className={`font-sans   bg-cover bg-center border border-[#4467CC80] grid grid-rows-1 p-2 rounded-lg overflow-visible ${className}`} >
+    <div className={`font-sans  bg-cover bg-center border border-[#4467CC80] grid grid-rows-1 p-2 rounded-lg overflow-visible ${className}`} >
       <div className="flex justify-between  relative  h-full items-center">
           <div className='flex flex-col  border rounded border-[#4467CC80] h-full md:w-28 w-[80px]'>
             {/* <TriangleIcon className='size-3 text-white absolute top-4 right-0 translate-x-full  rotate-90' /> */}
@@ -158,7 +158,7 @@ const DiceFace: React.FC<DiceFaceProps> = ({ marketItem, className, number, isWi
         <div
           key={i}
           className={cn(
-            "absolute md:w-1.5 md:h-1.5 w-1 h-1 bg-black rounded-full shadow-lg",
+            "absolute md:w-1.5 md:h-1.5 w-1 h-1 bg-[#5A3A24] rounded-full shadow-lg",
             isLoading && "animate-pulse"
           )}
           style={{
@@ -183,17 +183,13 @@ const DiceFace: React.FC<DiceFaceProps> = ({ marketItem, className, number, isWi
       style={{
         width: size,
         height: size,
-        background: isWinning ? 'linear-gradient(to right, #ffffff, #f0f0f0)' : 'linear-gradient(to right, #ffffff, #f0f0f0)',
-        border: '2px solid',
-        borderImage: 'linear-gradient(90deg, #d3d3d3 0%, #e0e0e0 50%, #d3d3d3 100%) 1',
-        borderRadius: '8px',
-        boxShadow: '0 0 20px rgba(128, 128, 128, 0.3), 0 8px 32px rgba(128, 128, 128, 0.15)'
+        background: isWinning ? 'linear-gradient(135deg, #FFF5D7, #EFD8AC)' : 'linear-gradient(135deg, #FFF5D7, #EFD8AC)',
       }}
     >
       {renderDots(number)}
       <div className="absolute bottom-0 left-0 right-0 text-center">
         <span className={cn(
-          "sm:text-[8px] text-[6px] truncate max-w-full selection:bg-transparent text-black font-medium z-10 relative tracking-wider rotate-15 block",
+          "sm:text-[8px] text-[6px] truncate max-w-full selection:bg-transparent text-[#5A3A24] font-medium z-10 relative tracking-wider rotate-15 block",
         )} style={{ textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
           {marketItem.codeName}
         </span>
