@@ -41,7 +41,7 @@ const WheelOfFortune = () => {
 
     if (isTablet) return <section className=" space-y-4 pt-14 bg-[#140538] font-inter">
         <Navbar />
-        <Dice3D className='min-h-60 w-full' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
+        <Dice3D className='sm:min-h-80 xs:min-h-72 min-h-60  w-full' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
         <BettingGrid roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={roundRecordWithWinningId?.winningId || null} >
             <DiceGameTimeDisplay className="w-full max-w-sm  " roundRecord={roundRecord} />
         </BettingGrid>
@@ -63,7 +63,7 @@ const WheelOfFortune = () => {
             </div>
             <div className="flex flex-col pt-5 px-3  col-span-6 overflow-y-auto  w-full relative h-full  rounded-none mx-auto  text-white overflow-hidden">
                 <MaintainceScreen />
-                <Dice3D className='xl:min-h-72 min-h-60' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
+                <Dice3D className='min-h-[300px]' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
                 <BettingGrid roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={roundRecordWithWinningId?.winningId || null} >
                     <DiceGameTimeDisplay className="w-full max-w-sm  " roundRecord={roundRecord} />
                 </BettingGrid>

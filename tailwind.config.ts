@@ -27,6 +27,7 @@ const config: Config = {
 			},
 			screens: {
 				"xs": "360px",
+				"xsm": "440px",
 			},
 			keyframes: {
 				marquee: {
