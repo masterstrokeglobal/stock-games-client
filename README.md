@@ -7,17 +7,14 @@ First, run a development server:
 ```bash 
 pnpm dev
 ```
-=======
-=======
+
    
 First, run a development server:      
             
 ```bash 
 pnpm dev     
 ```  
->>>>>>> main
-   
->>>>>>> main
+
 Open [http://localhost:3000](http://localhost:3000).    v
   
 You can start editing the page by modifying `app/page.tsx`.
