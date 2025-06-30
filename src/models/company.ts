@@ -29,6 +29,8 @@ export class Company {
     maxCasinoPlacement?: number;
     otpIntegration?: boolean;
     coinValues?: number[];
+    cryptoPayIn?: boolean;
+    cryptoPayOut?: boolean;
 
     constructor(params: Partial<Company> = {}) {
         this.id = params.id;
@@ -54,6 +56,8 @@ export class Company {
         this.coinValues = params.coinValues;
         this.minCasinoPlacement = params.minCasinoPlacement;
         this.maxCasinoPlacement = params.maxCasinoPlacement;
+        this.cryptoPayIn = params.cryptoPayIn || false;
+        this.cryptoPayOut = params.cryptoPayOut || false;
     }
 }
 
