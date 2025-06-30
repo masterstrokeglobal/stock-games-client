@@ -6,6 +6,7 @@ type CryptoAddress = {
     crypto: string;
     symbol: string;
     paymentAddress: string;
+    cryptoId: number;
 }
 
 class User {
