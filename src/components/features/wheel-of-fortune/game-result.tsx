@@ -36,7 +36,7 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
 
     const netWinning = netProfitLoss - totalPlaced;
 
-    const isWin = netWinning < 0;
+    const isWin = netWinning > 0;
 
     return (
         <Dialog defaultOpen={open} >
