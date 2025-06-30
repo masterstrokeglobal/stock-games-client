@@ -61,7 +61,7 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
     return (
         <aside
             className={cn(
-                "fixed left-0 top-0 h-screen  bg-primary border-r-2  border-gray-600 transition-all duration-300 ease-in-out z-40",
+                "fixed left-0 top-0 h-screen  bg-background-secondary border-r-2 border-gray-600 transition-all duration-300 ease-in-out z-40",
                 sidebarOpen ? "md:w-64 w-full" : "md:w-20 w-0",
                 !sidebarOpen && "w-0 md:w-20",
                 className
