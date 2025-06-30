@@ -17,7 +17,6 @@ interface BettingPanelProps {
 
 export default function BettingPanel({
   roundRecord,
-  multiplier,
   aviator
 }: BettingPanelProps) {
   const isPlaceOver = usePlacementOver(roundRecord);

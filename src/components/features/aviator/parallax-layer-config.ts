@@ -102,7 +102,7 @@ export const generateLayerObjects = (layer: LayerConfig) => {
   const buffer = 50 // Reduced buffer for more space
   const groundSafetyZone = 600 // Prevent any flying objects from appearing too close to ground
   const safeMinY = Math.max(0, minY - buffer)
-  const safeMaxY = Math.min(totalHeight - groundSafetyZone, maxY + buffer)
+  // const safeMaxY = Math.min(totalHeight - groundSafetyZone, maxY + buffer)
   
   // For very high altitude objects (space/planets), reduce ground safety zone impact
   const avgAltitude = (minAltitude + maxAltitude) / 2
