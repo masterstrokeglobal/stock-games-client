@@ -117,7 +117,7 @@ export default function ParallaxImage({ multiplier, isMoving = false }: Parallax
 
     // Calculate how much we can move vertically
     const containerHeight = imgContainerRef.current.clientHeight
-    const maxMoveY = imageHeight - containerHeight
+    const maxMoveY = Math.max(0, imageHeight - containerHeight)
 
     // Y-axis movement: 0% progress = -maxMoveY (bottom), 100% progress = 0px (top)
     const translateY = -(1 - progress) * maxMoveY
@@ -168,7 +168,7 @@ export default function ParallaxImage({ multiplier, isMoving = false }: Parallax
           />
         ))}
         <div
-          className="bottom-0 left-0 w-[3520px] h-[563px] absolute bg-[url('/images/aviator/grass.png')] bg-cover bg-no-repeat flip-alter-image"
+          className="absolute bottom-0 left-0 w-[calc(8000px*32)] h-[563px] bg-[url('/images/aviator/grass.png')] bg-repeat-x bg-bottom flip-alter-image"
           style={{ zIndex: 100 }} // Ensure grass stays at ground level
         />
       </div>
