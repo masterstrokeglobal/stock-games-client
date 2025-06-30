@@ -105,7 +105,7 @@ const DepositForm = () => {
                                 </SelectTrigger>
                                 <SelectContent>
                                     {user?.cryptoAddress?.map((address) => (
-                                        <SelectItem key={address.id} value={address.id.toString()}>
+                                        <SelectItem key={address.cryptoId} value={address.cryptoId.toString()}>
                                             {address.crypto} ({address.symbol})
                                         </SelectItem>
                                     ))}
