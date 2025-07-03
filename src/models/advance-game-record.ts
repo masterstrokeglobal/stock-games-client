@@ -1,4 +1,3 @@
-import { PlacementType } from "./game-record";
 import { RoundRecord } from "./round-record";
 
 export enum RedBlackAdvancePlacementType {

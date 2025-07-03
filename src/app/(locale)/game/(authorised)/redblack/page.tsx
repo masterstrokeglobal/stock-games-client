@@ -7,7 +7,6 @@ import RedBlackLeaderBoard from "@/components/features/game/red-black-leaderboar
 import RedBlackRouletteGame from "@/components/features/game/red-black-roulette-game";
 import { useHorseRaceSound } from "@/context/audio-context";
 import { useCurrentGame } from "@/hooks/use-current-game";
-import { RoundRecordGameType } from "@/models/round-record";
 import { useState } from "react";
 declare global {
   interface Window {

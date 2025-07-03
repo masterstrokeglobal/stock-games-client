@@ -8,17 +8,11 @@ import {
 } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGameState } from "@/hooks/use-current-game";
-import {
-  BLACK_NUMBERS,
-  cn,
-  getPlacementString,
-  RED_NUMBERS,
-} from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import AdvanceGameRecord, { RedBlackAdvancePlacementType, RedBlackPlacementType } from "@/models/advance-game-record";
-import GameRecord, { PlacementType } from "@/models/game-record";
 import { RoundRecord } from "@/models/round-record";
 import { useCreateAdvanceGameRecord } from "@/react-query/advance-game-record-queries";
-import { useCreateGameRecord, useGetAdvancePlacements, useGetMyPlacements } from "@/react-query/game-record-queries";
+import { useGetAdvancePlacements } from "@/react-query/game-record-queries";
 import { useTranslations } from "next-intl";
 import { useMemo, useRef } from "react";
 import { toast } from "sonner";
