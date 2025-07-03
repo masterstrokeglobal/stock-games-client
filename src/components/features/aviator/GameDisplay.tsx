@@ -14,9 +14,23 @@ interface GameDisplayProps {
   canvasOpacity?: number
   stockName?: string
   planeStatus?: "active" | "crashed" | "flew_away"
+  betAmount?: number
+  hasBet?: boolean
+  hasCashedOut?: boolean
 }
 
-const GameDisplay = ({ multiplier, shouldShowBlast = false, setShouldShowBlast, isParallaxMoving = false, canvasOpacity = 1, stockName, planeStatus }: GameDisplayProps) => {
+const GameDisplay = ({
+  multiplier,
+  shouldShowBlast = false,
+  setShouldShowBlast,
+  isParallaxMoving = false,
+  canvasOpacity = 1,
+  stockName,
+  planeStatus,
+  betAmount,
+  hasBet = false,
+  hasCashedOut = false
+}: GameDisplayProps) => {
 
   const [isBlastPlaying, setIsBlastPlaying] = useState(false)
   const [isCurrentPlaneCrashed, setIsCurrentPlaneCrashed] = useState(false)
@@ -60,11 +74,11 @@ const GameDisplay = ({ multiplier, shouldShowBlast = false, setShouldShowBlast, 
 
   // Handle blast video completion
   const handleBlastComplete = (isPlaying: boolean) => {
-      console.log("🎬 Blast video is complete", isPlaying)
-      setIsBlastPlaying(isPlaying)
-      if (!isPlaying && setShouldShowBlast) {
-        setShouldShowBlast(false)
-      }
+    console.log("🎬 Blast video is complete", isPlaying)
+    setIsBlastPlaying(isPlaying)
+    if (!isPlaying && setShouldShowBlast) {
+      setShouldShowBlast(false)
+    }
   }
 
   return (
@@ -89,6 +103,17 @@ const GameDisplay = ({ multiplier, shouldShowBlast = false, setShouldShowBlast, 
             {/* Animated border glow */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-blue-400/20 rounded-xl blur-sm animate-pulse"></div>
 
+              {/* Bet placed indicator */}
+              {hasBet && betAmount && (
+                <div className={`text-xs font-bold uppercase tracking-wide mb-2 px-2 py-0.5 rounded-full border shadow-lg ${
+                  hasCashedOut 
+                    ? 'text-green-400 bg-green-500/20 border-green-400/30' 
+                    : 'text-yellow-400 bg-yellow-500/20 border-yellow-400/30'
+                }`}>
+                  {hasCashedOut ? 'Cashed Out' : `Bet : ₹${betAmount}`}
+                </div>
+              )}
+
             {/* Content */}
             <div className="relative z-10 flex flex-col items-center">
               {stockName && (
@@ -96,8 +121,9 @@ const GameDisplay = ({ multiplier, shouldShowBlast = false, setShouldShowBlast, 
                   {stockName}
                 </div>
               )}
+
               <div className="flex items-center gap-2">
-                <h1 
+                <h1
                   className="text-2xl font-bold drop-shadow-xl"
                   style={{
                     color: '#86efac', // Fallback color for non-supporting browsers
@@ -109,6 +135,8 @@ const GameDisplay = ({ multiplier, shouldShowBlast = false, setShouldShowBlast, 
                 >
                   {multiplier.toFixed(2)}x
                 </h1>
+
+
                 <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse shadow-sm shadow-green-400/50"></div>
               </div>
             </div>

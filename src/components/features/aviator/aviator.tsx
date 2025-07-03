@@ -9,10 +9,11 @@ import useWindowSize from "@/hooks/use-window-size"
 import { cn } from "@/lib/utils"
 import { SchedulerType } from "@/models/market-item"
 import { RoundRecord } from "@/models/round-record"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import BettingPanel from "./BettingPanel"
 import GameDisplay from "./GameDisplay"
 import LastRoundsPanel from "./LastRoundsPanel"
+import { useAviatorMyPlacement } from "@/react-query/aviator-queries"
 
 
 type AviatorProps = {
@@ -25,6 +26,7 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
   const { gameType } = useGameType();
   const { stockSelectedAviator } = useStockSelectorAviator();
   const { isPlaceOver, placeTimeLeft, isGameOver } = useGameState(roundRecord);
+  const { data: myPlacement } = useAviatorMyPlacement(roundRecord.id);
   
   const [shouldShowBlast, setShouldShowBlast] = useState(false)
   const [isParallaxMoving, setIsParallaxMoving] = useState(false)
@@ -66,6 +68,18 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
   };
 
   const currentMultiplier = getCurrentMultiplier();
+
+  // Get the user's single bet placement (if any)
+  const userPlacement = useMemo(() => {
+    if (!myPlacement || myPlacement.length === 0) return null;
+    return myPlacement[0]; // Since we only allow one bet, get the first (and only) placement
+  }, [myPlacement]);
+
+  // Check if user's bet is on the currently selected plane
+  const isBetOnCurrentPlane = useMemo(() => {
+    if (!userPlacement || !stockSelectedAviator) return false;
+    return userPlacement.marketItem.id === Number(stockSelectedAviator);
+  }, [userPlacement, stockSelectedAviator]);
 
   // Mobile responsiveness state
   const [showLastRounds, setShowLastRounds] = useState(false)
@@ -155,6 +169,9 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
               canvasOpacity={canvasOpacity}
               stockName={currentStock?.name}
               planeStatus={currentStock ? aviator.planeStatus?.get(gameType === SchedulerType.CRYPTO ? currentStock.code ?? "" : currentStock.codeName ?? "")?.status : undefined}
+              betAmount={isBetOnCurrentPlane ? userPlacement?.amount : undefined}
+              hasBet={isBetOnCurrentPlane}
+              hasCashedOut={isBetOnCurrentPlane ? userPlacement?.isWinner : false}
             />
 
             <BettingPanel roundRecord={roundRecord} aviator={aviator} multiplier={currentMultiplier} />
