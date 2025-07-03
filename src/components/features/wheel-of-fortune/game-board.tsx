@@ -1,4 +1,4 @@
-import { RankedMarketItem, useLeaderboard } from '@/hooks/use-sevenup-leader-board';
+import { RankedMarketItem, useLeaderboard } from '@/hooks/use-multi-socket-leaderboard';
 import { cn, INR } from '@/lib/utils';
 import { RoundRecord, WHEEL_COLOR_CONFIG } from '@/models/round-record';
 import { WheelColor } from '@/models/wheel-of-fortune-placement';

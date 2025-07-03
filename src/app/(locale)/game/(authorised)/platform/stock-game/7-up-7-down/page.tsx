@@ -8,7 +8,7 @@ import { BettingArea } from '@/components/features/7-up-down/BettingArea';
 import { GameBoard } from '@/components/features/7-up-down/game-board';
 import { useCurrentGame } from '@/hooks/use-current-game';
 import { useMarketSelector } from '@/hooks/use-market-selector';
-import { useLeaderboard } from '@/hooks/use-sevenup-leader-board';
+import { useLeaderboard } from '@/hooks/use-multi-socket-leaderboard';
 import useWinningId from '@/hooks/use-winning-id';
 import { RoundRecordGameType } from '@/models/round-record';
 import { useState } from 'react';

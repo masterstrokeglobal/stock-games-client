@@ -8,16 +8,11 @@ import {
 } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGameState } from "@/hooks/use-current-game";
-import {
-  BLACK_NUMBERS,
-  cn,
-  getPlacementString,
-  RED_NUMBERS,
-} from "@/lib/utils";
-import GameRecord, { PlacementType } from "@/models/game-record";
+import { cn } from "@/lib/utils";
+import AdvanceGameRecord, { RedBlackAdvancePlacementType, RedBlackPlacementType } from "@/models/advance-game-record";
 import { RoundRecord } from "@/models/round-record";
 import { useCreateAdvanceGameRecord } from "@/react-query/advance-game-record-queries";
-import { useCreateGameRecord, useGetAdvancePlacements, useGetMyPlacements } from "@/react-query/game-record-queries";
+import { useGetAdvancePlacements } from "@/react-query/game-record-queries";
 import { useTranslations } from "next-intl";
 import { useMemo, useRef } from "react";
 import { toast } from "sonner";
@@ -33,33 +28,28 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
   const sectionRef = useRef<HTMLDivElement>(null);
 
   const { data: advanceData } = useGetAdvancePlacements({ roundId: roundRecord.id.toString() });
-  const { data } = useGetMyPlacements({ roundId: roundRecord.id.toString() });
 
-  const advancePlacements: GameRecord[] = useMemo(() => {
-    return advanceData?.data.map((item: any) => new GameRecord(item)) || [];
+  const advancePlacements: AdvanceGameRecord[] = useMemo(() => {
+    return advanceData?.data.placements.map((item: any) => new AdvanceGameRecord(item)) || [];
   }, [advanceData]);
 
-  const { redBets, blackBets } = useMemo(() => {
-    const placements: GameRecord[] | undefined = data?.data.map((item: any) => new GameRecord(item));
+  const { redBets, blackBets } = useMemo(() => {  
 
-    if (!placements) return { placements: [], redBets: 0, blackBets: 0 };
+    if (!advancePlacements) return { placements: [], redBets: 0, blackBets: 0 };
 
-    const redMarketItems = RED_NUMBERS.map((number) => roundRecord.market[number - 1]);
-    const redBets = placements?.filter((p) => p.placementType == PlacementType.COLOR && redMarketItems.some(item => p.market.includes(item?.id ?? 0))).reduce((sum, p) => sum + p.amount, 0) || 0;
+      const redBets = advancePlacements?.filter((p) => p.placementType == RedBlackPlacementType.RED && (p.advancePlacementType == RedBlackAdvancePlacementType.CURRENT || p.advancePlacementType == RedBlackAdvancePlacementType.NEXT) && p.startRound == roundRecord.todayCount && p.endRound == roundRecord.todayCount).reduce((sum, p) => sum + p.amount, 0) || 0;
 
-    const blackMarketItems = BLACK_NUMBERS.map((number) => roundRecord.market[number - 1]);
-    const blackBets = placements?.filter((p) => p.placementType == PlacementType.COLOR && blackMarketItems.some(item => p.market.includes(item?.id ?? 0))).reduce((sum, p) => sum + p.amount, 0) || 0;
+    const blackBets = advancePlacements?.filter((p) => p.placementType == RedBlackPlacementType.BLACK && (p.advancePlacementType == RedBlackAdvancePlacementType.CURRENT || p.advancePlacementType == RedBlackAdvancePlacementType.NEXT) && p.startRound == roundRecord.todayCount && p.endRound == roundRecord.todayCount).reduce((sum, p) => sum + p.amount, 0) || 0;
 
     return {
-      placements,
+      placements: advancePlacements,
       redBets,
       blackBets
     };
-  }, [data]);
+  }, [advancePlacements]);
 
   const gameState = useGameState(roundRecord);
   const currentRound = roundRecord.todayCount || -1;
-  const { mutate: mutateGameRecord, isPending: isPlacingBet } = useCreateGameRecord();
   const { mutate: mutateAdvanceGameRecord, isPending: isAdvancePlacingBet } = useCreateAdvanceGameRecord();
 
   const fancyRounds = [
@@ -80,60 +70,39 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
   ];
 
   const advanceBets = [
-    { start: 1, end: 1, Description: "Maximum Round Winner is Red" },
-    { start: 1, end: 1, Description: "Minimum Round Winner is Black" },
-    { start: 1, end: 1, Description: "In Round 1 to 20 Red will win" },
-    { start: 1, end: 1, Description: "In Round 10 to 20 Black will win" },
-    { start: 1, end: 1, Description: "In Round 1 to 40 Red will win" },
-    { start: 1, end: 1, Description: "In Round 1 to 40 Black will win" },
+    { start: 1, end: 180, Description: "Maximum Round Winner is Red" },
+    { start: 1, end: 180, Description: "Minimum Round Winner is Black" },
   ];
 
-  const handleColorBet = (numbers: number[]) => {
-    if (gameState.isPlaceOver || isPlacingBet) {
+  const handleColorBet = (color: RedBlackPlacementType) => {
+    if (gameState.isPlaceOver || isAdvancePlacingBet) {
       toast.error("Betting Time is Over");
       return;
     }
-    const markets = numbers
-      .map((number) => roundRecord.market[number - 1]?.id)
-      .filter((id) => id !== undefined);
-
-    mutateGameRecord({
-      amount: globalBetAmount,
-      round: roundRecord.id,
-      horseNumbers: numbers,
-      placementType: PlacementType.COLOR,
-      market: markets,
-      placedValues: getPlacementString(
-        {
-          market: markets as number[],
-          placementType: PlacementType.COLOR,
-        },
-        roundRecord
-      ),
-    });
-  };
-
-  const handleRangeBet = (start: number, end: number, numbers: number[]) => {
-    if (isAdvancePlacingBet) return;
-    const markets = numbers
-      .map((number) => roundRecord.market[number - 1]?.id)
-      .filter((id) => id !== undefined);
 
     mutateAdvanceGameRecord({
       amount: globalBetAmount,
       currentRoundId: roundRecord.id,
-      horseNumbers: numbers,
-      placementType: PlacementType.ROUND_RANGE,
-      market: markets,
-      startRoundOfBet: start,
-      endRoundOfBet: end,
-      placedValues: getPlacementString(
-        {
-          market: markets as number[],
-          placementType: PlacementType.COLOR,
-        },
-        roundRecord
-      ),
+      placementType: color,
+      advancePlacementType: RedBlackAdvancePlacementType.CURRENT,
+      startRoundOfBet:roundRecord.todayCount ?? 0,
+      endRoundOfBet:roundRecord.todayCount ?? 0,
+    });
+  };
+
+  const handleRangeBet = (start: number, end: number, color: RedBlackPlacementType) => {
+    if (isAdvancePlacingBet) return;
+
+    const isRangeBet = start !== end;
+    const advancePlacementType = isRangeBet ? RedBlackAdvancePlacementType.FIVE : RedBlackAdvancePlacementType.NEXT;
+
+    mutateAdvanceGameRecord({
+      amount: globalBetAmount,
+      currentRoundId: roundRecord.id,
+      placementType: color,
+        advancePlacementType: advancePlacementType,
+      startRoundOfBet:start,
+      endRoundOfBet:end,
     });
   };
 
@@ -142,7 +111,7 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
       .filter(placement => {
         // Check if placement matches any fancy round
         const matchesFancyRound = fancyRounds.some(
-          round => placement.placementType === PlacementType.ROUND_RANGE &&
+          round => placement.isRangeBet &&
             placement.startRound === round.start &&
             placement.endRound === round.end
         );
@@ -154,14 +123,12 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
   const advanceBetCount = useMemo(() => {
     return advanceBets.filter(bet => {
       return advancePlacements.some(
-        p => p.placementType === PlacementType.ROUND_RANGE &&
+        p => p.isRangeBet &&
           p.startRound === bet.start &&
           p.endRound === bet.end
       );
     }).length;
   }, [advancePlacements, advanceBets]);
-
-
 
 
   return (
@@ -201,13 +168,16 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
                   <div className="space-y-3 p-4">
                     <div className="flex gap-2 w-full justify-between">
                       <button
+                        onClick={() =>
+                          handleColorBet(RedBlackPlacementType.RED)
+                        }
                         className="px-6 py-2 flex-1 text-white text-center hover:from-red-600 hover:to-red-700 transition-all"
                       >
                         RED {redBets > 0 && <span className="text-red-400">(Rs. {redBets})</span>}
                       </button>
                       <button
                         onClick={() =>
-                          handleColorBet(BLACK_NUMBERS)
+                          handleColorBet(RedBlackPlacementType.BLACK)
                         }
                         className="px-6 py-2 text-white text-center flex-1 hover:from-zinc-700 hover:to-zinc-800 transition-all"
                       >
@@ -217,7 +187,7 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
                     <div className="flex gap-2 w-full justify-between">
                       <button
                         onClick={() =>
-                          handleColorBet(RED_NUMBERS)
+                          handleColorBet(RedBlackPlacementType.RED)
                         }
                         className="rounded-md flex-1 px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all"
                       >
@@ -225,7 +195,7 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
                       </button>
                       <button
                         onClick={() =>
-                          handleColorBet(BLACK_NUMBERS)
+                          handleColorBet(RedBlackPlacementType.BLACK)
                         }
                         className="rounded-md flex-1 px-6 py-2 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-800 transition-all"
                       >
@@ -264,40 +234,41 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
                     </div>
                     {fancyRounds.map(({ start, end, Description }, index) => {
                       const redBetAmount = advancePlacements
-                        .filter(p => p.placementType === PlacementType.ROUND_RANGE && p.startRound === start && p.endRound === end && p.placedValues?.includes("Red"))
+                        .filter(p => p.isRangeBet && p.startRound === start && p.endRound === end && p.placementType === RedBlackPlacementType.RED)
                         .reduce((sum, p) => sum + p.amount, 0);
 
                       const blackBetAmount = advancePlacements
-                        .filter(p => p.placementType === PlacementType.ROUND_RANGE && p.startRound === start && p.endRound === end && p.placedValues?.includes("Black"))
+                        .filter(p => p.isRangeBet && p.startRound === start && p.endRound === end && p.placementType === RedBlackPlacementType.BLACK)
                         .reduce((sum, p) => sum + p.amount, 0);
 
                       const totalBets = advancePlacements
-                        .filter(p => p.placementType === PlacementType.ROUND_RANGE && p.startRound === start && p.endRound === end)
+                        .filter(p => p.isRangeBet && p.startRound === start && p.endRound === end)
                         .length;
 
                       return (
                         <div key={index} className="flex items-center gap-4 px-2">
                           <div className="flex-1 text-sm text-zinc-200">
                             {Description}
-
                             {totalBets > 0 && <span className=" text-white"> ({totalBets} bets)</span>}
                           </div>
                           <div className="flex gap-2">
                             <button
-                              onClick={() => handleRangeBet(start, end, RED_NUMBERS)}
+                              onClick={() => handleRangeBet(start, end, RedBlackPlacementType.RED)}
                               className="rounded-md px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all"
                             >
                               {redBetAmount > 0 ? `Rs. ${redBetAmount}` : "1.77x"}
-
                               {
                                 redBetAmount > 0 && <span className="text-white text-xs backdrop-blur-sm p-1 rounded-sm">1.77x</span>
                               }
                             </button>
                             <button
-                              onClick={() => handleRangeBet(start, end, BLACK_NUMBERS)}
+                              onClick={() => handleRangeBet(start, end, RedBlackPlacementType.BLACK)}
                               className="rounded-md px-6 py-2 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-800 transition-all"
                             >
                               {blackBetAmount > 0 ? `Rs. ${blackBetAmount}` : "1.77x"}
+                              {
+                                blackBetAmount > 0 && <span className="text-white text-xs backdrop-blur-sm p-1 rounded-sm">1.77x</span>
+                              }
                             </button>
                           </div>
                         </div>
@@ -336,11 +307,11 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
                     </div>
                     {advanceBets.map(({ start, end, Description }, index) => {
                       const redBetAmount = advancePlacements
-                        .filter(p => p.placementType === PlacementType.ROUND_RANGE && p.startRound === start && p.endRound === end && p.placeValue === "Red")
+                        .filter(p => p.isRangeBet && p.startRound === start && p.endRound === end && p.placementType === RedBlackPlacementType.RED)
                         .reduce((sum, p) => sum + p.amount, 0);
 
                       const blackBetAmount = advancePlacements
-                        .filter(p => p.placementType === PlacementType.ROUND_RANGE && p.startRound === start && p.endRound === end && p.placeValue === "Black")
+                        .filter(p => p.isRangeBet && p.startRound === start && p.endRound === end && p.placementType === RedBlackPlacementType.BLACK)
                         .reduce((sum, p) => sum + p.amount, 0);
 
                       return (
@@ -350,13 +321,13 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
                           </div>
                           <div className="flex gap-2">
                             <button
-                              onClick={() => handleRangeBet(start, end, RED_NUMBERS)}
+                              onClick={() => handleRangeBet(start, end, RedBlackPlacementType.RED)}
                               className="rounded-md px-6 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 transition-all"
                             >
                               {redBetAmount > 0 ? `Rs. ${redBetAmount}` : "1.77x"}
                             </button>
                             <button
-                              onClick={() => handleRangeBet(start, end, BLACK_NUMBERS)}
+                              onClick={() => handleRangeBet(start, end, RedBlackPlacementType.BLACK)}
                               className="rounded-md px-6 py-2 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white hover:from-zinc-700 hover:to-zinc-800 transition-all"
                             >
                               {blackBetAmount > 0 ? `Rs. ${blackBetAmount}` : "1.77x"}

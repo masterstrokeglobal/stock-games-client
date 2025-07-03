@@ -1,6 +1,6 @@
 import MarketItem, { NSEMarketItem, SchedulerType } from '@/models/market-item';
 import { RoundRecord } from '@/models/round-record';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 export interface RankedMarketItem extends MarketItem {
     change_percent: string;
@@ -27,6 +27,14 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
     const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
     const initialPricesRef = useRef<Map<string, number>>(new Map());
     const roundEndCheckRef = useRef<NodeJS.Timeout>();
+
+    // use Memo to save the state o fhte round record type 
+    const roundRecordType = useMemo(() => roundRecord?.type, [roundRecord]);
+
+    useEffect(() => {
+        console.log("helo 2 updating roundRecordType", roundRecordType);
+    }, [roundRecordType]);
+
 
 
     const getRoundStatus = () => {
@@ -431,7 +439,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
             clearInterval(intervalId);
             initialPricesRef.current.clear();
         };
-    }, [roundRecord]);
+    }, [roundRecordType]);
 
     //update stocks on roundRecord change
     useEffect(() => {
