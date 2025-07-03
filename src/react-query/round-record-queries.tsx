@@ -126,3 +126,13 @@ type DiceLast10RoundDetails = {
             refetchInterval: THIRTY_SECONDS,
         });
     }
+
+    export const useGetAllGameHistory = (params: { page?: number; limit?: number; type?: SchedulerType; roundRecordGameType?: RoundRecordGameType }) => {
+        return useQuery({
+            queryKey: ["all-game-history", params],
+            queryFn: async () => {
+                const response = await roundRecordsAPI.getAllHistory(params);
+                return response.data
+            },
+        });
+    }

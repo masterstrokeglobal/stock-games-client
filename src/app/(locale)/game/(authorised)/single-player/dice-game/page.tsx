@@ -9,7 +9,6 @@ import Dice3D from '@/components/features/dice-game/dice-3d';
 import BettingGrid from '@/components/features/dice-game/game-board';
 import HelpButton from '@/components/features/dice-game/help-button';
 import LastRoundWinner from '@/components/features/dice-game/last-round';
-import LeaderBoard from '@/components/features/dice-game/leaderboard';
 import RoundTimings from '@/components/features/dice-game/round-timings';
 import Navbar from '@/components/features/game/navbar';
 import { useCurrentGame } from '@/hooks/use-current-game';
@@ -48,7 +47,6 @@ const WheelOfFortune = () => {
         <div className='flex flex-col gap-4 px-4'>
             <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
             <CurrentBets tableClassName='h-64' className='min-h-64' roundRecord={roundRecord} />
-            <LeaderBoard roundRecord={roundRecord} className="border-[#4467CC80] grid-rows-1 h-auto w-full rounded-md  border" />
             <LastRoundWinner roundRecord={roundRecord} className="border-[#4467CC80] grid-rows-1 h-auto w-full rounded-md border" />
             <MaintainceScreen />
             <HelpButton />
@@ -57,8 +55,7 @@ const WheelOfFortune = () => {
     return (
         <section className=" flex-col  items-start justify-start h-screen grid-cols-12 grid grid-rows-1 pt-14 bg-[#140538] font-inter">
             <Navbar />
-            <div className="col-span-3 border-r py-5 px-3 border-[#4467CC80] h-full grid gap-4 grid-rows-2 ">
-                <LeaderBoard roundRecord={roundRecord} className="border-[#4467CC80] grid-rows-1 h-auto  border" />
+            <div className="col-span-3 border-r py-5 px-3 border-[#4467CC80] h-full grid gap-4 grid-rows-1 ">
                 <LastRoundWinner roundRecord={roundRecord} className="border-[#4467CC80] grid-rows-1 h-auto  border" />
             </div>
             <div className="flex flex-col pt-5 px-3 col-span-6 overflow-y-auto  w-full relative h-full   rounded-none mx-auto  text-white overflow-hidden">
@@ -75,7 +72,7 @@ const WheelOfFortune = () => {
             </div>
             <div className="col-span-3 border-l py-3 px-2 overflow-y-auto border-[#4467CC80] space-y-5 flex justify-between flex-col  h-full">
                 <RoundTimings roundRecord={roundRecord} />
-                <CurrentBets tableClassName='h-64' className='min-h-64' roundRecord={roundRecord} />
+                <CurrentBets className='min-h-64' roundRecord={roundRecord} />
                 <HelpButton />
             </div>
         </section>

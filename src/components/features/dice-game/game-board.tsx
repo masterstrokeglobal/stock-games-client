@@ -41,7 +41,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
     const handleBetSelect = (number: number) => {
         if (globalBetAmount <= 0 || isPlaceOver) {
             toast.custom((t) => (
-                <BetErrorToast onClose={() => toast.dismiss(t)} />
+                <BetErrorToast message='Time’s up! No more bets' onClose={() => toast.dismiss(t)} />
             ), {
                 position: 'bottom-right'
             });

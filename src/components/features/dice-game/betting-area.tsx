@@ -39,7 +39,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
             min={userDetails?.company?.minPlacement}
             max={userDetails?.company?.maxPlacement}
             placeholder="Enter bet amount"
-            value={betAmount}
+            value={betAmount.toString() || "0"}
             onChange={(e) => setBetAmount(Number(e.target.value))}
             className={cn(
               "p-2  remove-spin border-2 text-lg h-12 pl-12 text-white rounded-md dice-input border-none bg-[#4467CC] focus:border-[#d1daf7] focus:ring-2 focus:ring-[#d1daf7] transition-all")}

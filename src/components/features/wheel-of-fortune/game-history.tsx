@@ -5,9 +5,9 @@ import {
 } from "@/components/ui/dialog";
 import { useGameType } from "@/hooks/use-game-type";
 import { cn } from "@/lib/utils";
-import { WHEEL_COLOR_CONFIG } from '@/models/round-record';
+import { RoundRecordGameType, WHEEL_COLOR_CONFIG } from '@/models/round-record';
 import { WheelColor } from "@/models/wheel-of-fortune-placement";
-import { useGetWheelOfFortuneHistory } from "@/react-query/round-record-queries";
+import { useGetAllGameHistory } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
 import { ChevronLeft, ChevronRight, Loader2, X } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
@@ -64,14 +64,12 @@ const GameHistoryDialog = ({ children }: GameHistoryDialogProps) => {
     const [open, setOpen] = useState(false);
     const [page, setPage] = useState(1);
     const [gameType] = useGameType()
-    const { data: userGameHistory, isLoading } = useGetWheelOfFortuneHistory({ page, limit: 10, type: gameType });
-
+    const { data: allGameHistory, isLoading } = useGetAllGameHistory({ roundRecordGameType: RoundRecordGameType.WHEEL_OF_FORTUNE, type: gameType, page: 1, limit: 10 });
     const { history, totalPages } = useMemo(() => {
-        console.log(userGameHistory);
-        const history: History[] = userGameHistory?.roundRecords || [];
-        const totalPages = Math.ceil(userGameHistory?.count / 10);
+        const history: History[] = allGameHistory?.rounds || [];
+        const totalPages = Math.ceil(allGameHistory?.count / 10);
         return { history, totalPages };
-    }, [userGameHistory]);
+    }, [allGameHistory]);
 
     const handlePreviousPage = () => {
         if (page > 1) {

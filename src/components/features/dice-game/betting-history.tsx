@@ -19,14 +19,14 @@ const StatusIndicator = ({ isWinner }: { isWinner: boolean }) => (
     >
         {isWinner ? (
             <>
-                <svg width="12" height="12" viewBox="0 0 12 12" className="inline rotate-180" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6 10L10 4H2L6 10Z" fill="#00FF85" />
+                <svg width="12" height="12" viewBox="0 0 12 12" className="inline" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 2L2 8H10L6 2Z" fill="#00FF85" />
                 </svg>
                 Win
             </>
         ) : (
             <>
-                <svg width="12" height="12" viewBox="0 0 12 12" className="inline" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="12" height="12" viewBox="0 0 12 12" className="inline rotate-180" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M6 2L2 8H10L6 2Z" fill="#FF4B4B" />
                 </svg>
                 Lost
@@ -185,7 +185,7 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                             <tr className="bg-[#003883] dice-header  text-[#A3A8D6] text-base">
                                                 <th className="px-4 py-3 font-semibold ">Round</th>
                                                 <th className="px-4 py-3 font-semibold">Amount</th>
-                                                <th className="px-4 py-3 font-semibold">Number</th>
+                                                <th className="px-4 py-3 font-semibold">Betting No.</th>
                                                 <th className="px-4 py-3 font-semibold">Dice Result</th>
                                                 <th className="px-4 py-3 font-semibold">Status</th>
                                                 <th className="px-4 py-3 font-semibold ">Profit/Loss</th>
@@ -213,6 +213,8 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                                         <span className={row.netProfitLoss > 0 ? "text-[#00FF85]" : "text-[#FF4B4B]"}>
                                                             {row.netProfitLoss > 0
                                                                 ? `+ ₹ ${row.netProfitLoss}`
+                                                                : row.netProfitLoss === 0
+                                                                ? `- ₹ ${row.amount}`
                                                                 : `- ₹ ${Math.abs(row.netProfitLoss)}`}
                                                         </span>
                                                     </td>

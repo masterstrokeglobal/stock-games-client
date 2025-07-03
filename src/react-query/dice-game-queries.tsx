@@ -4,6 +4,7 @@ import { DicePlacement } from "@/models/dice-placement";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { XCircle } from "lucide-react";
+import { AxiosError } from "axios";
 
 export const useCreateDiceGamePlacement = () => {
     const queryClient = useQueryClient();
@@ -22,9 +23,10 @@ export const useCreateDiceGamePlacement = () => {
                 position: 'bottom-right'
             });
         },
-        onError: () => {
-              toast.custom((t) => (
-                <BetErrorToast onClose={() => toast.dismiss(t)} />
+        onError: (error: AxiosError<{ message: string }>) => {
+            const errorMessage = error?.response?.data?.message;
+            toast.custom((t) => (
+                <BetErrorToast message={errorMessage} onClose={() => toast.dismiss(t)} />
             ), {
                 position: 'bottom-right'
             });
@@ -69,8 +71,9 @@ export const BetSuccessToast = ({ className, onClose, betAmount, betNumber }: Pr
     )
 }
 
-export const BetErrorToast = ({ className, onClose }: PropsWithClassName<{
-    onClose: () => void
+export const BetErrorToast = ({ className, message = " Please try Again", onClose }: PropsWithClassName<{
+    onClose: () => void,
+    message?: string
 }>) => {
     return (
         <div
@@ -84,7 +87,7 @@ export const BetErrorToast = ({ className, onClose }: PropsWithClassName<{
                     >
                         <XCircle />
                     </button>
-                    <h3 className="text-lg font-bold  text-white ">Time’s up! No more bets</h3>
+                    <h3 className="text-lg font-bold  text-white ">{message}</h3>
                 </div>
                 <div className="flex-shrink-0">
                     <img src="/images/dice-game/toast-error.png" alt="lady" className="h-32 absolute bottom-1/4 right-0" />

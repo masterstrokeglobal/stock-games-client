@@ -3,8 +3,8 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
-import { RoundRecord } from "@/models/round-record";
-import { useGetDiceLast10RoundDetails } from "@/react-query/round-record-queries";
+import { RoundRecord, RoundRecordGameType } from "@/models/round-record";
+import { useGetAllGameHistory } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
 import { useEffect, useRef } from "react";
 
@@ -16,7 +16,7 @@ type Props = {
 
 const LastRoundWinner = ({ roundRecord, className }: Props) => {
     const sectionRef = useRef<HTMLDivElement | null>(null);
-    const { data, isSuccess, refetch } = useGetDiceLast10RoundDetails();
+    const { data, isSuccess, refetch } = useGetAllGameHistory({ roundRecordGameType: RoundRecordGameType.DICE, type: roundRecord.type, page: 1, limit: 20 });
     const { isMobile } = useWindowSize();
 
     useEffect(() => {
@@ -28,7 +28,6 @@ const LastRoundWinner = ({ roundRecord, className }: Props) => {
 
         return () => clearTimeout(timer);
     }, [roundRecord, refetch]);
-
 
     return (
         <section
@@ -59,10 +58,10 @@ const LastRoundWinner = ({ roundRecord, className }: Props) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {isSuccess && data && data.length > 0 ? (
-                                data.slice(0, 10).map((round) => (
-                                    <tr 
-                                        key={round.id} 
+                            {isSuccess && data && data.rounds.length > 0 ? (
+                                data.rounds.map((round: any) => (
+                                    <tr
+                                        key={round.id}
                                         className="border-b last:border-none text-game-secondary border-[#DADCE00D] overflow-hidden"
                                     >
                                         <td className="p-2">

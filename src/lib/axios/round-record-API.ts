@@ -1,5 +1,6 @@
 import { SchedulerType } from "@/models/market-item";
 import api from "./instance";
+import { RoundRecordGameType } from "@/models/round-record";
 
 export const roundRecordsAPI = {
     getAllRoundRecords: async (filter: any) => {
@@ -49,5 +50,11 @@ export const roundRecordsAPI = {
     },
     getDiceLast10RoundDetails: async () => {
         return api.get("/round-records/dice/history");
+    },
+
+    getAllHistory: async (params: { page?: number; limit?: number; type?: SchedulerType; roundRecordGameType?: RoundRecordGameType }) => {
+        return api.get("/round-records/all-game/history", {
+            params
+        });
     },
 };
