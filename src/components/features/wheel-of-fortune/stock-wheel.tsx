@@ -76,7 +76,7 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
                         backgroundImage: winningColor ? winningColor.backgroundGradient : "transparent",
                         boxShadow: winningColor ? winningColor.shadow : "none",
                         borderColor: winningColor ? winningColor.borderColor : "transparent",
-                    }} className={cn("w-full backdrop-blur-lg  md:max-w-md xs:max-w-screen-xs max-w-72  rounded-md z-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 border-2")}>
+                    }} className={cn("w-full backdrop-blur-lg  md:max-w-md xs:max-w-screen-xs max-w-72  rounded-md z-40 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-4 border-2")}>
                         <div className="text-center font-medium uppercase">
                             <h3 className="md:text-3xl sm:text-2xl text-xl font-semibold italic sansation-regular text-white uppercase tracking-wider">
                                 Winner

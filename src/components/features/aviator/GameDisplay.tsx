@@ -97,7 +97,16 @@ const GameDisplay = ({ multiplier, shouldShowBlast = false, setShouldShowBlast, 
                 </div>
               )}
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-green-300 via-yellow-300 to-green-300 bg-clip-text text-transparent drop-shadow-xl">
+                <h1 
+                  className="text-2xl font-bold drop-shadow-xl"
+                  style={{
+                    color: '#86efac', // Fallback color for non-supporting browsers
+                    background: 'linear-gradient(to right, #86efac, #fde047, #86efac)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}
+                >
                   {multiplier.toFixed(2)}x
                 </h1>
                 <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse shadow-sm shadow-green-400/50"></div>

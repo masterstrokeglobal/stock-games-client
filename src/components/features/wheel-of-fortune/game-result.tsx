@@ -42,17 +42,14 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
         <Dialog defaultOpen={open} >
             <DialogContent
                 showButton={false}
-                className={cn(" border-2 shadow-2xl backdrop-blur-md max-w-md mx-auto", isWin ? "border-[#0FDB00]" : "border-[#FF0000]")}
+                className={cn(" border-2 shadow-2xl backdrop-blur-md max-w-md mx-auto", isWin ? "border-[#2be37c]" : "border-[#FF0000]")}
                 style={{
                     boxShadow: isWin 
                         ? "0px 0px 35.1px 0px rgba(6, 92, 0, 1)" 
                         : "0px 0px 35.1px 0px rgba(171, 0, 0, 1)",
                     background: "linear-gradient(299.61deg, rgba(1, 14, 2, 0.4) -20.13%, rgba(48, 63, 61, 0.4) 100.88%)",
 
-                }}
-
-
-            >
+                }}>
                 <DialogHeader>
                     <DialogTitle className="text-center text-white text-xl font-bold tracking-widest font-russo-one">
                         RESULT

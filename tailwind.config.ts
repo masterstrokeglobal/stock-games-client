@@ -21,12 +21,15 @@ const config: Config = {
 				'jersy-10': ['var(--font-jersy-10)', 'sans-serif'],				  
 				'russo-one': ['var(--font-russo-one)', 'sans-serif'],
 				'montserrat': ['var(--font-montserrat)', 'sans-serif'],
+				'inter': ['var(--font-inter)', 'sans-serif'],
 			},
 			animation: {
 				marquee: 'marquee 6s linear infinite',
 			},
 			screens: {
+				"xxl": "1640px",
 				"xs": "360px",
+				"xsm": "440px",
 			},
 			keyframes: {
 				marquee: {

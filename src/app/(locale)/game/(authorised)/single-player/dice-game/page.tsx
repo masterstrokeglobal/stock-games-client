@@ -39,9 +39,9 @@ const WheelOfFortune = () => {
 
     if (isLoading || !roundRecord) return <GameLoadingScreen className='min-h-[100svh]' />
 
-    if (isTablet) return <section className=" space-y-4 pt-14 bg-[#140538] font-inter">
+    if (isTablet) return <section className=" space-y-4 pt-14 bg-[#140538] font-">
         <Navbar />
-        <Dice3D className='min-h-60 w-full' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
+        <Dice3D className='sm:min-h-80 xs:min-h-72 min-h-60  w-full' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
         <BettingGrid roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={roundRecordWithWinningId?.winningId || null} >
             <DiceGameTimeDisplay className="w-full max-w-sm  " roundRecord={roundRecord} />
         </BettingGrid>
@@ -61,13 +61,17 @@ const WheelOfFortune = () => {
                 <LeaderBoard roundRecord={roundRecord} className="border-[#4467CC80] grid-rows-1 h-auto  border" />
                 <LastRoundWinner roundRecord={roundRecord} className="border-[#4467CC80] grid-rows-1 h-auto  border" />
             </div>
-            <div className="flex flex-col pt-5 px-3  col-span-6 overflow-y-auto  w-full relative h-full  rounded-none mx-auto  text-white overflow-hidden">
+            <div className="flex flex-col pt-5 px-3 col-span-6 overflow-y-auto  w-full relative h-full   rounded-none mx-auto  text-white overflow-hidden">
                 <MaintainceScreen />
-                <Dice3D className='xl:min-h-72 min-h-60' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
-                <BettingGrid roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={roundRecordWithWinningId?.winningId || null} >
-                    <DiceGameTimeDisplay className="w-full max-w-sm  " roundRecord={roundRecord} />
-                </BettingGrid>
-                <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
+                <Dice3D className='min-h-[300px] xxl:min-h-[400px]' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
+                <div className="flex flex-col justify-around flex-1">
+                    <BettingGrid roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={roundRecordWithWinningId?.winningId || null}>
+                        <DiceGameTimeDisplay className="w-full max-w-sm" roundRecord={roundRecord} />
+                    </BettingGrid>
+                    <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
+                </div>
+
+
             </div>
             <div className="col-span-3 border-l py-3 px-2 overflow-y-auto border-[#4467CC80] space-y-5 flex justify-between flex-col  h-full">
                 <RoundTimings roundRecord={roundRecord} />

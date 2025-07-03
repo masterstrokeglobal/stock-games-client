@@ -96,7 +96,7 @@ export const IndexwithColorBands = [
             name: 'GREEN',
             bgColor: 'bg-green-500',
             textColor: 'text-white',
-            backgroundGradient: 'linear-gradient(180deg, #0F5A1E 0%, #0A9B00 100%)',
+            backgroundGradient: 'linear-gradient(90.33deg, rgba(10, 155, 0, 0.85) 1.64%, rgba(15, 90, 30, 0.85) 115.74%)',
             borderColor: '#0ED700',
             shadowColor: 'shadow-green-500/50',
             shadow: "0px 0px 30px 0px rgba(76, 175, 80, 1)",

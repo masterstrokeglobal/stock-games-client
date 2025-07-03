@@ -4,7 +4,6 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { Switch } from '@/components/ui/switch';
 import { useAuthStore } from '@/context/auth-context';
 import User from '@/models/user';
 import { PopoverClose } from '@radix-ui/react-popover';
@@ -21,7 +20,6 @@ interface GameSettingsPopoverProps {
 
 const GameSettingsPopover = ({ children }: GameSettingsPopoverProps) => {
     const [open, setOpen] = useState(false);
-    const [soundEnabled, setSoundEnabled] = useState(true);
     const { userDetails } = useAuthStore()
 
     const user = userDetails as User;
@@ -58,16 +56,6 @@ const GameSettingsPopover = ({ children }: GameSettingsPopoverProps) => {
 
                     {/* Menu Items */}
                     <div className="p-6 space-y-3">
-                        {/* Sound Toggle */}
-                        <div className="flex items-center border-b border-[#5C8983] h-14 justify-between">
-                            <span className="text-white text-lg font-light">Sound</span>
-                            <Switch
-                                className='data-[state=checked]:bg-[#5C8983]'
-                                checked={soundEnabled}
-                                onCheckedChange={setSoundEnabled}
-                            />
-                        </div>
-
                         {/* My Bet History */}
                         <BettingHistoryDialog>
                             <button className="w-full border-b h-14  border-[#5C8983] text-left">

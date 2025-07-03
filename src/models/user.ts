@@ -1,6 +1,13 @@
 import Company from "./company";
 import { SchedulerType } from "./market-item";
 
+type CryptoAddress = {
+    id: number;
+    crypto: string;
+    symbol: string;
+    paymentAddress: string;
+    cryptoId: number;
+}
 
 class User {
     id?: number;
@@ -18,6 +25,7 @@ class User {
     placementNotAllowed: SchedulerType[];
     company?: Company;
     weeklyWithdrawLimit?: number;
+    cryptoAddress?: CryptoAddress[];
     dailyWithdrawLimit?: number;
     monthlyWithdrawLimit?: number;
     createdAt?: Date;
@@ -44,6 +52,7 @@ class User {
         this.weeklyWithdrawLimit = params.weeklyWithdrawLimit;
         this.dailyWithdrawLimit = params.dailyWithdrawLimit;
         this.monthlyWithdrawLimit = params.monthlyWithdrawLimit;
+        this.cryptoAddress = params.cryptoAddress;
         if (params.company) {
             this.company = new Company(params.company);
         }

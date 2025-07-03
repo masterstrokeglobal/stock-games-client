@@ -139,7 +139,7 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
-            <DialogContent showButton={false} className="max-w-7xl xs:w-[90vw] w-full p-0 border-none bg-transparent backdrop-blur-md h-fit ">
+            <DialogContent showButton={false} overlayClassName="bg-gradient-to-b from-[rgba(12,21,24,0.6)] via-[rgba(12,21,24,0.6)] to-[rgba(54,109,81,0.6)]" className="max-w-7xl xs:w-[90vw] w-full p-0 border-none bg-transparent backdrop-blur-md h-fit ">
                 <div style={{
                     background: 'linear-gradient(0deg, rgba(31, 41, 41, 0.9) 0%, rgba(43, 70, 67, 0.9) 90.29%)',
                 }}
@@ -168,9 +168,9 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                     <div className="p-6 flex-1 overflow-hidden flex flex-col">
                             {/* Desktop Table */}
                             {!isMobile && <div className="overflow-x-auto hidden md:block flex-1">
-                                <div className="min-w-full text-sm text-left text-white max-h-[60svh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#5C8983] scrollbar-track-transparent">
+                                <div className="min-w-full text-sm text-left text-white relative overflow-y-auto scrollbar-thin scrollbar-thumb-[#5C8983] scrollbar-track-transparent">
                                     {/* Header */}
-                                    <div className="border-b mb-4 border-[#5C8983] backdrop-blur-lg text-base flex sticky top-0  z-10">
+                                    <div className="border-b mb-4 border-[#5C8983]  text-base flex sticky top-0  z-10">
                                         <div className="px-4 py-3 font-semibold flex-1">Date</div>
                                         <div className="px-4 py-3 font-semibold flex-1">Time</div>
                                         <div className="px-4 py-3 font-semibold flex-1">Color Betted</div>
@@ -182,6 +182,7 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                     {history.length === 0 && (
                                         <div className="px-4 py-3 text-center">No data found</div>
                                     )}
+                                    <div className="max-h-[60svh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#5C8983] scrollbar-track-transparent">
                                     {history?.map((row, idx) => (
                                         <div
                                             key={idx}
@@ -217,12 +218,13 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                                     {WHEEL_COLOR_CONFIG[row.winningColor].name}
                                                 </span>
                                             </div>
-                                            <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D]" : ""}`)}>{row.amount}</div>
+                                            <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D]" : ""}`)}>Rs. {row.amount}</div>
                                             <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D] rounded-r-full" : ""}`)}>
                                                 {row.netProfitLoss > 0 ? `+Rs.${row.netProfitLoss}` : row.netProfitLoss < 0 ? `-Rs.${Math.abs(row.netProfitLoss)}` : `Rs.${row.netProfitLoss}`}
                                             </div>
                                         </div>
                                     ))}
+                                    </div>
                                 </div>
                             </div>}
                             {/* Mobile Card List */}

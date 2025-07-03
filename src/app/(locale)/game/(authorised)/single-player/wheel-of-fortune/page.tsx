@@ -54,7 +54,7 @@ const WheelOfFortune = () => {
         <section className="flex flex-col relative bg-gradient-to-b from-[#1a1b2e] to-[#1a1b2e]/0  items-center justify-center min-h-[calc(100svh-100px)] w-full">
             <Navbar />
             <video src="/videos/wheel-of-fortune.mp4" autoPlay muted loop className='absolute left-0 top-0 w-full h-[calc(100svh-100px)] object-cover' />
-            <div className='absolute bottom-0 left-0 h-[60vh] w-full bg-gradient-to-t from-[#000000] via-[#000000] via-[80%] to-transparent' />
+            <div className='absolute bottom-0 left-0 h-[60vh] w-full bg-gradient-to-t from-[#000000] via-[#000000] via-[60%]  to-transparent' />
             <div className="min-h-screen pt-20  px-4 max-w-[1560px] w-full mx-auto  text-white ">
                 <div className='md:grid md:grid-cols-3  gap-4'>
                     <StockPriceDisplay className='md:col-span-2' roundRecord={roundRecord} winningMarketId={winningMarketId} />

@@ -53,7 +53,7 @@ const DiceGameResultDialog = ({
           <DialogClose asChild>
             <Button
               variant="ghost"
-              className="absolute top-3 left-3 z-10 w-7 h-7 p-0 flex bg-transparent border-none items-center justify-center rounded-full"
+              className="absolute top-3 left-3 w-7 h-7 p-0 flex z-50 bg-transparent border-none items-center justify-center rounded-full"
             >
               <XCircleIcon className="text-[#013FCF] size-6" />
             </Button>

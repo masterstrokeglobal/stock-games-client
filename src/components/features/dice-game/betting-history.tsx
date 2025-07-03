@@ -145,7 +145,7 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
-            <DialogContent showButton={false} className="max-w-3xl xs:w-[95vw] bg-[#140538] w-full p-0 border-none  backdrop-blur-md ">
+            <DialogContent showButton={false}  className="max-w-3xl xs:w-[95vw] bg-[#140538] w-full p-0 border-none  backdrop-blur-md ">
                 <div
                     style={{
                         background: 'linear-gradient(180deg, #1B1E4B 0%, #23245A 100%)',

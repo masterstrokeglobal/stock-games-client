@@ -1,11 +1,11 @@
 {
     "radius": "0.5rem;",
-    "primary": "#02153F",
+    "primary": "#040029",
     "gameText": "#07171F",
     "tertiary": "#000000",
     "secondary": "#ADEBFF",
     "chip-color": "#f78a32",
-    "borderColor": "rgba(85, 176, 255, 0.31)",
+    "borderColor": "#280079",
     "input-field": "#000000",
     "top-bar-text": "#FFFFFF",
     "backgroundGame": "#000E37",

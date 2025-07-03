@@ -4,14 +4,13 @@
 
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { SchedulerType } from "@/models/market-item"
-import AutoScroll from "embla-carousel-auto-scroll"
 import Image from "next/image"
 import Link from "next/link"
 
 export default function StockGameCarousel() {
 
     return (
-        <Carousel opts={{ loop: true }} plugins={[AutoScroll({ active: true, stopOnInteraction: false, stopOnFocusIn: false, stopOnMouseEnter: true, direction: "forward", speed: 3 })]} className="w-full">
+        <Carousel opts={{ loop: true }} className="w-full">
             <div className="space-y-4">
                 <div className="flex items-center justify-between">
                     <h2 className="md:text-2xl text-base font-bold">Stock Games</h2>
@@ -84,14 +83,13 @@ export default function StockGameCarousel() {
                             </div>
                         </Link>
                     </CarouselItem>
-                    <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
+                    {/* <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href="/game/redblack">
                             <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">
                                 <Image src="/images/redvsblack.png" alt="coming-soon" className="w-full h-full object-top" width={500} height={500} />
                             </div>
                         </Link>
-                    </CarouselItem>
-
+                    </CarouselItem> */}
                     <CarouselItem className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                         <Link href="/game/platform/stock-game/aviator">
                             <div className="rounded-xl overflow-hidden aspect-square border border-blue-700 relative shadow-lg shadow-blue-900">

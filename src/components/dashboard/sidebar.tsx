@@ -180,6 +180,11 @@ const companyMenuItems: MenuItem[] = [
         name: "Tiers",
         icon: MedalIcon,
         link: '/dashboard/tier'
+    },
+    {
+        name: "Crypto Wallet",
+        icon: CoinsIcon,
+        link: '/dashboard/crypto-wallet'
     }
 ];
 

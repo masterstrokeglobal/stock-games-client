@@ -31,7 +31,7 @@ const StockDisplay = ({ stock, className, isSecondCube, roundRecord, winner, isL
   return (
     <div className={cn("flex flex-col justify-between items-center rounded-none  text-[10px] relative z-20 text-white/90 py-0.5 px-1 transition-colors w-full", className)}>
       <div className="flex items-center justify-between w-full px-1 gap-0.5 min-w-0">
-        <span className="font-medium truncate max-w-[60px]">{stock?.codeName}</span>
+        <span className="font-medium truncate max-w-[60px] font-inter">{stock?.codeName}</span>
         <span className={cn("text-[10px] border border-white/10 w-4 h-4 aspect-square font-bold flex items-center justify-center px-0.5 rounded-full flex-shrink-0", winner && "text-white", isSecondCube && "order-first")}>
           {horse}
         </span>
@@ -43,11 +43,11 @@ const StockDisplay = ({ stock, className, isSecondCube, roundRecord, winner, isL
           : 'text-[#FF0000]' : "text-white "
       )}>
 
-          <TriangleIcon className={cn(changePercentage ? Number(changePercentage) > 0 ? 'text-[#4FFF83] rotate-180' :
-          'text-[#FF0000]' : 'text-white rotate-90')} />
+        <TriangleIcon className={cn(changePercentage ? Number(changePercentage) > 0 ? 'text-[#4FFF83] ' :
+          'text-[#FF0000] rotate-180' : 'text-white rotate-90')} />
         {changePercentageText}
       </span>
-  { !isLast && <div className={cn('h-px bg-[#4467CC80]  w-full')}/>} 
+      {!isLast && <div className={cn('h-px bg-[#4467CC80]  w-full')} />}
     </div>
   );
 };
@@ -57,7 +57,6 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
   const { stocks } = useLeaderboard(roundRecord);
   const isPlaceOver = usePlacementOver(roundRecord);
   const isRolling = isPlaceOver && roundRecordWithWinningId?.winningId == null;
-  const { isMd } = useWindowSize();
 
   const firstCube = marketItems.slice(0, 6);
   const secondCube = marketItems.slice(6, 12);
@@ -83,43 +82,29 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
 
 
   return (
-    <div className={`font-sans   bg-cover bg-center border border-[#4467CC80] grid grid-rows-1 p-2 rounded-lg overflow-visible ${className}`} >
-      <div className="flex justify-center  relative  h-full items-center">
-        <div className="flex xl:pr-24 sm:pr-6 pr-0  flex-row bg-cover bg-center flex-1 h-full gap-2 items-center justify-end animate-slide-left relative">
-          <div className='flex flex-col absolute left-0 top-0 border rounded border-[#4467CC80] h-full md:w-28 w-[80px]'>
-            <TriangleIcon className='size-3 text-white absolute top-4 right-0 translate-x-full  rotate-90' />
-        {firstCubeStocks?.map((stock, index) => (
+    <div className={`font-sans  bg-cover bg-center border border-[#4467CC80] grid grid-rows-1 p-2 rounded-lg overflow-visible ${className}`} >
+      <div className="flex justify-between  relative  h-full items-center">
+          <div className='flex flex-col  border rounded border-[#4467CC80] h-full md:w-28 w-[80px]'>
+            {/* <TriangleIcon className='size-3 text-white absolute top-4 right-0 translate-x-full  rotate-90' /> */}
+            {firstCubeStocks?.map((stock, index) => (
               <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1 w-full last:border-none' roundRecord={roundRecordWithWinningId} isLast={index === 5} />
             ))}
           </div>
-          {
-            !isMd && (
-             isPlaceOver && (
+        <div className='relative flex-1 h-full max-w-sm'>
+          <h2 className='text-white text-center sm:hidden  uppercase  z-10 text-xs font-semibold tracking-wider absolute top-0 left-1/2 -translate-x-1/2'>Dice Game</h2>
+            <Image src="/images/dice-game/lady.png" alt="dice-1" width={600} height={600} className='absolute -bottom-2 left-3/4   z-10 -translate-x-3/4 sm:h-[90%] xsm:h-3/4 xs:h-40 h-32 w-auto ' />
+            <div style={{
+              border: '1px solid rgba(68, 103, 204, 1)',
+              boxShadow: '20px 20px 100px 18px rgba(68, 103, 204, 1)',
+            }} className='flex flex-col absolute left-1/4 rounded-full max-w-full !aspect-square sm:p-8 xsm:p-6 p-0 -translate-x-1/4 sm:-top-2 xsm:top-4 top-8 justify-center items-center gap-6 h-auto sm:w-52 w-40'>
               <Cube
                 marketItems={firstCube}
                 isRolling={isRolling}
+                className='md:mr-12 mr-6'
                 winningMarketId={roundRecordWithWinningId?.winningId}
                 isLoading={isWaitingForResults}
               />
-            ))
-          }
-        </div>
-        {
-          !isPlaceOver && (
-            <Image src="/images/dice-game/lady.png" alt="dice-1" width={600} height={600} className='absolute -bottom-2 left-1/2  -translate-x-1/2 h-full w-auto ' />
-          )
-        }
-
-        {
-          isMd && isPlaceOver && (
-            <div className='flex flex-col absolute left-1/2  -translate-x-1/2 top-0 justify-center  gap-12  h-full '>
-               <Cube
-                marketItems={firstCube}
-                isRolling={isRolling}
-                winningMarketId={roundRecordWithWinningId?.winningId}
-                isLoading={isWaitingForResults}
-              />
-               <Cube
+              <Cube
                 marketItems={secondCube}
                 className='delay-1000'
                 isRolling={isRolling}
@@ -127,33 +112,16 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
                 winningMarketId={roundRecordWithWinningId?.winningId}
                 isLoading={isWaitingForResults}
               />
-
             </div>
-          )
-        }
-        <div className="flex  xl:pl-24 sm:pl-6 flex-row   bg-cover bg-center flex-1 h-full gap-2 items-center justify-between animate-slide-right relative">
-          {
-            !isMd && (
-            isPlaceOver && (
-              <Cube
-                marketItems={secondCube}
-                className='delay-1000'
-                isRolling={isRolling}
-                isSecondCube
-                winningMarketId={roundRecordWithWinningId?.winningId}
-                isLoading={isWaitingForResults}
-              />
-            ))
-          }
-          <div className='flex flex-col h-full absolute right-0 top-0 md:w-28 w-[80px] self-end border border-[#4467CC80] rounded-lg'>
-          <TriangleIcon className='size-3 text-white absolute bottom-4 left-0 -translate-x-full  -rotate-90' />
+        </div>
+          <div className='flex flex-col h-full  md:w-28 w-[80px] self-end border border-[#4467CC80] rounded-lg'>
+            {/* <TriangleIcon className='size-3 text-white absolute bottom-4 left-0 -translate-x-full  -rotate-90' /> */}
 
             {secondCubeStocks?.map((stock, index) => (
-              <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1  w-full' isSecondCube roundRecord={roundRecordWithWinningId} isLast={index === 5}   />
+              <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1  w-full' isSecondCube roundRecord={roundRecordWithWinningId} isLast={index === 5} />
             ))}
 
           </div>
-        </div>
       </div>
     </div>
   );
@@ -162,7 +130,7 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
 export default Dice3D;
 
 const DiceFace: React.FC<DiceFaceProps> = ({ marketItem, className, number, isWinning, isLoading }) => {
-  const { isMd } = useWindowSize();
+  const { isMd, isXsm } = useWindowSize();
   const renderDots = (num: number): JSX.Element[] => {
     const dots: JSX.Element[] = [];
     const positions: Record<number, Array<{ top: string; left: string }>> = {
@@ -190,7 +158,7 @@ const DiceFace: React.FC<DiceFaceProps> = ({ marketItem, className, number, isWi
         <div
           key={i}
           className={cn(
-            "absolute md:w-2 md:h-2 w-1 h-1 bg-black rounded-full shadow-lg",
+            "absolute md:w-1.5 md:h-1.5 w-1 h-1 bg-[#5A3A24] rounded-full shadow-lg",
             isLoading && "animate-pulse"
           )}
           style={{
@@ -206,25 +174,22 @@ const DiceFace: React.FC<DiceFaceProps> = ({ marketItem, className, number, isWi
     return dots;
   };
 
+  const size = isXsm ? '30px' : isMd ? '40px' : '44px';
   return (
     <div
       className={cn(
         `absolute ${className}`
       )}
-      style={{  
-        width: isMd ? '40px' : '80px',
-        height: isMd ? '40px' : '80px',
-        background: isWinning ? 'linear-gradient(to right, #ffffff, #f0f0f0)' : 'linear-gradient(to right, #ffffff, #f0f0f0)',
-        border: '2px solid',
-        borderImage: 'linear-gradient(90deg, #d3d3d3 0%, #e0e0e0 50%, #d3d3d3 100%) 1',
-        borderRadius: '8px',
-        boxShadow: '0 0 20px rgba(128, 128, 128, 0.3), 0 8px 32px rgba(128, 128, 128, 0.15)'
+      style={{
+        width: size,
+        height: size,
+        background: isWinning ? 'linear-gradient(135deg, #FFF5D7, #EFD8AC)' : 'linear-gradient(135deg, #FFF5D7, #EFD8AC)',
       }}
     >
       {renderDots(number)}
       <div className="absolute bottom-0 left-0 right-0 text-center">
         <span className={cn(
-          "sm:text-[10px] text-[6px] selection:bg-transparent text-black font-medium z-10 relative tracking-wider rotate-15 block",
+          "sm:text-[8px] text-[6px] truncate max-w-full selection:bg-transparent text-[#5A3A24] font-medium z-10 relative tracking-wider rotate-15 block",
         )} style={{ textShadow: '0 1px 2px rgba(0,0,0,0.5)' }}>
           {marketItem.codeName}
         </span>
@@ -242,9 +207,9 @@ interface CubeProps {
   isLoading?: boolean;
 }
 
-export const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, winningMarketId, isLoading, isSecondCube }) => {
+export const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, winningMarketId, isLoading, isSecondCube, }) => {
   // Ensure we have at least 6 market items, if not, repeat the available ones
-  const { isMd } = useWindowSize();
+  const { isMd, isXsm } = useWindowSize();
   const items = marketItems.length >= 6
     ? marketItems.slice(0, 6)
     : [...marketItems, ...marketItems.slice(0, 6 - marketItems.length)];
@@ -272,13 +237,15 @@ export const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, w
 
   // Determine if we should show the winning face
   const shouldShowWinningFace = !isRolling && winningMarketId !== undefined && winningIndex !== -1;
+  const size = isXsm ? '30px' : isMd ? '40px' : '44px';
+
 
   return (
     <div
       className={cn('dice-cube-container', className)}
       style={{
-        width: isMd ? '40px' : '80px',
-        height: isMd ? '40px' : '80px',
+        width: size,
+        height: size,
         perspective: '400px'
       }}
     >

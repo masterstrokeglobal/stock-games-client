@@ -596,27 +596,27 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
 
 
 .dice-front {
-  transform: translateZ(40px);
+  transform: translateZ(22px);
 }
 
 .dice-back {
-  transform: rotateY(180deg) translateZ(40px);
+  transform: rotateY(180deg) translateZ(22px);
 }
 
 .dice-right {
-  transform: rotateY(90deg) translateZ(40px);
+  transform: rotateY(90deg) translateZ(22px);
 }
 
 .dice-left {
-  transform: rotateY(-90deg) translateZ(40px);
+  transform: rotateY(-90deg) translateZ(22px);
 }
 
 .dice-top {
-  transform: rotateX(90deg) translateZ(40px);
+  transform: rotateX(90deg) translateZ(22px);
 }
 
 .dice-bottom {
-  transform: rotateX(-90deg) translateZ(40px);
+  transform: rotateX(-90deg) translateZ(22px);
 }
 
 .dice-cube-container:hover .dice-cube {
@@ -704,6 +704,33 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   }
 }
 
+/* Mobile responsive dice */
+@media (max-width: 440px) {
+  .dice-front {
+    transform: translateZ(15px);
+  }
+
+  .dice-back {
+    transform: rotateY(180deg) translateZ(15px);
+  }
+
+  .dice-right {
+    transform: rotateY(90deg) translateZ(15px);
+  }
+
+  .dice-left {
+    transform: rotateY(-90deg) translateZ(15px);
+  }
+
+  .dice-top {
+    transform: rotateX(90deg) translateZ(15px);
+  }
+
+  .dice-bottom {
+    transform: rotateX(-90deg) translateZ(15px);
+  }
+}
+
 * {
   /* Firefox */
   scrollbar-width: thin;
@@ -750,8 +777,8 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   -webkit-text-fill-color: white;
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: black;
-
 }
+
 .remove-spin::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
