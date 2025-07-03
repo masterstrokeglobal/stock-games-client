@@ -46,7 +46,6 @@ const HorseRaceEnvironment = ({
       <ambientLight intensity={1} />
       {/*  */}
       <OrbitControls
-        enableRotate={true}
         maxPolarAngle={Math.PI / 2 - 0.1 - .02}
         minPolarAngle={Math.PI / 2 - 0.1}
         maxDistance={1000}

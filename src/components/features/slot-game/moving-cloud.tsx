@@ -14,7 +14,7 @@ const MovingPeople: React.FC<MovingPeopleProps> = ({
   scale = [0.4, 0.4, 0.4],
   rotation = [0, 0, 0],
 }) => {
-  const { scene } = useGLTF("/models/roulette/clouds.glb");
+  const { scene } = useGLTF("/models/roulette/cloud2.glb");
   const groupRef = useRef<THREE.Group>(null);
 
   // Create multiple instances with random scales and positions
@@ -26,40 +26,40 @@ const MovingPeople: React.FC<MovingPeopleProps> = ({
     return Array.from({ length: instanceCount }, (_, index) => {
       const model = scene.clone();
       
-      // Apply white material to all meshes
-      model.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
-          const whiteMaterial = new THREE.MeshStandardMaterial({
-            color: 0xffffff,
-            fog: false,
-            flatShading: true,
-            emissive: 0x444444,
-            emissiveIntensity: 0.2,
-            side: THREE.DoubleSide
-          });
-          child.material = whiteMaterial;
-        }
-      });
+      // // Apply white material to all meshes
+      // model.traverse((child) => {
+      //   if (child instanceof THREE.Mesh) {
+      //     const whiteMaterial = new THREE.MeshStandardMaterial({
+      //       color: 0xffffff,
+      //       fog: false,
+      //       flatShading: true,
+      //       emissive: 0x444444,
+      //       emissiveIntensity: 0.2,
+      //       side: THREE.DoubleSide
+      //     });
+      //     child.material = whiteMaterial;
+      //   }
+      // });
 
       return {
         model,
         initialZ: startZ - (index * gap),
         randomScale: [
-            Math.random() * 0.4  + 0.2, // Random scale between 0.2 and 0.6
-            Math.random() * 0.4  + 0.2,
-            Math.random() * 0.4  + 0.2,
+          40,
+          40,
+          40,
         ] as [number, number, number],
         randomRotation: [
-          Math.random() * Math.PI * 2,
-          Math.random() * Math.PI * 2,
-          Math.random() * Math.PI * 2,
+        Math.random() * 30 + 70, // Random value between 70 and 100
+        Math.random() * 30 + 70, // Random value between 70 and 100
+        Math.random() * 30 + 70, // Random value between 70 and 100
         ] as [number, number, number],
       };
     });
   }, [scene]);
 
   const speed = 0.1;
-  const frequency = 10;
+  const frequency = 30;
   const startZ = 1000;
   const endZ = -1000;
 
@@ -106,6 +106,6 @@ const MovingPeople: React.FC<MovingPeopleProps> = ({
   );
 };
 
-useGLTF.preload("/models/roulette/clouds.glb");
+useGLTF.preload("/models/roulette/cloud2.glb");
 
 export default MovingPeople;
