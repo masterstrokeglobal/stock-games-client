@@ -88,6 +88,7 @@ const RedBlackRouletteGame = ({ roundRecord, globalBetAmount, handleGlobalBetAmo
       {/* {!isMobile && <ParticlesContainer />} */}
       <div >
         <div className="relative lg:flex-row w-full flex-col flex border-brown-800">
+          <h1 className="xl:text-2xl md:text-xl text-lg font-semibold text-white p-2">Round {roundRecord.todayCount}</h1>
           <div className="max-w-2xl mx-auto w-full">
             <div
               className={cn(

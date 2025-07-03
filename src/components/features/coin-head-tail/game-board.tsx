@@ -2,10 +2,10 @@ import { cn, INR } from '@/lib/utils';
 import { HeadTailPlacementType } from '@/models/head-tail';
 import { RoundRecord } from '@/models/round-record';
 import { useCreateHeadTailPlacement, useGetMyCurrentRoundHeadTailPlacement } from '@/react-query/head-tail-queries';
-import { useLeaderboard } from '@/hooks/use-sevenup-leader-board';
 import { StockPrice } from './stock-price';
 import TimeDisplay from '@/components/common/bet-locked-banner';
 import { useMemo } from 'react';
+import { useLeaderboard } from '@/hooks/use-leadboard';
 
 
 type Props = {

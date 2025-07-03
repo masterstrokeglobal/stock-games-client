@@ -1,4 +1,4 @@
-import { RankedMarketItem } from '@/hooks/use-sevenup-leader-board';
+import { RankedMarketItem } from '@/hooks/use-multi-socket-leaderboard';
 import { cn } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
 import { ArrowUpIcon } from "@radix-ui/react-icons";

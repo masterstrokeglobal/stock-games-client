@@ -1,6 +1,6 @@
 import MarketItem, { NSEMarketItem, SchedulerType } from '@/models/market-item';
 import { RoundRecord, RoundRecordGameType } from '@/models/round-record';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 export interface RankedMarketItem extends MarketItem {
     change_percent: string;
@@ -19,6 +19,8 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
     const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
     const initialPricesRef = useRef<Map<string, number>>(new Map());
     const roundEndCheckRef = useRef<NodeJS.Timeout>();
+
+    const roundRecordType = useMemo(() => roundRecord?.type, [roundRecord]);
 
     const getRoundStatus = () => {
         if (!roundRecord) return 'pre-tracking';
@@ -258,6 +260,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
     };
 
     useEffect(() => {
+        console.log("change roundRecord", roundRecord);
         if (!roundRecord) return;
         
         const connectSocket = () => {
@@ -373,7 +376,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
             clearInterval(intervalId);
             initialPricesRef.current.clear();
         };
-    }, [roundRecord]);
+    }, [roundRecordType]);
 
     // Update stocks on roundRecord change
     useEffect(() => {
@@ -387,4 +390,4 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
         connectionStatus,
         roundStatus: getRoundStatus()
     };
-};
+}; 

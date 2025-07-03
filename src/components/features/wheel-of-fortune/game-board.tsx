@@ -1,4 +1,3 @@
-import { RankedMarketItem, useLeaderboard } from '@/hooks/use-sevenup-leader-board';
 import { cn, INR } from '@/lib/utils';
 import { RoundRecord, WHEEL_COLOR_CONFIG } from '@/models/round-record';
 import { WheelColor } from '@/models/wheel-of-fortune-placement';
@@ -6,6 +5,7 @@ import { useCreateWheelOfFortunePlacement, useGetMyCurrentRoundWheelOfFortunePla
 import { useMemo } from 'react';
 import TriangleDownGlow from '../common/triangle-down-glow';
 import TriangleUpGlow from '../common/triangle-up-glow';
+import { RankedMarketItem, useLeaderboard } from '@/hooks/use-leadboard';
 
 // Color configuration mapping
 

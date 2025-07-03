@@ -13,6 +13,7 @@ export const useCreateAdvanceGameRecord = () => {
                     query.queryKey[0] === "winningGameRecord" ||
                     query.queryKey[0] === "topPlacements" ||
                     query.queryKey[0] === "myPlacements" ||
+                    query.queryKey[0] === "advancePlacements" ||
                     query.queryKey[0] === "user" && query.queryKey[1] == 'wallet',
             });
             toast.success("Bet placed successfully");
