@@ -99,13 +99,13 @@ export const generateLayerObjects = (layer: LayerConfig) => {
   const minY = totalHeight * (1 - maxAltitude) // Lower Y for higher altitude
   
   // Define category-specific ground safety zones
-  const getCategorySafetyZone = () => {
-    const avgAltitude = (minAltitude + maxAltitude) / 2
-    if (avgAltitude > 0.8) return 400 // Space objects - minimal ground restriction
-    if (avgAltitude > 0.5) return 1200 // Clouds - keep well above ground
-    if (avgAltitude > 0.2) return 1000 // Birds and aircraft - flying safety zone
-    return 800 // Low flying objects - minimum ground clearance
-  }
+  // const getCategorySafetyZone = () => {
+  //   const avgAltitude = (minAltitude + maxAltitude) / 2
+  //   if (avgAltitude > 0.8) return 400 // Space objects - minimal ground restriction
+  //   if (avgAltitude > 0.5) return 1200 // Clouds - keep well above ground
+  //   if (avgAltitude > 0.2) return 1000 // Birds and aircraft - flying safety zone
+  //   return 800 // Low flying objects - minimum ground clearance
+  // }
   
   // Calculate safe positioning area
   
@@ -122,9 +122,9 @@ export const generateLayerObjects = (layer: LayerConfig) => {
   }
   
   // For very high altitude objects (space/planets), reduce ground safety zone impact
-  const avgAltitude = (minAltitude + maxAltitude) / 2
-  const adjustedGroundSafetyZone = avgAltitude > 0.8 ? 200 : groundSafetyZone
-  const finalSafeMaxY = Math.min(totalHeight - adjustedGroundSafetyZone, maxY + buffer)
+  // const avgAltitude = (minAltitude + maxAltitude) / 2
+  // const adjustedGroundSafetyZone = avgAltitude > 0.8 ? 200 : groundSafetyZone
+  // const finalSafeMaxY = Math.min(totalHeight - adjustedGroundSafetyZone, maxY + buffer)
   
   layer.objects.forEach(objConfig => {
     for (let i = 0; i < objConfig.count; i++) {
