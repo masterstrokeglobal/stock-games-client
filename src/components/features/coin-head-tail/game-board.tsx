@@ -1,4 +1,4 @@
-import { cn, INR } from '@/lib/utils';
+import { cn, COIN_HEAD_TAIL_MULTIPLIER, INR } from '@/lib/utils';
 import { HeadTailPlacementType } from '@/models/head-tail';
 import { RoundRecord } from '@/models/round-record';
 import { useCreateHeadTailPlacement, useGetMyCurrentRoundHeadTailPlacement } from '@/react-query/head-tail-queries';
@@ -88,7 +88,7 @@ export default function CoinFlipGame({ roundRecord, amount, className, roundReco
               <div className="w-20 h-20 rounded-full flex items-center justify-center">
                 <img src="/images/coin-face/head.png" alt="head" className="w-full h-full object-fill" />
               </div>
-              <div className="mt-4 text-amber-900 font-bold">1:2</div>
+              <div className="mt-4 text-amber-900 font-bold">1:{COIN_HEAD_TAIL_MULTIPLIER}</div>  
 
               {/* Stats Container */}
               <div className="absolute bottom-0 left-0 right-0 bg-amber-50 bg-opacity-80 p-2 rounded-b-md">
@@ -99,7 +99,7 @@ export default function CoinFlipGame({ roundRecord, amount, className, roundReco
                   </div>
                   <div className="text-xs font-semibold text-amber-900">
                     <span>Win:</span>
-                    <span className="block font-bold">{INR(myHeadAmount * 2)}</span>
+                    <span className="block font-bold">{INR(myHeadAmount * COIN_HEAD_TAIL_MULTIPLIER,true)}</span>
                   </div>
                 </div>
               </div>
@@ -136,7 +136,7 @@ export default function CoinFlipGame({ roundRecord, amount, className, roundReco
               <div className="w-20 h-20 rounded-full flex items-center justify-center">
                 <img src="/images/coin-face/tail.png" alt="tail" className="w-full h-full object-fill" />
               </div>
-              <div className="mt-4 text-amber-900 font-bold">1:2</div>
+              <div className="mt-4 text-amber-900 font-bold">1:{COIN_HEAD_TAIL_MULTIPLIER}</div>
 
               {/* Stats Container */}
               <div className="absolute bottom-0 left-0 right-0 w-full bg-amber-50 bg-opacity-80 p-2 rounded-b-md">
@@ -147,7 +147,7 @@ export default function CoinFlipGame({ roundRecord, amount, className, roundReco
                   </div>
                   <div className="text-xs font-semibold text-amber-900">
                     <span>Win:</span>
-                    <span className="block font-bold">{INR(myTailAmount * 2)}</span>
+                    <span className="block font-bold">{INR(myTailAmount * COIN_HEAD_TAIL_MULTIPLIER,true)}</span>
                   </div>
                 </div>
               </div>

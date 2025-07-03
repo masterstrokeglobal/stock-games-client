@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from '@/context/auth-context';
 import { useIsPlaceOver, useShowResults } from '@/hooks/use-current-game';
-import { cn, INR } from '@/lib/utils';
+import { cn, INR, SEVEN_UP_DOWN_MULTIPLIER, SEVEN_UP_DOWN_MULTIPLIER_7 } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
 import { SevenUpDownPlacementType } from '@/models/seven-up-down';
 import { useGetMyCurrentRoundSevenUpDownPlacement } from '@/react-query/7-up-down';
@@ -116,7 +116,7 @@ const PlacementCard = ({ placement }: { placement: {placement: SevenUpDownPlacem
           {placement.placement === SevenUpDownPlacementType.SEVEN && 'Seven Bet'}
         </span>
         <span className="text-xs text-blue-300/50">
-          {placement.placement === SevenUpDownPlacementType.SEVEN ? '1:2' : '1:2'}
+          {placement.placement === SevenUpDownPlacementType.SEVEN ? `1:${SEVEN_UP_DOWN_MULTIPLIER_7}` : `1:${SEVEN_UP_DOWN_MULTIPLIER}`}
         </span>
       </div>
     </div>

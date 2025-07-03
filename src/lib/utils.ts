@@ -225,7 +225,7 @@ export const googleAuth = () => {
 
 export const RED_NUMBERS = [1, 3, 6, 8, 9, 11, 14, 16];
 export const BLACK_NUMBERS = [2, 4, 5, 7, 10, 12, 13, 15];
-export const  deepClone = (obj: any) => {
+export const deepClone = (obj: any) => {
   return JSON.parse(JSON.stringify(obj));
 }
 
@@ -321,19 +321,30 @@ export const schedulerTypeOptions = Object.values(SchedulerType).map((type) => (
 
 export const slotWinningMultiplier = [
   {
-    multiplier: 2,
+    multiplier: 8.5,
+    winningAmount: (betAmount: number) => betAmount * .98 * 8.5,
     count: 2
   },
   {
-    multiplier: 3,
+    multiplier: 85,
+    winningAmount: (betAmount: number) => betAmount * .98 * 85,
     count: 3
   },
   {
-    multiplier: 4,
+    multiplier: 800,
+    winningAmount: (betAmount: number) => betAmount * .98 * 800,
     count: 4
   },
   {
-    multiplier: 5,
+    multiplier: 8000,
+    winningAmount: (betAmount: number) => betAmount * .98 * 8000,
     count: 5
   },
 ]
+
+export const SEVEN_UP_DOWN_MULTIPLIER = 1.96;
+export const JACKPOT_MULTIPLIER = 1.96;
+
+export const SEVEN_UP_DOWN_MULTIPLIER_7 = 14.7;
+
+export const COIN_HEAD_TAIL_MULTIPLIER = 1.96;

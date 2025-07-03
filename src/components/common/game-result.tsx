@@ -72,11 +72,6 @@ const GameResult = ({ showDialog, setShowDialog, isLoading, isError, data }: Gam
                         </div>
 
                         <div className="text-center  flex justify-between  rounded-lg">
-                            <p className="">Platform Fees</p>
-                            <p className="text-xl ">- {INR(data.platformFeeAmount)}</p>
-                        </div>
-
-                        <div className="text-center  flex justify-between  rounded-lg">
                             <p className="">Net Winning</p>
                             <p className="text-xl ">{INR(data.netWinning)}</p>
                         </div>

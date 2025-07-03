@@ -59,7 +59,7 @@ export const Slot = ({ roundRecord,winningIdRoundRecord }: { roundRecord: RoundR
                         <span className="text-yellow-400 font-bold text-xs sm:text-sm">x{item.multiplier}</span>
                     </div>
                     <div className="text-gray-400 text-xs sm:text-sm">
-                         {totalBetAmount ? `Win ${INR(totalBetAmount * item.multiplier,true)}` : " "}
+                         {totalBetAmount ? `Win ${INR(item.winningAmount(totalBetAmount),true)}` : " "}
                     </div>
                 </div>
             ))}

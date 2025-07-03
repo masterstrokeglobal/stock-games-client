@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from '@/context/auth-context';
 import { useIsPlaceOver, useShowResults } from '@/hooks/use-current-game';
-import { cn, INR } from '@/lib/utils';
+import { cn, COIN_HEAD_TAIL_MULTIPLIER, INR } from '@/lib/utils';
 import { HeadTailPlacementType } from "@/models/head-tail";
 import { RoundRecord } from '@/models/round-record';
 import { useGetMyCurrentRoundHeadTailPlacement } from "@/react-query/head-tail-queries";
@@ -47,7 +47,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
                       {placement.placement === HeadTailPlacementType.HEAD && 'Head Bet'}
                       {placement.placement === HeadTailPlacementType.TAIL && 'Tail Bet'}
                     </span>
-                    <span className="text-xs text-amber-300/50">1:0.7</span>
+                    <span className="text-xs text-amber-300/50">1:{COIN_HEAD_TAIL_MULTIPLIER}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">

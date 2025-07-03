@@ -3,7 +3,7 @@
 import { Card } from "@/components/ui/card"
 import { useIsPlaceOver } from "@/hooks/use-current-game"
 import { RankedMarketItem } from "@/hooks/use-leadboard"
-import { cn, formatRupee } from "@/lib/utils"
+import { cn, formatRupee, JACKPOT_MULTIPLIER } from "@/lib/utils"
 import { RoundRecord } from "@/models/round-record"
 import { StockJackpotPlacementType } from "@/models/stock-slot-jackpot"
 import { useCreateStockSlotGameRecord, useGetMyStockSlotGameRecord } from "@/react-query/game-record-queries"
@@ -55,8 +55,8 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
 
   const initialPrice = roundRecord.getInitialPrice(marketItem.bitcode ?? "")
 
-  const upWinAmount = (upPlaced ?? 0) * 1.92;
-  const downWinAmount = (downPlaced ?? 0) * 1.92;
+  const upWinAmount = (upPlaced ?? 0) * JACKPOT_MULTIPLIER;
+  const downWinAmount = (downPlaced ?? 0) * JACKPOT_MULTIPLIER;
 
   const bettingOpen = !isPlaceOver && !isPlacingBet;
 

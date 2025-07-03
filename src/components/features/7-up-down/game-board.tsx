@@ -1,6 +1,6 @@
 import { usePlacementOver } from '@/hooks/use-current-game';
 import { RankedMarketItem } from '@/hooks/use-leadboard';
-import { cn } from '@/lib/utils';
+import { cn, SEVEN_UP_DOWN_MULTIPLIER, SEVEN_UP_DOWN_MULTIPLIER_7 } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
 import { SevenUpDownPlacementType } from '@/models/seven-up-down';
 import { useCreateSevenUpDownPlacement, useGetMyCurrentRoundSevenUpDownPlacement } from '@/react-query/7-up-down';
@@ -21,94 +21,94 @@ function generateGridPositions(count: number, xStart: number, xEnd: number, ySta
   const gridRows = Math.ceil(count / gridCols);
   let i = 0;
   let attempts = 0;
-  
+
   while (positions.length < count && attempts < count * 10) {
     const col = i % gridCols;
     const row = Math.floor(i / gridCols);
     let x = xStart + ((xEnd - xStart) * (col + 0.5) / gridCols);
     let y = yStart + ((yEnd - yStart) * (row + 0.5) / gridRows);
-    
+
     // Add random offset for more natural placement
     x += (Math.random() - 0.5) * 8;
     y += (Math.random() - 0.5) * 8;
-    
+
     // Clamp to prevent overflow
     x = Math.max(5, Math.min(95, x));
     y = Math.max(5, Math.min(95, y));
-    
+
     // Avoid center Y area (40-60%)
     if (avoidCenterY && y > 40 && y < 60) y = y < 50 ? 40 : 60;
-    
+
     // Avoid center X (40-60%) and X < 20%
     if ((x > 40 && x < 60) || x < 20) {
       i++;
       attempts++;
       continue;
     }
-    
+
     positions.push({ x, y });
     i++;
     attempts++;
   }
-  
+
   // If not enough positions, fill with fallback
   while (positions.length < count) {
     positions.push({ x: xStart + 5, y: yStart + 5 });
   }
-  
+
   return positions;
 }
 
 // Enhanced position generation with collision detection for results
 function generateNonOverlappingPositions(
-  count: number, 
-  xStart: number, 
-  xEnd: number, 
-  yStart: number, 
-  yEnd: number, 
+  count: number,
+  xStart: number,
+  xEnd: number,
+  yStart: number,
+  yEnd: number,
   minDistance = 8
 ) {
   const positions: { x: number, y: number }[] = [];
   const maxAttempts = count * 50;
   let attempts = 0;
-  
+
   while (positions.length < count && attempts < maxAttempts) {
     const x = xStart + Math.random() * (xEnd - xStart);
     const y = yStart + Math.random() * (yEnd - yStart);
-    
+
     // Check if this position conflicts with existing positions
     const hasCollision = positions.some(pos => {
       const distance = Math.sqrt(Math.pow(x - pos.x, 2) + Math.pow(y - pos.y, 2));
       return distance < minDistance;
     });
-    
+
     if (!hasCollision) {
       positions.push({ x, y });
     }
-    
+
     attempts++;
   }
-  
+
   // Fill remaining positions with fallback spiral pattern
   while (positions.length < count) {
     const angle = (positions.length * 2.4) % (2 * Math.PI);
     const radius = 5 + (positions.length * 2);
     const centerX = (xStart + xEnd) / 2;
     const centerY = (yStart + yEnd) / 2;
-    
+
     const x = Math.max(xStart, Math.min(xEnd, centerX + Math.cos(angle) * radius));
     const y = Math.max(yStart, Math.min(yEnd, centerY + Math.sin(angle) * radius));
-    
+
     positions.push({ x, y });
   }
-  
+
   return positions;
 }
 
-const MarketItemDisplay: React.FC<{ 
-  items: RankedMarketItem[], 
+const MarketItemDisplay: React.FC<{
+  items: RankedMarketItem[],
   showResults: boolean,
-  isTransitioning: boolean 
+  isTransitioning: boolean
 }> = ({ items, showResults }) => {
   const positionsRef = useRef<Map<string, ItemPosition>>(new Map());
   const containerRef = useRef<HTMLDivElement>(null);
@@ -144,7 +144,7 @@ const MarketItemDisplay: React.FC<{
     // Use requestAnimationFrame for smooth updates
     animationFrameRef.current = requestAnimationFrame(() => {
       const previousPositions = new Map(positionsRef.current);
-      
+
       // Separate items based on their change_percent
       const positiveItems = memoizedItems.filter(item => parseFloat(item.change_percent || '0') > 0);
       const negativeItems = memoizedItems.filter(item => parseFloat(item.change_percent || '0') <= 0);
@@ -164,16 +164,16 @@ const MarketItemDisplay: React.FC<{
 
       // Assign positions
       const newPositions = new Map<string, ItemPosition>();
-      
+
       positiveItems.forEach((item, i) => {
         if (!item.codeName) return;
         const priceChange = parseFloat(item.change_percent || '0');
         const prevPos = previousPositions.get(item.codeName);
-        
+
         // Ensure positive items NEVER go below 40% (strict upper section)
         const yPosition = posPositions[i]?.y ?? 10;
         const clampedY = Math.max(5, Math.min(yPosition, 35)); // Max 35% to ensure safe margin
-        
+
         newPositions.set(item.codeName, {
           x: posPositions[i]?.x ?? 25,
           y: clampedY,
@@ -187,11 +187,11 @@ const MarketItemDisplay: React.FC<{
         if (!item.codeName) return;
         const priceChange = parseFloat(item.change_percent || '0');
         const prevPos = previousPositions.get(item.codeName);
-        
+
         // Ensure negative items NEVER go above 60% (strict lower section)
         const yPosition = negPositions[i]?.y ?? 70;
         const clampedY = Math.min(95, Math.max(yPosition, 65)); // Min 65% to ensure safe margin
-        
+
         newPositions.set(item.codeName, {
           x: negPositions[i]?.x ?? 25,
           y: clampedY,
@@ -207,7 +207,7 @@ const MarketItemDisplay: React.FC<{
 
   useEffect(() => {
     calculatePositions();
-    
+
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
@@ -228,31 +228,31 @@ const MarketItemDisplay: React.FC<{
     <div ref={containerRef} className="absolute inset-0 overflow-hidden">
       {memoizedItems.map((item) => {
         if (!item.codeName) return null;
-        
+
         const priceChange = parseFloat(item.change_percent || '0');
         const isPositive = priceChange > 0;
         const position = positionsRef.current.get(item.codeName);
         if (!position) return null;
-        
+
         const floatPattern = floatPatternsRef.current.get(item.codeName) || 0;
-        
+
         // Double-check position to prevent section crossing
         const finalY = isPositive ? Math.min(position.y, 35) : Math.max(position.y, 65);
-        
+
         // Enhanced animation logic with staggered results
         const getAnimationStyle = () => {
           if (showResults) {
             const staggerDelay = (Array.from(positionsRef.current.keys()).indexOf(item.codeName || '') * 0.1);
             return `resultPulse 2s ease-in-out infinite ${staggerDelay}s, float${floatPattern} 2s ease-in-out infinite ${staggerDelay}s`;
           }
-          
+
           if (position.changedSection) {
             return `sectionTransition 0.8s ease-out forwards, float${floatPattern} 3s ease-in-out infinite 0.8s`;
           }
-          
+
           return `move${isPositive ? 'Up' : 'Down'} 2s cubic-bezier(0.4, 0, 0.2, 1) infinite, float${floatPattern} 3s ease-in-out infinite`;
         };
-        
+
         return (
           <div
             key={item.codeName}
@@ -286,7 +286,7 @@ const MarketItemDisplay: React.FC<{
           </div>
         );
       })}
-      
+
       {/* Optimized CSS animations */}
       <style jsx>{`
         @keyframes moveUp {
@@ -391,11 +391,11 @@ const MarketItemDisplay: React.FC<{
   );
 };
 
-export const GameBoard: React.FC<PropsWithChildren<{ 
-  roundRecord: RoundRecord, 
-  amount: number, 
-  marketItems: RankedMarketItem[], 
-  roundRecordWithWinningId: RoundRecord | null 
+export const GameBoard: React.FC<PropsWithChildren<{
+  roundRecord: RoundRecord,
+  amount: number,
+  marketItems: RankedMarketItem[],
+  roundRecordWithWinningId: RoundRecord | null
 }>> = ({ roundRecord, children, amount, marketItems, roundRecordWithWinningId }) => {
   const { mutate } = useCreateSevenUpDownPlacement();
   const isPlaceOver = usePlacementOver(roundRecord);
@@ -405,7 +405,7 @@ export const GameBoard: React.FC<PropsWithChildren<{
   // Immediate, synchronous updates to prevent delay
   useEffect(() => {
     const newItems = roundRecordWithWinningId?.sortedMarketItems || marketItems;
-    
+
     // Use flushSync for immediate DOM updates if available
     if (typeof window !== 'undefined' && 'flushSync' in React) {
       (React as any).flushSync(() => {
@@ -431,8 +431,8 @@ export const GameBoard: React.FC<PropsWithChildren<{
 
   const { totalUpBets, totalDownBets, totalSevenBets } = betCalculations;
 
-  const positiveStocks = useMemo(() => 
-    displayItems.filter(item => parseFloat(item.change_percent || '0') > 0).length, 
+  const positiveStocks = useMemo(() =>
+    displayItems.filter(item => parseFloat(item.change_percent || '0') > 0).length,
     [displayItems]
   );
 
@@ -457,12 +457,12 @@ export const GameBoard: React.FC<PropsWithChildren<{
   }, [showWinner, positiveStocks]);
 
   return (
-    <div 
-      style={{ 
-        backgroundImage: 'url(/images/7-up.png)', 
-        backgroundSize: 'cover', 
-        backgroundPosition: 'center' 
-      }} 
+    <div
+      style={{
+        backgroundImage: 'url(/images/7-up.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
       className="relative px-[7rem] pt-20 w-full pb-4 bg-brown-900 md:mx-auto"
     >
       {children}
@@ -472,13 +472,13 @@ export const GameBoard: React.FC<PropsWithChildren<{
             <StockPrice key={`left-${stock.codeName || index}`} rankedMarketItem={stock} />
           ))}
         </div>
-        
+
         <div className="relative z-0 h-[20rem] w-full">
           {/* Market items display */}
           <div className="absolute inset-0">
             {isPlaceOver && displayItems.length > 0 && (
-              <MarketItemDisplay 
-                items={displayItems} 
+              <MarketItemDisplay
+                items={displayItems}
                 showResults={showWinner || false}
                 isTransitioning={false} // Removed transition state complexity
               />
@@ -486,15 +486,15 @@ export const GameBoard: React.FC<PropsWithChildren<{
           </div>
 
           {/* 8-14 Area */}
-          <div 
-            onClick={() => handleBoardClick(SevenUpDownPlacementType.UP)} 
+          <div
+            onClick={() => handleBoardClick(SevenUpDownPlacementType.UP)}
             className={cn(
               "absolute inset-x-0 top-0 h-[10rem] hover:scale-[1.02] cursor-pointer transition-all duration-500 bg-yellow-500 bg-opacity-20 rounded-t-3xl border-yellow-500 border-2 flex flex-col items-center justify-start pt-4",
               winningSection === 'up' && "bg-yellow-600 bg-opacity-30 shadow-lg animate-pulse shadow-yellow-400/50 border-yellow-300"
             )}
           >
             <div className="text-2xl font-bold text-yellow-400">8~14</div>
-            <div className="text-sm text-yellow-400">1:2</div>
+            <div className="text-sm text-yellow-400">1:{SEVEN_UP_DOWN_MULTIPLIER}</div>
 
             {!isPlaceOver && totalUpBets > 0 && (
               <div
@@ -510,15 +510,15 @@ export const GameBoard: React.FC<PropsWithChildren<{
           </div>
 
           {/* Center 7 Area */}
-          <div 
-            onClick={() => handleBoardClick(SevenUpDownPlacementType.SEVEN)} 
+          <div
+            onClick={() => handleBoardClick(SevenUpDownPlacementType.SEVEN)}
             className={cn(
               "absolute cursor-pointer hover:bg-red-950 left-1/2 top-1/2 hover:scale-[1.02] transition-all duration-500 transform -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-red-900 rounded-full border-2 border-yellow-500 flex flex-col items-center justify-center z-10",
               winningSection === 'seven' && "bg-yellow-600 shadow-lg shadow-yellow-400/50 animate-pulse border-yellow-300 scale-110"
             )}
           >
             <div className="text-4xl font-bold text-yellow-400">7</div>
-            <div className="text-sm text-yellow-400">1:2</div>
+            <div className="text-sm text-yellow-400">1:{SEVEN_UP_DOWN_MULTIPLIER_7}</div>
             {!isPlaceOver && totalSevenBets > 0 && (
               <div className="text-[10px] bg-[url('/images/seven-up-down/coin.png')] text-gray-50 flex items-center justify-center aspect-square p-1 rounded-full absolute top-1/2 right-0 -translate-y-1/2 bg-chip w-fit transition-all duration-300">
                 {totalSevenBets}
@@ -527,15 +527,15 @@ export const GameBoard: React.FC<PropsWithChildren<{
           </div>
 
           {/* 0-6 Area */}
-          <div 
-            onClick={() => handleBoardClick(SevenUpDownPlacementType.DOWN)} 
+          <div
+            onClick={() => handleBoardClick(SevenUpDownPlacementType.DOWN)}
             className={cn(
               "absolute inset-x-0 bottom-0 cursor-pointer hover:scale-[1.02] transition-all duration-500 h-[10rem] bg-yellow-500 bg-opacity-20 rounded-b-3xl border-2 border-yellow-500 flex flex-col items-center justify-end py-4",
               winningSection === 'down' && "bg-yellow-600 bg-opacity-30 shadow-lg shadow-yellow-400/50 animate-pulse border-yellow-300"
             )}
           >
             <div className="text-2xl font-bold text-yellow-400">0~6</div>
-            <div className="text-sm text-yellow-400">1:2</div>
+            <div className="text-sm text-yellow-400">1:{SEVEN_UP_DOWN_MULTIPLIER}</div>
 
             {!isPlaceOver && totalDownBets > 0 && (
               <div
