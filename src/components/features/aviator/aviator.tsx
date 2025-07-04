@@ -172,6 +172,7 @@ export default function   Aviator({ className, roundRecord, token }: AviatorProp
               betAmount={isBetOnCurrentPlane ? userPlacement?.amount : undefined}
               hasBet={isBetOnCurrentPlane}
               hasCashedOut={isBetOnCurrentPlane ? userPlacement?.isWinner : false}
+              roundRecord={roundRecord}
             />
 
             <BettingPanel roundRecord={roundRecord} aviator={aviator} multiplier={currentMultiplier} />
