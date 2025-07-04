@@ -1,5 +1,13 @@
 import api from "./instance";
 import { HeadTailPlacement, HeadTailPlacementType } from "@/models/head-tail";
+
+type HeadTailRoundResult = {
+    isWinner: boolean;
+    amountWon: number;
+    amountPlaced: number;
+    platformFeeAmount: number;
+    winningSide: HeadTailPlacementType;
+}
 export const headTailAPI = {
     createHeadTailPlacement: async (data: { roundId: number, placement: HeadTailPlacementType, amount: number }) => {
         const response = await api.post("/head-tail", data);
@@ -15,13 +23,6 @@ export const headTailAPI = {
     },
     getHeadTailRoundResult: async (roundId: number) => {
         const response = await api.get(`/head-tail/result/${roundId}`);
-        return response.data.data as {
-            netProfitLoss: number;
-            netWinning: number;
-            platformFeeAmount: number;
-            amountWon: number;
-            grossWinning: number;
-            totalPlaced: number;
-        };
+        return response.data.data as HeadTailRoundResult[]; 
     }
 } as const;
