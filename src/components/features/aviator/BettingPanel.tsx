@@ -3,9 +3,9 @@ import { usePlacementOver } from "@/hooks/use-current-game";
 import { RoundRecord } from "@/models/round-record";
 import { useAviatorMyPlacement } from "@/react-query/aviator-queries";
 import { AviatorPlacement } from "@/models/aviator-placement";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { useStockSelectorAviator } from "@/hooks/use-market-selector";
-import { SchedulerType, MarketItem } from "@/models/market-item";
+import { SchedulerType } from "@/models/market-item";
 import { useGameType } from "@/hooks/use-market-selector";
 import { Button } from "@/components/ui/button";
 
@@ -259,7 +259,7 @@ function OtherPlanes({
   myPlacement: AviatorPlacement[]
 }) {
   // const [filteredPlanes, setFilteredPlanes] = useState<MarketItem[]>([]);
-  const { stockSelectedAviator, setStockSelectedAviator } = useStockSelectorAviator();
+  const { setStockSelectedAviator } = useStockSelectorAviator();
   const { gameType } = useGameType();
   const { planeStatus } = aviator;
   const isPlaceOver = usePlacementOver(roundRecord);
