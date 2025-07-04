@@ -1,6 +1,6 @@
 import MarketItem, { NSEMarketItem, SchedulerType } from '@/models/market-item';
 import { RoundRecord } from '@/models/round-record';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export interface RankedMarketItem extends MarketItem {
     change_percent: string;
