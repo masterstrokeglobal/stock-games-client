@@ -1,13 +1,12 @@
+import { Button } from "@/components/ui/button";
 import { AviatorHookReturn } from "@/hooks/use-aviator";
 import { usePlacementOver } from "@/hooks/use-current-game";
+import { useGameType, useStockSelectorAviator } from "@/hooks/use-market-selector";
+import { AviatorPlacement } from "@/models/aviator-placement";
+import { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { useAviatorMyPlacement } from "@/react-query/aviator-queries";
-import { AviatorPlacement } from "@/models/aviator-placement";
-import { useMemo, useState, useEffect } from "react";
-import { useStockSelectorAviator } from "@/hooks/use-market-selector";
-import { SchedulerType, MarketItem } from "@/models/market-item";
-import { useGameType } from "@/hooks/use-market-selector";
-import { Button } from "@/components/ui/button";
+import { useMemo, useState } from "react";
 
 interface BettingPanelProps {
   roundRecord: RoundRecord
@@ -259,7 +258,7 @@ function OtherPlanes({
   myPlacement: AviatorPlacement[]
 }) {
   // const [filteredPlanes, setFilteredPlanes] = useState<MarketItem[]>([]);
-  const { stockSelectedAviator, setStockSelectedAviator } = useStockSelectorAviator();
+  const {  setStockSelectedAviator } = useStockSelectorAviator();
   const { gameType } = useGameType();
   const { planeStatus } = aviator;
   const isPlaceOver = usePlacementOver(roundRecord);
