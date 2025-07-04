@@ -21,6 +21,14 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
   const [showDialog, setShowDialog] = useState(open);
   const { data, isLoading, isError } = useGetHeadTailRoundResult(roundRecordId,open);
 
+
+  const totalPlaced = data?.reduce((acc, curr) => acc + curr.amountPlaced, 0) ?? 0  ;
+  const totalWon = data?.reduce((acc, curr) => acc + curr.amountWon, 0) ?? 0;
+  const totalPlatformFee = data?.reduce((acc, curr) => acc + curr.platformFeeAmount, 0) ?? 0;
+  const totalNetProfitLoss = totalWon - totalPlaced - totalPlatformFee;   
+  const totalNetWinning = totalWon - totalPlatformFee;
+
+
   useEffect(() => {
     if (open) {
       setShowDialog(open);
@@ -28,7 +36,7 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
   }, [open]);
 
   // Check if the result is a win or loss
-  const isWin = data && Number(data.netProfitLoss) >= 0;
+  const isWin = data && Number(totalNetProfitLoss) >= 0;
 
   return (  
     <Dialog open={showDialog}>
@@ -78,28 +86,28 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
 
               <div className="text-center  flex justify-between  rounded-lg">
                 <p className="">Total Bet Amount</p>
-                <p className="text-xl ">{INR(data.totalPlaced)}</p>
+                <p className="text-xl ">{INR(totalPlaced)}</p>
               </div>
 
               <div className="text-center  flex justify-between  rounded-lg">
                 <p className="">Total Winnings</p>
-                <p className="text-xl ">{INR(data.amountWon)}</p>
+                <p className="text-xl ">{INR(totalWon)}</p>
               </div>
 
               <div className="text-center  flex justify-between  rounded-lg">
                 <p className="">Platform Fees</p>
-                <p className="text-xl ">- {INR(data.platformFeeAmount)}</p>
+                <p className="text-xl ">- {INR(totalPlatformFee)}</p>
               </div>
 
               <div className="text-center  flex justify-between  rounded-lg">
                 <p className="">Net Winning</p>
-                <p className="text-xl ">{INR(data.netWinning)}</p>
+                <p className="text-xl ">{INR(totalNetWinning)}</p>
               </div>
 
               <div className="text-center  flex justify-between  rounded-lg">
                 <p className="">Profit/Loss</p>
                 <p className={`text-xl  ${isWin ? 'text-green-600' : 'text-red-600'}`}>
-                  {INR(data.netProfitLoss)}
+                  {INR(totalNetProfitLoss)}
                 </p>
               </div>
 
