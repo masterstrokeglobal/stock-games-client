@@ -58,8 +58,8 @@ export const layerConfigs: LayerConfig[] = [
     speed: 1.4,
     altitudeRange: [0.2, 0.4], // Medium altitude - birds
     objects: [
-      { src: "/images/aviator/objects/birds.png", scale: [0.5, 0.7], count: 80 },
-      { src: "/images/aviator/objects/birds2.png", scale: [0.5, 0.7], count: 60 }
+      // { src: "/images/aviator/objects/birds.png", scale: [0.5, 0.7], count: 80 },
+      // { src: "/images/aviator/objects/birds2.png", scale: [0.5, 0.7], count: 60 }
     ]
   },
   {
