@@ -98,7 +98,7 @@ export const generateLayerObjects = (layer: LayerConfig) => {
   const maxY = totalHeight * (1 - minAltitude) // Higher Y for lower altitude
   const minY = totalHeight * (1 - maxAltitude) // Lower Y for higher altitude
   
-  // // Define category-specific ground safety zones
+  // Define category-specific ground safety zones
   // const getCategorySafetyZone = () => {
   //   const avgAltitude = (minAltitude + maxAltitude) / 2
   //   if (avgAltitude > 0.8) return 400 // Space objects - minimal ground restriction

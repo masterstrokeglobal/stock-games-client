@@ -44,23 +44,30 @@ export default function BettingPanel({
     return aviator.planeStatus.get(codeToCheck ?? "")?.multiplier || 1;
   }, [currentPlane, aviator.planeStatus, gameType]);
 
-  // Check if user has bet on current plane
-  const currentPlanePlacements = useMemo(() => {
-    if (!myPlacement || !stockSelectedAviator) return [];
-    return myPlacement.filter(placement =>
-      placement.marketItem.id === Number(stockSelectedAviator)
-    );
-  }, [myPlacement, stockSelectedAviator]);
+  // Check if user has ANY bet in this round (single bet restriction)
+  const hasAnyBetInRound = useMemo(() => {
+    return myPlacement && myPlacement.length > 0;
+  }, [myPlacement]);
 
-  const hasBetOnCurrentPlane = currentPlanePlacements.length > 0;
-  const totalBetOnCurrentPlane = currentPlanePlacements.reduce((sum, placement) => sum + placement.amount, 0);
-  const hasWonOnCurrentPlane = currentPlanePlacements.some(placement => placement.isWinner);
+  // Get the user's single bet placement (if any)
+  const userPlacement = useMemo(() => {
+    if (!myPlacement || myPlacement.length === 0) return null;
+    return myPlacement[0]; // Since we only allow one bet, get the first (and only) placement
+  }, [myPlacement]);
 
-  // Calculate potential cashout amount
+  // Check if user's bet is on the currently selected plane
+  const isBetOnCurrentPlane = useMemo(() => {
+    if (!userPlacement || !stockSelectedAviator) return false;
+    return userPlacement.marketItem.id === Number(stockSelectedAviator);
+  }, [userPlacement, stockSelectedAviator]);
+
+  const hasWonOnCurrentPlane = userPlacement?.isWinner || false;
+
+  // Calculate potential cashout amount for the user's single bet
   const cashOutAmount = useMemo(() => {
-    if (!hasBetOnCurrentPlane) return 0;
-    return parseFloat((totalBetOnCurrentPlane * currentPlaneMultiplier).toFixed(2));
-  }, [hasBetOnCurrentPlane, totalBetOnCurrentPlane, currentPlaneMultiplier]);
+    if (!userPlacement || !isBetOnCurrentPlane) return 0;
+    return parseFloat((userPlacement.amount * currentPlaneMultiplier).toFixed(2));
+  }, [userPlacement, isBetOnCurrentPlane, currentPlaneMultiplier]);
 
   const onPlaceBet = (amount: number) => {
     aviator.placeBet(amount);
@@ -74,8 +81,8 @@ export default function BettingPanel({
   const getButtonConfig = () => {
     // If betting phase is over (planes are flying/crashed)
     if (isPlaceOver) {
-      // If user has bet on current plane
-      if (hasBetOnCurrentPlane) {
+      // If user has a bet and it's on the current plane
+      if (hasAnyBetInRound && isBetOnCurrentPlane) {
         if (hasWonOnCurrentPlane) {
           return {
             text: "CASHED OUT",
@@ -112,7 +119,7 @@ export default function BettingPanel({
           };
         }
       } else {
-        // User hasn't bet on current plane
+        // User hasn't bet on current plane or no bet at all
         return {
           text: "BETTING CLOSED",
           variant: "closed",
@@ -122,14 +129,27 @@ export default function BettingPanel({
       }
     } else {
       // Betting phase is still active
-      if (hasBetOnCurrentPlane) {
-        return {
-          text: "BET PLACED",
-          variant: "placed",
-          disabled: true,
-          onClick: () => { }
-        };
+      if (hasAnyBetInRound) {
+        // User already has a bet placed somewhere
+        if (isBetOnCurrentPlane) {
+          return {
+            text: "BET PLACED",
+            variant: "placed",
+            disabled: true,
+            onClick: () => { }
+          };
+        } else {
+          // User has bet on a different plane
+          const betPlaceName = userPlacement?.marketItem?.name || "OTHER PLANE";
+          return {
+            text: `BET PLACED ON ${betPlaceName}`,
+            variant: "placed",
+            disabled: true,
+            onClick: () => { }
+          };
+        }
       } else {
+        // User hasn't placed any bet yet
         return {
           text: "PLACE BET",
           variant: "bet",
@@ -182,8 +202,8 @@ export default function BettingPanel({
       <div className="bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-lg p-4">
         <div className="w-full flex flex-col space-y-4">
 
-          {/* Betting Input - only show during betting phase and if no bet on current plane */}
-          <div className={`flex flex-col gap-2 ${isPlaceOver || hasBetOnCurrentPlane ? 'opacity-[50%] pointer-events-none' : ''}`}>
+          {/* Betting Input - only show during betting phase and if no bet placed in round */}
+          <div className={`flex flex-col gap-2 ${isPlaceOver || hasAnyBetInRound ? 'opacity-[50%] pointer-events-none' : ''}`}>
             <div className="flex items-center bg-gray-900 rounded-lg">
               <div className="bg-yellow-400 rounded-full px-2 py-1 m-2">
                 <span className="text-xs font-bold">₹</span>
@@ -238,23 +258,23 @@ function OtherPlanes({
   roundRecord: RoundRecord,
   myPlacement: AviatorPlacement[]
 }) {
-  const [filteredPlanes, setFilteredPlanes] = useState<MarketItem[]>([]);
+  // const [filteredPlanes, setFilteredPlanes] = useState<MarketItem[]>([]);
   const { stockSelectedAviator, setStockSelectedAviator } = useStockSelectorAviator();
   const { gameType } = useGameType();
   const { planeStatus } = aviator;
   const isPlaceOver = usePlacementOver(roundRecord);
 
-  useEffect(() => {
-    // Filter out the currently selected plane
-    const filteredPlanes = roundRecord.market.filter((stock) => stock.id !== Number(stockSelectedAviator));
-    setFilteredPlanes(filteredPlanes);
-  }, [planeStatus, stockSelectedAviator, roundRecord.market]);
+  // useEffect(() => {
+  //   // Filter out the currently selected plane
+  //   const filteredPlanes = roundRecord.market.filter((stock) => stock.id !== Number(stockSelectedAviator));
+  //   setFilteredPlanes(filteredPlanes);
+  // }, [planeStatus, stockSelectedAviator, roundRecord.market]);
 
   return (
     <div className="flex mt-4 flex-col gap-2">
       <div className="text-white text-sm font-medium mb-2">Other Planes:</div>
       <div className="flex flex-wrap gap-2 max-h-64 overflow-hidden scrollbar-hide">
-        {filteredPlanes.map((stock) => {
+        {roundRecord.market.slice(0, 4).map((stock) => {
           const codeToCheck = gameType === SchedulerType.CRYPTO ? stock.code : stock.codeName;
           const statusData = planeStatus?.get(codeToCheck ?? "");
           const status = statusData?.status || "unknown";
@@ -277,12 +297,33 @@ function OtherPlanes({
                 w-[calc(50%-4px)] min-h-[80px] flex flex-col justify-between
                 backdrop-blur-sm shadow-lg
                 ${canSwitch
-                  ? 'cursor-pointer bg-gradient-to-br from-blue-600/30 to-blue-500/20 border-blue-300/60 hover:from-blue-600/40 hover:to-blue-500/30 hover:border-blue-300/80 hover:scale-[1.02]'
+                  ? hasPlacementOnThisPlane 
+                    ? 'cursor-pointer bg-gradient-to-br from-yellow-600/30 to-yellow-500/20 border-yellow-400/80 hover:border-yellow-400/90 hover:scale-[1.02]'
+                    : 'cursor-pointer bg-gradient-to-br from-blue-600/30 to-blue-500/20 border-blue-300/60 hover:from-blue-600/40 hover:to-blue-500/30 hover:border-blue-300/80 hover:scale-[1.02]'
                   : 'cursor-not-allowed bg-gray-800/40 border-gray-500/50 opacity-70'
                 }
-                ${hasPlacementOnThisPlane ? 'ring-2 ring-yellow-400/50' : ''}
               `}
             >
+              {/* Bet Status Tag - Top Right */}
+              {hasPlacementOnThisPlane && (() => {
+                const placementOnThisPlane = myPlacement?.find(placement => placement.marketItem.id === stock.id);
+                const hasWon = placementOnThisPlane?.isWinner || false;
+                
+                if (hasWon) {
+                  return (
+                    <div className="absolute top-2 right-2 text-xs bg-green-500/90 text-green-900 px-2 py-1 rounded-full font-semibold shadow-lg">
+                      Cashed Out
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div className="absolute top-2 right-2 text-xs bg-yellow-500/90 text-yellow-900 px-2 py-1 rounded-full font-semibold shadow-lg">
+                      Bet Placed
+                    </div>
+                  );
+                }
+              })()}
+
               <div className="flex items-center gap-2 mb-2">
                 <img
                   src="/images/aviator/planes/plane_1.png"
@@ -318,11 +359,6 @@ function OtherPlanes({
                           "Waiting"
                     }
                   </div>
-                  {hasPlacementOnThisPlane && (
-                    <div className="text-xs bg-yellow-500/20 text-yellow-200 px-1 py-0.5 rounded">
-                      Bet Placed
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
@@ -330,9 +366,9 @@ function OtherPlanes({
         })}
       </div>
 
-      {filteredPlanes.length === 0 && (
+      {roundRecord.market.length === 0 && (
         <div className="text-center py-4 text-gray-300 text-sm">
-          No other planes available
+          No planes available
         </div>
       )}
     </div>

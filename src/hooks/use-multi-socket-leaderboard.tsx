@@ -20,7 +20,11 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
     const initialPricesRef = useRef<Map<string, number>>(new Map());
     const roundEndCheckRef = useRef<NodeJS.Timeout>();
 
-    const roundRecordType = useMemo(() => roundRecord?.type, [roundRecord]);
+    // const roundRecordType = useMemo(() => roundRecord?.type, [roundRecord]);
+
+    // useEffect(() => {
+    //     console.log("helo 1 updating roundRecordType", roundRecordType);
+    // }, [roundRecordType]);
 
     const getRoundStatus = () => {
         if (!roundRecord) return 'pre-tracking';
@@ -376,7 +380,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
             clearInterval(intervalId);
             initialPricesRef.current.clear();
         };
-    }, [roundRecordType]);
+    }, [roundRecord]);
 
     // Update stocks on roundRecord change
     useEffect(() => {
