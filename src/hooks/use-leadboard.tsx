@@ -29,11 +29,11 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
     const roundEndCheckRef = useRef<NodeJS.Timeout>();
 
     // use Memo to save the state o fhte round record type 
-    const roundRecordType = useMemo(() => roundRecord?.type, [roundRecord]);
+    // const roundRecordType = useMemo(() => roundRecord?.type, [roundRecord]);
 
-    useEffect(() => {
-        console.log("helo 2 updating roundRecordType", roundRecordType);
-    }, [roundRecordType]);
+    // useEffect(() => {
+    //     console.log("helo 2 updating roundRecordType", roundRecordType);
+    // }, [roundRecordType]);
 
 
 
@@ -439,7 +439,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
             clearInterval(intervalId);
             initialPricesRef.current.clear();
         };
-    }, [roundRecordType]);
+    }, [roundRecord]);
 
     //update stocks on roundRecord change
     useEffect(() => {
