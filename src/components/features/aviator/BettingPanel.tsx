@@ -258,7 +258,7 @@ function OtherPlanes({
   myPlacement: AviatorPlacement[]
 }) {
   // const [filteredPlanes, setFilteredPlanes] = useState<MarketItem[]>([]);
-  const {  setStockSelectedAviator } = useStockSelectorAviator();
+  const { setStockSelectedAviator } = useStockSelectorAviator();
   const { gameType } = useGameType();
   const { planeStatus } = aviator;
   const isPlaceOver = usePlacementOver(roundRecord);
