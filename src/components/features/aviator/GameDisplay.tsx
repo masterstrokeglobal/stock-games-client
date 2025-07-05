@@ -38,7 +38,7 @@ const GameDisplay = ({
   const [isCurrentPlaneCrashed, setIsCurrentPlaneCrashed] = useState(false)
   const [isParallaxVisible, setIsParallaxVisible] = useState(true)
   const [blastOpacity, setBlastOpacity] = useState(0)
-  const [flightTime, setFlightTime] = useState<string>("00:00")
+  const [flightTime, setFlightTime] = useState<number>(0)
 
   // Calculate flight time (time elapsed since round started)
   const getFlightTime = () => {
@@ -57,7 +57,8 @@ const GameDisplay = ({
   // Real-time flight time timer
   useEffect(() => {
     const updateFlightTime = () => {
-      setFlightTime(getFlightTime());
+      // subtract 30 seconds from the flight time
+      setFlightTime(getFlightTime().split(':').map(Number).reduce((acc, curr, i) => acc + curr * (i === 0 ? 60 : 1), 0) - 30);
     };
 
     // Update immediately
@@ -175,19 +176,19 @@ const GameDisplay = ({
               {planeStatus === "active" && (
                 <div className="mt-2 text-center">
                   <div className="text-green-300 text-xs font-bold">
-                    Flight Time: {flightTime}
+                    Flight Time: {flightTime}s
                   </div>
                 </div>
               )}
               
               {/* Final Flight Time Display */}
-              {(planeStatus === "crashed" || planeStatus === "flew_away") && (
+              {/* {(planeStatus === "crashed" || planeStatus === "flew_away") && (
                 <div className="mt-2 text-center">
                   <div className="text-gray-300 text-xs font-medium">
-                    Final Time: {flightTime}
+                    Flight Time: {flightTime}s
                   </div>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>
