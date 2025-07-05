@@ -45,12 +45,12 @@ const GameDisplay = ({
     const now = new Date();
     const startTime = roundRecord.startTime;
     const elapsed = now.getTime() - startTime.getTime();
-    
+
     if (elapsed <= 0) return "00:00";
-    
+
     const minutes = Math.floor(elapsed / (1000 * 60));
     const seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
-    
+
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
@@ -122,6 +122,8 @@ const GameDisplay = ({
           <ParallaxImage multiplier={multiplier} isMoving={isParallaxMoving} />
         )}
 
+        {/* <ParallaxImage multiplier={multiplier} isMoving={isParallaxMoving} /> */}
+
         {!isCurrentPlaneCrashed && (<>
           <AviatorCanvas multiplier={multiplier} shouldStartTakeOffAnimation={isParallaxMoving} opacity={canvasOpacity} />
         </>)}
@@ -135,16 +137,15 @@ const GameDisplay = ({
             {/* Animated border glow */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-blue-400/20 rounded-xl blur-sm animate-pulse"></div>
 
-              {/* Bet placed indicator */}
-              {hasBet && betAmount && (
-                <div className={`text-xs font-bold uppercase tracking-wide mb-2 px-2 py-0.5 rounded-full border shadow-lg ${
-                  hasCashedOut 
-                    ? 'text-green-400 bg-green-500/20 border-green-400/30' 
-                    : 'text-yellow-400 bg-yellow-500/20 border-yellow-400/30'
+            {/* Bet placed indicator */}
+            {hasBet && betAmount && (
+              <div className={`text-xs font-bold uppercase tracking-wide mb-2 px-2 py-0.5 rounded-full border shadow-lg ${hasCashedOut
+                  ? 'text-green-400 bg-green-500/20 border-green-400/30'
+                  : 'text-yellow-400 bg-yellow-500/20 border-yellow-400/30'
                 }`}>
-                  {hasCashedOut ? 'Cashed Out' : `Bet : ₹${betAmount}`}
-                </div>
-              )}
+                {hasCashedOut ? 'Cashed Out' : `Bet : ₹${betAmount}`}
+              </div>
+            )}
 
             {/* Content */}
             <div className="relative z-10 flex flex-col items-center">
@@ -180,15 +181,6 @@ const GameDisplay = ({
                   </div>
                 </div>
               )}
-              
-              {/* Final Flight Time Display */}
-              {/* {(planeStatus === "crashed" || planeStatus === "flew_away") && (
-                <div className="mt-2 text-center">
-                  <div className="text-gray-300 text-xs font-medium">
-                    Flight Time: {flightTime}s
-                  </div>
-                </div>
-              )} */}
             </div>
           </div>
         </div>

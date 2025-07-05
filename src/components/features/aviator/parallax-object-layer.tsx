@@ -27,7 +27,7 @@ const ParallaxObjectLayer = ({ layerRef, containerRef, objects, speed }: Paralla
   return (
     <div 
       ref={containerRef} 
-      className="absolute top-0 left-0 w-[calc(8000px*16)] h-[8000px]"
+      className="absolute inset-0 top-0 left-0 w-[calc(8000px*16)] h-[8000px]"
       style={{ 
         filter: speed < 1 ? `brightness(${0.6 + speed * 0.3}) opacity(${0.7 + speed * 0.2})` : 'none'
       }}
