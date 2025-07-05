@@ -173,10 +173,10 @@ const GameDisplay = ({
               </div>
 
               {/* Flight Time Display */}
-              {planeStatus === "active" && (
+              {planeStatus === "active" && flightTime >= 0 && (
                 <div className="mt-2 text-center">
                   <div className="text-green-300 text-xs font-bold">
-                    Flight Time: {flightTime}s
+                    Flight Time: {Math.floor(flightTime / 60).toString().padStart(2, '0')}:{(flightTime % 60).toString().padStart(2, '0')}
                   </div>
                 </div>
               )}
