@@ -2,6 +2,7 @@
 import CategoryCarousel from "@/components/features/casino-games/category-carousel";
 import { CasinoProvidersCarousel } from "@/components/features/casino-games/game-providers";
 import AdMarquee from "@/components/features/platform/ad-marquee";
+import CtaSection from "@/components/features/platform/cta-section";
 import StockGameCarousel from "@/components/features/stock-games.tsx/stock-game-carousel";
 import ActiveTierCard from "@/components/features/tier/user-tier-card";
 import { Button } from "@/components/ui/button";
@@ -20,18 +21,18 @@ const PlatformPage = () => {
     const isCasinoAllowed = checkCasinoAllowed(COMPANYID);
 
     return (
-        <section className="space-y-4 md:space-y-8">
-            <AdMarquee />
+        <section className="space-y-4 md:space-y-8 font-inter">
+            <AdMarquee />  
             {isLoggedIn && !user.isDemoUser && (
                 <div className="flex gap-2">
                     <Link href="/game/wallet/deposit" className="flex-1" passHref>
-                        <Button className="w-full  bg-accent-secondary text-accent-secondary-foreground gap-x-2 md:h-12">
+                        <Button className="w-full  dark:bg-[linear-gradient(to_right,#AA5798_0%,#5065C6_100%)] bg-primary-game dark:text-white   dark:rounded-none gap-x-2 md:h-12">
                             {t('menu.deposit')}
                         </Button>
                     </Link>
 
                     <Link href="/game/wallet/withdrawl" className="flex-1" passHref>
-                        <Button className="w-full gap-x-2 md:h-12 border border-accent-secondary text-accent-secondary bg-transparent tex">
+                        <Button className="w-full gap-x-2 md:h-12 dark:bg-[linear-gradient(90deg,#02A2A0_32.81%,#4A66C9_100%)] bg-primary-game  dark:rounded-none dark:text-white">
                             {t('menu.withdraw')}
                         </Button>
                     </Link>
@@ -39,7 +40,7 @@ const PlatformPage = () => {
                 </div>
             )}
 
-            {isLoggedIn && <ActiveTierCard className="mt-12" />}
+            {isLoggedIn && <ActiveTierCard className="my-12" />}
 
             <StockGameCarousel />
             {isCasinoAllowed && (
@@ -57,6 +58,8 @@ const PlatformPage = () => {
                     <CategoryCarousel title="Lottery" type={GameTypeEnum.LOTTERY} direction="forward" />
                 </>
             )}
+
+            <CtaSection />
 
         </section>
     )

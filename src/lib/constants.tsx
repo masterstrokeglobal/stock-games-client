@@ -83,7 +83,7 @@ export const LOBBY_GAMES: Game[] = [
 
 export const StockDerbyGames: Game[] = [
     {
-        title: "NSE Market",
+        title: "Indian Stock Market",
         link: "/game?gameType=nse",
         image: "/images/nse.png",
         description: "Rouletter game on live NSE stocks",
@@ -95,7 +95,7 @@ export const StockDerbyGames: Game[] = [
     //     description: "Rouletter game on live crypto currencies",
     // },
     {
-        title: "US Market",
+        title: "US Stock Market",
         link: "/game?gameType=usa_market",
         image: "/images/us-stock.png",
         description: "Rouletter game on live US stocks",

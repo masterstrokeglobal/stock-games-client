@@ -180,8 +180,10 @@ export const secondNames: string[] = [
 ];
 
 
-export const INR = (rupees: string | number, nodecimal: boolean = false) => {
+
+export const INR = (rupees: string | number | undefined, nodecimal: boolean = false, gap: boolean = false) => {
   // convert number into RUpees
+  if (!rupees) return '0.00';
   const number = Number(rupees);
 
   const formatted = new Intl.NumberFormat('en-IN', {
@@ -192,7 +194,7 @@ export const INR = (rupees: string | number, nodecimal: boolean = false) => {
   }).format(number);
 
   // Add a space between the currency symbol and the number
-  return formatted.replace('₹', '₹ ');
+  return formatted.replace('₹', gap ? '₹ ' : '₹');
 }
 
 export const RED_BLACK_ROULETTE_NUMBERS = [
@@ -256,7 +258,7 @@ export const formatRupee = (rupees: number) => {
 }
 
 export const checkCasinoAllowed = (companyId: number) => {
-  return companyId === 21;
+  return companyId === 4;
 }
 
 // Generate current time in 12-hour format (HH:MM AM/PM)

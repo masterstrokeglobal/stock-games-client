@@ -27,6 +27,7 @@ export default function RootLayout({
         <Suspense>
             <AudioProvider>
                 <UserProvider>
+
                     <ThemeProvider>
                     <QueryClientProvider client={queryClient}>
                         <ThemeManager />

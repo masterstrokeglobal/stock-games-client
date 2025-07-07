@@ -8,7 +8,7 @@ const useWallet = () => {
     const wallet = useMemo(() => {
         if (isLoading) return new Wallet();
         return new Wallet(data?.data?.wallet);
-    }, [data]);
+    }, [data, isLoading]);
 
     return wallet;
 }

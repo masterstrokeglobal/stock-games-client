@@ -1,6 +1,6 @@
 import { casinoAPI } from "@/lib/axios/casino-API";
 import CasinoGames from "@/models/casino-games";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useGetCasinoGames = (filter: any) => {
@@ -18,6 +18,24 @@ export const useGetCasinoGames = (filter: any) => {
     });
 };
 
+
+export const useInfiniteGetCasinoGames = (filter: any) => {
+    const limit = filter.limit || 100;
+    return useInfiniteQuery({
+        queryKey: ["casino-games", filter],
+        queryFn: async ({ pageParam = 1 }) => {
+            const response = await casinoAPI.getCasinoGames({ ...filter, page: pageParam });
+            return response.data;
+        },
+        getNextPageParam: (lastPage: any, pages: any) => {
+            return lastPage.count > pages.length * limit ? pages.length + 1 : undefined;      
+        },
+        initialPageParam: 1, 
+        getPreviousPageParam: (firstPage: any, allPages: any) => {
+            return firstPage.count > allPages.length * limit ? allPages.length - 1 : undefined;
+        }
+    });
+};
 
 export const useGameLogin = (id: string) => {
     return useQuery({

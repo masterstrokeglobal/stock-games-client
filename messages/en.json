@@ -29,7 +29,7 @@
         "placement": "Placement",
         "top-bets": "Top Bets",
         "race-begin": "Race Starts in",
-        "no-bets": "You haven’t placed any Bets yet",
+        "no-bets": "You haven't placed any Bets yet",
         "no-bets-description": "Place your bets to see them here",
         "betting-closed": "Betting Closed",
         "place-your-bets": "Place your bets",
@@ -183,6 +183,7 @@
         "title": "Your Wallet",
         "balance": {
             "title": "Wallet Balance",
+            "total": "Total Balance",
             "main": {
                 "label": "Main",
                 "alt": "coin"

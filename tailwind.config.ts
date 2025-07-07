@@ -22,6 +22,11 @@ const config: Config = {
 				'russo-one': ['var(--font-russo-one)', 'sans-serif'],
 				'montserrat': ['var(--font-montserrat)', 'sans-serif'],
 				'inter': ['var(--font-inter)', 'sans-serif'],
+				'playfair-display-sc': ['var(--font-playfair-display-sc)', 'sans-serif'],
+				'play': ['var(--font-play)', 'sans-serif'],
+				'phudu': ['var(--font-phudu)', 'sans-serif'],
+				'protest-strike': ['var(--font-protest-strike)', 'sans-serif'],
+				'prosto-one': ['var(--font-prosto-one)', 'sans-serif'],
 			},
 			animation: {
 				marquee: 'marquee 6s linear infinite',
@@ -108,6 +113,10 @@ const config: Config = {
 					background: 'var(--input-field-background)',
 				},
 				ring: 'hsl(var(--ring))',
+				platform: {
+					border: 'var(--platform-border)',
+					text: 'var(--platform-text)'
+				},
 				chart: {
 					'1': 'hsl(var(--chart-1))',
 					'2': 'hsl(var(--chart-2))',

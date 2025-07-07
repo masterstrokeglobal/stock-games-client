@@ -1,34 +1,13 @@
 "use client";
 import Navbar from "@/components/features/game/navbar";
+import BottomNavbar from "@/components/features/platform/bottom-navbar";
 import Footer from "@/components/features/platform/footer";
 import Sidebar from "@/components/features/platform/sidebar";
-import { Button } from "@/components/ui/button";
 import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
-import { GiftIcon, MenuIcon, SearchIcon, UserIcon } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { PropsWithChildren, useEffect, useState } from "react";
-const menuItems = [
-    {
-        label: "Promotions",
-        icon: GiftIcon,
-        href: "/game/platform/promotion"
-    },
-    {
-        label: "Search",
-        icon: SearchIcon,
-        href: "/game/platform/casino"
-    },
 
-    {
-        label: "Account",
-        icon: UserIcon,
-        href: "/game/platform/user-menu"
-    }
-]
 export default function GamingAppInterface({ children }: PropsWithChildren) {
-    const pathname = usePathname()
 
     const { isMobile } = useWindowSize();
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -41,35 +20,15 @@ export default function GamingAppInterface({ children }: PropsWithChildren) {
         setSidebarOpen(!sidebarOpen)
     }
 
-    const checkActive = (path: string) => {
-        return pathname === path
-    }
 
     return (
-        <div className="flex flex-col min-h-screen relative bg-primary-game text-white   mx-auto">
+        <div className="flex flex-col min-h-screen relative dark:bg-primary-game bg-background-game text-white   mx-auto">
             <Navbar />
             <Sidebar sidebarOpen={sidebarOpen} toggleSidebar={toggleSidebar} className="h-[100svh] pt-14" />
             {/* platform menu and account */}
-            <div className="fixed bottom-0 left-0 right-0 bg-primary-game border-t border-gray-800 md:hidden flex justify-around py-2 z-50">
-                <div className="flex items-center justify-center gap-2">
-                    <Button variant="ghost" aria-label="Collapse sidebar" className="flex flex-col gap-2 h-fit" onClick={toggleSidebar}>
-                        <MenuIcon className="w-5 h-5" />
-                        <span>Menu</span>
-                    </Button>
-                </div>
-                {menuItems.map((item) => (
-                    <div key={item.href} className="flex items-center justify-center gap-2">
-                        <Link href={item.href} className={cn(checkActive(item.href) ? "active-menu-button text-white rounded-md" : "text-gray-400")}>
-                            <Button variant="ghost" aria-label="Collapse sidebar" className="flex flex-col gap-2 h-fit">
-                                <item.icon className="w-5 h-5" />
-                                <span>{item.label}</span>
-                            </Button>
-                        </Link>
-                    </div>
-                ))}
-            </div>
+            <BottomNavbar toggleSidebar={toggleSidebar} />
             <div className={cn("flex-1 mt-14  pt-5 transition-all duration-300 ease-in-out", sidebarOpen ? "md:pl-64" : "md:pl-20")}>
-                <main className="w-full md:px-12 px-4">
+                <main className="w-full md:px-12 sm:px-4 px-2">
                     {children}
                     <Footer />
                 </main>

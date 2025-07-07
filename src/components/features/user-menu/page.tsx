@@ -1,143 +1,188 @@
 "use client";
-import Container from '@/components/common/container';
-import TopBar from '@/components/common/top-bar';
-import { Button } from '@/components/ui/button';
+import LocaleSwitcher from '@/components/common/LocaleSwitcher';
+import { MuteButton } from '@/components/common/mute-button';
+import { PasswordIcon, ProfileIcon, TransactionIcon, WalletIcon } from '@/components/features/user-menu/icons';
+import { Button } from "@/components/ui/button";
 import { useAuthStore } from '@/context/auth-context';
+import { INR } from "@/lib/utils";
 import User from '@/models/user';
 import Wallet from '@/models/wallet';
 import { useUserLogout } from '@/react-query/admin-auth-queries';
+import { useGetUserTier } from "@/react-query/game-user-queries";
 import { useGetWallet } from '@/react-query/payment-queries';
-import { Coins, HelpCircleIcon, Home, LogOutIcon, BookIcon } from 'lucide-react';
-import { useTranslations } from 'next-intl';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useMemo } from 'react';
-import { PasswordIcon, ProfileIcon, TransactionIcon, WalletIcon } from './icons';
-import LocaleSwitcher from '@/components/common/LocaleSwitcher';
-import { MuteButton } from '@/components/common/mute-button';
+import { BookIcon, Coins, HelpCircleIcon, LogOutIcon } from 'lucide-react';
+import { useTranslations } from "next-intl";
+import Image from "next/image";
+import Link from "next/link";
+import { useMemo } from "react";
+
 
 const UserMenu = () => {
-    const t = useTranslations('user-menu');
+    const t = useTranslations("user-menu");
     const { userDetails } = useAuthStore();
     const { data, isLoading } = useGetWallet();
 
-    const router = useRouter();
+    const { data: userTier } = useGetUserTier();
+
     const { mutate } = useUserLogout();
 
     const wallet = useMemo(() => {
         if (isLoading) return new Wallet();
         return new Wallet(data?.data?.wallet);
-    }, [data])
+    }, [data]);
+
     const user = userDetails as User;
 
+    // Menu items configuration
+    const menuItems = [
+        {
+            href: "/game/profile",
+            icon: ProfileIcon,
+            label: t('your-info')
+        },
+        {
+            href: "/game/change-password",
+            icon: PasswordIcon,
+            label: t('change-password')
+        },
+        {
+            href: "/game/transaction-history",
+            icon: TransactionIcon,
+            label: t('transaction-history')
+        },
+        {
+            href: "/game/betting-history",
+            icon: Coins,
+            label: t('betting-history')
+        },
+        {
+            href: "/game/wallet/menu",
+            icon: WalletIcon,
+            label: t('your-wallet')
+        },
+        {
+            href: "/game/terms-and-condition",
+            icon: BookIcon,
+            label: t('terms-and-conditions')
+        },
+        {
+            href: "/game/contact",
+            icon: HelpCircleIcon,
+            label: t('contact-us')
+        },
+        {
+            href: "/game/rules",
+            icon: BookIcon,
+            label: t('rules')
+        },
+        // {
+        //     href: "/game/faq",
+        //     icon: HelpCircleIcon,
+        //     label: t('faq')
+        // }
+    ];
 
     return (
-        <>
-            <Container className="flex flex-col items-center min-h-screen pt-24 ">
-                <TopBar leftContent={<Button variant="ghost" className='flex gap-2 items-end' onClick={() => router.push('/game/platform')}>
-                    <Home size={20} /> Home
-                </Button>}>
-                    {t('title')}
-                </TopBar>
-                <div className="flex-1 w-full mx-auto max-w-sm flex flex-col ">
-                    <div className="mb-8 flex mt-8 gap-4 sm:flex-row flex-col bg-tertiary p-4 rounded-xl">
-                        <div className='w-24 h-24 border-2 rounded-3xl border-[#EEC53C]'>
-                            <img src={user?.profileImage} alt={t('profile-image-alt')} className="rounded-3xl h-full w-full object-cover" />
-                        </div>
-                        <div className='space-y-2'>
-                            <h2 className="text-2xl text-white font-semibold">
-                                {user?.name}
-                            </h2>
-                            <div className='flex items-center justify-start gap-4'>
-                                <div className="shadow-custom-glow h-fit w-fit mr-2 rounded-full" >
-                                    <img src="/coin.svg" alt={t('coin-image-alt')} />
-                                </div>
-                                <span className="text-white text-xl">
-                                    {isLoading ? t('loading') : wallet.totalBalance}
-                                </span>
-                                <Link href="/game/wallet/menu" passHref>
-                                    <Button size="icon" variant="ghost" className="ml-auto">
-                                        <img src="/plus-icon.svg" className="size-7" alt={t('add-funds-alt')} />
-                                    </Button>
-                                </Link>
-                            </div>
+
+        <div className="sm:max-w-2xl mx-auto  gap-0 p-0 overflow-hidden">
+            <div className="flex flex-col items-center bg-[#050128]  md:px-6 px-0 py-8 gap-6">
+                {/* User Profile Card */}
+                <div className="max-w-lg w-full flex bg-gradient-to-b text-platform-text dark:from-[#262BB5] dark:to-[#11134F] from-[#64B6FD] to-[#466CCF] rounded-none border-2 border-platform-border shadow-lg p-4 items-center mb-2">
+                    <div className="flex items-center justify-center mr-4">
+                        <div className='md:w-20 md:h-20 w-16 h-16 border-2 rounded-3xl border-[#EEC53C] overflow-hidden'>
+                            <img
+                                src={user?.profileImage || "/images/default-avatar.png"}
+                                alt="Profile"
+                                className="rounded-3xl h-full w-full object-cover"
+                            />
                         </div>
                     </div>
-
-                    <nav className="space-y-4 w-full flex flex-col gap-3.5  max-w-sm">
-                        <Link href="/game/profile" passHref>
-                            <Button variant="game-secondary" className="w-full  gap-x-2 h-14">
-                                <ProfileIcon />
-                                {t('your-info')}
-                            </Button>
-                        </Link>
-                        <Link href="/game/change-password" passHref>
-                            <Button variant="game-secondary" className="w-full   gap-x-2 h-14">
-                                <PasswordIcon />
-                                {t('change-password')}
-                            </Button>
-                        </Link>
-                        <Link href="/game/wallet/menu" passHref>
-                            <Button variant="game-secondary" className="w-full  gap-x-2 h-14">
-                                <WalletIcon />
-                                {t('your-wallet')}
-                            </Button>
-                        </Link>
-                        <Link href="/game/transaction-history" passHref>
-                            <Button variant="game-secondary" className="w-full gap-2 h-14">
-                                <TransactionIcon />
-                                {t('transaction-history')}
-                            </Button>
-                        </Link>
-                        <Link href="/game/betting-history" passHref>
-                            <Button variant="game-secondary" className="w-full gap-2 h-14">
-                                <Coins className='text-white' />
-                                {t('betting-history')}
-                            </Button>
-                        </Link>
-                        <Link href="/game/terms-and-condition" passHref>
-                            <Button variant="game-secondary" className="w-full gap-2 h-14">
-                                <BookIcon />
-                                {t('terms-and-conditions')}
-                            </Button>
-                        </Link>
-                        <Link href="/game/contact" passHref>
-                            <Button variant="game-secondary" className="w-full gap-2 h-14">
-                                <HelpCircleIcon />
-                                {t('contact-us')}
-                            </Button>
-                        </Link>
-                        <Link href="/game/rules" passHref>
-                            <Button variant="game-secondary" className="w-full gap-2 h-14">
-                                <BookIcon />
-                                {t('rules')}
-                            </Button>
-                        </Link>
-                        <Link href="/game/faq" passHref>
-                            <Button variant="game-secondary" className="w-full gap-2 h-14">
-                                <HelpCircleIcon />
-                                {t('faq')}
-                            </Button>
-                        </Link>
-                        <LocaleSwitcher className="w-full text-white" selectClassName="bg-primary text-white" />
-                        <MuteButton className="w-full bg-primary text-white" />
-                    </nav>
+                    <div className="flex flex-col justify-center h-full flex-1">
+                        <div className="md:text-lg text-sm font-semibold mb-2">
+                            {user?.name || "Player Name"}
+                        </div>
+                        <div className='flex items-center justify-start gap-2'>
+                            <div className="h-fit w-fit rounded-full">
+                                <img src="/images/coins/bag.png" alt="Coin" className="w-6 h-6 md:w-6 md:h-6 w-4 h-4" />
+                            </div>
+                            <span className="text-white md:text-base text-sm">
+                                {isLoading ? t('loading') : INR(wallet.totalBalance, true)}
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="mt-8  w-full max-w-sm">
-                    <Button variant="destructive" className="w-full mx-auto gap-2 h-14" onClick={() => mutate()}>
-                        <LogOutIcon />
+                {/* Progress Section */}
+                <div className="max-w-lg w-full  border-2 bg-gradient-to-b dark:from-[#262BB5] dark:to-[#11134F] from-[#64B6FD] to-[#466CCF] border-platform-border rounded-none p-4 flex items-center md:gap-6 gap-4 shadow-lg">
+                    {/* Tier Icon */}
+                    <div className="flex flex-col items-center md:mr-4">
+                        <div className="md:w-14 md:h-14 w-10 h-10 rounded-full md:border-4 border-2 border-[#EEC53C] flex items-center justify-center bg-[#181E6A]">
+                            <Image
+                                src={userTier?.imageUrl ? userTier?.imageUrl : "/images/tier/tier-bg-light.png"}
+                                alt={userTier?.tierName || "Tier"}
+                                width={44}
+                                height={44}
+                                className="object-contain"
+                            />
+                        </div>
+                        <span className="text-white md:text-base text-sm font-semibold mt-2">{userTier?.tierName}</span>
+                    </div>
+                    {/* Progress Info */}
+                    <div className="flex-1 flex flex-col justify-center">
+                        <div className="flex items-center mb-2 flex-wrap">
+                            <span className="text-white font-semibold md:text-sm text-xs mr-auto">Point Progress</span>
+                            <span className="text-white font-bold md:text-sm text-xs">{userTier?.totalPoints || 0}/{userTier?.nextTierPointsRequired || 0} Points</span>
+                        </div>
+                        <div className="w-full h-2 rounded-full bg-[#3B418C] overflow-hidden">
+                            <div
+                                className="h-2 rounded-full bg-gradient-to-r from-[#E96B8A] via-[#7AC6F9] to-[#3B418C]"
+                                style={{
+                                    width: `${userTier?.totalPoints && userTier?.nextTierPointsRequired
+                                        ? Math.min((userTier.totalPoints / userTier.nextTierPointsRequired) * 100, 100)
+                                        : 0
+                                        }%`
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Menu Grid */}
+                <div className="w-full max-w-lg grid md:grid-cols-2 grid-cols-1 gap-4">
+                    {menuItems.map((item, index) => {
+                        const IconComponent = item.icon;
+                        return (
+                            <Link key={index} href={item.href} passHref>
+                                <Button variant="ghost" className="w-full rounded-none h-16 border-2 border-platform-border justify-start text-platform-text flex gap-4">
+                                    <div className="w-10 h-10 backdrop-blur-sm p-2 border-2 border-platform-border rounded-full flex items-center justify-center">
+                                        <IconComponent className="w-5 h-5" />
+                                    </div>
+                                    <span className="font-semibold">{item.label}</span>
+                                </Button>
+                            </Link>
+                        );
+                    })}
+                </div>
+
+                {/* Settings Section */}
+                <div className="w-full max-w-lg space-y-3">
+                    <LocaleSwitcher theme="solid" className="w-full " />
+                    <MuteButton className="w-full bg-gradient-to-b rounded-none dark:from-[#262BB5] dark:to-[#11134F] from-[#64B6FD] to-[#466CCF] border-2 border-platform-border text-white hover:from-[#2B2BB5] hover:to-[#15154F]" />
+                </div>
+
+                {/* Logout Button */}
+                <div className="w-full max-w-lg">
+                    <Button
+                        variant="destructive"
+                        className="rounded-none w-full h-12 bg-[#AA2D2D] "
+                        onClick={() => mutate()}
+                    >
+                        <LogOutIcon className="w-5 h-5 mr-2" />
                         {t('logout')}
                     </Button>
                 </div>
-
-            </Container>
-            <footer className='w-full mx-auto bg-gray-200 p-2 mt-20'>
-                <p className='text-sm text-center text-gray-500'>
-                    Copyright © 2025 {userDetails?.company?.name}. All rights reserved. <Link href="/game/terms-and-condition" passHref className='text-primary underline'>Terms and Conditions</Link>
-                </p>
-            </footer>
-        </>
+            </div>
+        </div>
     );
 };
 

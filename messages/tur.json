@@ -159,13 +159,14 @@
     "title": "Cüzdanınız",
     "balance": {
       "title": "Cüzdan Bakiyesi",
+      "total": "Toplam Bakiye",
       "main": {
         "label": "Ana",
-        "alt": "jeton"
+        "alt": "madeni para"
       },
       "bonus": {
         "label": "Bonus",
-        "alt": "bonus jeton"
+        "alt": "bonus madeni para"
       }
     },
     "menu": {
