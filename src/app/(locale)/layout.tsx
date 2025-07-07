@@ -2,11 +2,10 @@
 import { AudioProvider } from "@/context/audio-context";
 import { UserProvider } from "@/context/auth-context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Suspense } from "react";
 import { Toaster } from "sonner";
 import ThemeManager from "./dashboard/theme-manager";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import ThemeProvider from "@/context/theme-context";
 
 
 const queryClient = new QueryClient({
@@ -27,15 +26,12 @@ export default function RootLayout({
         <Suspense>
             <AudioProvider>
                 <UserProvider>
-
-                    <ThemeProvider>
                     <QueryClientProvider client={queryClient}>
                         <ThemeManager />
                         <Toaster toastOptions={{ duration: 1500 }} expand={true} visibleToasts={3} position="top-right" richColors />
                         {children}
                         <ReactQueryDevtools initialIsOpen={false} />
                     </QueryClientProvider>
-                    </ThemeProvider>
                 </UserProvider>
             </AudioProvider>
         </Suspense>

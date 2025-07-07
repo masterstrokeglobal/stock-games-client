@@ -1,3 +1,5 @@
+"use client";
+
 import { baseTheme, COMPANYID } from "@/lib/utils";
 import Company from "@/models/company";
 import { useGetCompanyById } from "@/react-query/company-queries";

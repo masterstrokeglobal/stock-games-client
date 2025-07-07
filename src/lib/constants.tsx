@@ -125,7 +125,7 @@ export const StockDerbyGames: Game[] = [
     // coin head tail
     {
         title: "Coin Head Tail",
-        link: "/game/platform/stock-game/coin-head-tail",
+        link: "/game/single-player/head-tail",
         image: "/images/banner/coin-toss.png",
         description: "Guess the side of the coin"
     }
@@ -224,7 +224,7 @@ export const SinglePlayerGames: Game[] = [
     },
     {
         title: "Coin Head Tail",
-        link: "/game/platform/stock-game/coin-head-tail",
+        link: "/game/single-player/head-tail",
         image: "/images/games/coin-head-tail.png",
         description: "Guess the side of the coin"
     }

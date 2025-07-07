@@ -1,9 +1,9 @@
 "use client";
-import { useTheme } from '@/context/theme-context';
 import { Inter, Jersey_10, Jersey_20, Konkhmer_Sleokchher, Montserrat, Poppins, Russo_One } from 'next/font/google';
 import "./game.css";
 import "./globals.css";
 import "./shuffle.css";
+import ThemeProvider, { useTheme } from '@/context/theme-context';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
@@ -50,7 +50,7 @@ const inter = Inter({
 
 const Body = ({ children }: { children: React.ReactNode }) => {
     const theme = useTheme();
-    const isDark = theme === "dark";
+    const isDark = theme == "dark";
     return (
       <body className={`${poppins.className} antialiased ${KonkhmerSleokchher.variable} ${jersy2.variable} ${jersy10.variable} ${RussoOne.variable} ${montserrat.variable} ${inter.variable} ${isDark ? 'dark' : ''}`}>
         {children}
@@ -58,4 +58,13 @@ const Body = ({ children }: { children: React.ReactNode }) => {
     );
   };
   
-  export default Body;
+
+  export default function BodyComponent ({ children }: { children: React.ReactNode }) {
+    return (
+    <ThemeProvider>
+      <Body>  
+        {children}
+      </Body>
+    </ThemeProvider>
+    )
+  }

@@ -48,7 +48,7 @@ export const StockPrice: React.FC<StockPriceProps> = ({ rankedMarketItem, winnin
                     Current Price:
                 </span>
             </div>
-            <div className="flex flex-row w-full justify-between items-center">
+            <div className="flex flex-row w-full gap-2 justify-between items-center">
                 <span
                     className="text-white text-[6px] sm:text-[8px] font-normal leading-none"
                 >
@@ -88,18 +88,18 @@ const PriceDisplay = ({ roundRecord, roundRecordWithWinningSide }: { roundRecord
 export const LiveBadge = ({ className }: { className?: string }) => {
     return (
         <div
-            className={cn("flex items-center gap-2 h-fit  px-3 py-2 rounded-lg bg-[#D32D2F] w-fit animate-fade-in", className)}
+            className={cn("flex items-center gap-1 sm:gap-2 h-fit px-2 sm:px-3 py-1 sm:py-2 rounded-lg bg-[#D32D2F] w-fit animate-fade-in", className)}
             style={{
                 boxShadow: "0 2px 8px rgba(211,45,47,0.15)",
             }}
         >
             <span
-                className="inline-block w-2 h-2 rounded-full mr-1 bg-white animate-blink"
+                className="inline-block w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full mr-0.5 sm:mr-1 bg-white animate-blink"
                 style={{
                     boxShadow: "0 0 0 2px #fff, 0 0 8px 2px #fff8",
                 }}
             />
-            <span className="text-white font-bold tracking-widest text-base font-sans select-none" style={{ letterSpacing: "0.08em" }}>
+            <span className="text-white font-bold tracking-widest text-xs sm:text-base font-sans select-none" style={{ letterSpacing: "0.08em" }}>
                 LIVE
             </span>
             <style jsx>{`

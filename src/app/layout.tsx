@@ -1,4 +1,3 @@
-import ThemeProvider from '@/context/theme-context';
 import { HIGHLIGHT_APP_KEY } from '@/lib/utils';
 import { HighlightInit } from '@highlight-run/next/client';
 import { GoogleAnalytics } from '@next/third-parties/google';
@@ -50,7 +49,6 @@ return (
       }}
     >
       <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID!}>
-
         <html lang={locale}>
           <head>
             <meta charSet="UTF-8" />
@@ -74,16 +72,13 @@ return (
             <link rel="icon" href="/favicon.ico" />
             <link rel="manifest" href="/manifest.json" />
           </head>
-          <ThemeProvider>
             <Body>
-
               <NuqsAdapter>
                 <NextIntlClientProvider messages={messages}>
                   {children}
                 </NextIntlClientProvider>
               </NuqsAdapter>
             </Body>
-          </ThemeProvider>
         </html>
       </GoogleOAuthProvider>
     </FpjsProvider>

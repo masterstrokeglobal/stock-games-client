@@ -34,7 +34,7 @@ const stockGames = [
         alt: "coming-soon",
     },
     {
-        href: "/game/platform/stock-game/coin-head-tail",
+        href: "/game/single-player/head-tail",
         src: "/images/banner/coin-toss.png",
         alt: "coming-soon"
     },
