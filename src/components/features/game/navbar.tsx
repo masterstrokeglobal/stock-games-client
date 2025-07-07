@@ -16,7 +16,7 @@ const Navbar = ({ className }: Props) => {
     const { isLoggedIn } = useAuthStore();
 
     return (
-    <nav className= {cn("items-center md:px-6 px-4 z-50 border-b-2 game-gradient-border flex fixed top-0 justify-between font-semibold w-full h-14  mb-4 bg-primary-game", className)}>
+        <nav className={cn("items-center md:px-6 px-4 z-50 border-b border-platform-border bg-primary-game flex fixed top-0 justify-between font-semibold w-full h-14  mb-4", className)}>
             <div className="flex items-center space-x-4 ">
                 <Link href="/game/platform">
                     <span className="md:text-xl text-sm font-semibold flex items-end">
@@ -26,8 +26,9 @@ const Navbar = ({ className }: Props) => {
                 {isLoggedIn && <GameTimings />}
             </div>
             <div className="flex items-center space-x-4 ml-auto">
-                <ThemeSwitcher />
-                <MuteButton className="md:flex hidden border rounded-full text-white border-[#29FEFE] bg-[#003662E5] size-10  justify-center p-1" />
+                <ThemeSwitcher className="md:flex hidden" />
+                <MuteButton className="md:flex hidden border rounded-full platform-gradient header-inner-shadow  size-10  justify-center p-1" />
+
                 <LocaleSwitcher className="md:block hidden " selectClassName="h-10" />
                 {isLoggedIn && <UserMenuNavbar />}
                 {!isLoggedIn && <div className="flex items-center space-x-4">
@@ -39,7 +40,6 @@ const Navbar = ({ className }: Props) => {
                     </Link>
                 </div>}
             </div>
-        <div className="absolute bottom-0 h-px bg-gradient-to-r from-[#29FEFE] to-[#013169] w-[120%] -mx-12"/> 
         </nav>
     );
 }

@@ -169,6 +169,7 @@
         "title": "तुमचे वॉलेट",
         "balance": {
             "title": "वॉलेट बॅलन्स",
+            "total": "एकूण बॅलन्स",
             "main": {
                 "label": "मुख्य",
                 "alt": "नाणे"
@@ -179,9 +180,9 @@
             }
         },
         "menu": {
-            "deposit": "डिपॉझिट करा",
-            "withdraw": "विथड्रॉ करा",
-            "paymentMethod": "पेमेंट मेथड"
+            "deposit": "फंड जमा करा",
+            "withdraw": "फंड काढा",
+            "paymentMethod": "पेमेंट पद्धत"
         }
     },
     "deposit": {

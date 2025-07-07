@@ -1,11 +1,14 @@
 import { baseTheme, COMPANYID } from "@/lib/utils";
 import Company from "@/models/company";
 import { useGetCompanyById } from "@/react-query/company-queries";
+import { useTheme } from "@/context/theme-context";
 import { useEffect, useMemo } from "react";
 
 const ThemeManager = () => {
     const { data, isSuccess } = useGetCompanyById(COMPANYID.toString());
 
+    const theme = useTheme();
+    const isDark = theme === "dark";
     const company = useMemo(() => {
         if (isSuccess) {
             return new Company(data?.data);
@@ -14,7 +17,7 @@ const ThemeManager = () => {
     }, [data, isSuccess]);
 
     useEffect(() => {
-        const theme = company?.theme || baseTheme;
+        const theme:any = company?.theme || baseTheme;
         if (!theme) return;
 
         // Set main theme variables
@@ -62,6 +65,18 @@ const ThemeManager = () => {
         document.documentElement.style.setProperty('--secondary-background', theme["secondary-background"]);
         document.documentElement.style.setProperty('--chip-color', theme["chip-color"]);
 
+        // platform border
+        document.documentElement.style.setProperty('--platform-border', theme["platform-border"]);
+        document.documentElement.style.setProperty('--platform-text', theme["platform-text"]);
+
+        if (!isDark) {
+            document.documentElement.style.setProperty('--primary-game', theme["light-primary"]);
+            document.documentElement.style.setProperty('--secondary-background', theme["light-secondary-background"]);
+            document.documentElement.style.setProperty('--background-game', theme["light-background-game"]);
+            document.documentElement.style.setProperty('--platform-border', theme["light-platform-border"]);
+            document.documentElement.style.setProperty('--platform-text', theme["light-platform-text"]);
+        }
+
         return () => {
             // Clean up main theme variables
             document.documentElement.style.removeProperty('--primary-game');
@@ -95,7 +110,7 @@ const ThemeManager = () => {
             document.documentElement.style.removeProperty('--chip-color');
 
         };
-    }, [company]);
+    }, [company, isDark]);
 
 
     return null;

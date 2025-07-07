@@ -11,7 +11,7 @@ export default function GameCard({ game }: GameCardProps) {
   return (
     // tab active add border and shadow 
     <Link href={`/game/casino/${game.id}`} >
-      <Card className="relative overflow-hidden aspect-square border-none rounded-xl group pb-1 cursor-pointer transition-transform duration-300 hover:scale-105">
+      <Card className="relative overflow-hidden aspect-square border border-[#4467CC] rounded-none group pb-1 cursor-pointer transition-transform duration-300 hover:scale-105">
 
       <img
           src={game.imageUrl || "/placeholder.svg?height=400&width=300"}

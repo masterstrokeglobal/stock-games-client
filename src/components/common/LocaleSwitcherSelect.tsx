@@ -31,11 +31,11 @@ export default function LocaleSwitcherSelect({
   return (
     <div className={className}>
       <Select defaultValue={defaultValue} onValueChange={onChange} disabled={isPending}>
-        <SelectTrigger showCaret={false} className={cn("w-full border rounded-full text-white border-[#29FEFE] bg-[#003662E5] h-11 ", selectClassName)}  >
+        <SelectTrigger showCaret={false} className={cn("w-full border rounded-full platform-gradient header-inner-shadow h-11 ", selectClassName)}  >
           {items.find((item) => item.value === defaultValue)?.label}
-          <ChevronDown className='fill-white stroke-none' />
+          <ChevronDown className='fill-platform-text stroke-none' />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className='z-[61]'>
           {items.map(({ value, label }) => (
             <SelectItem key={value} value={value}>
               {label}
@@ -46,3 +46,40 @@ export default function LocaleSwitcherSelect({
     </div>
   );
 }
+
+
+
+export  function LocaleSwitcherSelect2({
+  defaultValue,
+  items,
+  className,
+  selectClassName
+}: Props) {
+  const [isPending, startTransition] = useTransition();
+
+  function onChange(value: string) {
+    const locale = value as Locale;
+    startTransition(() => {
+      setUserLocale(locale);
+    });
+  }
+
+  return (
+    <div className={className}>
+      <Select defaultValue={defaultValue} onValueChange={onChange} disabled={isPending}>
+        <SelectTrigger showCaret={false} className={cn("w-full border bg-primary-game rounded-none border-platform-border h-11 ", selectClassName)}  >
+          {items.find((item) => item.value === defaultValue)?.label}
+          <ChevronDown className='fill-platform-text stroke-none' />
+        </SelectTrigger>
+        <SelectContent className='z-[61] bg-primary-game rounded-none border border-platform-border'>
+          {items.map(({ value, label }) => (
+            <SelectItem key={value} value={value} className='rounded-none hover:bg-secondary'>
+              {label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+

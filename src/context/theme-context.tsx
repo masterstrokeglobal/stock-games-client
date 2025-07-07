@@ -1,5 +1,6 @@
 "use client";
-import React, { useContext, ChangeEventHandler, useEffect, useState, PropsWithChildren } from "react";
+import React, { PropsWithChildren, useContext, useEffect, useState } from "react";
+
 
 export type Theme = "light" | "dark" | "system";
 
@@ -10,7 +11,8 @@ export const themes: { [key: string]: Theme } = {
 
 interface ThemeContextInterface {
     theme: Theme;
-    toggleTheme: ChangeEventHandler<HTMLInputElement>
+    toggleTheme: (theme: Theme) => void
+
 }
 
 export const ThemeContext = React.createContext<ThemeContextInterface>({
@@ -18,7 +20,8 @@ export const ThemeContext = React.createContext<ThemeContextInterface>({
     toggleTheme: () => { },
 });
 
-export const useTheme: Function = () => {
+export const useTheme = () => {
+
     const context = useContext(ThemeContext)
     if (!context) {
         throw new Error(
@@ -29,9 +32,35 @@ export const useTheme: Function = () => {
 };
 
 
+export const useToggleTheme = () => {
+    const context = useContext(ThemeContext)
+    if (!context) {
+        throw new Error(
+            "useToggleTheme must be used inside a ThemeContext.Provider"
+        )
+    }
+    return context.toggleTheme
+}
+
+export const useDefaultTheme = (theme: Theme) => {
+    const currentTheme = useTheme()
+    const toggleTheme = useToggleTheme()
+    useEffect(() => {
+        if (currentTheme !== theme) {
+            document.documentElement.setAttribute("data-theme", theme);
+            localStorage.setItem("theme", theme);
+            toggleTheme(theme)
+        }
+    }, [currentTheme, theme])
+
+    return currentTheme
+}
+
+
 
 const ThemeProvider: React.FC<PropsWithChildren> = ({ children }) => {
-    const [theme, setTheme] = useState<Theme>(themes.system);
+    const [theme, setTheme] = useState<Theme>(useDefaultTheme(themes.system));
+
     const toggleTheme = (): void => {
         const newTheme = theme == themes.dark ? themes.light : themes.dark;
         setTheme(newTheme);

@@ -252,7 +252,7 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
 
     return (
         <>
-            <div className={cn("mx-auto  lg:pr-4  md:py-2 md:rounded-sm  bg-primary-game h-full ", className)}>
+            <div className={cn("mx-auto  lg:pr-4  md:py-2 md:rounded-sm  bg-[#000E37] h-full ", className)}>
                 <div className="relative rounded-xl lg:flex-row w-full flex-col flex border-brown-800">
                     <div className='lg:w-7/12 max-w-2xl mx-auto w-full'>
                         <h1 className='text-xl text-left  md:py-2 py-4  md:mx-4 md:px-0 px-4 mb-2    leading-none text-game-secondary relative font-semibold '>

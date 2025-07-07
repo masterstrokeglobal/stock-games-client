@@ -1,16 +1,16 @@
 "use client";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import Bonus from "@/models/bonus";
 import { useGetActiveBonus } from "@/react-query/bonus-queries";
-import { AlertCircle } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { useMemo } from "react";
 import BonusCard from "./bonus-card";
+import { Button } from "@/components/ui/button";
 
 const PromotionPage = () => {
-    const { data, isLoading } = useGetActiveBonus();
+    const { data, isLoading, refetch } = useGetActiveBonus();
 
     const activeBonus = useMemo(() => {
         if (isLoading) return null;
@@ -18,13 +18,10 @@ const PromotionPage = () => {
     }, [data, isLoading]);
 
     return (
-        <section className="flex flex-col min-h-screen bg-primary-game text-white p-4 mx-auto">
-            <main className="flex flex-col gap-4 md:mt-20 mt-10 
-            
-            w-full mx-auto">
+        <section className="flex flex-col min-h-screen  p-4 mx-auto">
+            <main className="flex flex-col gap-4 md:mt-20 mt-10 w-full mx-auto">
                 <header>
-                    <h1 className="text-2xl font-bold text-left">
-                        <span className="text-2xl mr-2">🎉</span>
+                    <h1 className="text-2xl font-bold text-left text-platform-text">
                         Promotion
                     </h1>
                 </header>
@@ -38,7 +35,7 @@ const PromotionPage = () => {
                         ))}
                     </div>
                 ) : (
-                    <NoPromotionsMessage />
+                    <NoPromotionsMessage onRefresh={refetch} />
                 )}
             </main>
         </section>
@@ -69,16 +66,32 @@ const BonusSkeletonLoader = () => {
     );
 };
 
-// No promotions message using Shadcn Alert
-const NoPromotionsMessage = () => {
+// No promotions message with gradient background, icon, and action buttons
+const NoPromotionsMessage = ({ onRefresh }: { onRefresh: () => void }) => {
     return (
-        <Alert className="bg-gray-800/50 border-gray-700 text-gray-300">
-            <AlertCircle className="h-5 w-5 stroke-white" />
-            <AlertTitle className="text-xl font-semibold">No Active Promotions</AlertTitle>
-            <AlertDescription className="text-gray-400">
+        <div className="border border-[#4D66C8] bg-[linear-gradient(90.08deg,#AC5797_0.13%,#4D66C8_99.99%)] p-6 flex flex-col gap-3 shadow-lg">
+            <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center h-10 w-10 rounded-full bg-white/30">
+                    <span className="block h-6 w-6 bg-white/40 rounded-full" />
+                </div>
+                <div>
+                    <div className="text-lg font-semibold text-white/90">No Active Promotions</div>
+                </div>
+            </div>
+            <div className="text-sm text-white/80">
                 There are currently no active promotions available. Check back later for exciting offers and bonuses!
-            </AlertDescription>
-        </Alert>
+            </div>
+            <div className="flex gap-3 mt-2">
+                <Button
+                    onClick={onRefresh}
+                    variant="platform-primary"
+                    className=" rounded-none bg-[#4467CC]"
+                >
+                    <RefreshCw className="h-5 w-5 mr-2" />
+                    Refresh
+                </Button>
+            </div>
+        </div>
     );
 };
 

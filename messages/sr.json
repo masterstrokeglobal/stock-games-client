@@ -158,22 +158,23 @@
         }
     },
     "wallet": {
-        "title": "Vaš novčanik",
+        "title": "Ваш новчаник",
         "balance": {
-            "title": "Stanje na novčaniku",
+            "title": "Стање новчаника",
+            "total": "Укупно стање",
             "main": {
-                "label": "Glavni",
-                "alt": "kovanica"
+                "label": "Главни",
+                "alt": "новчић"
             },
             "bonus": {
-                "label": "Bonus",
-                "alt": "bonus kovanica"
+                "label": "Бонус",
+                "alt": "бонус новчић"
             }
         },
         "menu": {
-            "deposit": "Depozit sredstva",
-            "withdraw": "Povlačenje sredstava",
-            "paymentMethod": "Metod plačanja"
+            "deposit": "Уплатите средства",
+            "withdraw": "Подигните средства",
+            "paymentMethod": "Начин плаћања"
         }
     },
     "deposit": {

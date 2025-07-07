@@ -180,8 +180,10 @@ export const secondNames: string[] = [
 ];
 
 
+
 export const INR = (rupees: string | number, nodecimal: boolean = false, gap: boolean = false) => {
   // convert number into RUpees
+  if (!rupees) return '0.00';
   const number = Number(rupees);
 
   const formatted = new Intl.NumberFormat('en-IN', {
@@ -256,7 +258,7 @@ export const formatRupee = (rupees: number) => {
 }
 
 export const checkCasinoAllowed = (companyId: number) => {
-  return companyId === 21;
+  return companyId === 4;
 }
 
 // Generate current time in 12-hour format (HH:MM AM/PM)

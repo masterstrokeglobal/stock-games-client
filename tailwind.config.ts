@@ -113,6 +113,10 @@ const config: Config = {
 					background: 'var(--input-field-background)',
 				},
 				ring: 'hsl(var(--ring))',
+				platform: {
+					border: 'var(--platform-border)',
+					text: 'var(--platform-text)'
+				},
 				chart: {
 					'1': 'hsl(var(--chart-1))',
 					'2': 'hsl(var(--chart-2))',

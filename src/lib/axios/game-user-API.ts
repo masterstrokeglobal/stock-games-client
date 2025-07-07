@@ -2,6 +2,27 @@ import { RoundRecordGameType } from "@/models/round-record";
 import { COMPANYID } from "../utils";
 import api from "./instance";
 
+type UserTier = {
+
+  name: string;
+  companyId: number;
+  totalPoints: number;
+  tierId: number;
+  imageUrl: string;
+  lastLoginBonusDate: string;
+  lastGameBonuDate: string | null;
+  gamesPlayed: number;
+  redeemablePoints: number;
+  pointsPerHundredRupees: number;
+  pointsRedeemed: number;
+  loginBonusAmount: number;
+  gameBonusAmount: number;
+  tierName: string;
+  nextTierName: string;
+  nextTierGameRequires: number;
+  nextTierPointsRequired: number;
+  nextTierImageUrl: string;
+}
 export const gameUserAPI = {
   createUser: async (payload: any) => {
     return api.post("/user", { ...payload, company: COMPANYID });
@@ -72,8 +93,9 @@ export const gameUserAPI = {
     return api.post("/auth/google", payload);
   },
 
+
   getTier: async () => {
-    return api.get("/user/my-tier");
+    return api.get<UserTier>("/user/my-tier");
   }, 
 
   demoLogin: async () => {

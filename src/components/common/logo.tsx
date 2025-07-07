@@ -6,9 +6,10 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 type LogoProps = {
     className?: string;
     dark?: boolean;
+    textClassName?: string;
 }
 
-const Logo = ({ className, dark = true }: LogoProps) => {
+const Logo = ({ className, dark = true, textClassName }: LogoProps) => {
     const { data } = useGetMyCompany();
     const initials = data?.name?.split(" ").map(name => name[0]).join("");
 
@@ -19,7 +20,7 @@ const Logo = ({ className, dark = true }: LogoProps) => {
                     {initials}
                 </AvatarFallback>   
             </Avatar>}
-            <span className={cn("hidden md:inline-block capitalize font-semibold", dark ? "text-white" : "text-black")}>
+            <span className={cn("hidden md:inline-block capitalize font-semibold", dark ? "text-white" : "text-black", textClassName)}>
                 {data?.name || "--"}
             </span>
         </div>
