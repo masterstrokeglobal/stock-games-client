@@ -8,7 +8,6 @@ import { useCreateHeadTailPlacement, useGetMyCurrentRoundHeadTailPlacement } fro
 import { CheckCircle } from "lucide-react";
 import { BettingArea } from "./betting-chip";
 import { useEffect, useRef, useState } from "react";
-import useWindowSize from "@/hooks/use-window-size";
 import CoinToss from "../coin-head-tail/coin-toss";
 
 type GameBoardProps = PropsWithClassName<{
