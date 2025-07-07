@@ -18,7 +18,7 @@ export const ThemeContext = React.createContext<ThemeContextInterface>({
     toggleTheme: () => { },
 });
 
-export const useTheme: Function = () => {
+export const useTheme = () => {
     const context = useContext(ThemeContext)
     if (!context) {
         throw new Error(
