@@ -134,7 +134,7 @@ const HeadCard = ({ bet, win, className, onClick, isMobile, style }: CardProps) 
             className,
             "rounded-[14px] ",
             "transition-all duration-200",
-            bet > 0 ? "ring-2 ring-[#24AAFF] scale-105" : ""
+            bet > 0 ? "ring-2 ring-[#24AAFF]" : ""
         )}
         style={{
             ...style,
@@ -199,7 +199,7 @@ const TailCard = ({ bet, win, className, onClick, isMobile }: CardProps) => (
             className,
             "rounded-[14px] ",
             "transition-all duration-200",
-            bet > 0 ? "ring-2 ring-[#24AAFF] scale-105" : ""
+            bet > 0 ? "ring-2 ring-[#24AAFF]" : ""
         )}
         style={{
             width: isMobile ? MOBILE_CARD_WIDTH : CARD_WIDTH,

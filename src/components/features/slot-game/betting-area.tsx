@@ -169,15 +169,12 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
                     <span className="text-lg">₹{totalBetAmount}</span>
                 </div>
             </div>
-            {
-                previousRoundId && (
-                    <SlotGameResultDialog
-                        key={String(showResults)}
-                        open={showResults}
-                        roundRecordId={previousRoundId}
-                    />
-                )
-            }
+
+            <SlotGameResultDialog
+                open={showResults}
+                roundRecordId={previousRoundId ?? 0}
+            />
+
         </>
     );
 };
