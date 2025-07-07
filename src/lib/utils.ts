@@ -180,7 +180,6 @@ export const secondNames: string[] = [
 ];
 
 
-
 export const INR = (rupees: string | number | undefined, nodecimal: boolean = false, gap: boolean = false) => {
   // convert number into RUpees
   if (!rupees) return '0.00';

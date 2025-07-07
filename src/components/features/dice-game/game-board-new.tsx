@@ -1,13 +1,15 @@
 import { useGameState, useIsPlaceOver } from "@/hooks/use-current-game";
+
 import useWindowSize from "@/hooks/use-window-size";
 import { cn, INR } from "@/lib/utils";
 import { HeadTailPlacementType } from "@/models/head-tail";
 import { RoundRecord } from "@/models/round-record";
 import { useCreateHeadTailPlacement, useGetMyCurrentRoundHeadTailPlacement } from "@/react-query/head-tail-queries";
 import { CheckCircle } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import CoinToss from "../coin-head-tail/coin-toss";
 import { BettingArea } from "./betting-chip";
+import { useEffect, useRef, useState } from "react";
+import useWindowSize from "@/hooks/use-window-size";
+import CoinToss from "../coin-head-tail/coin-toss";
 
 type GameBoardProps = PropsWithClassName<{
     roundRecord: RoundRecord,
@@ -82,6 +84,7 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
                             onClick={() => handleCardClick(HeadTailPlacementType.HEAD)}
                             bet={hasHeadBet ? myHeadAmount : 0}
                             win={hasHeadBet ? myHeadAmount * 2 : 0}
+
                             className={cn("xs:left-[12%] left-[10px] -bottom-1/2 cursor-pointer", winningSide === HeadTailPlacementType.HEAD ? "animate-pulse" : "")}
                             isMobile={isMobile}
                             style={{
@@ -93,6 +96,7 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
                             onClick={() => handleCardClick(HeadTailPlacementType.TAIL)}
                             bet={hasTailBet ? myTailAmount : 0}
                             win={hasTailBet ? myTailAmount * 2 : 0}
+
                             className={cn("xs:right-[12%] right-[10px] -bottom-1/2 cursor-pointer", winningSide === HeadTailPlacementType.TAIL ? "animate-pulse" : "")}
                             isMobile={isMobile}
                             style={{
