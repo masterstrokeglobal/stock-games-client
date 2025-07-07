@@ -3,7 +3,7 @@ import AviatorCanvas from "./aviator-canvas"
 import BlastVideo from "./blast-video"
 import ParallaxImage from "./parallax-image"
 import LoaderAviator from "./LoaderAviator"
-
+import { RoundRecord } from "@/models/round-record"
 
 interface GameDisplayProps {
   multiplier: number
@@ -17,6 +17,7 @@ interface GameDisplayProps {
   betAmount?: number
   hasBet?: boolean
   hasCashedOut?: boolean
+  roundRecord: RoundRecord
 }
 
 const GameDisplay = ({
@@ -29,14 +30,45 @@ const GameDisplay = ({
   planeStatus,
   betAmount,
   hasBet = false,
-  hasCashedOut = false
+  hasCashedOut = false,
+  roundRecord
 }: GameDisplayProps) => {
 
   const [isBlastPlaying, setIsBlastPlaying] = useState(false)
   const [isCurrentPlaneCrashed, setIsCurrentPlaneCrashed] = useState(false)
   const [isParallaxVisible, setIsParallaxVisible] = useState(true)
   const [blastOpacity, setBlastOpacity] = useState(0)
+  const [flightTime, setFlightTime] = useState<number>(0)
 
+  // Calculate flight time (time elapsed since round started)
+  const getFlightTime = () => {
+    const now = new Date();
+    const startTime = roundRecord.startTime;
+    const elapsed = now.getTime() - startTime.getTime();
+
+    if (elapsed <= 0) return "00:00";
+
+    const minutes = Math.floor(elapsed / (1000 * 60));
+    const seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
+
+    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  // Real-time flight time timer
+  useEffect(() => {
+    const updateFlightTime = () => {
+      // subtract 30 seconds from the flight time
+      setFlightTime(getFlightTime().split(':').map(Number).reduce((acc, curr, i) => acc + curr * (i === 0 ? 60 : 1), 0) - 30);
+    };
+
+    // Update immediately
+    updateFlightTime();
+
+    // Update every second
+    const interval = setInterval(updateFlightTime, 1000);
+
+    return () => clearInterval(interval);
+  }, [roundRecord.startTime]);
 
   // Update crash state when plane status changes
   useEffect(() => {
@@ -90,6 +122,8 @@ const GameDisplay = ({
           <ParallaxImage multiplier={multiplier} isMoving={isParallaxMoving} />
         )}
 
+        {/* <ParallaxImage multiplier={multiplier} isMoving={isParallaxMoving} /> */}
+
         {!isCurrentPlaneCrashed && (<>
           <AviatorCanvas multiplier={multiplier} shouldStartTakeOffAnimation={isParallaxMoving} opacity={canvasOpacity} />
         </>)}
@@ -103,16 +137,15 @@ const GameDisplay = ({
             {/* Animated border glow */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-blue-400/20 rounded-xl blur-sm animate-pulse"></div>
 
-              {/* Bet placed indicator */}
-              {hasBet && betAmount && (
-                <div className={`text-xs font-bold uppercase tracking-wide mb-2 px-2 py-0.5 rounded-full border shadow-lg ${
-                  hasCashedOut 
-                    ? 'text-green-400 bg-green-500/20 border-green-400/30' 
-                    : 'text-yellow-400 bg-yellow-500/20 border-yellow-400/30'
+            {/* Bet placed indicator */}
+            {hasBet && betAmount && (
+              <div className={`text-xs font-bold uppercase tracking-wide mb-2 px-2 py-0.5 rounded-full border shadow-lg ${hasCashedOut
+                  ? 'text-green-400 bg-green-500/20 border-green-400/30'
+                  : 'text-yellow-400 bg-yellow-500/20 border-yellow-400/30'
                 }`}>
-                  {hasCashedOut ? 'Cashed Out' : `Bet : ₹${betAmount}`}
-                </div>
-              )}
+                {hasCashedOut ? 'Cashed Out' : `Bet : ₹${betAmount}`}
+              </div>
+            )}
 
             {/* Content */}
             <div className="relative z-10 flex flex-col items-center">
@@ -139,6 +172,15 @@ const GameDisplay = ({
 
                 <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse shadow-sm shadow-green-400/50"></div>
               </div>
+
+              {/* Flight Time Display */}
+              {planeStatus === "active" && flightTime >= 0 && (
+                <div className="mt-2 text-center">
+                  <div className="text-green-300 text-xs font-bold">
+                    Flight Time: {Math.floor(flightTime / 60).toString().padStart(2, '0')}:{(flightTime % 60).toString().padStart(2, '0')}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
