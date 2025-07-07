@@ -304,8 +304,30 @@ export const generateNewCameraPosition = (currentPosition: [number, number, numb
 
 export const baseTheme = {
   "radius": "0.5rem;",
+  "primary": "#040029",
+  "gameText": "#07171F",
+  "tertiary": "#000000",
+  "secondary": "#ADEBFF",
+  "chip-color": "#f78a32",
+  "borderColor": "#280079",
+  "input-field": "#000000",
+  "top-bar-text": "#FFFFFF",
+  "backgroundGame": "#000E37",
+  "bet-button-end": "#279BFF",
+  "bet-button-mid": "#4DAAFF",
+  "last-winner-bg": "#a0b1c3",
+  "redGradientEnd": "#ad0707",
   "accent-secondary": "#5fd9ed",
-  "primary": "#001e34", "gameText": "#07171F", "tertiary": "#000000", "secondary": "#ADEBFF", "chip-color": "#f78a32", "borderColor": "rgba(85, 176, 255, 0.31)", "input-field": "#000000", "top-bar-text": "#FFFFFF", "backgroundGame": "#FFFFFF", "bet-button-end": "#279BFF", "bet-button-mid": "#4DAAFF", "last-winner-bg": "#a0b1c3", "redGradientEnd": "#ad0707", "bet-button-start": "#0D7FE1", "blackGradientEnd": "#000000", "innerShadowColor": "rgba(208, 232, 253, 0.05)", "redGradientStart": "#ad0707", "bet-button-border": "#55B0FF", "gameTextSecondary": "#FFFFFF", "blackGradientStart": "#000000", "gameHeaderHighlight": "linear-gradient(to right, #fafafa, transparent)", "secondary-background": "#003459", "input-field-background": "#ffffff"
+  "bet-button-start": "#0D7FE1",
+  "blackGradientEnd": "#000000",
+  "innerShadowColor": "rgba(208, 232, 253, 0.05)",
+  "redGradientStart": "#ad0707",
+  "bet-button-border": "#55B0FF",
+  "gameTextSecondary": "#FFFFFF",
+  "blackGradientStart": "#000000",
+  "gameHeaderHighlight": "linear-gradient(to right, #fafafa, transparent)",
+  "secondary-background": "#003459",
+  "input-field-background": "#ffffff"
 };
 
 export const decodeUrlString = (encoded: string): string => {

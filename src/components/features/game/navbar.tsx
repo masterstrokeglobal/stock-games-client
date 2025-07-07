@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import GameTimings from "./game-timings";
 import UserMenuNavbar from "./user-menu-navbar";
+import ThemeSwitcher from "@/context/theme-swithcer";
 type Props = {
     className?: string
 }
@@ -25,6 +26,7 @@ const Navbar = ({ className }: Props) => {
                 {isLoggedIn && <GameTimings />}
             </div>
             <div className="flex items-center space-x-4 ml-auto">
+                <ThemeSwitcher />
                 <MuteButton className="md:flex hidden border rounded-full text-white border-[#29FEFE] bg-[#003662E5] size-10  justify-center p-1" />
                 <LocaleSwitcher className="md:block hidden " selectClassName="h-10" />
                 {isLoggedIn && <UserMenuNavbar />}
