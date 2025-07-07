@@ -5,9 +5,12 @@ import { Environment, useTexture } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import { cn } from "@/lib/utils";
+import { useWindowSize } from "@/hooks/use-window-size";
 
 // Constants
-const COIN_RADIUS = 0.7;
+const COIN_RADIUS_DESKTOP =1 ; // Reduced from 0.7 for 80px equivalent
+const COIN_RADIUS_MOBILE = 1; // Reduced from 0.7 for 40px equivalent
 const COIN_THICKNESS = 0.05;
 const TABLE_Y_SURFACE = -0.03;
 const COIN_LANDED_Y_CENTER = TABLE_Y_SURFACE + COIN_THICKNESS / 2;
@@ -29,8 +32,12 @@ const Coin = ({ isFlipping, resultOutcome }: CoinComponentProps) => {
   const hasSettledCallbackCalled = useRef(false);
   const [currentY, setCurrentY] = useState(COIN_START_Y); // Start with margin
 
-  const headTexture = useTexture("/images/coin-face/head.png");
-  const tailTexture = useTexture("/images/coin-face/tail.png");
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
+  const coinRadius = isMobile ? COIN_RADIUS_MOBILE : COIN_RADIUS_DESKTOP;
+
+  const headTexture = useTexture("/images/coins/head.png");
+  const tailTexture = useTexture("/images/coins/tail.png");
 
   const headMaterial = new THREE.MeshStandardMaterial({ map: headTexture });
   const tailMaterial = new THREE.MeshStandardMaterial({ map: tailTexture });
@@ -98,7 +105,7 @@ const Coin = ({ isFlipping, resultOutcome }: CoinComponentProps) => {
 
   return (
     <mesh ref={coinRef} position={[0, currentY, 0]} castShadow>
-      <cylinderGeometry args={[COIN_RADIUS, COIN_RADIUS, COIN_THICKNESS, 64]} />
+      <cylinderGeometry args={[coinRadius, coinRadius, COIN_THICKNESS, 64]} />
       <meshStandardMaterial attach="material-0" {...edgeMaterial} />
       <meshStandardMaterial attach="material-1" {...headMaterial} />
       <meshStandardMaterial attach="material-2" {...tailMaterial} />
@@ -106,15 +113,9 @@ const Coin = ({ isFlipping, resultOutcome }: CoinComponentProps) => {
   );
 };
 
-  
-  
 const Table = () => {
-  const woodTexture = useTexture("/images/coin-face/wood.jpg");
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, TABLE_Y_SURFACE, 0]} receiveShadow>
       <planeGeometry args={[30, 30]} />
-      <meshStandardMaterial map={woodTexture} />
-    </mesh>
   );
 };
 
@@ -134,32 +135,42 @@ const CameraController = () => {
 interface CoinTossContainerProps {
   isFlipping: boolean;
   resultOutcome?: HeadTailPlacementType;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
-export default function CoinToss({ isFlipping, resultOutcome }: CoinTossContainerProps) {
+export default function CoinToss({ isFlipping, resultOutcome, className, style   }: CoinTossContainerProps) {
   return (
-    <Canvas shadows camera={{ position: [0, 5, 0], fov: 45 }}>
-      <ambientLight intensity={0.5} />
-      <directionalLight
-        position={[4, 5, 3]}
-        intensity={1}
-        castShadow
-        shadow-mapSize-width={1024}
-        shadow-mapSize-height={1024}
-        shadow-camera-far={20}
-        shadow-camera-left={-7}
-        shadow-camera-right={7}
-        shadow-camera-top={7}
-        shadow-camera-bottom={-7}
-      />
-      <directionalLight position={[-4, 3, -3]} intensity={0.3} />
-      <Table />
-      <Coin
-        isFlipping={isFlipping}
-        resultOutcome={resultOutcome}
-      />
-      <Environment preset="sunset" />
-      <CameraController />
-    </Canvas>
+    <div className={cn("absolute  md:w-32 md:h-32 w-20 h-20", className)} style={style}>
+      <Canvas 
+        shadows 
+        camera={{ position: [0, 5, 0], fov: 45 }}
+        gl={{ alpha: true, antialias: true }}
+        style={{ background: 'transparent' }}
+        className="w-full h-full"
+      >
+        <ambientLight intensity={0.5} />
+        <directionalLight
+          position={[4, 5, 3]}
+          intensity={1}
+          castShadow
+          shadow-mapSize-width={1024}
+          shadow-mapSize-height={1024}
+          shadow-camera-far={20}
+          shadow-camera-left={-7}
+          shadow-camera-right={7}
+          shadow-camera-top={7}
+          shadow-camera-bottom={-7}
+        />
+        <directionalLight position={[-4, 3, -3]} intensity={0.3} />
+        <Table />
+        <Coin
+          isFlipping={isFlipping}
+          resultOutcome={resultOutcome}
+        />
+        <Environment preset="sunset" />
+        <CameraController />
+      </Canvas>
+    </div>
   );
 }

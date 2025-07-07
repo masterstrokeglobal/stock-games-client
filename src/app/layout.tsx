@@ -5,7 +5,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Analytics } from "@vercel/analytics/react";
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from "next-intl/server";
-import { Inter, Jersey_10, Jersey_20, Konkhmer_Sleokchher, Montserrat, Poppins, Russo_One} from 'next/font/google';
+import { Inter, Jersey_10, Jersey_20, Konkhmer_Sleokchher, Montserrat, Phudu, Play, Playfair_Display_SC, Poppins, Protest_Strike, Russo_One} from 'next/font/google';
 import Script from 'next/script';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import "./globals.css";
@@ -52,6 +52,31 @@ const inter = Inter({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
   subsets: ['latin'],
   variable: '--font-inter',
+});
+
+const playfairDisplaySC = Playfair_Display_SC({
+  weight: ['400',"700"],
+  subsets: ['latin'],
+  variable: '--font-playfair-display-sc',
+});
+
+const play = Play({
+  weight: ['400', "700"],
+  subsets: ['latin'],
+  variable: '--font-play',
+});
+
+const phudu = Phudu({
+  weight: ['300', "400", "500", "600", "700"],
+  subsets: ['latin'],
+  variable: '--font-phudu',
+});
+
+
+const protestStrike = Protest_Strike({    
+  weight: ['400'],
+  subsets: ['latin'],
+  variable: '--font-protest-strike',
 });
 
 import {
@@ -115,7 +140,7 @@ export default async function RootLayout({
               <link rel="manifest" href="/manifest.json" />
             </head>
             <body
-              className={`${poppins.className} antialiased ${KonkhmerSleokchher.variable} ${jersy2.variable} ${jersy10.variable} ${RussoOne.variable} ${montserrat.variable} ${inter.variable}`}
+              className={`${poppins.className} antialiased ${KonkhmerSleokchher.variable} ${jersy2.variable} ${jersy10.variable} ${RussoOne.variable} ${montserrat.variable} ${inter.variable} ${playfairDisplaySC.variable} ${play.variable} ${phudu.variable} ${protestStrike.variable}`}
             >
               <NuqsAdapter>
                 <NextIntlClientProvider messages={messages}>
@@ -124,7 +149,7 @@ export default async function RootLayout({
               </NuqsAdapter>
 
             </body>
-          </html>
+          </html> 
         </GoogleOAuthProvider>
       </FpjsProvider>
     </>

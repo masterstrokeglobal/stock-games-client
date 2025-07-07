@@ -180,7 +180,7 @@ export const secondNames: string[] = [
 ];
 
 
-export const INR = (rupees: string | number, nodecimal: boolean = false) => {
+export const INR = (rupees: string | number, nodecimal: boolean = false, gap: boolean = false) => {
   // convert number into RUpees
   const number = Number(rupees);
 
@@ -192,7 +192,7 @@ export const INR = (rupees: string | number, nodecimal: boolean = false) => {
   }).format(number);
 
   // Add a space between the currency symbol and the number
-  return formatted.replace('₹', '₹ ');
+  return formatted.replace('₹', gap ? '₹ ' : '₹');
 }
 
 export const RED_BLACK_ROULETTE_NUMBERS = [

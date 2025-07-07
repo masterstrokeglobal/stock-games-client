@@ -22,6 +22,11 @@ const config: Config = {
 				'russo-one': ['var(--font-russo-one)', 'sans-serif'],
 				'montserrat': ['var(--font-montserrat)', 'sans-serif'],
 				'inter': ['var(--font-inter)', 'sans-serif'],
+				'playfair-display-sc': ['var(--font-playfair-display-sc)', 'sans-serif'],
+				'play': ['var(--font-play)', 'sans-serif'],
+				'phudu': ['var(--font-phudu)', 'sans-serif'],
+				'protest-strike': ['var(--font-protest-strike)', 'sans-serif'],
+				'prosto-one': ['var(--font-prosto-one)', 'sans-serif'],
 			},
 			animation: {
 				marquee: 'marquee 6s linear infinite',
