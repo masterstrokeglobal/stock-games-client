@@ -63,8 +63,8 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
 
     return (
         <section className={cn("flex flex-col relative w-full h-full", className)}>
-            <main className="w-full h-full flex flex-col justify-between">
-                <div className="xl:mx-20 -mx-4  relative md:pt-20 pt-40">
+            <main className="w-full h-full flex flex-col xxl:justify-around justify-between">
+                <div className="xl:mx-20 -mx-4  relative xxl:pt-[25%] md:pt-20 pt-40">
                     <img src="/images/head-tail/bg.png" alt="game board" className="w-full scale-125 -translate-y-1/4 z-0 h-full absolute top-0 left-0 object-cover" />
                     <div className="bottom-0 left-0 w-full  min-h-40 bg-gradient-to-t scale-125 absolute z-0 from-[#00033D] to-transparent" />
                     <img src="/images/head-tail/table.png" alt="table" className="w-full relative z-0 aspect-[8/3]" ref={tableRef} />

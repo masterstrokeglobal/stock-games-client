@@ -39,7 +39,7 @@
 
 
         return (
-            <section className={`flex flex-col relative bg-[#c00033D]  items-center justify-start overflow-hidden min-h-screen w-full ${ProstoOne.variable}`}>
+            <section className={`flex flex-col relative bg-[#00033D]  items-center justify-start overflow-hidden min-h-screen w-full ${ProstoOne.variable}`}>
                 <Navbar />
                 <div className=" pt-20 pb-2  sm:px-4 px-2 max-w-[1560px] flex flex-col w-full mx-auto flex-1  text-white ">
                     <div className='w-full bg-[#004DA9] relative z-10 rounded-2xl flex items-center justify-between px-4 sm:py-2 py-1'>
@@ -56,7 +56,7 @@
                     </div>
                     <div className='md:grid md:grid-cols-12 flex-1 gap-4'>
                         <div className='md:col-span-8 flex flex-col'>
-                            <div className="justify-between items-center  flex-wrap flex flex-row w-full gap-4 mt-4 mb-12 relative z-10">
+                            <div className="justify-between  items-center  flex-wrap flex flex-row w-full gap-4 mt-4 mb-12 relative z-10">
                                 <GameTimer className='md:flex hidden'   roundRecord={roundRecord} />
                                 <LiveBadge
                                     className='md:hidden flex'
