@@ -58,18 +58,18 @@ const BetsList = ({
 }) => {
     return (
         <div className={cn("w-full", listClassName)}>
+            {/* Header */}
+            <div className="flex w-full px-4 py-3 font-play tracking-wider text-white text-sm gap-4">
+                <div className="flex-1 text-left">Bet</div>
+                <div className="flex-1 text-left">Time</div>
+                <div className="flex-1 text-left">Selected Side</div>
+                <div className="flex-1 text-left">Bets INR</div>
+            </div>
             <ScrollArea
                 scrollThumbClassName="bg-[#4467CC]"
                 type="auto"
-                className="h-full"
+                className="h-[calc(100svh-360px)]"
             >
-                {/* Header */}
-                <div className="flex w-full px-4 py-3 font-play tracking-wider text-white text-sm gap-4">
-                    <div className="flex-1 text-left">Bet</div>
-                    <div className="flex-1 text-left">Time</div>
-                    <div className="flex-1 text-left">Selected Side</div>
-                    <div className="flex-1 text-left">Bets INR</div>
-                </div>
                 <div className="flex flex-col gap-3 pb-2">
                     {placements.map((placement, index) => {
                         const isHead = placement.placement === HeadTailPlacementType.HEAD;

@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
+    DialogClose,
     DialogContent,
     DialogHeader,
     DialogTitle,
@@ -10,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
+import { CircleX } from "lucide-react";
 import Image from "next/image";
 import { ReactNode, useState } from "react";
 
@@ -39,11 +41,16 @@ const ContactDialog = ({ children }: ContactDialogProps) => {
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
-            <DialogContent className="dark:bg-[#121456] bg-primary-game rounded-2xl border-2 dark:border-platform-border border-primary-game gap-0 p-0 overflow-hidden">
+            <DialogContent showButton={false} className="dark:bg-[#121456] bg-primary-game rounded-2xl border-2 dark:border-platform-border border-primary-game gap-0 p-0 overflow-hidden">
                 <DialogHeader className="px-4 sm:px-6 py-3 sm:py-4 rounded-t-2xl">
                     <DialogTitle className="dark:text-platform-text text-white text-base sm:text-lg font-semibold text-center">
                         Support
                     </DialogTitle>
+                    <DialogClose asChild>
+                        <Button variant="ghost" size="icon" className="absolute bg-transparent right-4 top-2 mt-0">
+                            <CircleX className="text-white" />
+                        </Button>
+                    </DialogClose>
                 </DialogHeader>
                 <ScrollArea className="max-h-[calc(100vh-120px)] bg-primary-game rounded-t-3xl border-t-2 border-platform-border" scrollThumbClassName="bg-platform-border">
                     <div className="flex flex-col items-center dark:bg-[#050128] bg-[#C3E3FF] rounded-t-3xl rounded-b px-4 sm:px-6 py-6 sm:py-8 gap-6 sm:gap-8">

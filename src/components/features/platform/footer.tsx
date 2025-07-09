@@ -116,7 +116,7 @@ export default function Footer() {
         </div>
 
         {/* Description and legal */}
-        <div className="text-center text-platform-text/80 text-sm max-w-2xl mx-auto space-y-4">
+        <div className="text-center  font-red text-platform-text/80 text-sm max-w-4xl mx-auto space-y-4">
           <p>
             Stock Games blends entertainment with strategic thinking — built for those who love a challenge and value financial awareness.<br /><br />
             Discover more about responsible gameplay and smart decision-making at <a href="https://investsmart.org" target="_blank" rel="noopener noreferrer" className="text-accent-secondary underline">InvestSmart.org</a>.

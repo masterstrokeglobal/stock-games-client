@@ -128,12 +128,12 @@ function QuickTipTab() {
 
 function FAQTab() {
   return (
-    <div className="flex flex-col h-full text-platform-text text-sm sm:text-lg p-6">
+    <div className="flex flex-col h-full text-platform-text text-sm sm:text-lg p-6 w-full max-w-2xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
         <span className="text-3xl">❓</span>
         <h3 className="text-xl font-semibold">Frequently Asked Questions</h3>
       </div>
-      <div className="max-w-2xl">
+      <div className="max-w-2xl w-full">
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1" className="border-b border-platform-border">
             <AccordionTrigger className="text-left hover:no-underline">
@@ -269,7 +269,7 @@ export default function GameGuideUI() {
                   >
                     <div
                       className={`rounded-full p-2 sm:p-3 border-2 transition-all mb-1
-                        ${activeTab === idx ? "border-yellow-400 bg-[#E6F6FF]" : "border-transparent"}
+                        ${activeTab === idx ? "border-yellow-400 bg-[#E6F6FF] dark:bg-primary-game" : "border-transparent"}
                       `}
                     >
                       <img

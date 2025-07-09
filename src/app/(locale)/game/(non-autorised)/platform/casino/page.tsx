@@ -40,6 +40,7 @@ export default function GamingAppInterface() {
         if (type) {
             setFilter({ ...filter, type: type })
         }
+        console.log(filter, search, category, provider, type)
     }, [search, category, provider, type])
 
 
@@ -49,15 +50,28 @@ export default function GamingAppInterface() {
 
     const areFiltersApplied = filter.search || filter.category !== "all" || filter.provider !== "all" || filter.type  || popular || isNew;
 
+    console.log(filter, search, category, provider, type, popular, isNew)
     return (
         <>
-            <main className="md:mx-auto w-full md:px-4 mt-10">
+            <main className="md:mx-auto w-full md:px-4 mt-4">
                 {/* Search Bar */}
 
-                <GameFilters filter={filter} setFilter={setFilter} />
+                <GameFilters filter={{
+                    search: search,
+                    category: category,
+                    provider: provider,
+                    type: type || undefined
+                }} setFilter={setFilter} />
                 {/* Content: Either search results or category carousels */}
                 {areFiltersApplied ? (
-                  <CasinoGameResult filter={filter} className="my-8" />
+                  <CasinoGameResult filter={{
+                    search: search,
+                    category: category,
+                    provider: provider,
+                    type: type || undefined,
+                    popular: popular,
+                    new: isNew
+                  }} className="my-8" />
                 ) : (
                     <div className="space-y-12">
                         {/* most popular games , ne games with emoji  */}

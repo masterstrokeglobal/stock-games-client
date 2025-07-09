@@ -24,6 +24,13 @@ export const COIN_SIDE_CONFIG = {
     }
 };
 
+
+
+const HEAD_BG =
+    "linear-gradient(90deg, rgba(182, 143, 0, 0.3) 0%, rgba(147, 115, 0, 0.3) 100%)";
+const TAIL_BG =
+    "linear-gradient(90deg, rgba(218, 218, 218, 0.35) 0%, rgba(137, 137, 137, 0.35) 100%)";
+
 const PreviousBets = ({ className, tableClassName }: { className?: string, tableClassName?: string }) => {
 
     const { data: userGameHistory } = useGetUserGameHistory({ page: 1, roundRecordGameType: RoundRecordGameType.HEAD_TAIL });
@@ -66,7 +73,7 @@ const BetsTable = ({ placements, listClassName }: { placements: CoinHeadTailHist
             <ScrollArea
                 scrollThumbClassName="bg-[#4467CC]"
                 type="auto"
-                className={cn("w-full h-[calc(100svh-200px)]   ", listClassName)}
+                className={cn("w-full h-[calc(100svh-380px)]", listClassName)}
             >
                 {placements.length === 0 ? (
                     <div className="px-4 py-3 text-left text-white">No data found</div>
@@ -75,8 +82,11 @@ const BetsTable = ({ placements, listClassName }: { placements: CoinHeadTailHist
                         <div
                             key={idx}
                             className={cn(
-                                "flex items-center flex-1 border-b border-[#0B5AB6]",
+                                "flex items-center h-10  rounded-full mb-2 text-sm"
                             )}
+                                style={{
+                                    background: placement.winningSide === HeadTailPlacementType.HEAD ? HEAD_BG : TAIL_BG
+                                }}
                         >
                             <div className="px-4 py-1 flex-1 text-white text-center">
                                 {dayjs(placement.createdAt).format("hh:mm A")}

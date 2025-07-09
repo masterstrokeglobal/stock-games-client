@@ -28,7 +28,7 @@ const AllBets = ({
                     boxShadow: "0px 0px 8px 0px rgba(0, 92, 164, 1) inset",
                 }}
                 className={cn(
-                    "rounded-2xl md:p-4  flex flex-col  bg-[#004DA982] ",
+                    "rounded-2xl md:p-4  flex flex-col border border-[#0074FF]  bg-[#004DA982] ",
                     className
                 )}
             >
@@ -45,10 +45,9 @@ const AllBets = ({
                         <TabsTrigger
                             value="current"
                             className={cn(
-                                "flex-1  font-semibold tracking-wider transition-none rounded-[10px] h-8",
-                                "data-[state=active]:bg-[#00033DB0] data-[state=active]:text-white data-[state=active]:border-[#0074FF] data-[state=active]:shadow-[0px_0px_3.6px_1px_rgba(0,116,255,1)_inset]",
+                                "flex-1 font-semibold tracking-wider transition-none rounded-[10px] h-8",
+                                "data-[state=active]:bg-[#00033DB0] data-[state=active]:text-white data-[state=active]:border-[#0074FF] data-[state=active]:border data-[state=active]:shadow-[0px_0px_3.6px_1px_rgba(0,116,255,1)_inset]",
                                 "data-[state=inactive]:bg-transparent data-[state=inactive]:text-[#A3D1FF]",
-                                "border-none"
                             )}
                         >
                             Current Bets
@@ -56,10 +55,9 @@ const AllBets = ({
                         <TabsTrigger
                             value="previous"
                             className={cn(
-                                "flex-1  font-semibold tracking-wider transition-none rounded-[10px] h-8",
-                                "data-[state=active]:bg-[#00033DB0] data-[state=active]:text-white data-[state=active]:border-[#0074FF] data-[state=active]:shadow-[0px_0px_3.6px_1px_rgba(0,116,255,1)_inset]",
+                                "flex-1 font-semibold tracking-wider transition-none rounded-[10px]  h-8",
+                                "data-[state=active]:bg-[#00033DB0] data-[state=active]:text-white data-[state=active]:border-[#0074FF] data-[state=active]:border data-[state=active]:shadow-[0px_0px_3.6px_1px_rgba(0,116,255,1)_inset]",
                                 "data-[state=inactive]:bg-transparent data-[state=inactive]:text-[#A3D1FF]",
-                                "border-none"
                             )}
                         >
                             Previous Bets

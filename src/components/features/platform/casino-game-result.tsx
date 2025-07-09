@@ -20,7 +20,9 @@ export default function CasinoGameResult({ filter, className }: { filter: Filter
         type: filter.type || undefined,
         category: filter.category === "all" ? undefined : (filter.category as (typeof GameCategories)[number]["value"]),
         provider: filter.provider === "all" ? undefined : (filter.provider as ProviderEnum),
-        limit: 30
+        limit: 30,
+        popular: filter.popular,
+        new: filter.new
     });
 
     const isCasinoAllowed = checkCasinoAllowed(COMPANYID);

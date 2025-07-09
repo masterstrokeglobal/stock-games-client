@@ -130,7 +130,7 @@ const ActiveTierCard = ({ className }: PropsWithClassName) => {
     return (
         <Card
             className={cn(
-                "mb-8 md:min-h-64 flex flex-col overflow-hidden dark:rounded-none px-0 py-0",
+                "mb-8 md:h-64 flex flex-col overflow-hidden dark:rounded-none px-0 py-0",
                 "bg-white border border-platform-border",
                 "dark:bg-transparent dark:border dark:border-platform-border",
                 className
@@ -146,18 +146,18 @@ const ActiveTierCard = ({ className }: PropsWithClassName) => {
                         <Image
                             src={activeTier?.imageUrl}
                             alt={activeTier?.name}
-                            className="md:w-48 md:h-48 w-20 h-20 z-10 relative"
+                            className="md:w-40   md:h-auto w-20 h-20 z-10 relative"
                             width={96}
                             height={96}
                         />
                     </div>
                     <div className="flex flex-col items-center mt-2">
-                        <span className="font-bold text-xl uppercase tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)] text-[#00355B] dark:text-[#B6C6FF]">
+                        <span className="font-bold text-xl md:text-2xl uppercase tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)] text-[#00355B] dark:text-white">
                             {activeTier?.name}
                         </span>
-                        <span className="text-[#7AC6F9] text-xs font-semibold tracking-widest mt-1" style={{ letterSpacing: "0.1em" }}>
+                        <span className="text-[#7AC6F9] dark:text-[#FCC93D] text-xs md:text-base font-semibold tracking-widest mt-1" style={{ letterSpacing: "0.1em" }}>
                             MY TIER
-                        </span>
+                        </span> 
                     </div>
                 </div>
                 {/* Right: Progress and next tier */}

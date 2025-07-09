@@ -3,6 +3,7 @@ import { ProviderEnum } from "@/models/casino-games";
 import Link from "next/link";
 
 const providers = [
+  { alt: ProviderEnum.STOCK_GAMES, src: "/images/companies/stock-games.svg" },
   { alt: ProviderEnum.BetGames, src: "/images/companies/Betgames.png" },
   { alt: ProviderEnum.Evoplay, src: "/images/companies/Evoplay.png" },
   { alt: ProviderEnum.Ezugi, src: "/images/companies/Ezugi.png" },
@@ -22,7 +23,7 @@ const CasinoProviders = () => {
         {providers.map((provider, index) => (
           <Link
             key={index}
-            href={`/game/platform/casino?provider=${provider.alt}`}
+            href={provider.alt == ProviderEnum.STOCK_GAMES ? "/game/platform/stock-games" : `/game/platform/casino?provider=${provider.alt}`}
             className=" rounded-lg  flex items-center justify-center h-24"
           >
             {/* new game will have a rotated tag */}
@@ -67,7 +68,7 @@ export function CasinoProvidersCarousel({ title }: CategoryCarouselProps) {
             <CarouselItem key={provider.alt} className="pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/6">
               <Link
                 key={index}
-                href={`/game/platform/casino?provider=${provider.alt}`}
+                href={provider.alt == ProviderEnum.STOCK_GAMES ? "/game/platform/stock-games" : `/game/platform/casino?provider=${provider.alt}`}
                 className="flex items-center justify-center h-10 "
               >
                 {/* new game will have a rotated tag */}

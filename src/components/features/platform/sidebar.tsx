@@ -90,7 +90,7 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
             )}
         >
             <div className="flex h-full flex-col">
-                <div className="hidden md:flex justify-end p-2 sticky top-0  z-10">
+                <div className={cn("hidden md:flex p-2 sticky top-0  z-10", !sidebarOpen ? "justify-center" : "justify-end")   }>
                     <Button
                         onClick={toggleSidebar}
                         variant="ghost"
@@ -151,8 +151,9 @@ const SidebarItem = ({
     return (
         <button
             className={cn(
-                "flex items-center cursor-pointer w-full gap-3 rounded-md px-3 py-2 text-sm font-medium text-platform-text hover:bg-platform-border hover:text-platform-text group",
-                isActive && "bg-platform-border "
+                "flex items-center cursor-pointer w-full gap-3 rounded-md px-3 py-2 text-sm font-medium text-platform-text transition-all duration-300 ease-in-out hover:bg-platform-border hover:text-platform-text group",
+                isActive && "bg-platform-border ",
+                !sidebarOpen && "justify-center"
             )}
             onClick={onClick}
             type="button"

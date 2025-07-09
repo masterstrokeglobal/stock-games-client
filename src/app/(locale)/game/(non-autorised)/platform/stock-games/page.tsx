@@ -17,7 +17,7 @@ export default function GamingAppInterface() {
 
     return (
         <div className="flex flex-col min-h-screen  text-white mx-auto">
-            <main className="container mx-auto  md:px-4 py-6">
+            <main className="container mx-auto  md:px-4 pb-6">
                 {/* Search Bar */}
                 <header className="container mx-auto py-4">
                     <h1 className="text-2xl font-bold capitalize text-platform-text">Stock Games</h1>

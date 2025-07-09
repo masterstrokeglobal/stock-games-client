@@ -27,6 +27,7 @@ const config: Config = {
 				'phudu': ['var(--font-phudu)', 'sans-serif'],
 				'protest-strike': ['var(--font-protest-strike)', 'sans-serif'],
 				'prosto-one': ['var(--font-prosto-one)', 'sans-serif'],
+				'poppins': ['var(--font-poppins)', 'sans-serif'],
 			},
 			animation: {
 				marquee: 'marquee 6s linear infinite',

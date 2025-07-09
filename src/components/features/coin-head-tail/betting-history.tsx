@@ -3,12 +3,13 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { RoundRecordGameType } from '@/models/round-record';
 import { useGetUserGameHistory } from '@/react-query/game-user-queries';
 import dayjs from "dayjs";
-import { ChevronLeft, ChevronRight, RefreshCw, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 
 // --- Coin Head/Tail Config ---
@@ -159,14 +160,17 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
-            <DialogContent showButton={false} overlayClassName="bg-[#00033D] bg-opacity-70" className="max-w-5xl xs:w-[90vw] font-phudu w-full p-0 border-none bg-transparent backdrop-blur-md h-fit ">
+            <DialogContent
+              
+             showButton={false} overlayClassName="backdrop-blur-md" className="max-w-5xl xs:w-[90vw] font-phudu w-full p-0 border-none bg-transparent  h-fit ">
                 <div style={{
                     background: 'linear-gradient(0deg, #0A023B 0%, #002A5A 90.29%)',
+                    boxShadow: '0px 0px 8px 1px rgba(0, 92, 164, 1) inset',
                 }}
                     className="w-full border backdrop-blur-md border-[#0074FF] rounded-3xl shadow-2xl overflow-hidden  flex flex-col">
                     {/* Header */}
                     <div className="flex items-center border-b border-[#0074FF] bg-[#004DA9] justify-between p-4 pb-3 flex-shrink-0">
-                        <div className="flex items-center text-white text-base font-play font-semibold space-x-3">
+                        <div className="flex items-center text-white md:text-xl text-base font-play font-semibold space-x-3">
                             My Bet History
                         </div>
                         <div className="flex items-center gap-2">
@@ -179,9 +183,9 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                             </button>
                             <button
                                 onClick={() => setOpen(false)}
-                                className="text-white hover:text-gray-200 transition-colors"
+                                className="text-white hover:text-gray-200 text-2xl px-2 font-play transition-colors"
                             >
-                                <X size={24} />
+                                x
                             </button>
                         </div>
                     </div>
@@ -203,8 +207,8 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                     {history.length === 0 && (
                                         <div className="px-4 py-3 text-center">No data found</div>
                                     )}
-                                    <div className="max-h-[60svh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#0074FF] scrollbar-track-transparent">
-                                        {history?.map((row, idx) => (
+                                    <ScrollArea scrollThumbClassName="bg-[#4467CC]" type="auto" className="h-[60svh] font-phudu font-light overflow-y-auto">
+                                        {history.map((row, idx) => (
                                             <div
                                                 key={idx}
                                                 className={cn(
@@ -254,7 +258,7 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                                 </div>
                                             </div>
                                         ))}
-                                    </div>
+                                    </ScrollArea>
                                 </div>
                             </div>
                         )}

@@ -12,6 +12,8 @@ export type Filter = {
     platform?: string;
     provider?: string;
     type?: string;
+    popular?: boolean;
+    new?: boolean;
 }
 
 type Props = {
