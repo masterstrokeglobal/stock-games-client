@@ -38,14 +38,14 @@ const AllBets = ({
                 <Tabs defaultValue="current" className="w-full mt-4 ">
                     <TabsList
                         className={cn(
-                            "w-full flex bg-[#004DA9] rounded-[10px] p-1 h-10  mb-4",
+                            "w-full flex bg-[#004DA9] rounded-[10px] p-1 h-10",
                             "justify-between"
                         )}
                     >
                         <TabsTrigger
                             value="current"
                             className={cn(
-                                "flex-1 font-semibold tracking-wider transition-none rounded-[10px] h-8",
+                                "flex-1 font-semibold tracking-wider transition-none rounded-[10px] font-play text-base h-8",
                                 "data-[state=active]:bg-[#00033DB0] data-[state=active]:text-white data-[state=active]:border-[#0074FF] data-[state=active]:border data-[state=active]:shadow-[0px_0px_3.6px_1px_rgba(0,116,255,1)_inset]",
                                 "data-[state=inactive]:bg-transparent data-[state=inactive]:text-[#A3D1FF]",
                             )}
@@ -55,7 +55,7 @@ const AllBets = ({
                         <TabsTrigger
                             value="previous"
                             className={cn(
-                                "flex-1 font-semibold tracking-wider transition-none rounded-[10px]  h-8",
+                                "flex-1 font-semibold tracking-wider transition-none rounded-[10px] font-play text-base h-8",
                                 "data-[state=active]:bg-[#00033DB0] data-[state=active]:text-white data-[state=active]:border-[#0074FF] data-[state=active]:border data-[state=active]:shadow-[0px_0px_3.6px_1px_rgba(0,116,255,1)_inset]",
                                 "data-[state=inactive]:bg-transparent data-[state=inactive]:text-[#A3D1FF]",
                             )}

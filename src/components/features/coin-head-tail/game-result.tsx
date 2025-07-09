@@ -1,13 +1,12 @@
 import { Dialog, DialogClose, DialogContent } from '@/components/ui/dialog';
 import { cn, INR } from '@/lib/utils';
-import { useGetHeadTailRoundResult } from '@/react-query/head-tail-queries';
-import { X } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { COIN_SIDE_CONFIG } from './betting-history';
-import dayjs from 'dayjs';
-import TriangleUpGlow from '../common/triangle-up-glow';
-import TriangleDownGlow from '../common/triangle-down-glow';
 import { RoundRecord } from '@/models/round-record';
+import { useGetHeadTailRoundResult } from '@/react-query/head-tail-queries';
+import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
+import TriangleDownGlow from '../common/triangle-down-glow';
+import TriangleUpGlow from '../common/triangle-up-glow';
+import { COIN_SIDE_CONFIG } from './betting-history';
 
 interface GameResultDialogProps {
   open: boolean;
@@ -16,8 +15,7 @@ interface GameResultDialogProps {
 
 const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
   const [showDialog, setShowDialog] = useState(open);
-  const { data: roundResult, isLoading, isError } = useGetHeadTailRoundResult(roundRecordId, open);
-
+  const { data: roundResult, isLoading, isError } = useGetHeadTailRoundResult(roundRecordId, true);
 
   useEffect(() => {
     setShowDialog(open);
@@ -29,14 +27,16 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
   }, 0);
 
   return (
-    <Dialog defaultOpen={showDialog}>
+    <Dialog   defaultOpen={showDialog}>
       <DialogContent
         showButton={false}
         className={cn(
-          "border-2 border-none max-w-2xl shadow-none mx-auto p-0",
+          " outline-none ring-0  border-none  w-full px-4 max-w-7xl h-full flex flex-col items-center justify-center shadow-none mx-auto p-0",
           "bg-transparent"
         )}
       >
+
+        <img src="/images/glow.png" alt="Game Result"  className="w-full h-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" /> 
         {isLoading && (
           <div className="relative rounded-2xl w-full mx-auto font-inter">
             <div className="text-center text-white text-2xl px-6 py-6 font-bold tracking-widest font-play mb-2">
@@ -44,8 +44,6 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
             </div>
           </div>
         )}
-
-
 
         {isError && (
 
@@ -58,46 +56,51 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
 
 
         {roundResult && (
-          <div className="relative rounded-2xl w-full mx-auto font-inter">
-            <div className="text-center text-white text-2xl px-6 py-6 font-bold tracking-widest font-play mb-2">
+          <div className="relative max-w-2xl sm:w-full w-[calc(100vw-2rem)] rounded-2xl sm:h-[80vh] mx-auto font-inter">
+            <div
+              className="text-center text-white text-3xl px-6 py-6 font-bold tracking-widest font-play mb-2"
+              style={{
+                textShadow: "0px 2px 8px #CDDDFF, 0px 0px 2px #001F65"
+              }}
+            >
               Result
-              <DialogClose className='absolute top-0 right-0 bg-[#001F65] z-[61] rounded-full p-2 border-[#6FB0FF] focus:ring-0 border'>
-                <X className='w-6 h-6 text-white' />
-              </DialogClose>
+              <DialogClose className='absolute top-0  font-play sm:text-xl text-base flex items-center justify-center font-medium aspect-square sm:size-10 size-8 right-0 bg-[#001F65] z-[61] rounded-full p-2 border-[#6FB0FF] focus:ring-0 border'>
+
+X              </DialogClose>
             </div>
 
             <main className='bg-[#1574F4] border-2 border-[#6FB0FF] rounded-2xl p-0.5'>
-              <div className='flex flex-col gap-4 bg-gradient-to-b from-[#001F65] to-[#00309D] border-2 border-[#6FB0FF] rounded-2xl p-4'>
+              <div className='flex flex-col gap-4 bg-gradient-to-b from-[#001F65] to-[#00309D] pt-4 sm:pt-10 px-4 sm:px-10 border-2 border-[#6FB0FF] rounded-2xl p-4'>
                 <div className='bg-[#001B50] rounded-2xl border  w-full border-[#6FB0FF] p-4'>
-                  <div className="flex items-center justify-between mb-10  py-2 rounded-t-2xl">
-                    <span className="text-white text-lg ">
-                      Round <span className="text-[#F5C201] font-normal">: #{roundResult?.round?.id}</span>
+                  <div className="flex items-center font-poppins justify-between mb-10  py-2 rounded-t-2xl">
+                    <span className="text-white font-semibold text-lg ">
+                      Round <span className="text-[#F5C201] font-light text-base">: #{roundResult?.round?.id}</span>
                     </span>
-                    <span className="text-white text-lg ">
-                      Time <span className="text-[#F5C201] font-normal">{roundResult?.round?.startTime ? dayjs(roundResult.round.startTime).format("HH:mm A") : "--"}</span>
+                    <span className="text-white font-semibold text-lg ">
+                      Time <span className="text-[#F5C201] font-light text-base">{roundResult?.round?.startTime ? dayjs(roundResult.round.startTime).format("HH:mm A") : "--"}</span>
                     </span>
                   </div>
-                  <div className='md:mx-10 '>
-                    <div className="grid grid-cols-3 font-play gap-2 font-medium border-b border-[#8EC2FF] text-[#8EC2FF] pb-2 mb-2">
-                      <div className="text-left">Winner</div>
-                      <div className="text-center">Bet INR</div>
-                      <div className="text-center">Cashout INR</div>
+                  <div className='md:mx-4 '>
+                    <div className="grid grid-cols-3 sm:px-4 font-play gap-2 sm:text-base text-sm font-medium border-b border-[#8EC2FF] text-[#8EC2FF] pb-2 mb-2">
+                      <div className="text-left uppercase sm:text-base text-sm whitespace-nowrap ">Winner</div>
+                      <div className="text-center uppercase sm:text-base text-sm whitespace-nowrap">Bet INR</div>
+                      <div className="text-center uppercase sm:text-base text-sm whitespace-nowrap">Cashout INR</div>
                     </div>
                     <div className="space-y-2 mb-4 max-h-[150px] overflow-y-auto font-phudu">
                       {roundResult?.placements.map((bet, idx) => {
                         const config = COIN_SIDE_CONFIG[bet.winningSide as keyof typeof COIN_SIDE_CONFIG];
                         return (
-                          <div className="grid grid-cols-3 gap-2 items-center" key={idx}>
+                          <div className="grid grid-cols-3 gap-2  sm:px-4 font-phudu text-sm font-light items-center" key={idx}>
                             {/* Winner Side */}
                             <div className="flex items-center">
                               <span
                                 style={{
                                   backgroundColor: config.chipColor,
                                   color: config.textColor,
-                                  border: `2px solid ${config.borderColor}`,
+                                  border: `1px solid ${config.borderColor}`,
                                 }}
                                 className={cn(
-                                  "px-4 py-1 rounded-full text-base font-bold shadow uppercase",
+                                  "sm:px-4 px-2 py-1 rounded-full text-sm  shadow uppercase",
                                   "min-w-[80px] flex items-center justify-center"
                                 )}
                               >
@@ -105,12 +108,12 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
                               </span>
                             </div>
                             {/* Bet INR */}
-                            <div className="text-center text-white font-medium text-base">
+                            <div className="text-center text-white font-medium text-xs sm:text-sm">
                               {INR(bet.amountPlaced, true)}
                             </div>
                             {/* Cashout INR */}
                             <div className={cn(
-                              "text-center font-bold flex items-end justify-center  gap-1 text-base",
+                              "text-center font-bold flex items-end justify-center  gap-1 text-xs sm:text-sm",
                               bet.isWinner ? "text-green-400" : "text-red-500"
                             )}>
                               {bet.isWinner ? (
@@ -137,7 +140,12 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
                     </div>
                   </div>
                   <div className='flex justify-center mb-2 mt-16'>
-                    <div className='text-center text-lg font-phudu xl:text-4xl md:text-3xl font-bold sm:text-2xl xs:text-xl text-white' style={{ textShadow: '0px 0px 9.5px #2A8BFF' }}>
+                    <div
+                      className='text-center text-lg font-phudu xl:text-4xl md:text-3xl font-bold sm:text-2xl xs:text-xl text-white'
+                      style={{
+                        textShadow: "0px 0px 8px #2A8BFF, 0px 0px 2px #fff"
+                      }}
+                    >
                       NET RESULT : ₹ {Math.abs(netResult ?? 0)}
                     </div>
                   </div>
@@ -149,7 +157,7 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
 
             <div className='flex justify-center w-full'>
               <button
-                className="w-full mt-4 text-white max-w-sm mx-auto py-3 rounded-xl text-lg font-play transition border border-[#6FB0FF]"
+                className="w-full mt-4 text-white  sm:max-w-sm max-w-xs mx-auto py-3 rounded-xl text-xl tracking-wider font-play transition border border-[#6FB0FF]"
                 style={{
                   background: "linear-gradient(0deg, #002067 0%, #00339D 90.29%)",
                   textShadow: "0px 0px 5px rgba(255, 255, 255, 1)",

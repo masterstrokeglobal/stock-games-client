@@ -64,14 +64,14 @@ const BetsTable = ({ placements, listClassName }: { placements: CoinHeadTailHist
         >
 
             {/* Header */}
-            <div className="flex w-full px-4 py-3 font-play  sticky top-0  z-10 tracking-wider text-white text-sm gap-4">
-                <div className="flex-1 text-left">Time</div>
-                <div className="flex-1 text-left">Selected Side</div>
-                <div className="flex-1 text-left">Winning Side</div>
-                <div className="flex-1 text-left">Profit/Loss</div>
+            <div className="flex w-full px-4 py-3 font-play text-[15px]  sticky top-0  z-10 tracking-wider text-white text-sm gap-4">
+                <div className="flex-1 text-left uppercase whitespace-nowrap ">TIME</div>
+                <div className="flex-1 text-left uppercase whitespace-nowrap">SELECTED SIDE</div>
+                <div className="flex-1 text-left uppercase whitespace-nowrap">WINNER</div>
+                <div className="flex-1 text-left uppercase whitespace-nowrap">PROFIT/LOSS</div>
             </div>
             <ScrollArea
-                scrollThumbClassName="bg-[#4467CC]"
+                scrollThumbClassName="bg-[#004DA9]"
                 type="auto"
                 className={cn("w-full h-[calc(100svh-380px)]", listClassName)}
             >
@@ -82,7 +82,7 @@ const BetsTable = ({ placements, listClassName }: { placements: CoinHeadTailHist
                         <div
                             key={idx}
                             className={cn(
-                                "flex items-center h-10  rounded-full mb-2 text-sm"
+                                "flex items-center h-10  font-phudu font-light rounded-full mb-2 text-sm"
                             )}
                                 style={{
                                     background: placement.winningSide === HeadTailPlacementType.HEAD ? HEAD_BG : TAIL_BG
@@ -93,7 +93,7 @@ const BetsTable = ({ placements, listClassName }: { placements: CoinHeadTailHist
                             </div>
                             <div className="px-4 py-1 flex-1 text-left">
                                 <span
-                                    className="px-3 py-1 rounded-full font-semibold text-xs border"
+                                    className="px-3 py-1 rounded-full  text-xs border"
                                     style={{
                                         background: COIN_SIDE_CONFIG[placement.selectedSide === HeadTailPlacementType.HEAD ? 'head' : 'tail']?.chipColor,
                                         color: COIN_SIDE_CONFIG[placement.selectedSide === HeadTailPlacementType.HEAD ? 'head' : 'tail']?.textColor,
@@ -108,7 +108,7 @@ const BetsTable = ({ placements, listClassName }: { placements: CoinHeadTailHist
                             </div>
                             <div className="px-4 py-1 flex-1 text-left">
                                 <span
-                                    className="px-3 py-1 rounded-full font-semibold text-xs border"
+                                    className="px-3 py-1 rounded-full  text-xs border"
                                     style={{
                                         background: COIN_SIDE_CONFIG[placement.winningSide === HeadTailPlacementType.HEAD ? 'head' : 'tail']?.chipColor,
                                         color: COIN_SIDE_CONFIG[placement.winningSide === HeadTailPlacementType.HEAD ? 'head' : 'tail']?.textColor,

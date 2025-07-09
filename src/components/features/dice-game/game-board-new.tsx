@@ -198,7 +198,7 @@ const HeadCard = ({ bet, win, className, onClick, isMobile, style, name }: CardP
                 <span className="text-[10px] font-phudu font-normal text-white">{INR(win)}</span>
             </div>
         </div>
-        <div className="absolute -bottom-4 left-0 w-full h-4 bg-black/70 blur-[6px] z-10"/>
+        <div className="absolute -bottom-4 left-0 w-full h-4 bg-black/50 blur-[10px] z-10"/>
 
     </div>
 );
@@ -273,7 +273,7 @@ const TailCard = ({ bet, win, className, onClick, isMobile, name }: CardProps) =
                 <span className="text-[10px] font-phudu text-white">{INR(win)}</span>
             </div>
         </div>
-        <div className="absolute -bottom-4 left-0 w-full h-4 bg-black/70 blur-[6px] z-10"/>
+        <div className="absolute -bottom-4 left-0 w-full h-4 bg-black/50 blur-[10px] z-10"/>
     </div>
 );
 
