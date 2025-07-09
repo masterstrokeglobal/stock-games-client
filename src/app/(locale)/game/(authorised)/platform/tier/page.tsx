@@ -175,7 +175,6 @@ export default function TiersProgram(): JSX.Element {
                                         {step.number}. {step.title}
                                     </h4>
                                     <p className="text-xs sm:text-sm  font-poppins font-semibold text-[#FFC541] dark:text-[#FFDE21] flex-grow">{step.description}</p>
-
                                 </div>
                             </Card>
                         ))}

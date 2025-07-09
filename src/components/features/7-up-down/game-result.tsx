@@ -33,6 +33,7 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
   return (  
     <Dialog open={showDialog}>
       <DialogContent className="sm:max-w-md bg-primary-game text-white [&>.close-button]:hidden" data-hide-children="true">
+      
         <DialogHeader>
           <DialogTitle>Round Results</DialogTitle>
         </DialogHeader>

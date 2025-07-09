@@ -196,12 +196,12 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                 <div className="min-w-full text-sm text-left text-white mt-4 relative overflow-y-auto scrollbar-thin scrollbar-thumb-[#0074FF] scrollbar-track-transparent">
                                     {/* Table Header */}
                                     <div className=" text-base font-play text-[#8EC2FF] rounded-full flex sticky top-0 z-10 bg-[#004DA9]">
-                                        <div className="px-4 py-3 font-semibold flex-[1.2]">Date</div>
-                                        <div className="px-4 py-3 font-semibold flex-[1.2]">Time</div>
-                                        <div className="px-4 py-3 font-semibold flex-[1.2]">SELECTED SIDE</div>
-                                        <div className="px-4 py-3 font-semibold flex-[1.2]">WINNER</div>
-                                        <div className="px-4 py-3 font-semibold flex-[1.2]">BET INR</div>
-                                        <div className="px-4 py-3 font-semibold flex-[1.2]">CASHOUT INR</div>
+                                        <div className="px-4 py-3 font-semibold uppercase flex-[1.2]">Date</div>
+                                        <div className="px-4 py-3 font-semibold uppercase flex-[1.2]">Time</div>
+                                        <div className="px-4 py-3 font-semibold uppercase flex-[1.2]">SELECTED SIDE</div>
+                                        <div className="px-4 py-3 font-semibold uppercase flex-[1.2]">WINNER</div>
+                                        <div className="px-4 py-3 font-semibold uppercase flex-[1.2]">BET INR</div>
+                                        <div className="px-4 py-3 font-semibold uppercase flex-[1.2]">CASHOUT INR</div>
                                     </div>
                                     {/* Table Body */}
                                     {history.length === 0 && (

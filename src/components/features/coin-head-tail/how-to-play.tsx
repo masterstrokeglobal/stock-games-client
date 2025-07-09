@@ -49,7 +49,7 @@ const HowToPlayDialog: React.FC<HowToPlayDialogProps> = ({
                 >
                     {/* Header */}
                     <div className="flex items-center border-b border-[#0074FF] bg-[#004DA9] justify-between p-4 pb-3 flex-shrink-0">
-                        <div className="flex items-center text-white text-base font-semibold space-x-3">
+                        <div className="flex items-center font-play text-white text-base font-semibold space-x-3">
                             How to Play?
                         </div>
                         <button

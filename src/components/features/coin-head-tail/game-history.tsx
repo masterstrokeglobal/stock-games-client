@@ -142,9 +142,9 @@ const GameHistoryDialog = ({ children }: GameHistoryDialogProps) => {
                                 <div className="min-w-full text-sm text-left text-white mt-4 relative overflow-y-auto scrollbar-thin scrollbar-thumb-[#0074FF] scrollbar-track-transparent">
                                     {/* Table Header */}
                                     <div className=" text-base font-play text-[#8EC2FF] rounded-full flex sticky top-0 z-10 bg-[#004DA9]">
-                                        <div className="px-4 py-3 font-semibold flex-[1.2]">Date</div>
-                                        <div className="px-4 py-3 font-semibold flex-[1.2]">Time</div>
-                                        <div className="px-4 py-3 font-semibold flex-[1.2]">WINNER</div>
+                                        <div className="px-4 py-3 font-semibold flex-[1.2] uppercase">Date</div>
+                                        <div className="px-4 py-3 font-semibold flex-[1.2] uppercase">Time</div>
+                                        <div className="px-4 py-3 font-semibold flex-[1.2] uppercase">WINNER</div>
                                     </div>
                                     {/* Table Body */}
                                     {isLoading ? (
@@ -159,7 +159,7 @@ const GameHistoryDialog = ({ children }: GameHistoryDialogProps) => {
                                                 <div
                                                     key={idx}
                                                     className={cn(
-                                                        "text-white flex items-center border-b border-[#0B5AB6]")}>
+                                                        "text-white flex items-center font-phudu font-light border-b border-[#0B5AB6]")}>
                                                     <div className="px-4 py-3 flex-[1.2] flex items-center">{dayjs(row.createdAt).format("DD/MM/YYYY")}</div>
                                                     <div className="px-4 py-3 flex-[1.2] flex items-center">{dayjs(row.createdAt).format("hh:mm A")}</div>
                                                     <div className="px-4 py-3 flex-[1.2] flex items-center">
