@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const providers = [
   { alt: ProviderEnum.STOCK_GAMES, src: "/images/companies/stock-games.svg" },
-  { alt: ProviderEnum.BetGames, src: "/images/companies/Betgames.png" },
+  { alt: ProviderEnum.BetGames, src: "/images/companies/betgames.png" },
   { alt: ProviderEnum.Evoplay, src: "/images/companies/Evoplay.png" },
   { alt: ProviderEnum.Ezugi, src: "/images/companies/Ezugi.png" },
   { alt: ProviderEnum.Gamzix, src: "/images/companies/gamzix.png" },
