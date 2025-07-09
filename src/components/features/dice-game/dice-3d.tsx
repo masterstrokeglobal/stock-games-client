@@ -4,9 +4,9 @@ import useWindowSize from '@/hooks/use-window-size';
 import { cn } from '@/lib/utils';
 import { MarketItem } from '@/models/market-item';
 import { RoundRecord } from '@/models/round-record';
-import Image from 'next/image';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import TriangleIcon from '../common/triangle-icon';
+
 interface DiceFaceProps {
   marketItem: MarketItem;
   className: string;
@@ -55,12 +55,14 @@ const StockDisplay = ({ stock, className, isSecondCube, roundRecord, winner, isL
 export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, roundRecordWithWinningId }) => {
   const marketItems = roundRecord.market;
   const { stocks } = useLeaderboard(roundRecord);
+  const [showDice, setShowDice] = useState(false);
+  const [diceAppear, setDiceAppear] = useState(false); 
+  const videoRef = useRef<HTMLVideoElement>(null);
   const isPlaceOver = usePlacementOver(roundRecord);
   const isRolling = isPlaceOver && roundRecordWithWinningId?.winningId == null;
 
   const firstCube = marketItems.slice(0, 6);
   const secondCube = marketItems.slice(6, 12);
-
 
   const marketItemsStocks = useMemo(() => {
     return marketItems.map((item) => {
@@ -80,50 +82,154 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
   // Check if we're waiting for winning data
   const isWaitingForResults = !isRolling && (!roundRecordWithWinningId?.winningId || roundRecordWithWinningId?.winningId.length === 0);
 
+  // Animate dice appearing from below when showDice goes from false to true
+  useEffect(() => {
+    if (isPlaceOver) {
+      if (videoRef.current) {
+        videoRef.current.currentTime = 0;
+        videoRef.current.play();
+        setTimeout(() => {
+          setShowDice(true);
+        }, 3000);
+      }
+    }
+    else {
+      setShowDice(false);
+      setDiceAppear(false);
+    }
+    // eslint-disable-next-line
+  }, [isPlaceOver]);
+
+  // Watch showDice and trigger appear animation
+  useEffect(() => {
+    if (showDice) {
+      setDiceAppear(false);
+      // allow reflow for animation
+      const timeout = setTimeout(() => setDiceAppear(true), 10);
+      return () => clearTimeout(timeout);
+    } else {
+      setDiceAppear(false);
+    }
+  }, [showDice]);
+
+  // Animation CSS
+  // You can move this to a CSS/SCSS file if you prefer
+  const diceAppearAnimation = `
+    @keyframes diceAppearFromBelow100 {
+      0% {
+        transform: scale(0.2) translateY(400px);
+      }
+   
+      20% {
+        transform: scale(.2);
+      }
+    
+      100% {
+        transform: scale(1) translateY(0);
+      }
+    }
+    @keyframes diceAppearFromBelow150 {
+      0% {
+        transform: scale(0.2) translateY(200px);
+      }
+
+      20% {
+        transform: scale(.2);
+      }
+
+      100% {
+        transform: scale(1) translateY(0);
+      }
+    }
+    .dice-appear-animate-100 {
+      animation: diceAppearFromBelow100 3s cubic-bezier(.22,1.12,.62,1) forwards;
+    }
+    .dice-appear-animate-150 {
+      animation: diceAppearFromBelow150 3s cubic-bezier(.22,1.12,.62,1) forwards;
+    }
+    .dice-appear-hidden-100 {
+      opacity: 0;
+      transform: scale(0.2) translateY(100px);
+      pointer-events: none;
+    }
+    .dice-appear-hidden-150 {
+      opacity: 0;
+      transform: scale(0.2) translateY(150px);
+      pointer-events: none;
+    }
+  `;
 
   return (
-    <div className={`font-sans  bg-cover bg-center border border-[#4467CC80] grid grid-rows-1 p-2 rounded-lg overflow-visible ${className}`} >
-      <div className="flex justify-between  relative  h-full items-center">
-          <div className='flex flex-col  border rounded border-[#4467CC80] h-full md:w-28 w-[80px]'>
-            {/* <TriangleIcon className='size-3 text-white absolute top-4 right-0 translate-x-full  rotate-90' /> */}
-            {firstCubeStocks?.map((stock, index) => (
-              <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1 w-full last:border-none' roundRecord={roundRecordWithWinningId} isLast={index === 5} />
-            ))}
+    <>
+      <style>{diceAppearAnimation}</style>
+      <div className={`font-sans  bg-cover bg-center border border-[#4467CC80] grid grid-rows-1 p-2 rounded-lg overflow-visible ${className}`} >
+        <div className="flex justify-between  relative  h-full items-center">
+            <div className='flex flex-col  border rounded border-[#4467CC80] h-full md:w-28 w-[80px]'>
+              {/* <TriangleIcon className='size-3 text-white absolute top-4 right-0 translate-x-full  rotate-90' /> */}
+              {firstCubeStocks?.map((stock, index) => (
+                <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1 w-full last:border-none' roundRecord={roundRecordWithWinningId} isLast={index === 5} />
+              ))}
+            </div>
+          <div className='relative flex-1 h-full max-w-sm'>
+            <h2 className='text-white text-center sm:hidden  uppercase  z-10 text-xs font-semibold tracking-wider absolute top-0 left-1/2 -translate-x-1/2'>Dice Game</h2>
+              <video ref={videoRef} src="/images/dice-game/gennie.webm"  muted className='absolute xsm:-bottom-2 z-10 xsm:scale-100  xs:scale-125 scale-[1.75] xs:bottom-[3%] bottom-[11%] ' />
+              <div
+                style={{
+                  border: '1px solid rgba(68, 103, 204, 1)',
+                  boxShadow: '20px 20px 100px 18px rgba(68, 103, 204, 1)',
+                }}
+                className={cn(
+                  'flex flex-col absolute left-1/4 rounded-full max-w-full !aspect-square sm:p-8 xsm:p-6 p-0 -translate-x-1/4 sm:-top-2 xsm:top-4 top-8 justify-center items-center gap-8 h-auto sm:w-52 w-40'
+                )}
+              >
+                <div
+                  className={cn(
+                    'flex flex-col gap-6 items-center justify-center w-full'
+                  )}
+                >
+                  <Cube
+                    marketItems={firstCube}
+                    showDice={showDice}
+                    isRolling={isRolling}
+                    className={cn(
+                      showDice 
+                        ? diceAppear
+                          ? 'dice-appear-animate-100'
+                          : 'dice-appear-hidden-100'
+                        : 'dice-appear-hidden-100'
+                    )}
+                    winningMarketId={roundRecordWithWinningId?.winningId}
+                    isLoading={isWaitingForResults}
+                  />
+                  <Cube
+                    marketItems={secondCube}
+                    showDice={showDice}
+                    className={cn(
+                      showDice 
+                        ? diceAppear
+                          ? 'dice-appear-animate-150'
+                          : 'dice-appear-hidden-150'
+                        : 'dice-appear-hidden-150'
+                    )}
+                    isRolling={isRolling}
+                    isSecondCube
+                    winningMarketId={roundRecordWithWinningId?.winningId}
+                    isLoading={isWaitingForResults}
+                  />
+                </div>
+              </div>
           </div>
-        <div className='relative flex-1 h-full max-w-sm'>
-          <h2 className='text-white text-center sm:hidden  uppercase  z-10 text-xs font-semibold tracking-wider absolute top-0 left-1/2 -translate-x-1/2'>Dice Game</h2>
-            <Image src="/images/dice-game/lady.png" alt="dice-1" width={600} height={600} className='absolute -bottom-2 left-3/4   z-10 -translate-x-3/4 sm:h-[90%] xsm:h-3/4 xs:h-40 h-32 w-auto ' />
-            <div style={{
-              border: '1px solid rgba(68, 103, 204, 1)',
-              boxShadow: '20px 20px 100px 18px rgba(68, 103, 204, 1)',
-            }} className='flex flex-col absolute left-1/4 rounded-full max-w-full !aspect-square sm:p-8 xsm:p-6 p-0 -translate-x-1/4 sm:-top-2 xsm:top-4 top-8 justify-center items-center gap-6 h-auto sm:w-52 w-40'>
-              <Cube
-                marketItems={firstCube}
-                isRolling={isRolling}
-                className='md:mr-12 mr-6'
-                winningMarketId={roundRecordWithWinningId?.winningId}
-                isLoading={isWaitingForResults}
-              />
-              <Cube
-                marketItems={secondCube}
-                className='delay-1000'
-                isRolling={isRolling}
-                isSecondCube
-                winningMarketId={roundRecordWithWinningId?.winningId}
-                isLoading={isWaitingForResults}
-              />
+            <div className='flex flex-col h-full  md:w-28 w-[80px] self-end border border-[#4467CC80] rounded-lg'>
+              {/* <TriangleIcon className='size-3 text-white absolute bottom-4 left-0 -translate-x-full  -rotate-90' /> */}
+
+              {secondCubeStocks?.map((stock, index) => (
+                <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1  w-full' isSecondCube roundRecord={roundRecordWithWinningId} isLast={index === 5} />
+              ))}
+
             </div>
         </div>
-          <div className='flex flex-col h-full  md:w-28 w-[80px] self-end border border-[#4467CC80] rounded-lg'>
-            {/* <TriangleIcon className='size-3 text-white absolute bottom-4 left-0 -translate-x-full  -rotate-90' /> */}
-
-            {secondCubeStocks?.map((stock, index) => (
-              <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1  w-full' isSecondCube roundRecord={roundRecordWithWinningId} isLast={index === 5} />
-            ))}
-
-          </div>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -131,6 +237,8 @@ export default Dice3D;
 
 const DiceFace: React.FC<DiceFaceProps> = ({ marketItem, className, number, isWinning, isLoading }) => {
   const { isMd, isXsm } = useWindowSize();
+
+  // FIXED: renderDots was broken, now it's a function that returns an array
   const renderDots = (num: number): JSX.Element[] => {
     const dots: JSX.Element[] = [];
     const positions: Record<number, Array<{ top: string; left: string }>> = {
@@ -204,10 +312,11 @@ interface CubeProps {
   isRolling: boolean;
   isSecondCube?: boolean;
   winningMarketId?: number[];
+  showDice?: boolean;
   isLoading?: boolean;
 }
 
-export const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, winningMarketId, isLoading, isSecondCube, }) => {
+export const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, winningMarketId, isLoading, isSecondCube, showDice }) => {
   // Ensure we have at least 6 market items, if not, repeat the available ones
   const { isMd, isXsm } = useWindowSize();
   const items = marketItems.length >= 6
@@ -239,14 +348,14 @@ export const Cube: React.FC<CubeProps> = ({ marketItems, className, isRolling, w
   const shouldShowWinningFace = !isRolling && winningMarketId !== undefined && winningIndex !== -1;
   const size = isXsm ? '30px' : isMd ? '40px' : '44px';
 
-
   return (
     <div
       className={cn('dice-cube-container', className)}
       style={{
         width: size,
         height: size,
-        perspective: '400px'
+        perspective: '400px',
+        scale: showDice ? '1' : '0'
       }}
     >
       <div

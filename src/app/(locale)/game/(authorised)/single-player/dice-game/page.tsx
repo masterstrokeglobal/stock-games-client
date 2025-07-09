@@ -60,15 +60,13 @@ const WheelOfFortune = () => {
             </div>
             <div className="flex flex-col pt-5 px-3 col-span-6 overflow-y-auto  w-full relative h-full   rounded-none mx-auto  text-white overflow-hidden">
                 <MaintainceScreen />
-                <Dice3D className='min-h-[300px] xxl:min-h-[400px]' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
+                <Dice3D key={roundRecord.id} className='min-h-[300px] xxl:min-h-[400px]' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
                 <div className="flex flex-col justify-around flex-1">
                     <BettingGrid roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={roundRecordWithWinningId?.winningId || null}>
                         <DiceGameTimeDisplay className="w-full max-w-sm" roundRecord={roundRecord} />
                     </BettingGrid>
                     <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
                 </div>
-
-
             </div>
             <div className="col-span-3 border-l py-3 px-2 overflow-y-auto border-[#4467CC80] space-y-5 flex justify-between flex-col  h-full">
                 <RoundTimings roundRecord={roundRecord} />
