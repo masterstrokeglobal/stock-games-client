@@ -58,8 +58,9 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
     const hasHeadBet = myHeadAmount > 0;
     const hasTailBet = myTailAmount > 0;
 
-    const headName = roundRecord.coinTossPair?.head.name ?? "HEAD";
-    const tailName = roundRecord.coinTossPair?.tail.name ?? "TAIL";
+    const headName = roundRecord.market.find(m => m.id === roundRecord.coinTossPair?.head.id)?.codeName ?? "HEAD";
+    const tailName = roundRecord.market.find(m => m.id === roundRecord.coinTossPair?.tail.id)?.codeName ?? "TAIL";
+
 
     const winningSide = roundRecordWithWinningSide?.winningSide;
 
@@ -170,7 +171,8 @@ const HeadCard = ({ bet, win, className, onClick, isMobile, style, name }: CardP
         </div>
         {/* SubLabel and Coin */}
         <div className="flex flex-col items-center flex-1 justify-center relative w-full">
-            <span className={cn("tracking-wider text-white mb-0.5 font-prosto-one", isMobile ? "text-xs" : "text-sm")}>{name.toUpperCase()}</span>
+            <span className={cn("tracking-wider text-white  text-center mb-0.5 font-prosto-one w-full px-1 line-clamp-1 truncate", isMobile ? "text-xs" : "text-sm")}>{name.toUpperCase()}</span>
+
             {/* Coin image in center */}
             <div className="flex items-center justify-center w-full my-1">
                 <img
@@ -241,7 +243,8 @@ const TailCard = ({ bet, win, className, onClick, isMobile, name }: CardProps) =
         </div>
         {/* SubLabel and Coin */}
         <div className="flex flex-col items-center flex-1 justify-center relative w-full">
-            <span className={cn("tracking-wider text-white mb-0.5 font-prosto-one", isMobile ? "text-xs" : "text-sm")}>{name.toUpperCase()}</span>
+            <span className={cn("tracking-wider text-white text-center mb-0.5 w-full px-1 line-clamp-1 truncate font-prosto-one", isMobile ? "text-xs" : "text-sm")}>{name.toUpperCase()}</span>
+
             {/* Coin image in center */}
             <div className="flex items-center justify-center w-full my-1">
                 <img
