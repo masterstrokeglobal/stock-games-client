@@ -58,13 +58,16 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
     const hasHeadBet = myHeadAmount > 0;
     const hasTailBet = myTailAmount > 0;
 
+    const headName = roundRecord.coinTossPair?.head.name ?? "HEAD";
+    const tailName = roundRecord.coinTossPair?.tail.name ?? "TAIL";
+
     const winningSide = roundRecordWithWinningSide?.winningSide;
 
 
     return (
         <section className={cn("flex flex-col relative w-full h-full", className)}>
             <main className="w-full h-full flex flex-col xxl:justify-around justify-between">
-                <div className="xl:mx-20 -mx-4  relative xxl:pt-[25%] md:pt-20 pt-40">
+                <div className="xl:mx-20 -mx-4  relative xxl:pt-[15%] md:pt-20 pt-40">
                     <img src="/images/head-tail/bg.png" alt="game board" className="w-full scale-125 -translate-y-1/4 z-0 h-full absolute top-0 left-0 object-cover" />
                     <div className="bottom-0 left-0 w-full  min-h-40 bg-gradient-to-t scale-125 absolute z-0 from-[#00033D] to-transparent" />
                     <img src="/images/head-tail/table.png" alt="table" className="w-full relative z-0 aspect-[8/3]" ref={tableRef} />
@@ -83,8 +86,10 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
                             onClick={() => handleCardClick(HeadTailPlacementType.HEAD)}
                             bet={hasHeadBet ? myHeadAmount : 0}
                             win={hasHeadBet ? myHeadAmount * 2 : 0}
-
-                            className={cn("xs:left-[12%] left-[10px] -bottom-1/2 cursor-pointer", winningSide === HeadTailPlacementType.HEAD ? "animate-pulse" : "")}
+                            name={headName}
+                            className={cn("xs:left-[12%] left-[10px] -bottom-1/2 cursor-pointer", 
+                                myHeadAmount > 0 ? "drop-shadow-[0px_0px_20.9px_#B6D7FF]" : "",
+                                winningSide === HeadTailPlacementType.HEAD ? "animate-pulse" : "")}
                             isMobile={isMobile}
                             style={{
                                 width: isMobile ? MOBILE_CARD_WIDTH : CARD_WIDTH,
@@ -95,8 +100,10 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
                             onClick={() => handleCardClick(HeadTailPlacementType.TAIL)}
                             bet={hasTailBet ? myTailAmount : 0}
                             win={hasTailBet ? myTailAmount * 2 : 0}
-
-                            className={cn("xs:right-[12%] right-[10px] -bottom-1/2 cursor-pointer", winningSide === HeadTailPlacementType.TAIL ? "animate-pulse" : "")}
+                            name={tailName}
+                            className={cn("xs:right-[12%] right-[10px] -bottom-1/2 cursor-pointer",
+                                myTailAmount > 0 ? "drop-shadow-[0px_0px_20.9px_#B6D7FF]" : "",
+                                 winningSide === HeadTailPlacementType.TAIL ? "animate-pulse" : "")}
                             isMobile={isMobile}
                             style={{
                                 width: isMobile ? MOBILE_CARD_WIDTH : CARD_WIDTH,
@@ -124,9 +131,10 @@ type CardProps = {
     onClick?: (side: HeadTailPlacementType) => void;
     isMobile?: boolean;
     style?: React.CSSProperties;
+    name: string;
 };
 
-const HeadCard = ({ bet, win, className, onClick, isMobile, style }: CardProps) => (
+const HeadCard = ({ bet, win, className, onClick, isMobile, style, name }: CardProps) => (
     <div
         onClick={() => onClick?.(HeadTailPlacementType.HEAD)}
         className={cn(
@@ -152,7 +160,7 @@ const HeadCard = ({ bet, win, className, onClick, isMobile, style }: CardProps) 
             </span>
             <img src="/images/head-tail/betting-chip.png" alt="" className="w-full h-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
         </div>}
-        {bet > 0 && <BetIndicator key={bet} bet={bet} className="left-1/2 -translate-x-1/2 top-0 -translate-y-full" />}
+        {bet > 0 && <BetIndicator key={bet} bet={bet} className="left-1/2 drop-shadow-none -translate-x-1/2 top-0 -translate-y-full" />}
 
         {/* Top Bar */}
         <div
@@ -162,36 +170,38 @@ const HeadCard = ({ bet, win, className, onClick, isMobile, style }: CardProps) 
         </div>
         {/* SubLabel and Coin */}
         <div className="flex flex-col items-center flex-1 justify-center relative w-full">
-            <span className={cn("tracking-wider text-white mb-0.5 font-prosto-one", isMobile ? "text-xs" : "text-sm")}>Gold</span>
+            <span className={cn("tracking-wider text-white mb-0.5 font-prosto-one", isMobile ? "text-xs" : "text-sm")}>{name.toUpperCase()}</span>
             {/* Coin image in center */}
             <div className="flex items-center justify-center w-full my-1">
                 <img
                     src="/images/coins/head.png"
                     alt="head coin"
-                    className={cn("relative z-10 object-contain drop-shadow", isMobile ? "w-8 h-8 scale-100" : "w-14 h-14")}
+                    className={cn("relative z-10 object-contain drop-shadow", isMobile ? "w-8 h-8 scale-100 -translate-y-0.5" : "w-14 -translate-y-0.5 h-14")}
                     style={{ maxWidth: isMobile ? 32 : 60, maxHeight: isMobile ? 32 : 60, }}
                 />
                 <div className={cn("w-auto aspect-square blur-sm rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#693D11]", isMobile ? "h-8" : "h-14")}></div>
             </div>
-            <div className={cn("font-bold text-white mb-0.5", isMobile ? "text-[8px]" : "text-[10px]")}>1 : 2</div>
+            <div className={cn("font-bold text-white font-inter mb-0.5", isMobile ? "text-[8px]" : "text-[10px]")}>1 : 2</div>
         </div>
         {/* Bottom Stats */}
         <div
             className="w-full px-2 py-1.5 flex flex-col border-t-2 rounded-b-xl overflow-hidden border-t-[#F5D561] bg-[#693D11] shadow-[0_0_9.9px_0_#F5D561_inset] backdrop-blur-[12.1px]"
         >
-            <div className="flex flex-row justify-between w-full mb-0.5">
+            <div className="flex flex-row font-inter justify-between w-full mb-0.5">
                 <span className={cn("font-semibold text-white", isMobile ? "text-[7px]" : "text-[9px]")}>Your Bet:</span>
                 <span className="text-[9px] font-semibold text-white">Win:</span>
             </div>
             <div className="flex flex-row justify-between w-full">
-                <span className="text-[10px] font-phudu text-white">{INR(bet)}</span>
-                <span className="text-[10px] font-phudu text-white">{INR(win)}</span>
+                <span className="text-[10px] font-phudu font-normal text-white">{INR(bet)}</span>
+                <span className="text-[10px] font-phudu font-normal text-white">{INR(win)}</span>
             </div>
         </div>
+        <div className="absolute -bottom-4 left-0 w-full h-4 bg-black/70 blur-[6px] z-10"/>
+
     </div>
 );
 
-const TailCard = ({ bet, win, className, onClick, isMobile }: CardProps) => (
+const TailCard = ({ bet, win, className, onClick, isMobile, name }: CardProps) => (
     <div
         onClick={() => onClick?.(HeadTailPlacementType.TAIL)}
         className={cn(
@@ -204,7 +214,7 @@ const TailCard = ({ bet, win, className, onClick, isMobile }: CardProps) => (
         style={{
             width: isMobile ? MOBILE_CARD_WIDTH : CARD_WIDTH,
             height: isMobile ? "auto" : CARD_HEIGHT,
-            background: "radial-gradient(50% 50% at 50% 50%, rgb(192, 192, 192) 0%, rgb(80, 80, 80) 100%)",
+            background: "radial-gradient(50% 50% at 50% 50%, #EFEFEF 0%, #898989 100%)",
             border: "2px solid #B9B9B9",
             boxShadow: "0px 0px 10.8px -2px #B9B9B9 inset",
         }}
@@ -215,8 +225,9 @@ const TailCard = ({ bet, win, className, onClick, isMobile }: CardProps) => (
             </span>
             <img src="/images/head-tail/betting-chip.png" alt="" className="w-full h-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
         </div>}
-        {bet > 0 && <BetIndicator key={bet} bet={bet} className="left-1/2 -translate-x-1/2 top-0 -translate-y-full" />}
+        {bet > 0 && <BetIndicator key={bet} bet={bet} className="left-1/2 !drop-shadow-none -translate-x-1/2 top-0 -translate-y-full" />}
         {/* Top Bar */}
+        <div></div>
         <div
             className="w-[calc(100%-12px)] py-0.5 px-0 text-center rounded-[7px] m-1.5"
             style={{
@@ -230,13 +241,13 @@ const TailCard = ({ bet, win, className, onClick, isMobile }: CardProps) => (
         </div>
         {/* SubLabel and Coin */}
         <div className="flex flex-col items-center flex-1 justify-center relative w-full">
-            <span className={cn("tracking-wider text-white mb-0.5 font-prosto-one", isMobile ? "text-xs" : "text-sm")}>Silver</span>
+            <span className={cn("tracking-wider text-white mb-0.5 font-prosto-one", isMobile ? "text-xs" : "text-sm")}>{name.toUpperCase()}</span>
             {/* Coin image in center */}
             <div className="flex items-center justify-center w-full my-1">
                 <img
                     src="/images/coins/tail.png"
                     alt="tail coin"
-                    className={cn("relative z-10 object-contain drop-shadow", isMobile ? "w-8 h-8 scale-100" : "w-14 h-14")}
+                    className={cn("relative z-10 object-contain drop-shadow -translate-y-0.5", isMobile ? "w-8 h-8 scale-100" : "w-14 -translate-y-0.5 h-14")}
                     style={{ maxWidth: isMobile ? 32 : 60, maxHeight: isMobile ? 32 : 60, }}
                 />
                 <div className={cn("w-auto aspect-square blur-sm rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#555555]", isMobile ? "h-8" : "h-14")}></div>
@@ -259,6 +270,7 @@ const TailCard = ({ bet, win, className, onClick, isMobile }: CardProps) => (
                 <span className="text-[10px] font-phudu text-white">{INR(win)}</span>
             </div>
         </div>
+        <div className="absolute -bottom-4 left-0 w-full h-4 bg-black/70 blur-[6px] z-10"/>
     </div>
 );
 
@@ -293,8 +305,7 @@ export const GameTimer = ({ roundRecord, className }: { roundRecord: RoundRecord
                 {statusText}
             </span>
             <span
-                className={` font-poppins font-bold text-white  px-3 py-1 rounded text-nowrap
-        `}
+                className={`font-poppins font-bold text-white  px-3 py-1 rounded text-nowrap`}
                 style={{
                     textShadow: "0px 0px 24.6px rgba(0,85,255,1)",
                 }}
@@ -319,7 +330,7 @@ const BetIndicator = ({ bet, className }: { bet: number, className?: string }) =
     if (!isVisible) return null;
 
     return (
-        <div className={cn("pointer-events-auto rounded-lg absolute flex flex-col items-center z-20 animate-pulse", className)}>
+        <div className={cn("pointer-events-auto rounded-lg absolute flex flex-col items-center z-20 ", className)}>
             <div
                 style={{
                     background: "#076509",

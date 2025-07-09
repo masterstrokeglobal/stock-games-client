@@ -102,7 +102,7 @@ export default function TiersProgram(): JSX.Element {
 
     return (
         <>
-            <section className="my-6 sm:my-12 md:my-20 ">
+            <section className="my-6 sm:mb-12 md:mb-20 ">
                 <header  className="flex items-center justify-between mb-4">
                     <h2 className="text-lg text-platform-text font-semibold">Tiers Program</h2>
                 </header>
@@ -127,13 +127,13 @@ export default function TiersProgram(): JSX.Element {
                                             ref={tierRefs.current[index]}
                                             onClick={() => setActiveTier(index)}
                                             className={cn(
-                                                "flex flex-col items-center focus:outline-none group",
+                                                "flex flex-col items-center aspect-square focus:outline-none group",
                                                 isActive ? "z-20" : "z-10"
                                             )}
                                             style={{ background: "none", border: "none", padding: 0 }}
                                         >
                                             <div className={cn(
-                                                "rounded-full p-1 transition-all border-2",
+                                                "rounded-full transition-all border-2 p-2 flex items-center justify-center aspect-square",
                                                 isActive
                                                     ? "border-[#FFDE21] dark:bg-primary-game bg-[#E6F6FF]"
                                                     : "border-transparent"
@@ -142,12 +142,10 @@ export default function TiersProgram(): JSX.Element {
                                                     src={tier?.imageUrl}
                                                     alt={tier?.name}
                                                     className={cn(
-                                                        "w-10 h-10 sm:w-12 sm:h-12 object-contain")}
+                                                        "w-10 h-auto sm:w-12 md:w-14 sm:h-auto object-contain")}
                                                 />
                                             </div>
 
-                                              
-                                             
                                         </button>
                                     </div>
                                 );
@@ -176,7 +174,7 @@ export default function TiersProgram(): JSX.Element {
                                     <h4 className="text-base sm:text-lg dark:text-platform-text text-white font-bold mb-1">
                                         {step.number}. {step.title}
                                     </h4>
-                                    <p className="text-xs sm:text-sm dark:text-platform-text text-[#FFC541] flex-grow">{step.description}</p>
+                                    <p className="text-xs sm:text-sm dark:text-platform-text font-poppins font-semibold text-[#FFC541] dark:text-[#FFDE21] flex-grow">{step.description}</p>
                                 </div>
                             </Card>
                         ))}
@@ -236,8 +234,8 @@ const ActiveTierCard = ({
             <div className="flex-1 flex flex-col md:gap-6 gap-2">
                 {/* Tier Title and Steps */}
                 <div className="px-2">
-                    <span className="uppercase text-yellow-400 font-bold text-sm tracking-widest">{tier?.name}</span>
-                    <div className="text-platform-text text-lg font-semibold mt-1 mb-2">
+                    <span className="uppercase text-yellow-400 font-bold md:text-xl text-lg tracking-widest">{tier?.name}</span>
+                <div className="text-platform-text text-base font-semibold mb-2">
                         Step One: Survive {tier?.name}. Step Two: Dominate
                     </div>
                 </div>
@@ -246,7 +244,7 @@ const ActiveTierCard = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:gap-4">
                     {/* Login Points */}
                     <div className="sm:border dark:border-platform-border border-primary-game p-4 flex items-center gap-4 min-h-[90px]">
-                        <div className="w-10 h-10 bg-white/10 rounded-full backdrop-blur border dark:border-platform-border border-primary-game flex items-center justify-center text-white text-xl font-bold">
+                        <div className="w-10 h-10 sm:h-14 sm:w-14 sm:text-3xl bg-white/10 rounded-full backdrop-blur border dark:border-platform-border border-primary-game flex items-center justify-center text-white text-xl font-bold">
                             🎰
                         </div>
                         <div>
@@ -258,7 +256,7 @@ const ActiveTierCard = ({
                     </div>
                     {/* First Game Points */}
                     <div className="sm:border dark:border-platform-border border-primary-game p-4 flex items-center gap-4 min-h-[90px]">
-                        <div className="w-10 h-10 bg-white/10 rounded-full backdrop-blur border dark:border-platform-border border-primary-game flex items-center justify-center text-white text-xl font-bold">
+                        <div className="w-10 h-10 sm:h-14 sm:w-14 bg-white/10 rounded-full backdrop-blur border dark:border-platform-border border-primary-game flex items-center justify-center text-white text-xl font-bold">
                             ⚽
                         </div>
                         <div>
@@ -311,7 +309,7 @@ const ActiveTierCard = ({
                                     {myTier?.totalPoints || 0}/{nextTier?.minPoints} Points
                                 </span>
                             </div>
-                            <div className="h-2 w-full bg-[#90ACFF6E] rounded-[2px] overflow-hidden">
+                            <div className="h-2 w-full bg-[#90ACFF6E] rounded-full overflow-hidden">
                                 <div
                                     className="h-full bg-gradient-to-r dark:from-[#7c3aed] dark:to-[#f472b6] from-primary-game to-primary-game"
                                     style={{
@@ -328,7 +326,7 @@ const ActiveTierCard = ({
                                     {myTier?.gamesPlayed || 0}/{nextTier?.gamesRequired} Games
                                 </span>
                             </div>
-                            <div className="h-2 w-full bg-[#90ACFF6E] rounded-[2px] overflow-hidden">
+                            <div className="h-2 w-full bg-[#90ACFF6E] rounded-full overflow-hidden">
                                 <div
                                     className="h-full bg-gradient-to-r dark:from-[#7c3aed] dark:to-[#f472b6] from-primary-game to-primary-game"
                                     style={{

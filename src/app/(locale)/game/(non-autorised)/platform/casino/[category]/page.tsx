@@ -24,7 +24,7 @@ export default function GamingAppInterface() {
     return (
         <div className="flex flex-col min-h-screen bg-primary-game text-white">            
             <GameAdsCarousel /> 
-            <main className="container mx-auto mt-20 px-4 py-6">
+            <main className="container mx-auto mt-4 px-4 pb-6">
                 {/* Search Bar */}
                 <div className="relative mb-8 max-w-2xl mx-auto">
                     <div className="relative">
@@ -37,7 +37,7 @@ export default function GamingAppInterface() {
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                     </div>
                 </div>
-                <header className="container mx-auto  py-4">
+                <header className="container mx-auto  py-2">
                 <h1 className="text-2xl font-bold capitalize">{category.toString().split("_").join(" ")}</h1>
             </header>
 

@@ -59,6 +59,7 @@ export enum GameCategory {
 }
 
 export enum ProviderEnum {
+    STOCK_GAMES = "Stock Games",
     PGSoft = "PGSoft",
     JILI = "JILI",
     Rubyplay = "Rubyplay",

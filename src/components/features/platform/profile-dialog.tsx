@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
+    DialogClose,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -18,7 +19,7 @@ import Wallet from '@/models/wallet';
 import { useUserLogout } from '@/react-query/admin-auth-queries';
 import { useGetUserTier } from "@/react-query/game-user-queries";
 import { useGetWallet } from '@/react-query/payment-queries';
-import { BookIcon, Coins, HelpCircleIcon, LogOutIcon } from 'lucide-react';
+import { BookIcon, CircleX, Coins, HelpCircleIcon, LogOutIcon } from 'lucide-react';
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
@@ -98,7 +99,7 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl dark:bg-[#121456] bg-primary-game  rounded-2xl border-2 dark:border-platform-border border-primary-game  gap-0 p-0 overflow-hidden">
+            <DialogContent showButton={false} className="sm:max-w-2xl dark:bg-[#121456] bg-primary-game  rounded-2xl border-2 dark:border-platform-border border-primary-game  gap-0 p-0 overflow-hidden">
                <ScrollArea
                 className="h-full max-h-[90vh] overflow-y-auto"
                 scrollThumbClassName="bg-background-secondary "
@@ -107,6 +108,11 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
                     <DialogTitle className="text-white text-lg font-semibold text-center">
                         Profile
                     </DialogTitle>
+                    <DialogClose asChild>   
+                        <Button variant="ghost" size="icon" className="absolute bg-transparent right-4 top-2 mt-0">
+                            <CircleX className="text-white" />
+                        </Button>
+                    </DialogClose>  
                 </DialogHeader>
                 <div className="flex flex-col items-center dark:bg-[#050128] bg-[#C3E3FF] border-t-2 dark:border-platform-border border-primary-game rounded-t-3xl rounded-b px-6 py-8 gap-6">
                     {/* User Profile Card */}

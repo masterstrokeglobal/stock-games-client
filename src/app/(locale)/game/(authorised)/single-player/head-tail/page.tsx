@@ -43,12 +43,12 @@
                 <Navbar />
                 <div className=" pt-20 pb-2  sm:px-4 px-2 max-w-[1560px] flex flex-col w-full mx-auto flex-1  text-white ">
                     <div className='w-full bg-[#004DA9] relative z-10 rounded-2xl flex items-center justify-between px-4 sm:py-2 py-1'>
-                        <h2 className='font-playfair-display-sc sm:text-lg xs:text-base text-xs md:text-2xl font-bold'>Coin - Head & tail</h2>
+                        <h2 className='font-playfair-display-sc sm:text-lg xs:text-base text-xs md:text-2xl font-bold uppercase tracking-wide'>Coin - Head & tail</h2>
                         <div className='flex items-center gap-2'>
                             <span className='tracking-widest text-xs md:text-base'>312 Viewing</span>
                             <GameSettingsPopover>
                                 <Button style={{
-                                }} className='bg-transparent shadow-none px-2 text-white'>
+                                }} className='bg-transparent shadow-none px-2 text-[#00033D]'>
                                     <MenuIcon />
                                 </Button>
                             </GameSettingsPopover>

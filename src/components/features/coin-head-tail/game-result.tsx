@@ -83,7 +83,7 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
                       <div className="text-center">Bet INR</div>
                       <div className="text-center">Cashout INR</div>
                     </div>
-                    <div className="space-y-2 mb-4 font-phudu">
+                    <div className="space-y-2 mb-4 max-h-[150px] overflow-y-auto font-phudu">
                       {roundResult?.placements.map((bet, idx) => {
                         const config = COIN_SIDE_CONFIG[bet.winningSide as keyof typeof COIN_SIDE_CONFIG];
                         return (

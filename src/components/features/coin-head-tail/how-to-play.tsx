@@ -4,7 +4,6 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import React, { useState } from "react";
-import { X } from "lucide-react";
 
 interface HowToPlayDialogProps {
     children: React.ReactNode;
@@ -38,12 +37,13 @@ const HowToPlayDialog: React.FC<HowToPlayDialogProps> = ({
             </DialogTrigger>
             <DialogContent
                 showButton={false}
-                overlayClassName="bg-[#00033D] bg-opacity-70"
-                className="max-w-2xl w-full p-0 border-none bg-transparent backdrop-blur-md"
+                overlayClassName="backdrop-blur-md"
+                className="max-w-2xl w-full p-0 border-none bg-transparent backdrop-blur-md "
             >
                 <div
                     style={{
                         background: 'linear-gradient(0deg, #0A023B 0%, #002A5A 90.29%)',
+                        boxShadow: '0px 0px 8px 1px rgba(0, 92, 164, 1) inset',
                     }}
                     className="w-full border backdrop-blur-md border-[#0074FF] rounded-3xl shadow-2xl overflow-hidden"
                 >
@@ -54,9 +54,9 @@ const HowToPlayDialog: React.FC<HowToPlayDialogProps> = ({
                         </div>
                         <button
                             onClick={() => setOpen(false)}
-                            className="text-white hover:text-gray-200 transition-colors"
+                            className="text-white hover:text-gray-200 text-2xl px-2 font-play transition-colors"
                         >
-                            <X size={24} />
+                            X   
                         </button>
                     </div>
                     <div className="p-0">

@@ -70,7 +70,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
   return (
     <>
-      <div className="w-full bg-[#1a1b2e] text-white p-6">
+      <div className="w-full bg-[#00033D] text-white p-6">
         <div className="flex justify-center relative mb-4">
           <div className="mr-2 absolute left-3 top-3 bottom-2">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-red-500 flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.5)]">

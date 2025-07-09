@@ -19,10 +19,10 @@ export default function SlotGamesPage() {
 
     return (
         <div className="flex flex-col min-h-screen">
-            <main className="container mx-auto mt-10 md:px-4 py-6">
+            <main className="container mx-auto mt-4 md:px-4 pb-6">
                 {/* Search Bar */}
                 <GameFilters filter={filter} setFilter={setFilter} />
-                <header className="container mx-auto  py-4">
+                <header className="container mx-auto  py-2">
                     <h1 className="text-2xl font-bold capitalize text-platform-text">Slot Games</h1>
                 </header>
 
