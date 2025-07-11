@@ -63,7 +63,7 @@
                                 />
                                 <PriceDisplay roundRecord={roundRecord} roundRecordWithWinningSide={roundRecordWithWinningId} />
                             </div>
-                            <GameBoard className='flex-1' roundRecord={roundRecord} betAmount={betAmount} setBetAmount={setBetAmount} roundRecordWithWinningSide={roundRecordWithWinningId} />
+                            <GameBoard key={roundRecord.id} className='flex-1' roundRecord={roundRecord} betAmount={betAmount} setBetAmount={setBetAmount} roundRecordWithWinningSide={roundRecordWithWinningId} />
                         </div>
                         <div className='md:col-span-4 mt-4 relative z-10'>
                             <AllBets roundRecord={roundRecord} className='h-full' />

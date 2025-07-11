@@ -31,7 +31,7 @@ type CarouselContextProps = {
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null)
 
-function useCarousel() {
+export function useCarousel() {
   const context = React.useContext(CarouselContext)
 
   if (!context) {
@@ -205,7 +205,7 @@ const CarouselPrevious = React.forwardRef<
       variant={variant}
       size={size}
       className={cn(
-        "absolute !bg-white dark:bg-[#753CFF] !border-none h-8 w-8 rounded-full",
+        "absolute !bg-white dark:!bg-[#753CFF] !border-none h-8 w-8 rounded-full",
         orientation === "horizontal"
           ? "-left-12 top-1/2 -translate-y-1/2"
           : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
@@ -215,7 +215,7 @@ const CarouselPrevious = React.forwardRef<
       onClick={scrollPrev}
       {...props}
     >
-      <ChevronLeftIcon className="md:size-5 size-4 stroke-[3] text-primary-game" />
+      <ChevronLeftIcon className="md:size-5 size-4 stroke-[3] dark:text-white text-primary-game" />
       <span className="sr-only">Previous slide</span>
     </Button>
   )
@@ -234,7 +234,7 @@ const CarouselNext = React.forwardRef<
       variant={variant}
       size={size}
       className={cn(
-        "absolute !bg-white dark:!bg-[#753CFF]   !border-none h-8 w-8 rounded-full",
+        "absolute !bg-white dark:!bg-[#753CFF]  !border-none h-8 w-8 rounded-full",
         orientation === "horizontal"
           ? "-right-12 top-1/2 -translate-y-1/2"
           : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",

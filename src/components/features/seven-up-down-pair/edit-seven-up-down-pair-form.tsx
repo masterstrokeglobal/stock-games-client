@@ -1,7 +1,7 @@
 "use client";
 
 import LoadingScreen from "@/components/common/loading-screen";
-import MarketItem, { SchedulerType } from "@/models/market-item";
+import MarketItem from "@/models/market-item";
 import { useGetSevenUpDownPairById, useUpdateSevenUpDownPair } from "@/react-query/seven-up-down-pair-queries";
 import { useMemo } from "react";
 import SevenUpDownPairForm, { SevenUpDownPairFormValues } from "./seven-up-down-pair-form";
@@ -23,7 +23,6 @@ const EditSevenUpDownPairForm = ({ id }: Props) => {
 
     const defaultValues = useMemo(() => {
         return {
-            type: sevenUpDownPair?.type as SchedulerType,
             marketItems: sevenUpDownPair?.marketItems?.map((item: MarketItem) => item.id?.toString() || "") || [],
             active: sevenUpDownPair?.active || false
         }

@@ -9,6 +9,7 @@ import { useMemo } from "react";
 import { INR } from "@/lib/utils";
 import useWindowSize from "@/hooks/use-window-size";
 import ProfileDialog from "../platform/profile-dialog";
+import ThemeSwitcher from "@/context/theme-swithcer";
 const UserMenuNavbar = () => {
     const { userDetails } = useAuthStore();
     const { data, isLoading } = useGetWallet();
@@ -27,9 +28,10 @@ const UserMenuNavbar = () => {
                 <span className="md:text-sm text-xs">Bonus: {INR(wallet?.bonusBalance ?? 0, true)}</span>
                 <span className="md:text-sm text-xs">Bal: {INR(wallet?.mainBalance ?? 0, true)}</span>
             </div>
+
             {isMobile ? (
-                <Link href="/game/user-menu">
-                    <button className="md:px-4 md:h-12 h-10 text-game-text justify-center md:aspect-auto aspect-square space-x-3 flex items-center md:py-2 p-1 rounded-md">
+                <Link href="/game/platform/user-menu" className="!ml-0 ">
+                    <button className="md:px-4  md:h-12 h-10 text-game-text justify-center md:aspect-auto aspect-square space-x-3 flex items-center md:py-2 p-1 rounded-md">
                         <Avatar className="size-6" p-6>
                             <AvatarImage src={user.profileImage ?? "/icons/profile.png"} />
                         </Avatar>
@@ -37,13 +39,15 @@ const UserMenuNavbar = () => {
                 </Link>
             ) : (
                 <ProfileDialog>
-                    <button className="md:px-4 md:h-12 h-10 text-game-text justify-center md:aspect-auto aspect-square space-x-3 flex items-center md:py-2 p-1 rounded-md">
-                        <Avatar className="size-6" p-6>
+                    <button className="md:px-4 md:h-12  h-10 text-game-text justify-center md:aspect-auto aspect-square space-x-3 flex items-center md:py-2 p-1 rounded-md">
+                        <Avatar className="size-6">
                             <AvatarImage src={user.profileImage ?? "/icons/profile.png"} />
                         </Avatar>
                     </button>
                 </ProfileDialog>
             )}
+  <ThemeSwitcher className="md:hidden flex !ml-0" />
+
         </>
     )
 }

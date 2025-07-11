@@ -30,7 +30,7 @@ const BettingChips: React.FC<Props> = ({ chips, getBetPosition, roundRecord }) =
         return (
           <div
             key={index}
-            className="absolute flex items-center justify-center w-7 h-7 rounded-full bg-chip text-white text-xs font-bold transform -translate-x-1/2 -translate-y-1/2"
+            className="absolute flex items-center aspect-square justify-center min-w-7 min-h-7 rounded-full bg-[url('/images/betting-chip.png')] bg-cover bg-center text-white text-[10px] p-1 font-semibold transform -translate-x-1/2 -translate-y-1/2"
             style={{
               left: position.x,
               top: position.y,

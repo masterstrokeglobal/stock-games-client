@@ -7,6 +7,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
+
 const stockGames = [
     {
         href: `/game?gameType=${SchedulerType.NSE}`,
@@ -29,7 +30,7 @@ const stockGames = [
         alt: "coming-soon",
     },
     {
-        href: "/game/platform/stock-game/7-up-7-down",
+        href: "/game/single-player/7-up-down",
         src: "/images/banner/7-up-game.png",
         alt: "coming-soon",
     },

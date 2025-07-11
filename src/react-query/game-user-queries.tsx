@@ -246,11 +246,11 @@ export const useGetUserTier = () => {
 };
 
 
-export const useGetUserGameHistory = ({ page, roundRecordGameType }: { page: number, roundRecordGameType: RoundRecordGameType }) => {
+export const useGetUserGameHistory = ({ page, roundRecordGameType, startDate }: { page: number, roundRecordGameType: RoundRecordGameType, startDate?: string }) => {
   return useQuery({
-    queryKey: ["userGameHistory", page, roundRecordGameType],
+    queryKey: ["userGameHistory", page, roundRecordGameType, startDate],
     queryFn: async () => {
-      const response = await gameUserAPI.getUserGameHistory({ page, roundRecordGameType } );
+      const response = await gameUserAPI.getUserGameHistory({ page, roundRecordGameType, startDate } );
       return response.data;
     },
   });

@@ -16,20 +16,24 @@ import { CircleX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface WalletDialogProps {
-    children: ReactNode;
+    children?: ReactNode;
+    open?: boolean;
+    activeTab?: "balance" | "deposit" | "withdraw";
+    onClose?: () => void;
 }
 
-const WalletDialog = ({ children }: WalletDialogProps) => {
+const WalletDialog = ({ children, activeTab = "balance", open = false, onClose }: WalletDialogProps) => {
     const t = useTranslations("wallet");
-    const [defaultTab, setDefaultTab] = useState<"balance" | "deposit" | "withdraw">("balance");
+    const [defaultTab, setDefaultTab] = useState<"balance" | "deposit" | "withdraw">(activeTab);
 
     const handleClose = (open: boolean) => {
         if (!open) {
             setDefaultTab("balance");
+            onClose?.();
         }
     }
     return (
-        <Dialog onOpenChange={handleClose}>
+        <Dialog defaultOpen={open} onOpenChange={handleClose}>
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>

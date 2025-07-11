@@ -257,7 +257,7 @@ export const formatRupee = (rupees: number) => {
 }
 
 export const checkCasinoAllowed = (companyId: number) => {
-  return companyId === 21;
+  return companyId === 4;
 }
 
 // Generate current time in 12-hour format (HH:MM AM/PM)
@@ -365,9 +365,24 @@ export const slotWinningMultiplier = [
   },
 ]
 
-export const SEVEN_UP_DOWN_MULTIPLIER = 1.96;
+export const SEVEN_UP_DOWN_MULTIPLIER = 2;
 export const JACKPOT_MULTIPLIER = 1.96;
 
 export const SEVEN_UP_DOWN_MULTIPLIER_7 = 14.7;
 
-export const COIN_HEAD_TAIL_MULTIPLIER = 1.96;
+export const COIN_HEAD_TAIL_MULTIPLIER = 2
+  
+
+// Dice multipliers
+export const DICE_WINNING_MULTIPLIER_2 = 36;
+export const DICE_WINNING_MULTIPLIER_3 = 18;
+export const DICE_WINNING_MULTIPLIER_4 = 12;
+export const DICE_WINNING_MULTIPLIER_5 = 9;
+export const DICE_WINNING_MULTIPLIER_6 = 7.2;
+export const DICE_WINNING_MULTIPLIER_7 = 6;
+export const DICE_WINNING_MULTIPLIER_8 = 7.2;
+export const DICE_WINNING_MULTIPLIER_9 = 9;
+export const DICE_WINNING_MULTIPLIER_10 = 12;
+export const DICE_WINNING_MULTIPLIER_11 = 18;
+export const DICE_WINNING_MULTIPLIER_12 = 36;
+

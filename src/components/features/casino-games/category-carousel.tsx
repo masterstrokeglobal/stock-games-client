@@ -69,7 +69,7 @@ export default function CategoryCarousel({ categoryId, title, popular, new: isNe
 
 
     return (
-        <Carousel opts={{ loop: false, startIndex: 0 }} className="w-full">
+        <Carousel opts={{ loop: false, startIndex: 0 ,slidesToScroll: 2}} className="w-full">
             <div className="md:space-y-4 space-y-2">
                 <div className="flex items-end justify-between">
                     <h2 className="md:text-2xl sm:text-base text-sm font-semibold text-platform-text">{title}</h2>

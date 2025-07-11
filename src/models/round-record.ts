@@ -363,4 +363,10 @@ export class RoundRecord {
     getColorByMarketId(marketId: number): WheelColor | undefined {
         return this.marketColors.find(item => item.marketId === marketId)?.color || undefined;
     }
+
+    get SevenUpDownWinner(): string {
+        const winner = this.market.find(item => item.id === this.winningId?.[0]);
+        if (!winner) return "-";
+        return winner.name || "-";
+    }
 }

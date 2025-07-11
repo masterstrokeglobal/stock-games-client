@@ -1,7 +1,6 @@
 "use client";
 import LocaleSwitcher from '@/components/common/LocaleSwitcher';
 import { MuteButton } from '@/components/common/mute-button';
-import { PasswordIcon, ProfileIcon, TransactionIcon, WalletIcon } from '@/components/features/user-menu/icons';
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from '@/context/auth-context';
 import { INR } from "@/lib/utils";
@@ -10,7 +9,6 @@ import Wallet from '@/models/wallet';
 import { useUserLogout } from '@/react-query/admin-auth-queries';
 import { useGetUserTier } from "@/react-query/game-user-queries";
 import { useGetWallet } from '@/react-query/payment-queries';
-import { BookIcon, Coins, HelpCircleIcon, LogOutIcon } from 'lucide-react';
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
@@ -33,46 +31,46 @@ const UserMenu = () => {
 
     const user = userDetails as User;
 
-    // Menu items configuration
+    // Menu items configuration with updated image icons
     const menuItems = [
         {
             href: "/game/profile",
-            icon: ProfileIcon,
+            icon: "/images/platform/user-menu/your-info.png",
             label: t('your-info')
         },
         {
             href: "/game/change-password",
-            icon: PasswordIcon,
+            icon: "/images/platform/user-menu/change-password.png",
             label: t('change-password')
         },
         {
             href: "/game/transaction-history",
-            icon: TransactionIcon,
+            icon: "/images/platform/user-menu/transaction-history.png",
             label: t('transaction-history')
         },
         {
             href: "/game/betting-history",
-            icon: Coins,
+            icon: "/images/platform/user-menu/betting-history.png",
             label: t('betting-history')
         },
         {
             href: "/game/wallet/menu",
-            icon: WalletIcon,
+            icon: "/images/platform/user-menu/wallet.png",
             label: t('your-wallet')
         },
         {
             href: "/game/terms-and-condition",
-            icon: BookIcon,
+            icon: "/images/platform/user-menu/terms-and-conditions.png",
             label: t('terms-and-conditions')
         },
         {
             href: "/game/contact",
-            icon: HelpCircleIcon,
+            icon: "/images/platform/user-menu/contact-us.png",
             label: t('contact-us')
         },
         {
             href: "/game/rules",
-            icon: BookIcon,
+            icon: "/images/platform/user-menu/rules.png",
             label: t('rules')
         },
         // {
@@ -83,13 +81,12 @@ const UserMenu = () => {
     ];
 
     return (
-
-        <div className="sm:max-w-2xl mx-auto  gap-0 p-0 overflow-hidden">
-            <div className="flex flex-col items-center bg-[#050128]  md:px-6 px-0 py-8 gap-6">
+        <>
+            <div className="flex flex-col items-center py-4 gap-6">
                 {/* User Profile Card */}
-                <div className="max-w-lg w-full flex bg-gradient-to-b text-platform-text dark:from-[#262BB5] dark:to-[#11134F] from-[#64B6FD] to-[#466CCF] rounded-none border-2 border-platform-border shadow-lg p-4 items-center mb-2">
+                <div className="max-w-lg w-full flex bg-gradient-to-b text-platform-text dark:from-[#262BB5] dark:to-[#11134F] from-[#64B6FD] to-[#466CCF] rounded-none dark:border-2 border-platform-border shadow-lg p-4 items-center mb-2">
                     <div className="flex items-center justify-center mr-4">
-                        <div className='md:w-20 md:h-20 w-16 h-16 border-2 rounded-3xl border-[#EEC53C] overflow-hidden'>
+                        <div className='w-20 h-20 border-2 rounded-full border-[#EEC53C] overflow-hidden'>
                             <img
                                 src={user?.profileImage || "/images/default-avatar.png"}
                                 alt="Profile"
@@ -98,14 +95,14 @@ const UserMenu = () => {
                         </div>
                     </div>
                     <div className="flex flex-col justify-center h-full flex-1">
-                        <div className="md:text-lg text-sm font-semibold mb-2">
+                        <div className="text-lg font-semibold mb-2">
                             {user?.name || "Player Name"}
                         </div>
                         <div className='flex items-center justify-start gap-2'>
                             <div className="h-fit w-fit rounded-full">
-                                <img src="/images/coins/bag.png" alt="Coin" className="w-6 h-6 md:w-6 md:h-6 w-4 h-4" />
+                                <img src="/images/coins/bag.png" alt="Coin" className="w-6 h-6" />
                             </div>
-                            <span className="text-white md:text-base text-sm">
+                            <span className="text-white text-base">
                                 {isLoading ? t('loading') : INR(wallet.totalBalance, true)}
                             </span>
                         </div>
@@ -113,10 +110,10 @@ const UserMenu = () => {
                 </div>
 
                 {/* Progress Section */}
-                <div className="max-w-lg w-full  border-2 bg-gradient-to-b dark:from-[#262BB5] dark:to-[#11134F] from-[#64B6FD] to-[#466CCF] border-platform-border rounded-none p-4 flex items-center md:gap-6 gap-4 shadow-lg">
+                <div className="max-w-lg w-full  dark:border-2 bg-gradient-to-b dark:from-[#262BB5] dark:to-[#11134F] from-[#64B6FD] to-[#466CCF] border-platform-border rounded-none p-4 flex items-center gap-6 shadow-lg">
                     {/* Tier Icon */}
-                    <div className="flex flex-col items-center md:mr-4">
-                        <div className="md:w-14 md:h-14 w-10 h-10 rounded-full md:border-4 border-2 border-[#EEC53C] flex items-center justify-center bg-[#181E6A]">
+                    <div className="flex flex-col items-center mr-4">
+                        <div className="w-16 h-16 rounded-full border-2 border-[#EEC53C] flex items-center justify-center bg-[#181E6A]">
                             <Image
                                 src={userTier?.imageUrl ? userTier?.imageUrl : "/images/tier/tier-bg-light.png"}
                                 alt={userTier?.tierName || "Tier"}
@@ -125,13 +122,13 @@ const UserMenu = () => {
                                 className="object-contain"
                             />
                         </div>
-                        <span className="text-white md:text-base text-sm font-semibold mt-2">{userTier?.tierName}</span>
+                        <span className="text-white text-base font-semibold mt-2">{userTier?.tierName}</span>
                     </div>
                     {/* Progress Info */}
                     <div className="flex-1 flex flex-col justify-center">
-                        <div className="flex items-center mb-2 flex-wrap">
-                            <span className="text-white font-semibold md:text-sm text-xs mr-auto">Point Progress</span>
-                            <span className="text-white font-bold md:text-sm text-xs">{userTier?.totalPoints || 0}/{userTier?.nextTierPointsRequired || 0} Points</span>
+                        <div className="flex items-center mb-2">
+                            <span className="text-white font-semibold text-sm mr-auto">Point Progress</span>
+                            <span className="text-white font-bold text-sm">{userTier?.totalPoints || 0}/{userTier?.nextTierPointsRequired || 0} Points</span>
                         </div>
                         <div className="w-full h-2 rounded-full bg-[#3B418C] overflow-hidden">
                             <div
@@ -148,16 +145,15 @@ const UserMenu = () => {
                 </div>
 
                 {/* Menu Grid */}
-                <div className="w-full max-w-lg grid md:grid-cols-2 grid-cols-1 gap-4">
+                <div className="w-full max-w-lg grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {menuItems.map((item, index) => {
-                        const IconComponent = item.icon;
                         return (
                             <Link key={index} href={item.href} passHref>
-                                <Button variant="ghost" className="w-full rounded-none h-16 border-2 border-platform-border justify-start text-platform-text flex gap-4">
-                                    <div className="w-10 h-10 backdrop-blur-sm p-2 border-2 border-platform-border rounded-full flex items-center justify-center">
-                                        <IconComponent className="w-5 h-5" />
+                                <Button variant="ghost" className="w-full rounded-none h-16 border-2 dark:border-platform-border border-primary-game justify-start text-platform-text flex gap-4">
+                                    <div className="w-10 h-10 backdrop-blur-sm p-0.5 border-2 dark:border-platform-border border-primary-game rounded-full flex items-center justify-center">
+                                        <img src={`${item.icon}`} alt={item.label} className="w-full h-auto block" />
                                     </div>
-                                    <span className="font-semibold">{item.label}</span>
+                                    <span className="font-semibold line-clamp-2">{item.label}</span>
                                 </Button>
                             </Link>
                         );
@@ -174,15 +170,15 @@ const UserMenu = () => {
                 <div className="w-full max-w-lg">
                     <Button
                         variant="destructive"
-                        className="rounded-none w-full h-12 bg-[#AA2D2D] "
+                        className="rounded-none w-full h-10 tracking-wide bg-[#AA2D2D] border-[#E73E3E] border font-inter"
                         onClick={() => mutate()}
                     >
-                        <LogOutIcon className="w-5 h-5 mr-2" />
                         {t('logout')}
                     </Button>
                 </div>
             </div>
-        </div>
+
+        </>
     );
 };
 

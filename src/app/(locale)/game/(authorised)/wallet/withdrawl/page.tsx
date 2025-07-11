@@ -28,7 +28,7 @@ const WithdrawalFormPage = () => {
         };
         mutate(withdrawalData, {
             onSuccess: () => {
-                router.push('/game/user-menu');
+                router.push('/game/platform/user-menu');
             }
         });
     };

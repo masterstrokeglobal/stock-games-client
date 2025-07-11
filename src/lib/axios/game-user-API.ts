@@ -120,8 +120,8 @@ export const gameUserAPI = {
     return api.get("/favourite");
   },
 
-  getUserGameHistory: async ({ page, roundRecordGameType }: { page: number, roundRecordGameType: RoundRecordGameType }) => {
-    return api.get(`/user/game-history/round-record-game-type/${roundRecordGameType}`, { params: { page } });
+  getUserGameHistory: async ({ page, roundRecordGameType, startDate }: { page: number, roundRecordGameType: RoundRecordGameType, startDate?: string }) => {
+    return api.get(`/user/game-history/round-record-game-type/${roundRecordGameType}`, { params: { page, startDate } });
   },
 
   getUserGameHistoryByRoundId: async (roundId: string) => {

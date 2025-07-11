@@ -165,11 +165,11 @@ export default function TiersProgram(): JSX.Element {
                         {steps.map((step) => (
                             <Card key={step.number} className="dark:bg-gradient-to-br dark:from-[rgba(68,103,204,0.8)] dark:to-[rgba(26,14,225,0.8)] bg-[linear-gradient(172.33deg,rgba(125,192,252,0.8)_5.37%,rgba(69,106,206,0.8)_94.32%)] border-platform-border rounded-none p-3 sm:p-4">
                                 <div className="flex flex-col justify-between h-full">
-                                    <div className="mb-4 sm:mb-6 w-12 h-12 sm:w-16 sm:h-16 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center">
-                                        {step.number === "01" && <span className="text-xl sm:text-2xl">⚡</span>}
-                                        {step.number === "02" && <span className="text-xl sm:text-2xl">🎮</span>}
-                                        {step.number === "03" && <span className="text-xl sm:text-2xl">🏆</span>}
-                                        {step.number === "04" && <span className="text-xl sm:text-2xl">🎉</span>}
+                                    <div className="mb-4 sm:mb-6 w-12 h-12 sm:w-16 aspect-square sm:h-16 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center">
+                                        {step.number === "01" && <img src="/images/platform/tier/sign-up.png" alt="coin" className="w-full h-auto block"  />}
+                                        {step.number === "02" && <img src="/images/platform/tier/play.png" alt="coin" className="w-full h-auto block"  />}
+                                        {step.number === "03" && <img src="/images/platform/tier/level-up.png" alt="coin" className="w-full h-auto block"  />}
+                                        {step.number === "04" && <img src="/images/platform/tier/have-fun.png" alt="coin" className="w-full h-auto block"  />}
                                     </div>
                                     <h4 className="text-base sm:text-lg dark:text-platform-text text-white font-bold mb-1">
                                         {step.number}. {step.title}
@@ -211,7 +211,7 @@ const ActiveTierCard = ({
     return (
         <div className={cn("flex flex-col md:flex-row gap-6 md:gap-10 md:border-none border border-platform-border mb-8", className)}>    
             {/* Left: Badge and Tier Name */}
-            <div className="flex flex-col items-center justify-center  dark:bg-[url('/images/tier/tier-bg-dark.png')] bg-[url('/images/tier/tier-bg-light.png')]  bg-cover bg-center md:p-8 p-4 w-full md:w-[340px] md:min-h-[420px] min-h-52  md:border border-platform-border ">
+            <div className="flex flex-col items-center justify-center  dark:bg-[url('/images/tier/tier-bg-dark.png')] bg-[url('/images/tier/tier-bg-light.png')]  bg-cover bg-center md:p-8 p-4 w-full lg:w-[440px] md:w-[340px] md:min-h-[420px] min-h-52  md:border border-platform-border rounded-none">
                 <div className="relative md:w-48 md:h-48 w-auto h-full aspect-square flex-1 md:mb-6">
                     <Image
                         src={tier?.imageUrl}
@@ -223,7 +223,7 @@ const ActiveTierCard = ({
                     />
                 </div>
                 <div className="flex flex-col items-center">
-                    <span className="uppercase text-platform-text text-2xl font-bold tracking-wider mb-1">{tier?.name}</span>
+                    <span className="uppercase text-platform-text text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-wider mb-1">{tier?.name}</span>
                     {isMyTier && (
                         <span className="text-yellow-400 text-lg font-semibold tracking-wide">MY TIER</span>
                     )}
@@ -245,7 +245,7 @@ const ActiveTierCard = ({
                     {/* Login Points */}
                     <div className="sm:border dark:border-platform-border border-primary-game p-4 flex items-center gap-4 min-h-[90px]">
                         <div className="w-10 h-10 sm:h-14 sm:w-14 sm:text-3xl bg-white/10 rounded-full backdrop-blur border dark:border-platform-border border-primary-game flex items-center justify-center text-white text-xl font-bold">
-                            🎰
+                            <img src="/images/platform/tier/login-points.png" alt="coin" className=" w-full h-auto block"  />
                         </div>
                         <div>
                             <div className="text-platform-text font-bold text-base">Login Points</div>
@@ -257,7 +257,7 @@ const ActiveTierCard = ({
                     {/* First Game Points */}
                     <div className="sm:border dark:border-platform-border border-primary-game p-4 flex items-center gap-4 min-h-[90px]">
                         <div className="w-10 h-10 sm:h-14 sm:w-14 bg-white/10 rounded-full backdrop-blur border dark:border-platform-border border-primary-game flex items-center justify-center text-white text-xl font-bold">
-                            ⚽
+                            <img src="/images/platform/tier/first-game-points.png" alt="coin" className=" w-full h-auto block"  />
                         </div>
                         <div>
                             <div className="text-platform-text font-bold text-base">First Game Points</div>
@@ -268,8 +268,8 @@ const ActiveTierCard = ({
                     </div>
                     {/* Game Points */}
                     <div className="sm:border dark:border-platform-border border-primary-game p-4 flex items-center gap-4 min-h-[90px]">
-                        <div className="w-10 h-10 bg-white/10 rounded-full backdrop-blur border dark:border-platform-border border-primary-game flex items-center justify-center text-white text-xl font-bold">
-                            🪙
+                    <div className="w-10 h-10 sm:h-14 sm:w-14 aspect-square bg-white/10 rounded-full backdrop-blur border dark:border-platform-border border-primary-game flex items-center justify-center text-white text-xl font-bold">
+                    <img src="/images/platform/tier/game-points.png" alt="coin" className=" w-full h-auto block"  />
                         </div>
                         <div>
                             <div className="text-platform-text font-bold text-base">Game Points</div>
@@ -280,8 +280,8 @@ const ActiveTierCard = ({
                     </div>
                     {/* Redeem Points */}
                     <div className="sm:border dark:border-platform-border border-primary-game p-4 flex items-center gap-4 min-h-[90px]">
-                        <div className="w-10 h-10 bg-white/10 rounded-full backdrop-blur border dark:border-platform-border border-primary-game  flex items-center justify-center text-white text-xl font-bold">
-                            🎫
+                    <div className="w-10 h-10 sm:h-14 sm:w-14 bg-white/10 aspect-square rounded-full backdrop-blur border dark:border-platform-border border-primary-game flex items-center justify-center text-white text-xl font-bold">
+                       <img src="/images/platform/tier/reedeem-points.png" alt="coin" className=" w-full h-auto block"  />
                         </div>
                         <div>
                             <div className="text-platform-text font-bold text-base">Reedeem Points</div>
@@ -303,13 +303,13 @@ const ActiveTierCard = ({
                         </div>
                         {/* Points Progress */}
                         <div className="mb-2">
-                            <div className="flex justify-between text-xs text-platform-text mb-1">
+                            <div className="flex justify-between font-semibold text-xs text-platform-text mb-1">
                                 <span>Point Progress</span>
                                 <span>
                                     {myTier?.totalPoints || 0}/{nextTier?.minPoints} Points
                                 </span>
                             </div>
-                            <div className="h-2 w-full bg-[#90ACFF6E] rounded-full overflow-hidden">
+                            <div className="h-2 w-full dark:bg-[#90ACFF6E] bg-white rounded-full overflow-hidden">
                                 <div
                                     className="h-full bg-gradient-to-r dark:from-[#7c3aed] dark:to-[#f472b6] from-primary-game to-primary-game"
                                     style={{
@@ -320,13 +320,13 @@ const ActiveTierCard = ({
                         </div>
                         {/* Games Progress */}
                         <div>
-                            <div className="flex justify-between text-xs text-platform-text mb-1">
+                            <div className="flex justify-between font-semibold text-xs text-platform-text mb-1">
                                 <span>Game Progress</span>  
                                 <span>
                                     {myTier?.gamesPlayed || 0}/{nextTier?.gamesRequired} Games
                                 </span>
                             </div>
-                            <div className="h-2 w-full bg-[#90ACFF6E] rounded-full overflow-hidden">
+                            <div className="h-2 w-full dark:bg-[#90ACFF6E] bg-white rounded-full overflow-hidden">
                                 <div
                                     className="h-full bg-gradient-to-r dark:from-[#7c3aed] dark:to-[#f472b6] from-primary-game to-primary-game"
                                     style={{

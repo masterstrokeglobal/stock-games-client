@@ -55,7 +55,7 @@ function FooterMobileNav() {
               <ul className="pl-2 pr-2 pb-2 space-y-2">
                 {section.links.map((link) => (
                   <li key={link.label}>
-                    <Link href={link.href} className="hover:underline text-[#747487] block py-1">
+                    <Link href={link.href} className="hover:text-white text-[#747487] block py-1">
                       {link.label}
                     </Link>
                   </li>

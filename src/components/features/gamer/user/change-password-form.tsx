@@ -50,7 +50,7 @@ const PasswordChangeForm = () => {
             {
                 onSuccess: () => {
                     form.reset();
-                    router.push('/game/user-menu');
+                    router.push('/game/platform/user-menu');
                 }
             }
         );

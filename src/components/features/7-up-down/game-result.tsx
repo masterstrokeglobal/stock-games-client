@@ -1,16 +1,13 @@
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle
-} from '@/components/ui/dialog';
-import { Separator } from '@/components/ui/separator';
+import { Dialog, DialogClose, DialogContent } from '@/components/ui/dialog';
+import { getWinnerSide } from '@/lib/axios/7-up-down-API';
 import { cn, INR } from '@/lib/utils';
-import { AlertCircle, Loader2 } from 'lucide-react';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { RoundRecord } from '@/models/round-record';
 import { useGetSevenUpDownRoundResult } from '@/react-query/7-up-down';
+import dayjs from 'dayjs';
+import { Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import SevenUpDownChip from './chip';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface GameResultDialogProps {
   open: boolean;
@@ -19,104 +16,169 @@ interface GameResultDialogProps {
 
 const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
   const [showDialog, setShowDialog] = useState(open);
-  const { data, isLoading, isError } = useGetSevenUpDownRoundResult(roundRecordId,open);
+  const { data: roundResult, isLoading } = useGetSevenUpDownRoundResult(roundRecordId, open);
 
   useEffect(() => {
-    if (open) {
-      setShowDialog(open);
-    }
+    setShowDialog(open);
   }, [open]);
 
-  // Check if the result is a win or loss
-  const isWin = data && Number(data.netProfitLoss) >= 0;
 
-  return (  
-    <Dialog open={showDialog}>
-      <DialogContent className="sm:max-w-md bg-primary-game text-white [&>.close-button]:hidden" data-hide-children="true">
-      
-        <DialogHeader>
-          <DialogTitle>Round Results</DialogTitle>
-        </DialogHeader>
+  const netResult = roundResult?.reduce((total, bet) => {
+    return total + (bet.isWinner ? bet.amountWon : -bet.amountPlaced);
+  }, 0);
 
-        <div className="py-4">
-          {isLoading ? (
-            <div className="flex flex-col items-center justify-center p-8 space-y-4">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-              <p className="text-gray-600">Loading results...</p>
-              <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                Checkout Game
-              </button>
+  const round = roundResult?.[0]?.round ? new RoundRecord(roundResult[0].round) : null;
+
+  return (
+    <Dialog defaultOpen={showDialog}>
+      <DialogContent
+        showButton={false}
+        className={cn(
+          "border-2 border-none  max-w-none outline-none h-full  flex flex-col justify-center shadow-none mx-auto p-0",
+          "bg-black/50 backdrop-blur-sm"
+        )}
+      >
+        <img src="/images/seven-up-down/bull.png" alt="Bull" className="absolute z-[11] md:-bottom-24 -bottom-12 sm:left-0 -left-0 -translate-x-1/4 w-auto md:h-[500px] h-48" />
+        <img src="/images/seven-up-down/bear.png" alt="Bear" className="absolute z-[11] md:-bottom-12 -bottom-8   right-0   w-auto md:h-[400px] h-40" />
+
+        {
+          isLoading && <div className='flex justify-center items-center h-full'>
+            <Loader2 className='w-10 h-10 text-white animate-spin' />
+          </div>
+        }
+
+        {round && roundResult && <section className='sm:h-[80vh] h-screen my-auto flex flex-col justify-center items-center max-w-3xl w-full mx-auto'>
+          <div className="relative rounded-2xl h-fit w-full flex flex-col justify-center mx-auto font-poppins">
+            <div
+              className="text-center text-white md:text-4xl text-2xl px-6 py-6 font-bold tracking-wide font-poppins mb-2"
+              style={{
+                textShadow: "0px 2px 8px rgba(255, 222, 33, 0.8), 0px 0px 2px #fff"
+              }}
+            >
+              Result
+              <DialogClose className='absolute top-0 right-0 bg-[#517ED4] z-[61] font-play rounded-full  aspect-square sm:size-10 size-8 p-0 flex items-center justify-center border-white text-white focus:ring-0 border'>
+                <span
+                  className='sm:text-2xl text-lg font-light'
+                  style={{
+                    textShadow: "0px 2px 8px #CDDDFF, 0px 0px 2px #fff"
+                  }}
+                >
+                  x
+                </span>
+              </DialogClose>
             </div>
-          ) : isError ? (
-            <>
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription>
-                  Failed to load round results. Please try again.
-                </AlertDescription>
-              </Alert>
-              <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                Checkout Game
-              </button>
-            </>
-          ) : data ? (
-            <div className="space-y-4">
-              {/* Display the image and message */}
-              <div className="space-y-4 mb-4">
-                <Image
-                  src={isWin ? '/won.png' : '/lost.png'}
-                  alt={isWin ? 'You Won!' : 'Better Luck Next Time'}
-                  width={100}
-                  height={100}
-                  className="rounded-full w-32 mx-auto" // Add this to remove any white 
-                />
-                <p className={cn("text-2xl  font-bold text-center",
-                  isWin ? 'text-yellow-600' : 'text-gray-100'
-                )}>
-                  {isWin ? 'Congratulations! You won!' : 'Better luck next time!'}
-                </p>
+            <div className="relative sm:px-0 px-2 w-full mx-auto flex flex-col items-center justify-center bg-transparent">
+              <div className="sm:flex-1 sm:h-fit relative  w-full grid grid-cols-1 grid-rows-1">
+                <div className="absolute -rotate-[2deg] z-0 top-0 left-0 w-full h-full rounded-2xl bg-[#517ED4]" />
+                <div
+                  className={cn(
+                    "w-full relative z-10 grid rounded-2xl h-full bg-[linear-gradient(99deg,_#295AB2_0%,_#171E57_100.75%)] shadow-[0px_0px_7.1px_0px_rgba(1,59,177,0.25)_inset] border-2 border-[#295CB5] flex-1 sm:p-6 p-4 ")}
+                >
+                  <div className="flex items-start justify-between sm:mb-10 mb-4  rounded-t-2xl">
+                    <span className="text-white text-lg font-semibold font-poppins">
+                      Round :<span className="text-[#F5C201] text-base font-normal font-poppins">#{round.id}</span>
+                    </span>
+                    <span className="text-white text-lg font-semibold font-poppins">
+                      Time :<span className="text-[#F5C201] text-base font-normal font-poppins">{round.startTime ? dayjs(round.startTime).format("HH:mm A") : "--"}</span>
+                    </span>
+                  </div>
+                  <div className='md:mx-10 '>
+                    <div className="grid grid-cols-3 items-center md:text-base sm:text-sm text-xs font-bold font-montserrat uppercase px-4 gap-2 border-b border-[#6FB0FF] text-[#8EC2FF] pb-2 mb-2">
+                      <div className="text-left whitespace-nowrap">Selected Side</div>
+                      <div className="text-center whitespace-nowrap">Bet INR</div>
+                      <div className="text-center whitespace-nowrap">Winner</div>
+                    </div>
+
+                    <ScrollArea className='h-[220px]' scrollThumbClassName='bg-[#4467CC]'>
+                      {
+                        roundResult.map((result, index) => {
+                          return (
+                            <div key={index} className="grid grid-cols-3 font-poppins font-light uppercase px-4 gap-2 sm:text-[15px] text-xs bg-[#355DAE] py-2 rounded-xl mb-2">
+                              <div className="text-left"><SevenUpDownChip className='justify-start' side={result.selectedSide} /></div>
+                              <div className="text-center">{INR(result.amountPlaced)}</div>
+                              <div className="text-center">{<SevenUpDownChip className='justify-center' side={getWinnerSide(result.winner)} />}</div>
+                            </div>
+                          )
+                        })
+                      }
+                    </ScrollArea>
+                  </div>
+                  <div className='flex justify-center sm:mb-2 sm:mt-4 h-fit'>
+                    <div className='text-center text-lg font-poppins  leading-none xl:text-4xl md:text-3xl font-bold sm:text-2xl xs:text-xl text-white' style={{ textShadow: '0px 0px 9.5px #2A8BFF' }}>
+                      Net Result : ₹ {Math.abs(netResult ?? 0)}
+                    </div>
+                  </div>
+                  <NextRound round={round} className='my-2 md:text-3xl h-fit sm:text-2xl xs:text-xl  md:hidden block' />
+                </div>
               </div>
 
-              <div className="text-center  flex justify-between  rounded-lg">
-                <p className="">Total Bet Amount</p>
-                <p className="text-xl ">{INR(data.totalPlaced)}</p>
+              <NextRound round={round} className='my-4  md:text-3xl  sm:text-2xl xs:text-xl  md:flex hidden' />
+              <div className='flex justify-center w-full'>
               </div>
-
-              <div className="text-center  flex justify-between  rounded-lg">
-                <p className="">Total Winnings</p>
-                <p className="text-xl ">{INR(data.amountWon)}</p>
-              </div>
-
-              <div className="text-center  flex justify-between  rounded-lg">
-                <p className="">Net Winning</p>
-                <p className="text-xl ">{INR(data.netWinning)}</p>
-              </div>
-
-              <div className="text-center  flex justify-between  rounded-lg">
-                <p className="">Profit/Loss</p>
-                <p className={`text-xl  ${isWin ? 'text-green-600' : 'text-red-600'}`}>
-                  {INR(data.netProfitLoss)}
-                </p>
-              </div>
-
-              <Separator />
-
-              <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                Play Again
-              </button>
+              <DialogClose asChild>
+                <button
+                  className="w-full  text-white max-w-sm mx-auto py-3 rounded-xl sm:mt-0 mt-4 sm:text-lg text-sm font-poppins transition border border-[#6FB0FF]"
+                  style={{
+                    background: "linear-gradient(0deg, #002067 0%, #00339D 90.29%)",
+                    textShadow: "0px 0px 5px rgba(255, 255, 255, 1)",
+                  }}
+                >
+                  Play Again
+                </button>
+              </DialogClose>
             </div>
-          ) : (
-            <>
-              <p className="text-gray-600 text-center">No results available.</p>
-              <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                Play Again
-              </button>
-            </>
-          )}
-        </div>
+          </div>
+        </section>}
       </DialogContent>
     </Dialog>
   );
 };
 
 export default SevenUpDownResultDialog;
+
+
+const NextRound = ({ round, className }: { round?: RoundRecord, className?: string }) => {
+  const [timeLeft, setTimeLeft] = useState(0);
+
+  useEffect(() => {
+    if (!round?.endTime) return;
+
+    const calculateTimeLeft = () => {
+      const endTime = new Date(round.endTime);
+      const now = new Date();
+      // Add 10 seconds to the end time
+      const nextRoundStartTime = endTime.getTime() + 10000;
+      const timeUntilNextRound = nextRoundStartTime - now.getTime();
+
+      if (timeUntilNextRound <= 0) {
+        setTimeLeft(0);
+        return;
+      }
+
+      const secondsLeft = Math.ceil(timeUntilNextRound / 1000);
+      setTimeLeft(secondsLeft);
+    };
+
+    // Calculate initial time
+    calculateTimeLeft();
+
+    const timer = setInterval(() => {
+      calculateTimeLeft();
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [round?.endTime]);
+
+  return (
+    <div
+      className={cn("text-center font-medium text-[#F5C201] font-poppins", className)}
+      style={{
+        textShadow: "0px 0px 10px #001B50",
+      }}
+    >
+      Next Round starts in {timeLeft.toString().padStart(2, '0')}
+    </div>
+  );
+};
+
+

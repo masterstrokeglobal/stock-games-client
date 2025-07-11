@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { PropsWithChildren } from 'react';
 import { Cube } from './dice-3d';
 import { toast } from 'sonner';
+import { DICE_WINNING_MULTIPLIER_2, DICE_WINNING_MULTIPLIER_3, DICE_WINNING_MULTIPLIER_4, DICE_WINNING_MULTIPLIER_5, DICE_WINNING_MULTIPLIER_6, DICE_WINNING_MULTIPLIER_7, DICE_WINNING_MULTIPLIER_8, DICE_WINNING_MULTIPLIER_9, DICE_WINNING_MULTIPLIER_10, DICE_WINNING_MULTIPLIER_11, DICE_WINNING_MULTIPLIER_12 } from '@/lib/utils';
 
 interface GameBoardProps extends PropsWithChildren<PropsWithClassName> {
     roundRecord: RoundRecord;
@@ -14,25 +15,25 @@ interface GameBoardProps extends PropsWithChildren<PropsWithClassName> {
     winningMarketId: number[] | null;
 }
 
+
 // First row: numbers 2-7
 const firstRow = [
-    { number: 2, multiplier: '11x' },
-    { number: 3, multiplier: '11x' },
-    { number: 4, multiplier: '11x' },
-    { number: 5, multiplier: '11x' },
-    { number: 6, multiplier: '11x' },
-    { number: 7, multiplier: '11x' }
+    { number: 2, multiplier: `${DICE_WINNING_MULTIPLIER_2}x` },
+    { number: 3, multiplier: `${DICE_WINNING_MULTIPLIER_3}x` },
+    { number: 4, multiplier: `${DICE_WINNING_MULTIPLIER_4}x` },
+    { number: 5, multiplier: `${DICE_WINNING_MULTIPLIER_5}x` },
+    { number: 6, multiplier: `${DICE_WINNING_MULTIPLIER_6}x` },
+    { number: 7, multiplier: `${DICE_WINNING_MULTIPLIER_7}x` }
 ];
 
-// Second row: numbers 8-12 (reversed for visual balance)
+// Second row: numbers 8-12
 const secondRow = [
-    { number: 8, multiplier: '11x' },
-    { number: 9, multiplier: '11x' },
-    { number: 10, multiplier: '11x' },
-    { number: 11, multiplier: '11x' },
-    { number: 12, multiplier: '11x' }
+    { number: 8, multiplier: `${DICE_WINNING_MULTIPLIER_8}x` },
+    { number: 9, multiplier: `${DICE_WINNING_MULTIPLIER_9}x` },
+    { number: 10, multiplier: `${DICE_WINNING_MULTIPLIER_10}x` },
+    { number: 11, multiplier: `${DICE_WINNING_MULTIPLIER_11}x` },
+    { number: 12, multiplier: `${DICE_WINNING_MULTIPLIER_12}x` }
 ];
-
 const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningMarketId }: GameBoardProps) => {
     const createPlacement = useCreateDiceGamePlacement();
     const isPlaceOver = usePlacementOver(roundRecord);

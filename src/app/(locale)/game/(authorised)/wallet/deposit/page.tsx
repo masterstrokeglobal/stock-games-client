@@ -22,9 +22,9 @@ const DepositFormPage = () => {
                 const responseLink = data.data?.response;
                 if (responseLink) {
                     window.open(responseLink, '_blank');
-                    router.push('/game/user-menu');
+                    router.push('/game/platform/user-menu');
                 } else {
-                    router.push('/game/user-menu');
+                    router.push('/game/platform/user-menu');
                 }
             },
             onError: () => {
