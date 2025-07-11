@@ -81,10 +81,18 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
     };
     const sideBarItems = isCasinoAllowed ? withCasino : navItems;
     return (
+        <>
+        {isMobile && sidebarOpen && (
+            <div
+                className="fixed inset-0 z-30 bg-black bg-opacity-40 md:hidden"
+                onClick={toggleSidebar}
+                aria-label="Close sidebar overlay"
+            />
+        )}
         <aside
             className={cn(
                 "fixed left-0 top-0 h-screen  bg-background-secondary dark:bg-primary-game md:border-r border-platform-border transition-all duration-300 ease-in-out z-40",
-                sidebarOpen ? "md:w-64 w-full" : "md:w-20 w-0",
+                sidebarOpen ? "md:w-64 w-[calc(70vw)]" : "md:w-20 w-0",
                 !sidebarOpen && "w-0 md:w-20",
                 className
             )}
@@ -95,7 +103,7 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
                         onClick={toggleSidebar}
                         variant="ghost"
                         aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
-                    >
+                        >
                         {!sidebarOpen ? <SidebarOpenIcon className="text-platform-text" size={20} /> : <SidebarCloseIcon className="text-platform-text" size={20} />}
                     </Button>
                 </div>
@@ -104,7 +112,7 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
                         <TooltipProvider>
                             {sideBarItems.map((item, index) => {
                                 const isActive = pathname === item.href
-
+                                
                                 if (item.Parent) {
                                     return (
                                         <Tooltip key={index}>
@@ -134,6 +142,7 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
                 </ScrollArea>
             </div>
         </aside>
+</>
     )
 }
 
@@ -151,7 +160,7 @@ const SidebarItem = ({
     return (
         <button
             className={cn(
-                "flex items-center cursor-pointer w-full gap-3 rounded-md px-3 py-2 text-sm font-medium text-platform-text transition-all duration-300 ease-in-out hover:bg-platform-border hover:text-platform-text group",
+                "flex items-center cursor-pointer group w-full gap-3 rounded-md px-3 py-2 text-sm font-medium text-platform-text transition-all duration-300 ease-in-out hover:text-gray-200 hover:text-platform-text group",
                 isActive && "bg-platform-border ",
                 !sidebarOpen && "justify-center"
             )}
@@ -161,7 +170,7 @@ const SidebarItem = ({
             <SidebarIconComponent
                 Icon={item.icon}
                 className={cn(
-                    "flex-shrink-0 text-platform-text group-hover:text-platform-text",
+                    "flex-shrink-0 text-platform-text group-hover:text-gray-500 transition-all duration-300 ease-in-out ",
                     sidebarOpen ? "h-5 w-5" : "h-6 w-6"
                 )}
             />
@@ -169,7 +178,7 @@ const SidebarItem = ({
                 sidebarOpen && (
                     <span
                         className={cn(
-                            "transition-opacity duration-200",
+                            "transition-opacity duration-200 group-hover:text-gray-500",
                             sidebarOpen ? "opacity-100" : "opacity-0 hidden md:block",
                         )}
                     >

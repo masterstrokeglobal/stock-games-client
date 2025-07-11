@@ -45,7 +45,7 @@ export default function CasinoGameResult({ filter, className }: { filter: Filter
             </div>
             <div className="flex flex-col items-center mt-12 mb-8">
                 <div className="w-full max-w-xs mb-2">
-                    <div className="relative h-2 bg-[#23245A] rounded-full overflow-hidden">
+                    <div className="relative h-2 dark:bg-[#23245A] bg-white rounded-full overflow-hidden">
                         <div
                             className="absolute left-0 top-0 h-2 dark:bg-[#4B53E2] bg-[#64B6FD] rounded-full transition-all"
                             style={{
@@ -61,7 +61,7 @@ export default function CasinoGameResult({ filter, className }: { filter: Filter
                     <Button
                         onClick={() => fetchNextPage()}
                         disabled={isFetchingNextPage}
-                        className="border border-platform-border rounded-none dark:bg-transparent bg-primary-game text-platform-text hover:bg-primary-game"
+                        className="border border-primary-game dark:border-platform-border bg-white rounded-none  dark:bg-transparent hover:bg-primary-game text-platform-text dark:hover:bg-platform-border  "
                     >
                         {isFetchingNextPage ? "Loading..." : "Show more"}
                     </Button>

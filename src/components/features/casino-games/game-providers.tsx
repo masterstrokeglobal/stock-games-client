@@ -42,8 +42,9 @@ const CasinoProviders = () => {
 
 export default CasinoProviders;
 
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import type { GameCategory } from "@/models/casino-games";
+import AutoScroll from "embla-carousel-auto-scroll";
 
 interface CategoryCarouselProps {
   categoryId?: GameCategory,
@@ -54,14 +55,10 @@ interface CategoryCarouselProps {
 
 export function CasinoProvidersCarousel({ title }: CategoryCarouselProps) {
   return (
-    <Carousel className="w-auto">
+    <Carousel opts={{ loop: true, startIndex: 0}}  plugins={[AutoScroll({active: true})]} className="w-auto">
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="md:text-2xl text-base font-semibold text-platform-text">{title}</h2>
-          <div className="flex gap-2">
-            <CarouselPrevious className="static translate-y-0 bg-background/20 hover:bg-background/40" />
-            <CarouselNext className="static translate-y-0 bg-background/20 hover:bg-background/40" />
-          </div>
         </div>
         <CarouselContent className="-ml-2 md:-ml-4">
           {providers.map((provider, index) => (

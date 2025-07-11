@@ -1,6 +1,7 @@
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle
@@ -10,7 +11,7 @@ import { cn } from '@/lib/utils';
 import { useGetMyRoundResult } from '@/react-query/round-record-queries';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 interface GameResultDialogProps {
   open: boolean;
@@ -18,7 +19,6 @@ interface GameResultDialogProps {
 }
 
 const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
-  const [showDialog, setShowDialog] = useState(open);
   const { data, isLoading, isError } = useGetMyRoundResult(roundRecordId, open);
 
   const resultData = useMemo(() => {
@@ -26,7 +26,7 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
       return {
         totalBetAmount: data.data.totalBetAmount.toFixed(2),
         totalWinnings: data.data.totalWinnings.toFixed(2),
-        platformFees:data.data.totalPlatformFeeAmount.toFixed(2),
+        platformFees: data.data.totalPlatformFeeAmount.toFixed(2),
         netWinning: (data.data.netWinning).toFixed(2),
         profit: (data.data.netWinning - data.data.totalBetAmount).toFixed(2)
       };
@@ -34,18 +34,13 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
     return null;
   }, [data]);
 
-  useEffect(() => {
-    if (open) {
-      setShowDialog(open);
-    }
-  }, [open]);
 
 
   // Check if the result is a win or loss
   const isWin = resultData && Number(resultData.profit) >= 0;
 
   return (
-    <Dialog open={showDialog}>
+    <Dialog defaultOpen={open}>
       <DialogContent className="sm:max-w-md bg-primary-game text-white [&>.close-button]:hidden" data-hide-children="true">
         <DialogHeader>
           <DialogTitle>Round Results</DialogTitle>
@@ -56,9 +51,11 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
             <div className="flex flex-col items-center justify-center p-8 space-y-4">
               <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
               <p className="text-gray-600">Loading results...</p>
-              <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                Checkout Game
-              </button>
+              <DialogClose asChild>
+                <button className="bet-button w-full">
+                  Checkout Game
+                </button>
+              </DialogClose>
             </div>
           ) : isError ? (
             <>
@@ -68,9 +65,11 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
                   Failed to load round results. Please try again.
                 </AlertDescription>
               </Alert>
-              <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                Checkout Game
-              </button>
+              <DialogClose asChild>
+                <button className="bet-button w-full">
+                  Checkout Game
+                </button>
+              </DialogClose>
             </>
           ) : resultData ? (
             <div className="space-y-4">
@@ -112,21 +111,25 @@ const GameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
                 <div className="text-center flex justify-between  rounded-lg">
                   <p className="">Profit/Loss</p>
                   <p className={`text-xl  ${isWin ? 'text-green-600' : 'text-red-600'}`}>
-                  ₹{resultData.profit}
+                    ₹{resultData.profit}
                   </p>
                 </div>
               </div>
 
-              <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                Play Again
-              </button>
+              <DialogClose asChild>
+                <button className="bet-button w-full">
+                  Play Again
+                </button>
+              </DialogClose>
             </div>
           ) : (
             <>
               <p className="text-gray-600 text-center">No results available.</p>
-              <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                Play Again
-              </button>
+              <DialogClose asChild>
+                <button className="bet-button w-full">
+                  Play Again
+                </button>
+              </DialogClose>
             </>
           )}
         </div>

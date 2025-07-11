@@ -32,6 +32,9 @@ const Coin = ({ isFlipping, resultOutcome }: CoinComponentProps) => {
   const hasSettledCallbackCalled = useRef(false);
   const [currentY, setCurrentY] = useState(COIN_START_Y); // Start with margin
 
+  // New: scale state for animation
+  const [currentScale, setCurrentScale] = useState(0.3); // Start small
+
   const { width } = useWindowSize();
   const isMobile = width < 768;
   const coinRadius = isMobile ? COIN_RADIUS_MOBILE : COIN_RADIUS_DESKTOP;
@@ -50,7 +53,8 @@ const Coin = ({ isFlipping, resultOutcome }: CoinComponentProps) => {
       hasSettledCallbackCalled.current = false;
       rotationXSpeed.current = 7;
       rotationYSpeed.current = 0.5 + Math.random();
-      setCurrentY(COIN_START_Y); // Reset to default margin height
+      setCurrentY(COIN_START_Y + 1.5); // Start higher above
+      setCurrentScale(0.3); // Start small
     } else if (animState.current === 'flipping') {
       animState.current = 'settling';
     }
@@ -64,10 +68,15 @@ const Coin = ({ isFlipping, resultOutcome }: CoinComponentProps) => {
       coin.rotation.x += rotationXSpeed.current * delta;
       coin.rotation.y += rotationYSpeed.current * delta;
 
-      // Bounce around initial margin height
+      // Animate Y from above to COIN_START_Y with bounce
       const targetY = COIN_START_Y + Math.sin(Date.now() * 0.01) * 0.05;
-      setCurrentY(prev => THREE.MathUtils.lerp(prev, targetY, 0.1));
+      setCurrentY(prev => THREE.MathUtils.lerp(prev, targetY, 0.12));
+
+      // Animate scale from 0.3 to 1
+      setCurrentScale(prev => THREE.MathUtils.lerp(prev, 1, 0.12));
+
       coin.position.y = currentY;
+      coin.scale.set(currentScale, currentScale, currentScale);
     }
 
     if (animState.current === 'settling') {
@@ -78,7 +87,9 @@ const Coin = ({ isFlipping, resultOutcome }: CoinComponentProps) => {
 
       // Easing down to surface
       setCurrentY(prev => THREE.MathUtils.lerp(prev, COIN_LANDED_Y_CENTER, 0.08));
+      setCurrentScale(prev => THREE.MathUtils.lerp(prev, 1, 0.15));
       coin.position.y = currentY;
+      coin.scale.set(currentScale, currentScale, currentScale);
 
       if (rotationXSpeed.current < 0.2 && rotationYSpeed.current < 0.2) {
         animState.current = 'result';
@@ -86,12 +97,23 @@ const Coin = ({ isFlipping, resultOutcome }: CoinComponentProps) => {
     }
 
     if (animState.current === 'result' && resultOutcome) {
-      coin.rotation.x = THREE.MathUtils.lerp(coin.rotation.x, resultOutcome === HeadTailPlacementType.HEAD ? 0 : Math.PI, 0.1);
+      coin.rotation.x = THREE.MathUtils.lerp(
+        coin.rotation.x,
+        resultOutcome === HeadTailPlacementType.HEAD ? 0 : Math.PI,
+        0.1
+      );
       coin.rotation.y = THREE.MathUtils.lerp(coin.rotation.y, 0, 0.1);
       setCurrentY(prev => THREE.MathUtils.lerp(prev, COIN_LANDED_Y_CENTER, 0.08));
+      setCurrentScale(prev => THREE.MathUtils.lerp(prev, 1, 0.15));
       coin.position.y = currentY;
+      coin.scale.set(currentScale, currentScale, currentScale);
 
-      if (Math.abs(coin.rotation.x - (resultOutcome === HeadTailPlacementType.HEAD ? 0 : Math.PI)) < 0.01) {
+      if (
+        Math.abs(
+          coin.rotation.x -
+            (resultOutcome === HeadTailPlacementType.HEAD ? 0 : Math.PI)
+        ) < 0.01
+      ) {
         if (!hasSetResult.current) {
           hasSetResult.current = true;
         }
@@ -100,6 +122,11 @@ const Coin = ({ isFlipping, resultOutcome }: CoinComponentProps) => {
         }
         animState.current = 'idle';
       }
+    }
+
+    // Ensure scale is always set (for idle state)
+    if (animState.current === 'idle') {
+      coin.scale.set(1, 1, 1);
     }
   });
 

@@ -6,75 +6,65 @@ import CasinoGameResult from "@/components/features/platform/casino-game-result"
 import GameFilters, { Filter } from "@/components/features/platform/filters"
 import { checkCasinoAllowed, COMPANYID } from "@/lib/utils"
 import { GameTypeEnum } from "@/models/casino-games"
-import { notFound, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
-
+import { notFound, useRouter, useSearchParams } from "next/navigation"
+import { useMemo } from "react"
 
 export default function GamingAppInterface() {
     const searchParams = useSearchParams();
 
-    const search = searchParams.get("search") || "";
-    const category = searchParams.get("category") || "all";
-    const provider = searchParams.get("provider") || "all";
-    const type = searchParams.get("type");
-
-    const popular = searchParams.get("popular") === "true" || false;
-    const isNew = searchParams.get("new") === "true" || false;
-
-    const [filter, setFilter] = useState<Filter>({
-        search: search,
-        category: category,
-        provider: provider,
-    });
-
-    useEffect(() => {
-        if (search) {
-            setFilter({ ...filter, search: search })
+    // Build filter object from search params
+    const filter = useMemo<Filter>(() => {
+        return {
+            search: searchParams.get("search") || "",
+            category: searchParams.get("category") || "all",
+            provider: searchParams.get("provider") || "all",
+            type: searchParams.get("type") || undefined,
+            popular: searchParams.get("popular") === "true" ? true : undefined,
+            new: searchParams.get("new") === "true" ? true : undefined,
         }
-        if (category) {
-            setFilter({ ...filter, category: category })
-        }
-        if (provider) {
-            setFilter({ ...filter, provider: provider })
-        }
-        if (type) {
-            setFilter({ ...filter, type: type })
-        }
-        console.log(filter, search, category, provider, type)
-    }, [search, category, provider, type])
+    // Only recalculate when searchParams changes
+    }, [searchParams]);
 
+    // For updating the URL when filters change
+    const router = useRouter();
+    const setFilter = (newFilter: Filter) => {
+        const params = new URLSearchParams();
+        if (newFilter.search) params.set("search", newFilter.search);
+        if (newFilter.category && newFilter.category !== "all") params.set("category", newFilter.category);
+        if (newFilter.provider && newFilter.provider !== "all") params.set("provider", newFilter.provider);
+        if (newFilter.type) params.set("type", newFilter.type);
+        if (newFilter.popular) params.set("popular", "true");
+        if (newFilter.new) params.set("new", "true");
+        // If all filters are default, clear the query
+        router.replace(`?${params.toString()}`, { scroll: false });
+    };
 
     const isCasinoAllowed = checkCasinoAllowed(COMPANYID);
 
     if (!isCasinoAllowed) notFound();
 
-    const areFiltersApplied = filter.search || filter.category !== "all" || filter.provider !== "all" || filter.type  || popular || isNew;
+    const areFiltersApplied =
+        !!filter.search ||
+        (filter.category && filter.category !== "all") ||
+        (filter.provider && filter.provider !== "all") ||
+        !!filter.type ||
+        !!filter.popular ||
+        !!filter.new;
 
-    console.log(filter, search, category, provider, type, popular, isNew)
     return (
         <>
             <main className="md:mx-auto w-full md:px-4 mt-4">
                 {/* Search Bar */}
-
-                <GameFilters filter={{
-                    search: search,
-                    category: category,
-                    provider: provider,
-                    type: type || undefined
-                }} setFilter={setFilter} />
+                <GameFilters filter={filter} setFilter={setFilter} />
                 {/* Content: Either search results or category carousels */}
                 {areFiltersApplied ? (
-                  <CasinoGameResult filter={{
-                    search: search,
-                    category: category,
-                    provider: provider,
-                    type: type || undefined,
-                    popular: popular,
-                    new: isNew
-                  }} className="my-8" />
+                    <CasinoGameResult
+                        filter={filter}
+                        className="my-8"
+                    />
                 ) : (
                     <div className="space-y-12">
-                        {/* most popular games , ne games with emoji  */}
+                        {/* most popular games , new games with emoji  */}
                         <CategoryCarousel title="Hot Games" popular={true} />
                         <CategoryCarousel title=" Crash Games" type={GameTypeEnum.CRASH_GAME} />
                         <CategoryCarousel title="Game Show" type={GameTypeEnum.GAME_SHOW} />

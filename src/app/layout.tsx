@@ -5,7 +5,6 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Analytics } from "@vercel/analytics/react";
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from "next-intl/server";
-
 import Script from 'next/script';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import "./game.css";

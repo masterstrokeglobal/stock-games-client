@@ -3,6 +3,7 @@ import CategoryCarousel from "@/components/features/casino-games/category-carous
 import { CasinoProvidersCarousel } from "@/components/features/casino-games/game-providers";
 import AdMarquee from "@/components/features/platform/ad-marquee";
 import CtaSection from "@/components/features/platform/cta-section";
+import WalletDialog from "@/components/features/platform/wallet-dialog";
 import StockGameCarousel from "@/components/features/stock-games.tsx/stock-game-carousel";
 import ActiveTierCard from "@/components/features/tier/user-tier-card";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,6 @@ import { checkCasinoAllowed, COMPANYID } from "@/lib/utils";
 import { GameTypeEnum } from "@/models/casino-games";
 import User from "@/models/user";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 
 const PlatformPage = () => {
     const t = useTranslations('wallet');
@@ -25,17 +25,17 @@ const PlatformPage = () => {
             <AdMarquee />  
             {isLoggedIn && !user.isDemoUser && (
                 <div className="flex gap-2">
-                    <Link href="/game/wallet/deposit" className="flex-1" passHref>
+                    <WalletDialog activeTab="deposit">
                         <Button className="w-full  dark:bg-[linear-gradient(to_right,#AA5798_0%,#5065C6_100%)] bg-primary-game dark:text-white   dark:rounded-none gap-x-2 md:h-12">
                             {t('menu.deposit')}
                         </Button>
-                    </Link>
+                    </WalletDialog>
 
-                    <Link href="/game/wallet/withdrawl" className="flex-1" passHref>
+                    <WalletDialog activeTab="withdraw">
                         <Button className="w-full gap-x-2 md:h-12 dark:bg-[linear-gradient(90deg,#02A2A0_32.81%,#4A66C9_100%)] bg-primary-game  dark:rounded-none dark:text-white">
                             {t('menu.withdraw')}
                         </Button>
-                    </Link>
+                    </WalletDialog>
 
                 </div>
             )}

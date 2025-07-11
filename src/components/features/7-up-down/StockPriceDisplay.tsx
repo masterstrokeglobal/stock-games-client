@@ -1,21 +1,23 @@
 import { RankedMarketItem } from '@/hooks/use-multi-socket-leaderboard';
 import { cn } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
-import { ArrowUpIcon } from "@radix-ui/react-icons";
 import React from 'react';
+import TriangleDownGlow from '../common/triangle-down-glow';
+import TriangleUpGlow from '../common/triangle-up-glow';
 interface StockPriceProps {
   rankedMarketItem: RankedMarketItem;
+  className?: string;
 }
 
-export const StockPrice: React.FC<StockPriceProps> = ({ rankedMarketItem }) => {
+export const StockPrice: React.FC<StockPriceProps> = ({ rankedMarketItem, className }) => {
   return (
-    <div className="bg-black flex  text-xs items-center gap-2 p-2 border-b w-[5rem] relative border-r border-gray-700 ">
-      <div className="flex items-start flex-col gap-2 flex-1">
-        <span className='line-clamp-1'>{rankedMarketItem.name}</span>
-        <span className={cn('font-semibold', parseFloat(rankedMarketItem.change_percent) > 0 ? 'text-green-500' : 'text-red-500')}>{rankedMarketItem.price}</span>
+    <div className={cn("bg-transparent mx-auto space-y-1 p-1 h-12 min-w-10 relative", className)}>
+      <div className="flex items-start flex-col gap-1 flex-1">
+        <span className="line-clamp-1 text-left text-xs truncate block sm:text-sm">{rankedMarketItem.name}</span>
       </div>
-      <div className="flex flex-col gap-2 absolute right-2 bottom-2">
-        <ArrowUpIcon className={`w-4 h-4 ${parseFloat(rankedMarketItem.change_percent) > 0 ? 'text-green-500' : 'text-red-500 rotate-180'}`} />
+      <div className="flex items-center gap-x-1 truncate">
+        <span className={cn('font-semibold text-xs sm:text-sm', parseFloat(rankedMarketItem.change_percent) > 0 ? 'text-green-500' : 'text-red-500')}>{rankedMarketItem.price??"--"}</span>
+        {parseFloat(rankedMarketItem.change_percent) > 0 ? <TriangleUpGlow className="size-4" /> : <TriangleDownGlow className="size-4" />}
       </div>
     </div>
   );
@@ -29,7 +31,7 @@ export const StockPriceDisplay: React.FC<{ stocks: RankedMarketItem[], roundReco
 
   const stocksToDisplay = sortedStocksWithWinningId || sortedStocks;
   return (
-    <div className="flex flex-col justify-between items-start bg-gray-200">
+    <div className="flex flex-col justify-between items-start bg-transparent">
       <div className="grid grid-cols-7 w-full">
 
         {stocksToDisplay.slice(0, 7).map((stock, index) => (

@@ -102,3 +102,40 @@
 .header-inner-shadow {
     box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
 }
+
+.input-dark-calendar::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+/** Coin Toss Animation */
+.coin-toss-anim-1 {
+    animation: coin-toss-float-1 1s forwards;
+}
+
+@keyframes coin-toss-float-1 {
+    0% {
+        /* Start further left and from above */
+        transform: translateY(-300px) translateX(-60%) scale(0.3);
+        opacity: 1;
+        transform-origin: center;
+    }
+    60% {
+        /* Move to center horizontally, still small */
+        transform: translateY(0px) translateX(-60%) scale(0.3);
+        opacity: 1;
+        transform-origin: center;
+    }
+    80% {
+        /* Start expanding in center */
+        transform: translateY(16.666666%) translateX(-60%) scale(0.7);
+        opacity: 1;
+        transform-origin: center;
+    }
+    100% {
+        /* End at the same transform as the CoinToss component's className */
+        transform: translateY(33.333333%) translateX(-50%) scale(1);
+        opacity: 1;
+        transform-origin: center;
+    }
+}
+

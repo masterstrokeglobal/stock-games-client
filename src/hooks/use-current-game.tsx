@@ -58,7 +58,7 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
 
         // Create RoundRecord only when necessary
         const roundRecord = new RoundRecord(data.data.roundRecords[0]);
-  
+
         /*
         gold, color5: market index [20] wheel index [0] 
         red color1: [market index 0, 3, 6, 9, 12, 15, 18 ] wheel index [2, 5, 8,11, 14, 17 ]
@@ -72,7 +72,7 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         // Function to rearrange markets according to wheel position mapping
         const rearrangeMarketsForWheel = (markets: any[]) => {
             if (markets.length !== 21) return markets; // Safety check
-            
+
             // Mapping: wheelIndex -> marketIndex
             const wheelToMarketMapping = [
                 20, // wheel index 0 -> market index 20 (gold)
@@ -97,13 +97,13 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
                 16, // wheel index 19 -> market index 16 (green)
                 18  // wheel index 20 -> market index 18 (red)
             ];
-            
+
             // Create new array with markets in wheel order
             const rearrangedMarkets = wheelToMarketMapping.map(marketIndex => markets[marketIndex]);
-            
+
             return rearrangedMarkets;
         };
-        
+
         // Apply the rearrangement to the market array
         if (roundRecord.market && Array.isArray(roundRecord.market) && roundRecord.roundRecordGameType === RoundRecordGameType.WHEEL_OF_FORTUNE) {
             roundRecord.market = rearrangeMarketsForWheel(roundRecord.market);
@@ -247,57 +247,125 @@ export const useIsPlaceOver = (roundRecord: RoundRecord | null) => {
 export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: any[]) => {
     const [showResults, setShowResults] = useState(false);
     const [currentRoundId, setCurrentRoundId] = useState<number | null>(null);
+
+    // Store a copy of the previous roundRecord and its endTime
+    const [previousRoundRecord, setPreviousRoundRecord] = useState<RoundRecord | null>(null);
+    const [previousRoundEndTime, setPreviousRoundEndTime] = useState<number | null>(null);
     const [previousRoundId, setPreviousRoundId] = useState<number | null>(null);
 
+    // On mount, restore previous round info from sessionStorage
     useEffect(() => {
-        // Retrieve previous round ID from localStorage when the component mounts
         const storedPreviousRoundId = sessionStorage.getItem(`game-previous-Round-${roundRecord?.roundRecordGameType}`);
+        const storedPreviousRoundEndTime = sessionStorage.getItem(`game-previous-Round-end-time-${roundRecord?.roundRecordGameType}`);
         if (storedPreviousRoundId) {
             setPreviousRoundId(parseInt(storedPreviousRoundId, 10));
         }
-    }, []); // Run only on mount
+        if (storedPreviousRoundEndTime) {
+            setPreviousRoundEndTime(parseInt(storedPreviousRoundEndTime, 10));
+        }
+        // eslint-disable-next-line
+    }, []);
 
     useEffect(() => {
         if (!roundRecord) return;
 
-        // Check if the round has changed
-        if (roundRecord.id !== currentRoundId) {
-            // Update the previous round ID
-            if (currentRoundId) {
-                sessionStorage.setItem(`game-previous-Round-${roundRecord.roundRecordGameType}`, currentRoundId.toString());
-                setPreviousRoundId(currentRoundId);
+        // Hide results 10 seconds before round end
+        let timeout: NodeJS.Timeout | null = null;
+        if (roundRecord) {
+            const now = Date.now();
+            const roundEndTime = new Date(roundRecord.endTime).getTime();
+            const msUntil10SecondsBeforeEnd = roundEndTime - now - 10000;
+            if (msUntil10SecondsBeforeEnd > 0) {
+                timeout = setTimeout(() => {
+                    setPreviousRoundEndTime(roundEndTime);
+                    setPreviousRoundId(roundRecord.id);
+                    setPreviousRoundRecord(new RoundRecord(roundRecord));
+                    setShowResults(false);
+                }, msUntil10SecondsBeforeEnd);
             }
-
-            setCurrentRoundId(roundRecord.id);
         }
 
-        const updateShowResults = () => {
-            const now = new Date().getTime();
-            const gameEnd = new Date(roundRecord.endTime).getTime();
-            const adjustedEndTime = gameEnd + 3000;
-            const EMD_TIME = 30000;
-            
-            if (now >= adjustedEndTime - EMD_TIME) {
-                setShowResults(false);
-                if (roundRecord.id !== previousRoundId) {
-                    setPreviousRoundId(roundRecord.id);
-                }
+        // If round changes, update previous round info
+        if (roundRecord.id !== currentRoundId) {
+            if (currentRoundId) {
+                // Save previous round info to sessionStorage and state
+                sessionStorage.setItem(`game-previous-Round-${roundRecord.roundRecordGameType}`, currentRoundId.toString());
+                sessionStorage.setItem(`game-previous-Round-end-time-${roundRecord.roundRecordGameType}`, new Date(roundRecord.endTime).getTime().toString());
+                setPreviousRoundEndTime(new Date(roundRecord.endTime).getTime());
+                setPreviousRoundId(currentRoundId);
+                setPreviousRoundRecord(new RoundRecord(roundRecord)); // Save a copy of the previous roundRecord
             }
-            if (now >= adjustedEndTime && bettedChips.length > 0) {
-                setShowResults(true);
+            setCurrentRoundId(roundRecord.id);
+        }
+        return () => {
+            if (timeout) {
+            clearTimeout(timeout);
             }
         };
+    }, [roundRecord, currentRoundId]);
 
-        const intervalId = setInterval(updateShowResults, REFRESH_INTERVAL);
+    useEffect(() => {
+        let timeoutShow: NodeJS.Timeout | null = null;
+        let timeoutHide: NodeJS.Timeout | null = null;
+
+        // Determine which round to use for result display
+        // If less than 10 seconds before round ends, use current round, otherwise use previous
+        let roundToUse: RoundRecord | null = null;
+        let endTimeToUse: number | null = null;
+
+        if (roundRecord) {
+            const now = Date.now();
+            const roundEndTime = new Date(roundRecord.endTime).getTime();
+            if (roundEndTime - now <= 10000) {
+                // Within 10 seconds before round ends, use current round
+                roundToUse = roundRecord;
+                endTimeToUse = roundEndTime;
+            } else if (previousRoundRecord && previousRoundEndTime && previousRoundId !== null) {
+                // Otherwise, use previous round
+                roundToUse = previousRoundRecord;
+                endTimeToUse = previousRoundEndTime;
+            } else {
+                // Fallback to current round if no previous
+                roundToUse = roundRecord;
+                endTimeToUse = roundEndTime;
+            }
+        }
+
+        if (!roundToUse || !endTimeToUse) {
+            setShowResults(false);
+            return;
+        }
+
+        // Only show results if there were bets
+        if (bettedChips?.length === 0) {
+            setShowResults(false);
+            return;
+        }
+
+        const now = Date.now();
+        const showAt = endTimeToUse + 2000; // Show 2s after round over
+        const hideAt = showAt + 5000;       // Hide 5s after that
+
+        if (now < showAt) {
+            setShowResults(false);
+            timeoutShow = setTimeout(() => setShowResults(true), showAt - now);
+            timeoutHide = setTimeout(() => setShowResults(false), hideAt - now);
+        } else if (now >= showAt && now < hideAt) {
+            setShowResults(true);
+            timeoutHide = setTimeout(() => setShowResults(false), hideAt - now);
+        } else {
+            setShowResults(false);
+        }
 
         return () => {
-            clearInterval(intervalId);
+            if (timeoutShow) clearTimeout(timeoutShow);
+            if (timeoutHide) clearTimeout(timeoutHide);
         };
-    }, [roundRecord, currentRoundId, bettedChips]);
+        // Only depend on previousRoundRecord, previousRoundEndTime, previousRoundId, bettedChips, and roundRecord
+    }, [previousRoundRecord, previousRoundEndTime, previousRoundId, bettedChips, roundRecord]);
 
     return { showResults, currentRoundId, previousRoundId };
 };
-
 
 export const usePlacementOver = (roundRecord: RoundRecord | null) => {
 
@@ -312,7 +380,7 @@ export const usePlacementOver = (roundRecord: RoundRecord | null) => {
         const checkPlaceOver = () => {
             const now = new Date().getTime();
             const placeEnd = new Date(roundRecord.placementEndTime).getTime();
-            
+
             // Reset to false if placement time is still available
             if (now < placeEnd) {
                 setIsPlaceOver(false);
@@ -338,7 +406,7 @@ export const usePlacementOver = (roundRecord: RoundRecord | null) => {
             clearInterval(intervalId);
             clearTimeout(timeoutId);
         };
-    }, [roundRecord]); 
+    }, [roundRecord]);
 
     return isPlaceOver;
 };

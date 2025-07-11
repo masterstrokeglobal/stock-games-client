@@ -1,5 +1,27 @@
+
+import { RoundRecord } from "@/models/round-record";
 import { SevenUpDownPlacementType } from "@/models/seven-up-down";
 import api from "./instance";
+
+
+
+export type SevenUpDownRoundResult = {
+    selectedSide: "up" | "down";
+    isWinner: boolean;
+    amountWon: number;
+    amountPlaced: number;
+    platformFeeAmount: number;
+    winner: "7" | "7 Up" | "7 Down";
+    round: RoundRecord
+}
+
+export const getWinnerSide = (winner: "7" | "7 Up" | "7 Down") => {
+    if (winner === "7") return "seven";
+    if (winner === "7 Up") return "up";
+    if (winner === "7 Down") return "down";
+    return "seven";
+}
+
 export const sevenUpDownAPI = {
     createSevenUpDownPlacement: async (data: { roundId: number, placement: SevenUpDownPlacementType, amount: number } ) => {
         const response = await api.post("/seven-up-down", data);
@@ -15,13 +37,6 @@ export const sevenUpDownAPI = {
     },
     getSevenUpDownRoundResult: async (roundId: number) => {
         const response = await api.get(`/seven-up-down/result/${roundId}`);
-        return response.data.data as  {
-            netProfitLoss: number;
-            netWinning: number;
-            platformFeeAmount: number;
-            amountWon: number;
-            grossWinning: number;
-            totalPlaced: number;
-        };
+        return response.data.data as unknown as SevenUpDownRoundResult[];
     }
 } as const;

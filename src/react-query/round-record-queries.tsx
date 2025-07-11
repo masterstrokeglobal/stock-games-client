@@ -127,7 +127,7 @@ type DiceLast10RoundDetails = {
         });
     }
 
-    export const useGetAllGameHistory = (params: { page?: number; limit?: number; type?: SchedulerType; roundRecordGameType?: RoundRecordGameType }) => {
+    export const useGetAllGameHistory = (params: { page?: number; limit?: number; type?: SchedulerType; roundRecordGameType?: RoundRecordGameType, startDate?: string, endDate?: string }) => {
         return useQuery({
             queryKey: ["all-game-history", params],
             queryFn: async () => {

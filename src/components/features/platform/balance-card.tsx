@@ -1,5 +1,4 @@
 "use client";
-import { MoneyIcon, WithdrawIcon } from "@/components/features/user-menu/icons";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
 import useWallet from "@/hooks/use-wallet";
@@ -57,7 +56,7 @@ const BalanceCard = ({ onDeposit, onWithdraw }: BalanceCardProps) => {
                             variant="platform-outline"
                             onClick={onDeposit}
                         >
-                            <MoneyIcon />
+                            <img src="/images/platform/wallet/deposit.png" alt="coin" className="md:size-7 size-6 block"  />
                             {t("menu.deposit", { defaultValue: "Deposit Funds" })}
                         </Button>
                         <Button
@@ -66,7 +65,7 @@ const BalanceCard = ({ onDeposit, onWithdraw }: BalanceCardProps) => {
                             variant="platform-outline"
                             onClick={onWithdraw}
                         >
-                            <WithdrawIcon />
+                            <img src="/images/platform/wallet/withdraw.png" alt="coin" className="md:size-7 size-6 block"  />
                             {t("menu.withdraw", { defaultValue: "Withdraw Funds" })}
                         </Button>
                     </div>

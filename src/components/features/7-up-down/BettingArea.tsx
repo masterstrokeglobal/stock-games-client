@@ -1,12 +1,11 @@
 "use client"
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useAuthStore } from '@/context/auth-context';
-import { useIsPlaceOver, useShowResults } from '@/hooks/use-current-game';
-import { cn, INR, SEVEN_UP_DOWN_MULTIPLIER, SEVEN_UP_DOWN_MULTIPLIER_7 } from '@/lib/utils';
+import { useShowResults } from '@/hooks/use-current-game';
+import { cn } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
-import { SevenUpDownPlacementType } from '@/models/seven-up-down';
 import { useGetMyCurrentRoundSevenUpDownPlacement } from '@/react-query/7-up-down';
+import { Minus, Plus } from "lucide-react";
 import React from 'react';
 import SevenUpDownResultDialog from './game-result';
 
@@ -22,113 +21,121 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
   roundRecord
 }) => {
   const { userDetails } = useAuthStore();
-  const {data:placements} = useGetMyCurrentRoundSevenUpDownPlacement(roundRecord.id);
-  const isPlaceOver = useIsPlaceOver(roundRecord);
+  const { data: placements } = useGetMyCurrentRoundSevenUpDownPlacement(roundRecord.id);
   const coinValues = userDetails?.company?.coinValues;
-
-  const totalUpAmount = placements?.filter(p => p.placement === SevenUpDownPlacementType.UP).reduce((acc, bet) => acc + bet.amount, 0) ?? 0;
-  const totalDownAmount = placements?.filter(p => p.placement === SevenUpDownPlacementType.DOWN).reduce((acc, bet) => acc + bet.amount, 0) ?? 0;
-  const totalSevenAmount = placements?.filter(p => p.placement === SevenUpDownPlacementType.SEVEN).reduce((acc, bet) => acc + bet.amount, 0) ?? 0;
 
   const showResult = useShowResults(roundRecord, placements ?? []);
 
-  if (isPlaceOver && placements?.length) {
-    return (
-      <div className="w-full bg-[#1a1b2e] text-white p-6">
-        <div className="flex flex-col gap-3">
-          <h3 className="text-xl font-semibold text-blue-400 mb-2">Your Bets</h3>
-          {totalUpAmount > 0 && (
-            <PlacementCard placement={{placement: SevenUpDownPlacementType.UP, amount: totalUpAmount}} />
-          )}
-          {totalDownAmount > 0 && (
-            <PlacementCard placement={{placement: SevenUpDownPlacementType.DOWN, amount: totalDownAmount}} />
-          )}
-          {totalSevenAmount > 0 && (
-            <PlacementCard placement={{placement: SevenUpDownPlacementType.SEVEN, amount: totalSevenAmount}} />
-          )}
-        </div>
-      </div>
+  // Handlers for + and - buttons
+  const handleIncrement = () => {
+    if (!userDetails?.company?.maxPlacement) return;
+    const next = betAmount + 100;
+    setBetAmount(
+      next > userDetails.company.maxPlacement
+        ? userDetails.company.maxPlacement
+        : next
     );
-  }
+  };
+
+  const handleDecrement = () => {
+    if (!userDetails?.company?.minPlacement) return;
+    const next = betAmount - 100;
+    setBetAmount(
+      next < userDetails.company.minPlacement
+        ? userDetails.company.minPlacement
+        : next
+    );
+  };
+
 
   return (
     <>
-      <div className="w-full bg-[#1a1b2e] text-white p-6">
-        <div className="flex justify-center relative mb-4">
-          <div className="mr-2 absolute left-3 top-3 bottom-2">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.5)]">
-            <span className="text-lg">₹</span>
+      <div className="w-full md:px-2 py-4 md:flex flex-col grid sm:grid-cols-3 grid-cols-1 relative z-10 items-center md:gap-4 gap-2">
+        {/* Chips */}
+        <div className="grid md:grid-cols-4 grid-cols-2 col-span-2  gap-2 w-full max-w-2xl mb-2">
+          {coinValues?.map((amount) => (
+            <Button
+              key={amount}
+              onClick={() => setBetAmount(amount)}
+              className={cn(
+                "rounded-2xl font-semibold text-white md:text-base text-sm font-montserrat py-2 px-0 transition-all duration-200 border-2",
+                betAmount === amount
+                  ? "bg-[#3072DA] border-[#285BB2] shadow-[0_0_10px_#3072DA80]"
+                  : "bg-[#3072DABF] border-[#285BB2] hover:bg-[#3072DA]",
+                "focus:outline-none"
+              )}
+              style={{
+                minWidth: 100,
+                background: betAmount === amount ? "#3072DA" : "#3072DABF",
+                borderColor: "#285BB2"
+              }}
+            >
+              ₹ {amount}
+            </Button>
+          ))}
+        </div>
+
+        {/* Input with + and - buttons inside */}
+        <div className="flex md:flex-row flex-col items-center xl:gap-12 md:gap-8 gap-2 w-full max-w-2xl justify-between">
+          {/* Input with + and - buttons inside */}
+          <div
+            className="flex items-center md:w-auto w-full px-4 md:py-2 py-0.5 flex-1 rounded-2xl border-2 relative"
+            style={{
+              background: "#295CB440",
+              borderColor: "#285BB2"
+            }}
+          >
+            <input
+              type="number"
+              min={userDetails?.company?.minPlacement}
+              max={userDetails?.company?.maxPlacement}
+              value={betAmount}
+              onChange={(e) => setBetAmount(Number(e.target.value))}
+              className="bg-transparent outline-none border-none text-white font-montserrat text-lg w-full text-center "
+              style={{ appearance: "textfield" }}
+            />
+            
+            {/* + Button inside input */}
+            <button
+              onClick={handleIncrement}
+              className="absolute left-2 top-1/2 transform -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center text-white text-sm font-bold border"
+              style={{
+                background: "#3174DE",
+                borderColor: "#5667DD"
+              }}
+              type="button"
+            >
+              <Plus size={12} />
+            </button>
+            
+            {/* - Button inside input */}
+            <button
+              onClick={handleDecrement}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center text-white text-sm font-bold border"
+              style={{
+                background: "#3174DE",
+                borderColor: "#5667DD"
+              }}
+              type="button"
+            >
+              <Minus size={12} />
+            </button>
+          </div>
+
+          {/* Total Bet */}
+          <div
+            className="flex items-center justify-between md:px-6 px-2 md:py-2 py-0.5 flex-1 rounded-2xl border-2 w-full md:ml-auto"
+            style={{
+              background: "linear-gradient(90deg, #161B52 0%, #27367C 100%)",
+              borderColor: "#5667DD"
+            }}
+          >
+            <span className="text-[#B6C6FF] md:text-base text-sm font-semibold whitespace-nowrap mr-2 tracking-wider">TOTAL BET</span>
+            <span className="text-white text-lg font-bold">{betAmount}</span>
           </div>
         </div>
-        <Input
-          type="number"
-          min={userDetails?.company?.minPlacement}
-          max={userDetails?.company?.maxPlacement}
-          placeholder="Enter bet amount"
-          value={betAmount}
-          onChange={(e) => setBetAmount(Number(e.target.value))}
-          className="p-2 rounded-2xl pl-14 h-14 border-2 border-blue-500/50 text-white text-xl bg-[#2a2b3e] focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all"
-        />
       </div>
-
-      <div className="grid grid-cols-4 gap-2 w-full">
-        {coinValues?.map((amount) => (
-          <Button
-            className={cn(
-              'rounded-full transition-all duration-200 relative group overflow-hidden',
-              betAmount === amount ? 'bg-gradient-to-br from-blue-400 to-purple-500 shadow-[0_0_15px_rgba(59,130,246,0.3)]' : 'bg-[#2a2b3e] hover:bg-[#3a3b4e]'
-            )}
-            key={amount}
-            onClick={() => setBetAmount(amount)}
-          >
-            <div className="flex   items-center">
-              <span className="text-sm">{INR(amount, true)}</span>
-            </div>
-            <div className={cn(
-              "absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%]",
-              betAmount === amount && "animate-shimmer"
-            )} />
-          </Button>
-        ))}
-      </div>
-      </div>
-       <SevenUpDownResultDialog key={String(showResult.showResults)} open={showResult.showResults} roundRecordId={showResult.previousRoundId ?? 0} />
+      <SevenUpDownResultDialog key={String(showResult.showResults)} open={showResult.showResults} roundRecordId={showResult.previousRoundId ?? 0} />
     </>
   );
 };
-
-
-const PlacementCard = ({ placement }: { placement: {placement: SevenUpDownPlacementType, amount: number} }) => {
-  return (
-    <div  className="flex items-center justify-between bg-[#2a2b3e] p-4 rounded-xl border-2 border-blue-500/30 hover:border-blue-400 transition-all duration-300 shadow-lg hover:shadow-blue-500/20">
-    <div className="flex items-center gap-3">
-      <div className="bg-gradient-to-br from-blue-500/30 to-purple-500/30 p-3 rounded-lg">
-        <div className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-          {placement.placement === SevenUpDownPlacementType.UP && '8-14'}
-          {placement.placement === SevenUpDownPlacementType.DOWN && '0-6'}
-          {placement.placement === SevenUpDownPlacementType.SEVEN && '7'}
-        </div>
-      </div>
-      <div className="flex flex-col">
-        <span className="text-sm text-blue-200 opacity-70">
-          {placement.placement === SevenUpDownPlacementType.UP && 'Up Bet'}
-          {placement.placement === SevenUpDownPlacementType.DOWN && 'Down Bet'}
-          {placement.placement === SevenUpDownPlacementType.SEVEN && 'Seven Bet'}
-        </span>
-        <span className="text-xs text-blue-300/50">
-          {placement.placement === SevenUpDownPlacementType.SEVEN ? `1:${SEVEN_UP_DOWN_MULTIPLIER_7}` : `1:${SEVEN_UP_DOWN_MULTIPLIER}`}
-        </span>
-      </div>
-    </div>
-    <div className="flex items-center gap-3">
-      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-        <span className="text-lg font-bold">₹</span>
-      </div>
-      <div className="flex flex-col items-end">
-        <span className="text-lg font-bold text-blue-300">₹{placement.amount}</span>
-        <span className="text-xs text-blue-300/50">Placed</span>
-      </div>
-    </div>
-  </div>
-  )
-}

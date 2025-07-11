@@ -17,12 +17,12 @@ interface DepositMethodsProps {
 
 const DepositMethods = ({ selectedMethod, onMethodChange }: DepositMethodsProps) => {
     const methods = [
-        { id: 'upi', label: 'UPI', icon: <img src="/images/upi-icon.png" className="w-auto h-10" alt="upi" /> },
+        { id: 'upi', label: 'UPI', icon: <img src="/images/platform/wallet/upi.png" className="w-auto h-10" alt="upi" /> },
     ];
     const { data: company } = useGetMyCompany();
     const isCryptoPayIn = company?.cryptoPayIn;
     if (isCryptoPayIn) {
-        methods.push({ id: 'crypto', label: 'Crypto', icon: <img src="/images/crypto-icon.png" className="w-auto h-10" alt="crypto" /> });
+        methods.push({ id: 'crypto', label: 'Crypto', icon: <img src="/images/platform/wallet/crypto.png" className="w-auto h-10" alt="crypto" /> });
     }
     return (
         <div className="space-y-4">
@@ -35,7 +35,7 @@ const DepositMethods = ({ selectedMethod, onMethodChange }: DepositMethodsProps)
                     <PaymentMethod
                         key={method.id}
                         icon={method.icon}
-                        label={method.label}
+                        label={method.label ?? ""}
                         isSelected={selectedMethod === method.id}
                         onClick={() => onMethodChange(method.id)}
                     />
@@ -53,7 +53,7 @@ interface PaymentMethodProps {
     onClick: () => void;
 }
 
-const PaymentMethod = ({ icon, isSelected, onClick }: PaymentMethodProps) => {
+const PaymentMethod = ({ icon, isSelected, onClick, label }: PaymentMethodProps) => {
     return (
         <button
             onClick={onClick}
@@ -63,6 +63,7 @@ const PaymentMethod = ({ icon, isSelected, onClick }: PaymentMethodProps) => {
                 }`}
         >
             {icon}
+            <span className="text-platform-text text-sm">{label}</span>
         </button>
     );
 };

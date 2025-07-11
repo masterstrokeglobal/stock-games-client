@@ -119,7 +119,7 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
     }, [currentUser, bettedChips]);
 
     const ButtonChip = ({ amount, className }: { amount: number, className?: string }) => (
-        <div className={cn("absolute top-1/2 right-4 translate-x-1/2 -translate-y-1/2 bg-chip text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold", className)}>
+        <div className={cn("absolute top-1/2 right-4 translate-x-1/2 -translate-y-1/2 bg-[url('/images/betting-chip.png')] bg-contain bg-no-repeat aspect-square bg-center p-1 text-white text-[10px] font-semibold rounded-full  min-w-6 min-h-6 flex items-center justify-center ", className)}>
             {amount}
         </div>
     );
@@ -250,6 +250,7 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
 
     const isNotAllowedToPlaceBet = currentUser.isNotAllowedToPlaceOrder(roundRecord.type);
 
+    // console.log("show results in component", showResults);
     return (
         <>
             <div className={cn("mx-auto  lg:pr-4  md:py-2 md:rounded-sm  bg-[#000E37] h-full ", className)}>
@@ -330,7 +331,7 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
                                             {roundRecord.market[16]?.codeName}
                                         </span>
                                         {getBetForPosition(PlacementType.SINGLE, [17]) && (
-                                            <ButtonChip className=" top/1/2 bg-red-600 right-1/2 translate-x-1/2 -translate-y-1/2" amount={getBetForPosition(PlacementType.SINGLE, [17])!.amount} />
+                                            <ButtonChip className=" top/1/2  right-1/2 translate-x-1/2 -translate-y-1/2" amount={getBetForPosition(PlacementType.SINGLE, [17])!.amount} />
                                         )}
                                         {roundRecord.winningId === roundRecord.market[16]?.id && <img className='z-40 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-auto md:h-7 h-6 animate-pulse  duration-500 ' src='/images/crown.png' />}
                                     </Button>

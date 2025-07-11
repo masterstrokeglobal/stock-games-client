@@ -57,7 +57,10 @@ const GameFilters = ({ filter, setFilter }: Props) => {
                     <div className="w-full">
                         <Select onValueChange={(value) => setFilter({ ...filter, category: value })} value={filter.category}>
                             <SelectTrigger className="w-full bg-primary-game border-platform-border focus:bg-primary-game/80 border focus:border-game-secondary text-white placeholder:text-gray-200 dark:placeholder:text-gray-400 h-12 rounded-none">
-                                <SelectValue placeholder="Select Category" />
+                                <div className="flex flex-col items-start justify-start">
+                                    <span className="text-xs text-gray-300 block text-left w-full pb-0.5">Category</span>
+                                    <SelectValue placeholder="Select Category" className="text-left" />
+                                </div>
                             </SelectTrigger>
                             <SelectContent className="bg-primary-game rounded-none border-platform-border">
                                 <SelectItem value="all" className="text-white">All</SelectItem>
@@ -71,7 +74,10 @@ const GameFilters = ({ filter, setFilter }: Props) => {
                     <div className="w-full">
                         <Select onValueChange={(value) => setFilter({ ...filter, provider: value })} value={filter.provider}>
                             <SelectTrigger className="w-full bg-primary-game border-platform-border focus:bg-primary-game/80 border focus:border-game-secondary text-white placeholder:text-gray-400 h-12 rounded-none">
-                                <SelectValue placeholder="Select Platform" />
+                                <div className="flex flex-col items-start justify-start">
+                                    <span className="text-xs text-gray-300 block text-left w-full pb-0.5">Platform</span>
+                                    <SelectValue placeholder="Select Platform" className="text-left" />
+                                </div>
                             </SelectTrigger>
                             <SelectContent className="bg-primary-game rounded-none border-platform-border">
                                 <SelectItem value="all" className="text-white">All</SelectItem>
@@ -100,7 +106,10 @@ const GameFilters = ({ filter, setFilter }: Props) => {
                 <div className="w-full max-w-xs">
                     <Select onValueChange={(value) => setFilter({ ...filter, category: value })} value={filter.category}>
                         <SelectTrigger className="w-full bg-primary-game border-platform-border focus:bg-primary-game/80 border focus:border-game-secondary text-white placeholder:text-gray-200 dark:placeholder:text-gray-400 h-12 rounded-none">
-                            <SelectValue placeholder="Select Category" />
+                            <div className="flex flex-col items-start justify-start">
+                                <span className="text-xs text-gray-300 block text-left w-full pb-0.5">Category</span>
+                                <SelectValue placeholder="Select Category" className="text-left" />
+                            </div>
                         </SelectTrigger>
                         <SelectContent className="bg-primary-game rounded-none border-platform-border">
                             <SelectItem value="all" className="text-white">All</SelectItem>
@@ -114,7 +123,10 @@ const GameFilters = ({ filter, setFilter }: Props) => {
                 <div className="w-full max-w-xs">
                     <Select onValueChange={(value) => setFilter({ ...filter, provider: value })} value={filter.provider}>
                         <SelectTrigger className="w-full bg-primary-game border-platform-border focus:bg-primary-game/80 border focus:border-game-secondary text-white placeholder:text-gray-400 h-12 rounded-none">
-                            <SelectValue placeholder="Select Platform" />
+                            <div className="flex flex-col items-start justify-start">
+                                <span className="text-xs text-gray-300 block text-left w-full pb-0.5">Platform</span>
+                                <SelectValue placeholder="Select Platform" className="text-left" />
+                            </div>
                         </SelectTrigger>
                         <SelectContent className="bg-primary-game rounded-none border-platform-border">
                             <SelectItem value="all" className="text-white">All</SelectItem>

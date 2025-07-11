@@ -23,9 +23,9 @@ type SelectOption = {
 const createSevenUpDownPairSchema = z.object({
     type: z.nativeEnum(SchedulerType, { required_error: "Type is required" }),
     marketItems: z.array(z.string().min(1, "Seven up down market item is required"))
-        .length(14, "Exactly 14 seven up down items are required")
+        .length(13, "Exactly 13 seven up down items are required")
         .refine((items) => {
-            const uniqueItems = new Set(items.filter(item => item)); // Filter out empty strings
+            const uniqueItems = new Set(items.filter(item => item && item !== "")); // Filter out empty strings
             return uniqueItems.size === items.filter(item => item).length;
         }, "No duplicate market items are allowed"),
     active: z.boolean().default(false),
@@ -52,19 +52,17 @@ const SevenUpDownPairForm = ({ onSubmit, isLoading, defaultValues }: Props) => {
     });
 
     const { control, watch, formState: { errors } } = form;
-    const type = watch("type");
     const selectedMarketItems = watch("marketItems") || [];
 
     const marketItemsQuery = useGetMarketItems({
         search: search,
-        limit: 100,
+        limit: 300,
         page: 1,
-        type: type
     });
 
     const sevenUpDownOptions: SelectOption[] = useMemo(() => {
         const allMarketItems = marketItemsQuery.data?.data.marketItems || [];
-        
+    
         return allMarketItems.map((item: MarketItem) => ({
             label: item.name,
             value: item.id?.toString() || ""
@@ -98,7 +96,6 @@ const SevenUpDownPairForm = ({ onSubmit, isLoading, defaultValues }: Props) => {
         return undefined;
     };
 
-    console.log(selectedMarketItems);
 
     return (
         <FormProvider methods={form} onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -110,7 +107,7 @@ const SevenUpDownPairForm = ({ onSubmit, isLoading, defaultValues }: Props) => {
             />
 
             <div className="grid grid-cols-1 gap-4">
-                {Array.from({ length: 14 }).map((_, index) => (
+                {Array.from({ length: 13 }).map((_, index) => (
                     <FormComboboxSelect
                         key={index}
                         className="w-full"

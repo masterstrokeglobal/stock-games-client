@@ -405,7 +405,6 @@ export const GameBoard: React.FC<PropsWithChildren<{
   // Immediate, synchronous updates to prevent delay
   useEffect(() => {
     const newItems = roundRecordWithWinningId?.sortedMarketItems || marketItems;
-
     // Use flushSync for immediate DOM updates if available
     if (typeof window !== 'undefined' && 'flushSync' in React) {
       (React as any).flushSync(() => {
@@ -493,7 +492,7 @@ export const GameBoard: React.FC<PropsWithChildren<{
               winningSection === 'up' && "bg-yellow-600 bg-opacity-30 shadow-lg animate-pulse shadow-yellow-400/50 border-yellow-300"
             )}
           >
-            <div className="text-2xl font-bold text-yellow-400">8~14</div>
+            <div className="text-2xl font-bold text-yellow-400 font-protest-strike">8~14</div>
             <div className="text-sm text-yellow-400">1:{SEVEN_UP_DOWN_MULTIPLIER}</div>
 
             {!isPlaceOver && totalUpBets > 0 && (

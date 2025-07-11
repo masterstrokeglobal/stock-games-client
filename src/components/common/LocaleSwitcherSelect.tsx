@@ -37,7 +37,7 @@ export default function LocaleSwitcherSelect({
         </SelectTrigger>
         <SelectContent className='z-[61]'>
           {items.map(({ value, label }) => (
-            <SelectItem key={value} value={value}>
+            <SelectItem className='rounded-none hover:bg-transparent dark:hover:bg-transparent hover:text-gray-200' key={value} value={value}>
               {label}
             </SelectItem>
           ))}
@@ -66,14 +66,14 @@ export  function LocaleSwitcherSelect2({
 
   return (
     <div className={className}>
-      <Select defaultValue={defaultValue} onValueChange={onChange} disabled={isPending}>
+      <Select  defaultValue={defaultValue} onValueChange={onChange} disabled={isPending}>
         <SelectTrigger showCaret={false} className={cn("w-full border bg-primary-game rounded-none border-platform-border h-11 ", selectClassName)}  >
           {items.find((item) => item.value === defaultValue)?.label}
           <ChevronDown className='fill-platform-text stroke-none' />
         </SelectTrigger>
         <SelectContent className='z-[61] bg-primary-game rounded-none border border-platform-border'>
           {items.map(({ value, label }) => (
-            <SelectItem key={value} value={value} className='rounded-none hover:bg-secondary'>
+            <SelectItem key={value} value={value} className='rounded-none hover:bg-transparent dark:hover:bg-transparent dark:hover:text-gray-400 hover:text-gray-200'>
               {label}
             </SelectItem>
           ))}
