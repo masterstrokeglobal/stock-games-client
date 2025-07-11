@@ -122,12 +122,12 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         const timeToPlace = new Date(roundRecord.placementEndTime).getTime() - new Date().getTime() + 4000;
 
         // adding 2 seconds delay for round creation
-        let timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 8000;
+        let timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 5000;
 
 
-        if (roundRecord.roundRecordGameType !== RoundRecordGameType.DERBY) {
-            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 10000;
-        }
+        // if (roundRecord.roundRecordGameType !== RoundRecordGameType.DERBY) {
+        //     timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 10000;
+        // }
 
         const gameEnd = setTimeout(() => {
             queryClient.invalidateQueries({
