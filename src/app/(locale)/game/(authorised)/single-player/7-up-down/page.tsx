@@ -57,7 +57,7 @@ const SevenUpDown = () => {
                             <LiveBadge/>
                             <GameTimer  roundRecord={roundRecord} />
                         </div>
-                        <GameBoard roundRecord={roundRecord} amount={betAmount} marketItems={stocks} roundRecordWithWinningId={roundRecordWithWinningId} />
+                        <GameBoard className='flex-1' roundRecord={roundRecord} amount={betAmount}  marketItems={stocks} roundRecordWithWinningId={roundRecordWithWinningId} />
                         <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
                     </div>
                     <div className='md:col-span-4 mt-4 relative z-10'>

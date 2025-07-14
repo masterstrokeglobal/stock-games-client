@@ -11,9 +11,9 @@ interface StockPriceProps {
 
 export const StockPrice: React.FC<StockPriceProps> = ({ rankedMarketItem, className }) => {
   return (
-    <div className={cn("bg-transparent mx-auto space-y-1 p-1 h-12 min-w-10 relative", className)}>
+    <div className={cn("bg-transparent mx-auto space-y-1 p-1 h-12 w-10 relative", className)}>
       <div className="flex items-start flex-col gap-1 flex-1">
-        <span className="line-clamp-1 text-left text-xs truncate block sm:text-sm">{rankedMarketItem.name}</span>
+        <span className="line-clamp-1 text-left text-xs truncate block w-20  sm:text-sm">{rankedMarketItem.name}</span>
       </div>
       <div className="flex items-center gap-x-1 truncate">
         <span className={cn('font-semibold text-xs sm:text-sm', parseFloat(rankedMarketItem.change_percent) > 0 ? 'text-green-500' : 'text-red-500')}>{rankedMarketItem.price??"--"}</span>

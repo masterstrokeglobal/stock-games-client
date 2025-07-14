@@ -318,7 +318,7 @@ const MarketItemDisplay: React.FC<{
               minWidth: showResults ? '40px' : 'auto',
             } as React.CSSProperties}
           >
-            <div className="font-medium whitespace-nowrap">{item.codeName}</div>
+            <div className="font-medium whitespace-nowrap truncate">{item.codeName}</div>
           </div>
         );
       })}
@@ -430,9 +430,10 @@ const MarketItemDisplay: React.FC<{
 export const GameBoard: React.FC<PropsWithChildren<{
   roundRecord: RoundRecord,
   amount: number,
+  className?: string,
   marketItems: RankedMarketItem[],
   roundRecordWithWinningId: RoundRecord | null
-}>> = ({ roundRecord, children, amount, marketItems, roundRecordWithWinningId }) => {
+}>> = ({ roundRecord, children, amount, marketItems, roundRecordWithWinningId, className }) => {
   const { mutate } = useCreateSevenUpDownPlacement();
   const isPlaceOver = usePlacementOver(roundRecord);
   const [displayItems, setDisplayItems] = useState(marketItems);
@@ -467,10 +468,10 @@ export const GameBoard: React.FC<PropsWithChildren<{
 
   return (
     <div
-      className="relative  w-full  md:mx-auto"
+      className={cn("relative  w-full  md:mx-auto", className)}
     >
       {children}
-      <div className="flex justify-between flex-col gap-2 w-full">
+      <div className="flex xl:justify-around justify-between flex-col h-full gap-2 w-full">
         <MarketRow items={displayItems.slice(0, 7)} />
         <div className="relative z-0 h-[20rem]   w-full">
           {/* Market items display */}
@@ -564,7 +565,7 @@ const SevenBetButton: React.FC<{
       </motion.div>
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center justify-center w-full h-full">
-        <div className="text-3xl font-bold text-black" style={{ fontFamily: 'Oval, sans-serif' }}>
+        <div className="md:text-3xl text-2xl font-bold text-black" style={{ fontFamily: 'Oval, sans-serif' }}>
           7 Up Down
         </div>
       </div>

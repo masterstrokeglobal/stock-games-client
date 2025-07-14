@@ -30,7 +30,7 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
   const round = roundResult?.[0]?.round ? new RoundRecord(roundResult[0].round) : null;
 
   return (
-    <Dialog defaultOpen={showDialog}>
+    <Dialog  defaultOpen={showDialog}>
       <DialogContent
         showButton={false}
         className={cn(
@@ -38,8 +38,8 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
           "bg-black/50 backdrop-blur-sm"
         )}
       >
-        <img src="/images/seven-up-down/bull.png" alt="Bull" className="absolute z-[11] md:-bottom-24 -bottom-12 sm:left-0 -left-0 -translate-x-1/4 w-auto md:h-[500px] h-48" />
-        <img src="/images/seven-up-down/bear.png" alt="Bear" className="absolute z-[11] md:-bottom-12 -bottom-8   right-0   w-auto md:h-[400px] h-40" />
+        <img src="/images/seven-up-down/bull.png" alt="Bull" className="absolute z-[11] md:-bottom-24 -bottom-12 sm:left-0 -left-0 -translate-x-1/4 w-auto md:h-[500px] h-48 xl:h-[600px]" />
+        <img src="/images/seven-up-down/bear.png" alt="Bear" className="absolute z-[11] md:-bottom-12 -bottom-8   right-0   w-auto md:h-[400px] h-40 xl:h-[500px] " />
 
         {
           isLoading && <div className='flex justify-center items-center h-full'>
@@ -50,7 +50,7 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
         {round && roundResult && <section className='sm:h-[80vh] h-screen my-auto flex flex-col justify-center items-center max-w-3xl w-full mx-auto'>
           <div className="relative rounded-2xl h-fit w-full flex flex-col justify-center mx-auto font-poppins">
             <div
-              className="text-center text-white md:text-4xl text-2xl px-6 py-6 font-bold tracking-wide font-poppins mb-2"
+              className="text-center text-white md:text-4xl text-2xl px-6 py-6 font-semibold xl:text-5xl tracking-wide font-poppins mb-2"
               style={{
                 textShadow: "0px 2px 8px rgba(255, 222, 33, 0.8), 0px 0px 2px #fff"
               }}
@@ -58,7 +58,7 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
               Result
               <DialogClose className='absolute top-0 right-0 bg-[#517ED4] z-[61] font-play rounded-full  aspect-square sm:size-10 size-8 p-0 flex items-center justify-center border-white text-white focus:ring-0 border'>
                 <span
-                  className='sm:text-2xl text-lg font-light'
+                  className='sm:text-2xl text-lg leading-none sm:size-10 size-8 font-light'
                   style={{
                     textShadow: "0px 2px 8px #CDDDFF, 0px 0px 2px #fff"
                   }}
@@ -112,12 +112,12 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
                 </div>
               </div>
 
-              <NextRound round={round} className='my-4  md:text-3xl  sm:text-2xl xs:text-xl  md:flex hidden' />
+              <NextRound round={round} className='my-4 md:my-6  md:text-3xl  sm:text-2xl xs:text-xl  md:flex hidden' />
               <div className='flex justify-center w-full'>
               </div>
               <DialogClose asChild>
                 <button
-                  className="w-full  text-white max-w-sm mx-auto py-3 rounded-xl sm:mt-0 mt-4 sm:text-lg text-sm font-poppins transition border border-[#6FB0FF]"
+                  className="w-full  text-white max-w-sm mx-auto py-3 rounded-xl sm:mt-0 mt-4 xl:text-2xl md:text-xl sm:text-lg text-sm font-poppins transition border border-[#6FB0FF]"
                   style={{
                     background: "linear-gradient(0deg, #002067 0%, #00339D 90.29%)",
                     textShadow: "0px 0px 5px rgba(255, 255, 255, 1)",

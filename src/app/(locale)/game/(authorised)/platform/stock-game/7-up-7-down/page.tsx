@@ -29,7 +29,7 @@ const SevenUpSevenDown = () => {
       <div className="flex flex-col  relative md:rounded-lg border border-gray-700  max-w-2xl w-full mx-auto bg-gray-900 text-white overflow-hidden">
         <StockGameHeader onBack={() => setMarketSelected(false)} title="7 Up & 7 Down" />
         <MaintainceScreen />
-        <GameBoard roundRecord={roundRecord} amount={betAmount} marketItems={stocks} roundRecordWithWinningId={roundRecordWithWinningId}>
+        <GameBoard  roundRecord={roundRecord} amount={betAmount} marketItems={stocks} roundRecordWithWinningId={roundRecordWithWinningId}>
           <TimeDisplay className="absolute top-0 left-1/2 -translate-x-1/2 md:max-w-sm max-w-[200px] w-full" roundRecord={roundRecord} />
         </GameBoard>
         <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />

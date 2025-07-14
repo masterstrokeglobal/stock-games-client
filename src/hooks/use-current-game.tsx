@@ -149,9 +149,9 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         let timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 5000;
 
 
-        // if (roundRecord.roundRecordGameType !== RoundRecordGameType.DERBY) {
-        //     timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 10000;
-        // }
+        if (roundRecord.roundRecordGameType !== RoundRecordGameType.DERBY) {
+            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 10000;
+        }
 
         const gameEnd = setTimeout(() => {
             queryClient.invalidateQueries({
@@ -368,7 +368,7 @@ export const useShowResults = (roundRecord: RoundRecord | null, bettedChips: any
 
         const now = Date.now();
         const showAt = endTimeToUse + 2000; // Show 2s after round over
-        const hideAt = showAt + 5000;       // Hide 5s after that
+        const hideAt = showAt + 8000;       // Hide 5s after that
 
         if (now < showAt) {
             setShowResults(false);

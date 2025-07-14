@@ -5,6 +5,7 @@ import { RoundRecordGameType } from "@/models/round-record";
 import { useGetAllGameHistory } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
+import SevenUpDownChip from "@/components/features/7-up-down/chip";
 
 type History = {
   id: number;
@@ -41,7 +42,6 @@ const GameHistoryTable = ({ className }: { className?: string }) => {
     return { history, totalPages };
   }, [allGameHistory]);
 
-  console.log(allGameHistory);
 
   const handlePreviousPage = () => {
     if (page > 1) {
@@ -71,9 +71,9 @@ const GameHistoryTable = ({ className }: { className?: string }) => {
 
   return (
     <section className={cn("w-full overflow-hidden", className)}>
-      <header className="py-4 px-4 flex flex-col gap-2 bg-transparent relative">
+      <header className="md:py-4 md:px-4 mb-4 flex flex-col gap-2 bg-transparent relative">
         <div className="flex items-center gap-2 justify-between w-full">
-          <span className="text-[#8BB4FF] md:text-xl xs:text-lg font-bold tracking-wider uppercase">
+          <span className="text-[#8BB4FF] md:text-xl xs:text-lg font-extrabold tracking-wide uppercase">
             Game History
           </span>
           <div className="relative">
@@ -126,7 +126,7 @@ const GameHistoryTable = ({ className }: { className?: string }) => {
             {history.map((bet, index) => (
               <div
                 key={index}
-                className="flex bg-[#517ED466] rounded-full mb-2 items-center"
+                className="flex bg-[#517ED466] font-normal font-poppins rounded-full mb-2 items-center"
               >
                 <div className="py-2 px-4 text-white text-sm flex-1 min-w-[120px]">
                   {dayjs(bet.createdAt).format("DD/MM/YYYY")}
@@ -160,28 +160,21 @@ const GameHistoryTable = ({ className }: { className?: string }) => {
                 key={index}
                 className="rounded-xl bg-[#1B2B4B] border overflow-hidden border-[#517ED4] shadow-md"
               >
-                <div className="flex  items-center justify-between  px-4 py-1 bg-[#1A2867] border-b border-[#517ED4] ">
-                  <div className="text-[#8BB4FF] font-semibold text-base tracking-wider">
+                <div className="flex  items-center justify-between  px-2 py-1 bg-[#1A2867] border-b border-[#517ED4] ">
+                  <div className="text-[#8BB4FF] font-semibold text-sm tracking-wider">
                     {dayjs(bet.createdAt).format("DD/MM/YYYY")}
                   </div>
                   <div className="text-[#BED5FF] font-semibold text-sm">
                     {dayjs(bet.createdAt).format("dddd")}
                   </div>
                 </div>
-                <div className=" gap-1  text-xs bg-[#2958AF] px-4 py-2 ">
+                <div className=" gap-1  text-xs bg-[#2958AF] px-2 py-2 ">
                
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-[#BED5FF] whitespace-nowrap">
                       Winner :
                     </span>
-                    <span
-                      style={{
-                        backgroundColor:
-                          bet.winner === "7 Up" ? "#6DCB4B" : "#E94B4B",
-                      }}
-                      className={cn("size-3 rounded-full ml-auto block")}
-                    />
-                    <span className="text-white whitespace-nowrap">{bet.winner}</span>
+                <SevenUpDownChip side={bet.winner === "7 Up" ? "up" : bet.winner === "7 Down" ? "down" : "seven"} />
                   </div>
                
                 </div>
@@ -192,12 +185,12 @@ const GameHistoryTable = ({ className }: { className?: string }) => {
       </div>
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-8 mt-6 select-none">
+        <div className="flex items-center justify-center md:gap-8 gap-2 mt-6 select-none">
           <button
             onClick={handlePreviousPage}
             disabled={page === 1}
             className={cn(
-              "flex items-center gap-1 text-base font-medium transition",
+              "flex items-center gap-1 md:text-base text-sm font-medium transition",
               page === 1 ? "opacity-50 cursor-not-allowed" : "hover:underline"
             )}
             style={{ color: "#fff" }}
@@ -219,14 +212,14 @@ const GameHistoryTable = ({ className }: { className?: string }) => {
             </svg>
             Previous
           </button>
-          <span className="text-[#8BB4FF] text-base font-medium">
+          <span className="text-[#8BB4FF] md:text-base text-sm whitespace-nowrap  font-medium">
             Page {page} of {totalPages}
           </span>
           <button
             onClick={handleNextPage}
             disabled={page === totalPages}
             className={cn(
-              "flex items-center gap-1 text-base font-medium transition",
+              "flex items-center gap-1 md:text-base text-sm  font-medium transition",
               page === totalPages
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:underline"

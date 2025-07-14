@@ -33,7 +33,7 @@
         const roundRecordWithWinningId = useWinningId(roundRecord);
 
 
-        if (!marketSelected) return <MarketSelector className=' max-w-2xl mx-auto' title="Coin Toss Market (Head & Tail)" />
+        if (!marketSelected) return <MarketSelector title="Coin Toss Market (Head & Tail)" />
 
         if (isLoading || !roundRecord) return <GameLoadingScreen className='min-h-[calc(100svh)]' />
 

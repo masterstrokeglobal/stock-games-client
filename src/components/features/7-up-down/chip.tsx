@@ -23,9 +23,9 @@ const SevenUpDownChip = ({ side, className }: SevenUpDownChipProps) => {
     }[side];
 
     return (
-        <div className={cn("flex gap-2 items-center", className)}>
+        <div className={cn("flex md:gap-2 xs:gap-1 gap-0.5 items-center", className)}>
             <span style={{ backgroundColor: config.color }} className={"size-3 rounded-full"}></span>
-            <span className="text-white  select-none">
+            <span className="text-white  select-none whitespace-nowrap">
                 {config.label}
             </span>
         </div>
