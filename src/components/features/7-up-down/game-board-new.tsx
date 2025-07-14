@@ -293,12 +293,12 @@ const MarketItemDisplay: React.FC<{
             key={item.codeName}
             className={cn(
               "px-1.5 text-[9px] py-0.5 rounded-full text-black border absolute will-change-transform transition-all duration-700 ease-out",
-              showResults && "animate-pulse shadow-lg ring-2 ring-white/30",              
+              showResults && "animate-pulse shadow-lg ring-2 ring-white/30",
               // Add higher z-index for results to prevent overlap issues
               showResults ? "z-30" : "z-20"
             )}
             style={{
-              backgroundColor:"white",
+              backgroundColor: "white",
               left: `${position.x}%`,
               borderColor: isPositive ? 'rgb(34, 197, 94)' : 'rgb(239, 68, 68)',
               top: `${finalY}%`,
@@ -481,7 +481,7 @@ export const GameBoard: React.FC<PropsWithChildren<{
               <MarketItemDisplay
                 items={displayItems}
                 showResults={showWinner || false}
-                isTransitioning={false} 
+                isTransitioning={false}
               />
             )}
           </div>
@@ -520,7 +520,7 @@ export const GameBoard: React.FC<PropsWithChildren<{
 const SevenBetButton: React.FC<{
   onClick: () => void;
   className?: string;
-}> = ({  className }) => {
+}> = ({ className }) => {
   return (
     <motion.div
       className={cn(
@@ -581,15 +581,12 @@ const WinnerOverlay: React.FC<{
   const positiveStocks = roundRecordWithWinningId?.winningId?.length || 0;
   let winningSection: "seven" | "up" | "down" | null = null;
   if (finalPricesPresent) {
-    if (positiveStocks === 7) winningSection = "seven";
-    else if (positiveStocks > 7) winningSection = "up";
+    if (positiveStocks >= 7) winningSection = "up";
     else if (positiveStocks < 7) winningSection = "down";
   }
 
   let winnerLabel = "";
-  if (winningSection === "seven") {
-    winnerLabel = "7";
-  } else if (winningSection === "up") {
+  if (winningSection === "up") {
     winnerLabel = "7 up";
   } else if (winningSection === "down") {
     winnerLabel = "7 down";
@@ -617,10 +614,7 @@ const WinnerOverlay: React.FC<{
           </p>
         </div>
       </div>
-      <div
-       
-        className="w-full h-full bg-black/50 scale-110 blur-sm absolute z-40 top-0 left-0"
-      />
+      <div className="w-full h-full bg-black/50 scale-110 blur-sm absolute z-40 top-0 left-0" />
     </>
   );
 };
