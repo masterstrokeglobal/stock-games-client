@@ -5,11 +5,12 @@ import React from "react";
 interface SettingLayoutProps {
     children: React.ReactNode;
     className?: string;
+    parentClassName?: string;
 }
 
-const SettingLayout: React.FC<SettingLayoutProps> = ({ children, className }) => {
+const SettingLayout: React.FC<SettingLayoutProps> = ({ children, className, parentClassName }) => {
     return (
-        <div className="relative sm:w-[calc(100%-4rem)] sm:px-0 px-2 w-full mx-auto sm:min-h-[calc(100svh-7rem)]  h-full flex flex-col items-center justify-center bg-transparent">
+        <div className={cn("relative sm:w-[calc(100%-4rem)] sm:px-0 px-2 w-full mx-auto sm:min-h-[calc(100svh-7rem)]  h-full flex flex-col items-center justify-center bg-transparent", parentClassName)}>
             <div className="flex-1 relative sm:w-[calc(100%-4rem)]  w-full grid grid-cols-1 grid-rows-1">
                 <div className="absolute -rotate-[2deg] z-0 top-0 left-0 w-full h-full rounded-2xl bg-[#517ED4]" />
                 <div

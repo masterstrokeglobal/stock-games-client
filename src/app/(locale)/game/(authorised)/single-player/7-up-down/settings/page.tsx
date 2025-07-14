@@ -36,10 +36,16 @@ const TABS = [
 const SevenUpDownSettings = () => {
 
     return (
-        <section className={`flex flex-col relative bg-[radial-gradient(133.68%_74.71%_at_55.58%_46.9%,#01144C_0%,#000313_100%)] backdrop-blur-sm  items-center justify-start overflow-hidden min-h-screen w-full`}>
+        <section
+            className="flex flex-col relative items-center justify-start overflow-hidden min-h-screen w-full"
+            style={{
+                background: "radial-gradient(133.68% 74.71% at 55.58% 46.9%, #01144C 0%, #000313 100%)",
+                backdropFilter: "blur(3.15px)",
+            }}
+        >
             <Navbar />
-            <img src="/images/seven-up-down/bg.png" alt="7Up & 7Down" className='absolute top-0 left-0 w-full h-full opacity-50 object-cover' />
-            <Tabs defaultValue="my-bet-history" className="pt-20 pb-2  max-w-[1560px] relative z-10 flex flex-col w-full mx-auto flex-1 text-white">
+            <img src="/images/seven-up-down/setting-bg.png" alt="7Up & 7Down" className='absolute top-0 left-0 w-full h-full opacity-50 object-cover' />
+            <Tabs defaultValue="my-bet-history" className="pt-20 pb-2  max-w-[2080px] relative z-10 flex flex-col w-full mx-auto flex-1 text-white">
                 <div className="flex flex-col lg:flex-row gap-6 mt-6">
                     <aside className="lg:w-64 lg:block hidden  w-full">
                         <TabsList className="flex flex-col w-full bg-transparent gap-2">
@@ -89,7 +95,7 @@ const SevenUpDownSettings = () => {
                             </div>
                         </Carousel>
                     </div>
-                    <SettingLayout className="flex-1">
+                    <SettingLayout parentClassName="max-w-7xl" className="flex-1">
                     {
                         TABS.map((tab) => (
                             <TabsContent key={tab.value} value={tab.value} className="h-full">

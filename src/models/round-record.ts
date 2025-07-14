@@ -26,7 +26,7 @@ export const WHEEL_COLOR_SEQUENCE = [
     WheelColor.COLOR5, // GOLDEN - Segment 0 (top)
     WheelColor.COLOR1, // RED - Segment 1
     WheelColor.COLOR2, // GREEN - Segment 2
-    WheelColor.COLOR3, // BLUE - Segment 3
+    WheelColor.COLOR2, // GREEN - Segment 3
     WheelColor.COLOR1, // RED - Segment 4
     WheelColor.COLOR2, // GREEN - Segment 5
     WheelColor.COLOR4, // PURPLE - Segment 6
@@ -49,8 +49,8 @@ export const WHEEL_COLOR_SEQUENCE = [
 
 export const WHEEL_COLOR_BANDS = [
     { color: WheelColor.COLOR1, indices: [0, 3, 6, 9, 12, 15, 18] }, // 7 items
-    { color: WheelColor.COLOR2, indices: [1, 4, 7, 10, 13, 16] }, // 6 items
-    { color: WheelColor.COLOR3, indices: [2, 8, 14, 19] }, // 4 items
+    { color: WheelColor.COLOR2, indices: [1,2, 4, 7, 10, 13, 16] }, // 7 items
+    { color: WheelColor.COLOR3, indices: [8, 14, 19] }, // 3 items
     { color: WheelColor.COLOR4, indices: [5, 11, 17] }, // 3 items
     { color: WheelColor.COLOR5, indices: [20] }, // 1 item
 ];
@@ -59,7 +59,7 @@ export const IndexwithColorBands = [
     { color: WheelColor.COLOR5, index: 20 },
     { color: WheelColor.COLOR1, index: 0 },
     { color: WheelColor.COLOR2, index: 1 },
-    { color: WheelColor.COLOR3, index: 2 },
+    { color: WheelColor.COLOR2, index: 2 },
     { color: WheelColor.COLOR1, index: 3 },
     { color: WheelColor.COLOR2, index: 4 },
     { color: WheelColor.COLOR4, index: 5 },
@@ -101,7 +101,7 @@ export const IndexwithColorBands = [
             shadowColor: 'shadow-green-500/50',
             shadow: "0px 0px 30px 0px rgba(76, 175, 80, 1)",
             actualColor: '#4CAF50',
-            chipColor: '#0E6D24', // Vibrant green (6 items)
+            chipColor: '#0E6D24', // Vibrant green (7 items)
             multiplier: 3
         },
         [WheelColor.COLOR3]: {
@@ -113,8 +113,8 @@ export const IndexwithColorBands = [
             borderColor: '#0076FF',
             chipColor: '#0A57B4',
             shadowColor: 'shadow-blue-500/50',
-            actualColor: '#2196F3', // Bright blue (4 items)
-            multiplier: 5
+            actualColor: '#2196F3', // Bright blue (3 items)
+            multiplier: 7
         },
         [WheelColor.COLOR4]: {
             name: 'PURPLE',
