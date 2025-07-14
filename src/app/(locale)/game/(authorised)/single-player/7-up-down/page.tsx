@@ -30,7 +30,7 @@ const SevenUpDown = () => {
     const roundRecordWithWinningId = useWinningId(roundRecord);
     const { stocks } = useLeaderboard(roundRecord);
     
-    if (!marketSelected) return <MarketSelector className=' max-w-2xl mx-auto' title="Wheel of Fortune Market" />
+    if (!marketSelected) return <MarketSelector title="Wheel of Fortune Market" />
 
     if (isLoading || !roundRecord) return <GameLoadingScreen className='min-h-[calc(100svh)]' />
 

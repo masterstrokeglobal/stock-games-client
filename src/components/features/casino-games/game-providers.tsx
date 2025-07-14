@@ -1,39 +1,48 @@
 "use client";
 import { ProviderEnum } from "@/models/casino-games";
 import Link from "next/link";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import type { GameCategory } from "@/models/casino-games";
+import AutoScroll from "embla-carousel-auto-scroll";
 
+// Provider list based on the image order and naming
 const providers = [
-  { alt: ProviderEnum.STOCK_GAMES, src: "/images/companies/stock-games.svg" },
-  { alt: ProviderEnum.BetGames, src: "/images/companies/betgames.png" },
-  { alt: ProviderEnum.Evoplay, src: "/images/companies/Evoplay.png" },
-  { alt: ProviderEnum.Ezugi, src: "/images/companies/Ezugi.png" },
-  { alt: ProviderEnum.Gamzix, src: "/images/companies/gamzix.png" },
-  { alt: ProviderEnum.JILI, src: "/images/companies/jili.png" },
-  { alt: ProviderEnum.Playtech_Casino, src: "/images/companies/playtech.png" },
-  { alt: ProviderEnum.SmartSoft, src: "/images/companies/smartsoft.png" },
-  { alt: ProviderEnum.spribe, src: "/images/companies/spribe.png" },
-  { alt: ProviderEnum.Turbo_Games, src: "/images/companies/turbo-games.png" },
-  { alt: ProviderEnum.Vivo_Gaming, src: "/images/companies/vg.png" },
+  { alt: ProviderEnum.BetGames, label: "betgames", src: "/images/companies/betgames.png" },
+  { alt: ProviderEnum.Evolution_Gaming, label: "evolution", src: "/images/companies/evolution.png" },
+  { alt: ProviderEnum.Evoplay, label: "evoplay", src: "/images/companies/Evoplay.png" },
+  { alt: ProviderEnum.Ezugi, label: "ezugi", src: "/images/companies/Ezugi.png" },
+  { alt: ProviderEnum.Gamzix, label: "gamzix", src: "/images/companies/gamzix.png" },
+  { alt: ProviderEnum.JILI, label: "jili", src: "/images/companies/jilli.png" },
+  { alt: ProviderEnum.Playtech_Casino, label: "playtech", src: "/images/companies/playtech.png" },
+  { alt: ProviderEnum.SmartSoft, label: "smartsoft", src: "/images/companies/smartsoft.png" },
+  { alt: ProviderEnum.spribe, label: "spribe", src: "/images/companies/spribe.png" },
+  { alt: ProviderEnum.Turbo_Games, label: "turbo-games", src: "/images/companies/turbo-games.png" },
+  { alt: ProviderEnum.STOCK_GAMES, label: "stock-games", src: "/images/companies/stock-games.png" },
+  { alt: ProviderEnum.Vivo_Gaming, label: "vg", src: "/images/companies/vg.png" },
 ];
+
 const CasinoProviders = () => {
   return (
     <section className="mt-10">
-      <h2 className="text-2xl font-semibold mb-4">Game Providers</h2>
-      <div className="casino-provider-ctn grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+      <h2 className="text-2xl font-semibold mb-4 text-white">Game Providers</h2>
+      <div className="casino-provider-ctn grid grid-cols-6 gap-4">
         {providers.map((provider, index) => (
-          <Link
-            key={index}
-            href={provider.alt == ProviderEnum.STOCK_GAMES ? "/game/platform/stock-games" : `/game/platform/casino?provider=${provider.alt}`}
-            className=" rounded-lg  flex items-center justify-center h-24"
-          >
-            {/* new game will have a rotated tag */}
-
-            <img
-              className="home-casino-img object-contain w-full h-full"
-              src={provider.src}
-              alt={provider.alt}
-            />
-          </Link>
+          <div key={index} className="flex flex-col items-center">
+            <Link
+              href={
+                provider.alt === ProviderEnum.STOCK_GAMES
+                  ? "/game/platform/stock-games"
+                  : `/game/platform/casino?provider=${provider.alt}`
+              }
+              className="flex items-center justify-center h-16 w-full  transition"
+            >
+              <img
+                className="object-contain w-full h-10"
+                src={provider.src}
+                alt={provider.alt}
+              />
+            </Link>
+          </div>
         ))}
       </div>
     </section>
@@ -42,44 +51,50 @@ const CasinoProviders = () => {
 
 export default CasinoProviders;
 
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import type { GameCategory } from "@/models/casino-games";
-import AutoScroll from "embla-carousel-auto-scroll";
-
 interface CategoryCarouselProps {
-  categoryId?: GameCategory,
-  popular?: boolean,
-  new?: boolean,
-  title: string
+  categoryId?: GameCategory;
+  popular?: boolean;
+  new?: boolean;
+  title: string;
 }
 
 export function CasinoProvidersCarousel({ title }: CategoryCarouselProps) {
   return (
-    <Carousel opts={{ loop: true, startIndex: 0}}  plugins={[AutoScroll({active: true})]} className="w-auto">
+    <Carousel
+      opts={{ loop: true, startIndex: 0 }}
+      plugins={[AutoScroll({ active: true })]}
+      className="w-auto"
+    >
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="md:text-2xl text-base font-semibold text-platform-text">{title}</h2>
         </div>
         <CarouselContent className="-ml-2 md:-ml-4">
-          {providers.map((provider, index) => (
-            <CarouselItem key={provider.alt} className="pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/6">
-              <Link
-                key={index}
-                href={provider.alt == ProviderEnum.STOCK_GAMES ? "/game/platform/stock-games" : `/game/platform/casino?provider=${provider.alt}`}
-                className="flex items-center justify-center h-10 "
-              >
-                {/* new game will have a rotated tag */}
-
-                <img
-                  className="home-casino-img h-10 object-contain w-full"
-                  src={provider.src}
-                  alt={provider.alt}
-                />
-              </Link>                 
+          {providers.map((provider) => (
+            <CarouselItem
+              key={provider.alt}
+              className="pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/6"
+            >
+              <div className="flex flex-col items-center">
+                <Link
+                  href={
+                    provider.alt === ProviderEnum.STOCK_GAMES
+                      ? "/game/platform/stock-games"
+                      : `/game/platform/casino?provider=${provider.alt}`
+                  }
+                  className="flex items-center justify-center h-10 w-full transition rounded"
+                >
+                  <img
+                    className="object-contain h-14 w-auto"
+                    src={provider.src}
+                    alt={provider.alt}
+                  />
+                </Link>
+              </div>
             </CarouselItem>
           ))}
         </CarouselContent>
       </div>
     </Carousel>
-  )
+  );
 }
