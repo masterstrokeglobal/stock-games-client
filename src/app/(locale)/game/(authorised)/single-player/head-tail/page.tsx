@@ -3,7 +3,7 @@
     import MarketSelector from '@/components/common/market-selector';
     import AllBets from '@/components/features/coin-head-tail/all-bets';
     import GameSettingsPopover from '@/components/features/coin-head-tail/game-menu';
-    import GameBoard, { GameTimer } from '@/components/features/dice-game/game-board-new';
+    import GameBoard, { GameTimer } from '@/components/features/coin-head-tail/game-board-new';
     import PriceDisplay, { LiveBadge } from '@/components/features/dice-game/price-display';
     import Navbar from '@/components/features/game/navbar';
     import { Button } from '@/components/ui/button';

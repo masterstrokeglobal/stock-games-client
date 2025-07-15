@@ -13,6 +13,8 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo } from "react";
+import WalletDialog from '../platform/wallet-dialog';
+import ContactDialog from '../platform/contact-dialog';
 
 
 const UserMenu = () => {
@@ -56,6 +58,7 @@ const UserMenu = () => {
         {
             href: "/game/wallet/menu",
             icon: "/images/platform/user-menu/wallet.png",
+            parent:WalletDialog,
             label: t('your-wallet')
         },
         {
@@ -66,6 +69,7 @@ const UserMenu = () => {
         {
             href: "/game/contact",
             icon: "/images/platform/user-menu/contact-us.png",
+            parent:ContactDialog,
             label: t('contact-us')
         },
         {
@@ -147,6 +151,19 @@ const UserMenu = () => {
                 {/* Menu Grid */}
                 <div className="w-full max-w-lg grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {menuItems.map((item, index) => {
+
+                        if (item.parent) {
+                            return (
+                                <item.parent key={index}>
+                                 <Button variant="ghost" className="w-full rounded-none h-16 border-2 dark:border-platform-border border-primary-game justify-start text-platform-text flex gap-4">
+                                    <div className="w-10 h-10 backdrop-blur-sm p-0.5 border-2 dark:border-platform-border border-primary-game rounded-full flex items-center justify-center">
+                                        <img src={`${item.icon}`} alt={item.label} className="w-full h-auto block" />
+                                    </div>
+                                    <span className="font-semibold line-clamp-2">{item.label}</span>
+                                </Button>
+                                </item.parent>
+                            );
+                        }
                         return (
                             <Link key={index} href={item.href} passHref>
                                 <Button variant="ghost" className="w-full rounded-none h-16 border-2 dark:border-platform-border border-primary-game justify-start text-platform-text flex gap-4">

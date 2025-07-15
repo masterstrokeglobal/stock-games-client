@@ -48,7 +48,6 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
   };
 
 
-  console.log(showResult.showResults, showResult.previousRoundId);
   return (
     <>
       <div className="w-full md:px-2 py-4 md:flex flex-col grid sm:grid-cols-3 grid-cols-1 relative z-10 items-center md:gap-4 gap-2">

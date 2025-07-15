@@ -1,14 +1,12 @@
 "use client";
 
-import Container from "@/components/common/container";
-import TopBar from "@/components/common/top-bar";
 import TransactionTable from "@/components/features/gamer/wallet/transaction-list";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Transaction, TransactionType } from "@/models/transaction";
 import { useGetUserTransactions } from "@/react-query/payment-queries";
 import { Loader2 } from "lucide-react";
-import { useMemo, useState } from "react";
 import { useTranslations } from 'next-intl';
+import { useMemo, useState } from "react";
 
 const TransactionHistoryPage = () => {
     const t = useTranslations('transaction-history');
@@ -30,28 +28,27 @@ const TransactionHistoryPage = () => {
     }, [data, isSuccess]);
 
     return (
-        <Container className="bg-tertiary max-w-3xl rounded-xl relative flex flex-col pt-24 gap-12 items-center min-h-screen overflow-hidden">
-            <img
-                src="/top-gradient.svg"
-                alt="Background gradient"
-                className="w-full absolute z-0 top-0 h-auto"
-                aria-hidden="true"
-            />
-
-            <TopBar>
+        <section className="w-full max-w-3xl mx-auto min-h-[calc(100vh-200px)] flex flex-col gap-4">
+            <header className="flex flex-col gap-2 mb-4">
                 <h1 className="text-xl font-semibold">{t('page-title')}</h1>
-            </TopBar>
+            </header>
 
             <Tabs
                 defaultValue="deposit"
                 className="w-full relative z-10"
                 onValueChange={handleTabChange}
             >
-                <TabsList className="w-full h-13 p-2">
-                    <TabsTrigger className="flex-1" value="deposit">
+                <TabsList className="grid w-full mb-4 grid-cols-2 bg-transparent border-2 dark:border-platform-border border-primary-game rounded-sm p-0 h-auto">
+                    <TabsTrigger
+                        value="deposit"
+                        className="rounded-sm py-3 text-platform-text  bg-transparent data-[state=active]:bg-gradient-to-r dark:data-[state=active]:from-[#252AB2] dark:data-[state=active]:to-[#111351] data-[state=active]:from-[#64B6FD] data-[state=active]:to-[#64B7FE] data-[state=active]:text-white data-[state=active]:border-r-2 dark:data-[state=active]:border-[#3B4BFF] data-[state=active]:border-[#64B7FE] border-transparent"
+                    >
                         {t('tabs.deposits')}
                     </TabsTrigger>
-                    <TabsTrigger className="flex-1" value="withdrawal">
+                    <TabsTrigger
+                        value="withdrawal"
+                        className="rounded-sm py-3 text-platform-text  bg-transparent data-[state=active]:bg-gradient-to-r dark:data-[state=active]:from-[#252AB2] dark:data-[state=active]:to-[#111351] data-[state=active]:from-[#64B6FD] data-[state=active]:to-[#64B7FE] data-[state=active]:text-white data-[state=active]:border-l-2 dark:data-[state=active]:border-[#3B4BFF] data-[state=active]:border-[#64B7FE] border-transparent"
+                    >
                         {t('tabs.withdrawals')}
                     </TabsTrigger>
                 </TabsList>
@@ -68,7 +65,7 @@ const TransactionHistoryPage = () => {
                     <TransactionTable transactions={transactions} />
                 )}
             </Tabs>
-        </Container>
+        </section>
     );
 };
 

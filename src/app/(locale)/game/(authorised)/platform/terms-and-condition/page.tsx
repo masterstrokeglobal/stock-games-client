@@ -10,7 +10,7 @@ function TermsAndConditions() {
     return (
         <div className="max-w-4xl mx-auto p-6 bg-white">
             <div className="prose prose-slate max-w-none">
-                <h1 className="text-3xl font-bold text-center text-blue-800 mb-8">INTRODUCTION - WHO WE ARE AND WHAT WE DO?</h1>
+                <h1 className="text-3xl font-bold text-center font-bold mb-8">INTRODUCTION - WHO WE ARE AND WHAT WE DO?</h1>
                 <p className="mb-4">We are the flagship brand of {name}, offering Our Platform to You and an opportunity for You to participate in Contests spanning across a broad range of market events (&quot;Services&quot;). An illustrative list of such market events is mentioned below as maybe modified from time to time (&quot;Markets&quot;):</p>
 
                 <ul className="list-disc pl-6 mb-6">
@@ -21,7 +21,7 @@ function TermsAndConditions() {
 
                 <p className="mb-6">Any person using, accessing and/or participating in any stock-related free-to-play online contests (&quot;Practice Contest&quot;) and/or pay-to-play online contests (&quot;Paid Contest&quot;) on Our Platform is a user (&quot;User&quot;). All references to &quot;You/Your&quot; relate to the User. All references to &quot;We/Us/Our&quot; relate to &quot;{ name}&quot; which denotes a collective reference to the { name} mobile application and the { name} website (hereinafter collectively referred to as &quot;Platform&quot;). Practice Contest and Paid Contest are hereinafter collectively referred to as &quot;Contests&quot;.</p>
 
-                <h2 className="text-2xl font-semibold text-blue-700 mt-8 mb-4">ACCEPTANCE OF OUR TERMS AND CONDITIONS</h2>
+                <h2 className="text-2xl font-bold mt-8 mb-4">ACCEPTANCE OF OUR TERMS AND CONDITIONS</h2>
 
                 <p className="mb-4">Your continued usage of Our Platform constitutes Your acceptance of the terms and conditions, including any additional terms that We may make available to You (&quot;Terms&quot;) and are contractually binding on You.</p>
 
@@ -39,7 +39,7 @@ function TermsAndConditions() {
 
                 <p className="mb-6">You agree that You shall mark Us as a safe sender on all Your platforms where You receive any such communications from Us (including via email and SMS) to ensure such communications are not transferred to the spam/junk folder.</p>
 
-                <h2 className="text-2xl font-semibold text-blue-700 mt-8 mb-4">USER ACCOUNT</h2>
+                <h2 className="text-2xl font-bold mt-8 mb-4">USER ACCOUNT</h2>
 
                 <p className="mb-4">You are required to register on Our Platform to create an account to access Our Services (&quot;Account&quot;). At the time of creating Your Account and/or at any time during the utilisation of Our Services, You will be required to provide any and/or all of the following information and/or documents:</p>
 
@@ -53,7 +53,7 @@ function TermsAndConditions() {
                     <li>UPI ID</li>
                 </ul>
 
-                <h2 className="text-2xl font-semibold text-blue-700 mt-8 mb-4">ELIGIBILITY</h2>
+                <h2 className="text-2xl font-bold mt-8 mb-4">ELIGIBILITY</h2>
 
                 <p className="mb-4">To participate in any Paid Contest, you must meet the following eligibility criteria:</p>
 
@@ -62,9 +62,9 @@ function TermsAndConditions() {
                     <li>You must have a valid mobile number or Email to create an Account.</li>
                 </ul>
 
-                <h2 className="text-2xl font-semibold text-blue-700 mt-8 mb-4">CONTEST RULES AND FORMAT</h2>
+                <h2 className="text-2xl font-bold mt-8 mb-4">CONTEST RULES AND FORMAT</h2>
 
-                <h3 className="text-xl font-medium text-blue-600 mt-6 mb-3">CONTEST RULES</h3>
+                <h3 className="text-xl font-bold mt-6 mb-3">CONTEST RULES</h3>
 
                 <p className="mb-4">You agree and acknowledge that:</p>
 
@@ -82,7 +82,7 @@ function TermsAndConditions() {
                     <li>any other rules and regulations (including without limitation in relation to payments made to participate in any Contest)</li>
                 </ul>
 
-                <h3 className="text-xl font-medium text-blue-600 mt-6 mb-3">CONTEST FORMATS</h3>
+                <h3 className="text-xl font-bold mt-6 mb-3">CONTEST FORMATS</h3>
 
                 <p className="mb-4">Public Contest</p>
                 <p className="mb-4">A Public Contest is a Contest where You can participate with other Users without any restrictions.</p>
@@ -119,16 +119,16 @@ function TermsAndConditions() {
                 <p className="mb-6">We will process the refund after the expiry of the Contest Deadline.</p>
                 <p className="mb-6">We will not be liable to the Invited User(s) for their inability to join the Private Contest for any reason not attributable to Us</p>
 
-                <h2 className="text-2xl font-semibold text-blue-700 mt-8 mb-4">WINNING</h2>
+                <h2 className="text-2xl font-bold mt-8 mb-4">WINNING</h2>
 
-                <h3 className="text-xl font-medium text-blue-600 mt-6 mb-3">TABULATION AND SCORING</h3>
+                <h3 className="text-xl font-bold mt-6 mb-3">TABULATION AND SCORING</h3>
 
                 <ul className="list-disc pl-6 mb-6">
                     <li>We use Data Feed Providers and/or the official website of the Markets organiser to obtain scores and relevant information required for calculating the points.</li>
                     <li>If there is an error in calculating the points that are brought to Our attention due to inaccuracies or incompleteness of the information provided by the Data Feed Provider, We shall do Our best to rectify said errors before distributing the prizes.</li>
                 </ul>
 
-                <h3 className="text-xl font-medium text-blue-600 mt-6 mb-3">VERIFICATION OF WINNERS</h3>
+                <h3 className="text-xl font-bold mt-6 mb-3">VERIFICATION OF WINNERS</h3>
 
                 <ul className="list-disc pl-6 mb-6">
                     <li>We or our third-party service providers working on behalf of us may contact the Winners on the email address or mobile number provided at the time of Account creation. At this stage, Winner will be explained the details of the verification process and the documents required for collecting the prize.</li>
@@ -136,11 +136,11 @@ function TermsAndConditions() {
                     <li>You agree and acknowledge that Our decision with respect to awarding the Winnings as per the Terms will be final and binding on You.</li>
                 </ul>
 
-                <h2 className="text-2xl font-semibold text-blue-700 mt-8 mb-4">PAYMENT TERMS</h2>
+                <h2 className="text-2xl font-bold mt-8 mb-4">PAYMENT TERMS</h2>
 
                 <p className="mb-6">The below terms govern all payment-related transactions made by You, and You agree to abide by them.</p>
 
-                <h3 className="text-xl font-medium text-blue-600 mt-6 mb-3">PAYMENT ACCOUNTS</h3>
+                <h3 className="text-xl font-bold mt-6 mb-3">PAYMENT ACCOUNTS</h3>
 
                 <p className="mb-6">By accessing and using Our Platform, You are provided with the following categories of accounts for processing and reconciling Your payments:</p>
                 <ul className="list-disc pl-6 mb-6">
@@ -149,7 +149,7 @@ function TermsAndConditions() {
                     <li>Play Winning Account - This is a sub-set of Your winnings account only and holds winning amount that You have selected to keep as Play Winnings. Play winnings are non-withdrawable, can be used to join Contests and do not expire.</li>
                 </ul>
 
-                <h3 className="text-xl font-medium text-blue-600 mt-6 mb-3">DISCOUNT OFFERED</h3>
+                <h3 className="text-xl font-bold mt-6 mb-3">DISCOUNT OFFERED</h3>
 
                 <p className="mb-6">In order to conduct promotional activities and provide incentives, We may issue discounts to You which may be utilised for joining any paid Public Contest(s) (&quot;Discount(s)&quot;). You agree to the following</p>
                 <ul className="list-disc pl-6 mb-6">
@@ -186,13 +186,13 @@ function TermsAndConditions() {
                 <p className="mb-6">Discount Coupons.</p>
                 <p className="mb-6">We may grant Discount coupons at Our sole discretion and each Discount coupon shall be governed by the specific terms and conditions as notified by Us at the time of grant of such Discount coupons. You acknowledge that Discount coupons shall have their own validity and specific terms and conditions available on the Platform. In case of any conflict between these Terms and the terms specific to the Discount coupon, the terms specific to the Discount coupon shall prevail.</p>
 
-                <h3 className="text-xl font-medium text-blue-600 mt-6 mb-3">PRE-DESIGNATED AMOUNT PAYMENT</h3>
+                <h3 className="text-xl font-bold mt-6 mb-3">PRE-DESIGNATED AMOUNT PAYMENT</h3>
 
                 <p className="mb-6">When You join any Contest, subject to the deduction of Discount Bonus, Discount Coupons and Discount Points (if any), the Pre-Designated Amount gets debited first from the Unutilized Account, Play Winnings and then from Your Winnings Account. For the Unutilized Account, debits will be made in order of the date when the funds were first credited.</p>
 
                 <p className="mb-6">If You do not have enough balance in either of your Accounts to participate in any Paid Contest, You will need to remit the Pre-Designated Amount required to join the Contest(s). You agree that any amount deposited shall be subject to applicable fees in accordance with these Terms.</p>
 
-                <h3 className="text-xl font-medium text-blue-600 mt-6 mb-3">WITHDRAWALS PROCESSING</h3>
+                <h3 className="text-xl font-bold mt-6 mb-3">WITHDRAWALS PROCESSING</h3>
 
                 <ul className="list-disc pl-6 mb-6">
                     <li>You will be prompted to provide certain documents for processing your payments and verification purposes at the time of your first withdrawal.</li>
@@ -204,7 +204,7 @@ function TermsAndConditions() {
                     <li>A transaction, once confirmed, is final, and no cancellation is permissible.</li>
                 </ul>
 
-                <h2 className="text-2xl font-semibold text-blue-700 mt-8 mb-4">REFUNDS</h2>
+                <h2 className="text-2xl font-bold mt-8 mb-4">REFUNDS</h2>
 
                 <ul className="list-disc pl-6 mb-6">
                     <li>We will refund any amount left in your Unutilised Account if your Account gets suspended or removed
@@ -219,7 +219,7 @@ function TermsAndConditions() {
                     <li>In the event of a Paid Contest involving up to 4 Users, where all the Users have entered the same portfolios (including the same stocks and weightages), the Pre-Designated Amount shall be refunded to all the users after the market opens. The refund shall be credited to the account from which the Pre-designated Amount was utilized. For a Paid Contest involving 5 or more Users, where all the Users have entered the same portfolios (including the same stocks and weightages), the Prize Money Pool shall be equally divided between the Users.</li>
                 </ul>
 
-                <h2 className="text-2xl font-semibold text-blue-700 mt-8 mb-4">USER FUNDS</h2>
+                <h2 className="text-2xl font-bold mt-8 mb-4">USER FUNDS</h2>
 
                 <ul className="list-disc pl-6 mb-6">
                     <li>You hereby authorise Us to appoint an independent third-party/trustee/escrow agent to act on your behalf in a fiduciary capacity (&quot;Third Party&quot;) with respect to holding any amount belonging to You and undertaking actions, consents, approvals and any other requisite instructions necessary for such amount.</li>
@@ -239,32 +239,32 @@ function TermsAndConditions() {
                     </li>
                 </ul>
 
-                <h2 className="text-2xl font-semibold text-blue-700 mt-8 mb-4">YOUR CONDUCT</h2>
+                <h2 className="text-2xl font-bold mt-8 mb-4">YOUR CONDUCT</h2>
 
                 <p className="mb-6">In using and accessing Our Platform, You agree to observe the following code of conduct:</p>
 
-                <h3 className="text-xl font-medium text-blue-600 mt-6 mb-3">ACCOUNT INFORMATION</h3>
+                <h3 className="text-xl font-bold mt-6 mb-3">ACCOUNT INFORMATION</h3>
 
                 <ul className="list-disc pl-6 mb-6">
                     <li>You are permitted to create only one Account on Our Platform. When creating Your Account with Us (or updating Your Account information), You agree that You will provide true, accurate and updated information and documentation. You will not provide any false and/or incorrect information and documentation nor impersonate or attempt to impersonate and/or otherwise assume the identity of another person without due authority. You will not commit any such fraudulent act which amounts to forgery and/or involves the fabrication of documentation.</li>
                     <li>You agree that You shall promptly update your Account related details on Our Platform in the event of any change in such details and/or write to Our Help and Support in the event of any; a) change in Your Account related details and/or; b) any unauthorised use of Your Account to enable us to take remedial action.</li>
                 </ul>
 
-                <h3 className="text-xl font-medium text-blue-600 mt-6 mb-3">MAINTAIN CONFIDENTIALITY</h3>
+                <h3 className="text-xl font-bold mt-6 mb-3">MAINTAIN CONFIDENTIALITY</h3>
 
                 <ul className="list-disc pl-6 mb-6">
                     <li>You will maintain the confidentiality of all information relating to Your Account, and You will not share Your One Time Password (&quot;OTP&quot;) with any other person;</li>
                     <li>You will not engage in any fraudulent conduct in logging into another user&apos;s account by asking for their account-related information or taking their OTP.</li>
                 </ul>
 
-                <h3 className="text-xl font-medium text-blue-600 mt-6 mb-3">COMPLIANCE WITH APPLICABLE LAW</h3>
+                <h3 className="text-xl font-bold mt-6 mb-3">COMPLIANCE WITH APPLICABLE LAW</h3>
 
                 <ul className="list-disc pl-6 mb-6">
                     <li>You agree to comply with Applicable Laws.</li>
                     <li>You agree that You shall not commit any illegal act that disrupts Our systems.</li>
                 </ul>
 
-                <h3 className="text-xl font-medium text-blue-600 mt-6 mb-3">VIOLATION OF PLATFORM TERMS</h3>
+                <h3 className="text-xl font-bold mt-6 mb-3">VIOLATION OF PLATFORM TERMS</h3>
 
                 <ul className="list-disc pl-6 mb-6">
                     <li>You shall not engage in any Fair Play Violation.</li>
@@ -275,15 +275,15 @@ function TermsAndConditions() {
                     <li>You shall not tamper, modify, or otherwise deal with our data, content, software, technology and/or Intellectual Property by any means.</li>
                 </ul>
 
-                <h3 className="text-xl font-medium text-blue-600 mt-6 mb-3">RESPONSIBLE PLAY</h3>
+                <h3 className="text-xl font-bold mt-6 mb-3">RESPONSIBLE PLAY</h3>
 
                 <p className="mb-6">We&apos;re committed to fostering responsible participation for all our users. You agree to participate in the Contests responsibly by making informed decisions and playing within Your means. You are encouraged to seek help if needed.</p>
 
-                <h2 className="text-2xl font-semibold text-blue-700 mt-8 mb-4">ADDITIONAL FEATURES</h2>
+                <h2 className="text-2xl font-bold mt-8 mb-4">ADDITIONAL FEATURES</h2>
 
                 <p className="mb-6">We offer Our Users additional features on our platform</p>
 
-                <h3 className="text-xl font-medium text-blue-600 mt-6 mb-3">Chat Feature</h3>
+                <h3 className="text-xl font-bold mt-6 mb-3">Chat Feature</h3>
 
                 <p className="mb-6">is a tool that allows You to communicate with each other in real-time on the Platform either in a public or private setting (&quot;Chat Feature&quot;). You agree to observe the following code of conduct:</p>
                 <ul className="list-disc pl-6 mb-6">

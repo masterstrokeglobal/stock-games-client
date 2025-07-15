@@ -22,8 +22,11 @@ const BetHistoryTable = ({ className }: { className?: string }) => {
 
   // Filter state
   const [showFilter, setShowFilter] = useState(false);
-  const [filterDate, setFilterDate] = useState<string>("");
-  const [filterTime, setFilterTime] = useState<string>("");
+  // Set filterDate to yesterday's date at 12:00 AM by default
+  const [filterDate, setFilterDate] = useState<string>(
+    dayjs().subtract(1, "day").format("YYYY-MM-DD")
+  );
+  const [filterTime, setFilterTime] = useState<string>("00:00");
 
   // For API: combine date and time if both are set
   const filterStartDate = filterDate && filterTime
@@ -90,15 +93,13 @@ const BetHistoryTable = ({ className }: { className?: string }) => {
               value={formattedDate}
               onChange={handleDateChange}
               className="text-white input-dark-calendar bg-[#111641B2] border border-[#6A9FFF] rounded h-8 px-2 outline-none  w-[120px] text-xs font-medium"
-              style={{ appearance: "none" }}
               />
             <input
               type="time"
               value={formattedTime}
               onChange={handleTimeChange}
               className="text-white  input-dark-calendar h-8 px-2 rounded outline-none w-[100px] text-xs font-medium bg-[#111641B2] border border-[#6A9FFF]"
-              style={{ appearance: "none" }}
-              />
+           />
         </div>
       )}
       </header>
@@ -138,28 +139,12 @@ const BetHistoryTable = ({ className }: { className?: string }) => {
                 </div>
                 <div className="py-2 px-4 flex-1 min-w-[140px]">
                   <div className="flex items-center gap-2">
-                    <span
-                      style={{
-                        backgroundColor:
-                          bet.selectedSide === "up" ? "#6DCB4B" : "#E94B4B",
-                      }}
-                      className={cn("size-3 rounded-full")}
-                    />
-                    <span className="text-white text-sm">
-                      {bet.selectedSide}
-                    </span>
+                    <SevenUpDownChip side={bet.selectedSide} />   
                   </div>
                 </div>
                 <div className="py-2 px-4 flex-1 min-w-[120px]">
                   <div className="flex items-center gap-2">
-                    <span
-                      style={{
-                        backgroundColor:
-                          bet.winner === "7 Up" ? "#6DCB4B" : "#E94B4B",
-                      }}
-                      className={cn("size-3 rounded-full")}
-                    />
-                    <span className="text-white text-sm">{bet.winner}</span>
+                    <SevenUpDownChip side={bet.winner === "7 Up" ? "up" : bet.winner === "7 Down" ? "down" : "seven"} />
                   </div>
                 </div>
                 <div className="py-2 px-4 text-white text-sm flex-1 min-w-[100px]">
@@ -196,18 +181,11 @@ const BetHistoryTable = ({ className }: { className?: string }) => {
                     </span>
                     <SevenUpDownChip side={bet.selectedSide} />
                   </div>
-                  <div className="flex items-center justify-start gap-2">
+                  <div className="flex pl-6 items-center justify-start gap-2">
                     <span className="text-[#BED5FF] whitespace-nowrap">
                       Winner :
                     </span>
-                    <span
-                      style={{
-                        backgroundColor:
-                          bet.winner === "7 Up" ? "#6DCB4B" : "#E94B4B",
-                      }}
-                      className={cn("size-3 rounded-full")}
-                    />
-                    <span className="text-white whitespace-nowrap">{bet.winner}</span>
+                    <SevenUpDownChip side={bet.winner === "7 Up" ? "up" : bet.winner === "7 Down" ? "down" : "seven"} />
                   </div>
                   <div className="flex items-center justify-start gap-2">
                     <span className="text-[#BED5FF] whitespace-nowrap">
@@ -215,7 +193,7 @@ const BetHistoryTable = ({ className }: { className?: string }) => {
                     </span>
                     <span className="text-white whitespace-nowrap">{bet.amount}</span>
                   </div>
-                  <div className="flex items-center justify-start gap-2">
+                  <div className="flex pl-6 items-center justify-start gap-2">
                     <span className="text-[#BED5FF] whitespace-nowrap">
                       Cashout INR :
                     </span>

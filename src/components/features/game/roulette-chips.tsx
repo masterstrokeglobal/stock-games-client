@@ -36,7 +36,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
     };
 
     const handleDouble = () => {
-        setBetAmount(Math.min(maxPlacement, betAmount * 200));
+        setBetAmount(Math.min(maxPlacement, betAmount * 2));
     };
 
 

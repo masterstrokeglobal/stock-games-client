@@ -113,7 +113,7 @@ X              </DialogClose>
                             </div>
                             {/* Cashout INR */}
                             <div className={cn(
-                              "text-center font-bold flex items-end justify-center  gap-1 text-xs sm:text-sm",
+                              "text-center font-bold flex items-end justify-center flex-nowrap gap-1 text-xs sm:text-sm",
                               bet.isWinner ? "text-green-400" : "text-red-500"
                             )}>
                               {bet.isWinner ? (

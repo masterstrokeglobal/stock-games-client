@@ -34,10 +34,14 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
       <DialogContent
         showButton={false}
         className={cn(
-          "border-2 border-none  max-w-none outline-none h-full  flex flex-col justify-center shadow-none mx-auto p-0",
-          "bg-black/50 backdrop-blur-sm"
+          "border-2  border-none h-[100svh] overflow-y-auto max-w-none outline-none   flex flex-col sm:justify-center justify-start shadow-none mx-auto p-0",
         )}
+        style={{
+          background: "radial-gradient(133.68% 74.71% at 55.58% 46.9%, #01144C 0%, #000313 100%)",
+          backdropFilter: "blur(3.15px)",
+      }}
       >
+        <img src="/images/seven-up-down/setting-bg.png" alt="7Up & 7Down" className='absolute sm:top-0 -top-1/4 left-0 w-full h-full opacity-50 object-cover' />
         <img src="/images/seven-up-down/bull.png" alt="Bull" className="absolute z-[11] md:-bottom-24 -bottom-12 sm:left-0 -left-0 -translate-x-1/4 w-auto md:h-[500px] h-48 xl:h-[600px]" />
         <img src="/images/seven-up-down/bear.png" alt="Bear" className="absolute z-[11] md:-bottom-12 -bottom-8   right-0   w-auto md:h-[400px] h-40 xl:h-[500px] " />
 
@@ -47,8 +51,8 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
           </div>
         }
 
-        {round && roundResult && <section className='sm:h-[80vh] h-screen my-auto flex flex-col justify-center items-center max-w-3xl w-full mx-auto'>
-          <div className="relative rounded-2xl h-fit w-full flex flex-col justify-center mx-auto font-poppins">
+        {round && roundResult && <section className='sm:h-[80vh] h-full flex-1 my-auto flex flex-col sm:justify-center justify-around items-center max-w-3xl w-full mx-auto'>
+          <div className="relative rounded-2xl md:h-fit h-full w-full flex flex-col sm:justify-center justify-start mt-12 sm:mt-0 mx-auto font-poppins">
             <div
               className="text-center text-white md:text-4xl text-2xl px-6 py-6 font-semibold xl:text-5xl tracking-wide font-poppins mb-2"
               style={{
@@ -58,7 +62,7 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
               Result
               <DialogClose className='absolute top-0 right-0 bg-[#517ED4] z-[61] font-play rounded-full  aspect-square sm:size-10 size-8 p-0 flex items-center justify-center border-white text-white focus:ring-0 border'>
                 <span
-                  className='sm:text-2xl text-lg leading-none sm:size-10 size-8 font-light'
+                  className='sm:text-2xl text-lg leading-none  font-light'
                   style={{
                     textShadow: "0px 2px 8px #CDDDFF, 0px 0px 2px #fff"
                   }}
@@ -89,7 +93,7 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
                       <div className="text-center whitespace-nowrap">Winner</div>
                     </div>
 
-                    <ScrollArea className='h-[220px]' scrollThumbClassName='bg-[#4467CC]'>
+                    <ScrollArea className='h-[150px]' scrollThumbClassName='bg-[#4467CC]'>
                       {
                         roundResult.map((result, index) => {
                           return (
@@ -120,10 +124,9 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
                   className="w-full  text-white max-w-sm mx-auto py-3 rounded-xl sm:mt-0 mt-4 xl:text-2xl md:text-xl sm:text-lg text-sm font-poppins transition border border-[#6FB0FF]"
                   style={{
                     background: "linear-gradient(0deg, #002067 0%, #00339D 90.29%)",
-                    textShadow: "0px 0px 5px rgba(255, 255, 255, 1)",
                   }}
                 >
-                  Play Again
+                  PLAY AGAIN
                 </button>
               </DialogClose>
             </div>

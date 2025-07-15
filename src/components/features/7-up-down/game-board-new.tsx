@@ -4,7 +4,6 @@ import { cn, SEVEN_UP_DOWN_MULTIPLIER } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
 import { SevenUpDownPlacementType } from '@/models/seven-up-down';
 import { useCreateSevenUpDownPlacement } from '@/react-query/7-up-down';
-import { motion } from 'framer-motion';
 import React, { Fragment, PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StockPrice } from './StockPriceDisplay';
 
@@ -518,60 +517,215 @@ export const GameBoard: React.FC<PropsWithChildren<{
   );
 };
 
-const SevenBetButton: React.FC<{
-  onClick: () => void;
-  className?: string;
-}> = ({ className }) => {
+const SevenBetButton = ({ className = "", onClick = () => {} }) => {
   return (
-    <motion.div
-      className={cn(
-        "absolute cursor-pointer w-48 h-24 flex flex-col items-center justify-center z-10",
-        className
-      )}
-
-      style={{
-        border: '3px solid #FFDE21', // blue border as in the image
-        borderRadius: '50%',    // oval shape
-        overflow: 'hidden',
-        background: 'transparent',
-      }}
-    >
-      {/* Rotating gradient background, but not the border */}
-      <motion.div
-        className="absolute inset-0 "
-        style={{
-          width: '100%',
-          height: '100%',
-          zIndex: 0,
-          scale: 2.3,
-        }}
-        animate={{
-          rotate: 360,
-        }}
-        transition={{
-          duration: 30, // very slow
-          repeat: Infinity,
-          ease: "linear"
-        }}
-      >
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            borderRadius: '50% / 40%',
-            background: 'linear-gradient(124deg, #E5C300 -4.44%, #805E01 34.69%, #EFCB00 66.57%, #805E01 96.03%)'
-          }}
-        />
-      </motion.div>
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center w-full h-full">
-        <div className="md:text-3xl text-2xl font-bold text-black" style={{ fontFamily: 'Oval, sans-serif' }}>
-          7 Up Down
+    <div className="button-container">
+      {/* Golden Animated Background (behind button) */}
+      <div className="fancy-timer-wrapper">
+        <div className="fancy-timer-container">
+          <div className="fancy-timer-loader"><span /></div>
+          <div className="fancy-timer-loader"><span /></div>
+          <div className="fancy-timer-loader"><i /></div>
+          <div className="fancy-timer-loader"><i /></div>
         </div>
       </div>
-    </motion.div>
+
+      {/* SevenBetButton (in front) */}
+      <div
+        className={`seven-bet-button ${className}`}
+        onClick={onClick}
+      >
+        {/* Rotating gradient background */}
+        <div className="rotating-gradient">
+          <div className="gradient-inner" />
+        </div>
+
+        {/* Content */}
+        <div className="button-content">
+          <div className="button-text">
+            7 Up Down
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        .button-container {
+          position: relative;
+          width: 192px;
+          height: 96px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        /* Golden Animated Background Styles */
+        .fancy-timer-wrapper {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          z-index: 1;
+        }
+
+        .fancy-timer-container {
+          position: relative;
+          display: flex;
+          height: 100%;
+          width: 100%;
+          justify-content: center;
+          align-items: center;
+          shape-rendering: crispEdges;
+          image-rendering: pixelated, crisp-edges, -moz-crisp-edges;
+        }
+
+        .fancy-timer-loader {
+          position: absolute;
+          width: 210px;
+          height: 110px;
+          border-radius: 50%;
+          animation: fancy-timer-anim 2s linear infinite;
+          background: transparent;
+        }
+
+        .fancy-timer-loader:nth-child(2),
+        .fancy-timer-loader:nth-child(4) {
+          animation-delay: -1s;
+          filter: hue-rotate(0deg);
+          box-sizing: border-box;
+          clear: initial;
+        }
+
+        @keyframes fancy-timer-anim {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+
+        .fancy-timer-loader:nth-child(1):before,
+        .fancy-timer-loader:nth-child(2):before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 50%;
+          height: 100%;
+          background: transparent;
+          background-size: 105px 125px;
+          background-repeat: no-repeat;
+          border-top-left-radius: 105px 55px;
+          border-bottom-left-radius: 105px 55px;
+          filter: blur(0.65px);
+        }
+
+        .fancy-timer-loader i {
+          position: absolute;
+          top: 0px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 20px;
+          height: 20px;
+          background: rgb(255, 222, 33);
+          border-radius: 50%;
+          z-index: 10;
+          box-shadow:
+            0 0 10px rgb(255, 222, 33),
+            0 0 20px rgb(255, 222, 33),
+            0 0 30px rgb(255, 222, 33),
+            0 0 40px rgb(255, 222, 33),
+            0 0 50px rgb(255, 222, 33),
+            0 0 60px rgb(255, 222, 33),
+            0 0 70px rgb(255, 222, 33),
+            0 0 80px rgb(255, 222, 33),
+            0 0 90px rgb(255, 222, 33),
+            0 0 100px rgb(255, 222, 33);
+          filter: blur(5px);
+        }
+
+        .fancy-timer-loader span {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          right: 20px;
+          bottom: 20px;
+          background: transparent;
+          border-radius: 50%;
+          z-index: 1;
+          filter: blur(3.4px);
+        }
+
+        /* SevenBetButton Styles */
+        .seven-bet-button {
+          position: relative;
+          cursor: pointer;
+          width: 192px;
+          height: 96px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          z-index: 10;
+          border: 3px solid #FFDE21;
+          border-radius: 50%;
+          overflow: hidden;
+          background: transparent;
+        }
+
+        .rotating-gradient {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 0;
+          transform: scale(2.3);
+          animation: rotate-gradient 30s linear infinite;
+        }
+
+        .gradient-inner {
+          width: 100%;
+          height: 100%;
+          border-radius: 50% / 40%;
+          background: linear-gradient(124deg, #E5C300 -4.44%, #805E01 34.69%, #EFCB00 66.57%, #805E01 96.03%);
+        }
+
+        @keyframes rotate-gradient {
+          0% {
+            transform: scale(2.3) rotate(0deg);
+          }
+          100% {
+            transform: scale(2.3) rotate(360deg);
+          }
+        }
+
+        .button-content {
+          position: relative;
+          z-index: 10;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+        }
+
+        .button-text {
+          font-size: 24px;
+          font-weight: bold;
+          color: black;
+          font-family: 'Arial', sans-serif;
+        }
+
+        @media (min-width: 768px) {
+          .button-text {
+            font-size: 30px;
+          }
+        }
+      `}</style>
+    </div>
   );
 };
+
 
 const WinnerOverlay: React.FC<{
   roundRecordWithWinningId: RoundRecord | null
@@ -594,14 +748,27 @@ const WinnerOverlay: React.FC<{
   }
 
   if (!finalPricesPresent) return null;
+
+
+  
+  // Set styles for up (green) and down (red)
+  const isDown = winningSection === "down";
+  const overlayStyle = isDown
+    ? {
+        background: "linear-gradient(108.92deg, #E02C0C 29.33%, #380104 114.8%)",
+        borderColor: "rgba(219, 15, 0, 1)",
+        boxShadow: "0px 0px 15px 1px rgba(222, 0, 0, 1)",
+      }
+    : {
+        background: "linear-gradient(108.92deg, #0C9E02 29.33%, #043801 114.8%)",
+        borderColor: "rgba(15, 219, 0, 1)",
+        boxShadow: "0px 0px 15px 1px rgba(0, 222, 0, 1)",
+      };
+
   return (
     <>
       <div
-        style={{
-          background: "linear-gradient(108.92deg, #0C9E02 29.33%, #043801 114.8%)",
-          borderColor: "rgba(15, 219, 0, 1)",
-          boxShadow: "0px 0px 15px 1px rgba(222, 189, 0, 1)",
-        }}
+        style={overlayStyle}  
         className={cn(
           "w-full backdrop-blur-lg  xs:max-w-screen-xs max-w-72 rounded-md z-[60] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-6 border-2"
         )}

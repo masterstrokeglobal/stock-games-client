@@ -7,6 +7,8 @@ import { SchedulerType } from "@/models/market-item";
 import User from "@/models/user";
 import { RoundRecordGameType } from "@/models/round-record";
 import useSchedularCheck from "@/hooks/use-schedular-check";
+import { useTheme } from "@/context/theme-context";
+import Navbar from "../features/game/navbar";
 
 type MarketSelectorProps = {
     title: string;
@@ -18,6 +20,8 @@ type MarketSelectorProps = {
 const MarketSelector = ({ title = "STOCK SLOT MARKET", className, roundRecordType = RoundRecordGameType.DERBY }: MarketSelectorProps) => {
     const isNSEAvailable = useNSEAvailable();
     const isUSAMarketAvailable = useUSAMarketAvailable();
+    const theme = useTheme();
+    const isDarkMode = theme === "dark";
 
     const { setMarketSelected } = useMarketSelector();
     const { schedulerStatus } = useSchedularCheck();
@@ -77,29 +81,28 @@ const MarketSelector = ({ title = "STOCK SLOT MARKET", className, roundRecordTyp
     const availableMarkets = markets.filter(market => market.allowed);
 
     return (
-        <div
-            className={cn("min-h-screen bg-[url('/images/platform/market-selector-bg.png')] w-full bg-cover bg-center flex flex-col items-center justify-center p-4", className)}>
+        <section
+            className={cn("min-h-screen dark:bg-[url('/images/platform/market-selector-bg.png')] bg-[url('/images/platform/market-selector-bg-light.png')] w-full bg-cover bg-center flex flex-col items-center justify-center p-4", className)}>
             {/* Header */}
-            <div className="bg-[#04002968] backdrop-blur-[2px] w-full h-full absolute top-0 left-0"/>
+            <Navbar />
+            <div className="dark:bg-[#04002968] bg-[#e6f6ff8b] backdrop-blur-[2px] w-full h-full absolute top-0 left-0"/>
             <div className="mx-auto max-w-3xl w-full">
-            <header className="text-center mb-8 relative z-10">
-                <h1 className="text-4xl font-bold text-white mb-2 ">
+            <header className="text-center mb-8 relative z-10 mt-10">
+                <h1 className="md:text-4xl sm:text-3xl text-2xl font-bold text-platform-text mb-2 ">
                     {title}
                 </h1>
-                <p className="text-white/80">Choose your trading market to continue</p>
+                <p className="text-platform-text">Choose your trading market to continue</p>
             </header>
 
             {/* Market Cards Grid */}
-            <div className="grid grid-cols-1  gap-6  w-full">
+            <main className="grid grid-cols-1  gap-6  w-full">
                 {availableMarkets.map((market) => (
                     <div
                     key={market.id}
-                    style={{ boxShadow: "5px 5px 50px 5px #4467CC inset" }}
+                    style={{ boxShadow: !isDarkMode ? "1px 1px 20px 5px rgba(100, 183, 254, 1) inset" : "5px 5px 50px 5px rgba(68, 103, 204, 1) inset" }}
                     className={cn(
-                        "relative overflow-hidden rounded-sm shadow-2xl transition-all duration-300 hover:scale-105 cursor-pointer",
-                        "border-2 border-[#4467CC33]",
-                            !market.available && "opacity-60 cursor-not-allowed hover:scale-100"
-                        )}
+                        "relative overflow-hidden rounded-sm bg-[#C2EBFFB2] dark:bg-transparent shadow-2xl transition-all duration-300  cursor-pointer",
+                        "border-2 dark:border-[#4467CC33] border-transparent",market.available ? "hover:scale-105":"opacity-80")}
                         onClick={() => market.available && handleMarketSelection(market.id)}
                         >
                         {/* Card Content */}
@@ -113,12 +116,25 @@ const MarketSelector = ({ title = "STOCK SLOT MARKET", className, roundRecordTyp
                                 {/* Status Badge */}
                                 <div
                                     className={cn(
-                                        "px-2 py-1 rounded-full text-sm tracking-wide font-semibold border-2 min-w-20 text-center  border-[#4467CC] text-platform-text"
+                                        "px-2 py-1 rounded-full text-sm tracking-wide font-semibold min-w-20 text-center",
+                                        isDarkMode
+                                            ? ""
+                                            : (market.available
+                                                ? "border-[rgba(55,206,153,1)] border-2 bg-[rgba(66,237,177,0.7)] text-platform-text"
+                                                : "border-[rgba(223,81,108,1)] text-platform-text")
                                     )}
                                     style={
                                         market.available
-                                            ? { boxShadow: "0px 0px 12px 2px #08FF0080" }
-                                            : { boxShadow: "0px 0px 7.8px 0px #FF0000" }
+                                            ? {
+                                                boxShadow: "0px 0px 12px 2px #08FF0080",
+                                                borderColor: "rgba(55,206,153,1)",
+                                                background: isDarkMode ? undefined : "[rgba(66,237,177,0.7)]"
+                                            }
+                                            : {
+                                                boxShadow: "0px 0px 7.8px 0px #FF0000",
+                                                borderColor: "rgba(223,81,108,1)",
+                                                background: isDarkMode ? undefined : "rgba(255,118,144,0.7)"
+                                            }
                                     }
                                 >
                                     {market.available ? "OPEN" : "CLOSED"}
@@ -128,7 +144,7 @@ const MarketSelector = ({ title = "STOCK SLOT MARKET", className, roundRecordTyp
                             {/* Bottom Section */}
                             <div className="">
 
-                            <h3 className="text-2xl font-bold text-platform-text mb-2">
+                            <h3 className="md:text-2xl sm:text-xl text-lg    font-bold text-platform-text mb-2">
                                         {market.title}
                                     </h3>
                                     <p className="text-platform-text/70 text-sm mb-1">
@@ -149,7 +165,7 @@ const MarketSelector = ({ title = "STOCK SLOT MARKET", className, roundRecordTyp
                         <div className="absolute inset-0 bg-gradient-to-br from-platform-text/0 to-platform-text/0 hover:from-platform-text/5 hover:to-platform-text/5 transition-all duration-300"></div>
                     </div>
                 ))}
-            </div>
+            </main>
 
             {/* No markets available message */}
             {availableMarkets.length === 0 && (
@@ -159,7 +175,7 @@ const MarketSelector = ({ title = "STOCK SLOT MARKET", className, roundRecordTyp
                 </div>
             )}
             </div>
-        </div>
+        </section>
     );
 };
 

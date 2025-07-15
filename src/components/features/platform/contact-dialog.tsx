@@ -16,10 +16,12 @@ import Image from "next/image";
 import { ReactNode, useState } from "react";
 
 interface ContactDialogProps {
-    children: ReactNode;
+    children?: ReactNode;
+    open?: boolean;
+    onClose?: () => void;
 }
 
-const ContactDialog = ({ children }: ContactDialogProps) => {
+const ContactDialog = ({ children, open, onClose }: ContactDialogProps) => {
     const [subject, setSubject] = useState("");
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
@@ -36,8 +38,15 @@ const ContactDialog = ({ children }: ContactDialogProps) => {
         }, 1200);
     };
 
+    const handleClose = (open: boolean) => {
+        if (!open) {
+            setSubject("");
+            setMessage("");
+            onClose?.();
+        }
+    };
     return (
-        <Dialog>
+        <Dialog defaultOpen={open} onOpenChange={handleClose}>
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>

@@ -24,8 +24,10 @@ const GameHistoryTable = ({ className }: { className?: string }) => {
 
   // Filter state
   const [showFilter, setShowFilter] = useState(false);
-  const [filterDate, setFilterDate] = useState<string>("");
-  const [filterTime, setFilterTime] = useState<string>("");
+  const [filterDate, setFilterDate] = useState<string>(
+    dayjs().subtract(1, "day").format("YYYY-MM-DD")
+  );
+  const [filterTime, setFilterTime] = useState<string>("00:00");
 
   // For API: combine date and time if both are set
   const filterStartDate = filterDate && filterTime
@@ -122,7 +124,7 @@ const GameHistoryTable = ({ className }: { className?: string }) => {
             </div>
 
           </div>
-          <ScrollArea className={cn(showFilter ? "h-[calc(100svh-28rem)]" : "h-[calc(100svh-25rem)]")} scrollThumbClassName="bg-[#BED5FF]">
+          <ScrollArea className={cn(showFilter ? "h-[calc(100svh-29rem)]" : "h-[calc(100svh-26rem)]")} scrollThumbClassName="bg-[#BED5FF]">
             {history.map((bet, index) => (
               <div
                 key={index}
@@ -153,7 +155,7 @@ const GameHistoryTable = ({ className }: { className?: string }) => {
         </div>
       </div>
       <div className="block md:hidden">
-        <ScrollArea className="h-[300px]">
+        <ScrollArea className="h-[250px]">
           <div className="flex flex-col font-montserrat gap-4">
             {history.map((bet, index) => (
               <div

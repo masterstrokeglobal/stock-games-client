@@ -44,7 +44,7 @@ const SevenUpDownSettings = () => {
             }}
         >
             <Navbar />
-            <img src="/images/seven-up-down/setting-bg.png" alt="7Up & 7Down" className='absolute top-0 left-0 w-full h-full opacity-50 object-cover' />
+            <img src="/images/seven-up-down/setting-bg.png" alt="7Up & 7Down" className='absolute scale-125 top-0 left-0 w-full h-full opacity-70 object-cover' />
             <Tabs defaultValue="my-bet-history" className="md:pt-20 pt-12 pb-2  max-w-[2080px] relative z-10 flex flex-col w-full mx-auto flex-1 text-white">
                 <div className="flex flex-col lg:flex-row gap-6 mt-6">
                     <aside className="lg:w-64 lg:block hidden  w-full">
@@ -54,7 +54,7 @@ const SevenUpDownSettings = () => {
                                     <TabsTrigger
                                         key={tab.value}
                                         value={tab.value}
-                                        className="w-full justify-start bg-transparent text-white text-lg font-semibold uppercase data-[state=active]:rounded-r-[10px] data-[state=active]:border data-[state=active]:border-[#12409D] data-[state=active]:bg-[#295CB5] data-[state=active]:shadow-[2px_2px_3.3px_2px_#327BB7,0px_0px_5px_2px_#0E1537_inset] data-[state=active]:uppercase data-[state=active]:font-semibold"
+                                        className="w-full justify-start pl-7 bg-transparent text-white text-lg font-semibold uppercase data-[state=active]:rounded-r-[10px] data-[state=active]:border data-[state=active]:border-[#12409D] data-[state=active]:bg-[#295CB5] data-[state=active]:shadow-[2px_2px_3.3px_2px_#327BB7,0px_0px_5px_2px_#0E1537_inset] data-[state=active]:uppercase data-[state=active]:font-semibold"
                                     >
                                         {tab.label}
                                     </TabsTrigger>
@@ -66,7 +66,7 @@ const SevenUpDownSettings = () => {
                         <Carousel opts={{ loop: false, startIndex: 0, containScroll: "trimSnaps" }} className="w-full">
                             <div className="md:space-y-4 space-y-2">
                                 <div className="flex items-center justify-between">
-                                    <Link href="/game/7-up-down">
+                                    <Link href="/game/single-player/7-up-down">
                                         <Button variant="ghost" className="p-0 text-white text-xs">
                                             <ArrowLeftIcon className="w-4 h-4 md:mr-2" />
                                             Back
