@@ -3,7 +3,7 @@ import { RankedMarketItem } from '@/hooks/use-leadboard';
 import { cn, SEVEN_UP_DOWN_MULTIPLIER } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
 import { SevenUpDownPlacementType } from '@/models/seven-up-down';
-import { useCreateSevenUpDownPlacement } from '@/react-query/7-up-down';
+import { useCreateSevenUpDownPlacement, useGetMyCurrentRoundSevenUpDownPlacement } from '@/react-query/7-up-down';
 import React, { Fragment, PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StockPrice } from './StockPriceDisplay';
 
@@ -436,6 +436,7 @@ export const GameBoard: React.FC<PropsWithChildren<{
   const { mutate } = useCreateSevenUpDownPlacement();
   const isPlaceOver = usePlacementOver(roundRecord);
   const [displayItems, setDisplayItems] = useState(marketItems);
+  const { data: currentRoundPlacements } = useGetMyCurrentRoundSevenUpDownPlacement(roundRecord.id);
 
   // Immediate, synchronous updates to prevent delay
   useEffect(() => {
@@ -454,6 +455,19 @@ export const GameBoard: React.FC<PropsWithChildren<{
 
   const showWinner = roundRecordWithWinningId?.finalPricesPresent;
 
+  const betCalculations = useMemo(() => {
+    const upBets = currentRoundPlacements?.filter(p => p.placement === SevenUpDownPlacementType.UP) || [];
+    const downBets = currentRoundPlacements?.filter(p => p.placement === SevenUpDownPlacementType.DOWN) || [];
+    const sevenBets = currentRoundPlacements?.filter(p => p.placement === SevenUpDownPlacementType.SEVEN) || [];
+
+    return {
+      totalUpBets: upBets.reduce((acc, bet) => acc + bet.amount, 0),
+      totalDownBets: downBets.reduce((acc, bet) => acc + bet.amount, 0),
+      totalSevenBets: sevenBets.reduce((acc, bet) => acc + bet.amount, 0),
+    };
+  }, [roundRecordWithWinningId,currentRoundPlacements]);
+
+
   const handleBoardClick = useCallback((type: SevenUpDownPlacementType) => {
     if (isPlaceOver) return;
     mutate({
@@ -462,8 +476,6 @@ export const GameBoard: React.FC<PropsWithChildren<{
       amount: amount,
     });
   }, [isPlaceOver, mutate, roundRecord.id, amount]);
-
-
 
   return (
     <div
@@ -493,22 +505,32 @@ export const GameBoard: React.FC<PropsWithChildren<{
           <div
             onClick={() => handleBoardClick(SevenUpDownPlacementType.UP)}
             className={cn(
-              "absolute inset-x-0 top-0 h-[10rem] hover:scale-[1.02] cursor-pointer transition-all duration-500 flex flex-col items-center justify-start pt-4",
+              "absolute inset-x-0 top-0 h-[10rem] cursor-pointer transition-all duration-500 flex flex-col items-center justify-start pt-4",
             )}
           >
             <div className="text-2xl font-protest-strike opacity-80 text-white">7 Up</div>
             <div className="text-sm  font-protest-strike opacity-80 text-white">1:{SEVEN_UP_DOWN_MULTIPLIER}</div>
+           { betCalculations.totalUpBets > 0 && (
+            <div className="font-inter p-5 text-xs rounded-full bg-[url('/images/seven-up-down/coin.png')] bg-cover bg-center absolute top-0 left-0 opacity-80 text-yellow-900 font-semibold">
+              {betCalculations.totalUpBets}
+            </div>
+           )}
           </div>
 
           {/* 0-6 Area */}
           <div
             onClick={() => handleBoardClick(SevenUpDownPlacementType.DOWN)}
             className={cn(
-              "absolute inset-x-0 bottom-0 cursor-pointer hover:scale-[1.02] transition-all duration-500 h-[10rem] flex flex-col items-center justify-end py-4",
+              "absolute inset-x-0 bottom-0 cursor-pointer transition-all duration-500 h-[10rem] flex flex-col items-center justify-end py-4",
             )}
           >
             <div className="text-2xl font-protest-strike opacity-80  text-white">7 Down</div>
             <div className="text-sm font-protest-strike opacity-80 text-white">1:{SEVEN_UP_DOWN_MULTIPLIER}</div>
+            { betCalculations.totalDownBets > 0 && (
+            <div className="font-inter p-5 text-xs rounded-full bg-[url('/images/seven-up-down/coin.png')] bg-cover bg-center absolute bottom-0 left-0 opacity-80 text-yellow-900 font-semibold">
+              {betCalculations.totalDownBets}
+            </div>
+           )}
           </div>
         </div>
         <MarketRow items={displayItems.slice(7, 14)} />

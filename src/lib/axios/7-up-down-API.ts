@@ -37,6 +37,7 @@ export const sevenUpDownAPI = {
     },
     getSevenUpDownRoundResult: async (roundId: number) => {
         const response = await api.get(`/seven-up-down/result/${roundId}`);
+      
         return response.data.data as unknown as SevenUpDownRoundResult[];
     }
 } as const;

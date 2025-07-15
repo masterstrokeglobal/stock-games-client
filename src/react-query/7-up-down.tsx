@@ -11,10 +11,9 @@ export const useCreateSevenUpDownPlacement = () => {
         onSuccess: (data) => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === "sevenUpDown" || query.queryKey[0] === "myPlacements" || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
+                    return query.queryKey[0] === "sevenUpDown" || query.queryKey[0] === "myPlacements" || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet' || query.queryKey[0] === "sevenUpDown" && query.queryKey[1] === "myPlacements";
                 },
             });
-            
             const placement = new SevenUpDownPlacement(data.stockSlotPlacement)
             toast.custom((t) => (
                 <BetSuccessToast onClose={() => toast.dismiss(t)} betAmount={placement.amount} betNumber={placement.id} betSide={placement.placement} />
@@ -57,7 +56,7 @@ export const BetSuccessToast = ({
             {/* Close button */}
             <button
                 onClick={onClose}
-                className="absolute z-10 top-3 right-3 w-7 h-7 font-montserrat text-xl flex items-center justify-center rounded-full hover:bg-[#003AA3]/10 transition"
+                className="absolute z-30 top-3 right-3 w-7 h-7 font-montserrat text-xl flex items-center justify-center rounded-full hover:bg-[#003AA3]/10 transition"
                 aria-label="Close"
             >
                 X

@@ -122,8 +122,8 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
 
     return (
         <>
-        <WalletDialog key={String(openWalletDialog)} open={openWalletDialog} onClose={() => setOpenWalletDialog(false)} />
-        <ContactDialog key={String(openContactDialog)} open={openContactDialog} onClose={() => setOpenContactDialog(false)} />
+        <WalletDialog key={String(`${openWalletDialog}-wallet`)} open={openWalletDialog} onClose={() => setOpenWalletDialog(false)} />
+        <ContactDialog key={String(`${openContactDialog}-contact`)} open={openContactDialog} onClose={() => setOpenContactDialog(false)} />
         <Dialog>
             <DialogTrigger asChild>
                 {children}

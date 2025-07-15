@@ -125,7 +125,7 @@ const BetHistoryTable = ({ className }: { className?: string }) => {
               CASHOUT INR
             </div>
           </div>
-          <ScrollArea className={cn(showFilter ? "h-[calc(100svh-28rem)]" : "h-[calc(100svh-25rem)]")} scrollThumbClassName="bg-[#BED5FF]">
+          <ScrollArea className={cn(showFilter ? "h-[calc(100svh-29rem)]" : "h-[calc(100svh-26rem)]")} scrollThumbClassName="bg-[#BED5FF]">
             {history.map((bet, index) => (
               <div
                 key={index}
