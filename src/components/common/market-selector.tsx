@@ -128,12 +128,10 @@ const MarketSelector = ({ title = "STOCK SLOT MARKET", className, roundRecordTyp
                                             ? {
                                                 boxShadow: "0px 0px 12px 2px #08FF0080",
                                                 borderColor: "rgba(55,206,153,1)",
-                                                background: isDarkMode ? undefined : "[rgba(66,237,177,0.7)]"
                                             }
                                             : {
                                                 boxShadow: "0px 0px 7.8px 0px #FF0000",
                                                 borderColor: "rgba(223,81,108,1)",
-                                                background: isDarkMode ? undefined : "rgba(255,118,144,0.7)"
                                             }
                                     }
                                 >

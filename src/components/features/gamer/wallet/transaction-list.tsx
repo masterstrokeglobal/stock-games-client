@@ -30,9 +30,9 @@ const TransactionTable = ({ transactions }: Props) => {
             <Table>
                 <TableHeader className='mb-3'>
                     <TableRow className="hover:bg-transparent border-b-0 border-none pb-4">
-                        <TableHead className="text-gray-300">{t('headers.date-time')}</TableHead>
-                        <TableHead className="text-gray-300">{t('headers.amount')}</TableHead>
-                        <TableHead className="text-gray-300">{t('headers.status')}</TableHead>
+                        <TableHead className="text-platform-text">{t('headers.date-time')}</TableHead>
+                        <TableHead className="text-platform-text">{t('headers.amount')}</TableHead>
+                        <TableHead className="text-platform-text">{t('headers.status')}</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -41,12 +41,12 @@ const TransactionTable = ({ transactions }: Props) => {
                             key={index}
                             className="hover:bg-blue-900/20 py-2 transition-colors  duration-200 border-b-0"
                         >
-                            <TableCell className="text-gray-300 rounded">
+                            <TableCell className="text-platform-text rounded">
                                 {dayjs(transaction.createdAt).format('MMM D,')}
                                 <br />
                                 {dayjs(transaction.createdAt).format('YYYY h:mm A')}
                             </TableCell>
-                            <TableCell className="font-medium text-white">
+                            <TableCell className="font-medium text-platform-text">
                                 {transaction.amount} 
                             </TableCell>
                             <TableCell className='rounded'>

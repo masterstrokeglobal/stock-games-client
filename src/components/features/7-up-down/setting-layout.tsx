@@ -22,8 +22,8 @@ const SettingLayout: React.FC<SettingLayoutProps> = ({ children, className, pare
                     {children}
                 </div>
             </div>
-            <img src="/images/seven-up-down/bull.png" alt="Bull" className="absolute z-[11] sm:bottom-0 bottom-16 left-0  -translate-x-1/4 translate-y-1/4     w-auto h-32  sm:h-40 md:h-52  xxl:h-80" />
-            <img src="/images/seven-up-down/bear.png" alt="Bear" className="absolute z-[11] sm:bottom-0 bottom-16 right-0 translate-x-1/4 translate-y-1/4 w-auto h-32  sm:h-40 md:h-52  xxl:h-80" />
+            <img src="/images/seven-up-down/bull.png" alt="Bull" className="absolute z-[11] sm:bottom-0 bottom-16 left-0  -translate-x-1/4 translate-y-4     w-auto h-32  sm:h-40 md:h-52  xxl:h-80" />
+            <img src="/images/seven-up-down/bear.png" alt="Bear" className="absolute z-[11] sm:bottom-0 bottom-16 right-0 translate-x-1/4  translate-y-4 w-auto h-32  sm:h-40 md:h-52  xxl:h-80" />
             <div className="w-full h-20 flex items-center md:pt-0 pt-32 justify-end">
                 <Link href="/game/single-player/7-up-down" className="relative z-20 md:flex-none max-w-[200px] w-full md:mr-auto mx-auto  flex-1">
                     <button className="tracking-wider bg-[#1246B8] hover:bg-[rgb(50,123,183)]  w-full text-white font-bold px-8 py-2 rounded-[10px] border-2 border-[#6DC1EE] shadow-[0px_0px_5.1px_1px_#3881FF] transition-all min-w-[100px] text-[1.1rem] ">

@@ -65,9 +65,11 @@ export default function StockGameCarousel() {
                     <div className="flex gap-2">
                         <CarouselPrevious className="static translate-y-0 bg-background/20 hover:bg-background/40" />
                         <CarouselNext className="static translate-y-0 bg-background/20 hover:bg-background/40" />
-                        <Button size="sm" variant="platform-primary" className="rounded-full">
-                            View All    
-                        </Button>
+                        <Link href="/game/platform/stock-games">
+                            <Button size="sm" variant="platform-primary" className="rounded-full">
+                                View All    
+                            </Button>
+                        </Link>
                     </div>
                 </div>
                 <CarouselContent>

@@ -9,8 +9,8 @@ import { cn } from "@/lib/utils";
 import { useWindowSize } from "@/hooks/use-window-size";
 
 // Constants
-const COIN_RADIUS_DESKTOP =1 ; // Reduced from 0.7 for 80px equivalent
-const COIN_RADIUS_MOBILE = 1; // Reduced from 0.7 for 40px equivalent
+const COIN_RADIUS_DESKTOP =1 ; 
+const COIN_RADIUS_MOBILE = 1; 
 const COIN_THICKNESS = 0.05;
 const TABLE_Y_SURFACE = -0.03;
 const COIN_LANDED_Y_CENTER = TABLE_Y_SURFACE + COIN_THICKNESS / 2;
@@ -201,3 +201,8 @@ export default function CoinToss({ isFlipping, resultOutcome, className, style  
     </div>
   );
 }
+
+
+// Preload coin textures for better performance
+useTexture.preload("/images/coins/head.png");
+useTexture.preload("/images/coins/tail.png");

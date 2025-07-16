@@ -49,12 +49,13 @@ export const useCreateStockGamePlacement = () => {
     });
 };
 
-export const useStockGameRoundResult = (roundId: number) => {
+export const useStockGameRoundResult = (roundId: number,open=false) => {
     return useQuery({
         queryKey: ["slot-jackpot-result", roundId],
         queryFn: async () => {
             const response = await slotGameAPI.getStockJackpotRoundResult(roundId);
             return response.data;
-        }
+        },
+        enabled: open
     });
 };

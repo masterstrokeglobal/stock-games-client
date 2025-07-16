@@ -28,9 +28,9 @@ const TransactionHistoryPage = () => {
     }, [data, isSuccess]);
 
     return (
-        <section className="w-full max-w-3xl mx-auto min-h-[calc(100vh-200px)] flex flex-col gap-4">
+        <section className="w-full max-w-3xl mx-auto text-platform-text min-h-[calc(100vh-200px)] flex flex-col gap-4">
             <header className="flex flex-col gap-2 mb-4">
-                <h1 className="text-xl font-semibold">{t('page-title')}</h1>
+                <h1 className="text-xl font-semibold text-platform-text">{t('page-title')}</h1>
             </header>
 
             <Tabs

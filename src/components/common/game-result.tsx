@@ -1,5 +1,5 @@
 import { AlertCircle, Loader2 } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog"
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog"
 import { Alert, AlertDescription } from "../ui/alert";
 import Image from "next/image";
 import { cn, INR } from "@/lib/utils";
@@ -7,16 +7,15 @@ import { Separator } from "@radix-ui/react-separator";
 
 type GameResultProps = {
     showDialog: boolean;
-    setShowDialog: (showDialog: boolean) => void;
     isLoading: boolean;
     isError: boolean;
     data: any;
 }
 
-const GameResult = ({ showDialog, setShowDialog, isLoading, isError, data }: GameResultProps) => {
+const GameResult = ({ showDialog, isLoading, isError, data }: GameResultProps) => {
     const isWin = data && Number(data.netProfitLoss) > 0;
 
-    return <Dialog open={showDialog}>
+    return <Dialog defaultOpen={showDialog}>
         <DialogContent className="sm:max-w-md bg-primary-game text-white [&>.close-button]:hidden" data-hide-children="true">
             <DialogHeader>
                 <DialogTitle>Round Results</DialogTitle>
@@ -27,9 +26,11 @@ const GameResult = ({ showDialog, setShowDialog, isLoading, isError, data }: Gam
                     <div className="flex flex-col items-center justify-center p-8 space-y-4">
                         <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
                         <p className="text-gray-600">Loading results...</p>
-                        <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                            Checkout Game
-                        </button>
+                        <DialogClose asChild>
+                            <button className="bet-button w-full">
+                                Checkout Game
+                            </button>
+                        </DialogClose>
                     </div>
                 ) : isError ? (
                     <>
@@ -39,9 +40,11 @@ const GameResult = ({ showDialog, setShowDialog, isLoading, isError, data }: Gam
                                 Failed to load round results. Please try again.
                             </AlertDescription>
                         </Alert>
-                        <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                            Checkout Game
-                        </button>
+                        <DialogClose asChild>
+                            <button className="bet-button w-full">
+                                Checkout Game
+                            </button>
+                        </DialogClose>
                     </>
                 ) : data ? (
                     <div className="space-y-4">
@@ -85,16 +88,20 @@ const GameResult = ({ showDialog, setShowDialog, isLoading, isError, data }: Gam
 
                         <Separator />
 
-                        <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                            Play Again
-                        </button>
+                        <DialogClose asChild>
+                            <button className="bet-button w-full">
+                                Play Again
+                            </button>
+                        </DialogClose>
                     </div>
                 ) : (
                     <>
                         <p className="text-gray-600 text-center">No results available.</p>
-                        <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
+                        <DialogClose asChild>
+                            <button className="bet-button w-full">
                             Play Again
                         </button>
+                        </DialogClose>
                     </>
                 )}
             </div>

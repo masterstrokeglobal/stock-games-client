@@ -171,10 +171,10 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
             </div>
 
             <SlotGameResultDialog
+                key={String(showResults)}
                 open={showResults}
                 roundRecordId={previousRoundId ?? 0}
             />
-
         </>
     );
 };

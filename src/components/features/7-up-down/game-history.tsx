@@ -139,14 +139,7 @@ const GameHistoryTable = ({ className }: { className?: string }) => {
            
                 <div className="py-2 px-4 flex-1 min-w-[120px]">
                   <div className="flex items-center gap-2">
-                    <span
-                      style={{
-                        backgroundColor:
-                          bet.winner === "7 Up" ? "#6DCB4B" : "#E94B4B",
-                      }}
-                      className={cn("size-3 rounded-full")}
-                    />
-                    <span className="text-white text-sm">{bet.winner}</span>
+                    <SevenUpDownChip side={bet.winner === "7 Up" ? "up" : bet.winner === "7 Down" ? "down" : "seven"} />
                   </div>
                 </div>
               </div>

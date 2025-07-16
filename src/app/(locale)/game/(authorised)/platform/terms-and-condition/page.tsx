@@ -1,6 +1,4 @@
 "use client"
-import Container from '@/components/common/container';
-import TopBar from '@/components/common/top-bar';
 import { useGetMyCompany } from '@/react-query/company-queries';
 function TermsAndConditions() {
     const { data } = useGetMyCompany();
@@ -8,8 +6,8 @@ function TermsAndConditions() {
     const name = data?.name;
 
     return (
-        <div className="max-w-4xl mx-auto p-6 bg-white">
-            <div className="prose prose-slate max-w-none">
+        <div className="max-w-4xl mx-auto p-6 ">
+            <div className="prose !text-platform-text max-w-none">
                 <h1 className="text-3xl font-bold text-center font-bold mb-8">INTRODUCTION - WHO WE ARE AND WHAT WE DO?</h1>
                 <p className="mb-4">We are the flagship brand of {name}, offering Our Platform to You and an opportunity for You to participate in Contests spanning across a broad range of market events (&quot;Services&quot;). An illustrative list of such market events is mentioned below as maybe modified from time to time (&quot;Markets&quot;):</p>
 
@@ -305,15 +303,4 @@ function TermsAndConditions() {
 
 
 
-const TermsAndConditionsPage = () => {
-    return (
-        <Container className="flex flex-col items-center min-h-screen bg-background pt-24">
-            <TopBar>
-                Terms and Conditions
-            </TopBar>
-            <TermsAndConditions />
-        </Container>
-    );
-};
-
-export default TermsAndConditionsPage;
+export default TermsAndConditions;

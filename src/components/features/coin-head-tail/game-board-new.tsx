@@ -18,7 +18,7 @@ type GameBoardProps = PropsWithClassName<{
 
 const CARD_WIDTH = 130;
 const CARD_HEIGHT = 190;
-const MOBILE_CARD_WIDTH = 110;
+const MOBILE_CARD_WIDTH = 100;
 
 const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecordWithWinningSide }: GameBoardProps) => {
 
@@ -90,8 +90,8 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
                 <div className="xl:mx-20 -mx-4  relative xxl:pt-[15%] md:pt-20 pt-40">
                     <img src="/images/head-tail/bg.png" alt="game board" className="w-full scale-125 -translate-y-1/4 z-0 h-full absolute top-0 left-0 object-cover" />
                     <div className="bottom-0 left-0 w-full  min-h-40 bg-gradient-to-t scale-125 absolute z-0 from-[#00033D] to-transparent" />
-                    <img src="/images/head-tail/table.png" alt="table" className="w-full relative z-0 aspect-[8/3]" ref={tableRef} />
-                    <video src="/images/head-tail/lady.webm" autoPlay loop muted className="absolute z-10 xsm:left-1/2 left-[calc(48%)] -translate-x-1/2 xl:h-60 h-48 " style={{ bottom: tableHeight - 20 }} ref={ladyRef} />
+                    <img src="/images/head-tail/table.png" alt="table" className="w-full relative z-10 aspect-[8/3]" ref={tableRef} />
+                    <video src="/images/head-tail/lady.webm" autoPlay loop muted controls={false} className="absolute z-0 xsm:left-1/2 left-[calc(48%)] -translate-x-1/2 xl:h-60 h-48 " style={{ bottom: tableHeight - 20 }} ref={ladyRef} />
                     {/* Cards absolute, larger size, with coin images in center */}
                    <CoinToss
                     isFlipping={isPlaceOver}
@@ -185,7 +185,7 @@ const HeadCard = ({ bet, win, className, onClick, isMobile, style, name }: CardP
 
         {/* Top Bar */}
         <div
-            className="w-[calc(100%-12px)] py-0.5 px-0 text-center m-1.5"
+            className="w-[calc(100%-12px)] md:py-0.5 px-0 text-center m-1.5"
             style={{
                 borderRadius: "9px",
                 border: "1px solid #6CDCFB",
@@ -193,7 +193,7 @@ const HeadCard = ({ bet, win, className, onClick, isMobile, style, name }: CardP
                 boxShadow: "0px 0px 10.8px -2px #7AB3FF inset",
             }}
         >
-            <span className={cn("font-medium tracking-wider text-[#6CDCFB] drop-shadow font-protest-strike", isMobile ? "text-sm" : "text-sm")}>HEAD</span>
+            <span className={cn("font-medium tracking-wider text-[#6CDCFB] drop-shadow font-protest-strike", isMobile ? "text-xs" : "text-sm")}>HEAD</span>
         </div>
         {/* SubLabel and Coin */}
         <div className="flex flex-col items-center flex-1 justify-center relative w-full">
@@ -256,7 +256,7 @@ const TailCard = ({ bet, win, className, onClick, isMobile, name }: CardProps) =
         {bet > 0 && <BetIndicator key={bet} bet={bet} className="left-1/2 !drop-shadow-none -translate-x-1/2 top-0 -translate-y-full" />}
         {/* Top Bar */}
         <div
-            className="w-[calc(100%-12px)] py-0.5 px-0 text-center m-1.5"
+            className="w-[calc(100%-12px)] md:py-0.5 px-0 text-center m-1.5"
             style={{
                 borderRadius: "9px",
                 border: "1px solid #6CDCFB",
@@ -264,7 +264,7 @@ const TailCard = ({ bet, win, className, onClick, isMobile, name }: CardProps) =
                 boxShadow: "0px 0px 10.8px -2px #7AB3FF inset",
             }}
         >
-            <span className="text-sm font-medium tracking-wider text-[#6CDCFB] drop-shadow font-protest-strike">TAIL</span>
+            <span className="text-xs md:text-sm font-medium tracking-wider text-[#6CDCFB] drop-shadow font-protest-strike">TAIL</span>
         </div>
         {/* SubLabel and Coin */}
         <div className="flex flex-col items-center flex-1 justify-center relative w-full">
