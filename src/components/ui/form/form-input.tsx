@@ -1,7 +1,6 @@
 "use client";
 
 import { Control, FieldPath, FieldValues } from "react-hook-form";
-
 import {
   FormControl,
   FormDescription,
@@ -13,6 +12,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
+/**
+ * Game style input for forms.
+ * Applies special styles when `game` prop is true.
+ */
 function FormInput<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
@@ -37,16 +40,31 @@ function FormInput<
   name: TName;
   description?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>) {
+  // Game input styles (matches /features/platform/filters.tsx)
+  const gameInputClass =
+    "w-full bg-primary-game border border-platform-border ring-0 focus:bg-primary-game/80 focus:border-platform-border text-white placeholder:text-gray-200 dark:placeholder:text-gray-400 h-12 rounded-none";
+
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={className}>
-          {label && <FormLabel className={cn(game ? "text-white" : '')}>{label}</FormLabel>}
+        <FormItem className={cn(className, game ? "space-y-1" : "")}>
+          {label && (
+            <FormLabel className={cn(game ? "text-platform-text mb-0" : "")}>
+              {label}
+            </FormLabel>
+          )}
           <FormControl>
-            <div className={"relative"}>
-              <Input className={cn(inputClassName, game ? "h-12 text-white text-input-field bg-input-background border border-primary focus:border-secondary-game" : '')} {...props} {...field} />
+            <div className="relative">
+              <Input
+                className={cn(
+                  inputClassName,
+                  game ? gameInputClass : ""
+                )}
+                {...props}
+                {...field}
+              />
               {children}
             </div>
           </FormControl>

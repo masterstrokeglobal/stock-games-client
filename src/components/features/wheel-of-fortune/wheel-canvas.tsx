@@ -19,7 +19,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
   roundRecord,
   winningMarketId,
   onSpinComplete,
-  modelUrl = "/models/fortuneWheel/FortuneWheel_v3.glb",
+  modelUrl = "/models/fortuneWheel/fortuneWheel_v4.glb",
   hdriUri = "/models/fortuneWheel/hdri2.exr",
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -479,7 +479,7 @@ export const WheelCanvas: React.FC<WheelCanvasProps> = ({
           const totalMarkets = roundRecord.market.length;
           const segmentAngle = 360 / totalMarkets; // degrees per segment
           const offset = segmentAngle / 2;
-          const winningMarketAngle = (marketIndex / totalMarkets) * 360 + offset;
+          const winningMarketAngle = (marketIndex / totalMarkets) * 360 + offset -5;
           const targetRotation = (360 - winningMarketAngle) % 360;
           // const targetRotation = (winningMarketAngle + 90) % 360 ;
 

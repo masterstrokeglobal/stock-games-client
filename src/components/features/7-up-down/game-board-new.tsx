@@ -3,8 +3,7 @@ import { RankedMarketItem } from '@/hooks/use-leadboard';
 import { cn, SEVEN_UP_DOWN_MULTIPLIER } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
 import { SevenUpDownPlacementType } from '@/models/seven-up-down';
-import { useCreateSevenUpDownPlacement } from '@/react-query/7-up-down';
-import { motion } from 'framer-motion';
+import { useCreateSevenUpDownPlacement, useGetMyCurrentRoundSevenUpDownPlacement } from '@/react-query/7-up-down';
 import React, { Fragment, PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StockPrice } from './StockPriceDisplay';
 
@@ -293,12 +292,12 @@ const MarketItemDisplay: React.FC<{
             key={item.codeName}
             className={cn(
               "px-1.5 text-[9px] py-0.5 rounded-full text-black border absolute will-change-transform transition-all duration-700 ease-out",
-              showResults && "animate-pulse shadow-lg ring-2 ring-white/30",              
+              showResults && "animate-pulse shadow-lg ring-2 ring-white/30",
               // Add higher z-index for results to prevent overlap issues
               showResults ? "z-30" : "z-20"
             )}
             style={{
-              backgroundColor:"white",
+              backgroundColor: "white",
               left: `${position.x}%`,
               borderColor: isPositive ? 'rgb(34, 197, 94)' : 'rgb(239, 68, 68)',
               top: `${finalY}%`,
@@ -318,7 +317,7 @@ const MarketItemDisplay: React.FC<{
               minWidth: showResults ? '40px' : 'auto',
             } as React.CSSProperties}
           >
-            <div className="font-medium whitespace-nowrap">{item.codeName}</div>
+            <div className="font-medium whitespace-nowrap truncate">{item.codeName}</div>
           </div>
         );
       })}
@@ -430,12 +429,14 @@ const MarketItemDisplay: React.FC<{
 export const GameBoard: React.FC<PropsWithChildren<{
   roundRecord: RoundRecord,
   amount: number,
+  className?: string,
   marketItems: RankedMarketItem[],
   roundRecordWithWinningId: RoundRecord | null
-}>> = ({ roundRecord, children, amount, marketItems, roundRecordWithWinningId }) => {
+}>> = ({ roundRecord, children, amount, marketItems, roundRecordWithWinningId, className }) => {
   const { mutate } = useCreateSevenUpDownPlacement();
   const isPlaceOver = usePlacementOver(roundRecord);
   const [displayItems, setDisplayItems] = useState(marketItems);
+  const { data: currentRoundPlacements } = useGetMyCurrentRoundSevenUpDownPlacement(roundRecord.id);
 
   // Immediate, synchronous updates to prevent delay
   useEffect(() => {
@@ -454,6 +455,19 @@ export const GameBoard: React.FC<PropsWithChildren<{
 
   const showWinner = roundRecordWithWinningId?.finalPricesPresent;
 
+  const betCalculations = useMemo(() => {
+    const upBets = currentRoundPlacements?.filter(p => p.placement === SevenUpDownPlacementType.UP) || [];
+    const downBets = currentRoundPlacements?.filter(p => p.placement === SevenUpDownPlacementType.DOWN) || [];
+    const sevenBets = currentRoundPlacements?.filter(p => p.placement === SevenUpDownPlacementType.SEVEN) || [];
+
+    return {
+      totalUpBets: upBets.reduce((acc, bet) => acc + bet.amount, 0),
+      totalDownBets: downBets.reduce((acc, bet) => acc + bet.amount, 0),
+      totalSevenBets: sevenBets.reduce((acc, bet) => acc + bet.amount, 0),
+    };
+  }, [roundRecordWithWinningId,currentRoundPlacements]);
+
+
   const handleBoardClick = useCallback((type: SevenUpDownPlacementType) => {
     if (isPlaceOver) return;
     mutate({
@@ -463,14 +477,12 @@ export const GameBoard: React.FC<PropsWithChildren<{
     });
   }, [isPlaceOver, mutate, roundRecord.id, amount]);
 
-
-
   return (
     <div
-      className="relative  w-full  md:mx-auto"
+      className={cn("relative  w-full  md:mx-auto", className)}
     >
       {children}
-      <div className="flex justify-between flex-col gap-2 w-full">
+      <div className="flex xl:justify-around justify-between flex-col h-full gap-2 w-full">
         <MarketRow items={displayItems.slice(0, 7)} />
         <div className="relative z-0 h-[20rem]   w-full">
           {/* Market items display */}
@@ -481,7 +493,7 @@ export const GameBoard: React.FC<PropsWithChildren<{
               <MarketItemDisplay
                 items={displayItems}
                 showResults={showWinner || false}
-                isTransitioning={false} 
+                isTransitioning={false}
               />
             )}
           </div>
@@ -493,22 +505,32 @@ export const GameBoard: React.FC<PropsWithChildren<{
           <div
             onClick={() => handleBoardClick(SevenUpDownPlacementType.UP)}
             className={cn(
-              "absolute inset-x-0 top-0 h-[10rem] hover:scale-[1.02] cursor-pointer transition-all duration-500 flex flex-col items-center justify-start pt-4",
+              "absolute inset-x-0 top-0 h-[10rem] cursor-pointer transition-all duration-500 flex flex-col items-center justify-start pt-4",
             )}
           >
             <div className="text-2xl font-protest-strike opacity-80 text-white">7 Up</div>
             <div className="text-sm  font-protest-strike opacity-80 text-white">1:{SEVEN_UP_DOWN_MULTIPLIER}</div>
+           { betCalculations.totalUpBets > 0 && (
+            <div className="font-inter p-5 text-xs rounded-full bg-[url('/images/seven-up-down/coin.png')] bg-cover bg-center absolute top-0 left-0 opacity-80 text-yellow-900 font-semibold">
+              {betCalculations.totalUpBets}
+            </div>
+           )}
           </div>
 
           {/* 0-6 Area */}
           <div
             onClick={() => handleBoardClick(SevenUpDownPlacementType.DOWN)}
             className={cn(
-              "absolute inset-x-0 bottom-0 cursor-pointer hover:scale-[1.02] transition-all duration-500 h-[10rem] flex flex-col items-center justify-end py-4",
+              "absolute inset-x-0 bottom-0 cursor-pointer transition-all duration-500 h-[10rem] flex flex-col items-center justify-end py-4",
             )}
           >
             <div className="text-2xl font-protest-strike opacity-80  text-white">7 Down</div>
             <div className="text-sm font-protest-strike opacity-80 text-white">1:{SEVEN_UP_DOWN_MULTIPLIER}</div>
+            { betCalculations.totalDownBets > 0 && (
+            <div className="font-inter p-5 text-xs rounded-full bg-[url('/images/seven-up-down/coin.png')] bg-cover bg-center absolute bottom-0 left-0 opacity-80 text-yellow-900 font-semibold">
+              {betCalculations.totalDownBets}
+            </div>
+           )}
           </div>
         </div>
         <MarketRow items={displayItems.slice(7, 14)} />
@@ -517,60 +539,215 @@ export const GameBoard: React.FC<PropsWithChildren<{
   );
 };
 
-const SevenBetButton: React.FC<{
-  onClick: () => void;
-  className?: string;
-}> = ({  className }) => {
+const SevenBetButton = ({ className = "", onClick = () => {} }) => {
   return (
-    <motion.div
-      className={cn(
-        "absolute cursor-pointer w-48 h-24 flex flex-col items-center justify-center z-10",
-        className
-      )}
-
-      style={{
-        border: '3px solid #FFDE21', // blue border as in the image
-        borderRadius: '50%',    // oval shape
-        overflow: 'hidden',
-        background: 'transparent',
-      }}
-    >
-      {/* Rotating gradient background, but not the border */}
-      <motion.div
-        className="absolute inset-0 "
-        style={{
-          width: '100%',
-          height: '100%',
-          zIndex: 0,
-          scale: 2.3,
-        }}
-        animate={{
-          rotate: 360,
-        }}
-        transition={{
-          duration: 30, // very slow
-          repeat: Infinity,
-          ease: "linear"
-        }}
-      >
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            borderRadius: '50% / 40%',
-            background: 'linear-gradient(124deg, #E5C300 -4.44%, #805E01 34.69%, #EFCB00 66.57%, #805E01 96.03%)'
-          }}
-        />
-      </motion.div>
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center w-full h-full">
-        <div className="text-3xl font-bold text-black" style={{ fontFamily: 'Oval, sans-serif' }}>
-          7 Up Down
+    <div className="button-container">
+      {/* Golden Animated Background (behind button) */}
+      <div className="fancy-timer-wrapper">
+        <div className="fancy-timer-container">
+          <div className="fancy-timer-loader"><span /></div>
+          <div className="fancy-timer-loader"><span /></div>
+          <div className="fancy-timer-loader"><i /></div>
+          <div className="fancy-timer-loader"><i /></div>
         </div>
       </div>
-    </motion.div>
+
+      {/* SevenBetButton (in front) */}
+      <div
+        className={`seven-bet-button ${className}`}
+        onClick={onClick}
+      >
+        {/* Rotating gradient background */}
+        <div className="rotating-gradient">
+          <div className="gradient-inner" />
+        </div>
+
+        {/* Content */}
+        <div className="button-content">
+          <div className="button-text">
+            7 Up Down
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        .button-container {
+          position: relative;
+          width: 192px;
+          height: 96px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        /* Golden Animated Background Styles */
+        .fancy-timer-wrapper {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          z-index: 1;
+        }
+
+        .fancy-timer-container {
+          position: relative;
+          display: flex;
+          height: 100%;
+          width: 100%;
+          justify-content: center;
+          align-items: center;
+          shape-rendering: crispEdges;
+          image-rendering: pixelated, crisp-edges, -moz-crisp-edges;
+        }
+
+        .fancy-timer-loader {
+          position: absolute;
+          width: 210px;
+          height: 110px;
+          border-radius: 50%;
+          animation: fancy-timer-anim 2s linear infinite;
+          background: transparent;
+        }
+
+        .fancy-timer-loader:nth-child(2),
+        .fancy-timer-loader:nth-child(4) {
+          animation-delay: -1s;
+          filter: hue-rotate(0deg);
+          box-sizing: border-box;
+          clear: initial;
+        }
+
+        @keyframes fancy-timer-anim {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+
+        .fancy-timer-loader:nth-child(1):before,
+        .fancy-timer-loader:nth-child(2):before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 50%;
+          height: 100%;
+          background: transparent;
+          background-size: 105px 125px;
+          background-repeat: no-repeat;
+          border-top-left-radius: 105px 55px;
+          border-bottom-left-radius: 105px 55px;
+          filter: blur(0.65px);
+        }
+
+        .fancy-timer-loader i {
+          position: absolute;
+          top: 0px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 20px;
+          height: 20px;
+          background: rgb(255, 222, 33);
+          border-radius: 50%;
+          z-index: 10;
+          box-shadow:
+            0 0 10px rgb(255, 222, 33),
+            0 0 20px rgb(255, 222, 33),
+            0 0 30px rgb(255, 222, 33),
+            0 0 40px rgb(255, 222, 33),
+            0 0 50px rgb(255, 222, 33),
+            0 0 60px rgb(255, 222, 33),
+            0 0 70px rgb(255, 222, 33),
+            0 0 80px rgb(255, 222, 33),
+            0 0 90px rgb(255, 222, 33),
+            0 0 100px rgb(255, 222, 33);
+          filter: blur(5px);
+        }
+
+        .fancy-timer-loader span {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          right: 20px;
+          bottom: 20px;
+          background: transparent;
+          border-radius: 50%;
+          z-index: 1;
+          filter: blur(3.4px);
+        }
+
+        /* SevenBetButton Styles */
+        .seven-bet-button {
+          position: relative;
+          cursor: pointer;
+          width: 192px;
+          height: 96px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          z-index: 10;
+          border: 3px solid #FFDE21;
+          border-radius: 50%;
+          overflow: hidden;
+          background: transparent;
+        }
+
+        .rotating-gradient {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 0;
+          transform: scale(2.3);
+          animation: rotate-gradient 30s linear infinite;
+        }
+
+        .gradient-inner {
+          width: 100%;
+          height: 100%;
+          border-radius: 50% / 40%;
+          background: linear-gradient(124deg, #E5C300 -4.44%, #805E01 34.69%, #EFCB00 66.57%, #805E01 96.03%);
+        }
+
+        @keyframes rotate-gradient {
+          0% {
+            transform: scale(2.3) rotate(0deg);
+          }
+          100% {
+            transform: scale(2.3) rotate(360deg);
+          }
+        }
+
+        .button-content {
+          position: relative;
+          z-index: 10;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+        }
+
+        .button-text {
+          font-size: 24px;
+          font-weight: bold;
+          color: black;
+          font-family: 'Arial', sans-serif;
+        }
+
+        @media (min-width: 768px) {
+          .button-text {
+            font-size: 30px;
+          }
+        }
+      `}</style>
+    </div>
   );
 };
+
 
 const WinnerOverlay: React.FC<{
   roundRecordWithWinningId: RoundRecord | null
@@ -581,29 +758,39 @@ const WinnerOverlay: React.FC<{
   const positiveStocks = roundRecordWithWinningId?.winningId?.length || 0;
   let winningSection: "seven" | "up" | "down" | null = null;
   if (finalPricesPresent) {
-    if (positiveStocks === 7) winningSection = "seven";
-    else if (positiveStocks > 7) winningSection = "up";
+    if (positiveStocks >= 7) winningSection = "up";
     else if (positiveStocks < 7) winningSection = "down";
   }
 
   let winnerLabel = "";
-  if (winningSection === "seven") {
-    winnerLabel = "7";
-  } else if (winningSection === "up") {
+  if (winningSection === "up") {
     winnerLabel = "7 up";
   } else if (winningSection === "down") {
     winnerLabel = "7 down";
   }
 
   if (!finalPricesPresent) return null;
+
+
+  
+  // Set styles for up (green) and down (red)
+  const isDown = winningSection === "down";
+  const overlayStyle = isDown
+    ? {
+        background: "linear-gradient(108.92deg, #E02C0C 29.33%, #380104 114.8%)",
+        borderColor: "rgba(219, 15, 0, 1)",
+        boxShadow: "0px 0px 15px 1px rgba(222, 0, 0, 1)",
+      }
+    : {
+        background: "linear-gradient(108.92deg, #0C9E02 29.33%, #043801 114.8%)",
+        borderColor: "rgba(15, 219, 0, 1)",
+        boxShadow: "0px 0px 15px 1px rgba(0, 222, 0, 1)",
+      };
+
   return (
     <>
       <div
-        style={{
-          background: "linear-gradient(108.92deg, #0C9E02 29.33%, #043801 114.8%)",
-          borderColor: "rgba(15, 219, 0, 1)",
-          boxShadow: "0px 0px 15px 1px rgba(222, 189, 0, 1)",
-        }}
+        style={overlayStyle}  
         className={cn(
           "w-full backdrop-blur-lg  xs:max-w-screen-xs max-w-72 rounded-md z-[60] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-6 border-2"
         )}
@@ -617,10 +804,7 @@ const WinnerOverlay: React.FC<{
           </p>
         </div>
       </div>
-      <div
-       
-        className="w-full h-full bg-black/50 scale-110 blur-sm absolute z-40 top-0 left-0"
-      />
+      <div className="w-full h-full bg-black/50 scale-110 blur-sm absolute z-40 top-0 left-0" />
     </>
   );
 };

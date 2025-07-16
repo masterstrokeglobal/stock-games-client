@@ -2,6 +2,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { RoundRecordGameType } from "@/models/round-record";
 import { useGetUserGameHistory } from "@/react-query/game-user-queries";
+import SevenUpDownChip from "@/components/features/7-up-down/chip";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 
@@ -21,8 +22,11 @@ const BetHistoryTable = ({ className }: { className?: string }) => {
 
   // Filter state
   const [showFilter, setShowFilter] = useState(false);
-  const [filterDate, setFilterDate] = useState<string>("");
-  const [filterTime, setFilterTime] = useState<string>("");
+  // Set filterDate to yesterday's date at 12:00 AM by default
+  const [filterDate, setFilterDate] = useState<string>(
+    dayjs().subtract(1, "day").format("YYYY-MM-DD")
+  );
+  const [filterTime, setFilterTime] = useState<string>("00:00");
 
   // For API: combine date and time if both are set
   const filterStartDate = filterDate && filterTime
@@ -65,9 +69,9 @@ const BetHistoryTable = ({ className }: { className?: string }) => {
 
   return (
     <section className={cn("w-full overflow-hidden", className)}>
-      <header className="py-4 px-4 flex flex-col gap-2 bg-transparent relative">
+      <header className="md:py-4 md:px-4 mb-4 flex flex-col gap-2 bg-transparent relative">
         <div className="flex items-center gap-2 justify-between w-full">
-        <span className="text-[#8BB4FF] md:text-xl xs:text-lg font-bold tracking-wider uppercase">
+        <span className="text-[#8BB4FF] md:text-xl xs:text-lg font-extrabold tracking-wide uppercase">
           My Bet History
         </span>
         <div className="relative">
@@ -89,15 +93,13 @@ const BetHistoryTable = ({ className }: { className?: string }) => {
               value={formattedDate}
               onChange={handleDateChange}
               className="text-white input-dark-calendar bg-[#111641B2] border border-[#6A9FFF] rounded h-8 px-2 outline-none  w-[120px] text-xs font-medium"
-              style={{ appearance: "none" }}
               />
             <input
               type="time"
               value={formattedTime}
               onChange={handleTimeChange}
               className="text-white  input-dark-calendar h-8 px-2 rounded outline-none w-[100px] text-xs font-medium bg-[#111641B2] border border-[#6A9FFF]"
-              style={{ appearance: "none" }}
-              />
+           />
         </div>
       )}
       </header>
@@ -123,7 +125,7 @@ const BetHistoryTable = ({ className }: { className?: string }) => {
               CASHOUT INR
             </div>
           </div>
-          <ScrollArea className={cn(showFilter ? "h-[calc(100svh-28rem)]" : "h-[calc(100svh-25rem)]")} scrollThumbClassName="bg-[#BED5FF]">
+          <ScrollArea className={cn(showFilter ? "h-[calc(100svh-29rem)]" : "h-[calc(100svh-26rem)]")} scrollThumbClassName="bg-[#BED5FF]">
             {history.map((bet, index) => (
               <div
                 key={index}
@@ -137,28 +139,12 @@ const BetHistoryTable = ({ className }: { className?: string }) => {
                 </div>
                 <div className="py-2 px-4 flex-1 min-w-[140px]">
                   <div className="flex items-center gap-2">
-                    <span
-                      style={{
-                        backgroundColor:
-                          bet.selectedSide === "up" ? "#6DCB4B" : "#E94B4B",
-                      }}
-                      className={cn("size-3 rounded-full")}
-                    />
-                    <span className="text-white text-sm">
-                      {bet.selectedSide}
-                    </span>
+                    <SevenUpDownChip side={bet.selectedSide} />   
                   </div>
                 </div>
                 <div className="py-2 px-4 flex-1 min-w-[120px]">
                   <div className="flex items-center gap-2">
-                    <span
-                      style={{
-                        backgroundColor:
-                          bet.winner === "7 Up" ? "#6DCB4B" : "#E94B4B",
-                      }}
-                      className={cn("size-3 rounded-full")}
-                    />
-                    <span className="text-white text-sm">{bet.winner}</span>
+                    <SevenUpDownChip side={bet.winner === "7 Up" ? "up" : bet.winner === "7 Down" ? "down" : "seven"} />
                   </div>
                 </div>
                 <div className="py-2 px-4 text-white text-sm flex-1 min-w-[100px]">
@@ -180,40 +166,26 @@ const BetHistoryTable = ({ className }: { className?: string }) => {
                 key={index}
                 className="rounded-xl bg-[#1B2B4B] border overflow-hidden border-[#517ED4] shadow-md"
               >
-                <div className="flex  items-center justify-between  px-4 py-1 bg-[#1A2867] border-b border-[#517ED4] ">
-                  <div className="text-[#8BB4FF] font-semibold text-base tracking-wider">
+                <div className="flex  items-center justify-between  px-2 py-1 bg-[#1A2867] border-b border-[#517ED4] ">
+                  <div className="text-[#8BB4FF] font-semibold text-sm tracking-wider">
                     {dayjs(bet.createdAt).format("DD/MM/YYYY")}
                   </div>
                   <div className="text-[#BED5FF] font-semibold text-sm">
                     {dayjs(bet.createdAt).format("dddd")}
                   </div>
                 </div>
-                <div className=" gap-1 grid grid-cols-2 text-xs bg-[#2958AF] text-sm px-4 py-2 ">
+                <div className=" gap-1 grid grid-cols-2 text-xs bg-[#2958AF]  px-2 py-2 ">
                   <div className="flex items-center justify-start gap-2">
                     <span className="text-[#BED5FF] whitespace-nowrap">
                       Selected Side :
                     </span>
-                    <span
-                      style={{
-                        backgroundColor:
-                          bet.selectedSide === "up" ? "#6DCB4B" : "#E94B4B",
-                      }}
-                      className={cn("size-3 rounded-full")}
-                    />
-                    <span className="text-white whitespace-nowrap">{bet.selectedSide === "up" ? "7 Up" : "7 Down"}</span>
+                    <SevenUpDownChip side={bet.selectedSide} />
                   </div>
-                  <div className="flex items-center justify-start gap-2">
+                  <div className="flex pl-6 items-center justify-start gap-2">
                     <span className="text-[#BED5FF] whitespace-nowrap">
                       Winner :
                     </span>
-                    <span
-                      style={{
-                        backgroundColor:
-                          bet.winner === "7 Up" ? "#6DCB4B" : "#E94B4B",
-                      }}
-                      className={cn("size-3 rounded-full")}
-                    />
-                    <span className="text-white whitespace-nowrap">{bet.winner}</span>
+                    <SevenUpDownChip side={bet.winner === "7 Up" ? "up" : bet.winner === "7 Down" ? "down" : "seven"} />
                   </div>
                   <div className="flex items-center justify-start gap-2">
                     <span className="text-[#BED5FF] whitespace-nowrap">
@@ -221,7 +193,7 @@ const BetHistoryTable = ({ className }: { className?: string }) => {
                     </span>
                     <span className="text-white whitespace-nowrap">{bet.amount}</span>
                   </div>
-                  <div className="flex items-center justify-start gap-2">
+                  <div className="flex pl-6 items-center justify-start gap-2">
                     <span className="text-[#BED5FF] whitespace-nowrap">
                       Cashout INR :
                     </span>
@@ -235,12 +207,12 @@ const BetHistoryTable = ({ className }: { className?: string }) => {
       </div>
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-8 mt-6 select-none">
+        <div className="flex items-center justify-center  md:gap-8 gap-2 mt-6 select-none">
           <button
             onClick={handlePrev}
             disabled={page === 1}
             className={cn(
-              "flex items-center gap-1 text-base font-medium transition",
+              "flex items-center gap-1 md:text-base text-sm font-medium transition",
               page === 1 ? "opacity-50 cursor-not-allowed" : "hover:underline"
             )}
             style={{ color: "#fff" }}
@@ -262,14 +234,14 @@ const BetHistoryTable = ({ className }: { className?: string }) => {
             </svg>
             Previous
           </button>
-          <span className="text-[#8BB4FF] text-base font-medium">
+          <span className="text-[#8BB4FF] whitespace-nowrap md:text-base text-sm font-medium">
             Page {page} of {totalPages}
-          </span>
+          </span> 
           <button
             onClick={handleNext}
             disabled={page === totalPages}
             className={cn(
-              "flex items-center gap-1 text-base font-medium transition",
+              "flex items-center gap-1 md:text-base text-sm  font-medium transition",
               page === totalPages
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:underline"

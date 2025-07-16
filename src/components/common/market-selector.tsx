@@ -7,6 +7,8 @@ import { SchedulerType } from "@/models/market-item";
 import User from "@/models/user";
 import { RoundRecordGameType } from "@/models/round-record";
 import useSchedularCheck from "@/hooks/use-schedular-check";
+import { useTheme } from "@/context/theme-context";
+import Navbar from "../features/game/navbar";
 
 type MarketSelectorProps = {
     title: string;
@@ -15,9 +17,11 @@ type MarketSelectorProps = {
     roundRecordType?: RoundRecordGameType;
 }
 
-const MarketSelector = ({ title, className, roundRecordType = RoundRecordGameType.DERBY }: MarketSelectorProps) => {
+const MarketSelector = ({ title = "STOCK SLOT MARKET", className, roundRecordType = RoundRecordGameType.DERBY }: MarketSelectorProps) => {
     const isNSEAvailable = useNSEAvailable();
     const isUSAMarketAvailable = useUSAMarketAvailable();
+    const theme = useTheme();
+    const isDarkMode = theme === "dark";
 
     const { setMarketSelected } = useMarketSelector();
     const { schedulerStatus } = useSchedularCheck();
@@ -77,84 +81,77 @@ const MarketSelector = ({ title, className, roundRecordType = RoundRecordGameTyp
     const availableMarkets = markets.filter(market => market.allowed);
 
     return (
-        <div
-            className={cn("min-h-screen flex flex-col items-center justify-center p-4", className)}
-            style={{
-                background: 'radial-gradient(ellipse at center, #8B4513 0%, #654321 50%, #3C2415 100%)',
-                backgroundImage: `
-                    radial-gradient(circle at 20% 50%, rgba(255,215,0,0.1) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(255,140,0,0.1) 0%, transparent 50%),
-                    radial-gradient(circle at 40% 80%, rgba(139,69,19,0.2) 0%, transparent 50%)
-                `
-            }}
-        >
+        <section
+            className={cn("min-h-screen dark:bg-[url('/images/platform/market-selector-bg.png')] bg-[url('/images/platform/market-selector-bg-light.png')] w-full bg-cover bg-center flex flex-col items-center justify-center p-4", className)}>
             {/* Header */}
-            <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 shadow-lg mb-4">
-                    <span className="text-3xl">📊</span>
-                </div>
-                <h1 className="text-4xl font-bold text-yellow-200 mb-2 drop-shadow-lg">
+            <Navbar />
+            <div className="dark:bg-[#04002968] bg-[#e6f6ff8b] backdrop-blur-[2px] w-full h-full absolute top-0 left-0"/>
+            <div className="mx-auto max-w-3xl w-full">
+            <header className="text-center mb-8 relative z-10 mt-10">
+                <h1 className="md:text-4xl sm:text-3xl text-2xl font-bold text-platform-text mb-2 ">
                     {title}
                 </h1>
-                <p className="text-yellow-100/80">Choose your trading market to continue</p>
-            </div>
+                <p className="text-platform-text">Choose your trading market to continue</p>
+            </header>
 
             {/* Market Cards Grid */}
-            <div className="grid grid-cols-1  gap-6 max-w-4xl w-full">
+            <main className="grid grid-cols-1  gap-6  w-full">
                 {availableMarkets.map((market) => (
                     <div
-                        key={market.id}
-                        className={cn(
-                            "relative overflow-hidden rounded-xl shadow-2xl transition-all duration-300 hover:scale-105 cursor-pointer",
-                            "border-2 border-yellow-600/30",
-                            !market.available && "opacity-60 cursor-not-allowed hover:scale-100"
-                        )}
+                    key={market.id}
+                    style={{ boxShadow: !isDarkMode ? "1px 1px 20px 5px rgba(100, 183, 254, 1) inset" : "5px 5px 50px 5px rgba(68, 103, 204, 1) inset" }}
+                    className={cn(
+                        "relative overflow-hidden rounded-sm bg-[#C2EBFFB2] dark:bg-transparent shadow-2xl transition-all duration-300  cursor-pointer",
+                        "border-2 dark:border-[#4467CC33] border-transparent",market.available ? "hover:scale-105":"opacity-80")}
                         onClick={() => market.available && handleMarketSelection(market.id)}
-                        style={{
-                            background: 'linear-gradient(135deg, rgba(139,69,19,0.9) 0%, rgba(101,67,33,0.9) 100%)',
-                            boxShadow: '0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)'
-                        }}
-                    >
+                        >
                         {/* Card Content */}
                         <div className="p-6 h-40 flex flex-col justify-between relative">
                             {/* Top Section */}
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <div className="text-3xl mb-2">{market.icon}</div>
-                                    <h3 className="text-2xl font-bold text-yellow-200 mb-1">
-                                        {market.title}
-                                    </h3>
-                                    <p className="text-yellow-100/70 text-sm">
-                                        {market.subtitle}
-                                    </p>
+                                   
                                 </div>
 
                                 {/* Status Badge */}
-                                <div className={cn(
-                                    "px-2 py-1 rounded-full text-xs font-semibold",
-                                    market.available
-                                        ? "bg-green-500/20 text-green-300 border border-green-500/30"
-                                        : "bg-red-500/20 text-red-300 border border-red-500/30"
-                                )}>
+                                <div
+                                    className={cn(
+                                        "px-2 py-1 rounded-full text-sm tracking-wide font-semibold min-w-20 text-center",
+                                        isDarkMode
+                                            ? ""
+                                            : (market.available
+                                                ? "border-[rgba(55,206,153,1)] border-2 bg-[rgba(66,237,177,0.7)] text-platform-text"
+                                                : "border-[rgba(223,81,108,1)] text-platform-text")
+                                    )}
+                                    style={
+                                        market.available
+                                            ? {
+                                                boxShadow: "0px 0px 12px 2px #08FF0080",
+                                                borderColor: "rgba(55,206,153,1)",
+                                            }
+                                            : {
+                                                boxShadow: "0px 0px 7.8px 0px #FF0000",
+                                                borderColor: "rgba(223,81,108,1)",
+                                            }
+                                    }
+                                >
                                     {market.available ? "OPEN" : "CLOSED"}
                                 </div>
                             </div>
 
                             {/* Bottom Section */}
-                            <div className="flex items-center justify-between">
-                                <div className="text-yellow-100/60 text-xs">
+                            <div className="">
+
+                            <h3 className="md:text-2xl sm:text-xl text-lg    font-bold text-platform-text mb-2">
+                                        {market.title}
+                                    </h3>
+                                    <p className="text-platform-text/70 text-sm mb-1">
+                                        {market.subtitle}
+                                    </p>
+                                <div className="text-platform-text/60 text-xs">
                                     Tap to select
                                 </div>
 
-                                <div
-                                    className={cn(
-                                        "w-8 h-8 rounded-full flex items-center justify-center",
-                                        "bg-gradient-to-br shadow-inner border border-yellow-500/30",
-                                        market.color
-                                    )}
-                                >
-                                    <div className="w-3 h-3 bg-white rounded-full opacity-90"></div>
-                                </div>
                             </div>
 
                             {/* Decorative corner elements */}
@@ -163,10 +160,10 @@ const MarketSelector = ({ title, className, roundRecordType = RoundRecordGameTyp
                         </div>
 
                         {/* Hover overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/0 to-orange-400/0 hover:from-yellow-400/5 hover:to-orange-400/5 transition-all duration-300"></div>
+                        <div className="absolute inset-0 bg-gradient-to-br from-platform-text/0 to-platform-text/0 hover:from-platform-text/5 hover:to-platform-text/5 transition-all duration-300"></div>
                     </div>
                 ))}
-            </div>
+            </main>
 
             {/* No markets available message */}
             {availableMarkets.length === 0 && (
@@ -175,7 +172,8 @@ const MarketSelector = ({ title, className, roundRecordType = RoundRecordGameTyp
                     <div className="text-yellow-100/40 text-sm">Please check your permissions or try again later</div>
                 </div>
             )}
-        </div>
+            </div>
+        </section>
     );
 };
 

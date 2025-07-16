@@ -81,8 +81,9 @@ const MobileBettingHistory = ({ history }: { history: History[] }) => {
 
 // Pagination component
 const Pagination = ({ currentPage, totalPages, onPageChange }: { currentPage: number; totalPages: number; onPageChange: (page: number) => void }) => {
+    console.log(currentPage, totalPages);
     return (
-        <div className="flex items-center justify-center gap-2 mt-4">
+        <div className="flex items-center z-10 relative justify-center gap-2 mt-4">
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage <= 1}

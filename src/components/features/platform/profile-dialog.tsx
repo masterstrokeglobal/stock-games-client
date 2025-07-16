@@ -24,6 +24,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ReactNode, useMemo, useRef, useState } from "react";
 import WalletDialog from './wallet-dialog';
+import ContactDialog from './contact-dialog';
 
 interface ProfileDialogProps {
     children: ReactNode;
@@ -31,6 +32,7 @@ interface ProfileDialogProps {
 
 const ProfileDialog = ({ children }: ProfileDialogProps) => {
     const [openWalletDialog, setOpenWalletDialog] = useState(false);
+    const [openContactDialog, setOpenContactDialog] = useState(false);
     const closebuttonref = useRef<HTMLButtonElement>(null);
     const t = useTranslations("user-menu");
     const { userDetails } = useAuthStore();
@@ -50,27 +52,27 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
     // Menu items configuration with updated image icons
     const menuItems = [
         {
-            href: "/game/profile",
+            href: "/game/platform/profile",
             icon: "/images/platform/user-menu/your-info.png",
             label: t('your-info')
         },
         {
-            href: "/game/change-password",
+            href: "/game/platform/change-password",
             icon: "/images/platform/user-menu/change-password.png",
             label: t('change-password')
         },
         {
-            href: "/game/transaction-history",
+            href: "/game/platform/transaction-history",
             icon: "/images/platform/user-menu/transaction-history.png",
             label: t('transaction-history')
         },
         {
-            href: "/game/betting-history",
+            href: "/game/platform/betting-history",
             icon: "/images/platform/user-menu/betting-history.png",
             label: t('betting-history')
         },
         {
-            href: "/game/wallet/menu",
+            href: "/game/platform/wallet/menu",
             Parent:  ( item: { icon: string, label: string }) =>   (
             <Button onClick={() => {
                 setOpenWalletDialog(true);
@@ -86,17 +88,28 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
             label: t('your-wallet')
         },
         {
-            href: "/game/terms-and-condition",
+            href: "/game/platform/terms-and-condition",
             icon: "/images/platform/user-menu/terms-and-conditions.png",
             label: t('terms-and-conditions')
         },
         {
-            href: "/game/contact",
+            href: "/game/platform/contact",
             icon: "/images/platform/user-menu/contact-us.png",
-            label: t('contact-us')
+            label: t('contact-us'),
+            Parent:  ( item: { icon: string, label: string }) =>   (
+            <Button onClick={() => {
+                setOpenContactDialog(true);
+                closebuttonref.current?.click();
+            }} variant="ghost" className="w-full rounded-none h-16 border-2 dark:border-platform-border border-primary-game justify-start text-platform-text flex gap-4">
+                <div className="w-10 h-10 backdrop-blur-sm p-0.5 border-2 dark:border-platform-border border-primary-game rounded-full flex items-center justify-center">
+                    <img src={`${item.icon}`} alt={item.label} className="w-full h-auto block" />
+                </div>
+                        <span className="font-semibold">{item.label}</span>
+                    </Button>
+            ),
         },
         {
-            href: "/game/rules",
+            href: "/game/platform/rules",
             icon: "/images/platform/user-menu/rules.png",
             label: t('rules')
         },
@@ -109,7 +122,8 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
 
     return (
         <>
-        <WalletDialog key={String(openWalletDialog)} open={openWalletDialog} onClose={() => setOpenWalletDialog(false)} />
+        <WalletDialog key={String(`${openWalletDialog}-wallet`)} open={openWalletDialog} onClose={() => setOpenWalletDialog(false)} />
+        <ContactDialog key={String(`${openContactDialog}-contact`)} open={openContactDialog} onClose={() => setOpenContactDialog(false)} />
         <Dialog>
             <DialogTrigger asChild>
                 {children}

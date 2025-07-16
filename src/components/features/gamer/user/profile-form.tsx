@@ -92,10 +92,10 @@ const ProfileUpdateForm = ({ showReferenceCode }: Props) => {
         <div className="w-full max-w-sm">
             <FormProvider methods={form} onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="grid sm:grid-cols-2 gap-4">
-                    <FormImage 
-                        control={control} 
-                        name="profileImage" 
-                        label={t('labels.profile-image')} 
+                    <FormImage
+                        control={control}
+                        name="profileImage"
+                        label={t('labels.profile-image')}
                     />
                 </div>
                 <div className="grid sm:grid-cols-2 gap-4">
@@ -140,13 +140,13 @@ const ProfileUpdateForm = ({ showReferenceCode }: Props) => {
                 />
 
                 {showReferenceCode && (
-                    <FormInput 
-                        control={control} 
-                        game 
-                        name="referenceCode" 
-                        label={t('labels.reference-code')} 
-                        type="text" 
-                        disabled 
+                    <FormInput
+                        control={control}
+                        game
+                        name="referenceCode"
+                        label={t('labels.reference-code')}
+                        type="text"
+                        disabled
                     />
                 )}
 
@@ -154,8 +154,8 @@ const ProfileUpdateForm = ({ showReferenceCode }: Props) => {
                     <Button
                         type="submit"
                         size="lg"
-                        variant="game"
-                        className="w-full"
+                        variant="platform-gradient-secondary"
+                        className="w-full rounded-none"
                         disabled={isUpdating || isLoadingProfile}
                     >
                         {isUpdating ? (

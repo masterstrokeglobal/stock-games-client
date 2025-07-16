@@ -92,8 +92,8 @@ const PasswordChangeForm = () => {
                     <Button
                         type="submit"
                         size="lg"
-                        variant="game"
-                        className="w-full"
+                        variant="platform-gradient-secondary"   
+                        className="w-full rounded-none"
                         disabled={isChanging}
                     >
                         {isChanging ? (

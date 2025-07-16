@@ -2,7 +2,7 @@ import { RankedMarketItem, useLeaderboard } from '@/hooks/use-leadboard';
 import { cn } from '@/lib/utils';
 import { RoundRecord, WHEEL_COLOR_CONFIG } from '@/models/round-record';
 import { WheelColor } from '@/models/wheel-of-fortune-placement';
-import { useCreateWheelOfFortunePlacement, useGetMyCurrentRoundWheelOfFortunePlacement } from '@/react-query/wheel-of-fortune-queries';
+import { useCreateWheelOfFortunePlacement } from '@/react-query/wheel-of-fortune-queries';
 import { useMemo } from 'react';
 import TriangleDownGlow from '../common/triangle-down-glow';
 import TriangleUpGlow from '../common/triangle-up-glow';
@@ -56,7 +56,7 @@ export default function WheelOfFortuneGameBoard({ roundRecord, amount, className
 
   const { stocks } = useLeaderboard(roundRecord);
   const { mutate: createWheelPlacement, isPending } = useCreateWheelOfFortunePlacement();
-  const { data: placements } = useGetMyCurrentRoundWheelOfFortunePlacement(roundRecord.id);
+  // const { data: placements } = useGetMyCurrentRoundWheelOfFortunePlacement(roundRecord.id);
 
   const winningId = roundRecordWithWinningId?.winningId || null;
 
@@ -75,13 +75,13 @@ export default function WheelOfFortuneGameBoard({ roundRecord, amount, className
   };
 
   // Calculate total bets for each color
-  const colorBets: Record<WheelColor, number> | undefined = placements?.reduce((acc, placement) => {
-    if (!acc[placement.placementColor]) {
-      acc[placement.placementColor] = 0;
-    }
-    acc[placement.placementColor] += placement.amount;
-    return acc;
-  }, {} as Record<WheelColor, number>);
+  // const colorBets: Record<WheelColor, number> | undefined = placements?.reduce((acc, placement) => {
+  //   if (!acc[placement.placementColor]) {
+  //     acc[placement.placementColor] = 0;
+  //   }
+  //   acc[placement.placementColor] += placement.amount;
+  //   return acc;
+  // }, {} as Record<WheelColor, number>);
 
 
   const winningColor = useMemo(() => {
@@ -96,18 +96,19 @@ export default function WheelOfFortuneGameBoard({ roundRecord, amount, className
       {children}
       {/* Color Cards Grid */}
       <div className="  flex flex-wrap gap-2 justify-center w-full">
-          <ColorCard color={WheelColor.COLOR5} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
-          <ColorCard color={WheelColor.COLOR4} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
-          <ColorCard color={WheelColor.COLOR3} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
-          <ColorCard color={WheelColor.COLOR2} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
-          <ColorCard color={WheelColor.COLOR1} colorBets={colorBets} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
+          <ColorCard color={WheelColor.COLOR5} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
+          <ColorCard color={WheelColor.COLOR4} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
+          <ColorCard color={WheelColor.COLOR3} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
+          <ColorCard color={WheelColor.COLOR2} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
+          <ColorCard color={WheelColor.COLOR1} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
       </div>
     </div>
   );
 }
-const ColorCard = ({ color, winningColor, isPending, handleColorClick, roundRecord, marketItemsStocks }: { color: WheelColor, colorBets?: Record<WheelColor, number>, winningColor: WheelColor | null, isPending: boolean, roundRecord: RoundRecord, handleColorClick: (color: WheelColor) => void, marketItemsStocks: RankedMarketItem[] }) => {
+const ColorCard = ({ color, winningColor, isPending, handleColorClick, roundRecord, marketItemsStocks }: { color: WheelColor, winningColor: WheelColor | null, isPending: boolean, roundRecord: RoundRecord, handleColorClick: (color: WheelColor) => void, marketItemsStocks: RankedMarketItem[] }) => {
   const config = WHEEL_COLOR_CONFIG[color];
   const currentColorConfig = colorConfig.find(c => c.color === color);
+  // const myBetAmount = colorBets?.[color] || 0;
   const isWinner = winningColor === color;
 
   // Get the top performing stock from marketItemsStocks

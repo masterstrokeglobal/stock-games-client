@@ -77,7 +77,7 @@ const BetsList = ({
       <ScrollArea
         scrollThumbClassName="bg-[#4467CC]"
         type="auto"
-        className="h-[calc(100vh-320px)]"
+        className="h-[calc(100vh-340px)]"
       >
         <div className="flex flex-col  gap-3 pb-2">
           {history.map((bet, index) => (
