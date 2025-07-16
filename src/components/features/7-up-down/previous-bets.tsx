@@ -75,8 +75,8 @@ const BetsList = ({
         <div className="flex-1 text-left text-nowrap whitespace-nowrap">WINNER</div>
       </div>
       <ScrollArea
-        scrollThumbClassName="bg-[#4467CC]"
-        type="auto"
+        scrollThumbClassName="bg-[#517ED4]" type="auto"
+
         className="h-[calc(100vh-340px)]"
       >
         <div className="flex flex-col  gap-3 pb-2">
@@ -87,12 +87,12 @@ const BetsList = ({
             >
               <div className="flex-1 text-left font-light">{dayjs(bet.createdAt).format("hh:mm A")}</div>
               <div className="flex-1 text-left flex items-center gap-2">
-               <SevenUpDownChip side={bet.selectedSide} />
+                <SevenUpDownChip side={bet.selectedSide} />
               </div>
               <div className="flex-1 text-left flex items-center gap-2">
                 <SevenUpDownChip side={getWinnerSide(bet.winner)} />
               </div>
-             
+
             </div>
           ))}
         </div>

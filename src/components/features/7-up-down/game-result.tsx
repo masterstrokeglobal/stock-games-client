@@ -93,7 +93,7 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
                       <div className="text-center whitespace-nowrap">Winner</div>
                     </div>
 
-                    <ScrollArea className='h-[150px]' scrollThumbClassName='bg-[#4467CC]'>
+                    <ScrollArea className='h-[150px]' scrollThumbClassName="bg-[#517ED4]">
                       {
                         roundResult.map((result, index) => {
                           return (

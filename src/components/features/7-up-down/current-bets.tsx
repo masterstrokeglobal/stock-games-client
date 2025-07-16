@@ -54,17 +54,16 @@ const BetsList = ({
 }) => {
   return (
     <div className={cn("w-full", listClassName)}>
-   
-        {/* Header */}
-        <div className="flex w-full px-4 py-3 tracking-wider font-montserrat  font-medium uppercase text-white text-sm gap-4">
-          <div className="flex-1 text-left text-nowrap whitespace-nowrap">BET</div>
-          <div className="flex-1 text-left text-nowrap whitespace-nowrap">TIME</div>
-          <div className="flex-1 text-left text-nowrap whitespace-nowrap">SELECTED SIDE</div>
-          <div className="flex-1 text-left text-nowrap whitespace-nowrap">BETS INR</div>
-        </div>
-        <ScrollArea
-        scrollThumbClassName="bg-[#4467CC]"
-        type="auto"
+
+      {/* Header */}
+      <div className="flex w-full px-4 py-3 tracking-wider font-montserrat  font-medium uppercase text-white text-sm gap-4">
+        <div className="flex-1 text-left text-nowrap whitespace-nowrap">BET</div>
+        <div className="flex-1 text-left text-nowrap whitespace-nowrap">TIME</div>
+        <div className="flex-1 text-left text-nowrap whitespace-nowrap">SELECTED SIDE</div>
+        <div className="flex-1 text-left text-nowrap whitespace-nowrap">BETS INR</div>
+      </div>
+      <ScrollArea
+        scrollThumbClassName="bg-[#517ED4]" type="auto"
         className="h-[calc(100vh-320px)]"
       >
         <div className="flex flex-col gap-3 pb-2">
@@ -79,9 +78,9 @@ const BetsList = ({
                   {dayjs(placement.createdAt).format("hh:mm A")}
                 </div>
                 <div className="flex-1 text-left flex items-center gap-2">
-                <SevenUpDownChip
-                  side={placement.placement}
-                />
+                  <SevenUpDownChip
+                    side={placement.placement}
+                  />
                 </div>
                 <div className="flex-1 text-left">{INR(placement.amount)}</div>
               </div>
@@ -89,7 +88,7 @@ const BetsList = ({
           })}
         </div>
         <ScrollBar orientation="horizontal" />
-      </ScrollArea> 
+      </ScrollArea>
     </div>
   );
 };

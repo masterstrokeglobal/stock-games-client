@@ -7,7 +7,7 @@ const GameRules = () => {
                 <h1 className="md:text-xl uppercase tracking-wide xs:text-lg  font-extrabold text-[#8BB4FF]">Game Rules</h1>
             </header>
             <main className="rounded-[30px]  border-[3px] max-w-2xl mx-auto w-full  border-[#12409D] bg-[rgba(1,15,60,0.58)] shadow-[0px_0px_7.1px_11px_rgba(1,59,177,0.25)_inset] p-6">
-                <ScrollArea scrollThumbClassName="bg-[#BED5FF]" className="space-y-6 h-[calc(100svh-26rem)] text-white">
+                <ScrollArea scrollThumbClassName="bg-[#517ED4]" className="space-y-6 h-[calc(100svh-26rem)] text-white">
                     <div className="space-y-4">
                         <h2 className="text-lg font-semibold text-[#6DC1EE]">How It Works</h2>
                         <ul className="space-y-3 text-sm leading-relaxed">
