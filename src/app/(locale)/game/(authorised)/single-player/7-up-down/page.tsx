@@ -3,6 +3,7 @@ import GameLoadingScreen from '@/components/common/game-loading-screen';
 import MarketSelector from '@/components/common/market-selector';
 import AllBets from '@/components/features/7-up-down/all-bets';
 import { BettingArea } from '@/components/features/7-up-down/BettingArea';
+import LastRounds from '@/components/features/7-up-down/last-rounds';
 import { GameBoard } from '@/components/features/7-up-down/game-board-new';
 import { GameTimer } from '@/components/features/7-up-down/game-timer';
 import { LiveBadge } from '@/components/features/dice-game/price-display';
@@ -26,10 +27,10 @@ const SevenUpDown = () => {
         roundRecord,
         isLoading
     } = useCurrentGame(RoundRecordGameType.SEVEN_UP_DOWN);
-    
+
     const roundRecordWithWinningId = useWinningId(roundRecord);
     const { stocks } = useLeaderboard(roundRecord);
-    
+
     if (!marketSelected) return <MarketSelector title="7 Up & 7 Down" />
 
     if (isLoading || !roundRecord) return <GameLoadingScreen className='min-h-[calc(100svh)]' />
@@ -54,14 +55,15 @@ const SevenUpDown = () => {
                 <div className='md:grid md:grid-cols-12 flex-1 gap-4'>
                     <div className='md:col-span-8 justify-around flex flex-col'>
                         <div className="justify-between items-center  flex-wrap flex flex-row w-full gap-4 my-4  relative z-10">
-                            <LiveBadge/>
-                            <GameTimer  roundRecord={roundRecord} />
+                            <LiveBadge />
+                            <GameTimer roundRecord={roundRecord} />
                         </div>
-                        <GameBoard className='flex-1' roundRecord={roundRecord} amount={betAmount}  marketItems={stocks} roundRecordWithWinningId={roundRecordWithWinningId} />
+                        <GameBoard className='flex-1' roundRecord={roundRecord} amount={betAmount} marketItems={stocks} roundRecordWithWinningId={roundRecordWithWinningId} />
                         <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
                     </div>
-                    <div className='md:col-span-4 mt-4 relative z-10'>
-                        <AllBets roundRecord={roundRecord} className='h-full' />
+                    <div className='md:col-span-4 pt-4 relative z-10 md:max-h-[calc(100svh-130px)] md:grid md:grid-rows-2 flex flex-col gap-4'>
+                        <AllBets roundRecord={roundRecord} />
+                        <LastRounds />
                     </div>
                 </div>
             </div>

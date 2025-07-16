@@ -29,7 +29,7 @@ const AllBets = ({
                     background: "linear-gradient(107deg, rgba(40, 88, 176, 0.90) 10.7%, rgba(29, 36, 93, 0.90) 111.17%)",
                 }}
                 className={cn(
-                    "rounded-2xl md:p-4 p-2  flex flex-col",
+                    "rounded-2xl md:p-4 p-2",
                     className
                 )}
             >
@@ -66,10 +66,10 @@ const AllBets = ({
                             Previous Bets
                         </TabsTrigger>
                     </TabsList>
-                    <TabsContent className="grid grid-cols-1 data-[state=active]:h-full " value="current">
+                    <TabsContent  value="current">
                         <CurrentBets roundRecord={roundRecord} />
                     </TabsContent>
-                    <TabsContent className="data-[state=active]:h-full" value="previous">
+                    <TabsContent value="previous">
                         <PreviousBets />
                     </TabsContent>
                 </Tabs>

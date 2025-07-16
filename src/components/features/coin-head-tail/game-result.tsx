@@ -146,7 +146,7 @@ X              </DialogClose>
                         textShadow: "0px 0px 8px #2A8BFF, 0px 0px 2px #fff"
                       }}
                     >
-                      NET RESULT : ₹ {Math.abs(netResult ?? 0)}
+                      NET RESULT : ₹ {netResult ?? 0}
                     </div>
                   </div>
                   <PriceLocked round={roundResult?.round} className='mt-4' />

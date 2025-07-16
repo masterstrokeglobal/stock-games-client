@@ -46,7 +46,7 @@ const PreviousBets = ({
 
 const NoBets = () => {
   return (
-    <div className="text-white space-y-2 text-center flex flex-col items-center py-4 justify-center h-64">
+    <div className="text-white space-y-2 text-center flex flex-col items-center justify-start ">
       <Image
         src="/images/dice-game/no-bets.png"
         alt="No Bets"
@@ -75,9 +75,8 @@ const BetsList = ({
         <div className="flex-1 text-left text-nowrap whitespace-nowrap">WINNER</div>
       </div>
       <ScrollArea
-        scrollThumbClassName="bg-[#517ED4]" type="auto"
 
-        className="h-[calc(100vh-340px)]"
+        scrollThumbClassName="bg-[#517ED4]" type="auto" className="md:h-[calc(100svh/2-250px)]"  
       >
         <div className="flex flex-col  gap-3 pb-2">
           {history.map((bet, index) => (
@@ -92,7 +91,6 @@ const BetsList = ({
               <div className="flex-1 text-left flex items-center gap-2">
                 <SevenUpDownChip side={getWinnerSide(bet.winner)} />
               </div>
-
             </div>
           ))}
         </div>
