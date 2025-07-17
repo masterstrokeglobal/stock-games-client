@@ -43,10 +43,10 @@ const BetsTable = ({ placements, tableClassName }: { placements: WheelOfFortuneP
                 <div className="relative mx-4 flex-1 w-[calc(100%-2rem)]">
                     {/* Header */}
                     <div className="sticky w-full flex justify-between top-0">
-                        <div className="p-2 py-3 text-left text-white w-1/3">
+                        <div className="p-2 py-3 text-left text-white w-1/2 whitespace-nowrap">
                             Betting Color
                         </div>
-                        <div className="p-2 pr-4 py-3 text-right text-white w-1/3">
+                        <div className="p-2 pr-4 py-3 text-right text-white w-1/2 whitespace-nowrap">
                             Bets INR
                         </div>
                     </div>
@@ -64,14 +64,14 @@ const BetsTable = ({ placements, tableClassName }: { placements: WheelOfFortuneP
                                     style={{
                                         background: placement.colorConfig.backgroundGradient,
                                     }}
-                                    className="shadow-xl rounded-full px-8 text-game-secondary overflow-hidden text-sm flex items-center justify-between"
+                                    className="shadow-xl rounded-xl px-4 text-game-secondary overflow-hidden text-sm flex items-center justify-between"
                                 >
                                     <div className="p-2 w-1/2">
-                                        <div className="text-game-secondary w-full text-start">
+                                        <div className="text-game-secondary w-full whitespace-nowrap text-start">
                                             {placement.colorName}
                                         </div>
                                     </div>
-                                    <div className="py-2 w-1/2 text-right">
+                                    <div className="py-2 w-1/2 text-right whitespace-nowrap">
                                         Rs. {placement.amount}
                                     </div>
                                 </div>

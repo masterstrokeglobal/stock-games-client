@@ -79,7 +79,7 @@ const GameTimer = ({ roundRecord }: { roundRecord: RoundRecord }) => {
   );
 };
 
-export const Viewers = () => {
+export const Viewers = ({className}: {className?: string}) => {
   const [viewerCount, setViewerCount] = useState(500);
   const [direction, setDirection] = useState(1); // 1 for increasing, -1 for decreasing
 
@@ -106,8 +106,8 @@ export const Viewers = () => {
   }, [direction]);
 
   return (
-    <div className='flex items-center gap-2'> 
-      {viewerCount} viewing
+    <div className={cn('flex items-center gap-2', className)}> 
+      {viewerCount} Viewing
     </div>
   )
 }

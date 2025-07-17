@@ -7,6 +7,7 @@ import GameSettingsPopover from '@/components/features/coin-head-tail/game-menu'
 import LastRounds from '@/components/features/coin-head-tail/last-rounds';
 import PriceDisplay, { LiveBadge } from '@/components/features/dice-game/price-display';
 import Navbar from '@/components/features/game/navbar';
+import { Viewers } from '@/components/features/wheel-of-fortune/stock-price';
 import { Button } from '@/components/ui/button';
 import { useCurrentGame } from '@/hooks/use-current-game';
 import { useMarketSelector } from '@/hooks/use-market-selector';
@@ -46,7 +47,7 @@ const HeadTail = () => {
                 <div className='w-full bg-[#004DA9] relative z-10 rounded-2xl flex items-center justify-between px-4 sm:py-2 py-1'>
                     <h2 className='font-playfair-display-sc sm:text-lg xs:text-base text-xs md:text-2xl font-bold uppercase tracking-wide'>Coin - Head & tail</h2>
                     <div className='flex items-center gap-2'>
-                        <span className='tracking-widest text-xs md:text-base'>312 Viewing</span>
+                        <Viewers className='tracking-widest text-xs md:text-base text-white'/>
                         <GameSettingsPopover>
                             <Button style={{
                             }} className='bg-transparent shadow-none px-2 text-[#00033D]'>

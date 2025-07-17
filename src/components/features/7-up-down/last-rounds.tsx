@@ -50,13 +50,13 @@ const LastRounds = ({
                 <div className="hidden md:block">
                     <div>
                     <div className="flex w-full  tracking-wider font-montserrat  font-medium uppercase text-white text-sm gap-4">
-                     <div className="py-3 px-4 font-normal tracking-wider flex-1 min-w-[120px]">
+                     <div className="py-3 px-4 font-normal tracking-wider whitespace-nowrap flex-1 min-w-[120px]">
                                 DATE
                             </div>
-                            <div className="py-3 px-4 font-normal tracking-wider flex-1 min-w-[100px]">
+                            <div className="py-3 px-4 font-normal tracking-wider whitespace-nowrap flex-1 min-w-[100px]">
                                 TIME
                             </div>
-                            <div className="py-3 px-4 font-normal tracking-wider flex-1 min-w-[120px]">
+                            <div className="py-3 px-4 font-normal tracking-wider whitespace-nowrap flex-1 min-w-[120px]">
                                 WINNER
                             </div>
                         </div>

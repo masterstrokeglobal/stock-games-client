@@ -1,8 +1,6 @@
 'use client';
 
 import bettingHistoryColumns from "@/columns/betting-history-column";
-import Container from "@/components/common/container";
-import TopBar from "@/components/common/top-bar";
 import DataTable from "@/components/ui/data-table-server-game";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -46,20 +44,17 @@ const BettingHistoryPage = () => {
     }, [data]);
 
     const totalPages = useMemo(() => {
-        if (!data?.data?.count) return 1;
-        return Math.ceil(data.data.count / pageSize);
+        if (!data?.data?.gameRecordHistory.count) return 1;
+        return Math.ceil(data.data.gameRecordHistory.count / pageSize);
     }, [data, pageSize]);
 
     const changePage = (newPage: number) => {
         setPage(newPage);
     };
 
+    console.log(totalPages,data?.data.gameRecordHistory.count,pageSize);   
     return (
-        <Container className="bg-primary-game w-full  rounded-xl relative flex flex-col pt-24 gap-6 items-center min-h-screen">
-            <TopBar>
-                <h1 className="text-xl font-semibold">{t('page-title')}</h1>
-            </TopBar>
-
+     
             <section className="container-main w-full max-w-6xl">
                 <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between mb-6">
                     <div className="flex sm:gap-5 gap-2 items-center flex-wrap text-white w-full">
@@ -118,7 +113,6 @@ const BettingHistoryPage = () => {
                     </div>
                 )}
             </section>
-        </Container>
     );
 };
 

@@ -211,7 +211,7 @@ const ActiveTierCard = ({
     return (
         <div className={cn("flex flex-col md:flex-row gap-6 md:gap-10 md:border-none border border-platform-border mb-8", className)}>    
             {/* Left: Badge and Tier Name */}
-            <div className="flex flex-col items-center justify-center  dark:bg-[url('/images/tier/tier-bg-dark.png')] bg-[url('/images/tier/tier-bg-light.png')]  bg-cover bg-center md:p-8 p-4 w-full lg:w-[440px] md:w-[340px] md:min-h-[420px] min-h-52  md:border border-platform-border rounded-none">
+            <div className="flex flex-col items-center justify-center  dark:bg-[url('/images/tier/tier-bg-dark.png')] bg-[url('/images/tier/tier-bg-light.png')]  bg-cover bg-center md:p-8 p-4 w-full xl:w-[440px] lg:w-[380px] md:w-[340px] md:min-h-[420px] min-h-52  md:border border-platform-border rounded-none">
                 <div className="relative md:w-48 md:h-48 w-auto h-full aspect-square flex-1 md:mb-6">
                     <Image
                         src={tier?.imageUrl}
@@ -244,7 +244,7 @@ const ActiveTierCard = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:gap-4">
                     {/* Login Points */}
                     <div className="sm:border dark:border-platform-border border-primary-game p-4 flex items-center gap-4 min-h-[90px]">
-                        <div className="w-10 h-10 sm:h-14 sm:w-14 sm:text-3xl bg-white/10 rounded-full backdrop-blur border dark:border-platform-border border-primary-game flex items-center justify-center text-white text-xl font-bold">
+                    <div className="w-10 h-10 sm:h-14 sm:w-14 aspect-square bg-white/10 rounded-full backdrop-blur border dark:border-platform-border border-primary-game flex items-center justify-center text-white text-xl font-bold">
                             <img src="/images/platform/tier/login-points.png" alt="coin" className=" w-full h-auto block"  />
                         </div>
                         <div>
@@ -256,7 +256,7 @@ const ActiveTierCard = ({
                     </div>
                     {/* First Game Points */}
                     <div className="sm:border dark:border-platform-border border-primary-game p-4 flex items-center gap-4 min-h-[90px]">
-                        <div className="w-10 h-10 sm:h-14 sm:w-14 bg-white/10 rounded-full backdrop-blur border dark:border-platform-border border-primary-game flex items-center justify-center text-white text-xl font-bold">
+                    <div className="w-10 h-10 sm:h-14 sm:w-14 aspect-square bg-white/10 rounded-full backdrop-blur border dark:border-platform-border border-primary-game flex items-center justify-center text-white text-xl font-bold">
                             <img src="/images/platform/tier/first-game-points.png" alt="coin" className=" w-full h-auto block"  />
                         </div>
                         <div>

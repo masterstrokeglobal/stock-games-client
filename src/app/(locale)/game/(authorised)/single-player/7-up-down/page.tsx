@@ -8,6 +8,7 @@ import { GameBoard } from '@/components/features/7-up-down/game-board-new';
 import { GameTimer } from '@/components/features/7-up-down/game-timer';
 import { LiveBadge } from '@/components/features/dice-game/price-display';
 import Navbar from '@/components/features/game/navbar';
+import { Viewers } from '@/components/features/wheel-of-fortune/stock-price';
 import { Button } from '@/components/ui/button';
 import { useCurrentGame } from '@/hooks/use-current-game';
 import { useMarketSelector } from '@/hooks/use-market-selector';
@@ -44,7 +45,7 @@ const SevenUpDown = () => {
                 <div className='w-full bg-[#2857ADBF] relative z-10 rounded-2xl flex items-center justify-between px-4 sm:py-2 py-1'>
                     <h2 className=' uppercase tracking-wider sm:text-lg xs:text-base text-xs md:text-2xl font-poppins font-bold'>7Up & 7Down</h2>
                     <div className='flex items-center gap-2'>
-                        <span className='tracking-widest text-xs md:text-base'>312 Viewing</span>
+                        <Viewers className='tracking-widest text-xs md:text-base text-white'/>
                         <Link href="/game/single-player/7-up-down/settings">
                             <Button className='bg-transparent shadow-none px-2 text-[#517ED4]'>
                                 <MenuIcon strokeWidth={2} />

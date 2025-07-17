@@ -21,12 +21,11 @@ const LastRoundsTable: React.FC<{ className?: string; tableClassName?: string }>
     roundRecordGameType: RoundRecordGameType.WHEEL_OF_FORTUNE,
     type: gameType,
     page: 1,
-    limit: 5,
+    limit: 10,
   });
 
   const rounds = data?.rounds || [];
 
-  console.log(rounds);
   return (
     <section
       className={cn(
@@ -45,10 +44,10 @@ const LastRoundsTable: React.FC<{ className?: string; tableClassName?: string }>
         <div className="w-full">
           {/* Table Header */}
           <div className="flex w-full text-white font-semibold text-xs md:text-base">
-            <div className="flex-1 px-3 py-2">Round ID</div>
-            <div className="flex-1 px-3 py-2">Date</div>
-            <div className="flex-1 px-3 py-2">Time</div>
-            <div className="flex-1 px-3 py-2">Winner</div>
+            <div className="flex-1 px-3 py-2 whitespace-nowrap">Round ID</div>
+            <div className="flex-1 px-3 py-2 whitespace-nowrap">Date</div>
+            <div className="flex-1 px-3 py-2 whitespace-nowrap">Time</div>
+            <div className="flex-1 px-3 py-2 whitespace-nowrap">Winner</div>
           </div>
           {/* Table Body */}
           <ScrollArea className="h-[150px]" scrollThumbClassName="bg-[#366D51]">

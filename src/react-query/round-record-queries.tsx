@@ -134,5 +134,6 @@ type DiceLast10RoundDetails = {
                 const response = await roundRecordsAPI.getAllHistory(params);
                 return response.data
             },
+            refetchInterval: 1000 * 30, // Refetch every 30 seconds
         });
     }

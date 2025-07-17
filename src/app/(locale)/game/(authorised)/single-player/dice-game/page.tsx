@@ -51,7 +51,7 @@ const DiceGame = () => {
     if (!marketSelected) return (
         <section className=" space-y-4 pt-14 min-h-screen ">
             <Navbar />
-            <MarketSelector className='max-w-2xl mx-auto' title="Dice Game Market" />
+            <MarketSelector title="Dice Game Market" />
         </section>
     )
 
