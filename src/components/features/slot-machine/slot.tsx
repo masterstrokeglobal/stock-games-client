@@ -10,7 +10,7 @@ export const Slot = ({ roundRecord,winningIdRoundRecord }: { roundRecord: RoundR
 
     const { gameTimeLeft, isPlaceOver, placeTimeLeft } = useGameState(roundRecord)
 
-    const [stockStates, setStockStates] = useState<number[]>([0, 0, 0, 0, 0])
+    const [stockStates, setStockStates] = useState<number[]>([0, 0, 0, 0, 0, 0])
 
     const [time, setTime] = useState<string>("00")
     const statusText = isPlaceOver ? "Betting Closed" : "Betting Open"
@@ -22,6 +22,9 @@ export const Slot = ({ roundRecord,winningIdRoundRecord }: { roundRecord: RoundR
         return myPlacementData?.data?.reduce((acc, curr) => acc + curr.amount, 0);
     }, [myPlacementData])
 
+    useEffect(()=>{
+        console.log("sarthak roundRecord", roundRecord.bonusMultiplier)
+    }, [roundRecord])
 
     useEffect(() => {
         setTime(!isPlaceOver ? placeTimeLeft.seconds.toString().padStart(2, "0") : gameTimeLeft.seconds.toString().padStart(2, "0") || "00")
@@ -29,7 +32,7 @@ export const Slot = ({ roundRecord,winningIdRoundRecord }: { roundRecord: RoundR
 
     useEffect(() => {
         if (stocks.length > 0) {
-            const newStockStates= [...stockStates]
+            let newStockStates: number[] = [...stockStates]
 
             let localStocks: any = winningIdRoundRecord?.sortedMarketItems ? winningIdRoundRecord.sortedMarketItems : stocks
             localStocks = localStocks.sort((a: any, b: any) => a.name.localeCompare(b.name))
@@ -42,6 +45,9 @@ export const Slot = ({ roundRecord,winningIdRoundRecord }: { roundRecord: RoundR
                     newStockStates[index] = firstDecimalDigit;
                 }
             })
+            const num: number = Number((winningIdRoundRecord?.bonusSymbol || '0X')[0])
+            newStockStates[5] = num
+            console.log("here this shit", newStockStates)
             setStockStates(newStockStates)
         }
     }, [stocks, winningIdRoundRecord])
@@ -65,9 +71,9 @@ export const Slot = ({ roundRecord,winningIdRoundRecord }: { roundRecord: RoundR
             ))}
             </div>
 
-            <div className="flex-1 w-full h-[500px]  relative z-0 ">
+            <div className="flex-1 w-full h-[500px] relative z-0 flex justify-center items-center">
                 
-                <div className="canvas-container absolute z-[-1] left-[50%] translate-x-[-50%] top-[240px] translate-y-[-50%] w-[270px] h-[187px]">
+                <div className="canvas-container absolute z-[-1] w-[300px] h-[210px]">
                     <SlotCanvas stockStates={stockStates} />
                 </div>
 
@@ -78,10 +84,10 @@ export const Slot = ({ roundRecord,winningIdRoundRecord }: { roundRecord: RoundR
                     <img src="/images/jackpot/lady5.gif" alt="slot-machine-bg" className="w-full h-full object-contain" />
                 </div>
 
-                <div className="h-[500px] w-full relative z-10">
-                    <img src="/images/slot-machine/slotMachine.png" alt="slot-machine-bg" className="w-full h-full object-contain" />
+                <div className="h-full w-full relative z-10 flex justify-center items-center">
+                    <img src="/images/slot-machine/slotMachine.png" alt="slot-machine-bg" className="w-[400px] h-full" />
                 </div>
-                <div className="absolute z-20 top-[150px] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[270px] h-[187px] text-center">
+                <div className="absolute z-20 top-[165px] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[270px] h-[187px] text-center">
                     <h1
                         className="text-5xl font-bold keania-one-regular text-yellow-400 drop-shadow-lg"
                         style={{

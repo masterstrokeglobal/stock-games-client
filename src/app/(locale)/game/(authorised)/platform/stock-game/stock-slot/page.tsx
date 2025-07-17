@@ -9,11 +9,15 @@ import { useCurrentGame } from '@/hooks/use-current-game';
 import { useMarketSelector } from '@/hooks/use-market-selector';
 import useWinningId from '@/hooks/use-winning-id';
 import { RoundRecordGameType } from '@/models/round-record';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const StockSlot = () => {
     const { marketSelected, setMarketSelected } = useMarketSelector();
     const { roundRecord, isLoading } = useCurrentGame(RoundRecordGameType.STOCK_JACKPOT);
+
+    useEffect(()=>{
+        console.log('sarthak round record', roundRecord?.bonusSymbol)
+    }, [roundRecord])
 
     const [betAmount, setBetAmount] = useState<number>(100);
 

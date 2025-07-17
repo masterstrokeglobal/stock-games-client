@@ -71,8 +71,9 @@ export const SlotCanvas = ({ stockStates }: { stockStates: number[] }) => {
         scene.add(pointLight)
 
         // Create 5 cylinders
-        const colors = [0xFFD700, 0xC0C0C0, 0xCD7F32, 0xFF6B6B, 0x4ECDC4]
+        const colors = [0xFFD700, 0xC0C0C0, 0xCD7F32, 0xFF6B6B, 0x4ECDC4, 0x4ecde4]
         const initialRotation= [
+            {x: 0, y: 0, z: -Math.PI/2},
             {x: 0, y: 0, z: -Math.PI/2},
             {x: 0, y: 0, z: -Math.PI/2},
             {x: 0, y: 0, z: -Math.PI/2},
@@ -117,7 +118,7 @@ export const SlotCanvas = ({ stockStates }: { stockStates: number[] }) => {
             cylinder.rotation.y = initialRotation[index].y
             cylinder.rotation.z = initialRotation[index].z
 
-            cylinder.position.x = (index - 2) * gap
+            cylinder.position.x = (index - 2.5) * gap
             cylinder.position.y = 0
             cylinder.position.z = 0
 

@@ -10,7 +10,7 @@ import { useGetWallet } from "@/react-query/payment-queries";
 import { useCreateStockGamePlacement, useGetMySlotGamePlacement } from "@/react-query/slot-game-queries";
 import { Minus, Plus, WalletIcon, } from 'lucide-react';
 import Image from 'next/image';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import SlotGameResultDialog from "../game/slot-game-result-dialog";
 
 interface BettingAreaProps {
@@ -33,6 +33,11 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
     const { stocks } = useLeaderboard(roundRecord)
 
     const isPlaceOver = usePlacementOver(roundRecord);
+
+    useEffect(()=>{
+        console.log("sarthak results", showResults)
+    }, [showResults])
+
 
     const totalBetAmount = useMemo(() => {
         return myPlacementData?.data?.reduce((acc, curr) => acc + curr.amount, 0);
@@ -73,6 +78,12 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
         return { currentStocks, stockPrice }
     }, [roundRecord, stocks, winningIdRoundRecord])
+
+    useEffect(()=>{
+
+        console.log("sarthak 12", winningIdRoundRecord?.bonusMultiplier, winningIdRoundRecord?.bonusMultiplier)
+
+    }, [winningIdRoundRecord])
 
     return (
         <>

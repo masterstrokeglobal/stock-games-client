@@ -211,6 +211,7 @@ bonusMultiplier?: number;
         this.winningSide = data.winningSide || undefined;
         this.marketColors = data.marketColors || [];
         this.todayCount = data.todayCount || -1;
+        console.log(this.bonusMultiplier,'BONUS SYMBOLS')
     }
 
     getSlotValues(code: string): { upperValue: number; lowerValue: number } {
