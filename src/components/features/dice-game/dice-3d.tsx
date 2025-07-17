@@ -1,5 +1,5 @@
 import { usePlacementOver } from '@/hooks/use-current-game';
-import { RankedMarketItem, useLeaderboard } from '@/hooks/use-leadboard';
+import { RankedMarketItem } from '@/hooks/use-leadboard';
 import useWindowSize from '@/hooks/use-window-size';
 import { cn } from '@/lib/utils';
 import { MarketItem } from '@/models/market-item';
@@ -18,6 +18,7 @@ interface DiceFaceProps {
 interface Dice3DProps {
   className?: string;
   roundRecord: RoundRecord;
+  stocks: RankedMarketItem[];
   roundRecordWithWinningId: RoundRecord | null;
 }
 
@@ -52,9 +53,8 @@ const StockDisplay = ({ stock, className, isSecondCube, roundRecord, winner, isL
   );
 };
 
-export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, roundRecordWithWinningId }) => {
+export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, roundRecordWithWinningId, stocks }) => {
   const marketItems = roundRecord.market;
-  const { stocks } = useLeaderboard(roundRecord);
   const [showDice, setShowDice] = useState(false);
   const [diceAppear, setDiceAppear] = useState(false); 
   const videoRef = useRef<HTMLVideoElement>(null);

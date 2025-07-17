@@ -28,14 +28,14 @@ const AllBets = ({
                     boxShadow: "0px 0px 8px 0px rgba(0, 92, 164, 1) inset",
                 }}
                 className={cn(
-                    "rounded-2xl md:p-4  flex flex-col border border-[#0074FF]  bg-[#004DA982] ",
+                    "rounded-2xl md:p-4 p-2 flex flex-col  border border-[#0074FF]  bg-[#004DA982] ",
                     className
                 )}
             >
-                <header className="bg-[#004DA9] rounded-[10px] px-4 py-2">
-                    <h2 className="font-play tracking-wider font-bold md:text-xl text-center"> My Bets</h2>
+                <header className="bg-[#004DA9] rounded-[10px] px-4 py-1">
+                    <h2 className="font-play tracking-wider font-bold md:text-lg text-center"> My Bets</h2>
                 </header>
-                <Tabs defaultValue="current" className="w-full mt-4 ">
+                <Tabs defaultValue="current" className="w-full mt-1 flex flex-col flex-1 ">
                     <TabsList
                         className={cn(
                             "w-full flex bg-[#004DA9] rounded-[10px] p-1 h-10",
@@ -63,12 +63,14 @@ const AllBets = ({
                             Previous Bets
                         </TabsTrigger>
                     </TabsList>
-                    <TabsContent className="grid grid-cols-1 data-[state=active]:h-full " value="current">
+                    <div className="flex-1 flex flex-col">
+                    <TabsContent className="data-[state=active]:flex-1 flex-none"  value="current">
                         <CurrentBets roundRecord={roundRecord} />
                     </TabsContent>
-                    <TabsContent className="data-[state=active]:h-full" value="previous">
+                    <TabsContent className="data-[state=active]:flex-1 flex-none"  value="previous">
                         <PreviousBets />
-                    </TabsContent>
+                    </TabsContent> 
+                    </div>
                 </Tabs>
             </aside>
             <CoinHeadTailResultDialog key={String(showResult.showResults)} open={showResult.showResults} roundRecordId={showResult.previousRoundId ?? 0} />

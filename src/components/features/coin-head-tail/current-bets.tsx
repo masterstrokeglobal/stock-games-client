@@ -35,7 +35,7 @@ const CurrentBets = ({
 
 const NoBets = () => {
     return (
-        <div className="text-white space-y-2 text-center flex flex-col items-center py-4 justify-center h-64">
+        <div className="text-white space-y-2 text-center flex flex-col items-center  justify-center flex-1">
             <Image
                 src="/images/dice-game/no-bets.png"
                 alt="No Bets"
@@ -57,7 +57,7 @@ const BetsList = ({
     listClassName?: string;
 }) => {
     return (
-        <div className={cn("w-full", listClassName)}>
+        <div className={cn("w-full  flex-1", listClassName)}>
             {/* Header */}
             <div className="flex w-full px-4 py-3 font-play tracking-wider text-white text-sm gap-4">
                 <div className="flex-1 text-left uppercase text-nowrap   ">Bet</div>
@@ -68,7 +68,7 @@ const BetsList = ({
             <ScrollArea
                 scrollThumbClassName="bg-[#004DA9]"
                 type="auto"
-                className="h-[calc(100svh-360px)]"
+                className="md:h-[calc(100svh/2-250px)]"
             >
                 <div className="flex flex-col font-phudu gap-3 pb-2">
                     {placements.map((placement, index) => {

@@ -34,7 +34,7 @@ const AllBets = ({
                 )}
             >
                 <header className="bg-[#0F1E4D] rounded-[10px] px-4 py-2">
-                    <h2 className="font-poppins tracking-wider font-bold md:text-xl text-center"> My Bets</h2>
+                    <h2 className="font-poppins tracking-wider font-bold md:text-lg text-center"> My Bets</h2>
                 </header>
                 <Tabs defaultValue="current" className="w-full mt-2">
                     <TabsList

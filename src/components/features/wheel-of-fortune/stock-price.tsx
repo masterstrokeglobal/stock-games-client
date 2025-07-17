@@ -25,7 +25,7 @@ export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, className?:
   const isSpinning = isBettingClosed && isGameStillActive && hasNoWinner && isPlaceOver;
 
   return (
-    <div className={cn("flex flex-col justify-between items-center relative z-0 ", className)}>
+    <div className={cn("flex flex-col justify-between items-center relative z-0 overflow-hidden ", className)}>
         <div className='md:hidden flex gap-2 w-full mb-4 px-4  justify-between items-center text-white'>
           <Badge className='bg-red-600 flex items-center  h-6 sm:h-8 text-sm sm:text-base tracking-wider md:hidden uppercase text-white'>
             <div className='size-1.5 sm:size-2 bg-white rounded-full mr-1.5 sm:mr-2' />
