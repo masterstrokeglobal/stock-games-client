@@ -302,13 +302,14 @@ type StockSlotRoundResult = {
     totalPlaced: number;
 }
 
-export const useGetStockSlotRoundResult = (roundId: number): UseQueryResult<StockSlotRoundResult> => {
+export const useGetStockSlotRoundResult = (roundId: number,open:boolean): UseQueryResult<StockSlotRoundResult> => {
     return useQuery({
         queryKey: ["stockSlotRoundResult", roundId],
         queryFn: async () => {
             const { data } = await gameRecordAPI.getStockSlotRoundResult(roundId.toString());
             return data.data as StockSlotRoundResult;
-        }
+        },
+        enabled: open
     });
 };
 

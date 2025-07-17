@@ -35,8 +35,8 @@ const NAV_LINKS = [
   {
     title: "Support",
     links: [
-      { href: "#", label: "FAQ" },
-      { href: "/game/contact", label: "Contact Us" },
+      { href: "/game/platform/faq", label: "FAQ" },
+      { href: "/game/platform/contact", label: "Contact Us" },
     ],
   },
 ];

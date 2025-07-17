@@ -32,11 +32,11 @@ const CurrentBets = ({
 
 const NoBets = () => {
   return (
-    <div className="text-white space-y-2 text-center flex flex-col items-center py-4 justify-center h-64">
+    <div className="text-white space-y-2 text-center flex flex-col items-center justify-start ">
       <Image
         src="/images/dice-game/no-bets.png"
         alt="No Bets"
-        className="w-auto h-full aspect-square "
+        className="w-auto h-18 aspect-square "
         width={100}
         height={100}
       />
@@ -63,8 +63,7 @@ const BetsList = ({
         <div className="flex-1 text-left text-nowrap whitespace-nowrap">BETS INR</div>
       </div>
       <ScrollArea
-        scrollThumbClassName="bg-[#517ED4]" type="auto"
-        className="h-[calc(100vh-320px)]"
+        scrollThumbClassName="bg-[#517ED4]" type="auto" className="md:h-[calc(100svh/2-250px)]"  
       >
         <div className="flex flex-col gap-3 pb-2">
           {placements.map((placement, index) => {

@@ -25,7 +25,7 @@ export const StockPriceDisplay: React.FC<{ roundRecord: RoundRecord, className?:
   const isSpinning = isBettingClosed && isGameStillActive && hasNoWinner && isPlaceOver;
 
   return (
-    <div className={cn("flex flex-col justify-between items-center relative z-0 ", className)}>
+    <div className={cn("flex flex-col justify-between items-center relative z-0 overflow-hidden ", className)}>
         <div className='md:hidden flex gap-2 w-full mb-4 px-4  justify-between items-center text-white'>
           <Badge className='bg-red-600 flex items-center  h-6 sm:h-8 text-sm sm:text-base tracking-wider md:hidden uppercase text-white'>
             <div className='size-1.5 sm:size-2 bg-white rounded-full mr-1.5 sm:mr-2' />
@@ -79,7 +79,7 @@ const GameTimer = ({ roundRecord }: { roundRecord: RoundRecord }) => {
   );
 };
 
-export const Viewers = () => {
+export const Viewers = ({className}: {className?: string}) => {
   const [viewerCount, setViewerCount] = useState(500);
   const [direction, setDirection] = useState(1); // 1 for increasing, -1 for decreasing
 
@@ -106,8 +106,8 @@ export const Viewers = () => {
   }, [direction]);
 
   return (
-    <div className='flex items-center gap-2'> 
-      {viewerCount} viewing
+    <div className={cn('flex items-center gap-2', className)}> 
+      {viewerCount} Viewing
     </div>
   )
 }

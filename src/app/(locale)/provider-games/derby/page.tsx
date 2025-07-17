@@ -13,7 +13,6 @@ import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
 import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
-import Navbar from "@/components/features/game/navbar";
 
 declare global {
     interface Window {

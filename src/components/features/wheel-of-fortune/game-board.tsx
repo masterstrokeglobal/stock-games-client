@@ -1,8 +1,8 @@
 import { RankedMarketItem, useLeaderboard } from '@/hooks/use-leadboard';
-import { cn } from '@/lib/utils';
+import { cn, INR } from '@/lib/utils';
 import { RoundRecord, WHEEL_COLOR_CONFIG } from '@/models/round-record';
 import { WheelColor } from '@/models/wheel-of-fortune-placement';
-import { useCreateWheelOfFortunePlacement } from '@/react-query/wheel-of-fortune-queries';
+import { useCreateWheelOfFortunePlacement, useGetMyCurrentRoundWheelOfFortunePlacement } from '@/react-query/wheel-of-fortune-queries';
 import { useMemo } from 'react';
 import TriangleDownGlow from '../common/triangle-down-glow';
 import TriangleUpGlow from '../common/triangle-up-glow';
@@ -56,7 +56,7 @@ export default function WheelOfFortuneGameBoard({ roundRecord, amount, className
 
   const { stocks } = useLeaderboard(roundRecord);
   const { mutate: createWheelPlacement, isPending } = useCreateWheelOfFortunePlacement();
-  // const { data: placements } = useGetMyCurrentRoundWheelOfFortunePlacement(roundRecord.id);
+  const { data: placements } = useGetMyCurrentRoundWheelOfFortunePlacement(roundRecord.id);
 
   const winningId = roundRecordWithWinningId?.winningId || null;
 
@@ -74,14 +74,13 @@ export default function WheelOfFortuneGameBoard({ roundRecord, amount, className
     createWheelPlacement({ roundId: roundRecord.id, placementColor: color, amount });
   };
 
-  // Calculate total bets for each color
-  // const colorBets: Record<WheelColor, number> | undefined = placements?.reduce((acc, placement) => {
-  //   if (!acc[placement.placementColor]) {
-  //     acc[placement.placementColor] = 0;
-  //   }
-  //   acc[placement.placementColor] += placement.amount;
-  //   return acc;
-  // }, {} as Record<WheelColor, number>);
+  const colorBets: Record<WheelColor, number> | undefined = placements?.reduce((acc, placement) => {
+    if (!acc[placement.placementColor]) {
+      acc[placement.placementColor] = 0;
+    }
+    acc[placement.placementColor] += placement.amount;
+    return acc;
+  }, {} as Record<WheelColor, number>);
 
 
   const winningColor = useMemo(() => {
@@ -96,16 +95,16 @@ export default function WheelOfFortuneGameBoard({ roundRecord, amount, className
       {children}
       {/* Color Cards Grid */}
       <div className="  flex flex-wrap gap-2 justify-center w-full">
-          <ColorCard color={WheelColor.COLOR5} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
-          <ColorCard color={WheelColor.COLOR4} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
-          <ColorCard color={WheelColor.COLOR3} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
-          <ColorCard color={WheelColor.COLOR2} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
-          <ColorCard color={WheelColor.COLOR1} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} />
+          <ColorCard color={WheelColor.COLOR5} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} betAmount={colorBets?.[WheelColor.COLOR5] || 0} />
+          <ColorCard color={WheelColor.COLOR4} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} betAmount={colorBets?.[WheelColor.COLOR4] || 0} />
+          <ColorCard color={WheelColor.COLOR3} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} betAmount={colorBets?.[WheelColor.COLOR3] || 0} />
+          <ColorCard color={WheelColor.COLOR2} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} betAmount={colorBets?.[WheelColor.COLOR2] || 0} />
+          <ColorCard color={WheelColor.COLOR1} winningColor={winningColor} isPending={isPending} roundRecord={roundRecord} handleColorClick={handleColorClick} marketItemsStocks={marketItemsStocks} betAmount={colorBets?.[WheelColor.COLOR1] || 0} />
       </div>
     </div>
   );
 }
-const ColorCard = ({ color, winningColor, isPending, handleColorClick, roundRecord, marketItemsStocks }: { color: WheelColor, winningColor: WheelColor | null, isPending: boolean, roundRecord: RoundRecord, handleColorClick: (color: WheelColor) => void, marketItemsStocks: RankedMarketItem[] }) => {
+const ColorCard = ({ color, winningColor, isPending, handleColorClick, roundRecord, marketItemsStocks,betAmount }: { color: WheelColor, winningColor: WheelColor | null, isPending: boolean, roundRecord: RoundRecord, handleColorClick: (color: WheelColor) => void, marketItemsStocks: RankedMarketItem[],betAmount: number }) => {
   const config = WHEEL_COLOR_CONFIG[color];
   const currentColorConfig = colorConfig.find(c => c.color === color);
   // const myBetAmount = colorBets?.[color] || 0;
@@ -129,6 +128,12 @@ const ColorCard = ({ color, winningColor, isPending, handleColorClick, roundReco
 
       onClick={() => handleColorClick(color)}
     >
+              {betAmount > 0 && <div className="absolute -top-3 -left-3 -rotate-12 p-1.5 flex items-center justify-center aspect-square rounded-full  z-10">
+            <span className="text-white md:text-[10px] text-[8px] z-10 relative  font-poppins">
+                {INR(betAmount, true, false)}
+            </span>
+            <img src="/images/head-tail/betting-chip.png" alt="" className="w-full h-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+        </div>}
       <div className="h-full flex-1 flex flex-col">
         <div style={{color: 'white', textShadow: `0px 0px 40px ${currentColorConfig?.borderColor}, 0px 0px 20px ${currentColorConfig?.borderColor}`}} className={cn("rounded-t-lg px-2 py-3 font-konkhmer-sleokchher tracking-wider text-white  flex justify-center gap-2 items-center text-center w-full")}>
           <span className="text-lg ">{config.name}</span>

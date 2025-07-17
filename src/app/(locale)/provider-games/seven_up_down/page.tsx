@@ -3,35 +3,29 @@ import GameLoadingScreen from '@/components/common/game-loading-screen';
 import MarketSelector from '@/components/common/market-selector';
 import AllBets from '@/components/features/7-up-down/all-bets';
 import { BettingArea } from '@/components/features/7-up-down/BettingArea';
-import LastRounds from '@/components/features/7-up-down/last-rounds';
 import { GameBoard } from '@/components/features/7-up-down/game-board-new';
 import { GameTimer } from '@/components/features/7-up-down/game-timer';
 import { LiveBadge } from '@/components/features/dice-game/price-display';
 import Navbar from '@/components/features/game/navbar';
-import { Viewers } from '@/components/features/wheel-of-fortune/stock-price';
-import { Button } from '@/components/ui/button';
 import { useCurrentGame } from '@/hooks/use-current-game';
 import { useMarketSelector } from '@/hooks/use-market-selector';
 import { useLeaderboard } from '@/hooks/use-multi-socket-leaderboard';
 import useWinningId from '@/hooks/use-winning-id';
 import { RoundRecordGameType } from '@/models/round-record';
-import { MenuIcon } from 'lucide-react';
-import Link from 'next/link';
 import { useState } from 'react';
 
 
 const SevenUpDown = () => {
     const { marketSelected } = useMarketSelector();
     const [betAmount, setBetAmount] = useState<number>(100);
-
     const {
         roundRecord,
         isLoading
     } = useCurrentGame(RoundRecordGameType.SEVEN_UP_DOWN);
-
+    
     const roundRecordWithWinningId = useWinningId(roundRecord);
     const { stocks } = useLeaderboard(roundRecord);
-
+    
     if (!marketSelected) return <MarketSelector title="7 Up & 7 Down" />
 
     if (isLoading || !roundRecord) return <GameLoadingScreen className='min-h-[calc(100svh)]' />
@@ -45,26 +39,20 @@ const SevenUpDown = () => {
                 <div className='w-full bg-[#2857ADBF] relative z-10 rounded-2xl flex items-center justify-between px-4 sm:py-2 py-1'>
                     <h2 className=' uppercase tracking-wider sm:text-lg xs:text-base text-xs md:text-2xl font-poppins font-bold'>7Up & 7Down</h2>
                     <div className='flex items-center gap-2'>
-                        <Viewers className='tracking-widest text-xs md:text-base text-white'/>
-                        <Link href="/game/single-player/7-up-down/settings">
-                            <Button className='bg-transparent shadow-none px-2 text-[#517ED4]'>
-                                <MenuIcon strokeWidth={2} />
-                            </Button>
-                        </Link>
+                        <span className='tracking-widest text-xs md:text-base'>312 Viewing</span>
                     </div>
                 </div>
                 <div className='md:grid md:grid-cols-12 flex-1 gap-4'>
                     <div className='md:col-span-8 justify-around flex flex-col'>
                         <div className="justify-between items-center  flex-wrap flex flex-row w-full gap-4 my-4  relative z-10">
-                            <LiveBadge />
-                            <GameTimer roundRecord={roundRecord} />
+                            <LiveBadge/>
+                            <GameTimer  roundRecord={roundRecord} />
                         </div>
-                        <GameBoard className='flex-1' roundRecord={roundRecord} amount={betAmount} marketItems={stocks} roundRecordWithWinningId={roundRecordWithWinningId} />
+                        <GameBoard className='flex-1' roundRecord={roundRecord} amount={betAmount}  marketItems={stocks} roundRecordWithWinningId={roundRecordWithWinningId} />
                         <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
                     </div>
-                    <div className='md:col-span-4 pt-4 relative z-10 md:max-h-[calc(100svh-130px)] md:grid md:grid-rows-2 flex flex-col gap-4'>
-                        <AllBets roundRecord={roundRecord} />
-                        <LastRounds />
+                    <div className='md:col-span-4 mt-4 relative z-10'>
+                        <AllBets roundRecord={roundRecord} className='h-full' />
                     </div>
                 </div>
             </div>

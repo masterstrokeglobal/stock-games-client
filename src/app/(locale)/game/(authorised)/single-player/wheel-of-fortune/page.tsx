@@ -6,6 +6,7 @@ import { BettingArea } from '@/components/features/wheel-of-fortune/betting-area
 import CurrentBets from '@/components/features/wheel-of-fortune/current-bets';
 import WheelOfFortuneGameBoard from '@/components/features/wheel-of-fortune/game-board';
 import GameSettingsPopover from '@/components/features/wheel-of-fortune/game-menu';
+import LastRoundsTable from '@/components/features/wheel-of-fortune/last-rounds';
 import { StockPriceDisplay, Viewers } from '@/components/features/wheel-of-fortune/stock-price';
 import { Button } from '@/components/ui/button';
 import { useWindowSize } from '@/hooks/use-window-size';
@@ -45,6 +46,7 @@ const WheelOfFortune = () => {
                     <WheelOfFortuneGameBoard className='flex-1' roundRecord={roundRecord} amount={betAmount} roundRecordWithWinningId={roundRecordWithWinningId} />
                     <BettingArea className='w-full' roundRecord={roundRecord} betAmount={betAmount} setBetAmount={setBetAmount} />
                     <CurrentBets roundRecord={roundRecord} className='w-full' />
+                    <LastRoundsTable className='w-full' />
                 </div>
             </section>
         )
@@ -71,10 +73,13 @@ const WheelOfFortune = () => {
                                 </GameSettingsPopover>
                             </header>
                         </div>
-                        <CurrentBets roundRecord={roundRecord} className='flex-1' />
+                        <div className='flex flex-col gap-4 h-[500px]'>
+                            <CurrentBets roundRecord={roundRecord} className='flex-1' />
+                            <LastRoundsTable className='flex-1' />
+                        </div>
                     </div>
                     <div className='col-span-3 flex md:flex-row relative flex-col gap-4 py-6'>
-                    <div className='absolute bottom-0 left-0 h-full w-full bg-gradient-to-t from-[#000000] via-[#000000] via-[80%] to-transparent' />
+                        <div className='absolute bottom-0 left-0 h-full w-full bg-gradient-to-t from-[#000000] via-[#000000] via-[80%] to-transparent' />
                         <WheelOfFortuneGameBoard className='flex-1' roundRecord={roundRecord} amount={betAmount} roundRecordWithWinningId={roundRecordWithWinningId} />
                         <BettingArea className='w-60' roundRecord={roundRecord} betAmount={betAmount} setBetAmount={setBetAmount} />
                     </div>

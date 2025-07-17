@@ -38,12 +38,12 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
   return (
     <>
-      <div className={cn("w-full flex flex-col font-montserrat tracking-wide justify-between gap-4  text-white ", className)}>
+      <div className={cn("w-full flex flex-col font-montserrat  tracking-wide justify-between gap-4  text-white ", className)}>
         <div className="grid grid-cols-2 gap-2 w-full">
           {coinValues?.map((amount) => (
             <Button
               className={cn(
-                'rounded-md transition-all py-4 h-12 duration-200 relative group overflow-hidden bg-[#366D51] border-2 border-[#5DA69A] hover:bg-[#366D51] hover:border-[#5DA69A] ')}
+                'rounded-md transition-all py-4 h-12 duration-200 text-white relative group overflow-hidden bg-[#366D51] border-2 border-[#5DA69A] hover:bg-[#366D51] hover:border-[#5DA69A] ')}
               key={amount}
               onClick={() => setBetAmount(amount)}
             >

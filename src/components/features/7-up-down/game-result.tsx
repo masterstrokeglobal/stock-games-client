@@ -109,7 +109,7 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
                   </div>
                   <div className='flex justify-center sm:mb-2 sm:mt-4 h-fit'>
                     <div className='text-center text-lg font-poppins  leading-none xl:text-4xl md:text-3xl font-bold sm:text-2xl xs:text-xl text-white' style={{ textShadow: '0px 0px 9.5px #2A8BFF' }}>
-                      Net Result : ₹ {Math.abs(netResult ?? 0)}
+                      Net Result : ₹ {netResult ?? 0}
                     </div>
                   </div>
                   <NextRound round={round} className='my-2 md:text-3xl h-fit sm:text-2xl xs:text-xl  md:hidden block' />

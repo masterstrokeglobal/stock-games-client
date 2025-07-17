@@ -49,7 +49,7 @@ const PreviousBets = ({ className, tableClassName }: { className?: string, table
 
 const NoBets = () => {
     return (
-        <div className="text-white space-y-2 text-center flex flex-col items-center py-4 justify-center h-64">
+        <div className="text-white space-y-2 text-center flex flex-col items-center flex-1 justify-center ">
             <Image src="/images/dice-game/no-bets.png" alt="No Bets" className="w-auto h-full aspect-square " width={100} height={100} />
             <p className="text-lg font-semibold max-w-sm px-12">{`You haven't placed
                 any bets yet`}</p>
@@ -64,7 +64,7 @@ const BetsTable = ({ placements, listClassName }: { placements: CoinHeadTailHist
         >
 
             {/* Header */}
-            <div className="flex w-full px-4 py-3 font-play text-[15px]  sticky top-0  z-10 tracking-wider text-white text-sm gap-4">
+            <div className="flex w-full px-4 py-3 font-play text-[15px]  sticky top-0  z-10 tracking-wider text-white text-sm gap-2 md:gap-4">
                 <div className="flex-1 text-left uppercase whitespace-nowrap ">TIME</div>
                 <div className="flex-1 text-left uppercase whitespace-nowrap">SELECTED SIDE</div>
                 <div className="flex-1 text-left uppercase whitespace-nowrap">WINNER</div>
@@ -73,7 +73,7 @@ const BetsTable = ({ placements, listClassName }: { placements: CoinHeadTailHist
             <ScrollArea
                 scrollThumbClassName="bg-[#004DA9]"
                 type="auto"
-                className={cn("w-full h-[calc(100svh-380px)]", listClassName)}
+                className={cn("w-full md:h-[calc(100svh/2-250px)]", listClassName)}
             >
                 {placements.length === 0 ? (
                     <div className="px-4 py-3 text-left text-white">No data found</div>
@@ -82,47 +82,23 @@ const BetsTable = ({ placements, listClassName }: { placements: CoinHeadTailHist
                         <div
                             key={idx}
                             className={cn(
-                                "flex items-center h-10  font-phudu font-light rounded-full mb-2 text-sm"
+                                "flex items-center h-9 px-4 md:gap-4 gap-2 font-phudu font-light rounded-full mb-2 text-sm"
                             )}
-                                style={{
-                                    background: placement.winningSide === HeadTailPlacementType.HEAD ? HEAD_BG : TAIL_BG
-                                }}
+                            style={{
+                                background: placement.winningSide === HeadTailPlacementType.HEAD ? HEAD_BG : TAIL_BG
+                            }}
                         >
-                            <div className="px-4 py-1 flex-1 text-white text-center">
+                            <div className="flex-1 text-white text-left">
                                 {dayjs(placement.createdAt).format("hh:mm A")}
                             </div>
-                            <div className="px-4 py-1 flex-1 text-left">
-                                <span
-                                    className="px-3 py-1 rounded-full  text-xs border"
-                                    style={{
-                                        background: COIN_SIDE_CONFIG[placement.selectedSide === HeadTailPlacementType.HEAD ? 'head' : 'tail']?.chipColor,
-                                        color: COIN_SIDE_CONFIG[placement.selectedSide === HeadTailPlacementType.HEAD ? 'head' : 'tail']?.textColor,
-                                        borderColor: COIN_SIDE_CONFIG[placement.selectedSide === HeadTailPlacementType.HEAD ? 'head' : 'tail']?.borderColor,
-                                        minWidth: 60,
-                                        display: "inline-block",
-                                        textAlign: "center"
-                                    }}
-                                >
-                                    {COIN_SIDE_CONFIG[placement.selectedSide === HeadTailPlacementType.HEAD ? 'head' : 'tail']?.name}
-                                </span>
+                            <div className="flex-1 text-left">
+                                {placement.selectedSide}
                             </div>
-                            <div className="px-4 py-1 flex-1 text-left">
-                                <span
-                                    className="px-3 py-1 rounded-full  text-xs border"
-                                    style={{
-                                        background: COIN_SIDE_CONFIG[placement.winningSide === HeadTailPlacementType.HEAD ? 'head' : 'tail']?.chipColor,
-                                        color: COIN_SIDE_CONFIG[placement.winningSide === HeadTailPlacementType.HEAD ? 'head' : 'tail']?.textColor,
-                                        borderColor: COIN_SIDE_CONFIG[placement.winningSide === HeadTailPlacementType.HEAD ? 'head' : 'tail']?.borderColor,
-                                        minWidth: 60,
-                                        display: "inline-block",
-                                        textAlign: "center"
-                                    }}
-                                >
-                                    {COIN_SIDE_CONFIG[placement.winningSide === HeadTailPlacementType.HEAD ? 'head' : 'tail']?.name}
-                                </span>
+                            <div className="flex-1 text-left">
+                                {placement.winningSide}
                             </div>
-                            <div className="px-4 py-1 flex-1 text-white text-left">
-                                <div className="px-4 py-3 flex-[1.2] flex items-center">
+                            <div className="flex-1 text-white text-left">
+                                <div className="flex-[1.2] flex items-center">
                                     {placement.netProfitLoss > 0
                                         ? `+₹ ${placement.netProfitLoss}`
                                         : placement.netProfitLoss < 0

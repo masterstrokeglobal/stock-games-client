@@ -31,7 +31,7 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
       <DialogContent
         showButton={false}
         className={cn(
-          " outline-none ring-0  border-none  w-full px-4 max-w-7xl h-full flex flex-col items-center justify-center shadow-none mx-auto p-0",
+          " outline-none ring-0  border-none  w-full px-4 max-w-7xl h-screen flex flex-col items-center justify-center shadow-none mx-auto p-0",
           "bg-transparent"
         )}
       >
@@ -146,7 +146,7 @@ X              </DialogClose>
                         textShadow: "0px 0px 8px #2A8BFF, 0px 0px 2px #fff"
                       }}
                     >
-                      NET RESULT : ₹ {Math.abs(netResult ?? 0)}
+                      NET RESULT : ₹ {netResult ?? 0}
                     </div>
                   </div>
                   <PriceLocked round={roundResult?.round} className='mt-4' />

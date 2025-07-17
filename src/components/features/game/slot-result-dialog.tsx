@@ -1,6 +1,7 @@
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle
@@ -10,7 +11,6 @@ import { cn, formatRupee } from '@/lib/utils';
 import { useGetStockSlotRoundResult } from '@/react-query/game-record-queries';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
 
 interface GameResultDialogProps {
   open: boolean;
@@ -18,20 +18,14 @@ interface GameResultDialogProps {
 }
 
 const SlotResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
-  const [showDialog, setShowDialog] = useState(open);
-  const { data, isLoading, isError } = useGetStockSlotRoundResult(roundRecordId);
+  const { data, isLoading, isError } = useGetStockSlotRoundResult(roundRecordId, open);
 
-  useEffect(() => {
-    if (open) {
-      setShowDialog(open);
-    }
-  }, [open]);
 
   // Check if the result is a win or loss
   const isWin = data && Number(data.netProfitLoss) >= 0;
 
-  return (  
-    <Dialog open={showDialog}>
+  return (
+    <Dialog defaultOpen={open}>
       <DialogContent className="sm:max-w-md bg-primary-game text-white [&>.close-button]:hidden" data-hide-children="true">
         <DialogHeader>
           <DialogTitle>Round Results</DialogTitle>
@@ -42,9 +36,11 @@ const SlotResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
             <div className="flex flex-col items-center justify-center p-8 space-y-4">
               <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
               <p className="text-gray-600">Loading results...</p>
-              <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                Checkout Game
-              </button>
+              <DialogClose asChild>
+                <button className="bet-button w-full" >
+                  Checkout Game
+                </button>
+              </DialogClose>
             </div>
           ) : isError ? (
             <>
@@ -54,9 +50,11 @@ const SlotResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
                   Failed to load round results. Please try again.
                 </AlertDescription>
               </Alert>
-              <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                Checkout Game
-              </button>
+              <DialogClose asChild>
+                <button className="bet-button w-full" >
+                  Checkout Game
+                </button>
+              </DialogClose>
             </>
           ) : data ? (
             <div className="space-y-4">
@@ -105,16 +103,20 @@ const SlotResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
 
               <Separator />
 
-              <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                Play Again
-              </button>
+              <DialogClose asChild>
+                <button className="bet-button w-full" >
+                  Play Again
+                </button>
+              </DialogClose>
             </div>
           ) : (
             <>
               <p className="text-gray-600 text-center">No results available.</p>
-              <button className="bet-button w-full" onClick={() => setShowDialog(false)}>
-                Play Again
-              </button>
+              <DialogClose asChild>
+                <button className="bet-button w-full" >
+                  Play Again
+                </button>
+              </DialogClose>
             </>
           )}
         </div>
