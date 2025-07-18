@@ -13,6 +13,7 @@ import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
 import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
+import ExternalUserNavbar from "@/components/features/game/external-user-Navbar";
 
 declare global {
     interface Window {
@@ -28,7 +29,8 @@ const GamePage = () => {
 
     if (isLoading) return <GameLoadingScreen className="h-screen" />;
     return (<>
-        <section className={cn("bg-background-game ")}>
+        <section className={cn("bg-background-game pt-20")}>
+            <ExternalUserNavbar />
             {!isMobile && <main className="grid grid-cols-12 grid-rows-12  md:gap-4 gap-2 md:max-h-[1100px] py-4 pb-4">
                 <div
                     className="lg:col-span-7 col-span-8 row-span-4 rounded-sm  overflow-hidden">

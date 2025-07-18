@@ -20,6 +20,7 @@ class User {
     googleId?: string;
     profileImage?: string;
     otpSecret?: string;
+    externalUser:boolean;
     isVerified?: boolean;
     depositBonusPercentage!: number;
     placementNotAllowed: SchedulerType[];
@@ -33,7 +34,7 @@ class User {
     demoUser?: boolean;
     updatedAt?: Date;
     deletedAt?: Date;
-
+    balance?: number;
     constructor(params: Partial<User> = {}) {
         this.id = params.id;
         this.firstname = params.firstname;
@@ -41,6 +42,7 @@ class User {
         this.username = params.username;
         this.email = params.email;
         this.phone = params.phone;
+        this.externalUser = params.externalUser??false;
         this.notes = params.notes;
         this.password = params.password;
         this.googleId = params.googleId;
@@ -49,6 +51,7 @@ class User {
         this.isVerified = params.isVerified;
         this.profileImage = params.profileImage;
         this.demoUser = params.demoUser;
+        this.balance = params.balance;
         this.weeklyWithdrawLimit = params.weeklyWithdrawLimit;
         this.dailyWithdrawLimit = params.dailyWithdrawLimit;
         this.monthlyWithdrawLimit = params.monthlyWithdrawLimit;

@@ -1,36 +1,25 @@
 "use client";
 import GameLoadingScreen from "@/components/common/game-loading-screen";
 import { useAuthStore } from "@/context/auth-context";
-import useGameUserLogin from "@/hooks/use-game-user-login";
+import useExternalUserLogin from "@/hooks/use-external-user-login";
 import User from "@/models/user";
-import Head from "next/head";
-import { useRouter } from "next/navigation";
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren } from "react";
 
-const GameLayout = ({ children }: PropsWithChildren) => {
+const ExternalUserLayout = ({ children }: PropsWithChildren) => {
   const { loading, userDetails } = useAuthStore();
-  const router = useRouter();
-  useGameUserLogin();
+  useExternalUserLogin();
 
-  useEffect(() => {
-    if (!loading && !(userDetails instanceof User)) {
-      router.push("/game/auth/login");
-    }
-  }, [userDetails, loading, router]);
-
-  if (loading || !(userDetails instanceof User)) {
-    return <GameLoadingScreen className="h-screen"/>;
+  if (loading || !(userDetails)) {
+    return <GameLoadingScreen className="h-screen" />;
   }
+  
+  console.log("userDetails is: ", userDetails);
 
   return (
     <>
-      <Head>
-        <link rel="icon" href={userDetails?.company?.logo ?? "/logo.png"} />
-        <title>{userDetails?.company?.name ?? "--"}</title>
-      </Head>
-     <div className="bg-background-game">{children}</div>
+      <div className="bg-background-game">{children}</div>
     </>
   );
 };
 
-export default GameLayout;
+export default ExternalUserLayout;

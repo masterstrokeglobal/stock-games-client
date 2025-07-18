@@ -42,7 +42,6 @@ type Props = {
 };
 
 const RouletteGame = ({ roundRecord, className }: Props) => {
-
     const t = useTranslations("game");
     const [betAmount, setBetAmount] = useState<number>(100);
     const gameState = useGameState(roundRecord);
@@ -52,7 +51,6 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
     const { userDetails } = useAuthStore();
     const currentUser = userDetails as User;
     const { mutate, isPending: isPlacingBet } = useCreateGameRecord();
-
 
     const boardRef = useRef<HTMLDivElement>(null);
 
