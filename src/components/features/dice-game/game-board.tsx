@@ -4,17 +4,19 @@ import { cn, INR } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
 import { BetErrorToast, useCreateDiceGamePlacement, useGetMyCurrentRoundDiceGamePlacement    } from '@/react-query/dice-game-queries';
 import Image from 'next/image';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useMemo, useState } from 'react';
 import { Cube } from './dice-3d';
 import { toast } from 'sonner';
+import { DicePlacementType } from '@/models/dice-placement';
 import { DICE_WINNING_MULTIPLIER_2, DICE_WINNING_MULTIPLIER_3, DICE_WINNING_MULTIPLIER_4, DICE_WINNING_MULTIPLIER_5, DICE_WINNING_MULTIPLIER_6, DICE_WINNING_MULTIPLIER_7, DICE_WINNING_MULTIPLIER_8, DICE_WINNING_MULTIPLIER_9, DICE_WINNING_MULTIPLIER_10, DICE_WINNING_MULTIPLIER_11, DICE_WINNING_MULTIPLIER_12 } from '@/lib/utils';
 
 interface GameBoardProps extends PropsWithChildren<PropsWithClassName> {
     roundRecord: RoundRecord;
     globalBetAmount: number;
-    winningSum: number | null;
+    winningSum: Record<DicePlacementType, number>;  
     winningMarketId: number[] | null;
 }
+
 
 
 // First row: numbers 2-7
@@ -35,24 +37,57 @@ const secondRow = [
     { number: 11, multiplier: `${DICE_WINNING_MULTIPLIER_11}x` },
     { number: 12, multiplier: `${DICE_WINNING_MULTIPLIER_12}x` }
 ];
+// Bet configurations for different types
+const betConfigs  = {
+    [DicePlacementType.BOTH]: {
+        firstRow: firstRow,
+        secondRow: secondRow
+    },
+    [DicePlacementType.FIRST]: {
+        firstRow: [
+            { number: 1, multiplier: '6x' },
+            { number: 2, multiplier: '6x' },
+            { number: 3, multiplier: '6x' },
+            { number: 4, multiplier: '6x' },
+            { number: 5, multiplier: '6x' },
+            { number: 6, multiplier: '6x' }
+        ],
+        secondRow: []
+    },
+    [DicePlacementType.SECOND]: {
+        firstRow: [
+            { number: 1, multiplier: '6x' },
+            { number: 2, multiplier: '6x' },
+            { number: 3, multiplier: '6x' },
+            { number: 4, multiplier: '6x' },
+            { number: 5, multiplier: '6x' },
+            { number: 6, multiplier: '6x' }
+        ],
+        secondRow: []
+    }
+};
+
+
 const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningMarketId,winningSum}: GameBoardProps) => {
     const createPlacement = useCreateDiceGamePlacement();
     const isPlaceOver = usePlacementOver(roundRecord);
+    const [selectedBetType, setSelectedBetType] = useState<DicePlacementType>(DicePlacementType.BOTH);
     const { data: placements } = useGetMyCurrentRoundDiceGamePlacement(roundRecord.id);
 
-    const chipBets: Record<number, number> | undefined = placements?.reduce((acc, placement) => {
-        if (!acc[placement.number]) {
-            acc[placement.number] = 0;
+    const chipBets: Record<string, number> | undefined = placements?.reduce((acc, placement) => {
+        const key = `${placement.placementType}-${placement.number}`;
+        if (!acc[key]) {
+            acc[key] = 0;
         }
-        acc[placement.number] += placement.amount;
+        acc[key] += placement.amount;
         return acc;
-    }, {} as Record<number, number>);
+    }, {} as Record<string, number>);
 
 
     const handleBetSelect = (number: number) => {
         if (globalBetAmount <= 0 || isPlaceOver) {
             toast.custom((t) => (
-                <BetErrorToast message='Time’s up! No more bets' onClose={() => toast.dismiss(t)} />
+                <BetErrorToast message="Time's up! No more bets" onClose={() => toast.dismiss(t)} />
             ), {
                 position: 'bottom-right'
             });
@@ -61,12 +96,13 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
         createPlacement.mutate({
             roundId: roundRecord.id,
             amount: globalBetAmount,
+            placementType: selectedBetType,
             number
         });
     };
 
     // Calculate winning sum from market items
-    const getWinningSum = () => {
+    const result = useMemo(() => {
         if (!winningMarketId || winningMarketId.length === 0) return null;
 
         let sum = 0;
@@ -80,40 +116,70 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
             }
         });
 
-        return sum > 0 ? sum : null;
-    };
-    const result = getWinningSum();
+        const firstDice = winningMarketId.length > 0 ? 
+            (() => {
+                const firstWinningIndex = roundRecord.market.findIndex(market => market.id === winningMarketId[0]);
+                if (firstWinningIndex >= 6) {
+                    // If index is 6 or greater, it's second dice
+                    const secondDiceValue = (firstWinningIndex + 1) % 6;
+                    return secondDiceValue === 0 ? 6 : secondDiceValue;
+                } else {
+                    // If index is less than 6, it's first dice
+                    return firstWinningIndex + 1;
+                }
+            })() : null;
 
-    console.log(winningSum, result);
+        const secondDice = winningMarketId.length > 1 ? 
+            (() => {
+                const secondWinningIndex = roundRecord.market.findIndex(market => market.id === winningMarketId[1]);
+                if (secondWinningIndex >= 6) {
+                    // If index is 6 or greater, it's second dice
+                    const secondDiceValue = (secondWinningIndex + 1) % 6;
+                    return secondDiceValue === 0 ? 6 : secondDiceValue;
+                } else {
+                    // If index is less than 6, it's first dice
+                    return secondWinningIndex + 1;
+                }
+            })() : null;
+
+        return {
+            [DicePlacementType.BOTH]: sum,
+            [DicePlacementType.FIRST]: firstDice,
+            [DicePlacementType.SECOND]: secondDice
+        }
+    }, [winningMarketId, roundRecord]);
+    const currentConfig = betConfigs[selectedBetType];
+
     return (
         <div className={cn("flex flex-col justify-center items-center gap-4 p-4", className)}>
             {/* Header */}
             {children}
 
-            {/* Betting Grid */}
-            <div className="space-y-4 w-full">
-                {/* First Row */}
-                <div className="flex md:justify-center justify-between w-full md:gap-3 gap-1">
-                    {firstRow.map((bet) => (
-                        <BetButton
-                            betAmount={chipBets?.[bet.number] || 0}
-                            isWinning={isPlaceOver ? winningSum == bet.number : false}
-                            isWinner={result === bet.number}
-                            handleBetSelect={handleBetSelect}
-                            key={bet.number}
-                            number={bet.number}
-                            multiplier={bet.multiplier}
-                        />
-                    ))}
-                </div>
+            {/* Bet Type Tabs */}
+            <div className="flex bg-gray-800 rounded-lg p-1 w-full max-w-sm">
+                {([DicePlacementType.FIRST, DicePlacementType.BOTH, DicePlacementType.SECOND] as DicePlacementType[]).map((betType) => (
+                    <button
+                        key={betType}
+                        onClick={() => setSelectedBetType(betType)}
+                        className={cn(
+                            "flex-1 py-1 px-2 rounded-md text-xs font-medium transition-all duration-200",
+                            selectedBetType === betType
+                                ? "bg-blue-600 text-white shadow-lg"
+                                : "text-gray-300 hover:text-white hover:bg-gray-700"
+                        )}
+                    >
+                        {betType.charAt(0).toUpperCase() + betType.slice(1)}
+                    </button>
+                ))}
+            </div>
 
-                {/* Second Row */}
-                <div className="flex md:justify-center sm:justify-around justify-between xs:px-10 px-2 w-full md:gap-3 gap-2">
-                    {secondRow.map((bet) => (
+            <div className="space-y-4 w-full">
+                <div className="flex md:justify-center justify-between w-full md:gap-3 gap-1">
+                    {currentConfig.firstRow.map((bet) => (
                         <BetButton
-                            betAmount={chipBets?.[bet.number] || 0}
-                            isWinning={isPlaceOver ? winningSum == bet.number : false}
-                            isWinner={result === bet.number}
+                            betAmount={chipBets?.[`${selectedBetType}-${bet.number}`] || 0}
+                            isWinning={isPlaceOver ? winningSum?.[selectedBetType] == bet.number : false}
+                            isWinner={result?.[selectedBetType] === bet.number}
                             handleBetSelect={handleBetSelect}
                             key={bet.number}
                             number={bet.number}
@@ -121,6 +187,21 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
                         />
                     ))}
                 </div>
+                {selectedBetType === 'both' && currentConfig.secondRow.length > 0 && (
+                    <div className="flex md:justify-center sm:justify-around justify-between xs:px-10 px-2 w-full md:gap-3 gap-2">
+                        {currentConfig.secondRow.map((bet) => (
+                            <BetButton
+                                betAmount={chipBets?.[bet.number] || 0}
+                                isWinning={isPlaceOver ? winningSum?.[selectedBetType] == bet.number : false}
+                                isWinner={result?.[selectedBetType] === bet.number}
+                                handleBetSelect={handleBetSelect}
+                                key={bet.number}
+                                number={bet.number}
+                                multiplier={bet.multiplier}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

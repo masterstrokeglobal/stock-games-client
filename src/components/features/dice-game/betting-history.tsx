@@ -11,6 +11,7 @@ import React, { useMemo, useState } from 'react';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import useWindowSize from "@/hooks/use-window-size";
 import Image from "next/image";
+import { DicePlacementType } from "@/models/dice-placement";
 
 // Status indicator for Win/Loss
 const StatusIndicator = ({ isWinner }: { isWinner: boolean }) => (
@@ -113,6 +114,7 @@ type History = {
     id: number;
     roundId: number;
     amount: number;
+    placementType: DicePlacementType;
     number: number;
     isWinner: boolean;
     createdAt: string;
@@ -205,7 +207,7 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                                 >
                                                     <td className="px-4 py-3 font-semibold text-white">#{row.roundId}</td>
                                                     <td className="px-4 py-3 text-white">₹ {row.amount}</td>
-                                                    <td className="px-4 py-3 text-white">{row.number}</td>
+                                                    <td className="px-4 py-3 text-white">{row.number} ({row.placementType === DicePlacementType.BOTH ? "Both" : row.placementType === DicePlacementType.FIRST ? "First" : "Second"})</td>
                                                     <td className="px-4 py-3 text-white">{row.DiceNumber}</td>
                                                     <td className="px-4 py-3">
                                                         <StatusIndicator isWinner={row.isWinner} />

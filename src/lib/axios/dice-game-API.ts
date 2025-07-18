@@ -1,10 +1,12 @@
 import api from "./instance";
+import { DicePlacementType } from "@/models/dice-placement";
 
 const diceGameAPI = {
     createDiceGamePlacement: async (placementData: {
         roundId: number;
         amount: number;
         number: number;
+        placementType: DicePlacementType;
     }) => {
         return api.post("/dice-placement", placementData);
     },

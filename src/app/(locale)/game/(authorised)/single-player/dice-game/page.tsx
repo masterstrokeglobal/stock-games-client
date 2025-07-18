@@ -17,6 +17,7 @@ import { useMarketSelector } from '@/hooks/use-market-selector';
 import { BREAKPOINTS, useWindowSize } from '@/hooks/use-window-size';
 import useWinningId from '@/hooks/use-winning-id';
 import { RoundRecordGameType } from '@/models/round-record';
+import { DicePlacementType } from '@/models/dice-placement';
 import { useMemo, useState } from 'react';
 
 const DiceGame = () => {
@@ -47,7 +48,12 @@ const DiceGame = () => {
       }, [marketItemsStocks]);
       
 
-    const winningSum = (firstCubeStocks[0]?.horse || 0) + (secondCubeStocks[0]?.horse || 0) -6;
+    const winningSum: Record<DicePlacementType, number> = {
+        [DicePlacementType.BOTH]: (firstCubeStocks[0]?.horse || 0) + (secondCubeStocks[0]?.horse || 0) -6,
+        [DicePlacementType.FIRST]: firstCubeStocks[0]?.horse || 0,
+        [DicePlacementType.SECOND]: ((secondCubeStocks[0]?.horse || 0)-6)
+    }
+
     if (!marketSelected) return (
         <section className=" space-y-4 pt-14 min-h-screen ">
             <Navbar />

@@ -22,7 +22,6 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
     setShowDialog(open);
   }, [open]);
 
-
   const netResult = roundResult?.reduce((total, bet) => {
     return total + (bet.isWinner ? bet.amountWon : -bet.amountPlaced);
   }, 0);
