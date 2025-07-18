@@ -31,6 +31,7 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
     const isMobile = width < 768;
 
     const isPlaceOver = useIsPlaceOver(roundRecord);
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
    
     useEffect(() => {
@@ -94,9 +95,10 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
   <video src="/images/head-tail/lady.webm" autoPlay loop muted controls={false} className="absolute z-0 xsm:left-1/2 left-[calc(48%)] -translate-x-1/2 xl:h-60 h-48 " 
                      style={{ 
                         bottom: tableHeight - 20,
-                            // filter: 'chroma-key(#000000)' // if background is pure black
-    mixBlendMode: 'screen', // or 'multiply' depen÷ding on your video
-  filter: 'brightness(1.2) contrast(1.1) saturate(0.9)',
+          ...(isSafari && {
+      mixBlendMode: "screen",
+      filter: "brightness(1.2) contrast(1.1) saturate(0.9)",
+    }),
 
                      }} 
                      ref={ladyRef} />                    {/* Cards absolute, larger size, with coin images in center */}
