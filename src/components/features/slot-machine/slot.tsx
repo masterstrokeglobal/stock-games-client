@@ -32,7 +32,7 @@ export const Slot = ({ roundRecord,winningIdRoundRecord }: { roundRecord: RoundR
 
     useEffect(() => {
         if (stocks.length > 0) {
-            let newStockStates: number[] = [...stockStates]
+            const newStockStates: number[] = [...stockStates]
 
             let localStocks: any = winningIdRoundRecord?.sortedMarketItems ? winningIdRoundRecord.sortedMarketItems : stocks
             localStocks = localStocks.sort((a: any, b: any) => a.name.localeCompare(b.name))

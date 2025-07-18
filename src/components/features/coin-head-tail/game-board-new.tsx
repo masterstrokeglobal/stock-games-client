@@ -91,8 +91,15 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
                     <img src="/images/head-tail/bg.png" alt="game board" className="w-full scale-125 -translate-y-1/4 z-0 h-full absolute top-0 left-0 object-cover" />
                     <div className="bottom-0 left-0 w-full  min-h-40 bg-gradient-to-t scale-125 absolute z-0 from-[#00033D] to-transparent" />
                     <img src="/images/head-tail/table.png" alt="table" className="w-full relative z-10 aspect-[8/3]" ref={tableRef} />
-                    <video src="/images/head-tail/lady.webm" autoPlay loop muted controls={false} className="absolute z-0 xsm:left-1/2 left-[calc(48%)] -translate-x-1/2 xl:h-60 h-48 " style={{ bottom: tableHeight - 20 }} ref={ladyRef} />
-                    {/* Cards absolute, larger size, with coin images in center */}
+  <video src="/images/head-tail/lady.webm" autoPlay loop muted controls={false} className="absolute z-0 xsm:left-1/2 left-[calc(48%)] -translate-x-1/2 xl:h-60 h-48 " 
+                     style={{ 
+                        bottom: tableHeight - 20,
+                            // filter: 'chroma-key(#000000)' // if background is pure black
+    mixBlendMode: 'screen', // or 'multiply' depen÷ding on your video
+  filter: 'brightness(1.2) contrast(1.1) saturate(0.9)',
+
+                     }} 
+                     ref={ladyRef} />                    {/* Cards absolute, larger size, with coin images in center */}
                    <CoinToss
                     isFlipping={isPlaceOver}
                     style={{
