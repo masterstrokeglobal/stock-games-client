@@ -107,6 +107,11 @@
     filter: invert(1);
 }
 
+.custom-input-calendar::-webkit-calendar-picker-indicator {
+    color: #fff;
+}
+
+
 /** Coin Toss Animation */
 .coin-toss-anim-1 {
     animation: coin-toss-float-1 1s forwards;

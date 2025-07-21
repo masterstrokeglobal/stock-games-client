@@ -52,67 +52,67 @@ const BettingHistoryPage = () => {
         setPage(newPage);
     };
 
-    console.log(totalPages,data?.data.gameRecordHistory.count,pageSize);   
+    console.log(totalPages, data?.data.gameRecordHistory.count, pageSize);
     return (
-     
-            <section className="container-main w-full max-w-6xl">
-                <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between mb-6">
-                    <div className="flex sm:gap-5 gap-2 items-center flex-wrap text-white w-full">
-                        <Input
-                            type="date"
-                            value={filter.startDate}
-                            onChange={(e) => setFilter({ ...filter, startDate: e.target.value })}
-                            className="h-12 text-white bg-primary-game border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF] dark"
-                        />
-                        <span>{t('date-range.to')}</span>
-                        <Input
-                            type="date"
-                            value={filter.endDate}
-                            onChange={(e) => setFilter({ ...filter, endDate: e.target.value })}
-                            className="h-12 text-white bg-primary-game border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF] dark"
-                        />
-                        <div className="sm:ml-auto sm:w-fit w-full flex sm:flex-row flex-col gap-2 sm:items-center">
-                            <Label>
-                                <span className="text-white">{t('date-range.page-size')}</span>
-                            </Label>
 
-                            <Select value={pageSize.toString()} onValueChange={(val) => setPageSize(Number(val))}>
-                                <SelectTrigger className="h-12 text-white bg-primary-game border border-[#EFF8FF17] focus:border-[#55B0FF] sm:w-[100px] w-full">
-                                    <SelectValue placeholder={t('date-range.page-size')} />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        <SelectItem value="10">10</SelectItem>
-                                        <SelectItem value="25">25</SelectItem>
-                                        <SelectItem value="100">100</SelectItem>
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
-                </header>
+        <section className="container-main w-full max-w-6xl">
+            <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between mb-6">
+                <div className="flex sm:gap-5 gap-2 items-center flex-wrap text-white w-full">
+                    <Input
+                        type="date"
+                        value={filter.startDate}
+                        onChange={(e) => setFilter({ ...filter, startDate: e.target.value })}
+                        className="h-12 input-dark-calendar text-white bg-primary-game border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF] "
+                    />
+                    <span>{t('date-range.to')}</span>
+                    <Input
+                        type="date"
+                        value={filter.endDate}
+                        onChange={(e) => setFilter({ ...filter, endDate: e.target.value })}
+                        className="h-12 input-dark-calendar text-white bg-primary-game border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF] "
+                    />
+                    <div className="sm:ml-auto sm:w-fit w-full flex sm:flex-row flex-col gap-2 sm:items-center">
+                        <Label>
+                            <span className="text-white">{t('date-range.page-size')}</span>
+                        </Label>
 
-                {isLoading ? (
-                    <div className="flex justify-center py-8">
-                        <Loader2 className="h-6 w-6 animate-spin" />
+                        <Select value={pageSize.toString()} onValueChange={(val) => setPageSize(Number(val))}>
+                            <SelectTrigger className="h-12 text-white bg-primary-game border border-[#EFF8FF17] focus:border-[#55B0FF] sm:w-[100px] w-full">
+                                <SelectValue placeholder={t('date-range.page-size')} />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem value="10">10</SelectItem>
+                                    <SelectItem value="25">25</SelectItem>
+                                    <SelectItem value="100">100</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
                     </div>
-                ) : isError ? (
-                    <div className="text-center py-8 text-red-500">
-                        {t('errors.load-failed')}
-                    </div>
-                ) : (
-                    <div>
-                        <DataTable
-                            page={page}
-                            loading={isLoading}
-                            columns={bettingHistoryColumns}
-                            data={records}
-                            totalPage={totalPages}
-                            changePage={changePage}
-                        />
-                    </div>
-                )}
-            </section>
+                </div>
+            </header>
+
+            {isLoading ? (
+                <div className="flex justify-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin" />
+                </div>
+            ) : isError ? (
+                <div className="text-center py-8 text-red-500">
+                    {t('errors.load-failed')}
+                </div>
+            ) : (
+                <div>
+                    <DataTable
+                        page={page}
+                        loading={isLoading}
+                        columns={bettingHistoryColumns}
+                        data={records}
+                        totalPage={totalPages}
+                        changePage={changePage}
+                    />
+                </div>
+            )}
+        </section>
     );
 };
 

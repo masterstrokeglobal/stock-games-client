@@ -30,7 +30,7 @@ class User {
     monthlyWithdrawLimit?: number;
     createdAt?: Date;
     notes?: string;
-    demoUser?: boolean;
+    demoUser: boolean;
     updatedAt?: Date;
     deletedAt?: Date;
 
@@ -48,7 +48,7 @@ class User {
         this.otpSecret = params.otpSecret;
         this.isVerified = params.isVerified;
         this.profileImage = params.profileImage;
-        this.demoUser = params.demoUser;
+        this.demoUser = params.demoUser ?? false;
         this.weeklyWithdrawLimit = params.weeklyWithdrawLimit;
         this.dailyWithdrawLimit = params.dailyWithdrawLimit;
         this.monthlyWithdrawLimit = params.monthlyWithdrawLimit;

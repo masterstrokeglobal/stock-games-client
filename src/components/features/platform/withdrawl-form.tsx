@@ -66,7 +66,6 @@ const WithdrawMethodOption: React.FC<WithdrawMethodOptionProps> = ({
     );
 };
 
-const MIN_WITHDRAWAL = 500;
 
 const WithdrawTab: React.FC = () => {
     const wallet = useWallet();
@@ -196,12 +195,12 @@ const WithdrawTab: React.FC = () => {
                         )}
                     />
                 </div>
-                <div className="flex items-center gap-2 text-yellow-400 text-sm px-1">
+                {/* <div className="flex items-center gap-2 text-yellow-400 text-sm px-1">
                     <span>💰</span>
                     <span>
                         Minimum withdrawal is ₹{MIN_WITHDRAWAL}!
                     </span>
-                </div>
+                </div> */}
             </div>
 
             {/* Divider */}

@@ -10,16 +10,19 @@ interface AmountInputProps {
     value: string;
     onChange: (value: string) => void;
     placeholder: string;
+    number?: boolean;
     minAmount?: number;
+    label?: string;
+    error?: string;
 }
 
-export const AmountInput = ({ value, onChange, placeholder, minAmount }: AmountInputProps) => {
+export const AmountInput = ({ value, onChange, placeholder, minAmount, error, label = "Amount", number = false }: AmountInputProps) => {
     return (
         <div className="space-y-3">
             <fieldset className="relative border-2 dark:border-platform-border border-primary-game rounded-sm px-4 py-3">
-                <legend className="px-2 text-platform-text text-sm font-medium">Amount</legend>
+                <legend className="px-2 text-platform-text text-sm font-medium">{label}</legend>
                 <Input
-                    type="text"
+                    type={number ? "number" : "text"}
                     className="w-full bg-transparent border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
                     placeholder={placeholder}
                     value={value}
@@ -31,6 +34,11 @@ export const AmountInput = ({ value, onChange, placeholder, minAmount }: AmountI
                 <div className="flex items-center gap-2 text-yellow-400 text-sm">
                     <span>⚠️</span>
                     <span>Minimum withdrawal is ₹{minAmount}!</span>
+                </div>
+            )}
+            {error && (
+                <div className="flex items-center gap-2 mt-px text-red-400 text-sm">
+                    <span>{error}</span>
                 </div>
             )}
         </div>
