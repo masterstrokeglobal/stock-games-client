@@ -74,7 +74,7 @@ import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const upiDepositSchema = (t: any,external:boolean) => z.object({
+const upiDepositSchema = (t: any) => z.object({
     pgId: z
         .string()
         .min(0, t('validation.transaction-id-required'))
@@ -102,11 +102,7 @@ const UPIDepositForm = () => {
     const t = useTranslations('deposit');
     const { mutate, isPending } = useCreateDepositRequest();
     const { userDetails } = useAuthStore();
-    const company = userDetails?.company;
-
-    const external = company?.externalPayIn ?? false;
     const paymentImage = userDetails?.company?.paymentImage;
-
 
     const onSubmit = async (data: UpiDepositFormValues) => {
         data.amount = parseInt(data.amount.toString());
@@ -128,7 +124,7 @@ const UPIDepositForm = () => {
         });
     }
     const form = useForm<UpiDepositFormValues>({
-        resolver: zodResolver(upiDepositSchema(t, external)),
+        resolver: zodResolver(upiDepositSchema(t)),
         defaultValues: { amount: 10, pgId: "" },
     });
    
