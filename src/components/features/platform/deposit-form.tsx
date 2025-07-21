@@ -84,11 +84,7 @@ const upiDepositSchema = (t: any,external:boolean) => z.object({
             message: t('validation.amount-invalid')
         })
         .min(1, t('validation.amount-required'))
-}).refine((data) => external ? data.pgId === '' : data.pgId !== '', {
-    message: t('validation.transaction-id-required'),
-    path: ['pgId']
 });
-
 
 type UpiDepositFormValues = z.infer<ReturnType<typeof upiDepositSchema>>;
 // Crypto Deposit Form Schema
