@@ -17,8 +17,13 @@ export const externalUserAPI = {
     return api.get("/external-user/external-wallet");
   },
 
+  // get externa user result  
+  getExternalUserResult : async (roundId: string | number) => {
+    return api.get(`/external-user/result/${roundId}`);
+  },
+
   // Get external user's placements for a round (requires external token)
-  getExternalUsersPlacements: async (roundId: string) => {
+  getExternalUsersPlacements: async (roundId: string | number) => {
     return api.get(`/external-user/placement/${roundId}`);
   },
 };

@@ -2,12 +2,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { sevenUpDownAPI } from "@/lib/axios/7-up-down-API";
 import SevenUpDownPlacement from "@/models/seven-up-down";
+import { cn } from "@/lib/utils";
+import { useIsExternalUser } from "@/context/auth-context";
+import { externalUserAPI } from "@/lib/axios/external-user-API";
 import { SevenUpDownRoundResult } from "@/lib/axios/7-up-down-API";
+
 export const useCreateSevenUpDownPlacement = () => {
     const queryClient = useQueryClient();
+    const isExternalUser = useIsExternalUser();
 
     return useMutation({
-        mutationFn: sevenUpDownAPI.createSevenUpDownPlacement,
+        mutationFn: isExternalUser ? externalUserAPI.createExternalBet : sevenUpDownAPI.createSevenUpDownPlacement,
         onSuccess: (data) => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
@@ -28,8 +33,6 @@ export const useCreateSevenUpDownPlacement = () => {
     });
 };
 
-
-import { cn } from "@/lib/utils";
 
 export const BetSuccessToast = ({
     className,
@@ -95,10 +98,11 @@ export const BetSuccessToast = ({
 
 
 export const useGetMyCurrentRoundSevenUpDownPlacement = (roundId: number) => {
+    const isExternalUser = useIsExternalUser();
     return useQuery<SevenUpDownPlacement[]>({
         queryKey: ["sevenUpDown", "myPlacements", roundId],
         queryFn: async () => {
-            const response = await sevenUpDownAPI.getMyCurrentRoundSevenUpDownPlacement(roundId);
+            const response = isExternalUser ? await externalUserAPI.getExternalUsersPlacements(roundId) : await sevenUpDownAPI.getMyCurrentRoundSevenUpDownPlacement(roundId);
             return response.data.map((placement: any) => new SevenUpDownPlacement(placement));
         },
     });

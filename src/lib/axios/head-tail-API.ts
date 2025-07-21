@@ -19,6 +19,10 @@ export const headTailAPI = {
         const response = await api.get(`/head-tail/my-current-placement/${roundId}`);
         return response.data.data.map((placement: HeadTailPlacement) => new HeadTailPlacement(placement));
     },
+    getExternalUsersPlacements: async (roundId: number) => {
+        const response = await api.get(`/external-user/placement/${roundId}`);
+        return response.data.data.map((placement: HeadTailPlacement) => new HeadTailPlacement(placement));
+    },
     getCurrentRoundHeadTailPlacement: async (roundId: number) => {
         const response = await api.get(`/head-tail/current-round-placements/${roundId}`);
         return response.data;
