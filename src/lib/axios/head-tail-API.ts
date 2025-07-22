@@ -27,6 +27,16 @@ export const headTailAPI = {
         const response = await api.get(`/head-tail/current-round-placements/${roundId}`);
         return response.data;
     },
+    getExternalUsersHeadTailRoundResult: async (roundId: number) => {
+        const response = await api.get(`/external-user/result/${roundId}`);
+        return  {
+            round: new RoundRecord(response.data.round as any),
+            placements: response.data.placements as HeadTailRoundResult[]
+        } as {
+            round: RoundRecord;
+            placements: HeadTailRoundResult[];
+        };
+    },
     getHeadTailRoundResult: async (roundId: number) => {
         const response = await api.get(`/head-tail/result/${roundId}`);
 

@@ -14,12 +14,9 @@ interface GameResultDialogProps {
 }
 
 const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
-  const [showDialog, setShowDialog] = useState(open);
-  const { data: roundResult, isLoading, isError } = useGetHeadTailRoundResult(roundRecordId, true);
+  const { data: roundResult, isLoading, isError } = useGetHeadTailRoundResult(roundRecordId, open);
 
-  useEffect(() => {
-    setShowDialog(open);
-  }, [open]);
+
 
   // Calculate net result from the round result data
   const netResult = roundResult?.placements.reduce((total, bet) => {
@@ -27,7 +24,7 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
   }, 0);
 
   return (
-    <Dialog   defaultOpen={showDialog}>
+    <Dialog defaultOpen={open}>
       <DialogContent
         showButton={false}
         className={cn(
@@ -36,7 +33,7 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
         )}
       >
 
-        <img src="/images/glow.png" alt="Game Result"  className="w-full h-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" /> 
+        <img src="/images/glow.png" alt="Game Result" className="w-full h-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
         {isLoading && (
           <div className="relative rounded-2xl w-full mx-auto font-inter">
             <div className="text-center text-white text-2xl px-6 py-6 font-bold tracking-widest font-play mb-2">
@@ -66,7 +63,7 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
               Result
               <DialogClose className='absolute top-0  font-play sm:text-xl text-base flex items-center justify-center font-medium aspect-square sm:size-10 size-8 right-0 bg-[#001F65] z-[61] rounded-full p-2 border-[#6FB0FF] focus:ring-0 border'>
 
-X              </DialogClose>
+                X              </DialogClose>
             </div>
 
             <main className='bg-[#1574F4] border-2 border-[#6FB0FF] rounded-2xl p-0.5'>
@@ -156,16 +153,17 @@ X              </DialogClose>
             </main>
 
             <div className='flex justify-center w-full'>
-              <button
-                className="w-full mt-4 text-white  sm:max-w-sm max-w-xs mx-auto py-3 rounded-xl text-xl tracking-wider font-play transition border border-[#6FB0FF]"
-                style={{
-                  background: "linear-gradient(0deg, #002067 0%, #00339D 90.29%)",
-                  textShadow: "0px 0px 5px rgba(255, 255, 255, 1)",
-                }}
-                onClick={() => setShowDialog(false)}
-              >
-                Play Again
-              </button>
+              <DialogClose>
+                <button
+                  className="w-full mt-4 text-white  sm:max-w-sm max-w-xs mx-auto py-3 rounded-xl text-xl tracking-wider font-play transition border border-[#6FB0FF]"
+                  style={{
+                    background: "linear-gradient(0deg, #002067 0%, #00339D 90.29%)",
+                    textShadow: "0px 0px 5px rgba(255, 255, 255, 1)",
+                  }}
+                >
+                  Play Again
+                </button>
+              </DialogClose>
             </div>
           </div>
         )}

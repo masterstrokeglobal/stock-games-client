@@ -110,7 +110,7 @@ export const useGetMyPlacements = (filter: any) => {
     const isExternalUser = useIsExternalUser();
     return useQuery({
         queryKey: ["myPlacements", filter],
-        queryFn: () => isExternalUser ? externalUserAPI.getExternalUsersPlacements(filter.roundId) : gameRecordAPI.getMyPlacements(filter),
+        queryFn: () => isExternalUser ? gameRecordAPI.getExternalUsersPlacements(filter.roundId) : gameRecordAPI.getMyPlacements(filter),
     });
 };
 

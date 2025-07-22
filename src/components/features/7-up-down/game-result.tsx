@@ -16,7 +16,7 @@ interface GameResultDialogProps {
 
 const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
   const [showDialog, setShowDialog] = useState(open);
-  const { data: roundResult, isLoading } = useGetSevenUpDownRoundResult(roundRecordId, true);
+  const { data: roundResult, isLoading } = useGetSevenUpDownRoundResult(roundRecordId, open);
 
   useEffect(() => {
     setShowDialog(open);

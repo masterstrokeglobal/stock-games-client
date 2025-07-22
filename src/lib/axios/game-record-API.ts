@@ -35,6 +35,11 @@ export const gameRecordAPI = {
     });
   },
 
+  getExternalUsersPlacements: async (roundId: string) => {
+    const data = await api.get(`/external-user/placement/${roundId}`);
+    return data.data;
+  },
+
   getAdvancePlacements: async (filter: any) => {
     return api.get("/advance-game-records", {
       params: filter

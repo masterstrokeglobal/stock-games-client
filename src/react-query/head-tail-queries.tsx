@@ -4,9 +4,10 @@ import { useIsExternalUser } from "@/context/auth-context";
 import { externalUserAPI } from "@/lib/axios/external-user-API";
 
 export const useGetHeadTailRoundResult = (roundId: number, open: boolean) => {
+    const isExternalUser = useIsExternalUser();
     return useQuery({
         queryKey: ["head-tail-round-result", roundId],
-        queryFn: () => headTailAPI.getHeadTailRoundResult(roundId),
+        queryFn: () => isExternalUser ? headTailAPI.getExternalUsersHeadTailRoundResult(roundId) : headTailAPI.getHeadTailRoundResult(roundId),
         enabled: open,
     });
 };

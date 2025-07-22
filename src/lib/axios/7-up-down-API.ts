@@ -31,13 +31,20 @@ export const sevenUpDownAPI = {
         const response = await api.get(`/seven-up-down/my-current-placement/${roundId}`);
         return response.data;
     },
+    getExternalUsersCurrentRoundSevenUpDownPlacement: async (roundId: number) => {
+        const response = await api.get(`/external-user/placement/${roundId}`);
+        return response.data;
+    },
     getCurrentRoundSevenUpDownPlacement: async (roundId: number) => {
         const response = await api.get(`/seven-up-down/current-round-placements/${roundId}`);
         return response.data;
     },
     getSevenUpDownRoundResult: async (roundId: number) => {
         const response = await api.get(`/seven-up-down/result/${roundId}`);
-      
         return response.data.data as unknown as SevenUpDownRoundResult[];
+    },
+    getExternalUsersSevenUpDownRoundResult: async (roundId: number) => {
+        const response = await api.get(`/external-user/result/${roundId}`);
+        return response.data as unknown as SevenUpDownRoundResult[];
     }
 } as const;

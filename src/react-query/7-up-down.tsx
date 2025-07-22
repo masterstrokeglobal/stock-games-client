@@ -102,7 +102,7 @@ export const useGetMyCurrentRoundSevenUpDownPlacement = (roundId: number) => {
     return useQuery<SevenUpDownPlacement[]>({
         queryKey: ["sevenUpDown", "myPlacements", roundId],
         queryFn: async () => {
-            const response = isExternalUser ? await externalUserAPI.getExternalUsersPlacements(roundId) : await sevenUpDownAPI.getMyCurrentRoundSevenUpDownPlacement(roundId);
+            const response = isExternalUser ? await sevenUpDownAPI.getExternalUsersCurrentRoundSevenUpDownPlacement(roundId) : await sevenUpDownAPI.getMyCurrentRoundSevenUpDownPlacement(roundId);
             return response.data.map((placement: any) => new SevenUpDownPlacement(placement));
         },
     });
@@ -116,9 +116,10 @@ export const useGetCurrentRoundSevenUpDownPlacement = (roundId: number) => {
 };
 
 export const useGetSevenUpDownRoundResult = (roundId: number, enable: boolean) => {
+    const isExternalUser = useIsExternalUser();
     return useQuery<SevenUpDownRoundResult[]>({
         queryKey: ["sevenUpDown", "roundResult", roundId],
-        queryFn: () => sevenUpDownAPI.getSevenUpDownRoundResult(roundId),
+        queryFn: () => isExternalUser ? sevenUpDownAPI.getExternalUsersSevenUpDownRoundResult(roundId) : sevenUpDownAPI.getSevenUpDownRoundResult(roundId),
         enabled: enable,
     });
 };
