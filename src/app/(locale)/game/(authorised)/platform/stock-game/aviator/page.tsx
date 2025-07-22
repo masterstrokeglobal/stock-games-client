@@ -38,7 +38,7 @@ const StockSlot = () => {
         }
     }, [marketSelected, roundRecord, stockSelectedAviator, setStockSelectedAviator]);
 
-    if (!marketSelected) return <MarketSelector variant='aviator' className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Avaiator" />
+    if (!marketSelected) return <MarketSelector showNavbar={false} variant='aviator' className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Avaiator" />
 
     if (isLoading || !roundRecord || isTokenLoading || token == null) return <GameLoadingScreen className='min-h-[calc(100svh-100px)]' />
 

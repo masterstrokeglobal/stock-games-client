@@ -14,10 +14,11 @@ type MarketSelectorProps = {
     title: string;
     className?: string;
     variant?: 'aviator' | 'all';
+    showNavbar?: boolean;
     roundRecordType?: RoundRecordGameType;
 }
 
-const MarketSelector = ({ title = "STOCK SLOT MARKET", className, roundRecordType = RoundRecordGameType.DERBY }: MarketSelectorProps) => {
+const MarketSelector = ({ title = "STOCK SLOT MARKET", className, roundRecordType = RoundRecordGameType.DERBY, showNavbar = true }: MarketSelectorProps) => {
     const isNSEAvailable = useNSEAvailable();
     const isUSAMarketAvailable = useUSAMarketAvailable();
     const theme = useTheme();
@@ -84,7 +85,7 @@ const MarketSelector = ({ title = "STOCK SLOT MARKET", className, roundRecordTyp
         <section
             className={cn("min-h-screen dark:bg-[url('/images/platform/market-selector-bg.png')] bg-[url('/images/platform/market-selector-bg-light.png')] w-full bg-cover bg-center flex flex-col items-center justify-center p-4", className)}>
             {/* Header */}
-            <Navbar />
+            { showNavbar && <Navbar /> }
             <div className="dark:bg-[#04002968] bg-[#e6f6ff8b] backdrop-blur-[2px] w-full h-full absolute top-0 left-0"/>
             <div className="mx-auto max-w-3xl w-full">
             <header className="text-center mb-8 relative z-10 mt-10">

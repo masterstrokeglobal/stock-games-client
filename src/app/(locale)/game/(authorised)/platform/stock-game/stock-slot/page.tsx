@@ -19,7 +19,7 @@ const StockSlot = () => {
 
     const winningIdRoundRecord = useWinningId(roundRecord);
 
-    if (!marketSelected) return <MarketSelector className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Stock Slot Market" />
+    if (!marketSelected) return <MarketSelector showNavbar={false} className='min-h-[calc(100svh-100px)] max-w-2xl mx-auto' title="Stock Slot Market" />
 
     if (isLoading || !roundRecord) return <GameLoadingScreen className='min-h-[calc(100svh-100px)]' />
 
