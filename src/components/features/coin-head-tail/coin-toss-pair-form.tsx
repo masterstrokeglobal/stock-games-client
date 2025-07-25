@@ -61,7 +61,7 @@ const CoinTossPairForm = ({ onSubmit, isLoading, defaultValues }: Props) => {
 
     const tailOptions = useMemo(() => {
         return tailMarketItems?.data?.marketItems?.map((item: MarketItem) => ({
-            label: item.name,
+            label: `${item.name} (${item.type})`,
             value: item.id?.toString() || ""
         })) || [];
     }, [tailMarketItems]);

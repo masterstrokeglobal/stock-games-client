@@ -101,21 +101,21 @@ export default SlotPairForm;
 const useMarketItemsQueries = (slotSearches: string[], type: SchedulerType) => {
     const marketItemsQueries1 = useGetMarketItems({
         search: slotSearches[0],
-        limit: 100,
+        limit: 500,
         page: 1,
         type: type
     });
 
     const marketItemsQueries2 = useGetMarketItems({
         search: slotSearches[1],
-        limit: 100,
+        limit: 500,
         page: 1,
         type: type
     });
 
     const marketItemsQueries3 = useGetMarketItems({
         search: slotSearches[2],
-        limit: 100,
+        limit: 500,
         page: 1,
         type: type
     });
@@ -123,7 +123,7 @@ const useMarketItemsQueries = (slotSearches: string[], type: SchedulerType) => {
 
     const marketItemsQueries4 = useGetMarketItems({
         search: slotSearches[3],
-        limit: 100,
+        limit: 500,
         page: 1,
         type: type
     });
@@ -131,7 +131,7 @@ const useMarketItemsQueries = (slotSearches: string[], type: SchedulerType) => {
 
     const marketItemsQueries5 = useGetMarketItems({
         search: slotSearches[4],
-        limit: 100,
+        limit: 500,
         page: 1,
         type: type
     });
