@@ -28,6 +28,8 @@ import { useGetMyFavorites } from "@/react-query/favorite-market-item-queries"
 import { useGetMyStockSlotGameRecord } from "@/react-query/game-record-queries"
 import { Triangle } from "lucide-react"
 import { useLeaderboard } from "@/hooks/use-multi-socket-leaderboard"
+import useMCXAvailable from "@/hooks/use-mcx-available"
+import useCOMEXAvailable from "@/hooks/use-comex-available"
 
 
 export default function Home() {
@@ -133,10 +135,12 @@ const MarketSection = ({ globalBetAmount, searchQuery, className }: { searchQuer
 
   const isNSEAvailable = useNSEAvailable();
   const isUSAMarketAvailable = useUSAMarketAvailable();
+  const isMCXAvailable = useMCXAvailable();
 
+  const isCOMEXAvailable = useCOMEXAvailable();
   const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
   const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
-  const isMCXAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.MCX);
+  const isMCXAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.MCX) ;
   const isCOMEXAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.COMEX);
 
 
@@ -150,8 +154,8 @@ const MarketSection = ({ globalBetAmount, searchQuery, className }: { searchQuer
           <TabsList className="w-full md:max-w-md  grid grid-cols-2 gap-2">
             <TabsTrigger value={SchedulerType.NSE} disabled={!isNSEAllowed || !isNSEAvailable} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">NSE</TabsTrigger>
             <TabsTrigger value={SchedulerType.USA_MARKET} disabled={!isUSAMarketAllowed || !isUSAMarketAvailable} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">US Stock</TabsTrigger>
-            {isMCXAllowed && <TabsTrigger value={SchedulerType.MCX} disabled={!isMCXAllowed} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">MCX</TabsTrigger>}
-            {isCOMEXAllowed && <TabsTrigger value={SchedulerType.COMEX} disabled={!isCOMEXAllowed} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">International</TabsTrigger>}
+            {isMCXAllowed && <TabsTrigger value={SchedulerType.MCX} disabled={!isMCXAllowed || !isMCXAvailable} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">MCX</TabsTrigger>}
+            {isCOMEXAllowed && <TabsTrigger value={SchedulerType.COMEX} disabled={!isCOMEXAllowed || !isCOMEXAvailable} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">International</TabsTrigger>}
           </TabsList>
         </div>
       </div>
