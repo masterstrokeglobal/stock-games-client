@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import FormInput from "@/components/ui/form/form-input";
 import FormProvider from "@/components/ui/form/form-provider";
 import FormGroupSelect from "@/components/ui/form/form-select";
-import { SchedulerType } from "@/models/market-item";
+import { schedulerTypeOptions } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -20,11 +20,7 @@ export const createMarketItemInputSchema = z.object({
 
 export type MarketItemFormValues = z.infer<typeof createMarketItemInputSchema>;
 
-const typeOptions = [
-    { label: "NSE", value: SchedulerType.NSE.toString() },
-    { label: "Crypto", value: SchedulerType.CRYPTO.toString() },
 
-];
 type Props = {
     defaultValues?: MarketItemFormValues;
     onSubmit: (data: MarketItemFormValues) => void;
@@ -41,7 +37,7 @@ const MarketItemForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
     return (
         <FormProvider methods={form} onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <FormGroupSelect
-                control={control} options={typeOptions} name={"type"}
+                control={control} options={schedulerTypeOptions} name={"type"}
             />
             <FormInput
                 control={control}
