@@ -1,18 +1,17 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import FormComboboxSelect from "@/components/ui/form/form-combobox";
+import FormProvider from "@/components/ui/form/form-provider";
+import FormGroupSelect from "@/components/ui/form/form-select";
+import FormSwitch from "@/components/ui/form/form-switch";
+import { schedulerTypeOptions } from "@/lib/utils";
+import { MarketItem, SchedulerType } from "@/models/market-item";
+import { useGetMarketItems } from "@/react-query/market-item-queries";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import FormProvider from "@/components/ui/form/form-provider";
-import FormGroupSelect from "@/components/ui/form/form-select";
-import FormComboboxSelect from "@/components/ui/form/form-combobox";
-import { SchedulerType } from "@/models/market-item";
-import FormSwitch from "@/components/ui/form/form-switch";
-import { MarketItem } from "@/models/market-item";
-import { useGetMarketItems } from "@/react-query/market-item-queries";
-import { schedulerTypeOptions } from "@/lib/utils";
 
 // Define SelectOption type if not imported
 type SelectOption = {
@@ -52,14 +51,12 @@ const JackpotPairForm = ({ onSubmit, isLoading, defaultValues }: Props) => {
     });
 
     const { control, watch, formState: { errors } } = form;
-    const type = watch("type");
     const selectedMarketItems = watch("marketItems") || [];
 
     const marketItemsQuery = useGetMarketItems({
         search: search,
         limit: 100,
         page: 1,
-        type: type
     });
 
     const jackpotOptions: SelectOption[] = useMemo(() => {
