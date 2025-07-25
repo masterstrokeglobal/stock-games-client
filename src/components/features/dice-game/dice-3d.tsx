@@ -6,6 +6,7 @@ import { MarketItem } from '@/models/market-item';
 import { RoundRecord } from '@/models/round-record';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import TriangleIcon from '../common/triangle-icon';
+import useIsSafari from '@/hooks/use-is-safari';
 
 interface DiceFaceProps {
   marketItem: MarketItem;
@@ -56,9 +57,10 @@ const StockDisplay = ({ stock, className, isSecondCube, roundRecord, winner, isL
 export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, roundRecordWithWinningId, stocks }) => {
   const marketItems = roundRecord.market;
   const [showDice, setShowDice] = useState(false);
-  const [diceAppear, setDiceAppear] = useState(false); 
+  const [diceAppear, setDiceAppear] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const isPlaceOver = usePlacementOver(roundRecord);
+  const isSafari = useIsSafari();
   const isRolling = isPlaceOver && roundRecordWithWinningId?.winningId == null;
 
   const firstCube = marketItems.slice(0, 6);
@@ -164,69 +166,74 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
       <style>{diceAppearAnimation}</style>
       <div className={`font-sans  bg-cover bg-center border border-[#4467CC80] grid grid-rows-1 p-2 rounded-lg overflow-visible ${className}`} >
         <div className="flex justify-between  relative  h-full items-center">
-            <div className='flex flex-col  border rounded border-[#4467CC80] h-full md:w-28 w-[80px]'>
-              {/* <TriangleIcon className='size-3 text-white absolute top-4 right-0 translate-x-full  rotate-90' /> */}
-              {firstCubeStocks?.map((stock, index) => (
-                <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1 w-full last:border-none' roundRecord={roundRecordWithWinningId} isLast={index === 5} />
-              ))}
-            </div>
+          <div className='flex flex-col  border rounded border-[#4467CC80] h-full md:w-28 w-[80px]'>
+            {/* <TriangleIcon className='size-3 text-white absolute top-4 right-0 translate-x-full  rotate-90' /> */}
+            {firstCubeStocks?.map((stock, index) => (
+              <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1 w-full last:border-none' roundRecord={roundRecordWithWinningId} isLast={index === 5} />
+            ))}
+          </div>
           <div className='relative flex-1 h-full max-w-sm'>
             <h2 className='text-white text-center sm:hidden  uppercase  z-10 text-xs font-semibold tracking-wider absolute top-0 left-1/2 -translate-x-1/2'>Dice Game</h2>
-              <video ref={videoRef} src="/images/dice-game/gennie.webm"  muted className='absolute xsm:-bottom-2 z-10 xsm:scale-100  xs:scale-125 scale-[1.75] xs:bottom-[3%] bottom-[11%] ' />
+            <video ref={videoRef} src="/images/dice-game/gennie.webm" style={{
+              ...(isSafari && {
+                mixBlendMode: "screen",
+              }),
+
+            }} muted className={cn('absolute xsm:-bottom-2 z-10 xsm:scale-100  xs:scale-125 scale-[1.75] xs:bottom-[3%] bottom-[11%] ', isSafari && 'mix-blend-screen')} />
+            <div
+              style={{
+                border: '1px solid rgba(68, 103, 204, 1)',
+                boxShadow: '20px 20px 100px 18px rgba(68, 103, 204, 1)',
+              }}
+              className={cn(
+                'flex flex-col absolute left-1/4 rounded-full max-w-full !aspect-square sm:p-8 xsm:p-6 p-0 -translate-x-1/4 sm:-top-2 xsm:top-4 top-8 justify-center items-center gap-8 h-auto sm:w-52 w-40'
+              )}
+            >
               <div
-                style={{
-                  border: '1px solid rgba(68, 103, 204, 1)',
-                  boxShadow: '20px 20px 100px 18px rgba(68, 103, 204, 1)',
-                }}
                 className={cn(
-                  'flex flex-col absolute left-1/4 rounded-full max-w-full !aspect-square sm:p-8 xsm:p-6 p-0 -translate-x-1/4 sm:-top-2 xsm:top-4 top-8 justify-center items-center gap-8 h-auto sm:w-52 w-40'
+                  'flex flex-col gap-6 items-center justify-center w-full'
                 )}
               >
-                <div
+                <Cube
+                  marketItems={firstCube}
+                  showDice={showDice}
+                  isRolling={isRolling}
                   className={cn(
-                    'flex flex-col gap-6 items-center justify-center w-full'
-                  )}
-                >
-                  <Cube
-                    marketItems={firstCube}
-                    showDice={showDice}
-                    isRolling={isRolling}
-                    className={cn(
-                      showDice 
-                        ? diceAppear
-                          ? 'dice-appear-animate-100'
-                          : 'dice-appear-hidden-100'
+                    showDice
+                      ? diceAppear
+                        ? 'dice-appear-animate-100'
                         : 'dice-appear-hidden-100'
-                    )}
-                    winningMarketId={roundRecordWithWinningId?.winningId}
-                    isLoading={isWaitingForResults}
-                  />
-                  <Cube
-                    marketItems={secondCube}
-                    showDice={showDice}
-                    className={cn(
-                      showDice 
-                        ? diceAppear
-                          ? 'dice-appear-animate-150'
-                          : 'dice-appear-hidden-150'
+                      : 'dice-appear-hidden-100'
+                  )}
+                  winningMarketId={roundRecordWithWinningId?.winningId}
+                  isLoading={isWaitingForResults}
+                />
+                <Cube
+                  marketItems={secondCube}
+                  showDice={showDice}
+                  className={cn(
+                    showDice
+                      ? diceAppear
+                        ? 'dice-appear-animate-150'
                         : 'dice-appear-hidden-150'
-                    )}
-                    isRolling={isRolling}
-                    isSecondCube
-                    winningMarketId={roundRecordWithWinningId?.winningId}
-                    isLoading={isWaitingForResults}
-                  />
-                </div>
+                      : 'dice-appear-hidden-150'
+                  )}
+                  isRolling={isRolling}
+                  isSecondCube
+                  winningMarketId={roundRecordWithWinningId?.winningId}
+                  isLoading={isWaitingForResults}
+                />
               </div>
-          </div>
-            <div className='flex flex-col h-full  md:w-28 w-[80px] self-end border border-[#4467CC80] rounded-lg'>
-              {/* <TriangleIcon className='size-3 text-white absolute bottom-4 left-0 -translate-x-full  -rotate-90' /> */}
-
-              {secondCubeStocks?.map((stock, index) => (
-                <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1  w-full' isSecondCube roundRecord={roundRecordWithWinningId} isLast={index === 5} />
-              ))}
-
             </div>
+          </div>
+          <div className='flex flex-col h-full  md:w-28 w-[80px] self-end border border-[#4467CC80] rounded-lg'>
+            {/* <TriangleIcon className='size-3 text-white absolute bottom-4 left-0 -translate-x-full  -rotate-90' /> */}
+
+            {secondCubeStocks?.map((stock, index) => (
+              <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1  w-full' isSecondCube roundRecord={roundRecordWithWinningId} isLast={index === 5} />
+            ))}
+
+          </div>
         </div>
       </div>
     </>

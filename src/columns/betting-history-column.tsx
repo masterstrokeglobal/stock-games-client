@@ -118,7 +118,7 @@ const gameHistoryColumns: ColumnDef<GameRecord>[] = [
   {
     accessorKey: "actions",
     header: () => <TranslatedHeader translationKey="headers.actions" />,
-    cell: ({row}) => (
+    cell: ({ row }) => (
       <div className="flex items-center justify-center space-x-2">
         <Link href={`/game/betting-history/${row.original.roundId}`}>
           <Button size="sm" variant="secondary">

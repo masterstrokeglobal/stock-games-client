@@ -22,10 +22,10 @@ const MovingPeople: React.FC<MovingPeopleProps> = ({
     const instanceCount = 3; // Number of instances
     const gap = 700; // Gap between instances
     const startZ = 800;
-    
+
     return Array.from({ length: instanceCount }, (_, index) => {
       const model = scene.clone();
-      
+
       // // Apply white material to all meshes
       // model.traverse((child) => {
       //   if (child instanceof THREE.Mesh) {
@@ -50,9 +50,9 @@ const MovingPeople: React.FC<MovingPeopleProps> = ({
           40,
         ] as [number, number, number],
         randomRotation: [
-        Math.random() * 30 + 70, // Random value between 70 and 100
-        Math.random() * 30 + 70, // Random value between 70 and 100
-        Math.random() * 30 + 70, // Random value between 70 and 100
+          Math.random() * 30 + 70, // Random value between 70 and 100
+          Math.random() * 30 + 70, // Random value between 70 and 100
+          Math.random() * 30 + 70, // Random value between 70 and 100
         ] as [number, number, number],
       };
     });
@@ -67,23 +67,24 @@ const MovingPeople: React.FC<MovingPeopleProps> = ({
     if (groupRef.current) {
       groupRef.current.children.forEach((child) => {
         child.position.z -= speed * frequency * delta * 60;
-        
+
         // Reset position when it goes past the end
         if (child.position.z <= endZ) {
           child.position.z = startZ;
-          
+
           // Randomize scale and rotation when resetting
+          const randomSize = Math.random() * 10 + 30; // random between 30 and 40
           const randomScale = [
-            Math.random() * 0.6 + 0.2,
-            Math.random() * 0.6 + 0.2,
-            Math.random() * 0.6 + 0.2,
+            randomSize,
+            randomSize,
+            randomSize,
           ];
           const randomRotation = [
             Math.random() * Math.PI * 2,
             Math.random() * Math.PI * 2,
             Math.random() * Math.PI * 2,
           ];
-          
+
           child.scale.set(randomScale[0], randomScale[1], randomScale[2]);
           child.rotation.set(randomRotation[0], randomRotation[1], randomRotation[2]);
         }

@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl'
 interface FormImageProps<TFieldValues extends FieldValues = FieldValues> {
     control: Control<TFieldValues>
     name: Path<TFieldValues>
+    disabled?: boolean
     label?: string
     className?: string
 }
@@ -18,6 +19,7 @@ const FormImage = <TFieldValues extends FieldValues>({
     name,
     label,
     className,
+    disabled = false
 }: FormImageProps<TFieldValues>) => {
     const t = useTranslations('form-image')
     const { setValue, getFieldState, getValues } = useFormContext()
@@ -92,7 +94,7 @@ const FormImage = <TFieldValues extends FieldValues>({
 
     return (
         <div className={`${className} space-y-2`}>
-            {label && <FormLabel className="text-white">{label || t('default-label')}</FormLabel>}
+            {label && <FormLabel className="text-platform-text">{label || t('default-label')}</FormLabel>}
 
             <div 
                 className={`
@@ -100,8 +102,8 @@ const FormImage = <TFieldValues extends FieldValues>({
                     transition-colors duration-300
                     ${previewUrl ? 'border-blue-400' : 'border-gray-300 hover:border-blue-500'}
                 `}
-                onDrop={handleDrop}
-                onDragOver={handleDragOver}
+                onDrop={disabled ? undefined : handleDrop}
+                onDragOver={disabled ? undefined : handleDragOver}
             >
                 {previewUrl ? (
                     <div className="relative aspect-square" >
@@ -111,11 +113,12 @@ const FormImage = <TFieldValues extends FieldValues>({
                             className="mx-auto h-full rounded-md object-cover"
                         />
                         <Button
+
                             variant="destructive"
-                            onClick={handleRemove}
+                            onClick={disabled ? undefined : handleRemove}
                             className="absolute top-0 right-0"
                             size="icon"
-                            disabled={isUploading}
+                            disabled={isUploading || disabled}
                         >
                             <X size={18} />
                         </Button>

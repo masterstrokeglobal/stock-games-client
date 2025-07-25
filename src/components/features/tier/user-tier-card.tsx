@@ -102,7 +102,7 @@ const ActiveTierCard = ({ className }: PropsWithClassName) => {
         if (tiersData?.tiers && tiersData.tiers.length > 0) {
             if (userTier) {
                 const currentTierIndex = tiersData.tiers.findIndex(
-                    (tier) => tier.id === userTier.tierId.toString()
+                    (tier) => tier.id.toString() == userTier.tierId.toString()
                 );
                 if (currentTierIndex !== -1) {
                     setActiveTier(tiersData.tiers[currentTierIndex]);

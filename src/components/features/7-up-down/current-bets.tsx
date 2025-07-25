@@ -36,7 +36,7 @@ const NoBets = () => {
       <Image
         src="/images/dice-game/no-bets.png"
         alt="No Bets"
-        className="w-auto h-18 aspect-square "
+        className="w-auto xl:h-20 h-16 aspect-square "
         width={100}
         height={100}
       />
@@ -63,7 +63,7 @@ const BetsList = ({
         <div className="flex-1 text-left text-nowrap whitespace-nowrap">BETS INR</div>
       </div>
       <ScrollArea
-        scrollThumbClassName="bg-[#517ED4]" type="auto" className="md:h-[calc(100svh/2-250px)]"  
+        scrollThumbClassName="bg-[#517ED4]" type="auto" className="md:h-[calc(100svh/2-250px)]"
       >
         <div className="flex flex-col gap-3 pb-2">
           {placements.map((placement, index) => {

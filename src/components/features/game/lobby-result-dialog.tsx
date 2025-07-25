@@ -61,7 +61,7 @@ const LobbyGameResultDialog = ({ open, result, lobby }: GameResultDialogProps) =
       };
     }
     return null;
-  }, [result, userDetails]);
+  }, [result, userDetails, lobby.amount]);
 
   useEffect(() => {
     if (open) {

@@ -11,9 +11,7 @@ const useUSAMarketAvailable = () => {
     const checkUSAMarketAvailability = () => {
       // Get current date in user's local timezone
       const now = new Date();
-      
-      // Convert to US Eastern Time (ET) which is UTC-4 (EDT) or UTC-5 (EST)
-      // Using a consistent offset for EDT (UTC-4)
+
       const etOffsetHours = -4;
       
       // Calculate the ET time by adjusting from UTC

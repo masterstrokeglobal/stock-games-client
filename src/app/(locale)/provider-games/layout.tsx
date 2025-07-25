@@ -13,8 +13,6 @@ const ExternalUserLayout = ({ children }: PropsWithChildren) => {
     return <GameLoadingScreen className="h-screen" />;
   }
   
-  console.log("userDetails is: ", userDetails);
-
   return (
     <>
       <div className="bg-background-game">{children}</div>

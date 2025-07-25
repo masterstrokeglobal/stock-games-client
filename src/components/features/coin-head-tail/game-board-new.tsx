@@ -8,6 +8,7 @@ import { CheckCircle } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import CoinToss from "./coin-toss";
 import { BettingArea } from "../dice-game/betting-chip";
+import useIsSafari from "@/hooks/use-is-safari";
 
 type GameBoardProps = PropsWithClassName<{
     roundRecord: RoundRecord,
@@ -23,6 +24,7 @@ const MOBILE_CARD_WIDTH = 100;
 const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecordWithWinningSide }: GameBoardProps) => {
 
     const [showCoinToss, setShowCoinToss] = useState(false);
+    const isSafari = useIsSafari();
     const tableRef = useRef<HTMLImageElement>(null);
     const ladyRef = useRef<HTMLVideoElement>(null);
     const { width } = useWindowSize();
@@ -91,7 +93,7 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
                     <img src="/images/head-tail/bg.png" alt="game board" className="w-full scale-125 -translate-y-1/4 z-0 h-full absolute top-0 left-0 object-cover" />
                     <div className="bottom-0 left-0 w-full  min-h-40 bg-gradient-to-t scale-125 absolute z-0 from-[#00033D] to-transparent" />
                     <img src="/images/head-tail/table.png" alt="table" className="w-full relative z-10 aspect-[8/3]" ref={tableRef} />
-                    <video src="/images/head-tail/lady.webm" autoPlay loop muted controls={false} className="absolute z-0 xsm:left-1/2 left-[calc(48%)] -translate-x-1/2 xl:h-60 h-48 " style={{ bottom: tableHeight - 20 }} ref={ladyRef} />
+                    <video src="/images/head-tail/lady.webm" autoPlay loop muted controls={false} className={cn("absolute z-0 xsm:left-1/2 left-[calc(48%)] -translate-x-1/2 xl:h-60 h-48 ", isSafari && 'mix-blend-screen')} style={{ bottom: tableHeight - 20 }} ref={ladyRef} />
                     {/* Cards absolute, larger size, with coin images in center */}
                    <CoinToss
                     isFlipping={isPlaceOver}

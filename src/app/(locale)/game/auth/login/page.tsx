@@ -4,18 +4,18 @@ import LoginForm, { LoginFormValues } from "@/components/features/gamer/login-fo
 import OTPForm from "@/components/features/gamer/otp-form";
 import { StepperProvider, useStepper } from "@/context/stepper-context";
 import { useGameUserLogin } from "@/react-query/game-user-queries";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const LoginPage = () => {
     const { currentStep, nextStep } = useStepper();
+    const searchParams = useSearchParams();
     const { mutate, isPending } = useGameUserLogin();
     const router = useRouter();
 
     const loginUser = (data: LoginFormValues) => {
         mutate(data, {
             onSuccess: () => {
-                // router.push("/game/platform");
-                router.back();
+                router.push(searchParams.get("redirect") || "/game/platform");
             }
         });
     }

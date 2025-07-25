@@ -13,7 +13,7 @@ const MarketRow: React.FC<{
 }> = ({ items }) => (
   <div
     className={cn(
-      "xsm:flex grid grid-cols-3 w-full justify-around items-center px-2",
+      "xsm:flex grid grid-cols-3 overflow-x-auto w-full justify-around items-center px-2",
       "xs:flex-row flex-col"
     )}
     style={{
@@ -465,7 +465,7 @@ export const GameBoard: React.FC<PropsWithChildren<{
       totalDownBets: downBets.reduce((acc, bet) => acc + bet.amount, 0),
       totalSevenBets: sevenBets.reduce((acc, bet) => acc + bet.amount, 0),
     };
-  }, [roundRecordWithWinningId,currentRoundPlacements]);
+  }, [currentRoundPlacements]);
 
 
   const handleBoardClick = useCallback((type: SevenUpDownPlacementType) => {

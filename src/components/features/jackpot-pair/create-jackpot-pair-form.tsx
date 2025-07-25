@@ -9,7 +9,12 @@ const CreateJackpotPairForm = () => {
     const { mutate: createJackpotPair, isPending: isCreating } = useCreateJackpotPair();
 
     const handleSubmit = (data: JackpotPairFormValues) => {
-        createJackpotPair(data, {
+        const sanitizedData = data.marketItems.filter(item => item !== "");
+        createJackpotPair({
+            type: data.type,
+            active: data.active,
+            marketItems: sanitizedData
+        }, {
             onSuccess: () => {
                 router.push("/dashboard/jackpot-pair");
             }

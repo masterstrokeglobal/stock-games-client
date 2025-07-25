@@ -1,6 +1,7 @@
 "use client";
 
 import TransactionTable from "@/components/features/gamer/wallet/transaction-list";
+import Pagination from "@/components/ui/game-pagination";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Transaction, TransactionType } from "@/models/transaction";
 import { useGetUserTransactions } from "@/react-query/payment-queries";
@@ -9,6 +10,7 @@ import { useTranslations } from 'next-intl';
 import { useMemo, useState } from "react";
 
 const TransactionHistoryPage = () => {
+    const [page, setPage] = useState(1);
     const t = useTranslations('transaction-history');
     const [transactionType, setTransactionType] = useState<TransactionType>(
         TransactionType.DEPOSIT
@@ -16,15 +18,20 @@ const TransactionHistoryPage = () => {
 
     const { data, isSuccess, isLoading, error } = useGetUserTransactions({
         type: transactionType,
+        page: page,
+        pageSize: 10
     });
 
     const handleTabChange = (value: string) => {
         setTransactionType(value as TransactionType);
     };
 
-    const transactions = useMemo(() => {
-        if (!isSuccess) return [];
-        return data.data.transactions.map((transaction: any) => new Transaction(transaction));
+    const {transactions, totalPages} = useMemo(() => {
+        if (!isSuccess) return {transactions: [], totalPages: 0};
+        return {
+            transactions: data.data.transactions.map((transaction: any) => new Transaction(transaction)),
+            totalPages: Math.ceil(data.data.count/10)
+        };
     }, [data, isSuccess]);
 
     return (
@@ -62,7 +69,10 @@ const TransactionHistoryPage = () => {
                         {t('errors.load-failed')}
                     </div>
                 ) : (
-                    <TransactionTable transactions={transactions} />
+                    <>
+                        <TransactionTable transactions={transactions}  />
+                        <Pagination totalPage={totalPages} page={page} className="w-fit mx-auto mt-2" changePage={(page) => setPage(page)} />
+                    </>
                 )}
             </Tabs>
         </section>

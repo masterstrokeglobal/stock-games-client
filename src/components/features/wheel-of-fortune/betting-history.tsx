@@ -3,6 +3,7 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { RoundRecordGameType, WHEEL_COLOR_CONFIG } from '@/models/round-record';
@@ -15,14 +16,14 @@ import React, { useMemo, useState } from 'react';
 // Mobile-specific component for bet history
 const MobileBettingHistory = ({ history }: { history: History[] }) => {
     return (
-        <div className="flex flex-col gap-4">
+        <ScrollArea scrollThumbClassName="bg-[#5C8983]" className="flex h-[60svh] overflow-y-auto">
             {history.length === 0 && (
                 <div className="px-4 py-3 text-center text-white">No data found</div>
             )}
             {history.map((row, idx) => (
                 <div
                     key={idx}
-                    className="rounded-2xl max-h-[80svh] border overflow-hidden  space-y-2 border-[#5C8983] bg-[#2B4643] shadow-md"
+                    className="rounded-2xl mb-4 max-h-[80svh] border overflow-hidden  space-y-2 border-[#5C8983] bg-[#2B4643] shadow-md"
                 >
                     <div className="flex justify-between items-center px-4 py-2 bg-[#242D2D] mb-2">
                         <div className="font-semibold text-white text-base">
@@ -70,7 +71,7 @@ const MobileBettingHistory = ({ history }: { history: History[] }) => {
                     </div>
                 </div>
             ))}
-        </div>
+        </ScrollArea>
     );
 };
 
@@ -118,7 +119,7 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
     const [open, setOpen] = useState(false);
     const [page, setPage] = useState(1);
     const { isMobile } = useWindowSize();
-    const { data: userGameHistory, refetch } = useGetUserGameHistory({ page, roundRecordGameType: RoundRecordGameType.WHEEL_OF_FORTUNE });
+    const { data: userGameHistory, refetch, isFetching } = useGetUserGameHistory({ page, roundRecordGameType: RoundRecordGameType.WHEEL_OF_FORTUNE });
 
     const { history, totalPages } = useMemo(() => {
         const history: History[] = userGameHistory?.data || [];
@@ -152,10 +153,11 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={handleRefresh}
-                                className="p-2 rounded-lg bg-[#28533D] text-white hover:bg-[#1e3d2e] transition-colors"
+                                disabled={isFetching}
+                                className="p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed bg-[#28533D] text-white hover:bg-[#1e3d2e] transition-colors"
                                 title="Refresh"
                             >
-                                <RefreshCw size={20} />
+                                <RefreshCw size={20} className={cn(isFetching && "animate-spin")} />
                             </button>
                             <button
                                 onClick={() => setOpen(false)}
@@ -166,23 +168,23 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                         </div>
                     </div>
                     <div className="p-6 flex-1 overflow-hidden flex flex-col">
-                            {/* Desktop Table */}
-                            {!isMobile && <div className="overflow-x-auto hidden md:block flex-1">
-                                <div className="min-w-full text-sm text-left text-white relative overflow-y-auto scrollbar-thin scrollbar-thumb-[#5C8983] scrollbar-track-transparent">
-                                    {/* Header */}
-                                    <div className="border-b mb-4 border-[#5C8983]  text-base flex sticky top-0  z-10">
-                                        <div className="px-4 py-3 font-semibold flex-1">Date</div>
-                                        <div className="px-4 py-3 font-semibold flex-1">Time</div>
-                                        <div className="px-4 py-3 font-semibold flex-1">Color Betted</div>
-                                        <div className="px-4 py-3 font-semibold flex-1">Win Color</div>
-                                        <div className="px-4 py-3 font-semibold flex-1">Bet INR</div>
-                                        <div className="px-4 py-3 font-semibold flex-1">Cashout INR</div>
-                                    </div>
-                                    {/* Body */}
-                                    {history.length === 0 && (
-                                        <div className="px-4 py-3 text-center">No data found</div>
-                                    )}
-                                    <div className="max-h-[60svh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#5C8983] scrollbar-track-transparent">
+                        {/* Desktop Table */}
+                        {!isMobile && <div className="overflow-x-auto hidden md:block flex-1">
+                            <div className="min-w-full text-sm text-left text-white relative overflow-y-auto scrollbar-thin scrollbar-thumb-[#5C8983] scrollbar-track-transparent">
+                                {/* Header */}
+                                <div className="border-b mb-4 border-[#5C8983]  text-base flex sticky top-0  z-10">
+                                    <div className="px-4 py-3 font-semibold flex-1">Date</div>
+                                    <div className="px-4 py-3 font-semibold flex-1">Time</div>
+                                    <div className="px-4 py-3 font-semibold flex-1">Color Betted</div>
+                                    <div className="px-4 py-3 font-semibold flex-1">Win Color</div>
+                                    <div className="px-4 py-3 font-semibold flex-1">Bet INR</div>
+                                    <div className="px-4 py-3 font-semibold flex-1">Cashout INR</div>
+                                </div>
+                                {/* Body */}
+                                {history.length === 0 && (
+                                    <div className="px-4 py-3 text-center">No data found</div>
+                                )}
+                                <div className="max-h-[60svh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#5C8983] scrollbar-track-transparent">
                                     {history?.map((row, idx) => (
                                         <div
                                             key={idx}
@@ -196,7 +198,7 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                                     style={{
                                                         background: WHEEL_COLOR_CONFIG[row.colorBetted].chipColor,
                                                         color: "#fff",
-                                                        minWidth: 60,   
+                                                        minWidth: 60,
                                                         display: "inline-block",
                                                         textAlign: "center"
                                                     }}
@@ -224,12 +226,12 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                             </div>
                                         </div>
                                     ))}
-                                    </div>
                                 </div>
-                            </div>}
-                            {/* Mobile Card List */}
-                            {isMobile && <MobileBettingHistory history={history} />}
-                            <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
+                            </div>
+                        </div>}
+                        {/* Mobile Card List */}
+                        {isMobile && <MobileBettingHistory history={history} />}
+                        <Pagination currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
                     </div>
                 </div>
             </DialogContent>

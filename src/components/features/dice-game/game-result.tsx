@@ -22,6 +22,7 @@ const DiceGameResultDialog = ({
     open
   );
 
+
   // Check if data is loaded and determine win/loss
   const isWin = data && Number(data.netProfitLoss) > 0;
   const isLoss = data && Number(data.netProfitLoss) <= 0;

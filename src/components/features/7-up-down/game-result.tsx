@@ -23,9 +23,18 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
   }, [open]);
 
 
-  const netResult = roundResult?.reduce((total, bet) => {
-    return total + (bet.isWinner ? bet.amountWon : -bet.amountPlaced);
-  }, 0);
+
+  const totalPlaced = roundResult?.reduce((total, bet) => {
+    return total + bet.amountPlaced;
+  }, 0) ?? 0;
+
+  const totalWon = roundResult?.reduce((total, bet) => {
+    return total + (bet.isWinner ? bet.amountWon : 0);
+  }, 0) ?? 0;
+
+  const totalNetResult = totalWon - totalPlaced;
+
+  console.log(totalPlaced, totalWon, totalNetResult);
 
   const round = roundResult?.[0]?.round ? new RoundRecord(roundResult[0].round) : null;
 
@@ -97,7 +106,7 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
                       {
                         roundResult.map((result, index) => {
                           return (
-                            <div key={index} className="grid grid-cols-3 font-poppins font-light uppercase xs:px-4 gap-2 sm:text-[15px] text-xs bg-[#355DAE] py-2 rounded-xl mb-2">
+                            <div key={index} className="grid grid-cols-3 text-white font-poppins font-light uppercase xs:px-4 gap-2 sm:text-[15px] text-xs bg-[#355DAE] py-2 rounded-xl mb-2">
                               <div className="text-left"><SevenUpDownChip className='justify-start' side={result.selectedSide} /></div>
                               <div className="text-center">{INR(result.amountPlaced)}</div>
                               <div className="text-center">{<SevenUpDownChip className='justify-center' side={getWinnerSide(result.winner)} />}</div>
@@ -109,7 +118,7 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
                   </div>
                   <div className='flex justify-center sm:mb-2 sm:mt-4 h-fit'>
                     <div className='text-center text-lg font-poppins  leading-none xl:text-4xl md:text-3xl font-bold sm:text-2xl xs:text-xl text-white' style={{ textShadow: '0px 0px 9.5px #2A8BFF' }}>
-                      Net Result : ₹ {netResult ?? 0}
+                      Net Result : {INR(totalNetResult)}
                     </div>
                   </div>
                   <NextRound round={round} className='my-2 md:text-3xl h-fit sm:text-2xl xs:text-xl  md:hidden block' />

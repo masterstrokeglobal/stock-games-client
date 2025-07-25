@@ -6,13 +6,15 @@ import { INR } from "@/lib/utils";
 import User from "@/models/user";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
+import Link from "next/link";
 
 type BalanceCardProps = {
     onDeposit: () => void;
     onWithdraw: () => void;
+    onClose?: () => void;
 }
 
-const BalanceCard = ({ onDeposit, onWithdraw }: BalanceCardProps) => {
+const BalanceCard = ({ onDeposit, onWithdraw, onClose }: BalanceCardProps) => {
     const t = useTranslations("wallet");
     const wallet = useWallet();
     const { userDetails } = useAuthStore();
@@ -56,7 +58,7 @@ const BalanceCard = ({ onDeposit, onWithdraw }: BalanceCardProps) => {
                             variant="platform-outline"
                             onClick={onDeposit}
                         >
-                            <img src="/images/platform/wallet/deposit.png" alt="coin" className="md:size-7 size-6 block"  />
+                            <img src="/images/platform/wallet/deposit.png" alt="coin" className="md:size-7 size-6 block" />
                             {t("menu.deposit", { defaultValue: "Deposit Funds" })}
                         </Button>
                         <Button
@@ -65,9 +67,22 @@ const BalanceCard = ({ onDeposit, onWithdraw }: BalanceCardProps) => {
                             variant="platform-outline"
                             onClick={onWithdraw}
                         >
-                            <img src="/images/platform/wallet/withdraw.png" alt="coin" className="md:size-7 size-6 block"  />
+                            <img src="/images/platform/wallet/withdraw.png" alt="coin" className="md:size-7 size-6 block" />
                             {t("menu.withdraw", { defaultValue: "Withdraw Funds" })}
                         </Button>
+                        <Link href={"/game/wallet/menu/withdrawl-details"}
+                            passHref
+                        >
+                            <Button
+                                size="lg"
+                                onClick={onClose}
+                                className="w-full gap-x-2"
+                                variant="platform-outline"
+                            >
+                                <img src="/images/platform/wallet/deposit.png" alt="coin" className="md:size-7 size-6 block" />
+                                {t("menu.paymentMethod", { defaultValue: "Payment Methods" })}
+                            </Button>
+                        </Link>
                     </div>
                 ) : (
                     <></>

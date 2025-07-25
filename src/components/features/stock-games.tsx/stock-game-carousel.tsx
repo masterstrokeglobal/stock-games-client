@@ -6,6 +6,7 @@ import { SchedulerType } from "@/models/market-item"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { useTranslations } from "next-intl"
 
 
 const stockGames = [
@@ -56,18 +57,19 @@ const stockGames = [
     }
 ]
 
-export default function StockGameCarousel() {
+export default function StockGameCarousel() {   
+    const t = useTranslations("platform.stock-game-carousel");
     return (
         <Carousel opts={{ loop: false, startIndex: 0 }} className="w-full">
             <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                    <h2 className="md:text-2xl text-base text-platform-text font-bold">Stock Games</h2>
+                    <h2 className="md:text-2xl text-base text-platform-text font-bold">{t("title")}</h2>
                     <div className="flex gap-2">
                         <CarouselPrevious className="static translate-y-0 bg-background/20 hover:bg-background/40" />
                         <CarouselNext className="static translate-y-0 bg-background/20 hover:bg-background/40" />
                         <Link href="/game/platform/stock-games">
                             <Button size="sm" variant="platform-primary" className="rounded-full">
-                                View All    
+                                {t("view-all")}    
                             </Button>
                         </Link>
                     </div>

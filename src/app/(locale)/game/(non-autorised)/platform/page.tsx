@@ -15,6 +15,7 @@ import { useTranslations } from "next-intl";
 
 const PlatformPage = () => {
     const t = useTranslations('wallet');
+    const tPlatform = useTranslations('platform.casino-games');
     const { isLoggedIn, userDetails } = useAuthStore();
     const user = userDetails as User;
 
@@ -45,17 +46,17 @@ const PlatformPage = () => {
             <StockGameCarousel />
             {isCasinoAllowed && (
                 <>
-                    <CasinoProvidersCarousel title="Game Providers" />
-                    <CategoryCarousel title="New Released" new={true} direction="backward" />
-                    <CategoryCarousel title="Hot Games" popular={true} direction="forward" />
-                    <CategoryCarousel title="Crash Games" type={GameTypeEnum.CRASH_GAME} direction="backward" />
-                    <CategoryCarousel title="Game Show" type={GameTypeEnum.GAME_SHOW} direction="forward" />
-                    <CategoryCarousel title="Instant Win" type={GameTypeEnum.INSTANT_WIN} direction="backward" />
-                    <CategoryCarousel title="Live Dealer" type={GameTypeEnum.LIVE_DEALER} direction="forward" />
-                    <CategoryCarousel title="Table Games" type={GameTypeEnum.TABLE_GAMES} direction="backward" />
-                    <CategoryCarousel title="Slots" type={GameTypeEnum.SLOTS} direction="forward" />
-                    <CategoryCarousel title="Shooting" type={GameTypeEnum.SHOOTING} direction="backward" />
-                    <CategoryCarousel title="Lottery" type={GameTypeEnum.LOTTERY} direction="forward" />
+                    <CasinoProvidersCarousel title={tPlatform("game-providers")} />
+                    <CategoryCarousel title={tPlatform("new-released")} new={true} direction="backward" />
+                    <CategoryCarousel title={tPlatform("hot-games")} popular={true} direction="forward" />
+                    <CategoryCarousel title={tPlatform("crash-games")} type={GameTypeEnum.CRASH_GAME} direction="backward" />
+                    <CategoryCarousel title={tPlatform("game-show")} type={GameTypeEnum.GAME_SHOW} direction="forward" />
+                    <CategoryCarousel title={tPlatform("instant-win")} type={GameTypeEnum.INSTANT_WIN} direction="backward" />
+                    <CategoryCarousel title={tPlatform("live-dealer")} type={GameTypeEnum.LIVE_DEALER} direction="forward" />
+                    <CategoryCarousel title={tPlatform("table-games")} type={GameTypeEnum.TABLE_GAMES} direction="backward" />
+                    <CategoryCarousel title={tPlatform("slots")} type={GameTypeEnum.SLOTS} direction="forward" />
+                    <CategoryCarousel title={tPlatform("shooting")} type={GameTypeEnum.SHOOTING} direction="backward" />
+                    <CategoryCarousel title={tPlatform("lottery")} type={GameTypeEnum.LOTTERY} direction="forward" />
                 </>
             )}
 

@@ -67,7 +67,6 @@ const CryptoWalletForm = ({ onSubmit, defaultValues, isLoading }: Props) => {
 
             </div>
 
-
             <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? <>
                     <Loader2 className="w-4 h-4 animate-spin" />

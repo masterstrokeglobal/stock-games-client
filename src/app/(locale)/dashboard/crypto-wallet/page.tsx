@@ -20,7 +20,10 @@ const CryptoWalletTable = () => {
     });
     // Calculate total pages based on data count
     const totalPages = useMemo(() => {
-        return Math.ceil(data?.data?.count / 10) || 1;
+        if (isSuccess) {    
+            return Math.ceil(data?.data?.count / 10) || 1;
+        }
+        return 1;
     }, [data, isSuccess]);
 
     // Handle search input change

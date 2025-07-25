@@ -68,7 +68,7 @@ const LeaderBoard = ({ roundRecord, filteredMarket, result }: Props) => {
         if (!winningId) return 0;
         const winningNumber = roundRecord.market.find((item) => item.id === winningId);
         return winningNumber ? winningNumber.horse : null;
-    }, [data, isSuccess, result]);
+    }, [data, isSuccess, result, roundRecord.market]);
 
     useEffect(() => {
         if (sectionRef.current) {

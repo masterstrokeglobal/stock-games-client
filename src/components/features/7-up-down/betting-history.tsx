@@ -126,6 +126,11 @@ const BetHistoryTable = ({ className }: { className?: string }) => {
             </div>
           </div>
           <ScrollArea className={cn(showFilter ? "h-[calc(100svh-29rem)]" : "h-[calc(100svh-26rem)]")} scrollThumbClassName="bg-[#517ED4]">
+            {history.length === 0 && (
+              <div className="flex items-center justify-center h-full">
+                <span className="text-secondary">No data found</span>
+              </div>
+            )}
             {history.map((bet, index) => (
               <div
                 key={index}
@@ -161,6 +166,13 @@ const BetHistoryTable = ({ className }: { className?: string }) => {
       <div className="block md:hidden">
         <ScrollArea className="h-[300px]" scrollThumbClassName="bg-[#517ED4]">
           <div className="flex flex-col font-montserrat gap-4">
+            {
+              history.length === 0 && (
+                <div className="flex items-center justify-center h-full">
+                  <span className="text-secondary">No data found</span>
+                </div>
+              )
+            }
             {history.map((bet, index) => (
               <div
                 key={index}

@@ -18,10 +18,16 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
 
 
 
-  // Calculate net result from the round result data
-  const netResult = roundResult?.placements.reduce((total, bet) => {
-    return total + (bet.isWinner ? bet.amountWon : -bet.amountPlaced);
-  }, 0);
+  const totalPlaced = roundResult?.placements.reduce((total, bet) => {
+    return total + bet.amountPlaced;
+  }, 0) ?? 0;
+
+  const totalWon = roundResult?.placements.reduce((total, bet) => {
+    return total + (bet.isWinner ? bet.amountWon : 0);
+  }, 0) ?? 0;   
+
+  const totalNetResult = totalWon - totalPlaced;
+
 
   return (
     <Dialog defaultOpen={open}>
@@ -143,7 +149,7 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
                         textShadow: "0px 0px 8px #2A8BFF, 0px 0px 2px #fff"
                       }}
                     >
-                      NET RESULT : ₹ {netResult ?? 0}
+                      NET RESULT : {INR(totalNetResult)}
                     </div>
                   </div>
                   <PriceLocked round={roundResult?.round} className='mt-4' />

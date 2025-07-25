@@ -17,12 +17,14 @@ import useWinningId from '@/hooks/use-winning-id';
 import { RoundRecordGameType } from '@/models/round-record';
 import { MenuIcon } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 
 const SevenUpDown = () => {
     const { marketSelected } = useMarketSelector();
     const [betAmount, setBetAmount] = useState<number>(100);
+    const queryParams = useSearchParams();
 
     const {
         roundRecord,
@@ -45,9 +47,9 @@ const SevenUpDown = () => {
                 <div className='w-full bg-[#2857ADBF] relative z-10 rounded-2xl flex items-center justify-between px-4 sm:py-2 py-1'>
                     <h2 className=' uppercase tracking-wider sm:text-lg xs:text-base text-xs md:text-2xl font-poppins font-bold'>7Up & 7Down</h2>
                     <div className='flex items-center gap-2'>
-                        <Viewers className='tracking-widest text-xs md:text-base text-white'/>
-                        <Link href="/game/single-player/7-up-down/settings">
-                            <Button className='bg-transparent shadow-none px-2 text-[#517ED4]'>
+                        <Viewers className='tracking-widest text-xs md:text-base text-white' />
+                        <Link href={`/game/single-player/7-up-down/settings?${queryParams.toString()}`}>
+                            <Button className='bg-transparent shadow-none px-2 hover:bg-white text-[#517ED4]'>
                                 <MenuIcon strokeWidth={2} />
                             </Button>
                         </Link>

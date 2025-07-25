@@ -35,7 +35,7 @@ const LeaderBoard = ({ roundRecord, className, order = "desc"    }: Props) => {
         const winningNumbers = roundRecord.market.filter((item) => winningId.includes(item.id));
         if (!winningNumbers) return [];
         return winningNumbers.map((item) => item.horse).filter((item) => item !== undefined) as number[];
-    }, [data, isSuccess]);
+    }, [data, isSuccess, roundRecord.market]);
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('en-US', {
@@ -54,7 +54,7 @@ const LeaderBoard = ({ roundRecord, className, order = "desc"    }: Props) => {
     const winnerMarketItems = leaderboardData.filter((item) => winnerNumbers.includes(item.horse!));
     const sortedLeaderboardData = useMemo(() => {
         return [...leaderboardData].sort((a, b) => order === "asc" ? Number(a.change_percent ?? 0   ) - Number(b.change_percent ?? 0) : Number(b.change_percent ?? 0) - Number(a.change_percent ?? 0));
-    }, [leaderboardData]);
+    }, [leaderboardData, order]);
 
     return (
         <div className={cn("w-full bg-black/50 backdrop-blur-md  overflow-hidden", className)}>

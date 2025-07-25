@@ -1,6 +1,6 @@
 import { useGetMyCurrentRoundDiceGamePlacement } from "@/react-query/dice-game-queries";
 import Image from "next/image";
-import { DicePlacement } from "@/models/dice-placement";
+import { DicePlacement, DicePlacementType } from "@/models/dice-placement";
 import { RoundRecord } from "@/models/round-record";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
@@ -60,7 +60,7 @@ const BetsTable = ({ placements, tableClassName }: { placements: DicePlacement[]
                                     </td>
                                     <td className="p-2 w-1/3">
                                         <div className="text-game-secondary w-full text-start">
-                                            {placement.number}
+                                            {placement.number} ({placement.placementType === DicePlacementType.BOTH ? "Both" : placement.placementType === DicePlacementType.FIRST ? "First" : "Second"})
                                         </div>
                                     </td>
                                     <td className="p-2 w-1/3">

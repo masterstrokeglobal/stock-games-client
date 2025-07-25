@@ -3,10 +3,12 @@
 import CasinoGameResult from "@/components/features/platform/casino-game-result"
 import GameFilters, { Filter } from "@/components/features/platform/filters"
 import { checkCasinoAllowed, COMPANYID } from "@/lib/utils"
+import { useTranslations } from "next-intl"
 import { notFound } from "next/navigation"
 import { useState } from "react"
 
 export default function SlotGamesPage() {
+    const t = useTranslations("platform.casino-games");
     const [filter, setFilter] = useState<Filter>({
         search: "",
         category: "all",
@@ -23,7 +25,7 @@ export default function SlotGamesPage() {
                 {/* Search Bar */}
                 <GameFilters filter={filter} setFilter={setFilter} />
                 <header className="container mx-auto  py-2">
-                    <h1 className="text-2xl font-bold capitalize text-platform-text">Slot Games</h1>
+                        <h1 className="text-2xl font-bold capitalize text-platform-text">{t("title")}</h1>
                 </header>
 
                 {/* Content: Either search results or category carousels */}

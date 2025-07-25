@@ -17,7 +17,7 @@ import { BREAKPOINTS, useWindowSize } from '@/hooks/use-window-size';
 import useWinningId from '@/hooks/use-winning-id';
 import { RoundRecordGameType } from '@/models/round-record';
 import { useMemo, useState } from 'react';
-import ExternalUserNavbar from '@/components/features/game/external-user-Navbar';
+import ExternalUserNavbar from '@/components/features/game/external-user-navbar';
 
 const DiceGame = () => {
     const { width } = useWindowSize();
@@ -47,7 +47,11 @@ const DiceGame = () => {
     }, [marketItemsStocks]);
 
 
-    const winningSum = (firstCubeStocks[0]?.horse || 0) + (secondCubeStocks[0]?.horse || 0) - 6;
+        const winningSum = {
+            first: firstCubeStocks[0]?.horse || 0,
+            second:(secondCubeStocks[0]?.horse || 0) - 6,
+            both: (firstCubeStocks[0]?.horse || 0) + (secondCubeStocks[0]?.horse || 0) - 6
+        };
     if (!marketSelected) return (
         <section className=" space-y-4 pt-14 min-h-screen ">
             <MarketSelector title="Dice Game Market" roundRecordType={RoundRecordGameType.DICE} />

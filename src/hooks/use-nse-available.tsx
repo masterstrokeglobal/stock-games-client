@@ -6,9 +6,7 @@ const useNSEAvailable = () => {
     useEffect(() => {
         const checkNSEAvailability = () => {
             const utcTime = new Date();
-
             const now = new Date(utcTime.getTime() + 5.5 * 60 * 60 * 1000);
-
 
             const hours = now.getUTCHours();
             const minutes = now.getUTCMinutes();

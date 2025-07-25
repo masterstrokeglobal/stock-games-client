@@ -12,8 +12,6 @@ import {
 import { Tier } from "@/models/tier";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
-
-
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { useDeleteTier } from "@/react-query/tier-queries";
@@ -34,7 +32,7 @@ const tierColumns: ColumnDef<Tier>[] = [
             <Image src={row.original.imageUrl} alt={row.original.name} width={100} height={100} className='size-10 rounded-md ' />
         )
     },
-   
+
     {
         header: "Min Points",
         accessorKey: "minPoints",
@@ -76,6 +74,27 @@ const tierColumns: ColumnDef<Tier>[] = [
         accessorKey: "pointsPerHundredRupees",
         cell: ({ row }) => (
             <span className="text-sm text-gray-500">{row.original.pointsPerHundredRupees ?? "-"}</span>
+        )
+    },
+    {
+        header: "Daily Withdraw Limit",
+        accessorKey: "dailyWithdrawLimit",
+        cell: ({ row }) => (
+            <span className="text-sm text-gray-500">{row.original.dailyWithdrawLimit ?? "-"}</span>
+        )
+    },
+    {
+        header: "Weekly Withdraw Limit",
+        accessorKey: "weeklyWithdrawLimit",
+        cell: ({ row }) => (
+            <span className="text-sm text-gray-500">{row.original.monthlyWithdrawLimit ?? "-"}</span>
+        )
+    },
+    {
+        header: "Monthly Withdraw Limit",
+        accessorKey: "monthlyWithdrawLimit",
+        cell: ({ row }) => (
+            <span className="text-sm text-gray-500">{row.original.monthlyWithdrawLimit ?? "-"}</span>
         )
     },
     {

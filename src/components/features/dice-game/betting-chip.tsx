@@ -63,7 +63,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
 <div className="flex gap-2 items-center flex-wrap">
                 {/* Bet input and controls */}
-                <div className="flex items-center gap-1 flex-1 md:max-w-[200px] h-fit px-2 py-2 rounded-full" style={{
+                <div className="flex items-center gap-1 flex-1 md:max-w-[200px] justify-between h-fit px-2 py-2 rounded-full" style={{
                     border: "1px solid #0074FF",
                     boxShadow: "0px 0px 4.1px 0px rgba(0, 116, 255, 0.86)",
                 }}>
@@ -100,13 +100,13 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
                 </div>
 
                 {/* Total Bet */}
-                <div  style={{
+                <div className="flex-1 flex justify-center" style={{
                     borderRadius: "30px",
                     border: "1px solid #079FFE",
                     boxShadow: "0px 0px 4.1px 0px rgba(0, 116, 255, 0.86)"
                 }}>
                     <div
-                        className="flex md:flex-col relative gap-x-2  items-center justify-center rounded-[30px] md:px-6 px-2 py-2 min-w-[120px] md:h-16"
+                        className="flex w-full justify-between md:flex-col relative gap-x-2  items-center justify-center rounded-[30px] md:px-6 px-2 py-2 min-w-[120px] md:h-16"
                         style={{
                             background: "linear-gradient(270deg, rgba(11, 156, 254, 0.3) 0%, rgba(211, 5, 254, 0.3) 100%)",
                         }}

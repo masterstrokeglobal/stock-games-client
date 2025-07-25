@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const AuthTabs = () => {
     const pathname = usePathname();
+    const t = useTranslations("auth");
     const isLogin = pathname === "/game/auth/login";
     
     return (
@@ -19,7 +21,7 @@ const AuthTabs = () => {
                                 "text-gray-300 hover:text-white bg-transparent"
                         )}
                     >
-                        Sign In
+                        {t("sign-in")}
                     </Button>
                 </Link>
                 <Link href="/game/auth/register">
@@ -32,7 +34,7 @@ const AuthTabs = () => {
                                 "text-gray-300 hover:text-white bg-transparent"
                         )}
                     >
-                        Sign Up
+                        {t("sign-up")}
                     </Button>
                 </Link>
             </div>

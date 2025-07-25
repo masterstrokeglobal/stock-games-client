@@ -6,10 +6,12 @@ import CasinoGameResult from "@/components/features/platform/casino-game-result"
 import GameFilters, { Filter } from "@/components/features/platform/filters"
 import { checkCasinoAllowed, COMPANYID } from "@/lib/utils"
 import { GameTypeEnum } from "@/models/casino-games"
+import { useTranslations } from "next-intl"
 import { notFound, useRouter, useSearchParams } from "next/navigation"
 import { useMemo } from "react"
 
 export default function GamingAppInterface() {
+    const t = useTranslations("platform.casino-games"); 
     const searchParams = useSearchParams();
 
     // Build filter object from search params
@@ -22,7 +24,7 @@ export default function GamingAppInterface() {
             popular: searchParams.get("popular") === "true" ? true : undefined,
             new: searchParams.get("new") === "true" ? true : undefined,
         }
-    // Only recalculate when searchParams changes
+        // Only recalculate when searchParams changes
     }, [searchParams]);
 
     // For updating the URL when filters change
@@ -65,17 +67,17 @@ export default function GamingAppInterface() {
                 ) : (
                     <div className="space-y-12">
                         {/* most popular games , new games with emoji  */}
-                        <CategoryCarousel title="Hot Games" popular={true} />
-                        <CategoryCarousel title=" Crash Games" type={GameTypeEnum.CRASH_GAME} />
-                        <CategoryCarousel title="Game Show" type={GameTypeEnum.GAME_SHOW} />
-                        <CategoryCarousel title="Instant Win" type={GameTypeEnum.INSTANT_WIN} />
-                        <CategoryCarousel title="Live Dealer" type={GameTypeEnum.LIVE_DEALER} />
-                        <CategoryCarousel title="Table Games" type={GameTypeEnum.TABLE_GAMES} />
-                        <CategoryCarousel title="Slots" type={GameTypeEnum.SLOTS} />
-                        <CategoryCarousel title="Shooting" type={GameTypeEnum.SHOOTING} />
-                        <CategoryCarousel title="Lottery" type={GameTypeEnum.LOTTERY} />
-                        <CategoryCarousel title="New Released" new={true} />
-                        <CasinoProvidersCarousel title="Game Providers" />
+                        <CategoryCarousel title={t("hot-games")} popular={true} />
+                        <CategoryCarousel title={t("crash-games")} type={GameTypeEnum.CRASH_GAME} />
+                        <CategoryCarousel title={t("game-show")} type={GameTypeEnum.GAME_SHOW} />
+                        <CategoryCarousel title={t("instant-win")} type={GameTypeEnum.INSTANT_WIN} />
+                        <CategoryCarousel title={t("live-dealer")} type={GameTypeEnum.LIVE_DEALER} />
+                        <CategoryCarousel title={t("table-games")} type={GameTypeEnum.TABLE_GAMES} />
+                        <CategoryCarousel title={t("slots")} type={GameTypeEnum.SLOTS} />
+                        <CategoryCarousel title={t("shooting")} type={GameTypeEnum.SHOOTING} />
+                        <CategoryCarousel title={t("lottery")} type={GameTypeEnum.LOTTERY} />
+                        <CategoryCarousel title={t("new-released")} new={true} />
+                        <CasinoProvidersCarousel title={t("game-providers")} />
                     </div>
                 )}
             </main>

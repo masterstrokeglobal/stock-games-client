@@ -111,7 +111,7 @@ const BankAccountForm = ({ defaultValues, onSubmit, isLoading, isUPI }: Props) =
                         type="submit"
                         size="lg"
                         variant="game"
-                        className="w-full"
+                        className="w-full rounded-none"
                         disabled={isLoading}
                     >
                         {isLoading ? t('saving') : t('save-method')}

@@ -46,7 +46,7 @@ const UserMenu = () => {
             label: t('change-password')
         },
         {
-            href: "/game/transaction-history",
+            href: "/game/platform/transaction-history",
             icon: "/images/platform/user-menu/transaction-history.png",
             label: t('transaction-history')
         },

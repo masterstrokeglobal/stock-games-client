@@ -28,7 +28,7 @@ const AllBets = ({
                     boxShadow: "0px 0px 8px 0px rgba(0, 92, 164, 1) inset",
                 }}
                 className={cn(
-                    "rounded-2xl md:p-4 p-2 flex flex-col  border border-[#0074FF]  bg-[#004DA982] ",
+                    "rounded-2xl md:p-4 p-2 overflow-hidden flex flex-col  border border-[#0074FF]  bg-[#004DA982] ",
                     className
                 )}
             >
@@ -64,12 +64,12 @@ const AllBets = ({
                         </TabsTrigger>
                     </TabsList>
                     <div className="flex-1 flex flex-col">
-                    <TabsContent className="data-[state=active]:flex-1 flex-none"  value="current">
-                        <CurrentBets roundRecord={roundRecord} />
-                    </TabsContent>
-                    <TabsContent className="data-[state=active]:flex-1 flex-none"  value="previous">
-                        <PreviousBets />
-                    </TabsContent> 
+                        <TabsContent className="data-[state=active]:flex-1 flex-none" value="current">
+                            <CurrentBets roundRecord={roundRecord} />
+                        </TabsContent>
+                        <TabsContent className="data-[state=active]:flex-1 flex-none" value="previous">
+                            <PreviousBets />
+                        </TabsContent>
                     </div>
                 </Tabs>
             </aside>
