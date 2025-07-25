@@ -66,7 +66,7 @@ const userColumns: ColumnDef<User>[] = [
   {
     header: "EMAIL",
     accessorKey: "email",
-    cell: ({ row }) => <div className="text-[#6B7280] w-48 truncate">{row.original.email}</div>,
+    cell: ({ row }) => <div className="text-[#6B7280] w-48 truncate">{row.original.email ?? "N/A"}</div>,
   },
   {
     header: "USERNAME",

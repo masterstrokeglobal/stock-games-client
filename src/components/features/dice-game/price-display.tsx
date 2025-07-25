@@ -1,4 +1,4 @@
-import { useLeaderboard } from "@/hooks/use-leadboard";
+import { useLeaderboard } from "@/hooks/use-multi-socket-leaderboard";
 import { cn } from "@/lib/utils";
 import { HeadTailPlacementType } from "@/models/head-tail";
 import { RoundRecord } from "@/models/round-record";

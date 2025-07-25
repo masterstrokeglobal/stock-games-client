@@ -12,6 +12,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import useWindowSize from "@/hooks/use-window-size";
 import Image from "next/image";
 import { DicePlacementType } from "@/models/dice-placement";
+import { cn } from "@/lib/utils";
 
 // Status indicator for Win/Loss
 const StatusIndicator = ({ isWinner }: { isWinner: boolean }) => (
@@ -127,7 +128,7 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
     const [open, setOpen] = useState(false);
     const [page, setPage] = useState(1);
     const { isMobile } = useWindowSize();
-    const { data: userGameHistory, refetch } = useGetUserGameHistory({ page, roundRecordGameType: RoundRecordGameType.DICE });
+    const { data: userGameHistory, refetch,isFetching } = useGetUserGameHistory({ page, roundRecordGameType: RoundRecordGameType.DICE });
 
     const { history, totalPages } = useMemo(() => {
         const history: History[] = userGameHistory?.data || [];
@@ -148,7 +149,7 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
             <DialogTrigger asChild>
                 {children}
             </DialogTrigger>
-            <DialogContent showButton={false}  className="max-w-3xl xs:w-[95vw] bg-[#140538] w-full p-0 border-none  backdrop-blur-md ">
+            <DialogContent showButton={false} className="max-w-3xl xs:w-[95vw] bg-[#140538] w-full p-0 border-none  backdrop-blur-md ">
                 <div
                     style={{
                         background: 'linear-gradient(180deg, #1B1E4B 0%, #23245A 100%)',
@@ -163,10 +164,11 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={handleRefresh}
-                                className="p-2 rounded-lg bg-[#23245A] text-white hover:bg-[#2E3A6A] transition-colors"
+                                disabled={isFetching}
+                                className="p-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed bg-[#23245A] text-white hover:bg-[#2E3A6A] transition-colors"
                                 title="Refresh"
                             >
-                                <RefreshCw size={20} />
+                                <RefreshCw size={20} className={cn(isFetching && "animate-spin")} />
                             </button>
                             <button
                                 onClick={() => setOpen(false)}
@@ -178,7 +180,7 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                     </div>
                     <div className=" py-4 flex-1 relative px-4  overflow-hidden border-x-[1.5rem] border-b-[1.5rem]  border-[#140538] flex flex-col">
                         <Image src="/images/dice-game/table-bg.png" alt="dice-1" fill />
-                        <div className="absolute top-0 left-0 w-full h-full backdrop-blur-sm bg-[#520B8E] bg-opacity-30"/>
+                        <div className="absolute top-0 left-0 w-full h-full backdrop-blur-sm bg-[#520B8E] bg-opacity-30" />
                         <ScrollArea className="h-[60vh] flex flex-col">
                             {/* Desktop Table */}
                             {!isMobile && (
@@ -217,8 +219,8 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                                             {row.netProfitLoss > 0
                                                                 ? `+ ₹ ${row.netProfitLoss}`
                                                                 : row.netProfitLoss === 0
-                                                                ? `- ₹ ${row.amount}`
-                                                                : `- ₹ ${Math.abs(row.netProfitLoss)}`}
+                                                                    ? `- ₹ ${row.amount}`
+                                                                    : `- ₹ ${Math.abs(row.netProfitLoss)}`}
                                                         </span>
                                                     </td>
                                                 </tr>

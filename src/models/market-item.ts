@@ -5,6 +5,7 @@ export enum SchedulerType {
     CRYPTO = "crypto",
     USA_MARKET = "usa_market",
     MCX = "mcx",
+    COMEX = "comex",
 }
 export class MarketItem {
     id?: number;

@@ -22,8 +22,8 @@ type SelectOption = {
 
 const createJackpotPairSchema = z.object({
     type: z.nativeEnum(SchedulerType, { required_error: "Type is required" }),
-    marketItems: z.array(z.string().min(1, "Jackpot market item is required"))
-        .length(14, "Exactly 14 jackpots are required")
+    marketItems: z.array(z.string())
+        .max(14, "Maximum 14 jackpots are allowed")
         .refine((items) => {
             const uniqueItems = new Set(items.filter(item => item)); // Filter out empty strings
             return uniqueItems.size === items.filter(item => item).length;

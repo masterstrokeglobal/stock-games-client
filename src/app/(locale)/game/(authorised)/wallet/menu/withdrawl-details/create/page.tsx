@@ -1,15 +1,12 @@
 "use client";
 
-import React from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 import Container from "@/components/common/container";
-import TopBar from "@/components/common/top-bar";
-import { useCreateWithdrawDetail } from "@/react-query/withdrawl-details-queries";
+import Navbar from "@/components/features/game/navbar";
 import BankAccountForm, { BankAccountFormValues } from "@/components/features/game/wallet/bank-details-form";
-import { useTranslations } from "next-intl";
+import { useCreateWithdrawDetail } from "@/react-query/withdrawl-details-queries";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const AddBankDetailsPage = () => {
-    const t = useTranslations('bank-form');
     const searchParams = useSearchParams();
     const { mutate, isPending } = useCreateWithdrawDetail();
     const router = useRouter();
@@ -28,9 +25,7 @@ const AddBankDetailsPage = () => {
 
     return (
         <Container className="flex flex-col items-center min-h-screen pt-24">
-            <TopBar>
-                {t('page-title')}
-            </TopBar>
+            <Navbar />
             <main className="mt-4 w-full mx-auto h-full max-w-xl  bg-primary-game p-4 rounded-xl">
                 <BankAccountForm
                     onSubmit={handleSubmit}

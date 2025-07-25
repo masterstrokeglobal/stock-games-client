@@ -6,6 +6,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import type { GameCategory } from "@/models/casino-games"
 import { GameTypeEnum } from "@/models/casino-games"
 import { useGetCasinoGames } from "@/react-query/casino-games-queries"
+import { useTranslations } from "next-intl"
 import Link from "next/link"
 import { useMemo } from "react"
 
@@ -21,6 +22,7 @@ interface CategoryCarouselProps {
 }
 
 export default function CategoryCarousel({ categoryId, title, popular, new: isNew, slot, liveGame, type }: CategoryCarouselProps) {
+    const t = useTranslations("platform.casino-games");
     const { data, isLoading } = useGetCasinoGames({
         limit: 100,
         popular,
@@ -77,7 +79,7 @@ export default function CategoryCarousel({ categoryId, title, popular, new: isNe
                         <CarouselPrevious className="static translate-y-0 bg-background/20 hover:bg-background/40 md:w-8 md:h-8 w-6 h-6" />
                         <CarouselNext className="static translate-y-0 bg-background/20 hover:bg-background/40 md:w-8 md:h-8 w-6 h-6" />
                         <Link href={link}>
-                            <Button size="sm" variant="platform-primary" className="rounded-full md:text-sm text-xs md:px-3 px-2 md:h-8 h-6">View All</Button>
+                                <Button size="sm" variant="platform-primary" className="rounded-full md:text-sm text-xs md:px-3 px-2 md:h-8 h-6">{t("view-all")}</Button>
                         </Link>
                     </div>
                 </div>

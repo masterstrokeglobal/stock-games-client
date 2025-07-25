@@ -23,7 +23,7 @@ export default function Last10WinnersCardSpinner() {
       }
     }, FIFTEEN_SECONDS);
     return () => clearInterval(interval);
-  }, [isSuccess, data]);
+  }, [isSuccess, refetch]);
 
   // console.log("Ronds" , rounds)
 

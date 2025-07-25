@@ -23,7 +23,8 @@ const EditSevenUpDownPairForm = ({ id }: Props) => {
 
     const defaultValues = useMemo(() => {
         return {
-            marketItems: sevenUpDownPair?.marketItems?.map((item: MarketItem) => item.id?.toString() || "") || [],
+            type: sevenUpDownPair?.type || "",
+            marketItems: sevenUpDownPair?.marketItems?.map((item: MarketItem) => item.id?.toString() || "").slice(0, 13) || [],
             active: sevenUpDownPair?.active || false
         }
     }, [sevenUpDownPair]);

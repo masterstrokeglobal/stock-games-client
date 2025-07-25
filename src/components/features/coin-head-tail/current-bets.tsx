@@ -68,7 +68,7 @@ const BetsList = ({
             <ScrollArea
                 scrollThumbClassName="bg-[#004DA9]"
                 type="auto"
-                className="md:h-[calc(100svh/2-250px)]"
+                    className="lg:h-[calc(100svh/2-250px)]"
             >
                 <div className="flex flex-col font-phudu gap-3 pb-2">
                     {placements.map((placement, index) => {

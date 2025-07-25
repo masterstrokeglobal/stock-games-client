@@ -38,7 +38,7 @@ const SinglePlayerRouletteGame = ({ roundRecord, globalBetAmount, children, show
         if (gameRecords.length === 0) return [];
 
         return gameRecords;
-    }, [data]);
+    }, [data, isSuccess]);
 
 
     const { previousRoundId, showResults } = useShowResults(roundRecord, bettedChips);

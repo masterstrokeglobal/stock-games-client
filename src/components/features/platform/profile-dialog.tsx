@@ -56,25 +56,25 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
             href: "/game/platform/profile",
             icon: "/images/platform/user-menu/your-info.png",
             label: t('your-info'),
-            demouser:true
+            demouser: true
         },
         {
             href: "/game/platform/change-password",
             icon: "/images/platform/user-menu/change-password.png",
             label: t('change-password'),
-            demouser:true
+            demouser: false
         },
         {
             href: "/game/platform/transaction-history",
             icon: "/images/platform/user-menu/transaction-history.png",
             label: t('transaction-history'),
-            demouser:false
+            demouser: false
         },
         {
             href: "/game/platform/betting-history",
             icon: "/images/platform/user-menu/betting-history.png",
             label: t('betting-history'),
-            demouser:false
+            demouser: false
         },
         {
             href: "/game/platform/wallet/menu",
@@ -91,19 +91,19 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
             ),
             icon: "/images/platform/user-menu/wallet.png",
             label: t('your-wallet'),
-            demouser:true
+            demouser: true
         },
         {
             href: "/game/platform/terms-and-condition",
             icon: "/images/platform/user-menu/terms-and-conditions.png",
             label: t('terms-and-conditions'),
-            demouser:true
+            demouser: true
         },
         {
             href: "/game/platform/contact",
             icon: "/images/platform/user-menu/contact-us.png",
             label: t('contact-us'),
-            demouser:true,
+            demouser: true,
             Parent: (item: { icon: string, label: string }) => (
                 <Button onClick={() => {
                     setOpenContactDialog(true);
@@ -120,7 +120,7 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
             href: "/game/platform/rules",
             icon: "/images/platform/user-menu/rules.png",
             label: t('rules'),
-            demouser:true
+            demouser: true
         },
         // {
         //     href: "/game/faq",
@@ -137,15 +137,15 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
                 <DialogTrigger asChild>
                     {children}
                 </DialogTrigger>
-                <DialogContent showButton={false} className="sm:max-w-2xl dark:bg-[#121456] bg-primary-game  rounded-2xl border-2 dark:border-platform-border border-primary-game  gap-0 p-0 overflow-hidden">
+                <DialogContent showButton={false} className="sm:max-w-2xl dark:bg-[#121456] bg-primary-game  rounded-xl border-2 dark:border-platform-border border-primary-game  gap-0 p-0 overflow-hidden">
                     <ScrollArea
                         className="h-full max-h-[90vh] overflow-y-auto"
                         scrollThumbClassName="bg-[#191D7B] "
                     >
-                        <DialogHeader className="px-6 py-4 dark:bg-[#121456] bg-primary-game  sticky top-0 z-10 rounded-t-2xl">
+                        <DialogHeader className="px-6 py-4 dark:bg-[#121456] bg-primary-game  sticky top-0 z-10 rounded">
                             <DialogTitle className="text-white text-lg font-semibold text-center">
-                                Profile
-                            </DialogTitle>
+                                {t('title')}
+                            </DialogTitle>  
                             <DialogClose asChild>
                                 <Button ref={closebuttonref} variant="ghost" size="icon" className="absolute bg-transparent right-4 top-2 mt-0">
                                     <CircleX className="text-white" />
@@ -197,8 +197,8 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
                                 {/* Progress Info */}
                                 <div className="flex-1 flex flex-col justify-center">
                                     <div className="flex items-center mb-2">
-                                        <span className="text-white font-semibold text-sm mr-auto">Point Progress</span>
-                                        <span className="text-white font-bold text-sm">{userTier?.totalPoints || 0}/{userTier?.nextTierPointsRequired || 0} Points</span>
+                                        <span className="text-white font-semibold text-sm mr-auto">{t('point-progress')}</span>
+                                        <span className="text-white font-bold text-sm">{userTier?.totalPoints || 0}/{userTier?.nextTierPointsRequired || 0} {t('points')}</span>
                                     </div>
                                     <div className="w-full h-2 rounded-full bg-[#3B418C] overflow-hidden">
                                         <div
@@ -222,7 +222,9 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
                                     }
                                     return (
                                         <Link key={index} href={user.isDemoUser && !item.demouser ? "#" : item.href} passHref>
-                                            <Button disabled={user.isDemoUser && !item.demouser} variant="ghost" className="w-full rounded-none h-16 border-2 dark:border-platform-border border-primary-game justify-start text-platform-text flex gap-4">
+                                            <Button  onClick={() => {
+                                            closebuttonref.current?.click();
+                                        }} disabled={user.isDemoUser && !item.demouser} variant="ghost" className="w-full rounded-none h-16 border-2 dark:border-platform-border border-primary-game justify-start text-platform-text flex gap-4">
                                                 <div className="w-10 h-10 backdrop-blur-sm p-0.5 border-2 dark:border-platform-border border-primary-game rounded-full flex items-center justify-center">
                                                     <img src={`${item.icon}`} alt={item.label} className="w-full h-auto block" />
                                                 </div>

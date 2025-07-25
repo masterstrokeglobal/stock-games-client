@@ -29,7 +29,7 @@ const transactionColumns: ColumnDef<Transaction>[] = [
         header: "Type",
         accessorKey: "type",
         cell: ({ row }) => (
-            <Badge variant={row.original.type === TransactionType.DEPOSIT ? "success" : "destructive"}>
+            <Badge className="text-nowrap" variant={row.original.type === TransactionType.DEPOSIT ? "success" : "outline"}>
                 {row.original.type.split("_").join(" ")}
             </Badge>
         ),
@@ -39,11 +39,11 @@ const transactionColumns: ColumnDef<Transaction>[] = [
         accessorKey: "amount",
         cell: ({ row }) => {
             if (row.original.type === TransactionType.POINTS_EARNED || row.original.type === TransactionType.POINTS_REDEEMED) {
-                return <div>
+                return <div className="text-nowrap">
                     {row.original.amount} Points
                 </div>
             }
-            return <div>Rs. {row.original.amount.toFixed(2)}</div>
+            return <div className="text-nowrap">Rs. {row.original.amount.toFixed(2)}</div>
         }
     },
     {
@@ -58,7 +58,7 @@ const transactionColumns: ColumnDef<Transaction>[] = [
     {
         header: "Bonus Percentage",
         accessorKey: "bonusPercentage",
-        cell: ({ row }) => <div>{row.original.bonusPercentage}%</div>,
+        cell: ({ row }) => <div>{row.original.bonusPercentage ? `${row.original.bonusPercentage}%` : 'N/A'}</div>,
     },
     {
         header: "Created On",
@@ -110,11 +110,14 @@ const StatusChangeColumn = ({ transaction }: { transaction: Transaction }) => {
         }
     };
 
-
-    if (transaction.status !== TransactionStatus.PENDING && (transaction.type === TransactionType.WITHDRAWAL || transaction.type === TransactionType.DEPOSIT)) {
-        return <div className="text-sm text-gray-500 text-center">
-            N/A
-        </div>
+    // Only show Accept/Reject for DEPOSIT and WITHDRAWAL and only if status is PENDING
+    if (
+        !(
+            (transaction.type === TransactionType.WITHDRAWAL || transaction.type === TransactionType.DEPOSIT) &&
+            transaction.status === TransactionStatus.PENDING
+        )
+    ) {
+        return <div className="text-sm text-gray-500 text-center">N/A</div>;
     }
 
     const isPending = updatePending || withdrawalPending;

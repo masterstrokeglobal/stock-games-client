@@ -49,14 +49,14 @@ const LastRounds = ({
             <div className="mt-2 flex-1">
                 <div className="hidden md:block">
                     <div>
-                    <div className="flex w-full  tracking-wider font-montserrat  font-medium uppercase text-white text-sm gap-4">
-                     <div className="py-3 px-4 font-normal tracking-wider whitespace-nowrap flex-1 min-w-[120px]">
+                    <div className="flex w-full xl:px-0 px-1  tracking-wider font-montserrat  font-medium uppercase text-white text-sm gap-4">
+                     <div className="py-3 xl:px-4 px-1 font-normal tracking-wider whitespace-nowrap flex-1 xl:min-w-[120px]">
                                 DATE
                             </div>
-                            <div className="py-3 px-4 font-normal tracking-wider whitespace-nowrap flex-1 min-w-[100px]">
+                            <div className="py-3 xl:px-4 px-1 font-normal tracking-wider whitespace-nowrap flex-1 xl:min-w-[100px]">
                                 TIME
                             </div>
-                            <div className="py-3 px-4 font-normal tracking-wider whitespace-nowrap flex-1 min-w-[120px]">
+                            <div className="py-3 xl:px-4 px-1 font-normal tracking-wider whitespace-nowrap flex-1 xl:min-w-[120px]">
                                 WINNER
                             </div>
                         </div>
@@ -67,15 +67,15 @@ const LastRounds = ({
                                 history.map((round, idx) => (
                                     <div
                                         key={round.id ?? idx}
-                                        className="flex bg-[#517ED466] font-normal text-sm font-poppins rounded-full mb-2 items-center"
+                                        className="flex bg-[#517ED466] font-normal text-sm px-2 font-poppins rounded-full mb-2 items-center"
                                     >
-                                        <div className="py-2 px-4 text-white text-sm flex-1 min-w-[120px]">
+                                        <div className="py-2 xl:px-4 px-1 text-white text-sm flex-1 xl:min-w-[120px]">
                                             {dayjs(round.createdAt).format("DD/MM/YYYY")}
                                         </div>
-                                        <div className="py-2 px-4 text-white text-sm flex-1 min-w-[100px]">
+                                            <div className="py-2 xl:px-4 px-1 text-white  text-sm flex-1 xl:min-w-[100px]">
                                             {dayjs(round.createdAt).format("HH:mm A")}
                                         </div>
-                                        <div className="py-2 px-4 flex-1 min-w-[120px]">
+                                        <div className="py-2 xl:px-4 px-1 flex-1 xl:min-w-[120px]">
                                             <div className="flex items-center gap-2">
                                                 <SevenUpDownChip side={round.winner === "7 Up" ? "up" : round.winner === "7 Down" ? "down" : "seven"} />
                                             </div>

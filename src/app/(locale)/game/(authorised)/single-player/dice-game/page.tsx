@@ -30,7 +30,9 @@ const DiceGame = () => {
     const roundRecordWithWinningId = useWinningId(roundRecord);
 
     const isTablet = width < BREAKPOINTS.lg;
-    const marketItems = roundRecord?.market || [];
+    const marketItems = useMemo(() => {
+        return roundRecord?.market || [];
+    }, [roundRecord])
 
     const marketItemsStocks = useMemo(() => {
         return marketItems.map((item) => {

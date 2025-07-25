@@ -13,7 +13,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAuthStore } from "@/context/auth-context"
 import { useCurrentGame, usePlacementOver, useShowResults } from "@/hooks/use-current-game"
 import { useGameType } from "@/hooks/use-game-type"
-import { RankedMarketItem, useLeaderboard } from "@/hooks/use-leadboard"
+import { RankedMarketItem } from "@/hooks/use-leadboard"
 import useNSEAvailable from "@/hooks/use-nse-available"
 import useSchedularInactive from "@/hooks/use-schedular-inactive"
 import useUSAMarketAvailable from "@/hooks/use-usa-available"
@@ -27,6 +27,7 @@ import User from "@/models/user"
 import { useGetMyFavorites } from "@/react-query/favorite-market-item-queries"
 import { useGetMyStockSlotGameRecord } from "@/react-query/game-record-queries"
 import { Triangle } from "lucide-react"
+import { useLeaderboard } from "@/hooks/use-multi-socket-leaderboard"
 
 
 export default function Home() {
@@ -61,13 +62,13 @@ export default function Home() {
         {roundRecord && <TimeDisplay className="fixed top-14 left-1/2 -translate-x-1/2 z-50  w-full max-w-sm" roundRecord={roundRecord} />}
         <div className="w-full">
           <div className="grid relative grid-cols-1  gap-6  rounded-lg overflow-hidden pt-20  ">
-            <img src="/images/jackpot/bg.png" className=" w-full absolute sm:top-0 top-12 left-0 object-cover  mx-auto h-full " />
+            <img src="/images/jackpot/bg.png" alt="jackpot-bg" className=" w-full absolute sm:top-0 top-12 left-0 object-cover  mx-auto h-full " />
             <div className="relative h-full w-full md:min-h-[700px]   sm:min-h-[600px] min-h-[350px]  bg-contain bg-no-repeat bg-center">
               <div className="absolute bottom-0 w-full h-fit ">
                 <div className='absolute left-1/2 -translate-x-1/2 bottom-[calc(100%-2vw)] md:h-[60%] h-3/4 z-10 flex max-w-sm items-end justify-center'>
                   <img src="/images/jackpot/lady4.gif" alt="dice-bg" className='w-auto h-full mt-20 scale-x-[-1]' />
                 </div>
-                <img src="/images/jackpot/table.png" className=" w-full sm:mx-auto h-full  relative z-10  md:max-w-6xl sm:max-w-2xl max-w-xl" />
+                <img src="/images/jackpot/table.png" alt="jackpot-table" className=" w-full sm:mx-auto h-full  relative z-10  md:max-w-6xl sm:max-w-2xl max-w-xl" />
                 {roundRecord && <StockCardStack roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />}
               </div>
             </div>
@@ -134,8 +135,9 @@ const MarketSection = ({ globalBetAmount, searchQuery, className }: { searchQuer
   const isUSAMarketAvailable = useUSAMarketAvailable();
 
   const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
-  const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO);
   const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
+  const isMCXAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.MCX);
+  const isCOMEXAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.COMEX);
 
 
 
@@ -145,10 +147,11 @@ const MarketSection = ({ globalBetAmount, searchQuery, className }: { searchQuer
     <div className={cn("relative w-full bg-black/70 backdrop-blur-sm", className)}>
       <div className={cn(" max-w-7xl  sticky top-0 z-10 bg-black/90 backdrop-blur-sm   px-4 py-4 mx-auto")}>
         <div className="flex justify-between flex-col md:flex-row items-start ">
-          <TabsList className="w-full md:max-w-md flex gap-2">
+          <TabsList className="w-full md:max-w-md  grid grid-cols-2 gap-2">
             <TabsTrigger value={SchedulerType.NSE} disabled={!isNSEAllowed || !isNSEAvailable} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">NSE</TabsTrigger>
-            {isCryptoAllowed && <TabsTrigger value={SchedulerType.CRYPTO} disabled={!isCryptoAllowed} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">Crypto</TabsTrigger>}
             <TabsTrigger value={SchedulerType.USA_MARKET} disabled={!isUSAMarketAllowed || !isUSAMarketAvailable} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">US Stock</TabsTrigger>
+            {isMCXAllowed && <TabsTrigger value={SchedulerType.MCX} disabled={!isMCXAllowed} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">MCX</TabsTrigger>}
+            {isCOMEXAllowed && <TabsTrigger value={SchedulerType.COMEX} disabled={!isCOMEXAllowed} className="w-full rounded-lg data-[state=active]:bg-amber-500 data-[state=active]:shadow-[0_0_15px_rgba(245,158,11,0.5)] data-[state=active]:border-amber-400 data-[state=inactive]:bg-gray-700/50">International</TabsTrigger>}
           </TabsList>
         </div>
       </div>

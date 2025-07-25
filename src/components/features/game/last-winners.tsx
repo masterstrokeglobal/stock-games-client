@@ -38,7 +38,7 @@ const LastRoundWinner = () => {
             }
         }, FIFTEEN_SECONDS);
         return () => clearInterval(interval);
-    }, [isSuccess, data]);
+    }, [isSuccess, refetch]);
 
 
     return (

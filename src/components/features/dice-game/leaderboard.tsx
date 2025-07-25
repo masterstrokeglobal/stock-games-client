@@ -47,7 +47,7 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
         if (!winningNumbers) return [];
         const winningNumbersArray = winningNumbers.map((item) => item.horse).filter((item) => item !== undefined) as number[];
         return winningNumbersArray;
-    }, [data, isSuccess]);
+    }, [data, isSuccess, roundRecord.market]);
 
 
     const formatPrice = (price: number) => {

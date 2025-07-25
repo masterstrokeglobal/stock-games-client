@@ -16,7 +16,7 @@ const UpdateBonus = () => {
         return data ? {
             ...data,
         } : null;
-    }, [data, id]);
+    }, [data]);
 
 
     const handleSubmit = (data: BonusFormValues) => {

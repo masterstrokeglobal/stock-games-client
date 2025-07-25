@@ -50,12 +50,12 @@ const StockCardStack = ({ roundRecord, className, marketItems, order = "desc" }:
 
         if (gameRecords.length === 0) return [];
         return gameRecords;
-    }, [data]);
+    }, [data, isSuccess]);
 
     // Sort market items by change percent
     const sortedStocks = useMemo(() => {
         return [...marketItems].sort((a, b) => order === "asc" ? Number(a.change_percent) - Number(b.change_percent) : Number(b.change_percent) - Number(a.change_percent));
-    }, [marketItems]);
+    }, [marketItems, order]);
 
     // Get top 4 stocks
     const topStocks = sortedStocks.slice(0, 4);
@@ -144,7 +144,7 @@ export const StockCardStackMobile = ({ roundRecord, className, marketItems, orde
     // Sort market items by change percent
     const sortedStocks = useMemo(() => {
         return [...marketItems].sort((a, b) => order === "asc" ? Number(a.change_percent) - Number(b.change_percent) : Number(b.change_percent) - Number(a.change_percent));
-    }, [marketItems]);
+    }, [marketItems, order]);
 
     // Get top 4 stocks
     const topStocks = sortedStocks.slice(0, 4);

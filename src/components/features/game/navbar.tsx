@@ -9,10 +9,12 @@ import Link from "next/link";
 import GameTimings from "./game-timings";
 import UserMenuNavbar from "./user-menu-navbar";
 import ThemeSwitcher from "@/context/theme-swithcer";
+import { useTranslations } from "next-intl";
 type Props = {
     className?: string
 }
 const Navbar = ({ className }: Props) => {
+    const t = useTranslations("platform.navbar");
     const { isLoggedIn } = useAuthStore();
 
     return (
@@ -32,10 +34,10 @@ const Navbar = ({ className }: Props) => {
                 {isLoggedIn && <UserMenuNavbar />}
                 {!isLoggedIn && <div className="flex items-center space-x-4">
                     <Link href="/game/auth/login">
-                        <Button>Login</Button>
+                        <Button>{t("login")}</Button>
                     </Link>
                     <Link href="/game/auth/register" >
-                        <Button className="active-menu-button  rounded-full">Signup</Button>
+                        <Button className="active-menu-button  rounded-full">{t("signup")}</Button>
                     </Link>
                 </div>}
             </div>

@@ -143,14 +143,13 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         if (!roundRecord) return;
 
         // adding 2 seconds to the time to fetch intial price values
-        const timeToPlace = new Date(roundRecord.placementEndTime).getTime() - new Date().getTime() + 4000;
+        const timeToPlace = new Date(roundRecord.placementEndTime).getTime() - new Date().getTime() +1000;
 
         // adding 2 seconds delay for round creation
         let timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 5000;
 
-
         if (roundRecord.roundRecordGameType !== RoundRecordGameType.DERBY) {
-            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 10000;
+            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 5000;
         }
 
         const gameEnd = setTimeout(() => {

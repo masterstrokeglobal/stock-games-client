@@ -40,7 +40,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
     const getRoundStatus = () => {
         if (!roundRecord) return 'pre-tracking';
         const now = new Date();
-        if (now < roundRecord .placementEndTime) {
+        if (now < roundRecord.placementEndTime) {
             return 'pre-tracking';
         } else if (now >= roundRecord.placementEndTime && now <= roundRecord.endTime) {
             return 'tracking';
@@ -289,7 +289,6 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
 
                     socketRef.current.onmessage = (message) => {
                         try {
-                            console.log("message", message.data);
                             const data = JSON.parse(message.data as string);
                             if (!Array.isArray(data) || data.length === 0) return;
 

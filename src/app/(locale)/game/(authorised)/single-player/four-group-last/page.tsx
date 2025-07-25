@@ -39,7 +39,7 @@ export default function Home() {
                 {roundRecord && <TimeDisplay className="fixed top-14 left-1/2 -translate-x-1/2 z-50  w-full max-w-[300px]" roundRecord={roundRecord} />}
                 <div className="w-full">
                     <div className="grid relative grid-cols-1  gap-6  rounded-lg  pt-20  ">
-                        <img src="/images/four-group/background.jpg" className=" w-full absolute top-0 left-0 object-cover  mx-auto  h-full " />
+                        <img src="/images/four-group/background.jpg" alt="four-group-bg" className=" w-full absolute top-0 left-0 object-cover  mx-auto  h-full " />
                         {roundRecord && isMobileSmall && <StockCardStackMobile order="asc" className="absolute  p-2 top-14 right-0" roundRecord={roundRecord} marketItems={marketItems} />}
                         <div className="relative h-full w-full md:min-h-[700px]  sm:min-h-[600px] min-h-[400px]  bg-contain bg-no-repeat bg-center">
                             <div className="absolute bottom-0 w-full h-fit ">
@@ -47,7 +47,7 @@ export default function Home() {
                                     <img src="/images/four-group/lady.gif" alt="dice-bg" className='w-auto md:h-[80%] sm:h-48 xs:h-40 h-36 mt-20' />
                                 </div>
                                 {roundRecord && <StockCardStack order="asc" className="absolute p-2 left-1/2 -translate-x-1/2 md:bottom-[calc(30%+1rem)] bottom-[calc(20%+1rem)]" roundRecord={roundRecord} marketItems={marketItems} />}
-                                <img src="/images/four-group/table.png" className=" w-full sm:mx-auto   h-full  relative z-10  md:max-w-5xl sm:max-w-2xl max-w-xl" />
+                                <img src="/images/four-group/table.png" alt="four-group-table" className=" w-full sm:mx-auto   h-full  relative z-10  md:max-w-5xl sm:max-w-2xl max-w-xl" />
                                 <h2 className="text-red-900 font-semibold absolute md:bottom-12 bottom-6 xl:text-3xl md:text-xl sm:text-base text-xs left-1/2 -translate-x-1/2 font-keania-one z-20 tracking-wide">BEAR MARKET</h2>
                             </div>
                         </div>

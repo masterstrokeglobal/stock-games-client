@@ -6,8 +6,9 @@ import { cn } from "@/lib/utils"
 import { Tier } from "@/models/tier"
 import { useGetUserTier } from "@/react-query/game-user-queries"
 import { useGetTiers } from "@/react-query/tier-queries"
+import { useTranslations } from "next-intl"
 import Image from "next/image"
-import { RefObject, createRef, useEffect, useRef, useState } from "react"
+import { RefObject, createRef, useEffect, useMemo, useRef, useState } from "react"
 
 interface Step {
     number: string;
@@ -16,6 +17,7 @@ interface Step {
 }
 
 export default function TiersProgram(): JSX.Element {
+    const t = useTranslations("platform.tier");
     const [activeTier, setActiveTier] = useState<number>(0)
     const scrollAreaRef = useRef<HTMLDivElement | null>(null)
     const tierRefs = useRef<Array<RefObject<HTMLButtonElement>>>([])
@@ -31,7 +33,9 @@ export default function TiersProgram(): JSX.Element {
     })
 
 
-    const tierList = tiers?.tiers || [];
+    const tierList = useMemo(() => {
+        return tiers?.tiers || [];
+    }, [tiers])
     // Initialize refs array when component mounts
     useEffect(() => {
         tierRefs.current = Array(tierList?.length ?? 0)
@@ -71,23 +75,23 @@ export default function TiersProgram(): JSX.Element {
     const steps: Step[] = [
         {
             number: "01",
-            title: "Sign Up",
-            description: "Register quickly and easily to begin your journey with us.",
+            title: t("sign-up"),
+            description: t("sign-up-description"),
         },
         {
             number: "02",
-            title: "Play!",
-            description: "Play and win your favorite games and get exclusive privileges.",
+            title: t("play"),
+            description: t("play-description"),
         },
         {
             number: "03",
-            title: "Level Up!",
-            description: "Advance through levels by playing more and unlocking new benefits.",
+            title: t("level-up"),
+            description: t("level-up-description"),
         },
         {
             number: "04",
-            title: "Have fun!",
-            description: "Enjoy your rewards and benefits as you progress.",
+            title: t("have-fun"),
+            description: t("have-fun-description"),
         },
     ]
 
@@ -104,7 +108,7 @@ export default function TiersProgram(): JSX.Element {
         <>
             <section className="my-6 sm:mb-12 md:mb-20 ">
                 <header  className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg text-platform-text font-semibold">Tiers Program</h2>
+                    <h2 className="text-lg text-platform-text font-semibold">{t("title")}</h2>
                 </header>
 
                 {/* Tier Tabs */}

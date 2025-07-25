@@ -2,18 +2,19 @@
 
 import LoadingScreen from "@/components/common/loading-screen";
 import UpdateAgentBonusPercentageForm from "@/components/common/update-agent-bonus-percentage";
-import TransactionTable from "@/components/features/transaction/transaction-table"; // Adjust the import based on your transaction table component
+import BettingHistory from "@/components/features/betting-history/betting-history";
+import TransactionTable from "@/components/features/transaction/transaction-table";
 import PlacementManagement from "@/components/features/user/placement-allowed";
-import UserCard from "@/components/features/user/user-card"; // Assuming you have a UserCard component
+import UserCard from "@/components/features/user/user-card";
 import UserEarningsCard from "@/components/features/user/user-earning";
 import UserUpdateNote from "@/components/features/user/user-update-note";
 import UserUpdateWithdrawl from "@/components/features/user/user-update-withdrawl";
 import { Separator } from "@/components/ui/separator";
 import { useAuthStore } from "@/context/auth-context";
 import Admin, { AdminRole } from "@/models/admin";
-import User from "@/models/user"; // Assuming you have a User model
+import User from "@/models/user";
 import { useGameUserUpdateById } from "@/react-query/game-user-queries";
-import { useGetUserById } from "@/react-query/user-queries"; // Custom hook for fetching user details
+import { useGetUserById } from "@/react-query/user-queries";
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
 
@@ -52,7 +53,7 @@ const ViewUserPage = () => {
             <main className="mt-4">
                 {userDetails && <UserCard user={userDetails} />} {/* Render UserCard if data exists */}
             </main>
-            
+
             {isAdmin && userDetails && <main className="mt-4">
                 <UserUpdateNote user={userDetails} />
             </main>}
@@ -70,7 +71,11 @@ const ViewUserPage = () => {
             <UserEarningsCard userId={id.toString()} /> {/* Render UserEarningsCard with user ID */}
 
             {user?.role != AdminRole.AGENT && <main className="mt-4">
-                <TransactionTable userId={id.toString()} /> {/* Render TransactionTable with user ID */}
+                <TransactionTable className="min-h-0" userId={id.toString()} /> {/* Render TransactionTable with user ID */}
+            </main>}
+
+            {user?.role !== AdminRole.AGENT && <main className="mt-4">
+                <BettingHistory userId={id.toString()} />
             </main>}
         </section>
     );

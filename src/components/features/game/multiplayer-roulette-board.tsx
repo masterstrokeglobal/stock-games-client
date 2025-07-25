@@ -47,7 +47,7 @@ const MultiplayerRouletteGame = ({ lobbyRound, lobby, result }: Props) => {
             numbers: [marketNumber]
         }];
         return chips;
-    }, [data]);
+    }, [data, isSuccess, roundRecord, lobby.bettedAmount]);
 
 
     const {

@@ -38,12 +38,12 @@ const LastRounds = ({
                 boxShadow: "0px 0px 8px 0px rgba(0, 92, 164, 1) inset",
             }}
             className={cn(
-                "rounded-2xl md:p-4 p-2 flex flex-col border border-[#0074FF] bg-[#004DA982]",
+                "rounded-2xl lg:p-4 p-2 flex flex-col border border-[#0074FF] bg-[#004DA982]",
                 className
             )}
         >
             <header className="bg-[#004DA9] rounded-[10px] px-4 py-2">
-                <h2 className="font-play tracking-wider font-bold md:text-md text-center">Last Game Results</h2>
+                <h2 className="font-play tracking-wider font-bold lg:text-md text-center">Last Game Results</h2>
             </header>
             <div className="mt-2 flex-1">
                 <div className="flex w-full px-4 py-3 font-play text-[15px] sticky top-0 z-10 tracking-wider text-white text-sm gap-4">
@@ -76,16 +76,16 @@ const LastRounds = ({
                                                 background: rowBg,
                                             }}
                                         >
-                                            <div className="px-4 py-1 flex-1 text-left">
+                                            <div className="px-4 py-1 flex-1 whitespace-nowrap text-left">
                                                 {row.id}
                                             </div>
-                                            <div className="px-4 py-1 flex-1 text-left">
+                                            <div className="px-4 py-1 flex-1 whitespace-nowrap text-left">
                                                 {dayjs(row.createdAt).format("DD/MM/YYYY")}
                                             </div>
-                                            <div className="px-4 py-1 flex-1 text-left">
+                                            <div className="px-4 py-1 flex-1 whitespace-nowrap text-left">
                                                 {dayjs(row.createdAt).format("hh:mm A")}
                                             </div>
-                                            <div className="px-4 py-1 flex-1 text-left">
+                                            <div className="px-4 py-1 flex-1 whitespace-nowrap text-left">
                                                     {row.winningSide}
                                             </div>
                                         </div>

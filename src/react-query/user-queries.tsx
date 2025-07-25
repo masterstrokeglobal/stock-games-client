@@ -1,7 +1,8 @@
+import { gameUserAPI } from "@/lib/axios/game-user-API";
+import { GetUserIpLogsParams, userAPI } from "@/lib/axios/user-API"; // Adjust the path as needed
+import { RoundRecordGameType } from "@/models/round-record";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { GetUserIpLogsParams, userAPI } from "@/lib/axios/user-API"; // Adjust the path as needed
-import { gameUserAPI } from "@/lib/axios/game-user-API";
 
 export const useGetAllUsers = (filter: SearchFilters) => {
     return useQuery({
@@ -236,5 +237,28 @@ export const useGetUserNotes = (userId?: number) => {
             return response.data.data;
         } : undefined,
         enabled: !!userId,
+    });
+}
+
+
+export const useGetUserBettingHistory = (filter: {
+    userId: number | string | undefined;
+    page: number;
+    limit: number;
+    startDate?: Date;
+    endDate?: Date;
+    roundRecordGameType: RoundRecordGameType;
+}) => {
+    return useQuery({
+        queryKey: ["users", "betting-history", filter],
+        queryFn: async () => {
+            const response = await userAPI.getUserBettingHistory(filter);
+            const transactions = response.data.data;
+            return {
+                data: transactions,
+                count: response.data.countOfGame,
+            };
+        },
+        enabled: !!filter.userId,
     });
 }

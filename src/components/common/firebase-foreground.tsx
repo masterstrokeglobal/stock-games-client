@@ -14,7 +14,7 @@ export default function FcmTokenComp() {
         if (fcmToken && notificationPermissionStatus === 'granted') {
             mutate(fcmToken);
         }
-    }, [fcmToken, notificationPermissionStatus]);
+    }, [fcmToken, notificationPermissionStatus, mutate]);
 
     useEffect(() => {
         if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {

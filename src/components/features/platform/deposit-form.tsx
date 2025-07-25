@@ -116,7 +116,7 @@ const UPIDepositForm = () => {
                 } else {
                     // router.push('/game/platform/transaction-history');
                 }
-                form.reset({amount: 0, pgId: ""});
+                form.reset({ amount: 0, pgId: "" });
             },
             onError: () => {
                 console.log('Error creating deposit request');
@@ -127,7 +127,7 @@ const UPIDepositForm = () => {
         resolver: zodResolver(upiDepositSchema(t)),
         defaultValues: { amount: 10, pgId: "" },
     });
-   
+
 
     return (
         <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit, (err) => {
@@ -141,7 +141,7 @@ const UPIDepositForm = () => {
             <AmountInput
                 number
                 value={form.watch("amount")?.toString() ?? ""}
-                onChange={(val) => form.setValue("amount", val  as  unknown as number ?? 0)}
+                onChange={(val) => form.setValue("amount", val as unknown as number ?? 0)}
                 placeholder="Enter the amount to deposit"
                 error={form.formState.errors.amount?.message}
             />
@@ -252,12 +252,7 @@ const CryptoDepositForm = ({
                     <p className="text-red-500 text-xs">{form.formState.errors.crypto.message}</p>
                 )}
             </div>
-            <AmountInput
-                value={form.watch("amount")}
-                onChange={(val) => form.setValue("amount", val)}
-                placeholder="Enter the amount to deposit"
-                error={form.formState.errors.amount?.message}
-            />
+
             {isLoading ? (
                 <div className="bg-white/10 p-8 rounded-lg flex items-center justify-center">
                     <Loader2 className="h-8 w-8 text-platform-text animate-spin" />

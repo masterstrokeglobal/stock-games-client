@@ -1,18 +1,17 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import FormComboboxSelect from "@/components/ui/form/form-combobox";
+import FormProvider from "@/components/ui/form/form-provider";
+import FormGroupSelect from "@/components/ui/form/form-select";
+import FormSwitch from "@/components/ui/form/form-switch";
+import { schedulerTypeOptions } from "@/lib/utils";
+import { MarketItem, SchedulerType } from "@/models/market-item";
+import { useGetMarketItems } from "@/react-query/market-item-queries";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import FormProvider from "@/components/ui/form/form-provider";
-import FormGroupSelect from "@/components/ui/form/form-select";
-import FormComboboxSelect from "@/components/ui/form/form-combobox";
-import { SchedulerType } from "@/models/market-item";
-import FormSwitch from "@/components/ui/form/form-switch";
-import { MarketItem } from "@/models/market-item";
-import { useGetMarketItems } from "@/react-query/market-item-queries";
-import { schedulerTypeOptions } from "@/lib/utils";
 const createCoinTossPairSchema = z.object({
     type: z.nativeEnum(SchedulerType, { required_error: "Type is required" }),
     head: z.string().min(1, "Head market item is required"),
@@ -40,25 +39,21 @@ const CoinTossPairForm = ({ onSubmit, isLoading, defaultValues }: Props) => {
 
     const { control } = form;
 
-    const type = form.watch("type");
-
     const { data: headMarketItems, isLoading: headMarketItemsLoading } = useGetMarketItems({
         search: headSearch,
         limit: 100,
         page: 1,
-        type: type
     });
 
     const { data: tailMarketItems, isLoading: tailMarketItemsLoading } = useGetMarketItems({
         search: tailSearch,
         limit: 100,
         page: 1,
-        type: type
     });
 
     const headOptions = useMemo(() => {
         return headMarketItems?.data.marketItems?.map((item: MarketItem) => ({
-            label: item.name,
+            label: `${item.name} (${item.type})`,
             value: item.id?.toString() || ""
         })) || [];
     }, [headMarketItems]);

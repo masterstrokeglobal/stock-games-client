@@ -15,11 +15,8 @@ const RegisterPage = () => {
     const referenceCode = params.get("refferal") ?? null;
     const [userId, setUserId] = useState<string | null>(null);
     const { userDetails } = useAuthStore();
-    
-  const { data: visitorData } = useVisitorData(
-    { extendedResult: true },
-    { immediate: true }
-  )
+
+    const { data: visitorData } = useVisitorData({ extendedResult: true }, { immediate: true })
 
     const router = useRouter();
 
@@ -29,10 +26,8 @@ const RegisterPage = () => {
     const { mutate: verifyUser, isPending: isLoading } = useGameUserVerify();
 
     const registerUser = (data: RegisterFormValues) => {
-
         const firstname = data.name.split(" ")[0];
         const lastname = data.name.split(" ")[1];
-
         const isEmail = data.email.includes("@");
 
         const payload: any = {
@@ -53,7 +48,7 @@ const RegisterPage = () => {
         if (visitorData) {
             payload.visitorId = visitorData.visitorId;
         }
-        
+
         mutate(payload, {
             onSuccess: (data) => {
                 const user = new User(data.data);

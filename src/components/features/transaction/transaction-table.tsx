@@ -20,9 +20,11 @@ import { Search } from "lucide-react";
 import React, { useMemo, useState } from "react";
 import CompanySelect from "./company-select";
 import Admin from "@/models/admin";
+import { cn } from "@/lib/utils";
 
 type Props = {
     userId?: string;
+    className?: string;
 };
 
 // Filter Type Definition
@@ -31,7 +33,7 @@ type Filter = {
     timeTo: string;
 };
 
-const TransactionTable = ({ userId }: Props) => {
+const TransactionTable = ({ userId, className }: Props) => {
     const [page, setPage] = useState(1);
     const { userDetails } = useAuthStore();
     const [limit, setLimit] = useState(10);
@@ -84,7 +86,7 @@ const TransactionTable = ({ userId }: Props) => {
     };
 
     return (
-        <section className="container-main min-h-[60vh] my-12">
+        <section className={cn("container-main min-h-[60vh] my-12", className)}>
             <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold mb-6">Transactions</h2>
                 {user.isSuperAdmin && (
@@ -142,6 +144,8 @@ const TransactionTable = ({ userId }: Props) => {
                                 <SelectLabel>Types</SelectLabel>
                                 <SelectItem value="all">All Types</SelectItem>
                                 <SelectItem value={TransactionType.DEPOSIT}>Deposit</SelectItem>
+                                <SelectItem value={TransactionType.PLACEMENT}>Placement</SelectItem>
+                                <SelectItem value={TransactionType.WINNING}>Winning</SelectItem>
                                 <SelectItem value={TransactionType.WITHDRAWAL}>Withdrawal</SelectItem>
                                 <SelectItem value={TransactionType.POINTS_EARNED}>Points Earned</SelectItem>
                                 <SelectItem value={TransactionType.POINTS_REDEEMED}>Points Redeemed</SelectItem>

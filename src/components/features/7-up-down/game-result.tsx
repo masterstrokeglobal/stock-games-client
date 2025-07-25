@@ -106,7 +106,7 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
                       {
                         roundResult.map((result, index) => {
                           return (
-                            <div key={index} className="grid grid-cols-3 font-poppins font-light uppercase xs:px-4 gap-2 sm:text-[15px] text-xs bg-[#355DAE] py-2 rounded-xl mb-2">
+                            <div key={index} className="grid grid-cols-3 text-white font-poppins font-light uppercase xs:px-4 gap-2 sm:text-[15px] text-xs bg-[#355DAE] py-2 rounded-xl mb-2">
                               <div className="text-left"><SevenUpDownChip className='justify-start' side={result.selectedSide} /></div>
                               <div className="text-center">{INR(result.amountPlaced)}</div>
                               <div className="text-center">{<SevenUpDownChip className='justify-center' side={getWinnerSide(result.winner)} />}</div>

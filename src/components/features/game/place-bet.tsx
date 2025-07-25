@@ -52,7 +52,7 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
   const currentRound = roundRecord.todayCount || -1;
   const { mutate: mutateAdvanceGameRecord, isPending: isAdvancePlacingBet } = useCreateAdvanceGameRecord();
 
-  const fancyRounds = [
+  const fancyRounds = useMemo(() => [
     {
       Description: `Next Round Winner ${currentRound + 1}`,
       start: currentRound + 1,
@@ -67,7 +67,7 @@ const PlaceBets = ({ className, roundRecord, globalBetAmount }: Props) => {
         end,
       };
     }).filter((round) => round.end >= currentRound),
-  ];
+  ], [currentRound]);
 
   const advanceBets = [
     { start: 1, end: 180, Description: "Maximum Round Winner is Red" },

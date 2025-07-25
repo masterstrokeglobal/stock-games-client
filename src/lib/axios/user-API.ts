@@ -66,6 +66,17 @@ export const userAPI = {
     getUserNotes: async (userId: number) => {
         return api.get(`user/notes/${userId}`);
     },
+    getUserBettingHistory: async (filter: {
+        userId: number | string | undefined;
+        page: number;
+        limit: number;
+        startDate?: Date;
+        endDate?: Date;
+    }) => {
+        return api.get(`/admin/user-history/${filter.userId}`, {
+            params: filter
+        });
+    },
 
     getUserIpLogs: async ({ userId, page, limit, startDate, endDate }: GetUserIpLogsParams) => {
         const response = await api.get(`/user/ip-logs/${userId}`, {

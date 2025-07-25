@@ -23,7 +23,7 @@ const HelpButton = () => {
                 </Button>
             </DemoVideoDialog>
             <Button className="w-full h-11 bg-[#0C309E] hover:bg-[#0C309E]/80 text-white dice-header ">
-                <Link href="/game/contact" className="w-full h-full flex items-center justify-center">
+                <Link href="/game/platform/contact" className="w-full h-full flex items-center justify-center">
                     Support
                 </Link>
             </Button>

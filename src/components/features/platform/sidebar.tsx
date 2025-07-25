@@ -24,30 +24,13 @@ import {
     GridIcon, 
     HomeIcon 
 } from '../../common/sidebar-icons';
+import { useTranslations } from "next-intl";
 
 // Helper for sidebar icon component
 const SidebarIconComponent = ({ Icon, className }: { Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>; className?: string }) => (
     <Icon className={className} />
 );
 
-const navItems = [
-    { icon: HomeIcon, label: "Home", href: "/game/platform" },
-    { icon: DatabaseIcon, label: "Stock Market", href: `/game/platform/stock-games` },
-    { icon: StarIcon, label: "Tiers", href: "/game/platform/tier" },
-    { icon: CreditCardIcon, label: "Wallet", href: "#", Parent: WalletDialog },
-    { icon: GiftIcon, label: "Promotions", href: "/game/platform/promotion" },
-    { icon: HelpCircleIcon, label: "How to Play", href: "/game/platform/how-to-play" },
-    { icon: HeadphonesIcon, label: "Support — Call Now!", Parent: ContactDialog },
-];
-
-const casinoItems = [
-    { icon: MaximizeIcon, label: "Casino Games", href: "/game/platform/casino" },
-    { icon: GridIcon, label: "Slot Games", href: `/game/platform/casino/slot-games` },
-    { icon: VideoIcon, label: "Live Casino", href: `/game/platform/casino/live-games` },
-];
-
-const withCasino = [...navItems];
-withCasino.splice(2, 0, ...casinoItems);
 
 interface SidebarProps {
     className?: string;
@@ -63,6 +46,26 @@ type SidebarItemType = {
 };
 
 const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
+    const t = useTranslations("platform.sidebar");
+    const navItems = [
+        { icon: HomeIcon, label: t("home"), href: "/game/platform" },
+        { icon: DatabaseIcon, label: t("stock-market"), href: `/game/platform/stock-games` },
+        { icon: StarIcon, label: t("tiers"), href: "/game/platform/tier" },
+        { icon: CreditCardIcon, label: "Wallet", href: "#", Parent: WalletDialog },
+        { icon: GiftIcon, label: t("promotions"), href: "/game/platform/promotion" },
+        { icon: HelpCircleIcon, label: t("how-to-play"), href: "/game/platform/how-to-play" },
+        { icon: HeadphonesIcon, label: t("support"), Parent: ContactDialog },
+    ];
+    
+    const casinoItems = [
+        { icon: MaximizeIcon, label: t("casino-games"), href: "/game/platform/casino" },
+        { icon: GridIcon, label: t("slot-games"), href: `/game/platform/casino/slot-games` },
+        { icon: VideoIcon, label: t("live-games"), href: `/game/platform/casino/live-games` },
+    ];
+    
+    const withCasino = [...navItems];
+    withCasino.splice(2, 0, ...casinoItems);
+    
     const pathname = usePathname()
     const { isMobile } = useWindowSize();
     const router = useRouter();

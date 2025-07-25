@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { SchedulerType } from "@/models/market-item";
 import FormSwitch from "@/components/ui/form/form-switch";
+import { schedulerTypeOptions } from "@/lib/utils";
 
 export const createSchedulerInputSchema = z.object({
     id: z.string().optional(),
@@ -47,10 +48,7 @@ const SchedulerForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
             {/* Type Dropdown */}
             <FormGroupSelect
                 control={control}
-                options={[
-                    { label: "NSE", value: SchedulerType.NSE },
-                    { label: "Crypto", value: SchedulerType.CRYPTO },
-                ]}
+                options={schedulerTypeOptions}
                 name="type"
                 label="Scheduler Type*"
             />

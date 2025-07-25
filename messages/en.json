@@ -2,7 +2,107 @@
     "common": {
         "app-name": "Stock Derby",
         "timings": "NSE operates from 9:30 AM to 3:25 PM (IST)",
-        "usa-timings": "USA Market operates from 7:30 PM to 1:30AM (IST)"
+        "usa-timings": "USA Market operates from 7:30 PM to 1:30 AM (IST)"
+    },
+    "platform": {
+        "casino-games": {
+            "title": "Casino Games",
+            "game-providers": "Game Providers",
+            "new-released": "Newly Released",
+            "hot-games": "Hot Games",
+            "crash-games": "Crash Games",
+            "live-dealer": "Live Dealer",
+            "live-games": "Live Games",
+            "table-games": "Table Games",
+            "game-show": "Game Show",
+            "instant-win": "Instant Win",
+            "shooting": "Shooting",
+            "lottery": "Lottery",
+            "slots": "Slots",
+            "search-games": "Search Games",
+            "no-games-found": "No Games Found",
+            "view-all": "View All",
+            "category": "Category",
+            "platform": "Platform"
+        },
+        "tier": {
+            "title": "Tiers Program",
+            "sign-up": "Sign Up",
+            "play": "Play",
+            "level-up": "Level Up",
+            "have-fun": "Have Fun",
+            "sign-up-description": "Quickly start your journey with us.",
+            "play-description": "Play your favorite games and earn your rights.",
+            "level-up-description": "Play more and discover new benefits.",
+            "have-fun-description": "Enjoy your rewards and benefits."
+        },
+        "sidebar": {
+            "home": "Home",
+            "stock-market": "Stock Market",
+            "tiers": "Tiers",
+            "wallet": "Wallet",
+            "promotions": "Promotions",
+            "how-to-play": "How to Play",
+            "support": "Support",
+            "casino-games": "Casino Games",
+            "slot-games": "Slot Games",
+            "live-games": "Live Games"
+        },
+        "navbar": {
+            "light-mode": "Light Mode",
+            "dark-mode": "Dark Mode",
+            "language": "Language",
+            "login": "Login",
+            "signup": "Sign Up"
+        },
+        "stock-games": {
+            "title": "Stock Games",
+            "search-games": "Search Games",
+            "no-games-found": "No Games Found"
+        },
+        "stock-game-carousel": {
+            "title": "Stock Games",
+            "view-all": "View All",
+            "stock-games": "Stock Games"
+        },
+        "cta-section": {
+            "every-game-counts": "Every Game Counts",
+            "watch-your": "Watch Your",
+            "wallet-grow": "Wallet Grow",
+            "play-now": "Play Now"
+        },
+        "footer": {
+            "home": "Home",
+            "promotions": "Promotions",
+            "stock-games": "Stock Games",
+            "casino-games": "Casino Games",
+            "slot-games": "Slot Games",
+            "live-games": "Live Games",
+            "tiers": "Tiers",
+            "menu": "Menu",
+            "policies": "Policies",
+            "platform": "Platform",
+            "support": "Support",
+            "faq": "FAQ",
+            "terms-and-conditions": "Terms and Conditions",
+            "bonus-terms": "Bonus Terms",
+            "privacy-policy": "Privacy Policy",
+            "responsible-gaming": "Responsible Gaming",
+            "about-us": "About Us",
+            "affiliate-program": "Affiliate Program",
+            "contact-us": "Contact Us",
+            "play-smart-win-smarter": "Play Smart. Win Smarter.",
+            "stock-games-blends-entertainment": "Stock Games blend entertainment and strategic thinking - they are designed for those who value responsible play and intelligent decision-making.",
+            "discover-more-about-responsible-gameplay": "Discover more about responsible gameplay and intelligent decision-making",
+            "investsmart-org": "InvestSmart.org",
+            "brought-to-you-by-q-holdings-ltd": "Brought to you by Q Holdings Ltd.",
+            "infrastructure-and-payment-services-powered-by-2024-technologies-registration-no-he-565239b": "Powered by 2024 Technologies",
+            "designed-for-the-future-of-play": "Designed for the Future of Play.",
+            "powered-by-data": "Powered by Data",
+            "backed-by-responsibility": "Backed by Responsibility",
+            "copyright": "Stock Games. All rights reserved.",
+            "all-rights-reserved": "All rights reserved."
+        }
     },
     "game": {
         "title": "Stock Derby",
@@ -11,49 +111,49 @@
         "color": "Color",
         "bet": "Bet",
         "undo": "Undo Bet",
-        "game-ends-in": "Game ends in",
-        "game-starts-in": "Game starts in",
-        "game-loops-in": "Game loops in",
+        "game-ends-in": "Game Ends In",
+        "game-starts-in": "Game Starts In",
+        "game-loops-in": "Game Loops In",
         "current-bets": "Current Bets",
         "leaderboard": "Leaderboard",
         "rank": "Rank",
-        "please-wait": "Please wait...",
+        "please-wait": "Please Wait...",
         "bull": "Bull",
         "cards": "Cards",
         "price": "Price",
-        "betting-not-allowed": "Betting not allowed",
+        "betting-not-allowed": "Betting Not Allowed",
         "name": "Name",
-        "change": "Change in 1.5 min",
-        "username": "username",
+        "change": "Change in 1.5 Minutes",
+        "username": "Username",
         "amount": "Amount",
         "placement": "Placement",
         "top-bets": "Top Bets",
-        "race-begin": "Race Starts in",
-        "no-bets": "You haven't placed any Bets yet",
+        "race-begin": "Race Begins",
+        "no-bets": "You haven't placed any bets yet",
         "no-bets-description": "Place your bets to see them here",
         "betting-closed": "Betting Closed",
-        "place-your-bets": "Place your bets",
-        "round-ends-in": "Round ends in",
-        "round-starts-in": "Round starts in",
-        "place-starts-in": "Place starts in",
-        "place-ends-in": "Place ends in",
+        "place-your-bets": "Place Your Bets",
+        "round-ends-in": "Round Ends In",
+        "round-starts-in": "Round Starts In",
+        "place-starts-in": "Place Starts In",
+        "place-ends-in": "Place Ends In",
         "clear-all": "Clear All",
         "repeat-bet": "Repeat Bet",
         "red": "Red",
         "black": "Black",
-        "no-fancy-bets": "No fancy bets can be placed now",
+        "no-fancy-bets": "No Fancy Bets can be placed right now",
         "fancy-bets": "Fancy Bets",
         "advance-bets": "Advance Bets",
-        "yes" :"Yes",
-        "no" : "No"
+        "yes": "Yes",
+        "no": "No"
     },
     "last-round-winner": {
         "title": "Last Round Winner",
         "round-type": "Round Type",
-        "date-time": "Date & Time",
+        "date-time": "Date and Time",
         "time": "Time",
         "winner": "Winner",
-        "no-bets": "No bets placed yet"
+        "no-bets": "No Bets Placed Yet"
     },
     "user-menu": {
         "title": "User Menu",
@@ -69,29 +169,31 @@
         "transaction-history": "Transaction History",
         "betting-history": "Betting History",
         "game-history": "Game History",
-        "faq": "Frequently Asked Questions",
-        "terms-and-conditions": "Terms & Conditions",
-         "logout": "Logout"
+        "faq": "FAQ",
+        "terms-and-conditions": "Terms and Conditions",
+        "logout": "Logout",
+        "point-progress": "Point Progress",
+        "points": "Points"
     },
     "game-rules": {
         "title": "Game Rules",
-        "video-title": "Watch video tutorial",
-        "description": "We have a total of 17 numbers in the table. Players can place the following types of bets:",
+        "video-title": "Watch Video Tutorial",
+        "description": "We have a total of 17 numbers on the table. Players can place the following types of bets:",
         "betting-options": "Betting Options",
         "winning-odds": "Winning Odds",
-        "straight-bet": "A particular number",
-        "straight-bet-description": "Select any single number on the table for the highest payout.",
-        "between-two-numbers": "Between two numbers",
-        "between-two-numbers-description": "Place a bet on two adjacent numbers either horizontally or vertically.",
+        "straight-bet": "A Specific Number",
+        "straight-bet-description": "Choose any single number on the table for the highest payout.",
+        "between-two-numbers": "Between Two Numbers",
+        "between-two-numbers-description": "Bet on two adjacent numbers horizontally or vertically.",
         "even-odd": "Even/Odd",
         "even-odd-description": "Lower risk, consistent returns",
         "high-low": "High/Low",
         "high-low-description": "Bet on numbers 19-36 or 1-18",
         "column-bet": "Column Bet",
-        "column-bet-description": "Bet on all numbers of a specific column.",
-        "red-black-colors": "Red/Black colors",
+        "column-bet-description": "Bet on all numbers in a specific column.",
+        "red-black-colors": "Red/Black Colors",
         "red-black-colors-description": "Bet on all numbers of a specific color (red or black).",
-        "row-of-four-numbers": "Row of four numbers",
+        "row-of-four-numbers": "Row of Four Numbers",
         "row-of-four-numbers-description": "Bet on an entire row of four numbers for a more balanced risk.",
         "single-number": "Single Number",
         "single-number-description": "Highest risk, highest reward",
@@ -107,7 +209,7 @@
         "split-bet-odds": "2x"
     },
     "profile": {
-        "page-title": "Your Info",
+        "page-title": "Your Information",
         "labels": {
             "profile-image": "Profile Image",
             "firstname": "First Name*",
@@ -125,6 +227,7 @@
             "lastname-required": "Last name is required",
             "lastname-max": "Last name must be less than 50 characters",
             "username-max": "Username must be less than 100 characters",
+            "phone-or-email-required": "Phone or email is required",
             "email-invalid": "Invalid email address"
         },
         "buttons": {
@@ -133,13 +236,13 @@
         }
     },
     "form-image": {
-        "default-label": "Upload image",
+        "default-label": "Upload Image",
         "image": {
             "preview-alt": "Preview of uploaded image"
         },
         "upload": {
             "click-to-upload": "Click to upload",
-            "select-image": "Select image"
+            "select-image": "Select Image"
         },
         "status": {
             "uploading": "Uploading image..."
@@ -157,21 +260,21 @@
             "label": "Old Password*",
             "validation": {
                 "required": "Old password is required",
-                "minLength": "Password must be at least 8 characters"
+                "minLength": "Password must be at least 8 characters long"
             }
         },
         "newPassword": {
             "label": "New Password*",
             "validation": {
                 "required": "New password is required",
-                "minLength": "Password must be at least 8 characters"
+                "minLength": "Password must be at least 8 characters long"
             }
         },
         "confirmPassword": {
             "label": "Re-enter New Password*",
             "validation": {
                 "required": "Password confirmation is required",
-                "match": "New password and confirm new password must match"
+                "match": "New password and new password confirmation must match"
             }
         },
         "button": {
@@ -186,11 +289,11 @@
             "total": "Total Balance",
             "main": {
                 "label": "Main",
-                "alt": "coin"
+                "alt": "Coin"
             },
             "bonus": {
                 "label": "Bonus",
-                "alt": "bonus coin"
+                "alt": "Bonus Coin"
             }
         },
         "menu": {
@@ -209,25 +312,25 @@
         "confirm-deposit": "Confirm Deposit",
         "validation": {
             "transaction-id-required": "Transaction ID is required",
-            "transaction-id-max": "Transaction ID must not exceed 50 characters",
+            "transaction-id-max": "Transaction ID cannot exceed 50 characters",
             "amount-required": "Amount is required",
             "amount-invalid": "Please enter a valid amount"
         }
     },
     "deposit-form": {
-        "transaction-id": "ID de transaction*",
-        "amount": "Montant à déposer*",
-        "enter-transaction-id": "Entrez l'ID de transaction de votre application bancaire",
-        "enter-amount": "Entrez le montant à déposer",
-        "confirm-deposit": "Confirmer le dépôt",
-        "scan-qr-code": "Scanner le code QR",
-        "qr-code-description": "Scannez le code QR avec votre application bancaire pour initier le processus de dépôt",
+        "transaction-id": "Transaction ID*",
+        "amount": "Deposit Amount*",
+        "enter-transaction-id": "Enter transaction ID from your banking app",
+        "enter-amount": "Enter deposit amount",
+        "confirm-deposit": "Confirm Deposit",
+        "scan-qr-code": "Scan QR Code",
+        "qr-code-description": "Scan the QR code from your banking app to start the deposit process",
         "errors": {
-            "transaction-id-required": "L'ID de transaction est requis",
-            "transaction-id-max-length": "L'ID de transaction est trop long",
-            "amount-required": "Le montant est requis",
-            "amount-number": "Le montant doit être un nombre",
-            "amount-min": "Le montant doit être supérieur à zéro"
+            "transaction-id-required": "Transaction ID is required",
+            "transaction-id-max-length": "Transaction ID is too long",
+            "amount-required": "Amount is required",
+            "amount-number": "Amount must be a number",
+            "amount-min": "Amount must be greater than zero"
         }
     },
     "withdraw": {
@@ -235,7 +338,7 @@
         "enter-bet-amount": "Enter bet amount",
         "withdraw-all": "Withdraw All",
         "withdrawal-amount-label": "Withdrawal Amount*",
-        "withdrawal-amount-placeholder": "Enter amount to withdraw",
+        "withdrawal-amount-placeholder": "Enter amount for withdrawal",
         "select-method-label": "Select Withdrawal Method*",
         "no-methods-found": "No withdrawal methods found. Please add a payment method.",
         "processing": "Processing...",
@@ -262,7 +365,7 @@
     "payment-methods": {
         "page-title": "Payment Methods",
         "upi-id": "UPI ID",
-        "no-methods": "No Payment Methods Added",
+        "no-methods": "No payment methods added",
         "add-method": "Add Payment Method",
         "add-upi": "Add UPI",
         "add-bank": "Add Bank Details"
@@ -284,7 +387,7 @@
             "ifsc-length": "IFSC code must be 11 characters",
             "ifsc-format": "Invalid IFSC code format. Example: SBIN0012345",
             "upi-format": "Invalid UPI ID format. Example: example@bank",
-            "provide-one-method": "Provide either bank details or a UPI ID, not both"
+            "provide-one-method": "Provide either bank details or UPI ID, not both"
         }
     },
     "transaction-history": {
@@ -312,7 +415,7 @@
     "betting-history": {
         "page-title": "Betting History",
         "date-range": {
-            "to": "to",
+            "to": "To",
             "page-size": "Page Size"
         },
         "errors": {
@@ -321,7 +424,7 @@
         "table": {
             "headers": {
                 "round": "Round",
-                "date-time": "Date & Time",
+                "date-time": "Date and Time",
                 "bet-type": "Bet Type",
                 "amount": "Amount",
                 "winner": "Winner",
@@ -338,7 +441,7 @@
     "game-history": {
         "page-title": "Game History",
         "date-range": {
-            "to": "to",
+            "to": "To",
             "page-size": "Page Size"
         },
         "errors": {
@@ -354,7 +457,7 @@
                 "total-winning": "Total Winning",
                 "winner": "Winner",
                 "profit-loss": "Profit/Loss",
-                "actions": "Action"
+                "actions": "Actions"
             }
         }
     },
@@ -363,7 +466,9 @@
         "next": "Next"
     },
     "auth": {
-        "common":{
+        "sign-in": "Sign In",
+        "sign-up": "Sign Up",
+        "common": {
             "loading": "Loading...",
             "or": "Or"
         },
@@ -378,7 +483,7 @@
             "captcha": "Enter Captcha"
         },
         "validation": {
-            "password-min": "Password must be at least 6 characters",
+            "password-min": "Password must be at least 6 characters long",
             "password-max": "Password must be less than 20 characters",
             "password-required": "Password is required",
             "captcha-required": "Captcha is required"
@@ -387,33 +492,33 @@
             "forgot-password": "Forgot Password?"
         },
         "buttons": {
-            "signing-in": "Signing in...",
+            "signing-in": "Signing In...",
             "sign-in": "Sign In",
             "continue-with-google": "Continue with Google",
-            "create-account": "Create an Account"
+            "create-account": "Create Account"
         },
         "alt": {
-            "google-logo": "Google logo"
+            "google-logo": "Google Logo"
         },
         "terms-and-conditions": {
             "title": "Terms and Conditions",
-            "description": "By continuing you agree with our terms of service"
+            "description": "By continuing you agree to our terms of service"
         },
         "refresh-captcha": "Refresh Captcha"
     },
     "reset-password": {
         "title": "Forgot Password",
-        "description": "Enter your new password twice below to reset a new password.",
+        "description": "Enter your new password twice below to reset your password.",
         "labels": {
-            "new-password": "Enter new password*",
-            "confirm-password": "Re-enter new password*"
+            "new-password": "Enter New Password*",
+            "confirm-password": "Re-enter New Password*"
         },
         "validation": {
-            "password-min": "Password must be at least 6 characters",
+            "password-min": "Password must be at least 6 characters long",
             "password-max": "Password must be less than 20 characters",
             "password-required": "Password is required",
             "confirm-password-required": "Please confirm your password",
-            "passwords-mismatch": "Passwords don't match"
+            "passwords-mismatch": "Passwords do not match"
         },
         "buttons": {
             "resetting": "Resetting...",
@@ -421,7 +526,7 @@
         }
     },
     "register": {
-        "form-title": "Create an Account",
+        "form-title": "Create Account",
         "label-full-name": "Full Name",
         "label-username": "Username",
         "label-email": "Email",
@@ -431,13 +536,13 @@
         "description-phone": "Enter your phone number",
         "label-reference-code": "Reference Code",
         "label-password": "Password",
-        "terms-message": "By continuing you agree with our terms of service",
+        "terms-message": "By continuing you agree to our terms of service",
         "button-register": "Register",
         "button-registering": "Registering...",
         "or": "Or",
         "button-google": "Continue with Google",
-        "have-account": "Have an account already?",
-        "sign-in": "sign in here",
+        "have-account": "Already have an account?",
+        "sign-in": "Sign in here",
         "validation": {
             "name-length": "Name must be at least 3 characters long",
             "name-max": "Name cannot exceed 100 characters",
@@ -445,7 +550,7 @@
             "email-invalid": "Please enter a valid email address",
             "username-max": "Username cannot exceed 100 characters",
             "username-required": "Username is required",
-            "password-min": "Password must be at least 6 characters",
+            "password-min": "Password must be at least 6 characters long",
             "password-max": "Password cannot exceed 20 characters",
             "password-required": "Password is required"
         }
@@ -475,7 +580,7 @@
         "email-phone": {
             "label": "Email or Phone*",
             "validation": {
-                "required": "Email or Phone is required",
+                "required": "Email or phone is required",
                 "invalid": "Please enter a valid email address or phone number"
             }
         },
@@ -508,7 +613,7 @@
         "errors": {
             "round-load-failed": "Failed to load round details",
             "result-load-failed": "Failed to load round results",
-            "bets-load-failed": "Failed to load bets information"
+            "bets-load-failed": "Failed to load bet information"
         },
         "result": {
             "title": "Your Round Results",
@@ -522,7 +627,7 @@
     },
     "contact": {
         "page-title": "Contact Us",
-        "need-assistance": "Need assistance ?",
+        "need-assistance": "Need Assistance?",
         "support-team-available": "Our friendly support team is available 24/7 to help you!",
         "contact-support": "Contact Support",
         "titles": {
@@ -539,9 +644,8 @@
         "validation": {
             "subject-required": "Subject is required",
             "message-required": "Message is required",
-            "message-min": "Message must be at least 10 characters",
+            "message-min": "Message must be at least 10 characters long",
             "message-max": "Message cannot exceed 500 characters"
         }
-
     }
 }

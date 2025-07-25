@@ -7,8 +7,10 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function GamingAppInterface() {
+    const t = useTranslations("platform.stock-games");
     const [searchTerm, setSearchTerm] = useState("");
 
     const filteredGames = StockDerbyGames.filter(game => 
@@ -20,12 +22,12 @@ export default function GamingAppInterface() {
             <main className="container mx-auto  md:px-4 pb-6">
                 {/* Search Bar */}
                 <header className="container mx-auto py-4">
-                    <h1 className="text-2xl font-bold capitalize text-platform-text">Stock Games</h1>
+                    <h1 className="text-2xl font-bold capitalize text-platform-text">{t("title")}</h1>
                 </header>
                 <div className="relative w-full  mb-6">
                     <Input
                         className="w-full bg-primary-game border-platform-border ring-0 focus:bg-primary-game/80 border focus:border-platform-border text-white placeholder:text-gray-200 dark:placeholder:text-gray-400 h-12 pl-10 rounded-none"
-                        placeholder="Search games..."
+                        placeholder={t("search-games")}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -37,7 +39,7 @@ export default function GamingAppInterface() {
                 <div className="mt-8">
                     {filteredGames.length === 0 ? (
                         <div className="flex justify-center items-center h-64">
-                            <p className="text-platform-text text-lg">No games found</p>
+                        <p className="text-platform-text text-lg">{t("no-games-found")}</p>
                         </div>
                     ) : (
                         <div className="grid xs:grid-cols-2 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 md:gap-6 gap-2">

@@ -13,7 +13,22 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { CircleX } from "lucide-react";
 import Image from "next/image";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useCreateContact } from "@/react-query/contact-queries";
+
+const contactSchema = z.object({
+    subject: z.string().nonempty("Subject is required"),
+    message: z
+        .string()
+        .min(10, "Message must be at least 10 characters")
+        .max(500, "Message must be at most 500 characters")
+        .nonempty("Message is required"),
+});
+
+type ContactFormValues = z.infer<typeof contactSchema>;
 
 interface ContactDialogProps {
     children?: ReactNode;
@@ -22,29 +37,42 @@ interface ContactDialogProps {
 }
 
 const ContactDialog = ({ children, open, onClose }: ContactDialogProps) => {
-    const [subject, setSubject] = useState("");
-    const [message, setMessage] = useState("");
-    const [loading, setLoading] = useState(false);
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm<ContactFormValues>({
+        resolver: zodResolver(contactSchema),
+        defaultValues: {
+            subject: "",
+            message: "",
+        },
+    });
 
-    // Dummy handler for send message
-    const handleSend = (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-            setSubject("");
-            setMessage("");
-            // You can add a toast or success message here
-        }, 1200);
+    const { mutate, isPending, isSuccess } = useCreateContact();
+
+    const onSubmit = (data: ContactFormValues) => {
+        mutate(
+            {
+                subject: data.subject,
+                description: data.message,
+            },
+            {
+                onSuccess: () => {
+                    reset();
+                },
+            }
+        );
     };
 
     const handleClose = (open: boolean) => {
         if (!open) {
-            setSubject("");
-            setMessage("");
+            reset();
             onClose?.();
         }
     };
+
     return (
         <Dialog defaultOpen={open} onOpenChange={handleClose}>
             <DialogTrigger asChild>
@@ -89,7 +117,7 @@ const ContactDialog = ({ children, open, onClose }: ContactDialogProps) => {
                         </div>
 
                         {/* Support Form */}
-                        <form className="w-full flex flex-col gap-4 sm:gap-6" onSubmit={handleSend}>
+                        <form className="w-full flex flex-col gap-4 sm:gap-6" onSubmit={handleSubmit(onSubmit)} noValidate>
                             <div className="space-y-4 sm:space-y-6">
                                 <fieldset className="relative border-2 dark:border-platform-border border-primary-game rounded-none px-3 sm:px-4 py-2 sm:py-3">
                                     <legend className="px-2 dark:text-white/80 text-platform-text text-xs sm:text-sm font-medium">Subject</legend>
@@ -98,10 +126,13 @@ const ContactDialog = ({ children, open, onClose }: ContactDialogProps) => {
                                         type="text"
                                         className="w-full bg-transparent border-none rounded-none text-platform-text text-sm sm:text-base focus:outline-none placeholder:text-white/40 transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
                                         placeholder=""
-                                        value={subject}
-                                        onChange={e => setSubject(e.target.value)}
+                                        {...register("subject")}
+                                        aria-invalid={!!errors.subject}
                                         required
                                     />
+                                    {errors.subject && (
+                                        <span className="text-xs text-red-500 mt-1 block">{errors.subject.message}</span>
+                                    )}
                                 </fieldset>
                                 <fieldset className="relative border-2 dark:border-platform-border border-primary-game rounded-none px-3 sm:px-4 py-2 sm:py-3">
                                     <legend className="px-2 dark:text-white/80 text-platform-text text-xs sm:text-sm font-medium">Message</legend>
@@ -109,19 +140,22 @@ const ContactDialog = ({ children, open, onClose }: ContactDialogProps) => {
                                         id="message"
                                         className="w-full bg-transparent border-none rounded-none  text-platform-text text-sm sm:text-base min-h-[100px] sm:min-h-[120px] focus:outline-none placeholder:text-white/40 transition-all resize-none p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                                         placeholder=""
-                                        value={message}
-                                        onChange={e => setMessage(e.target.value)}
+                                        {...register("message")}
+                                        aria-invalid={!!errors.message}
                                         required
                                     />
+                                    {errors.message && (
+                                        <span className="text-xs text-red-500 mt-1 block">{errors.message.message}</span>
+                                    )}
                                 </fieldset>
                             </div>
                             <Button
                                 type="submit"
                                 size="lg"
                                 className="w-full bg-gradient-to-b dark:from-[#262BB5] dark:to-[#11134F] from-[#64B6FD] to-[#466CCF] rounded-none text-white font-semibold text-base sm:text-lg py-2 sm:py-3 dark:border-2 border-platform-border hover:from-[#2B2BB5] hover:to-[#15154F] transition-all"
-                                disabled={loading}
+                                disabled={isPending}
                             >
-                                {loading ? (
+                                {isPending ? (
                                     <span className="flex items-center justify-center gap-2">
                                         <svg className="animate-spin h-4 w-4 sm:h-5 sm:w-5 text-white" fill="none" viewBox="0 0 24 24">
                                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -133,6 +167,11 @@ const ContactDialog = ({ children, open, onClose }: ContactDialogProps) => {
                                     "Send Message"
                                 )}
                             </Button>
+                            {isSuccess && (
+                                <div className="text-green-500 text-center text-sm mt-2">
+                                    Message sent successfully!
+                                </div>
+                            )}
                         </form>
                     </div>
                 </ScrollArea>
@@ -141,4 +180,4 @@ const ContactDialog = ({ children, open, onClose }: ContactDialogProps) => {
     );
 };
 
-export default ContactDialog;   
+export default ContactDialog;

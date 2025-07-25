@@ -9,6 +9,117 @@ export interface RankedMarketItem extends MarketItem {
     initialPrice?: number;
 }
 
+const parseCOMEXMessage = (data: any): { [key: string]: number } => {
+    const parsedPrices: { [key: string]: number } = {};
+  
+    if (!Array.isArray(data) || data.length < 1) {
+      return parsedPrices;
+    }
+  
+    const today = new Date();
+    today.setMinutes(today.getMinutes() - today.getTimezoneOffset() + 330);
+  
+    const contractsByCommodity: {
+      [key: string]: Array<{ symbol: string; expiryDate: Date; price: number }>;
+    } = {};
+  
+    for (const contractData of data) {
+      if (
+        !Array.isArray(contractData) ||
+        contractData.length < 3 ||
+        contractData[0] === ""
+      ) {
+        continue;
+      }
+  
+      const fullSymbol = contractData[0];
+      const symbolMatch = fullSymbol.match(
+        /^([A-Z]{2,4})([FGHJKMNQUVXZ])([0-9]{2})$/
+      );
+      if (!symbolMatch) {
+        continue;
+      }
+  
+      const baseSymbol = symbolMatch[1];
+      const monthCode = symbolMatch[2];
+      const year = parseInt("20" + symbolMatch[3], 10);
+  
+      const monthMap: { [key: string]: number } = {
+        F: 0,
+        G: 1,
+        H: 2,
+        J: 3,
+        K: 4,
+        M: 5,
+        N: 6,
+        Q: 7,
+        U: 8,
+        V: 9,
+        X: 10,
+        Z: 11,
+      };
+      const month = monthMap[monthCode];
+      if (month === undefined) {
+        continue;
+      }
+  
+      const expiryDate = new Date(year, month + 1, 0, 23, 59, 59);
+      expiryDate.setMinutes(
+        expiryDate.getMinutes() - expiryDate.getTimezoneOffset() + 330
+      );
+      if (isNaN(expiryDate.getTime())) {
+        continue;
+      }
+      if (expiryDate < today) {
+        continue;
+      }
+      let price = parseFloat(contractData[3]);
+      if (isNaN(price)) {
+        price = parseFloat(contractData[4]);
+        if (isNaN(price)) {
+          continue;
+        }
+      }
+      if (!contractsByCommodity[baseSymbol]) {
+        contractsByCommodity[baseSymbol] = [];
+      }
+      contractsByCommodity[baseSymbol].push({
+        symbol: `${baseSymbol}_${monthCode}${symbolMatch[3]}`,
+        expiryDate,
+        price,
+      });
+    }
+    for (const commodity in contractsByCommodity) {
+      const contracts = contractsByCommodity[commodity];
+  
+      if (contracts.length === 0) {
+        continue;
+      }
+  
+      contracts.sort((a, b) => a.expiryDate.getTime() - b.expiryDate.getTime());
+  
+      let selectedContract = null;
+      for (const contract of contracts) {
+        const deltaDate = new Date(contract.expiryDate);
+        deltaDate.setDate(deltaDate.getDate() - 5);
+  
+        if (today <= deltaDate) {
+          selectedContract = contract;
+          break;
+        } else if (contract.expiryDate >= today) {
+          selectedContract = contract;
+          break;
+        }
+      }
+  
+      if (selectedContract) {
+        parsedPrices[commodity] = selectedContract.price;
+      }
+    }
+    return parsedPrices;
+  };
+  
+
 export const useLeaderboard = (roundRecord: RoundRecord | null) => {
     const [stocks, setStocks] = useState<RankedMarketItem[]>(roundRecord?.market as RankedMarketItem[] || []);
     const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected'>('disconnected');
@@ -91,6 +202,10 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
     const updateStockData = (bitcode: string, currentPrice: number) => {
         if (!latestDataRef.current.some(stock => stock.bitcode === bitcode)) {
             return;
+        }
+        if (bitcode === "SI") {
+            console.log("currentPrice", currentPrice);
+            console.log("bitcode", bitcode);
         }
 
         const { initialPrice, changePercent } = processPrice(bitcode, currentPrice);
@@ -219,6 +334,13 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
         }
     };
 
+    const handleCOMEXMessage = (message: MessageEvent) => {
+        const parsedPrices = parseCOMEXMessage(JSON.parse(message.data));
+        Object.entries(parsedPrices).forEach(([commodity, price]) => {
+            updateStockData(commodity, price);
+        });
+    };
+
     // Function to create a single WebSocket connection
     const createWebSocket = (marketType: SchedulerType, wsUrl: string, messageHandler: (event: MessageEvent) => void) => {
         const socket = new WebSocket(wsUrl);
@@ -264,7 +386,6 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
     };
 
     useEffect(() => {
-        console.log("change roundRecord", roundRecord);
         if (!roundRecord) return;
         
         const connectSocket = () => {
@@ -290,7 +411,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                         { type: SchedulerType.NSE, url: process.env.NEXT_PUBLIC_NSE_WEBSOCKET_URL, handler: handleNSEMessage },
                         { type: SchedulerType.USA_MARKET, url: process.env.NEXT_PUBLIC_USA_WEBSOCKET_URL, handler: handleUSAMessage },
                         { type: SchedulerType.CRYPTO, url: process.env.NEXT_PUBLIC_CRYPTO_WEBSOCKET_URL, handler: handleCryptoMessage },
-                        { type: SchedulerType.MCX, url: process.env.NEXT_PUBLIC_MCX_WEBSOCKET_URL, handler: handleMCXMessage }
+                        { type: SchedulerType.MCX, url: process.env.NEXT_PUBLIC_MCX_WEBSOCKET_URL, handler: handleMCXMessage },
                     ];
                     
                     markets.forEach(market => {
@@ -328,6 +449,19 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                         process.env.NEXT_PUBLIC_MCX_WEBSOCKET_URL as string,
                         handleMCXMessage
                     );
+                }
+                else if (roundRecord.type === SchedulerType.COMEX) {
+                    const markets = [
+                        { type: SchedulerType.CRYPTO, url: process.env.NEXT_PUBLIC_CRYPTO_WEBSOCKET_URL, handler: handleCryptoMessage },
+                        { type: SchedulerType.COMEX, url: process.env.NEXT_PUBLIC_COMEX_WEBSOCKET_URL, handler: handleCOMEXMessage }
+                    ];
+                    
+                    markets.forEach(market => {
+                        if (market.url) {
+                            const socket = createWebSocket(market.type, market.url, market.handler);
+                            socketsRef.current.set(market.type, socket);
+                        }
+                    });
                 }
 
             } catch (error) {
