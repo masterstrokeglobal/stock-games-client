@@ -41,13 +41,13 @@ const CoinTossPairForm = ({ onSubmit, isLoading, defaultValues }: Props) => {
 
     const { data: headMarketItems, isLoading: headMarketItemsLoading } = useGetMarketItems({
         search: headSearch,
-        limit: 100,
+        limit: 500,
         page: 1,
     });
 
     const { data: tailMarketItems, isLoading: tailMarketItemsLoading } = useGetMarketItems({
         search: tailSearch,
-        limit: 100,
+        limit: 500,
         page: 1,
     });
 
