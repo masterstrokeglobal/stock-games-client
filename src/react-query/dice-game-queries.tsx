@@ -5,11 +5,15 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { XCircle } from "lucide-react";
 import { AxiosError } from "axios";
+import { useIsExternalUser } from "@/context/auth-context";
+import { userAPI } from "@/lib/axios/user-API";
+import { externalUserAPI } from "@/lib/axios/external-user-API";
 
 export const useCreateDiceGamePlacement = () => {
     const queryClient = useQueryClient();
+    const isExternalUser = useIsExternalUser();
     return useMutation({
-        mutationFn: diceGameAPI.createDiceGamePlacement,
+        mutationFn: isExternalUser ? externalUserAPI.createExternalBet : diceGameAPI.createDiceGamePlacement,
         onSuccess: (data, variables) => {
             const { amount, number } = variables;
             queryClient.invalidateQueries({
@@ -99,10 +103,11 @@ export const BetErrorToast = ({ className, message = " Please try Again", onClos
 
 
 export const useGetMyCurrentRoundDiceGamePlacement = (roundId: number) => {
+    const isExternalUser = useIsExternalUser();
     return useQuery<DicePlacement[]>({
         queryKey: ["dice-game", "my-current-round-placements", roundId],
         queryFn: async () => {
-            const { data } = await diceGameAPI.getMyCurrentRoundDiceGamePlacement(roundId);
+            const { data } = await (isExternalUser ? externalUserAPI.getExternalUsersPlacements(roundId) : diceGameAPI.getMyCurrentRoundDiceGamePlacement(roundId));
             return data.data.map((placement: any) => new DicePlacement(placement));
         },
         enabled: !!roundId
@@ -110,10 +115,11 @@ export const useGetMyCurrentRoundDiceGamePlacement = (roundId: number) => {
 };
 
 export const useGetCurrentRoundDiceGamePlacement = (roundId: number) => {
+    const isExternalUser = useIsExternalUser();
     return useQuery<DicePlacement[]>({
         queryKey: ["dice-game", "myPlacements", roundId],
         queryFn: async () => {
-            const { data } = await diceGameAPI.getCurrentRoundDiceGamePlacement(roundId);
+            const { data } = await (isExternalUser ? externalUserAPI.getExternalUsersPlacements(roundId) : diceGameAPI.getCurrentRoundDiceGamePlacement(roundId));
             return data.data.map((placement: any) => new DicePlacement(placement));
         },
         enabled: !!roundId
@@ -121,10 +127,11 @@ export const useGetCurrentRoundDiceGamePlacement = (roundId: number) => {
 };
 
 export const useGetDiceGameRoundResult = (roundId: number, open: boolean) => {
+    const isExternalUser = useIsExternalUser();
     return useQuery({
         queryKey: ["dice-game-round-result", roundId],
         queryFn: async () => {
-            const { data } = await diceGameAPI.getDiceGameRoundResult(roundId);
+            const { data } = await (isExternalUser ? externalUserAPI.getExternalUserResult(roundId) : diceGameAPI.getDiceGameRoundResult(roundId));
             return data.data;
         },
         enabled: !!roundId && open

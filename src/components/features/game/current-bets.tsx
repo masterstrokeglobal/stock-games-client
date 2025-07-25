@@ -74,7 +74,7 @@ const CurrentBets = ({ className, round }: Props) => {
                                             {getPlacementString(bet, round)}
                                         </td>
                                         <td className="p-2 text-sm text-game-secondary flex-1">
-                                            {bet.user?.username || randomUsername()}
+                                            {bet.user?.username ?? bet.externalUser?.name}
                                         </td>
                                         <td className="p-2 text-sm text-right text-game-secondary rounded-r-lg flex-1">
                                             {bet.amount || randomNumber(100, 1000, 100)}

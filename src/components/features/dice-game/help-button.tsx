@@ -4,17 +4,21 @@ import HowToPlayDialog from "./how-to-play";
 import Link from "next/link";
 import DemoVideoDialog from "./demo-video";
 
-const HelpButton = () => {
+const HelpButton = (
+    { externalUser = false }: { externalUser?: boolean }
+) => {
     return (
         <div className="space-y-2">
-            <BettingHistoryDialog>
-                <Button className="w-full h-11 bg-[#0C309E] hover:bg-[#0C309E]/80 text-white     dice-header ">
-                    Betting History
-                </Button>
-            </BettingHistoryDialog>
+            {!externalUser && (
+                <BettingHistoryDialog>
+                    <Button className="w-full h-11 bg-[#0C309E] hover:bg-[#0C309E]/80 text-white     dice-header ">
+                        Betting History
+                    </Button>
+                </BettingHistoryDialog>
+            )}
             <HowToPlayDialog>
                 <Button className="w-full h-11 bg-[#0C309E] hover:bg-[#0C309E]/80 text-white dice-header ">
-                Game Rules
+                    Game Rules
                 </Button>
             </HowToPlayDialog>
             <DemoVideoDialog    >
@@ -22,11 +26,13 @@ const HelpButton = () => {
                     Demo Video
                 </Button>
             </DemoVideoDialog>
-            <Button className="w-full h-11 bg-[#0C309E] hover:bg-[#0C309E]/80 text-white dice-header ">
-                <Link href="/game/contact" className="w-full h-full flex items-center justify-center">
-                    Support
-                </Link>
-            </Button>
+            {!externalUser && (
+                <Button className="w-full h-11 bg-[#0C309E] hover:bg-[#0C309E]/80 text-white dice-header ">
+                    <Link href="/game/contact" className="w-full h-full flex items-center justify-center">
+                        Support
+                    </Link>
+                </Button>
+            )}
         </div>
     );
 };

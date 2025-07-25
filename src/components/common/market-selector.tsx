@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/context/auth-context";
+import { useAuthStore, useIsExternalUser } from "@/context/auth-context";
 import { useGameType, useMarketSelector } from "@/hooks/use-market-selector";
 import useNSEAvailable from "@/hooks/use-nse-available";
 import useUSAMarketAvailable from "@/hooks/use-usa-available";
@@ -8,8 +8,8 @@ import User from "@/models/user";
 import { RoundRecordGameType } from "@/models/round-record";
 import useSchedularCheck from "@/hooks/use-schedular-check";
 import { useTheme } from "@/context/theme-context";
-import Navbar from "../features/game/navbar";
-
+import Navbar from "../features/game/navbar";    
+import ExternalUserNavbar from "../features/game/external-user-Navbar";
 type MarketSelectorProps = {
     title: string;
     className?: string;
@@ -19,6 +19,7 @@ type MarketSelectorProps = {
 
 const MarketSelector = ({ title = "STOCK SLOT MARKET", className, roundRecordType = RoundRecordGameType.DERBY }: MarketSelectorProps) => {
     const isNSEAvailable = useNSEAvailable();
+    const isExternalUser = useIsExternalUser();
     const isUSAMarketAvailable = useUSAMarketAvailable();
     const theme = useTheme();
     const isDarkMode = theme === "dark";
@@ -84,7 +85,7 @@ const MarketSelector = ({ title = "STOCK SLOT MARKET", className, roundRecordTyp
         <section
             className={cn("min-h-screen dark:bg-[url('/images/platform/market-selector-bg.png')] bg-[url('/images/platform/market-selector-bg-light.png')] w-full bg-cover bg-center flex flex-col items-center justify-center p-4", className)}>
             {/* Header */}
-            <Navbar />
+            {isExternalUser ?  <ExternalUserNavbar /> : <Navbar />}
             <div className="dark:bg-[#04002968] bg-[#e6f6ff8b] backdrop-blur-[2px] w-full h-full absolute top-0 left-0"/>
             <div className="mx-auto max-w-3xl w-full">
             <header className="text-center mb-8 relative z-10 mt-10">
