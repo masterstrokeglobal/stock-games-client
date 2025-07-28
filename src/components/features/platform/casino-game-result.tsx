@@ -18,6 +18,8 @@ export default function CasinoGameResult({ filter, className }: { filter: Filter
     } = useInfiniteGetCasinoGames({
         search: filter.search || undefined,
         type: filter.type || undefined,
+        stockGameChoice:filter.stockGameChoice,
+        providerOfWeek:filter.providerOfWeek,
         category: filter.category === "all" ? undefined : (filter.category as (typeof GameCategories)[number]["value"]),
         provider: filter.provider === "all" ? undefined : (filter.provider as ProviderEnum),
         limit: 30,

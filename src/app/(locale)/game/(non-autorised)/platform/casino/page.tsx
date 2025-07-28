@@ -11,7 +11,7 @@ import { notFound, useRouter, useSearchParams } from "next/navigation"
 import { useMemo } from "react"
 
 export default function GamingAppInterface() {
-    const t = useTranslations("platform.casino-games"); 
+    const t = useTranslations("platform.casino-games");
     const searchParams = useSearchParams();
 
     // Build filter object from search params
@@ -23,6 +23,8 @@ export default function GamingAppInterface() {
             type: searchParams.get("type") || undefined,
             popular: searchParams.get("popular") === "true" ? true : undefined,
             new: searchParams.get("new") === "true" ? true : undefined,
+            providerOfWeek: searchParams.get("providerOfWeek") === "true" ? true : undefined,
+            stockGameChoice: searchParams.get("stockGameChoice") === "true" ? true : undefined,
         }
         // Only recalculate when searchParams changes
     }, [searchParams]);
@@ -51,7 +53,7 @@ export default function GamingAppInterface() {
         (filter.provider && filter.provider !== "all") ||
         !!filter.type ||
         !!filter.popular ||
-        !!filter.new;
+        !!filter.new || !!filter.providerOfWeek || !!filter.stockGameChoice;
 
     return (
         <>

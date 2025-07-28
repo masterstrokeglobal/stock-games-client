@@ -19,14 +19,14 @@ const casinoGamesColumns: ColumnDef<CasinoGames>[] = [
         header: "Game Image",
         accessorKey: "gameImage",
         cell: ({ row }) => {
-            return  <img src={row.original.imageUrl} alt={row.original.name} className="w-10 h-10 rounded-md" />
+            return <img src={row.original.imageUrl} alt={row.original.name} className="w-10 h-10 rounded-md" />
         }
     },
     {
         header: "Game Type",
         accessorKey: "gameType",
         cell: ({ row }) => {
-            return <Badge variant="outline"  className="w-fit truncate">{row.original.category.split("_").join(" ")}</Badge>
+            return <Badge variant="outline" className="w-fit truncate">{row.original.category.split("_").join(" ")}</Badge>
         }
     },
 
@@ -61,10 +61,25 @@ const casinoGamesColumns: ColumnDef<CasinoGames>[] = [
         }
     },
     {
+        header: "Stock Game Choice",
+        "accessorKey": "stockGameChoice",
+        "cell": ({ row }) => {
+            return <StockGameChoiceColumn row={row.original} />
+        }
+    },
+
+    {
+        header: "Provider of the Week",
+        "accessorKey": "provider of the week",
+        "cell": ({ row }) => {
+            return <ProviderOfTheWeekColumn row={row.original} />
+        }
+    },
+    {
         header: "Game Type",
         accessorKey: "type",
         cell: ({ row }) => {
-            return <Badge variant="outline"  className="w-fit truncate">{row.original.type.split("_").join(" ")}</Badge>
+            return <Badge variant="outline" className="w-fit truncate">{row.original.type.split("_").join(" ")}</Badge>
         }
     },
     {
@@ -117,6 +132,24 @@ const NewColumn = ({ row }: { row: CasinoGames }) => {
     return <Switch
         checked={row.new}
         onCheckedChange={() => updateGame({ id: row.id, new: !row.new })}
+    />
+}
+
+
+const StockGameChoiceColumn = ({ row }: { row: CasinoGames }) => {
+    const { mutate: updateGame } = useUpdateGame();
+    return <Switch
+        checked={row.stockGameChoice}
+        onCheckedChange={() => updateGame({ id: row.id, stockGameChoice: !row.stockGameChoice })}
+    />
+}
+
+
+const ProviderOfTheWeekColumn = ({ row }: { row: CasinoGames }) => {
+    const { mutate: updateGame } = useUpdateGame();
+    return <Switch
+        checked={row.providerOfWeek}
+        onCheckedChange={() => updateGame({ id: row.id, providerOfWeek: !row.providerOfWeek })}
     />
 }
 

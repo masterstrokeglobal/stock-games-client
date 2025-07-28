@@ -14,6 +14,8 @@ export type Filter = {
     provider?: string;
     type?: string;
     popular?: boolean;
+    providerOfWeek?: boolean;
+    stockGameChoice?:boolean;
     new?: boolean;
 }
 
