@@ -18,7 +18,9 @@ export const useCreateSevenUpDownPlacement = () => {
             toast.custom((t) => (
                 <BetSuccessToast onClose={() => toast.dismiss(t)} betAmount={placement.amount} betNumber={placement.id} betSide={placement.placement} />
             ), {
-                position: 'bottom-right'
+                position: 'bottom-right',
+                dismissible: true,
+                
             });
         },
         onError: (error: any) => {
