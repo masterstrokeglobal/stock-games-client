@@ -4,9 +4,8 @@ import useWindowSize from '@/hooks/use-window-size';
 import { cn } from '@/lib/utils';
 import { MarketItem } from '@/models/market-item';
 import { RoundRecord } from '@/models/round-record';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import TriangleIcon from '../common/triangle-icon';
-import useIsSafari from '@/hooks/use-is-safari';
 
 interface DiceFaceProps {
   marketItem: MarketItem;
@@ -57,10 +56,9 @@ const StockDisplay = ({ stock, className, isSecondCube, roundRecord, winner, isL
 export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, roundRecordWithWinningId, stocks }) => {
   const marketItems = roundRecord.market;
   const [showDice, setShowDice] = useState(false);
+  const [isTossing,setIsTossing] = useState(false);
   const [diceAppear, setDiceAppear] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const isPlaceOver = usePlacementOver(roundRecord);
-  const isSafari = useIsSafari();
   const isRolling = isPlaceOver && roundRecordWithWinningId?.winningId == null;
 
   const firstCube = marketItems.slice(0, 6);
@@ -86,20 +84,31 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
 
   // Animate dice appearing from below when showDice goes from false to true
   useEffect(() => {
+    let showDiceTimeout: ReturnType<typeof setTimeout> | undefined;
+    let tossTimeout: ReturnType<typeof setTimeout> | undefined;
+
     if (isPlaceOver) {
-      if (videoRef.current) {
-        videoRef.current.currentTime = 0;
-        videoRef.current.play();
-        setTimeout(() => {
-          setShowDice(true);
-        }, 3000);
-      }
-    }
-    else {
+      setIsTossing(true);
+      // if (videoRef.current) {
+      //   videoRef.current.currentTime = 0;
+      //   videoRef.current.play();
+      // }
+      showDiceTimeout = setTimeout(() => {
+        setShowDice(true);
+      }, 3000); 
+      tossTimeout = setTimeout(() => {
+        setIsTossing(false);
+      }, 4000);
+    } else {
       setShowDice(false);
       setDiceAppear(false);
+      setIsTossing(false);
     }
-    // eslint-disable-next-line
+
+    return () => {
+      if (showDiceTimeout) clearTimeout(showDiceTimeout);
+      if (tossTimeout) clearTimeout(tossTimeout);
+    };
   }, [isPlaceOver]);
 
   // Watch showDice and trigger appear animation
@@ -166,20 +175,17 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
       <style>{diceAppearAnimation}</style>
       <div className={`font-sans  bg-cover bg-center border border-[#4467CC80] grid grid-rows-1 p-2 rounded-lg overflow-visible ${className}`} >
         <div className="flex justify-between  relative  h-full items-center">
-          <div className='flex flex-col  border rounded border-[#4467CC80] h-full md:w-28 w-[80px]'>
+          <div className='flex flex-col  border rounded overflow-hidden border-[#4467CC80] h-full md:w-28 w-[80px]'>
             {/* <TriangleIcon className='size-3 text-white absolute top-4 right-0 translate-x-full  rotate-90' /> */}
+            <h2 className='text-sm text-white  bg-[#4467CC80] mb-1 text-center py-1'>First Dice</h2>
             {firstCubeStocks?.map((stock, index) => (
               <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1 w-full last:border-none' roundRecord={roundRecordWithWinningId} isLast={index === 5} />
             ))}
           </div>
           <div className='relative flex-1 h-full max-w-sm'>
             <h2 className='text-white text-center sm:hidden  uppercase  z-10 text-xs font-semibold tracking-wider absolute top-0 left-1/2 -translate-x-1/2'>Dice Game</h2>
-            <video ref={videoRef} src="/images/dice-game/gennie.webm" style={{
-              ...(isSafari && {
-                mixBlendMode: "screen",
-              }),
+            <img src={isTossing?"/images/dice-game/gennie-toss.gif":"/images/dice-game/gennie-rest.gif"}  className={cn('absolute xsm:-bottom-2 z-10 xsm:h-52 h-40  xsm:left-[30%] left-1/4 -bottom-2')} />
 
-            }} muted className={cn('absolute xsm:-bottom-2 z-10 xsm:scale-100  xs:scale-125 scale-[1.75] xs:bottom-[3%] bottom-[11%] ', isSafari && 'mix-blend-screen')} />
             <div
               style={{
                 border: '1px solid rgba(68, 103, 204, 1)',
@@ -226,8 +232,9 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
               </div>
             </div>
           </div>
-          <div className='flex flex-col h-full  md:w-28 w-[80px] self-end border border-[#4467CC80] rounded-lg'>
+          <div className='flex flex-col h-full  md:w-28 w-[80px]  overflow-hidden self-end border border-[#4467CC80] rounded-lg'>
             {/* <TriangleIcon className='size-3 text-white absolute bottom-4 left-0 -translate-x-full  -rotate-90' /> */}
+            <h2 className='text-sm text-white  bg-[#4467CC80] mb-1 text-center py-1'>Second Dice</h2>
 
             {secondCubeStocks?.map((stock, index) => (
               <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1  w-full' isSecondCube roundRecord={roundRecordWithWinningId} isLast={index === 5} />
