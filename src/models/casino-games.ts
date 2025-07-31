@@ -167,6 +167,7 @@ export enum ProviderEnum {
     spike_games = "spike_games",
     rakki_games = "rakki_games",
     snowborn_games = "snowborn_games",
+    "1x2_gaming" = "1X2 Gaming",
 }
 
 
