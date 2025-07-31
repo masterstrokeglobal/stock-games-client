@@ -37,7 +37,7 @@ const CasinoProviders = () => {
               className="flex items-center justify-center h-16 w-full  transition"
             >
               <img
-                className="object-contain w-full h-10"
+                className="object-contain w-full h-14"
                 src={provider.src}
                 alt={provider.alt}
               />

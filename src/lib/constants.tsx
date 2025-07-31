@@ -84,33 +84,21 @@ export const LOBBY_GAMES: Game[] = [
 export const StockDerbyGames: Game[] = [
     {
         title: "Indian Stock Market",
-        link: "/game?gameType=nse",
-        image: "/images/nse.png",
+        link: "/game",
+        image: "/images/banner/roulette.png",
         description: "Rouletter game on live NSE stocks",
-    },
-    // {
-    //     title: "Crypto Market",
-    //     link: "/game?gameType=crypto",
-    //     image: "/images/crypto.png",
-    //     description: "Rouletter game on live crypto currencies",
-    // },
-    {
-        title: "US Stock Market",
-        link: "/game?gameType=usa_market",
-        image: "/images/us-stock.png",
-        description: "Rouletter game on live US stocks",
     },
     {
         title: "Stock Jackpot",
         link: "/game/single-player/jackpot",
-        image: "/images/stock-game/stock-jackpot.png",
+        image: "/images/banner/hi-lo.png",
         description: "Guess Price Movement"
     },
     {
 
         title: "Stock Slot",
         link: "/game/platform/stock-game/stock-slot",
-        image: "/images/stock-slot.png",
+        image: "/images/banner/stock-slot.png",
         description: "Guess Last Price Digit and win"
     },
 
@@ -118,7 +106,7 @@ export const StockDerbyGames: Game[] = [
     {
         title: "7 Up Down",
         link: "/game/single-player/7-up-down",
-        image: "/images/banner/7-up-game.png",
+        image: "/images/banner/7-up-down.png",
         description: "14 stocks choosing will more than 7 go up or down"
     }
     ,
