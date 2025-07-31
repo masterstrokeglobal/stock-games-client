@@ -5,7 +5,7 @@ import { HeadTailPlacementType } from "@/models/head-tail";
 import { RoundRecord } from "@/models/round-record";
 import { useCreateHeadTailPlacement, useGetMyCurrentRoundHeadTailPlacement } from "@/react-query/head-tail-queries";
 import { CheckCircle } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import CoinToss from "./coin-toss";
 import { BettingArea } from "../dice-game/betting-chip";
 import useIsSafari from "@/hooks/use-is-safari";
@@ -34,7 +34,7 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
 
     const isPlaceOver = useIsPlaceOver(roundRecord);
 
-   
+
     useEffect(() => {
         if (tableRef.current) {
             setTableHeight(tableRef.current.clientHeight);
@@ -43,7 +43,7 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
 
     useEffect(() => {
         let timeout: NodeJS.Timeout;
-        
+
         if (ladyRef.current && isPlaceOver) {
             ladyRef.current.play();
             timeout = setTimeout(() => {
@@ -95,22 +95,24 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
                     <img src="/images/head-tail/table.png" alt="table" className="w-full relative z-10 aspect-[8/3]" ref={tableRef} />
                     <video src="/images/head-tail/lady.webm" autoPlay loop muted controls={false} className={cn("absolute z-0 xsm:left-1/2 left-[calc(48%)] -translate-x-1/2 xl:h-60 h-48 ", isSafari && 'mix-blend-screen')} style={{ bottom: tableHeight - 20 }} ref={ladyRef} />
                     {/* Cards absolute, larger size, with coin images in center */}
-                   <CoinToss
-                    isFlipping={isPlaceOver}
-                    style={{
-                        bottom:tableHeight / 2,
-                        opacity: showCoinToss ? 1 : 0,
-                    }}
-                    className={cn("absolute z-20 left-1/2", showCoinToss ? "coin-toss-anim-1" : "")}
-                    resultOutcome={roundRecordWithWinningSide?.winningSide}
-                   />
+                    <Suspense fallback={<div>Loading..</div>} >
+                        <CoinToss
+                            isFlipping={isPlaceOver}
+                            style={{
+                                bottom: tableHeight / 2,
+                                opacity: showCoinToss ? 1 : 0,
+                            }}
+                            className={cn("absolute z-20 left-1/2", showCoinToss ? "coin-toss-anim-1" : "")}
+                            resultOutcome={roundRecordWithWinningSide?.winningSide}
+                        />
+                    </Suspense>
                     <div style={{ bottom: tableHeight / 2 }} className="absolute w-full left-0 right-0 -translate-y-1/4 z-20 pointer-events-none" >
                         <HeadCard
                             onClick={() => handleCardClick(HeadTailPlacementType.HEAD)}
                             bet={hasHeadBet ? myHeadAmount : 0}
                             win={hasHeadBet ? myHeadAmount * 2 : 0}
                             name={headName}
-                            className={cn("xs:left-[12%] left-[10px] -bottom-1/2 cursor-pointer", 
+                            className={cn("xs:left-[12%] left-[10px] -bottom-1/2 cursor-pointer",
                                 myHeadAmount > 0 ? "drop-shadow-[0px_0px_20.9px_#B6D7FF]" : "",
                                 winningSide === HeadTailPlacementType.HEAD ? "animate-pulse" : "")}
                             isMobile={isMobile}
@@ -126,7 +128,7 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
                             name={tailName}
                             className={cn("xs:right-[12%] right-[10px] -bottom-1/2 cursor-pointer",
                                 myTailAmount > 0 ? "drop-shadow-[0px_0px_20.9px_#B6D7FF]" : "",
-                                 winningSide === HeadTailPlacementType.TAIL ? "animate-pulse" : "")}
+                                winningSide === HeadTailPlacementType.TAIL ? "animate-pulse" : "")}
                             isMobile={isMobile}
                             style={{
                                 width: isMobile ? MOBILE_CARD_WIDTH : CARD_WIDTH,
@@ -215,8 +217,8 @@ const HeadCard = ({ bet, win, className, onClick, isMobile, style, name }: CardP
         </div>
         {/* Bottom Stats */}
         <div
-                className="w-full px-2 py-1.5 flex flex-col rounded-b-xl overflow-hidden "
-            >
+            className="w-full px-2 py-1.5 flex flex-col rounded-b-xl overflow-hidden "
+        >
             <div className="flex flex-row font-inter justify-between w-full mb-0.5">
                 <span className={cn("font-semibold text-white", isMobile ? "text-[7px]" : "text-[9px]")}>Your Bet:</span>
                 <span className="text-[9px] font-semibold text-white">Win:</span>
@@ -226,7 +228,7 @@ const HeadCard = ({ bet, win, className, onClick, isMobile, style, name }: CardP
                 <span className="text-[10px] font-phudu font-normal text-white">{INR(win)}</span>
             </div>
         </div>
-        <div className="absolute -bottom-4 left-0 w-full h-4 bg-black/50 blur-[10px] z-10"/>
+        <div className="absolute -bottom-4 left-0 w-full h-4 bg-black/50 blur-[10px] z-10" />
     </div>
 );
 
@@ -249,7 +251,7 @@ const TailCard = ({ bet, win, className, onClick, isMobile, name }: CardProps) =
             backdropFilter: "blur(13.300000190734863px)",
         }}
     >
-         {bet > 0 && <div className="absolute -top-3 -left-3 -rotate-12 p-1.5 flex items-center justify-center aspect-square rounded-full  z-10">
+        {bet > 0 && <div className="absolute -top-3 -left-3 -rotate-12 p-1.5 flex items-center justify-center aspect-square rounded-full  z-10">
             <span className="text-white md:text-[10px] text-[8px] z-10 relative  font-poppins">
                 {INR(bet, true, false)}
             </span>
@@ -297,7 +299,7 @@ const TailCard = ({ bet, win, className, onClick, isMobile, name }: CardProps) =
                 <span className="text-[10px] font-phudu text-white">{INR(win)}</span>
             </div>
         </div>
-        <div className="absolute -bottom-4 left-0 w-full h-4 bg-black/50 blur-[10px] z-10"/>
+        <div className="absolute -bottom-4 left-0 w-full h-4 bg-black/50 blur-[10px] z-10" />
     </div>
 );
 
