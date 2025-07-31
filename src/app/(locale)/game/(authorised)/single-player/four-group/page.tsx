@@ -51,18 +51,20 @@ export default function Home() {
                             </div>
                         </div>
                         {roundRecord && !isMobileSmall && <LeaderBoard roundRecord={roundRecord} className="absolute top-0 left-0 z-10 h-72 bg-black/50  w-full max-w-sm rounded-b-lg md:block hidden" />}
-                        <BettingChips
+                       { roundRecord && <BettingChips
                             showBetting={true}
+                            roundRecord={roundRecord}
                             className="absolute top-0 right-0 z-10 bg-black/50  w-full max-w-sm rounded-b-lg md:block hidden"
                             globalBetAmount={globalBetAmount}
                             handleGlobalBetAmountChange={handleGlobalBetAmountChange}
-                        />
+                        />}
                     </div>
 
                 </div>
                 {roundRecord && <SinglePlayerRouletteGame roundRecord={roundRecord} globalBetAmount={globalBetAmount} showCards={!isPlacementOver || !isMobileSmall}>
                     <div className="md:hidden block w-full mb-8 ">
                         <BettingChips
+                         roundRecord={roundRecord}
                             showBetting={!isPlacementOver}
                             globalBetAmount={globalBetAmount}
                             handleGlobalBetAmountChange={handleGlobalBetAmountChange}

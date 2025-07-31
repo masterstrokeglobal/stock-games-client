@@ -1,4 +1,6 @@
 import { gameRecordAPI } from "@/lib/axios/game-record-API"; // Adjust the path as needed
+import { RoundRecord } from "@/models/round-record";
+import { StockJackpotPlacementType } from "@/models/stock-slot-jackpot";
 import { StockJackpotPlacement } from "@/models/stock-slot-placement";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient, UseQueryResult } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -237,7 +239,6 @@ export const useRepeatPlacement = () => {
     });
 };
 
-// Stock Slot Game Record Hook
 
 export const useGetStockSlotGameRecord = (roundId: number): UseQueryResult<StockJackpotPlacement[]> => {
     return useQuery({
@@ -249,7 +250,8 @@ export const useGetStockSlotGameRecord = (roundId: number): UseQueryResult<Stock
     });
 };
 
-export const useGetMyStockSlotGameRecord = (roundId?: number): UseQueryResult<StockJackpotPlacement[]> => {
+
+export const useGetMyStockJackpotGameRecord = (roundId?: number): UseQueryResult<StockJackpotPlacement[]> => {
     return useQuery({
         queryKey: ["myStockSlotGameRecord", roundId],
         enabled: !!roundId,
@@ -261,8 +263,6 @@ export const useGetMyStockSlotGameRecord = (roundId?: number): UseQueryResult<St
 };
 
 
-
-
 // Get Current Round Placements Hook
 export const useGetCurrentRoundPlacements = (roundId?: string) => {
     return useQuery({
@@ -272,17 +272,15 @@ export const useGetCurrentRoundPlacements = (roundId?: string) => {
 };
 
 
-
-export const useCreateStockSlotGameRecord = () => {
+export const useCreateStockJackpotGameRecord = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: gameRecordAPI.createStockSlotGameRecord,
         onSuccess: () => {
             queryClient.invalidateQueries({
                 predicate: (query) => query.queryKey[0] === "stockSlotGameRecord" || query.queryKey[0] === "myStockSlotGameRecord" || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet'
-
             });
-            toast.success("Stock slot game record created successfully");
+            toast.success("Bet placed Successfully");
         },
         onError: (error: any) => {
             toast.error(error.response?.data.message ?? "Error creating stock slot game record");
@@ -291,27 +289,36 @@ export const useCreateStockSlotGameRecord = () => {
 };
 
 
-// Get Stock Slot Round Result Hook
-
-type StockSlotRoundResult = {
-    amountWon: number;
-    grossWinning: number;
+type JackpotPlacementResult = {
+    id: number;
+    roundId: number;
+    amount: number;
+    winningId: any[];
+    placement: StockJackpotPlacementType
+    result: StockJackpotPlacementType | null;
+    isWinner: boolean;
+    createdAt: string;
     netProfitLoss: number;
-    netWinning: number;
-    platformFeeAmount: number;
-    totalPlaced: number;
-}
+};
 
-export const useGetStockSlotRoundResult = (roundId: number,open:boolean): UseQueryResult<StockSlotRoundResult> => {
+export type StockJackpotRoundResult = {
+    placements: JackpotPlacementResult[];
+    round: RoundRecord;
+};
+
+export const useGetStockJackpotRoundResult = (
+    roundId: number,
+    open: boolean
+): UseQueryResult<StockJackpotRoundResult> => {
     return useQuery({
         queryKey: ["stockSlotRoundResult", roundId],
         queryFn: async () => {
-            const { data } = await gameRecordAPI.getStockSlotRoundResult(roundId.toString());
-            return data.data as StockSlotRoundResult;
+            const { data } = await gameRecordAPI.getStockJackpotRoundResult(roundId.toString());
+            return {
+                placements: data.data.placements as JackpotPlacementResult[],
+                round: new RoundRecord(data.data.round)
+            };
         },
         enabled: open
     });
 };
-
-
-// Stock Slot Jackpot Game Record Hook

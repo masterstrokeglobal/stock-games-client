@@ -2,7 +2,7 @@
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { RoundRecord } from "@/models/round-record"
-import { useGetMyStockSlotGameRecord } from "@/react-query/game-record-queries"
+import { useGetMyStockJackpotGameRecord } from "@/react-query/game-record-queries"
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react"
 
 interface BetSlipProps {
@@ -12,7 +12,7 @@ interface BetSlipProps {
 }
 
 export function BetSlip({ roundRecord, open, setOpen }: BetSlipProps) {
-    const {data: stockSlotPlacements } = useGetMyStockSlotGameRecord(roundRecord.id)
+    const {data: stockSlotPlacements } = useGetMyStockJackpotGameRecord(roundRecord.id)
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetContent side="right" className="w-full sm:max-w-md bg-[#1A1E2E] border-l border-[#2A2F42] p-0">

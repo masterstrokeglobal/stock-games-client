@@ -21,7 +21,7 @@ const stockGames = [
         alt: "coming-soon",
     },
     {
-        href: "/game/jackpot",
+        href: "/game/single-player/jackpot",
         src: "/images/stock-game/stock-jackpot.png",
         alt: "coming-soon",
     },

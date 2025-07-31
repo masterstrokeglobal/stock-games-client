@@ -18,7 +18,7 @@ const config: Config = {
 				'sansation-light': ['"Sansation"', 'sans-serif'],
 				'konkhmer-sleokchher': ['var(--font-konkhmer-sleokchher)', 'sans-serif'],
 				'jersy-20': ['var(--font-jersy-20)', 'sans-serif'],
-				'jersy-10': ['var(--font-jersy-10)', 'sans-serif'],				  
+				'jersy-10': ['var(--font-jersy-10)', 'sans-serif'],
 				'russo-one': ['var(--font-russo-one)', 'sans-serif'],
 				'montserrat': ['var(--font-montserrat)', 'sans-serif'],
 				'inter': ['var(--font-inter)', 'sans-serif'],
@@ -28,6 +28,12 @@ const config: Config = {
 				'protest-strike': ['var(--font-protest-strike)', 'sans-serif'],
 				'prosto-one': ['var(--font-prosto-one)', 'sans-serif'],
 				'poppins': ['var(--font-poppins)', 'sans-serif'],
+				"audiowale": ['var(--font-audiowide)'],
+				"spacemono": ['var(--font-spacemono)'],
+				"orbitron": ['var(--font-orbitron)'],
+				"space-grotesk": ['var(--font-space-grotesk)'],
+				"rajdhani": ['var(--font-rajdhani)'],
+				
 			},
 			animation: {
 				marquee: 'marquee 6s linear infinite',
@@ -72,7 +78,7 @@ const config: Config = {
 					foreground: 'hsl(var(--primary-foreground))',
 					game: 'var(--primary-game)'
 				},
-				
+
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
 					foreground: 'hsl(var(--secondary-foreground))',

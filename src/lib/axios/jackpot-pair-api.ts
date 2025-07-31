@@ -10,7 +10,6 @@ const jackpotPairAPI = {
             params: filter
         });
     },
-
     getJackpotPairById: async (id: string) => {
         return api.get(`/jackpot-pair/${id}`);
     },

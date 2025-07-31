@@ -79,7 +79,7 @@ export const gameRecordAPI = {
   createStockSlotGameRecord: async (data: { roundId: string, marketItem: number, placement: any, amount: number }) => {
     return api.post(`/stock-slot-placement`, data);
   },
-  getStockSlotRoundResult: async (roundId: string) => {
+  getStockJackpotRoundResult: async (roundId: string) => {
     return api.get(`/stock-slot-placement/result/${roundId}`);
   },
 
