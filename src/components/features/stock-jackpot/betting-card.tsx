@@ -61,7 +61,7 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
     <Card className={cn("w-full border-none relative text-white px-3 rounded-non group", className)}>
       <div className="flex flex-row items-center gap-4 py-2">
         <div className="flex flex-col flex-1">
-          <span className="font-bold md:text-[15px] text-[10px] line-clamp-1 font-spacemono" title={marketItem.name}>{marketItem.name}</span>
+          <span className="font-bold md:text-[15px] text-[10px] line-clamp-1 lg:max-w-32 font-spacemono" title={marketItem.name}>{marketItem.name}</span>
           <span className="text-gray-400 md:text-[12px] text-[8px]  font-space-grotesk">({marketItem.currency} {initialPrice ? initialPrice.toFixed(2) : "--"})</span>
         </div>
         <div className="flex gap-4  w-full flex-1">

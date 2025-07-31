@@ -38,7 +38,7 @@ export default function Home() {
                 <MarketSection
                     globalBetAmount={globalBetAmount}
                 />
-                <div className="w-full z-10 mt-32">
+                <div className="w-full z-10 ">
                     <div className="grid relative grid-cols-1  lg:gap-6  rounded-lg">
                         <div className="relative h-full w-full lg:min-h-[200px]  bg-contain bg-no-repeat bg-center">
                             <div className="lg:absolute lg bottom-0 w-full h-fit">

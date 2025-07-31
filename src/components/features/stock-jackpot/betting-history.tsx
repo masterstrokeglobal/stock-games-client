@@ -133,7 +133,7 @@ const JackpotBettingHistory = () => {
             <div className="hidden sm:block">
                     <div className="space-y-2 p-2">
                         {/* Table Header */}
-                        <div className="grid grid-cols-6 gap-4 text-sm font-medium font-orbitron border-b border-white/20 pb-2 sticky top-0 bg-[#05657D99] px-3 py-2 rounded-full">
+                        <div className="grid grid-cols-6 gap-4 text-sm font-medium text-white font-orbitron border-b border-white/20 pb-2 sticky top-0 bg-[#05657D99] px-3 py-2 rounded-full">
                             <div>DATE</div>
                             <div>TIME</div>
                             <div>BETTED ON</div>

@@ -26,6 +26,9 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
   const showResult = useShowResults(roundRecord, placements ?? []);
 
+  // Calculate the total amount placed in all placements
+  const totalPlacements = placements?.reduce((sum, placement) => sum + (placement.amount ?? 0), 0) ?? 0;
+
   // Handlers for + and - buttons
   const handleIncrement = () => {
     if (!userDetails?.company?.maxPlacement) return;
@@ -94,7 +97,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
               className="bg-transparent outline-none border-none text-white font-montserrat text-lg w-full text-center "
               style={{ appearance: "textfield" }}
             />
-            
+
             {/* + Button inside input */}
             <button
               onClick={handleIncrement}
@@ -107,7 +110,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
             >
               <Plus size={12} />
             </button>
-            
+
             {/* - Button inside input */}
             <button
               onClick={handleDecrement}
@@ -131,7 +134,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
             }}
           >
             <span className="text-[#B6C6FF] md:text-base text-sm font-semibold whitespace-nowrap mr-2 tracking-wider">TOTAL BET</span>
-            <span className="text-white text-lg font-bold">{betAmount}</span>
+            <span className="text-white text-lg font-bold">{totalPlacements}</span>
           </div>
         </div>
       </div>

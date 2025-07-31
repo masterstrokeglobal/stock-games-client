@@ -21,7 +21,9 @@ const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
     const round = roundResult?.round ?? null;
 
     // Calculate totals
-    const totalNetResult = placements.reduce((total, bet) => total + (bet.netProfitLoss ?? 0), 0);
+    const totalBet = placements.reduce((total, bet) => total + (bet.amount ?? 0), 0);
+    const totalWin = placements.reduce((total, bet) => total + (bet.netProfitLoss ?? 0), 0);
+    const totalNetResult = totalWin - totalBet;
 
     // Use round info if available, otherwise fallback to first placement
     const roundId = round?.id ?? (placements[0]?.roundId ?? "--");
@@ -36,7 +38,7 @@ const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
                 )}
             >
                 <img src='/images/jackpot/bg.png' className='absolute w-full h-full' />
-                <img src='/images/jackpot/result-bg.png' className='absolute w-full h-full z-10' />
+                <img src='/images/jackpot/result-bg.png' className='absolute w-full h-full' />
                 <div className='w-full h-full bg-black/20 backdrop-blur absolute' />
                 <div className="relative w-full max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[70vh]">
                     <div className="w-full flex flex-col items-center">
@@ -112,7 +114,7 @@ const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
                                         size="md"
                                         skew="right"
                                         variant="red"
-                                        className='flex-1'
+                                        className='flex-1 cursor-pointer'
                                     >
                                         Quit
                                     </SkewedButton>
@@ -122,7 +124,7 @@ const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
                                         size="md"
                                         skew="left"
                                         variant="green"
-                                        className="flex-1 text-lg font-bold"
+                                        className="flex-1 cursor-pointer"
                                     >
                                         Play
                                     </SkewedButton>
