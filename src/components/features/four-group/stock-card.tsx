@@ -68,7 +68,7 @@ const StockCardStack = ({ roundRecord, className, marketItems, order = "desc" }:
                     <div className="flex flex-col gap-2">
                         <div className="text-center font-bold text-xs md:text-sm">YOUR BETS</div>
                         {bettedMarketItems.length > 0 ? (
-                            <div className="flex justify-center gap-2">
+                            <div className="flex justify-center">
                                 {
                                     bettedMarketItems.map((bet) => (
 

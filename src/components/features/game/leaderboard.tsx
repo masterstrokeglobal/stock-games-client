@@ -119,12 +119,12 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                                     <td className="p-2">
                                         {winnerMarketItem.name}
                                     </td>
-                                    <td className="p-2  text-right ">
+                                    <td className="p-2  text-right font-bold ">
                                         {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : roundRecord.type === SchedulerType.USA_MARKET ? "$" : "Rs."}
                                         {winnerMarketItem.price ? formatPrice(winnerMarketItem.price) : "-"}
                                     </td>
                                     <td className={cn(
-                                        "p-2 text-right",
+                                        "p-2 text-right font-bold",
                                         getChangeColor(winnerMarketItem.change_percent)
                                     )}>
                                         {parseFloat(winnerMarketItem.change_percent) > 0 ? '+' : ''}
@@ -164,12 +164,12 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                                     <td className="p-2">
                                         {marketItem.name}
                                     </td>
-                                    <td className="p-2  text-right whitespace-nowrap ">
+                                    <td className="p-2  text-right font-semibold whitespace-nowrap ">
                                         {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : roundRecord.type === SchedulerType.USA_MARKET ? "$" : "Rs."}
                                         {marketItem.price ? formatPrice(marketItem.price) : "-"}
                                     </td>
                                     <td className={cn(
-                                        "p-2  text-right",
+                                        "p-2  text-right font-semibold",
                                         getChangeColor(marketItem.change_percent)
                                     )}>
 

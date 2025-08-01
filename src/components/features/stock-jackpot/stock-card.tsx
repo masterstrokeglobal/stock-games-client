@@ -10,7 +10,6 @@ import { useMemo } from "react";
 const StockCard = ({ stock, className, amount, roundRecord }: { stock?: RankedMarketItem, className?: string, amount?: number, roundRecord?: RoundRecord }) => {
     if (!stock) return null;
 
-
     const initialPrice = roundRecord?.getInitialPrice(stock.bitcode as string);
 
     const price = stock.price ? stock.price : initialPrice;
@@ -86,25 +85,25 @@ const StockCardStack = ({ roundRecord, roundRecordWithWinningId }: { roundRecord
     return (<div className="absolute p-2 left-1/2 -translate-x-1/2  md:bottom-[calc(40%+1rem)] bottom-[calc(30%+1rem)] z-10 w-full  md:max-w-xl sm:max-w-sm max-w-[280px]  ">
         <div style={{ transform: 'perspective(1000px) rotateX(15deg)' }} className=" origin-center mx-auto flex z-10 gap-2 md:gap-4 h-fit w-full" >
             <div className="flex-1 gap-2 md:gap-4 flex flex-col">
-                <div className="flex-1 gap-2 md:gap-4 flex justify-around">
+                <div className="flex-1 gap-2 md:gap-4 flex justify-start">
                     {lowStocks.length > 0 ? (
                         lowStocks.map((item) => (
                             <StockCard key={item.id} stock={item.stock} amount={item.amount} roundRecord={roundRecord} />
                         ))
                     ) : (
-                        <div className="text-center border border-dashed border-gray-400  md:p-2 p-1 text-gray-400 text-[10px] md:text-sm rounded-lg">No stocks selected</div>
+                        <div className="text-center border border-dashed border-red-600  md:p-2 p-1 text-red-600 font-semibold text-[10px] md:text-sm rounded-lg">No Low stocks selected</div>
                     )}
                 </div>
             </div>
 
             <div className="flex-1 gap-2 md:gap-4 flex flex-col" >
-                <div className="flex-1 gap-2 md:gap-4 flex justify-around">
+                <div className="flex-1 gap-2 md:gap-4 flex justify-end">
                     {highStocks.length > 0 ? (
                         highStocks.map((item) => (
                             <StockCard key={item.id} stock={item.stock} amount={item.amount} roundRecord={roundRecord} />
                         ))
                     ) : (
-                        <div className="text-center text-gray-400 text-[10px] md:text-sm border border-dashed border-gray-400  md:p-2 p-1 rounded-lg">No stocks selected</div>
+                        <div className="text-center text-green-600 text-[10px] md:text-sm border border-dashed border-green-600  font-semibold md:p-2 p-1 rounded-lg">No High stocks selected</div>
                     )}
                 </div>
             </div>

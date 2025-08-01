@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import FormImage from "@/components/ui/form/form-image-compact";
 import FormInput from "@/components/ui/form/form-input";
-import FormProvider from "@/components/ui/form/form-provider";
 import FormMultiInput from "@/components/ui/form/form-multi-input";
+import FormProvider from "@/components/ui/form/form-provider";
+import FormRecord from "@/components/ui/form/form-record";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -16,6 +17,7 @@ export const createCompanyInputSchema = z.object({
     logo: z.string().optional(),
     domain: z.string().optional(),
     paymentImage: z.string().url().optional(),
+    theme: z.record(z.string(), z.string()).optional(),
     minPlacement: z.coerce.number().optional(),
     coinValues: z.array(z.coerce.number()).min(4).max(4).default([]),
     maxPlacement: z.coerce.number().optional(),
@@ -91,7 +93,11 @@ const CompanyForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 name="maxPlacement"
                 label="Maximum Placement"
             />
-
+            <FormRecord
+                control={control}
+                name="theme"
+                label="Theme"
+            />
             <FormInput
                 control={control}
                 name="minCasinoPlacement"
