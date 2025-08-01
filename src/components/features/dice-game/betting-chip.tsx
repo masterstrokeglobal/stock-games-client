@@ -68,8 +68,9 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
                     boxShadow: "0px 0px 4.1px 0px rgba(0, 116, 255, 0.86)",
                 }}>
                     <button
+                    disabled={betAmount <= (userDetails?.company?.minPlacement ?? 0)}
                         onClick={() => setBetAmount(Math.max((userDetails?.company?.minPlacement ?? 1), betAmount - (coinValues?.[0] ?? 1)))}
-                        className="w-8 h-8 flex items-center justify-center rounded-full text-white text-sm font-bold"
+                        className="w-8 h-8 flex disabled:opacity-80 items-center justify-center rounded-full text-white text-sm font-bold"
                         style={{
                             background: "radial-gradient(50% 50% at 50% 50%, #004DA9 0%, #010571 100%)",
                             boxShadow: "0px 0px 4.1px 0px rgba(0, 116, 255, 0.86)"
@@ -80,7 +81,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
                     >-</button>
                     <Input
                         type="number"
-                        min={userDetails?.company?.minPlacement}
+                        min={userDetails?.company?.minPlacement ?? 0}
                         max={userDetails?.company?.maxPlacement}
                         value={betAmount}
                         onChange={(e) => setBetAmount(Number(e.target.value))}

@@ -22,6 +22,7 @@ export class Company {
     externalPayIn!: boolean;
     externalPayOut!: boolean;
     placementNotAllowed?: SchedulerType[];
+    allowedCasino!: boolean;
     deletedAt?: Date;
     minPlacement?: number;
     maxPlacement?: number;
@@ -42,6 +43,7 @@ export class Company {
         this.placementNotAllowed = params.placementNotAllowed || [];
         this.depositBonusPercentageEnabled = params.depositBonusPercentageEnabled;
         this.domain = params.domain;
+        this.allowedCasino = params.allowedCasino || false;
         this.theme = params.theme;
         this.externalPayIn = params.externalPayIn || false;
         this.externalPayOut = params.externalPayOut || false;
@@ -51,7 +53,7 @@ export class Company {
         this.paymentImage = params.paymentImage;
         this.depositBonusPercentage = params.depositBonusPercentage;
         this.otpIntegration = params.otpIntegration || false;
-        this.minPlacement = params.minPlacement;
+        this.minPlacement = params.minPlacement ?? 0;
         this.maxPlacement = params.maxPlacement;
         this.coinValues = params.coinValues;
         this.minCasinoPlacement = params.minCasinoPlacement;

@@ -41,13 +41,8 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
   };
 
   const handleDecrement = () => {
-    if (!userDetails?.company?.minPlacement) return;
     const next = betAmount - 100;
-    setBetAmount(
-      next < userDetails.company.minPlacement
-        ? userDetails.company.minPlacement
-        : next
-    );
+    setBetAmount(next);
   };
 
 
@@ -90,7 +85,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
           >
             <input
               type="number"
-              min={userDetails?.company?.minPlacement}
+              min={userDetails?.company?.minPlacement ?? 0}
               max={userDetails?.company?.maxPlacement}
               value={betAmount}
               onChange={(e) => setBetAmount(Number(e.target.value))}
@@ -113,8 +108,9 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
             {/* - Button inside input */}
             <button
+            disabled={betAmount <= (userDetails?.company?.minPlacement ?? 0)}
               onClick={handleDecrement}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center text-white text-sm font-bold border"
+              className="absolute right-2 disabled:opacity-80 top-1/2 transform -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center text-white text-sm font-bold border"
               style={{
                 background: "#3174DE",
                 borderColor: "#5667DD"

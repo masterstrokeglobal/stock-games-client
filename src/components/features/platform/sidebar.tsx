@@ -6,25 +6,26 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import useCasinoAllowed from "@/hooks/use-is-casino-allowed"
 import useWindowSize from "@/hooks/use-window-size"
-import { checkCasinoAllowed, cn, COMPANYID } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import { SidebarCloseIcon, SidebarOpenIcon } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { usePathname, useRouter } from "next/navigation"
-import WalletDialog from "./wallet-dialog"
+import {
+    CreditCardIcon,
+    DatabaseIcon,
+    GiftIcon,
+    GridIcon,
+    HeadphonesIcon,
+    HelpCircleIcon,
+    HomeIcon,
+    MaximizeIcon,
+    StarIcon,
+    VideoIcon
+} from '../../common/sidebar-icons'
 import ContactDialog from "./contact-dialog"
-import { 
-    DatabaseIcon, 
-    MaximizeIcon, 
-    CreditCardIcon, 
-    GiftIcon, 
-    HeadphonesIcon, 
-    HelpCircleIcon, 
-    StarIcon, 
-    VideoIcon, 
-    GridIcon, 
-    HomeIcon 
-} from '../../common/sidebar-icons';
-import { useTranslations } from "next-intl";
+import WalletDialog from "./wallet-dialog"
 
 // Helper for sidebar icon component
 const SidebarIconComponent = ({ Icon, className }: { Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>; className?: string }) => (
@@ -70,7 +71,7 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
     const { isMobile } = useWindowSize();
     const router = useRouter();
 
-    const isCasinoAllowed = checkCasinoAllowed(COMPANYID);
+    const isCasinoAllowed = useCasinoAllowed();
 
     const onClick = (item: SidebarItemType) => {
         if (isMobile) {

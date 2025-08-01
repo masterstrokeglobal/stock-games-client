@@ -3,7 +3,7 @@
 import { Card } from "@/components/ui/card"
 import { SkewedButton } from "@/components/ui/skew-button"
 import { useIsPlaceOver } from "@/hooks/use-current-game"
-import { cn, JACKPOT_MULTIPLIER } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import MarketItem from "@/models/market-item"
 import { RoundRecord } from "@/models/round-record"
 import { StockJackpotPlacementType } from "@/models/stock-slot-jackpot"
@@ -18,9 +18,9 @@ interface BettingCardProps {
 }
 
 // Use the provided Chip style
-function Chip({ amount ,className}: { amount: number,className?:string }) {
+function Chip({ amount, className }: { amount: number, className?: string }) {
   return (
-    <span className={cn("inline-flex items-center aspect-square justify-center rounded-full size-6  text-xs font-bold absolute  -right-8 -top-2 z-20",className)}>
+    <span className={cn("inline-flex items-center aspect-square justify-center rounded-full size-6  text-xs font-bold absolute  -right-8 -top-2 z-20", className)}>
       <img src="/images/jackpot/chip.png" alt="Chip" className="w-full h-full object-cover scale-[2] absolute" />
       <span className="relative z-20 text-white font-orbitron text-[8px] font-bold">
         {amount}
@@ -54,9 +54,6 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
 
   const initialPrice = roundRecord.getInitialPrice(marketItem.bitcode ?? "")
 
-  const upWinAmount = (upPlaced ?? 0) * JACKPOT_MULTIPLIER;
-  const downWinAmount = (downPlaced ?? 0) * JACKPOT_MULTIPLIER;
-
   return (
     <Card className={cn("w-full border-none relative text-white px-3 rounded-non group", className)}>
       <div className="flex flex-row items-center gap-4 py-2">
@@ -80,7 +77,7 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
             >
               DOWN
               {downPlaced ? (
-                <Chip amount={downWinAmount} className="-left-8 -top-2 " />
+                <Chip amount={downPlaced} />
               ) : null}
             </SkewedButton>
           </div>
@@ -99,7 +96,7 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
             >
               UP
               {upPlaced ? (
-                <Chip amount={upWinAmount} />
+                <Chip amount={upPlaced} />
               ) : null}
             </SkewedButton>
           </div>

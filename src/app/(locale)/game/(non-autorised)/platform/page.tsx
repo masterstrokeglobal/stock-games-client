@@ -8,7 +8,7 @@ import StockGameCarousel from "@/components/features/stock-games.tsx/stock-game-
 import ActiveTierCard from "@/components/features/tier/user-tier-card";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
-import { checkCasinoAllowed, COMPANYID } from "@/lib/utils";
+import useCasinoAllowed from "@/hooks/use-is-casino-allowed";
 import { GameTypeEnum } from "@/models/casino-games";
 import User from "@/models/user";
 import { useTranslations } from "next-intl";
@@ -19,7 +19,7 @@ const PlatformPage = () => {
     const { isLoggedIn, userDetails } = useAuthStore();
     const user = userDetails as User;
 
-    const isCasinoAllowed = checkCasinoAllowed(COMPANYID);
+    const isCasinoAllowed = useCasinoAllowed();
 
     return (
         <section className="space-y-4 md:space-y-8 font-inter">

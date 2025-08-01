@@ -7,7 +7,7 @@ type BettingAmountProps = {
     globalBetAmount: number,
     className?: string,
     showBetting: boolean,
-    roundRecord:RoundRecord,
+    roundRecord: RoundRecord,
     handleGlobalBetAmountChange: (amount: number) => void
 }
 
@@ -61,12 +61,21 @@ const BettingChips = ({ globalBetAmount, handleGlobalBetAmountChange, className,
                         >
                             <Plus className="w-3 h-3 text-white" />
                         </button>
-                        <div
-                            className="px-3 py-1 text-white font-orbitron sm:text-sm text-xs font-bold sm:min-w-[60px] min-w-12 text-center transform skew-x-[14deg]"
-                        >
-                            {globalBetAmount}
-                        </div>
+                        <input
+                            min={0}
+                            disabled={globalBetAmount <= 0}
+                            onChange={(e) => {
+                                const value = parseInt(e.target.value, 10);
+                                if (!isNaN(value) && value >= 0) {
+                                    handleGlobalBetAmountChange(value);
+                                }
+                            }}
+                            className="px-3 py-1 text-white bg-transparent border-none ring-0 outline-none font-orbitron sm:text-sm text-xs font-bold sm:min-w-[60px] min-w-12 text-center transform skew-x-[14deg]"
+                            value={globalBetAmount}
+
+                        />
                         <button
+                            disabled={globalBetAmount <= 0}
                             className="px-2 py-1 hover:opacity-80 transition-opacity transform rounded  bg-[#008DC2] -skew-x-[14deg]"
                             onClick={() => handleGlobalBetAmountChange(globalBetAmount - 100)}
                         >

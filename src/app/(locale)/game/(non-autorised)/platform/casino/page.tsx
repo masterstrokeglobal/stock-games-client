@@ -4,7 +4,7 @@ import CategoryCarousel from "@/components/features/casino-games/category-carous
 import { CasinoProvidersCarousel } from "@/components/features/casino-games/game-providers"
 import CasinoGameResult from "@/components/features/platform/casino-game-result"
 import GameFilters, { Filter } from "@/components/features/platform/filters"
-import { checkCasinoAllowed, COMPANYID } from "@/lib/utils"
+import useCasinoAllowed from "@/hooks/use-is-casino-allowed"
 import { GameTypeEnum } from "@/models/casino-games"
 import { useTranslations } from "next-intl"
 import { notFound, useRouter, useSearchParams } from "next/navigation"
@@ -43,7 +43,7 @@ export default function GamingAppInterface() {
         router.replace(`?${params.toString()}`, { scroll: false });
     };
 
-    const isCasinoAllowed = checkCasinoAllowed(COMPANYID);
+    const isCasinoAllowed = useCasinoAllowed();
 
     if (!isCasinoAllowed) notFound();
 
