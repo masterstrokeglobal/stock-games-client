@@ -18,9 +18,9 @@ interface BettingCardProps {
 }
 
 // Use the provided Chip style
-function Chip({ amount }: { amount: number }) {
+function Chip({ amount ,className}: { amount: number,className?:string }) {
   return (
-    <span className="inline-flex items-center aspect-square justify-center rounded-full size-6  text-xs font-bold absolute  -right-8 -top-2 z-20">
+    <span className={cn("inline-flex items-center aspect-square justify-center rounded-full size-6  text-xs font-bold absolute  -right-8 -top-2 z-20",className)}>
       <img src="/images/jackpot/chip.png" alt="Chip" className="w-full h-full object-cover scale-[2] absolute" />
       <span className="relative z-20 text-white font-orbitron text-[8px] font-bold">
         {amount}
@@ -80,7 +80,7 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
             >
               DOWN
               {downPlaced ? (
-                <Chip amount={downWinAmount} />
+                <Chip amount={downWinAmount} className="-left-8 -top-2 " />
               ) : null}
             </SkewedButton>
           </div>
