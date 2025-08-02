@@ -26,5 +26,6 @@ jobs:
 
       - name: Setup .env file
         run: |
-          touch .env
-          echo "${{ secrets.DEV_ENV_FILE }}" > .env
+          cat <<EOF > .env
+          ${{ secrets.DEV_ENV_FILE }}
+          EOF
