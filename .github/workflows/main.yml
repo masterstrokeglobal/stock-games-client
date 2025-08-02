@@ -4,7 +4,7 @@ name: Node.js CI/CD
 
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -12,15 +12,15 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
-        
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
     - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
-
-    - run: npm install --force
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci  #clean install
     - run: |
         touch .env
-        echo "${{ secrets.PROD_ENV_FILE }}" > .env #will create evn in hidden in vps can list out (ls -a)
-        
-    
+        echo "${{ secrets.PROD_ENV_FILE }}" > .env 
