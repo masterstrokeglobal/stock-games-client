@@ -1,6 +1,6 @@
 on:
   push:
-    branches: [ "dev" ]
+    branches: ["dev"]
 
 jobs:
   build:
@@ -10,21 +10,21 @@ jobs:
         node-version: [18.x]
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Setup Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'pnpm' 
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
 
-    - name: Install pnpm
-      run: npm install -g pnpm
+      - name: Install pnpm
+        run: npm install -g pnpm
 
-    - name: Install Dependencies
-      run: pnpm install  
+      - name: Install Dependencies
+        run: npm install --force
 
-    - name: Setup .env file
-      run: |
-        touch .env
-        echo "${{ secrets.PROD_ENV_FILE }}" > .env
+      - name: Setup .env file
+        run: |
+          touch .env
+          echo "${{ secrets.PROD_ENV_FILE }}" > .env
