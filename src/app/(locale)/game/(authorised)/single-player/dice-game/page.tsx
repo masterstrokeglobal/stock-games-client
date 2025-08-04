@@ -69,7 +69,7 @@ const DiceGame = () => {
         <Navbar />
         <Dice3D stocks={stocks} className='sm:min-h-80 xs:min-h-72 min-h-60  w-full' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
         <BettingGrid roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={roundRecordWithWinningId?.winningId || null} winningSum={winningSum} >
-            <DiceGameTimeDisplay className="w-full max-w-sm  " roundRecord={roundRecord} />
+            <DiceGameTimeDisplay className="w-full" roundRecord={roundRecord} />
         </BettingGrid>
         <div className='flex flex-col gap-4 px-4'>
             <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
@@ -90,7 +90,7 @@ const DiceGame = () => {
                 <Dice3D key={roundRecord.id} stocks={stocks} className='min-h-[300px] xxl:min-h-[400px]' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
                 <div className="flex flex-col justify-around flex-1">
                     <BettingGrid roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={roundRecordWithWinningId?.winningId || null} winningSum={winningSum}>
-                        <DiceGameTimeDisplay className="w-full max-w-sm" roundRecord={roundRecord} />
+                        <DiceGameTimeDisplay className="w-full max-w-lg" roundRecord={roundRecord} />
                     </BettingGrid>
                     <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
                 </div>

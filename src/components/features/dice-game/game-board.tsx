@@ -164,7 +164,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
                         className={cn(
                             "flex-1 py-1 px-2 rounded-md text-xs font-medium transition-all duration-200",
                             selectedBetType === betType
-                                ? "bg-blue-600 text-white shadow-lg"
+                                ? "bg-[#1294E2] text-white shadow-lg"
                                 : "text-gray-300 hover:text-white hover:bg-gray-700"
                         )}
                     >
@@ -191,7 +191,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
                     <div className="flex md:justify-center sm:justify-around justify-between xs:px-10 px-2 w-full md:gap-3 gap-2">
                         {currentConfig.secondRow.map((bet) => (
                             <BetButton
-                                betAmount={chipBets?.[bet.number] || 0}
+                                betAmount={chipBets?.[`${selectedBetType}-${bet.number}`] || 0}
                                 isWinning={isPlaceOver ? winningSum?.[selectedBetType] == bet.number : false}
                                 isWinner={result?.[selectedBetType] === bet.number}
                                 handleBetSelect={handleBetSelect}

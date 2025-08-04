@@ -55,7 +55,7 @@ export const DiceGameTimeDisplay = ({ roundRecord, className, isAviator }: { rou
   return (<div className={cn(className)}>
   <div style={{
     boxShadow: "20px 20px 100px 8px rgba(68, 103, 204, 1)"
-  }} className={cn("py-2 px-4 border rounded-md mx-auto w-fit border-[#4467CC80] flex items-center justify-center relative overflow-hidden")}>
+  }} className={cn("py-2 px-4 border rounded-md  w-full border-[#4467CC80] flex items-center justify-center relative overflow-hidden")}>
       {/* Inner content with highlight effect */}
 
       <div className="flex  items-center gap-4 justify-center">
