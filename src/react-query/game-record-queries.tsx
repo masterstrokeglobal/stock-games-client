@@ -49,6 +49,34 @@ export const useCreatePlacementBet = () => {
     });
 };
 
+
+export const useAutoBets = () => {
+  return useQuery({
+    queryKey: ["auto-bets"],
+    queryFn: gameRecordAPI.getAutoBet,
+  });
+};
+
+export const useCreateAutoBet = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: gameRecordAPI.createAutoBet,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["auto-bets"] });
+    },
+  });
+};
+
+export const useDeleteAutoBet = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: gameRecordAPI.deleteAutoBet,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["auto-bets"] });
+    },
+  });
+};
+
 export const useCreateMiniMutualFundPlacementBet = () => {
     const queryClient = useQueryClient();
 
