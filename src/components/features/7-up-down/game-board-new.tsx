@@ -433,7 +433,7 @@ export const GameBoard: React.FC<PropsWithChildren<{
   marketItems: RankedMarketItem[],
   roundRecordWithWinningId: RoundRecord | null
 }>> = ({ roundRecord, children, amount, marketItems, roundRecordWithWinningId, className }) => {
-  const { mutate } = useCreateSevenUpDownPlacement();
+  const { mutate,isPending } = useCreateSevenUpDownPlacement();
   const isPlaceOver = usePlacementOver(roundRecord);
   const [displayItems, setDisplayItems] = useState(marketItems);
   const { data: currentRoundPlacements } = useGetMyCurrentRoundSevenUpDownPlacement(roundRecord.id);
@@ -469,7 +469,7 @@ export const GameBoard: React.FC<PropsWithChildren<{
 
 
   const handleBoardClick = useCallback((type: SevenUpDownPlacementType) => {
-    if (isPlaceOver) return;
+    if (isPlaceOver || isPending) return;
     mutate({
       roundId: roundRecord.id,
       placement: type,
@@ -487,7 +487,7 @@ export const GameBoard: React.FC<PropsWithChildren<{
         <div className="relative z-0 h-[20rem]   w-full">
           {/* Market items display */}
           <WinnerOverlay roundRecordWithWinningId={roundRecordWithWinningId} />
-          <img src="/images/seven-up-down/board.png" alt="board" className="absolute inset-0 w-full h-full object-fill" />
+          <img src="/images/seven-up-down/board.png" alt="board" className={cn("absolute inset-0 w-full h-full object-fill",isPending && "animate-pulse")} />
           <div className="absolute inset-0">
             {isPlaceOver && displayItems.length > 0 && (
               <MarketItemDisplay

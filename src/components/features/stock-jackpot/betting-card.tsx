@@ -77,7 +77,7 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
             >
               DOWN
               {downPlaced ? (
-                <Chip amount={downPlaced} />
+                <Chip amount={downPlaced} className="-left-6" />
               ) : null}
             </SkewedButton>
           </div>

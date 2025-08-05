@@ -6,7 +6,7 @@ import { useGameState } from "@/hooks/use-current-game";
 import { cn, INR, slotWinningMultiplier } from "@/lib/utils";
 import { useGetMySlotGamePlacement } from "@/react-query/slot-game-queries";
 
-export const Slot = ({ roundRecord,winningIdRoundRecord }: { roundRecord: RoundRecord,winningIdRoundRecord:RoundRecord | null }) => {
+export const Slot = ({ roundRecord, winningIdRoundRecord }: { roundRecord: RoundRecord, winningIdRoundRecord: RoundRecord | null }) => {
 
     const { gameTimeLeft, isPlaceOver, placeTimeLeft } = useGameState(roundRecord)
 
@@ -29,7 +29,7 @@ export const Slot = ({ roundRecord,winningIdRoundRecord }: { roundRecord: RoundR
 
     useEffect(() => {
         if (stocks.length > 0) {
-            const newStockStates= [...stockStates]
+            const newStockStates = [...stockStates]
 
             let localStocks: any = winningIdRoundRecord?.sortedMarketItems ? winningIdRoundRecord.sortedMarketItems : stocks
             localStocks = localStocks.sort((a: any, b: any) => a.name.localeCompare(b.name))
@@ -48,34 +48,34 @@ export const Slot = ({ roundRecord,winningIdRoundRecord }: { roundRecord: RoundR
 
     return (
         <div className="flex flex-1 w-full flex-col items-center justify-center slotmachine-gradient">
-           
-           <div className="flex items-start justify-center md:gap-4 mb-4 w-full px-2">
-            {
-                slotWinningMultiplier.map((item) => (
-            
-           <div key={item.multiplier} className="flex flex-col flex-1 items-center justify-center gap-1 sm:gap-2 bg-[#1B1B1B] border-x-2 border-b-2 border-[#E3B872] px-1 sm:px-2 py-1 rounded-b-md">
-           <div className="flex items-center gap-1 sm:gap-2 justify-between whitespace-nowrap w-full">
-                        <span className="text-gray-300 text-xs">{item.count} Match</span>
-                        <span className="text-yellow-400 font-bold text-xs sm:text-sm">x{item.multiplier}</span>
-                    </div>
-                    <div className="text-gray-400 text-xs sm:text-sm">
-                         {totalBetAmount ? `Win ${INR(item.winningAmount(totalBetAmount),true)}` : " "}
-                    </div>
-                </div>
-            ))}
+
+            <div className="flex items-start justify-center md:gap-4 mb-4 w-full px-2">
+                {
+                    slotWinningMultiplier.map((item) => (
+
+                        <div key={item.multiplier} className="flex flex-col flex-1 items-center justify-center gap-1 sm:gap-2 bg-[#1B1B1B] border-x-2 border-b-2 border-[#E3B872] px-1 sm:px-2 py-1 rounded-b-md">
+                            <div className="flex items-center gap-1 sm:gap-2 justify-between whitespace-nowrap w-full">
+                                <span className="text-gray-300 text-xs">{item.count} Match</span>
+                                <span className="text-yellow-400 font-bold text-xs sm:text-sm">x{item.multiplier}</span>
+                            </div>
+                            <div className="text-gray-400 text-xs sm:text-sm">
+                                {totalBetAmount ? `Win ${INR(item.winningAmount(totalBetAmount), true)}` : " "}
+                            </div>
+                        </div>
+                    ))}
             </div>
 
             <div className="flex-1 w-full h-[500px]  relative z-0 ">
-                
+
                 <div className="canvas-container absolute z-[-1] left-[50%] translate-x-[-50%] top-[240px] translate-y-[-50%] w-[270px] h-[187px]">
                     <SlotCanvas stockStates={stockStates} />
                 </div>
 
                 <div className="h-[250px] w-fit absolute z-10 bottom-[0px] right-[0px] hidden sm:block">
-                    <img src="/images/jackpot/lady5.gif" alt="slot-machine-bg" className="w-full h-full object-contain" />
+                    <img src="/images/slot-machine/lady.gif" alt="slot-machine-bg" className="w-full h-full object-contain" />
                 </div>
                 <div className="h-[250px] w-fit absolute z-10 bottom-[0px] left-[0px] scale-x-[-1] hidden sm:block">
-                    <img src="/images/jackpot/lady5.gif" alt="slot-machine-bg" className="w-full h-full object-contain" />
+                    <img src="/images/slot-machine/lady.gif" alt="slot-machine-bg" className="w-full h-full object-contain" />
                 </div>
 
                 <div className="h-[500px] w-full relative z-10">
@@ -95,7 +95,7 @@ export const Slot = ({ roundRecord,winningIdRoundRecord }: { roundRecord: RoundR
                 </div>
 
                 <div className="absolute z-20 top-[420px] left-[49.5%] translate-x-[-50%] translate-y-[-50%]  text-center">
-                    <h1 className={cn("text-lg uppercase font-bold keania-one-regular  drop-shadow-lg",isPlaceOver?"text-red-600":"text-yellow-500")}>
+                    <h1 className={cn("text-lg uppercase font-bold keania-one-regular  drop-shadow-lg", isPlaceOver ? "text-red-600" : "text-yellow-500")}>
                         {statusText}
                     </h1>
                 </div>

@@ -1,5 +1,6 @@
+import useMaxPlacement from "@/hooks/use-max-placement";
 import { cn } from "@/lib/utils";
-import { RoundRecord } from "@/models/round-record";
+import { RoundRecord, RoundRecordGameType } from "@/models/round-record";
 import { useGetMyStockJackpotGameRecord } from "@/react-query/game-record-queries";
 import { Minus, Plus } from "lucide-react";
 
@@ -13,10 +14,8 @@ type BettingAmountProps = {
 
 const BettingChips = ({ globalBetAmount, handleGlobalBetAmountChange, className, roundRecord }: BettingAmountProps) => {
     const { data: stockSlotPlacements } = useGetMyStockJackpotGameRecord(roundRecord?.id);
-    // Calculate the total bet amount from all placements for this round
-    const totalAmount = Array.isArray(stockSlotPlacements)
-        ? stockSlotPlacements.reduce((sum, placement) => sum + (placement.amount || 0), 0)
-        : 0;
+    const totalAmount = Array.isArray(stockSlotPlacements)?stockSlotPlacements.reduce((sum, placement) => sum + (placement.amount || 0), 0): 0;
+    const { maxPlacement, minPlacement } = useMaxPlacement(RoundRecordGameType.STOCK_JACKPOT);
 
     return (
         <div id="betting-amount" className={cn("transition-all duration-200 p-4", className)}>
@@ -56,14 +55,15 @@ const BettingChips = ({ globalBetAmount, handleGlobalBetAmountChange, className,
                         }}
                     >
                         <button
+                            disabled={globalBetAmount >= maxPlacement}
                             className="px-2 py-1 hover:opacity-80 transition-opacity transform rounded bg-[#008DC2] -skew-x-[12deg]"
                             onClick={() => handleGlobalBetAmountChange(globalBetAmount + 100)}
                         >
                             <Plus className="w-3 h-3 text-white" />
                         </button>
                         <input
-                            min={0}
-                            disabled={globalBetAmount <= 0}
+                            min={minPlacement}
+                            max={maxPlacement}
                             onChange={(e) => {
                                 const value = parseInt(e.target.value, 10);
                                 if (!isNaN(value) && value >= 0) {
@@ -75,7 +75,7 @@ const BettingChips = ({ globalBetAmount, handleGlobalBetAmountChange, className,
 
                         />
                         <button
-                            disabled={globalBetAmount <= 0}
+                            disabled={globalBetAmount <= minPlacement}
                             className="px-2 py-1 hover:opacity-80 transition-opacity transform rounded  bg-[#008DC2] -skew-x-[14deg]"
                             onClick={() => handleGlobalBetAmountChange(globalBetAmount - 100)}
                         >

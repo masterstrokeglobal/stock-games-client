@@ -1,3 +1,4 @@
+import { RoundRecordGameType } from "./round-record";
 import { SchedulerType } from "./market-item";
 
 interface Theme {
@@ -24,10 +25,11 @@ export class Company {
     placementNotAllowed?: SchedulerType[];
     allowedCasino!: boolean;
     deletedAt?: Date;
-    minPlacement?: number;
-    maxPlacement?: number;
+    minPlacement: number;
+    maxPlacement: number;
     minCasinoPlacement?: number;
     maxCasinoPlacement?: number;
+    maxSinglePlacementPerGameType?: Record<RoundRecordGameType, number>;
     otpIntegration?: boolean;
     coinValues?: number[];
     cryptoPayIn?: boolean;
@@ -54,7 +56,8 @@ export class Company {
         this.depositBonusPercentage = params.depositBonusPercentage;
         this.otpIntegration = params.otpIntegration || false;
         this.minPlacement = params.minPlacement ?? 0;
-        this.maxPlacement = params.maxPlacement;
+        this.maxPlacement = params.maxPlacement ?? Infinity;
+        this.maxSinglePlacementPerGameType = params.maxSinglePlacementPerGameType;
         this.coinValues = params.coinValues;
         this.minCasinoPlacement = params.minCasinoPlacement;
         this.maxCasinoPlacement = params.maxCasinoPlacement;

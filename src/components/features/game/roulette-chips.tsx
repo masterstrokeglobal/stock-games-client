@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import {  Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuthStore } from "@/context/auth-context";
+import { RoundRecordGameType } from "@/models/round-record";
 import { Minus, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import * as React from "react";
@@ -23,8 +24,8 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
     const { userDetails } = useAuthStore();
 
     const coinValues = userDetails?.company?.coinValues || [100, 200, 1000, 2000];
-    const minPlacement = userDetails?.company?.minPlacement ?? 1;
-    const maxPlacement = userDetails?.company?.maxPlacement ?? 1000000;
+    const minPlacement = userDetails?.company?.minPlacement ?? 0;
+    const maxPlacement = userDetails?.company?.maxSinglePlacementPerGameType?.[RoundRecordGameType.DERBY] ?? 1000000;
 
 
     const handleDecrement = () => {

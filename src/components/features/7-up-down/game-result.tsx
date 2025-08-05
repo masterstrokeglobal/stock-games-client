@@ -15,13 +15,7 @@ interface GameResultDialogProps {
 }
 
 const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
-  const [showDialog, setShowDialog] = useState(open);
-  const { data: roundResult, isLoading } = useGetSevenUpDownRoundResult(roundRecordId, true);
-
-  useEffect(() => {
-    setShowDialog(open);
-  }, [open]);
-
+  const { data: roundResult, isLoading } = useGetSevenUpDownRoundResult(roundRecordId, open);
 
 
   const totalPlaced = roundResult?.reduce((total, bet) => {
@@ -34,10 +28,11 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
 
   const totalNetResult = totalWon - totalPlaced;
 
+
   const round = roundResult?.[0]?.round ? new RoundRecord(roundResult[0].round) : null;
 
   return (
-    <Dialog  defaultOpen={showDialog}>
+    <Dialog  defaultOpen={open}>
       <DialogContent
         showButton={false}
         className={cn(
@@ -113,6 +108,14 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
                         })
                       }
                     </ScrollArea>
+                    <div className='flex justify-between text-white  border-t py-2 border-white'>
+                      <span className='font-poppins'>
+                        Total :
+                      </span>
+                      <span className=' font-poppins font-semibold'>
+                        {`${INR(totalWon)} - ${INR(totalPlaced)}`}
+                      </span>
+                    </div>
                   </div>
                   <div className='flex justify-center sm:mb-2 sm:mt-4 h-fit'>
                     <div className='text-center text-lg font-poppins  leading-none xl:text-4xl md:text-3xl font-bold sm:text-2xl xs:text-xl text-white' style={{ textShadow: '0px 0px 9.5px #2A8BFF' }}>

@@ -21,10 +21,10 @@ const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
     const round = roundResult?.round ?? null;
 
     // Calculate totals
-    const totalBet = placements.reduce((total, bet) => total + (bet.amount ?? 0), 0);
-    const totalWin = placements.reduce((total, bet) => total + (bet.netProfitLoss ?? 0), 0);
-    const totalNetResult = totalWin - totalBet;
+    const grossProfit = placements.reduce((total, bet) => total + (bet.netProfitLoss > 0 ? bet.netProfitLoss : 0), 0);
+    const totalPlaced = placements.reduce((total, bet) => total + (bet.amount), 0);
 
+    const totalNetResult = grossProfit - totalPlaced;
     // Use round info if available, otherwise fallback to first placement
     const roundId = round?.id ?? (placements[0]?.roundId ?? "--");
     const roundStartTime = round?.createdAt ?? (placements[0]?.createdAt ?? null);
@@ -88,7 +88,7 @@ const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
                                                         >
                                                             <div className="text-left pl-2">{result.placement?.toUpperCase() ?? "--"}</div>
                                                             <div className="text-center">{INR(result.amount)}</div>
-                                                            <div className="text-center">{result.isWinner ? INR(result.amount + result.netProfitLoss) : "—"}</div>
+                                                            <div className="text-center">{INR(result.netProfitLoss)}</div>
                                                         </div>
                                                     ))
                                                 ) : (
@@ -98,6 +98,13 @@ const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
                                                 )}
                                             </ScrollArea>
                                         )}
+                                        <div className="flex justify-between text-white  border-t py-2 border-gray-200">
+                                            <span
+                                                className=" font-audiowale">
+                                                Total :
+                                            </span>
+                                            <span className='font-orbitron font-semibold'>{`${INR(grossProfit)} - ${INR(totalPlaced)} `}</span>
+                                        </div>
                                     </div>
                                     <div className="flex justify-center mb-4">
                                         <div

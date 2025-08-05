@@ -1,20 +1,29 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { RoundRecord } from "@/models/round-record";
-import { WheelOfFortunePlacement } from "@/models/wheel-of-fortune-placement";
+import { RoundRecord, WHEEL_COLOR_CONFIG } from "@/models/round-record";
+import { WheelColor } from "@/models/wheel-of-fortune-placement";
 import { useGetMyCurrentRoundWheelOfFortunePlacement } from "@/react-query/wheel-of-fortune-queries";
+import { colorConfig } from "./game-board";
 
 const CurrentBets = ({ roundRecord, className, tableClassName }: { roundRecord: RoundRecord, className?: string, tableClassName?: string }) => {
     const { data: placements } = useGetMyCurrentRoundWheelOfFortunePlacement(roundRecord.id);
-    const aggregatedPlacements = placements?.reduce((acc, placement) => {
-        const existingPlacement = acc.find(p => p.placementColor === placement.placementColor);
-        if (existingPlacement) {
-            existingPlacement.amount += placement.amount;
-        } else {
-            acc.push(placement);
+    console.log("placements in current bets", placements?.length);
+
+    const aggregatedPlacements: Record<WheelColor, number> = {
+        [WheelColor.COLOR1]: 0,
+        [WheelColor.COLOR2]: 0,
+        [WheelColor.COLOR3]: 0,
+        [WheelColor.COLOR4]: 0,
+        [WheelColor.COLOR5]: 0,
+    };
+
+    placements?.forEach((placement) => {
+        if (!aggregatedPlacements[placement.placementColor]) {
+            aggregatedPlacements[placement.placementColor] = 0;
         }
-        return acc;
-    }, [] as WheelOfFortunePlacement[]) || [];
+        aggregatedPlacements[placement.placementColor] += placement.amount;
+    });
+
     return (
         <section style={{
             background: 'linear-gradient(95.47deg, rgba(50, 66, 65, 0.8) 5.8%, rgba(25, 23, 18, 0.8) 97.51%)',
@@ -36,7 +45,7 @@ const NoBets = () => {
     );
 };
 
-const BetsTable = ({ placements, tableClassName }: { placements: WheelOfFortunePlacement[], tableClassName?: string }) => {
+const BetsTable = ({ placements, tableClassName }: { placements: Record<WheelColor, number>, tableClassName?: string }) => {
     return (
         <div className="md:rounded-sm h-full !pb-0.5 overflow-hidden w-full">
             <div className="md:rounded-sm h-full">
@@ -58,24 +67,25 @@ const BetsTable = ({ placements, tableClassName }: { placements: WheelOfFortuneP
                     >
                         {/* Body */}
                         <div className="space-y-2">
-                            {placements.map((placement, index) => (
-                                <div
+                            {Object.entries(placements).map(([color, amount], index) => {
+                                if (amount === 0) return null;
+                                return <div
                                     key={index}
                                     style={{
-                                        background: placement.colorConfig.backgroundGradient,
+                                        background: colorConfig.find(c => c.color === color)?.bgColor,
                                     }}
                                     className="shadow-xl rounded-xl px-4 text-game-secondary overflow-hidden text-sm flex items-center justify-between"
                                 >
                                     <div className="p-2 w-1/2">
                                         <div className="text-game-secondary w-full whitespace-nowrap text-start">
-                                            {placement.colorName}
+                                            {WHEEL_COLOR_CONFIG[color as WheelColor].name}
                                         </div>
                                     </div>
                                     <div className="py-2 w-1/2 text-right whitespace-nowrap">
-                                        Rs. {placement.amount}
+                                        Rs. {amount}
                                     </div>
                                 </div>
-                            ))}
+                            })}
                         </div>
                         <ScrollBar orientation="horizontal" />
                     </ScrollArea>

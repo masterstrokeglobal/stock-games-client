@@ -29,15 +29,18 @@ const EditCompanyPage = () => {
             contactPersonName: company.contactPersonName,
             contactPersonEmail: company.contactPersonEmail,
             logo: company.logo,
+            allowedCasino: company.allowedCasino,
+            maxSinglePlacementPerGameType: company.maxSinglePlacementPerGameType,
+            minPlacement: company.minPlacement,
+            maxPlacement: company.maxPlacement,
+            minCasinoPlacement: company.minCasinoPlacement,
+            maxCasinoPlacement: company.maxCasinoPlacement,
             depositBonusPercentage: company.depositBonusPercentage,
             depositBonusPercentageEnabled: company.depositBonusPercentageEnabled,
             domain: company.domain,
             paymentImage: company.paymentImage,
-            minPlacement: company.minPlacement,
-            maxPlacement: company.maxPlacement,
             coinValues: company.coinValues,
-            minCasinoPlacement: company.minCasinoPlacement,
-            maxCasinoPlacement: company.maxCasinoPlacement,
+            theme: company.theme,  
         };
     }, [data, isSuccess]);
 
