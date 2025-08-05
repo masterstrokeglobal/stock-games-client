@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { externalUserAPI } from "@/lib/axios/external-user-API";
 import { toast } from "sonner";
 
@@ -13,12 +13,19 @@ export const useVerifyExternalSession = ( {sessionId, gameName}: {sessionId: str
 
 // Place an external bet (requires external token)
 export const useCreateExternalBet = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload: any) =>
       externalUserAPI.createExternalBet(payload),
     onSuccess: () => {
+      console.log("Bet placed successfully");
       toast.success("Bet placed successfully");
-    },
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return query.queryKey[0] === "user" && query.queryKey[1] === "wallet" || query.queryKey[0] === "externalUser";
+        }
+      });
+      },
     onError: (error: any) => {
       toast.error(error.response?.data?.message ?? "Error placing bet");
     },

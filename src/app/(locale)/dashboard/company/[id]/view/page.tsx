@@ -2,6 +2,7 @@
 
 import CompanyWalletCard from "@/columns/company-wallet-card";
 import LoadingScreen from "@/components/common/loading-screen";
+import CompanyApiDetailsManager from "@/components/features/company/company-api-details";
 import CompanyCard from "@/components/features/company/company-card";
 import CompanyEarningsCard from "@/components/features/company/company-earning";
 import CompanyPlacementManagement from "@/components/features/company/company-placement-not-allowed";
@@ -32,6 +33,7 @@ const ViewCompanyPage = () => {
                 <CompanyWalletCard companyId={id.toString()} />
                 {companyDetails && <CompanyCard company={companyDetails} showBonusPercentage={companyDetails.depositBonusPercentageEnabled} />}
                 {companyDetails && <CompanyPlacementManagement company={companyDetails} />}
+                {companyDetails && <CompanyApiDetailsManager companyId={id.toString()} />}
                 <CompanyEarningsCard companyId={id.toString()} />
             </main>
         </section>

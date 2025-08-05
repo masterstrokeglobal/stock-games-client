@@ -27,7 +27,6 @@ export const useAuthStore = () => {
 
 export const useIsExternalUser = () => {
   const { userDetails } = useAuthStore();
-  console.log("userDetails is: ", userDetails);
   return userDetails instanceof User && userDetails.externalUser;
 };
 
