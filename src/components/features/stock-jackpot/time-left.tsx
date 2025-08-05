@@ -3,89 +3,66 @@ import { cn } from "@/lib/utils"
 import { RoundRecord } from "@/models/round-record"
 import { motion, AnimatePresence } from "framer-motion"
 import { useEffect, useState } from "react"
+import ClockIcon from "@/components/common/icons/clock"
 
 const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, className?: string }) => {
   const { gameTimeLeft, isPlaceOver, placeTimeLeft } = useGameState(roundRecord)
-  const statusText = isPlaceOver ? "Betting Closed" : "Betting Open"
+  const statusText = isPlaceOver ? "BETTING CLOSED" : "BETTING OPEN"
   const [displayNumber, setDisplayNumber] = useState("")
-  
-  const timePercent = !isPlaceOver
-    ? Math.min(100, Math.max(0, (placeTimeLeft.seconds / roundRecord.placementDuration) * 100))
-    : Math.min(100, Math.max(0, (gameTimeLeft.seconds / roundRecord.gameDuration) * 100))
 
   useEffect(() => {
     const currentTime = !isPlaceOver ? placeTimeLeft.shortFormatNoMinutes : gameTimeLeft.shortFormatNoMinutes
     setDisplayNumber(currentTime)
   }, [isPlaceOver, placeTimeLeft, gameTimeLeft])
 
-  const isUrgent = Number(displayNumber) <= 10
-
   return (
     <div className={cn(className)}>
-      <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-500/30 to-yellow-500/30 rounded-b-2xl blur-md" />
-        
-        <div className="relative bg-gradient-to-b from-amber-500 via-yellow-500 to-amber-600 h-14 sm:h-18 rounded-b-2xl shadow-xl flex items-center justify-center overflow-hidden border border-amber-700">
-          
-          <div className="absolute inset-0 rounded-b-2xl shadow-inner shadow-amber-800/50" />
-
-          <motion.div
-            className={cn(
-              "absolute bottom-0 left-0 h-1.5 sm:h-2 rounded-bl-2xl shadow-lg transition-all duration-300",
-              isPlaceOver ?
-              isUrgent 
-                ? "bg-gradient-to-r from-red-600 to-red-500 shadow-red-500/50" 
-                : "bg-gradient-to-r from-red-900 to-red-800 shadow-red-900/50"
-                :"bg-gradient-to-r from-emerald-900 to-emerald-800 shadow-emerald-900/5"
-            )}
-            initial={{ width: "0%" }}
-            animate={{ width: `${timePercent}%` }}
-            transition={{ duration: 0.5 }}
-          />
-
-          <div className="flex flex-col items-center justify-center gap-0.5 sm:gap-1 z-10">
-            <motion.span
+      <div className="relative flex items-center justify-center">
+        <div
+          className={cn(
+            "flex items-center sm:gap-4 px-3 sm:px-6 rounded-full border",
+            "h-9 sm:h-12 min-w-[260px] sm:min-w-[330px] max-w-full",
+            "bg-[#002C3ECC] border-[#FFFFFFB2]",
+            "shadow-lg"
+          )}
+        >
+          {/* Icon */}
+          <ClockIcon className="text-white opacity-80 w-5 h-5 sm:w-6 sm:h-6" />
+          {/* Status and Timer */}
+          <div className="flex-1 flex flex-col font-orbitron items-center translate-y-1/2 -top-1/2 relative justify-center min-w-0">
+            <span
               className={cn(
-                "font-bold tracking-wider text-xs sm:text-sm uppercase transition-colors duration-300",
-                isPlaceOver 
-                  ? "text-red-800" 
-                  : "text-emerald-800"
+                "font-spacemono font-bold tracking-wider text-xs xs:text-base sm:text-lg uppercase",
+                "text-white opacity-90"
               )}
-              initial={{ opacity: 1, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
+              style={{ letterSpacing: "0.08em" }}
             >
               {statusText}
-            </motion.span>
-
-            <div className="h-8 sm:h-10 overflow-hidden">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={displayNumber}
-                  initial={{ y: 50, opacity: 1 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -50, opacity: 1 }}
-                  transition={{
-                    y: { type: "spring", stiffness: 300, damping: 30 },
-                    opacity: { duration: 0.2 }
-                  }}
-                  className={cn(
-                    "text-2xl sm:text-4xl font-black tracking-wider transition-all duration-300",
-                    isPlaceOver?
-                    isUrgent 
-                      ? "text-red-800" 
-                      : "text-red-900"
-                      :"text-emerald-800"
-                  )}
-                >
-                  {displayNumber}
-                </motion.div>
-              </AnimatePresence>
+            </span>
+            {/* Timer */}
+            <div className="flex items-center justify-end min-w-[48px] sm:min-w-[80px]">
+              <div className="h-7 sm:h-10 flex items-center">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={displayNumber}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{
+                      y: { type: "spring", stiffness: 300, damping: 30 },
+                      opacity: { duration: 0.2 }
+                    }}
+                    className={cn(
+                      "font-spacemono text-xl sm:text-3xl sm:text-4xl font-black tracking-wider transition-all duration-300"
+                    )}
+                    style={{ lineHeight: "1" }}
+                  >
+                    {displayNumber}s
+                  </motion.div>
+                </AnimatePresence>
+              </div>
             </div>
           </div>
-
-          <div className="absolute top-2 sm:top-3 left-2 sm:left-3 w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-amber-700 opacity-60" />
-          <div className="absolute top-2 sm:top-3 right-2 sm:right-3 w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full bg-amber-700 opacity-60" />
         </div>
       </div>
     </div>

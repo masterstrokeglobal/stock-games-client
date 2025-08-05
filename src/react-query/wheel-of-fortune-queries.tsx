@@ -33,7 +33,8 @@ export const useGetMyCurrentRoundWheelOfFortunePlacement = (roundId: number) => 
         queryFn: async () => {
             if (isExternalUser) {
                 const response = await externalUserAPI.getExternalUsersPlacements(roundId);
-                return response.data.data.map((placement: any) => new WheelOfFortunePlacement(placement));
+                const placements:WheelOfFortunePlacement[] = response.data.data.map((placement:any) => new WheelOfFortunePlacement(placement));
+                return placements;
             }
             return wheelOfFortuneAPI.getMyCurrentRoundWheelOfFortunePlacement(roundId);
         },

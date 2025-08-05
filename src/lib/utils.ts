@@ -256,10 +256,6 @@ export const formatRupee = (rupees: number) => {
   }).format(rupees);
 }
 
-export const checkCasinoAllowed = (companyId: number) => {
-  return companyId === 21;
-}
-
 // Generate current time in 12-hour format (HH:MM AM/PM)
 const getCurrentTime = () => {
   const now = new Date()
@@ -371,7 +367,7 @@ export const JACKPOT_MULTIPLIER = 1.96;
 export const SEVEN_UP_DOWN_MULTIPLIER_7 = 14.7;
 
 export const COIN_HEAD_TAIL_MULTIPLIER = 2
-  
+
 
 // Dice multipliers
 export const DICE_WINNING_MULTIPLIER_2 = 36;

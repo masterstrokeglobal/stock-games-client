@@ -34,8 +34,6 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
 
   const totalNetResult = totalWon - totalPlaced;
 
-  console.log(totalPlaced, totalWon, totalNetResult);
-
   const round = roundResult?.[0]?.round ? new RoundRecord(roundResult[0].round) : null;
 
   return (

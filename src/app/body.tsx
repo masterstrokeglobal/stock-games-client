@@ -1,9 +1,9 @@
 "use client";
-import { Inter, Jersey_10, Jersey_20, Konkhmer_Sleokchher, Montserrat, Phudu, Poppins, Protest_Strike, Russo_One , Prosto_One, Playfair_Display_SC, Play} from 'next/font/google';
+import ThemeProvider, { useTheme } from '@/context/theme-context';
+import { Audiowide, Inter, Jersey_10, Jersey_20, Konkhmer_Sleokchher, Montserrat, Orbitron, Phudu, Play, Playfair_Display_SC, Poppins, Prosto_One, Protest_Strike, Rajdhani, Russo_One, Space_Grotesk, Space_Mono } from 'next/font/google';
 import "./game.css";
 import "./globals.css";
 import "./shuffle.css";
-import ThemeProvider, { useTheme } from '@/context/theme-context';
 
 const poppins = Poppins({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
@@ -78,28 +78,57 @@ const playfairDisplaySc = Playfair_Display_SC({
 });
 
 const play = Play({
-  weight: ['400',"700"],
+  weight: ['400', "700"],
   subsets: ['latin'],
   variable: '--font-play',
 });
 
-const Body = ({ children }: { children: React.ReactNode }) => {
-    const theme = useTheme();
-    const isDark = theme == "dark";
-    return (
-      <body className={`${poppins.className} antialiased ${KonkhmerSleokchher.variable} ${jersy2.variable} ${jersy10.variable} ${RussoOne.variable} ${montserrat.variable} ${inter.variable} ${ProtestStrike.variable} ${ProstoOne.variable} ${phudu.variable} ${playfairDisplaySc.variable} ${poppinsVariable.variable} ${play.variable} ${ isDark ? 'dark' : ''}`}>
-        {children}
-      </body>
-    );
-  };
-  
+const AudioWide = Audiowide({
+  weight: ['400'],
+  subsets: ['latin'],
+  variable: "--font-audiowide"
+})
+const SpaceMono = Space_Mono({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  variable: '--font-spacemono'
+})
 
-  export default function BodyComponent ({ children }: { children: React.ReactNode }) {
-    return (
+const OrbitronFont = Orbitron({
+  weight: ['400', '500', '600'],
+  subsets: ['latin'],
+  variable: '--font-orbitron'
+})
+
+const spacegrotesk = Space_Grotesk({
+  weight: ['400', '500', '600'],
+  subsets: ['latin'],
+  variable: "--font-space-grotesk"
+});
+
+const RajdhaniFont = Rajdhani({
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-rajdhani'
+});
+
+const Body = ({ children }: { children: React.ReactNode }) => {
+  const theme = useTheme();
+  const isDark = theme == "dark";
+  return (
+    <body className={`${poppins.className} antialiased ${KonkhmerSleokchher.variable} ${jersy2.variable} ${jersy10.variable} ${RussoOne.variable} ${AudioWide.variable} ${montserrat.variable} ${inter.variable} ${ProtestStrike.variable} ${ProstoOne.variable} ${phudu.variable} ${playfairDisplaySc.variable} ${poppinsVariable.variable} ${play.variable} ${SpaceMono.variable} ${OrbitronFont.variable} ${spacegrotesk.variable}  ${RajdhaniFont.variable} ${isDark ? 'dark' : ''}`}>
+      {children}
+    </body>
+  );
+};
+
+
+export default function BodyComponent({ children }: { children: React.ReactNode }) {
+  return (
     <ThemeProvider>
-      <Body>  
+      <Body>
         {children}
       </Body>
     </ThemeProvider>
-    )
-  }
+  )
+}

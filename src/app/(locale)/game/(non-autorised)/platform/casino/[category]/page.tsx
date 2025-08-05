@@ -3,7 +3,8 @@
 import GameGrid from "@/components/features/casino-games/game-grid"
 import { GameAdsCarousel } from "@/components/features/platform/game-ads-carousel"
 import { Input } from "@/components/ui/input"
-import { checkCasinoAllowed, COMPANYID, decodeUrlString } from "@/lib/utils"
+import useCasinoAllowed from "@/hooks/use-is-casino-allowed"
+import { decodeUrlString } from "@/lib/utils"
 import { useGetCasinoGames } from "@/react-query/casino-games-queries"
 import { Search } from "lucide-react"
 import { notFound, useParams } from "next/navigation"
@@ -17,7 +18,7 @@ export default function GamingAppInterface() {
         category: category || undefined,
     })
 
-    const isCasinoAllowed = checkCasinoAllowed(COMPANYID);
+    const isCasinoAllowed = useCasinoAllowed();
 
     if (!isCasinoAllowed || !category) notFound();
     

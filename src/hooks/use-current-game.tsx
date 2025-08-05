@@ -149,7 +149,7 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         let timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 5000;
 
         if (roundRecord.roundRecordGameType !== RoundRecordGameType.DERBY) {
-            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 5000;
+            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 10000;
         }
 
         const gameEnd = setTimeout(() => {

@@ -167,6 +167,7 @@ export enum ProviderEnum {
     spike_games = "spike_games",
     rakki_games = "rakki_games",
     snowborn_games = "snowborn_games",
+    "1x2_gaming" = "1X2 Gaming",
 }
 
 
@@ -180,6 +181,12 @@ export enum GameTypeEnum {
     LOTTERY = "lottery",
     SHOOTING = "shooting",
     OTHERS = "others",
+    POKER = "poker",
+    SCRATCH_CARD = "scratch_card",
+    AGE_OF_GODS = "age_of_gods",
+    SUMMER_GAMES = "summer_games",
+    TRAVEL_ADVENTURE = "travel_adventure",
+    VIRTUAL_SPORTS = "virtual_sports",
 }
 
 
@@ -205,6 +212,8 @@ class CasinoGames {
     type!: GameTypeEnum;
     popular!: boolean;
     new!: boolean;
+    providerOfWeek!: boolean;
+    stockGameChoice!: boolean;
     code!: string;
     gameId!: string;
     createdAt!: Date;
@@ -224,6 +233,8 @@ class CasinoGames {
         this.gameId = params.gameId;
         this.popular = params.popular;
         this.new = params.new;
+        this.providerOfWeek = params.providerOfWeek;
+        this.stockGameChoice = params.stockGameChoice;
         this.createdAt = params.createdAt;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;

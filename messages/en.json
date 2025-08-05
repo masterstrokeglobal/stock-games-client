@@ -23,7 +23,13 @@
             "no-games-found": "No Games Found",
             "view-all": "View All",
             "category": "Category",
-            "platform": "Platform"
+            "platform": "Platform",
+            "poker":"Poker",
+            "scratch_card":"Scratch Card",
+            "age_of_gods":"Age of gods",
+            "summer_games":"Summer Games",
+            "travel_adventure":"Travel Adventure",
+            "virtual_sports":"Virtual Sports"
         },
         "tier": {
             "title": "Tiers Program",
@@ -46,7 +52,13 @@
             "support": "Support",
             "casino-games": "Casino Games",
             "slot-games": "Slot Games",
-            "live-games": "Live Games"
+            "live-games": "Live Games",
+            "poker":"Poker",
+            "scratch_card":"Scratch Card",
+            "age_of_gods":"Age of gods",
+            "summer_games":"Summer Games",
+            "travel_adventure":"Travel Adventure",
+            "virtual_sports":"Virtual Sports"
         },
         "navbar": {
             "light-mode": "Light Mode",
@@ -61,7 +73,7 @@
             "no-games-found": "No Games Found"
         },
         "stock-game-carousel": {
-            "title": "Stock Games",
+            "title": "Stock Game",
             "view-all": "View All",
             "stock-games": "Stock Games"
         },

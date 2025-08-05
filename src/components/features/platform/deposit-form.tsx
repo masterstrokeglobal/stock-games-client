@@ -317,6 +317,12 @@ const DepositTab = () => {
 
     return (
         <div className="space-y-6">
+            <div className="rounded-md bg-yellow-100 dark:bg-yellow-900/40 border border-yellow-300 dark:border-yellow-700 px-4 py-2 text-yellow-800 dark:text-yellow-200 font-medium mb-2">
+                <span className="block font-semibold">Deposit Processing Time</span>
+                <span className="block text-sm mt-1">
+                    Deposits are typically processed within <span className="font-semibold">5 to 15 minutes</span>. Please wait for confirmation before contacting support.
+                </span>
+            </div>
             {selectedMethod === "upi" && (
                 <UPIDepositForm />
             )}

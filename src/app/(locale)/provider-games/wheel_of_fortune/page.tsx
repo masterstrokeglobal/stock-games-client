@@ -1,7 +1,7 @@
 "use client"
 import GameLoadingScreen from '@/components/common/game-loading-screen';
 import MarketSelector from '@/components/common/market-selector';
-import ExternalUserNavbar from '@/components/features/game/external-user-Navbar';
+import ExternalUserNavbar from '@/components/features/game/external-user-navbar';
 import Navbar from '@/components/features/game/navbar';
 import { BettingArea } from '@/components/features/wheel-of-fortune/betting-area';
 import CurrentBets from '@/components/features/wheel-of-fortune/current-bets';

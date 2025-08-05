@@ -2,11 +2,12 @@
 
 import GameGrid from "@/components/features/casino-games/game-grid"
 import { Button } from "@/components/ui/button"
-import { checkCasinoAllowed, cn, COMPANYID } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import { GameCategories, ProviderEnum } from "@/models/casino-games"
 import { useInfiniteGetCasinoGames } from "@/react-query/casino-games-queries"
 import { notFound } from "next/navigation"
 import { Filter } from "./filters"
+import useCasinoAllowed from "@/hooks/use-is-casino-allowed"
 
 export default function CasinoGameResult({ filter, className }: { filter: Filter, className?: string }) {
     const {
@@ -18,6 +19,8 @@ export default function CasinoGameResult({ filter, className }: { filter: Filter
     } = useInfiniteGetCasinoGames({
         search: filter.search || undefined,
         type: filter.type || undefined,
+        stockGameChoice:filter.stockGameChoice,
+        providerOfWeek:filter.providerOfWeek,
         category: filter.category === "all" ? undefined : (filter.category as (typeof GameCategories)[number]["value"]),
         provider: filter.provider === "all" ? undefined : (filter.provider as ProviderEnum),
         limit: 30,
@@ -25,7 +28,7 @@ export default function CasinoGameResult({ filter, className }: { filter: Filter
         new: filter.new
     });
 
-    const isCasinoAllowed = checkCasinoAllowed(COMPANYID);
+    const isCasinoAllowed = useCasinoAllowed();
     if (!isCasinoAllowed) notFound();
 
     // Calculate shown and total

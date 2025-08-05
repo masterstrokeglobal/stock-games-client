@@ -1,6 +1,6 @@
 "use client";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { cn, getPlacementString, randomNumber, randomUsername } from "@/lib/utils";
+import { cn, getPlacementString, randomNumber } from "@/lib/utils";
 import GameRecord from "@/models/game-record";
 import { RoundRecord } from "@/models/round-record";
 import { useGetMyPlacements } from "@/react-query/game-record-queries";

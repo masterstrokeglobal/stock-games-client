@@ -55,7 +55,7 @@ const JackpotPairForm = ({ onSubmit, isLoading, defaultValues }: Props) => {
 
     const marketItemsQuery = useGetMarketItems({
         search: search,
-        limit: 100,
+        limit: 500,
         page: 1,
     });
 
@@ -63,7 +63,7 @@ const JackpotPairForm = ({ onSubmit, isLoading, defaultValues }: Props) => {
         const allMarketItems = marketItemsQuery.data?.data.marketItems || [];
         
         return allMarketItems.map((item: MarketItem) => ({
-            label: item.name,
+            label: `${item.name} (${item.type})`,
             value: item.id?.toString() || ""
         }));
     }, [marketItemsQuery.data]);

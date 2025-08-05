@@ -35,7 +35,6 @@ class WebSocketManager {
     public getSocket(type: SchedulerType): WebSocket {
         if (!this.sockets[type]) {
             const ws = new WebSocket(this.getWebSocketUrl(type));
-            console.log('wssssss',ws)
             this.listeners[type] = new Set();
             this.errorListeners[type] = new Set();
 

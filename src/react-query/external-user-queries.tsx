@@ -16,7 +16,7 @@ export const useCreateExternalBet = () => {
   return useMutation({
     mutationFn: (payload: any) =>
       externalUserAPI.createExternalBet(payload),
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Bet placed successfully");
     },
     onError: (error: any) => {

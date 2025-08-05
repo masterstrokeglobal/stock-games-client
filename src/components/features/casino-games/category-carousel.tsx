@@ -15,17 +15,21 @@ interface CategoryCarouselProps {
     popular?: boolean,
     new?: boolean,
     slot?: boolean,
+    stockGameChoice?:boolean,
+    providerOfWeek?:boolean,
     liveGame?: boolean,
     title: string,
     type?: GameTypeEnum,
     direction?: "forward" | "backward"
 }
 
-export default function CategoryCarousel({ categoryId, title, popular, new: isNew, slot, liveGame, type }: CategoryCarouselProps) {
+export default function CategoryCarousel({ categoryId, title, popular,providerOfWeek,stockGameChoice, new: isNew, slot, liveGame, type }: CategoryCarouselProps) {
     const t = useTranslations("platform.casino-games");
     const { data, isLoading } = useGetCasinoGames({
         limit: 100,
         popular,
+        stockGameChoice,
+         providerOfWeek,
         excludeCategory: categoryId,
         new: isNew,
         slot,
@@ -47,6 +51,12 @@ export default function CategoryCarousel({ categoryId, title, popular, new: isNe
 
         if (isNew) {
             return `/game/platform/casino?new=true`
+        }
+        if (stockGameChoice){
+            return `/game/platform/casino?stockGameChoice=true`
+        }
+        if (providerOfWeek){
+            return `/game/platform/casino?providerOfWeek=true`
         }
         return `/game/platform/casino`
     }, [type, categoryId, popular, isNew])

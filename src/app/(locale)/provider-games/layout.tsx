@@ -2,7 +2,6 @@
 import GameLoadingScreen from "@/components/common/game-loading-screen";
 import { useAuthStore } from "@/context/auth-context";
 import useExternalUserLogin from "@/hooks/use-external-user-login";
-import User from "@/models/user";
 import { PropsWithChildren } from "react";
 
 const ExternalUserLayout = ({ children }: PropsWithChildren) => {

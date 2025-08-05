@@ -47,7 +47,7 @@ const SevenUpDownPairTable = () => {
                             className="pl-10"
                         />
                     </div>
-                    <Link href="/dashboard/jackpot-pair/create">
+                    <Link href="/dashboard/seven-up-down-pair/create">
                         <Button>Create Pair</Button>
                     </Link>
                 </div>

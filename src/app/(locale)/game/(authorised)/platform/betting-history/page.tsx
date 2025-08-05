@@ -1,5 +1,4 @@
 'use client';
-
 import bettingHistoryColumns from "@/columns/betting-history-column";
 import DataTable from "@/components/ui/data-table-server-game";
 import { Input } from "@/components/ui/input";
@@ -53,7 +52,6 @@ const BettingHistoryPage = () => {
     };
 
     return (
-
         <section className="container-main w-full max-w-6xl">
             <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between mb-6">
                 <div className="flex sm:gap-5 gap-2 items-center flex-wrap text-platform-text w-full">

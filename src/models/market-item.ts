@@ -58,6 +58,10 @@ export class MarketItem {
                 return "USDT";
             case SchedulerType.USA_MARKET:
                 return "$";
+            case SchedulerType.MCX:
+                return "Rs.";
+            case SchedulerType.COMEX:
+                return "$";
         }
     }
 }

@@ -30,6 +30,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
   const showResult = useShowResults(roundRecord, placements ?? []);
 
   const handleDecreaseBetAmount = () => {
+    if (betAmount <= (userDetails?.company?.minPlacement ?? 0)) return;
     setBetAmount(betAmount - 100);
   };
   const handleIncreaseBetAmount = () => {
@@ -58,7 +59,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
           ))}
         </div>
         <div className="flex justify-center relative mb-4">
-          <Button onClick={handleDecreaseBetAmount} className="rounded-full absolute left-2 top-2  h-8 w-10 px-0 flex items-center justify-center bg-[#366D51] border border-[#5DA69A]">
+          <Button disabled={betAmount <= (userDetails?.company?.minPlacement ?? 0)} onClick={handleDecreaseBetAmount} className="rounded-full absolute left-2 top-2  h-8 w-10 px-0 flex items-center justify-center bg-[#366D51] border border-[#5DA69A]">
             <Minus className="size-6" />
           </Button>
           <Input

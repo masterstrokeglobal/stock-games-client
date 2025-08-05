@@ -9,9 +9,10 @@ const getISTDate = () => {
     return new Date(utc + istOffset * 60000);
 };
 
+// MCX open from 7:30 PM to 11:30 PM IST (19:30 to 23:30)
 const isMCXOpenAt = (date: Date) => {
-    const openMinutes = 19 * 60 + 30;
-    const closeMinutes = 23 * 60 + 30;
+    const openMinutes = 19 * 60 + 30;   // 19:30 = 1170
+    const closeMinutes = 23 * 60 + 30;  // 23:30 = 1410
     const hours = date.getHours();
     const minutes = date.getMinutes();
     const currentMinutes = hours * 60 + minutes;

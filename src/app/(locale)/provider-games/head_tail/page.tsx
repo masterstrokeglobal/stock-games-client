@@ -4,7 +4,7 @@ import MarketSelector from '@/components/common/market-selector';
 import AllBets from '@/components/features/coin-head-tail/all-bets';
 import GameBoard, { GameTimer } from '@/components/features/coin-head-tail/game-board-new';
 import PriceDisplay, { LiveBadge } from '@/components/features/dice-game/price-display';
-import ExternalUserNavbar from '@/components/features/game/external-user-Navbar';
+import ExternalUserNavbar from '@/components/features/game/external-user-navbar';
 import { useCurrentGame } from '@/hooks/use-current-game';
 import { useMarketSelector } from '@/hooks/use-market-selector';
 import useWinningId from '@/hooks/use-winning-id';

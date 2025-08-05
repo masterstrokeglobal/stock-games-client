@@ -2,7 +2,7 @@
 
 import CasinoGameResult from "@/components/features/platform/casino-game-result"
 import GameFilters, { Filter } from "@/components/features/platform/filters"
-import { checkCasinoAllowed, COMPANYID } from "@/lib/utils"
+import useCasinoAllowed from "@/hooks/use-is-casino-allowed"
 import { useTranslations } from "next-intl"
 import { notFound } from "next/navigation"
 import { useState } from "react"
@@ -15,7 +15,7 @@ export default function LiveGamesPage() {
         provider: "all"
     });
 
-    const isCasinoAllowed = checkCasinoAllowed(COMPANYID);
+    const isCasinoAllowed = useCasinoAllowed();
 
     if (!isCasinoAllowed) notFound();
 

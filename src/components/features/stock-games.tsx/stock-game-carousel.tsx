@@ -12,27 +12,22 @@ import { useTranslations } from "next-intl"
 const stockGames = [
     {
         href: `/game?gameType=${SchedulerType.NSE}`,
-        src: "/images/nse.png",
+        src: "/images/banner/roulette.png",
         alt: "stock-roulette",
     },
     {
-        href: `/game?gameType=${SchedulerType.USA_MARKET}`,
-        src: "/images/stock-game/usa-market.png",
-        alt: "coming-soon",
-    },
-    {
-        href: "/game/jackpot",
-        src: "/images/stock-game/stock-jackpot.png",
+        href: "/game/single-player/jackpot",
+        src: "/images/banner/hi-lo.png",
         alt: "coming-soon",
     },
     {
         href: "/game/platform/stock-game/stock-slot",
-        src: "/images/stock-slot.png",
+        src: "/images/banner/stock-slot.png",
         alt: "coming-soon",
     },
     {
         href: "/game/single-player/7-up-down",
-        src: "/images/banner/7-up-game.png",
+        src: "/images/banner/7-up-down.png",
         alt: "coming-soon",
     },
     {

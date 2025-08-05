@@ -55,8 +55,8 @@ const WithdrawMethodOption: React.FC<WithdrawMethodOptionProps> = ({
             <div className="flex-1 text-left">
                 <p className="text-platform-text font-medium">{detail.accountName || detail.upiId}</p>
                 <p className="text-platform-text text-sm">
-                    {detail.isUpi ? detail.upiId : 
-                     `${detail.ifscCode} • ****${detail.accountNumber?.slice(-4)}`}
+                    {detail.isUpi ? detail.upiId :
+                        `${detail.ifscCode} • ****${detail.accountNumber?.slice(-4)}`}
                 </p>
             </div>
             <div className="text-xs px-2 py-1 rounded-full dark:bg-[#2A3655] bg-primary-game text-platform-text">
@@ -145,6 +145,14 @@ const WithdrawTab: React.FC = () => {
             onSubmit={handleSubmit(onSubmitWithdrawal)}
             className="space-y-8"
         >
+
+            <div className="rounded-md bg-yellow-100 dark:bg-yellow-900/40 border border-yellow-300 dark:border-yellow-700 px-4 py-2 text-yellow-800 dark:text-yellow-200 font-medium mb-2">
+                <span className="block font-semibold">Withdrawal Processing Time</span>
+                <span className="block text-sm mt-1">
+                    Withdrawal time: <span className="font-semibold">15 minutes to 1 hour</span>.<br />
+                    <span className="block mt-1">NEFT &amp; RTGS might take longer depending on your bank.</span>
+                </span>
+            </div>
             {/* Total Balance Card */}
             <div className="w-full flex flex-col items-center">
                 <div className="w-full  border-2 dark:border-platform-border border-primary-game dark:bg-transparent bg-primary-game rounded-md px-6 py-5 flex items-center gap-4 shadow-lg mb-2">
@@ -166,13 +174,14 @@ const WithdrawTab: React.FC = () => {
                 </div>
             </div>
 
+
             {/* Amount Input */}
             <div className="space-y-2">
                 {/* Custom outlined input with floating label style */}
                 <div className="relative w-full">
                     <label
                         htmlFor="withdraw-amount"
-                            className="absolute -top-2 left-4 dark:bg-[#0A0C2A] bg-[#C3E3FF] px-1 text-platform-text font-semibold text-sm z-10"
+                        className="absolute -top-2 left-4 dark:bg-[#0A0C2A] bg-[#C3E3FF] px-1 text-platform-text font-semibold text-sm z-10"
                         style={{
                             transform: "translateY(-50%)",
                             pointerEvents: "none"
