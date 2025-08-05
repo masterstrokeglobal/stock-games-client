@@ -177,7 +177,7 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
         <div className="flex justify-between  relative  h-full items-center">
           <div className='flex flex-col  border rounded overflow-hidden border-[#4467CC80] h-full md:w-28 w-[80px]'>
             {/* <TriangleIcon className='size-3 text-white absolute top-4 right-0 translate-x-full  rotate-90' /> */}
-            <h2 className='text-sm text-white  bg-[#4467CC80] mb-1 text-center py-1'>First Dice</h2>
+            <h2 className='sm:text-sm xsm:text-xs text-[10px] whitespace-nowrap text-white  bg-[#4467CC80] mb-1 text-center py-1'>First Dice</h2>
             {firstCubeStocks?.map((stock, index) => (
               <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1 w-full last:border-none' roundRecord={roundRecordWithWinningId} isLast={index === 5} />
             ))}
@@ -185,7 +185,6 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
           <div className='relative flex-1 h-full max-w-sm'>
             <h2 className='text-white text-center sm:hidden  uppercase  z-10 text-xs font-semibold tracking-wider absolute top-0 left-1/2 -translate-x-1/2'>Dice Game</h2>
             <img src={isTossing?"/images/dice-game/gennie-toss.gif":"/images/dice-game/gennie-rest.gif"}  className={cn('absolute xsm:-bottom-2 z-10 xsm:h-52 h-40  xsm:left-[30%] left-1/4 -bottom-2')} />
-
             <div
               style={{
                 border: '1px solid rgba(68, 103, 204, 1)',
@@ -234,7 +233,7 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
           </div>
           <div className='flex flex-col h-full  md:w-28 w-[80px]  overflow-hidden self-end border border-[#4467CC80] rounded-lg'>
             {/* <TriangleIcon className='size-3 text-white absolute bottom-4 left-0 -translate-x-full  -rotate-90' /> */}
-            <h2 className='text-sm text-white  bg-[#4467CC80] mb-1 text-center py-1'>Second Dice</h2>
+            <h2 className='sm:text-sm xsm:text-xs text-[10px] whitespace-nowrap text-white  bg-[#4467CC80] mb-1 text-center py-1'>Second Dice</h2>
 
             {secondCubeStocks?.map((stock, index) => (
               <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1  w-full' isSecondCube roundRecord={roundRecordWithWinningId} isLast={index === 5} />
