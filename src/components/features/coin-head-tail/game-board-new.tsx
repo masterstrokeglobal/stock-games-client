@@ -6,7 +6,7 @@ import { RoundRecord } from "@/models/round-record";
 import { useCreateHeadTailPlacement, useGetMyCurrentRoundHeadTailPlacement } from "@/react-query/head-tail-queries";
 import { CheckCircle } from "lucide-react";
 import { Suspense, useEffect, useRef, useState } from "react";
-import { BettingArea } from "../dice-game/betting-chip";
+import { BettingArea } from "./betting-chip";
 import CoinToss from "./coin-toss";
 
 type GameBoardProps = PropsWithClassName<{
@@ -30,7 +30,7 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
     const isMobile = width < 768;
 
     const isPlaceOver = useIsPlaceOver(roundRecord);
-// const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    // const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 
     useEffect(() => {
@@ -137,6 +137,7 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
                 <div className="flex flex-col items-center mt-8">
                     <GameTimer className="md:hidden flex relative z-10" roundRecord={roundRecord} />
                     <BettingArea
+                        roundRecordId={roundRecord.id}
                         betAmount={betAmount}
                         setBetAmount={setBetAmount}
                     />

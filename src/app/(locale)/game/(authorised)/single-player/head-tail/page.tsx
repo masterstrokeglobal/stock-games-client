@@ -31,9 +31,7 @@ const HeadTail = () => {
         isLoading
     } = useCurrentGame(RoundRecordGameType.HEAD_TAIL);
 
-
-    const roundRecordWithWinningId = useWinningId(roundRecord);
-
+    const roundRecordWithWinningId = useWinningId(roundRecord);   
 
     if (!marketSelected) return <MarketSelector roundRecordType={RoundRecordGameType.HEAD_TAIL} title="Coin Toss Market (Head & Tail)" />
 
