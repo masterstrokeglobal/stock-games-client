@@ -105,9 +105,9 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
                                                     <span className="font-normal">({INR(placement.amountWon, true)})</span>
                                                 </span>
                                             ) : (
-                                                <span className="text-red-400 font-bold flex items-center gap-1">
+                                                <span className="text-red-400 font-bold flex items-center justify-end gap-1">
                                                     Loss <TriangleDownGlow />
-                                                    <span className="font-normal">({INR(placement.amountWon, true)})</span>
+                                                    <span className="font-normal">-</span>
                                                 </span>
                                             )}
                                         </div>
@@ -115,12 +115,15 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
                                 );
                             })}
                         </div>
-                        <div className='flex justify-between text-white  border-t py-2 border-[#AFE7CC]'>
+                        <div className='grid grid-cols-3 text-white  border-t py-2 border-[#AFE7CC]'>
                             <span className='font-montserrat'>
                                 Total :
                             </span>
-                            <span className=' font-montserrat font-semibold'>
-                                ({`${INR(grossProfit, true)} -  ${INR(totalPlaced, true)}`})
+                            <span className='font-montserrat text-center'>
+                                {INR(totalPlaced, true)}
+                            </span> 
+                            <span className=' font-montserrat text-end font-semibold'>
+                                {INR(grossProfit, true)}
                             </span>
                         </div>
                         <div className="flex justify-center">
@@ -144,7 +147,7 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
                                             : "0px 0px 10.4px rgba(255, 0, 0, 1)"
                                     }}
                                 >
-                                    Net Result : ₹ {Math.abs(netWinning)}
+                                    Net Result : ₹ {netWinning}
                                 </span>
                             </div>
                         </div>

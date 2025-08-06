@@ -88,7 +88,7 @@ const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
                                                         >
                                                             <div className="text-left pl-2">{result.placement?.toUpperCase() ?? "--"}</div>
                                                             <div className="text-center">{INR(result.amount)}</div>
-                                                            <div className="text-center">{INR(result.netProfitLoss)}</div>
+                                                            <div className="text-center">{INR(result.netProfitLoss > 0 ? result.netProfitLoss : 0)}</div>
                                                         </div>
                                                     ))
                                                 ) : (
@@ -98,12 +98,13 @@ const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
                                                 )}
                                             </ScrollArea>
                                         )}
-                                        <div className="flex justify-between text-white  border-t py-2 border-gray-200">
+                                        <div className="grid grid-cols-3 text-white sm:text-sm text-xs  px-4 font-space-grotesk  border-t py-2 border-gray-200">
                                             <span
                                                 className=" font-audiowale">
                                                 Total :
                                             </span>
-                                            <span className='font-orbitron font-semibold'>{`${INR(grossProfit)} - ${INR(totalPlaced)} `}</span>
+                                            <span className="pl-2 text-center">{INR(totalPlaced, true)}</span>
+                                            <span className='font-orbitron font-semibold text-center'>{INR(grossProfit)}</span>
                                         </div>
                                     </div>
                                     <div className="flex justify-center mb-4">
