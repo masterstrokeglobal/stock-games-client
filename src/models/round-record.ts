@@ -176,6 +176,9 @@ export class RoundRecord {
     deletedAt?: Date;
     initialValues: Record<string, number> | null;
     finalDifferences: Record<string, number> | null;
+    bonusSymbol?: string;
+bonusMultiplier?: number;
+
     winningSide?: HeadTailPlacementType;
     marketColors: {
         color: WheelColor;
@@ -202,10 +205,13 @@ export class RoundRecord {
         this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : undefined;
         this.initialValues = data.initialValues || null;
         this.finalDifferences = data.finalDifferences || null;
+        this.bonusSymbol = data.bonusSymbol;
+        this.bonusMultiplier = data.bonusMultiplier;
         this.coinTossPair = data.coinTossPair ? new CoinTossPair(data.coinTossPair) : undefined;
         this.winningSide = data.winningSide || undefined;
         this.marketColors = data.marketColors || [];
         this.todayCount = data.todayCount || -1;
+        console.log(this.bonusMultiplier,'BONUS SYMBOLS')
     }
 
     getSlotValues(code: string): { upperValue: number; lowerValue: number } {

@@ -1,6 +1,6 @@
 "use client";
 import ThemeProvider, { useTheme } from '@/context/theme-context';
-import { Audiowide, Inter, Jersey_10, Jersey_20, Konkhmer_Sleokchher, Montserrat, Orbitron, Phudu, Play, Playfair_Display_SC, Poppins, Prosto_One, Protest_Strike, Rajdhani, Russo_One, Space_Grotesk, Space_Mono } from 'next/font/google';
+import { Audiowide, Inter,Quantico, Jersey_10, Jersey_20, Wendy_One, Konkhmer_Sleokchher, Montserrat, Orbitron, Phudu, Play, Playfair_Display_SC, Poppins, Prosto_One, Protest_Strike, Rajdhani, Russo_One, Space_Grotesk, Space_Mono } from 'next/font/google';
 import "./game.css";
 import "./globals.css";
 import "./shuffle.css";
@@ -112,11 +112,25 @@ const RajdhaniFont = Rajdhani({
   variable: '--font-rajdhani'
 });
 
+const quantico = Quantico({
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  variable: '--font-quantico'
+});
+
+
+const wendyOne = Wendy_One({
+  weight: ['400'],
+  subsets: ['latin'],
+  variable: '--font-wendy-one'
+});
+
+
 const Body = ({ children }: { children: React.ReactNode }) => {
   const theme = useTheme();
   const isDark = theme == "dark";
   return (
-    <body className={`${poppins.className} antialiased ${KonkhmerSleokchher.variable} ${jersy2.variable} ${jersy10.variable} ${RussoOne.variable} ${AudioWide.variable} ${montserrat.variable} ${inter.variable} ${ProtestStrike.variable} ${ProstoOne.variable} ${phudu.variable} ${playfairDisplaySc.variable} ${poppinsVariable.variable} ${play.variable} ${SpaceMono.variable} ${OrbitronFont.variable} ${spacegrotesk.variable}  ${RajdhaniFont.variable} ${isDark ? 'dark' : ''}`}>
+    <body className={`${poppins.className} antialiased ${KonkhmerSleokchher.variable} ${jersy2.variable} ${jersy10.variable} ${RussoOne.variable} ${AudioWide.variable} ${montserrat.variable} ${inter.variable} ${ProtestStrike.variable} ${ProstoOne.variable} ${phudu.variable} ${playfairDisplaySc.variable} ${poppinsVariable.variable} ${play.variable} ${SpaceMono.variable} ${OrbitronFont.variable} ${spacegrotesk.variable}  ${RajdhaniFont.variable} ${quantico.variable} ${wendyOne.variable} ${isDark ? 'dark' : ''}`}>
       {children}
     </body>
   );

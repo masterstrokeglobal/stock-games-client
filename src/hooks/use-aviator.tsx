@@ -292,6 +292,7 @@ const useAviator = ({ type, token, roundRecord, onSelectedPlaneCrash }: { type: 
 
 
     const placeBet = (amount: number) => {
+        console.log("loki placeBet", amount, roundRecord.id, stockSelectedAviator);
         if (socket) {
             console.log(amount, roundRecord.id, stockSelectedAviator);
             socket.send(JSON.stringify({ type: WebSocketEventType.PLACE_BET, amount, roundId: Number(roundRecord.id), marketItem: Number(stockSelectedAviator) }));

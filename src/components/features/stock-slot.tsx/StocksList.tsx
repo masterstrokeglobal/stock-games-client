@@ -1,0 +1,193 @@
+import React, { useMemo } from "react";
+import { useLeaderboard } from "@/hooks/use-leadboard";
+import { RoundRecord } from "@/models/round-record";
+
+// Helper function to highlight the first decimal digit with yellow color
+const formatPriceWithHighlightedDecimal = (price: string) => {
+  const decimalIndex = price.indexOf(".");
+  if (decimalIndex === -1 || decimalIndex === price.length - 1) return price;
+
+  const beforeDecimal = price.substring(0, decimalIndex + 1); // includes the decimal point
+  const firstDecimalDigit = price.charAt(decimalIndex + 1);
+  const restOfDecimals = price.substring(decimalIndex + 2);
+
+  return (
+    <>
+      {beforeDecimal}
+      <span style={{ color: "yellow" }}>{firstDecimalDigit}</span>
+      {restOfDecimals}
+    </>
+  );
+};
+
+interface StockListProps {
+  roundRecord?: RoundRecord;
+  winningIdRoundRecord?: any;
+}
+
+export const StockListMobile: React.FC<StockListProps> = ({
+  roundRecord,
+  winningIdRoundRecord,
+}) => {
+  const { stocks } = useLeaderboard(roundRecord || null);
+
+  const { currentStocks, stockPrice } = useMemo(() => {
+    if (!roundRecord) return { currentStocks: [], stockPrice: {} };
+
+    const currentStocks = roundRecord.market.sort(
+      (a, b) => a.name?.localeCompare(b.name ?? "") ?? 0
+    );
+    let stockPrice: Record<string, number> = roundRecord.initialValues ?? {};
+
+    if (
+      roundRecord.initialValues &&
+      Object.keys(roundRecord.initialValues).length > 0
+    ) {
+      stockPrice = roundRecord.initialValues;
+    }
+
+    if (stocks.length > 0 && !winningIdRoundRecord?.finalPricesPresent) {
+      stocks.forEach((stock) => {
+        if (stock.price) {
+          stockPrice[stock.code ?? ""] = stock.price;
+        }
+      });
+    } else if (
+      winningIdRoundRecord?.finalPricesPresent &&
+      winningIdRoundRecord?.finalDifferences
+    ) {
+      stockPrice = winningIdRoundRecord.finalDifferences;
+    }
+
+    return { currentStocks, stockPrice };
+  }, [roundRecord, stocks, winningIdRoundRecord]);
+
+  return (
+    <div className="lg:hidden flex justify-center items-start relative z-[80] mb-4 w-full text-xs">
+      <div
+        style={{
+          backgroundImage: "url('/images/slot-machine/pole-mobile.png')",
+          backgroundSize: "100% 100%",
+          backgroundPosition: "center center",
+          backgroundRepeat: "no-repeat",
+        }}
+        className="w-full h-10 absolute top-0 left-0 -translate-y-1/2"
+      ></div>
+      <div className=" grid grid-cols-5 items-center justify-center gap-2 w-full z-40">
+        {currentStocks?.slice(0, 5).map((stock, index) => {
+          const price = parseFloat(
+            stockPrice[stock.code ?? ""]?.toString() || "0"
+          ).toFixed(2);
+          const stockName = stock.name|| `Stock ${index + 1}`;
+
+          return (
+            <div
+              key={stock.code || index}
+              style={{
+                backgroundImage: "url('/images/slot-machine/stock-list.png')",
+                backgroundSize: "100% 100%",
+                backgroundPosition: "center center",
+                backgroundRepeat: "no-repeat",
+              }}
+              className="text-center w-full px-3 py-5 flex flex-col justify-center items-center"
+            >
+              <div className="truncate w-full">{stockName}</div>
+              <div>{formatPriceWithHighlightedDecimal(price)}</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+export const StockListDesktop: React.FC<StockListProps> = ({
+  roundRecord,
+  winningIdRoundRecord,
+}) => {
+  const { stocks } = useLeaderboard(roundRecord || null);
+
+  const { currentStocks, stockPrice } = useMemo(() => {
+    if (!roundRecord) return { currentStocks: [], stockPrice: {} };
+
+    const currentStocks = roundRecord.market.sort(
+      (a, b) => a.name?.localeCompare(b.name ?? "") ?? 0
+    );
+    let stockPrice: Record<string, number> = roundRecord.initialValues ?? {};
+
+    if (
+      roundRecord.initialValues &&
+      Object.keys(roundRecord.initialValues).length > 0
+    ) {
+      stockPrice = roundRecord.initialValues;
+    }
+
+    if (stocks.length > 0 && !winningIdRoundRecord?.finalPricesPresent) {
+      stocks.forEach((stock) => {
+        if (stock.price) {
+          stockPrice[stock.code ?? ""] = stock.price;
+        }
+      });
+    } else if (
+      winningIdRoundRecord?.finalPricesPresent &&
+      winningIdRoundRecord?.finalDifferences
+    ) {
+      stockPrice = winningIdRoundRecord.finalDifferences;
+    }
+
+    return { currentStocks, stockPrice };
+  }, [roundRecord, stocks, winningIdRoundRecord]);
+
+  return (
+    <div className="hidden lg:flex lg:col-span-2 justify-center items-start relative text-xl">
+      <div className="mt-[70px] flex flex-col items-center justify-center gap-3 w-full z-40">
+        {currentStocks.slice(0, 5).map((stock, index) => {
+          const price = parseFloat(
+            stockPrice[stock.code ?? ""]?.toString() || "0"
+          ).toFixed(1);
+          const stockName = stock.name || `Stock ${index + 1}`;
+
+          return (
+            <div
+              key={stock.code || index}
+              style={{
+                backgroundImage: "url('/images/slot-machine/stock-list.png')",
+                backgroundSize: "100% 100%",
+                backgroundPosition: "center center",
+                backgroundRepeat: "no-repeat",
+              }}
+              className="text-center w-full px-5 py-3 truncate"
+            >
+              {stockName} <br /> {formatPriceWithHighlightedDecimal(price)}
+            </div>
+          );
+        })}
+
+        {/* Fill remaining slots if less than 5 stocks */}
+        {[...Array(Math.max(0, 5 - currentStocks.length))].map((_, index) => (
+          <div
+            key={`placeholder-${index}`}
+            style={{
+              backgroundImage: "url('/images/slot-machine/stock-list.png')",
+              backgroundSize: "100% 100%",
+              backgroundPosition: "center center",
+              backgroundRepeat: "no-repeat",
+            }}
+            className="text-center w-full px-5 py-3"
+          >
+            Loading...
+          </div>
+        ))}
+      </div>
+      <div
+        style={{
+          backgroundImage: "url('/images/slot-machine/stock-list-pole.png')",
+          backgroundSize: "100% 100%",
+          backgroundPosition: "center center",
+          backgroundRepeat: "no-repeat",
+        }}
+        className="absolute h-full w-8 bottom-0 z-30"
+      ></div>
+    </div>
+  );
+};

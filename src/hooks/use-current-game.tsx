@@ -154,7 +154,7 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         const gameEnd = setTimeout(() => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
+                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet' || query.queryKey[0] === 'userGameHistory';
                 },
             });
         }, timeToGameEnd);
@@ -162,7 +162,7 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         const placeEnd = setTimeout(() => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
+                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet' ;
                 },
             });
         }, timeToPlace);

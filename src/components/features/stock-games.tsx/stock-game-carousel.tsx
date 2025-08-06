@@ -21,7 +21,8 @@ const stockGames = [
         alt: "coming-soon",
     },
     {
-        href: "/game/platform/stock-game/stock-slot",
+
+        href: "/game/single-player/stock-slot",
         src: "/images/banner/stock-slot.png",
         alt: "coming-soon",
     },
@@ -46,7 +47,8 @@ const stockGames = [
         alt: "coming-soon",
     },
     {
-        href: "/game/platform/stock-game/aviator",
+        href: "/game/single-player/aviator",
+        // href: "/game/platform/stock-game/aviator",
         src: "/images/banner/aviator.png",
         alt: "coming-soon",
     }
