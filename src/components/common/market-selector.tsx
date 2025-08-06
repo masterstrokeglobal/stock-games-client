@@ -9,10 +9,10 @@ import { RoundRecordGameType } from "@/models/round-record";
 import useSchedularCheck from "@/hooks/use-schedular-check";
 import { useTheme } from "@/context/theme-context";
 import Navbar from "../features/game/navbar";
-import ExternalUserNavbar from "../features/game/external-user-navbar";
 import useMCXAvailable from "@/hooks/use-mcx-available";
 import useCOMEXAvailable from "@/hooks/use-comex-available";
 import useMarketSchedule from "@/hooks/use-schedular-timings";
+import ExternalUserNavbar from "../features/game/external-user-navbar";
 
 type MarketSelectorProps = {
     title: string;
@@ -44,8 +44,6 @@ const MarketSelector = ({
     const isMCXAvailable = useMCXAvailable();
     const theme = useTheme();
     const isDarkMode = theme === "dark";
-
-    console.log("isExternalUser is: ", isExternalUser);
 
     const { setMarketSelected } = useMarketSelector();
     const { schedulerStatus } = useSchedularCheck();

@@ -7,6 +7,7 @@ import { useAuthStore } from "@/context/auth-context";
 import ThemeSwitcher from "@/context/theme-swithcer";
 import { cn, INR } from "@/lib/utils";
 import User from "@/models/user";
+import { useGetExternalWallet } from "@/react-query/external-user-queries";
 import GameTimings from "./game-timings";
 type Props = {
     className?: string
@@ -14,6 +15,9 @@ type Props = {
 const ExternalUserNavbar = ({ className }: Props) => {
     const { isLoggedIn, userDetails } = useAuthStore();
     const user = userDetails as User;
+    const { data } = useGetExternalWallet(isLoggedIn);
+
+    const balance = data?.data?.balance;
 
     return (
         <nav className={cn("items-center md:px-6 sm:px-4 px-2 z-50 border-b border-platform-border bg-primary-game flex fixed top-0 justify-between font-semibold w-full h-14  mb-4", className)}>
@@ -28,7 +32,7 @@ const ExternalUserNavbar = ({ className }: Props) => {
                 <MuteButton className="md:flex hidden border rounded-full platform-gradient header-inner-shadow  size-10  justify-center p-1" />
                 <LocaleSwitcher className="md:block hidden " selectClassName="h-10" />
                 <div className=" flex flex-col ">
-                    <span className="md:text-sm text-xs">Bal: {INR(user.balance ?? 0, true)}</span>
+                    <span className="md:text-sm text-xs">Bal: {INR(balance ?? 0, true)}</span>
                 </div>
 
                 <Avatar className="size-6">

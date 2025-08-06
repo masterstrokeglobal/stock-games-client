@@ -14,7 +14,9 @@ export const useCreateSevenUpDownPlacement = () => {
         onSuccess: (data) => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === "sevenUpDown" || query.queryKey[0] === "myPlacements" || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet' || query.queryKey[0] === "sevenUpDown" && query.queryKey[1] === "myPlacements";
+                    const queryKey = query.queryKey;
+                    const invalidateQueries = queryKey[0] === "sevenUpDown" || queryKey[0] === "myPlacements" || queryKey[0] === "user" && queryKey[1] == 'wallet' || queryKey[0] === "sevenUpDown" && queryKey[1] === "myPlacements";
+                    return invalidateQueries;
                 },
             });
             const placement = new SevenUpDownPlacement(data.stockSlotPlacement)

@@ -3,10 +3,10 @@ import { externalUserAPI } from "@/lib/axios/external-user-API";
 import { toast } from "sonner";
 
 // Verify external user session
-export const useVerifyExternalSession = ( {sessionId, gameName}: {sessionId: string, gameName: string}) => {
-  return useQuery   ({
+export const useVerifyExternalSession = ({ sessionId, gameName }: { sessionId: string, gameName: string }) => {
+  return useQuery({
     queryKey: ["externalUser", "verifySession", sessionId, gameName],
-    queryFn: () => externalUserAPI.verifyExternalSession({sessionId, gameName}),
+    queryFn: () => externalUserAPI.verifyExternalSession({ sessionId, gameName }),
     enabled: !!sessionId && !!gameName,
   });
 };
@@ -18,14 +18,15 @@ export const useCreateExternalBet = () => {
     mutationFn: (payload: any) =>
       externalUserAPI.createExternalBet(payload),
     onSuccess: () => {
-      console.log("Bet placed successfully");
       toast.success("Bet placed successfully");
       queryClient.invalidateQueries({
         predicate: (query) => {
-          return query.queryKey[0] === "user" && query.queryKey[1] === "wallet" || query.queryKey[0] === "externalUser";
+          const queryKey = query.queryKey;
+          const invalidateQueries = queryKey[0] === "user" && queryKey[1] === "wallet" || queryKey[0] === "externalUser";
+          return invalidateQueries;
         }
       });
-      },
+    },
     onError: (error: any) => {
       toast.error(error.response?.data?.message ?? "Error placing bet");
     },
@@ -36,7 +37,7 @@ export const useCreateExternalBet = () => {
 export const useGetExternalWallet = (enabled: boolean = false) => {
   return useQuery({
     queryKey: ["user", "wallet", "external"],
-    queryFn: () => externalUserAPI.getExternalWallet(),     
+    queryFn: () => externalUserAPI.getExternalWallet(),
     retry: 1,
     enabled: enabled,
   });
