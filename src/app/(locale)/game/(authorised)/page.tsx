@@ -21,7 +21,6 @@ declare global {
     }
 }
 
-
 const GamePage = () => {
     const { roundRecord, isLoading } = useCurrentGame();
     const { isMobile } = useWindowSize();

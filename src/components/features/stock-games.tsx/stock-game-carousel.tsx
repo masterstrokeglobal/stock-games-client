@@ -11,7 +11,7 @@ import { useTranslations } from "next-intl"
 
 const stockGames = [
     {
-        href: `/game?gameType=${SchedulerType.NSE}`,
+        href: `/game`,
         src: "/images/banner/roulette.png",
         alt: "stock-roulette",
     },
