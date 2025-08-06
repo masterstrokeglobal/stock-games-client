@@ -1,18 +1,16 @@
+import { useIsExternalUser } from "@/context/auth-context";
+import { sevenUpDownAPI, SevenUpDownRoundResult } from "@/lib/axios/7-up-down-API";
+import { cn } from "@/lib/utils";
+import SevenUpDownPlacement from "@/models/seven-up-down";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { sevenUpDownAPI } from "@/lib/axios/7-up-down-API";
-import SevenUpDownPlacement from "@/models/seven-up-down";
-import { cn } from "@/lib/utils";
-import { useIsExternalUser } from "@/context/auth-context";
-import { externalUserAPI } from "@/lib/axios/external-user-API";
-import { SevenUpDownRoundResult } from "@/lib/axios/7-up-down-API";
 
 export const useCreateSevenUpDownPlacement = () => {
     const queryClient = useQueryClient();
     const isExternalUser = useIsExternalUser();
 
     return useMutation({
-        mutationFn: isExternalUser ? externalUserAPI.createExternalBet : sevenUpDownAPI.createSevenUpDownPlacement,
+        mutationFn: isExternalUser ? sevenUpDownAPI.createExternalBet : sevenUpDownAPI.createSevenUpDownPlacement,
         onSuccess: (data) => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
