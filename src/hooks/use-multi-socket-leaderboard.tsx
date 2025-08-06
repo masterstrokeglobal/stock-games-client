@@ -203,10 +203,6 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
         if (!latestDataRef.current.some(stock => stock.bitcode === bitcode)) {
             return;
         }
-        if (bitcode === "SI") {
-            console.log("currentPrice", currentPrice);
-            console.log("bitcode", bitcode);
-        }
 
         const { initialPrice, changePercent } = processPrice(bitcode, currentPrice);
 
@@ -271,10 +267,11 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
         try {
             const changes = JSON.parse(message.data as string) as any[];
             if (Array.isArray(changes) && changes.length === 0) return;
-
+             
             const changedStocks = changes.map(change => new NSEMarketItem(change));
             changedStocks.forEach(changeStock => {
                 const currentPrice = parseFloat(changeStock.price.toString());
+                console.log(changeStock.code, currentPrice);
                 updateStockData(changeStock.code, currentPrice);
             });
         } catch (error) {
@@ -348,7 +345,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
         socket.onopen = () => {
             console.log(`Connected to ${marketType} WebSocket`);
             // Check if all required sockets are connected for multi-market scenario
-            if (roundRecord?.roundRecordGameType === RoundRecordGameType.SEVEN_UP_DOWN) {
+            if (roundRecord?.roundRecordGameType === RoundRecordGameType.SEVEN_UP_DOWN || roundRecord?.roundRecordGameType === RoundRecordGameType.STOCK_SLOTS) {
                 const allConnected = Array.from(socketsRef.current.values()).every(s => s.readyState === WebSocket.OPEN);
                 if (allConnected) {
                     setConnectionStatus('connected');
@@ -409,7 +406,6 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                 if (roundRecord.type === SchedulerType.NSE && roundRecord.roundRecordGameType === RoundRecordGameType.SEVEN_UP_DOWN) {
                     const markets = [
                         { type: SchedulerType.NSE, url: process.env.NEXT_PUBLIC_NSE_WEBSOCKET_URL, handler: handleNSEMessage },
-                        { type: SchedulerType.USA_MARKET, url: process.env.NEXT_PUBLIC_USA_WEBSOCKET_URL, handler: handleUSAMessage },
                         { type: SchedulerType.CRYPTO, url: process.env.NEXT_PUBLIC_CRYPTO_WEBSOCKET_URL, handler: handleCryptoMessage },
                         { type: SchedulerType.MCX, url: process.env.NEXT_PUBLIC_MCX_WEBSOCKET_URL, handler: handleMCXMessage },
                     ];
@@ -421,6 +417,37 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                         }
                     });
                 }
+                // Multi-market scenario (USA Market Stock Slots)
+                else if (roundRecord.type === SchedulerType.USA_MARKET && roundRecord.roundRecordGameType === RoundRecordGameType.SEVEN_UP_DOWN) {
+                    const markets = [
+                        { type: SchedulerType.USA_MARKET, url: process.env.NEXT_PUBLIC_USA_WEBSOCKET_URL, handler: handleUSAMessage },
+                        { type: SchedulerType.CRYPTO, url: process.env.NEXT_PUBLIC_CRYPTO_WEBSOCKET_URL, handler: handleCryptoMessage },
+                        { type: SchedulerType.MCX, url: process.env.NEXT_PUBLIC_MCX_WEBSOCKET_URL, handler: handleMCXMessage },
+                        { type: SchedulerType.COMEX, url: process.env.NEXT_PUBLIC_COMEX_WEBSOCKET_URL, handler: handleCOMEXMessage },
+                    ];
+                    
+                    markets.forEach(market => {
+                        if (market.url) {
+                            const socket = createWebSocket(market.type, market.url, market.handler);
+                            socketsRef.current.set(market.type, socket);
+                        }
+                    });
+                }
+                // Multi-market scenario (USA Market Stock Slots)
+                else if (roundRecord.type === SchedulerType.COMEX && roundRecord.roundRecordGameType === RoundRecordGameType.STOCK_SLOTS) {
+                    const markets = [
+                        { type: SchedulerType.CRYPTO, url: process.env.NEXT_PUBLIC_CRYPTO_WEBSOCKET_URL, handler: handleCryptoMessage },
+                        { type: SchedulerType.COMEX, url: process.env.NEXT_PUBLIC_COMEX_WEBSOCKET_URL, handler: handleCOMEXMessage },
+                    ];
+                    
+                    markets.forEach(market => {
+                        if (market.url) {
+                            const socket = createWebSocket(market.type, market.url, market.handler);
+                            socketsRef.current.set(market.type, socket);
+                        }
+                    });
+                }
+
                 // Single market scenarios
                 else if (roundRecord?.type === SchedulerType.CRYPTO) {
                     socketRef.current = createWebSocket(

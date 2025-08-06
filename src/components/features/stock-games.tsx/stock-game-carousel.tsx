@@ -1,12 +1,11 @@
 "use client"
 
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { SchedulerType } from "@/models/market-item"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import { useTranslations } from "next-intl"
 import Image from "next/image"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { useTranslations } from "next-intl"
 
 
 const stockGames = [
