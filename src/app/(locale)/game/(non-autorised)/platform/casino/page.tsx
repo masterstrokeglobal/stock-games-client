@@ -43,18 +43,18 @@ export default function GamingAppInterface() {
         router.replace(`?${params.toString()}`, { scroll: false });
     };
 
-    const isCasinoAllowed = useCasinoAllowed();
+    const { isLoading, isCasinoAllowed } = useCasinoAllowed();
 
-    if (!isCasinoAllowed) notFound();
-
+    
     const areFiltersApplied =
-        !!filter.search ||
-        (filter.category && filter.category !== "all") ||
-        (filter.provider && filter.provider !== "all") ||
-        !!filter.type ||
-        !!filter.popular ||
-        !!filter.new || !!filter.providerOfWeek || !!filter.stockGameChoice;
-
+    !!filter.search ||
+    (filter.category && filter.category !== "all") ||
+    (filter.provider && filter.provider !== "all") ||
+    !!filter.type ||
+    !!filter.popular ||
+    !!filter.new || !!filter.providerOfWeek || !!filter.stockGameChoice;
+    
+    if (!isCasinoAllowed && !isLoading) notFound();
     return (
         <>
             <main className="md:mx-auto w-full md:px-4 mt-4">

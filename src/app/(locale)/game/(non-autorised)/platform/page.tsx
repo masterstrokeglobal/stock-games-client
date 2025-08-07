@@ -19,7 +19,7 @@ const PlatformPage = () => {
     const { isLoggedIn, userDetails } = useAuthStore();
     const user = userDetails as User;
 
-    const isCasinoAllowed = useCasinoAllowed();
+    const { isCasinoAllowed } = useCasinoAllowed();
 
     return (
         <section className="space-y-4 md:space-y-8 font-inter">
@@ -44,7 +44,7 @@ const PlatformPage = () => {
             {isLoggedIn && <ActiveTierCard className="my-12" />}
 
             <StockGameCarousel />
-            {isCasinoAllowed && (
+            {isCasinoAllowed  && (
                 <>
                     <CasinoProvidersCarousel title={tPlatform("game-providers")} />
                     <CategoryCarousel title={tPlatform("new-released")} new={true} direction="backward" />
