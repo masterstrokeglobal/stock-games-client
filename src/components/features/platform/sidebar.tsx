@@ -71,7 +71,7 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
     const { isMobile } = useWindowSize();
     const router = useRouter();
 
-    const isCasinoAllowed = useCasinoAllowed();
+    const {isCasinoAllowed} = useCasinoAllowed();
 
     const onClick = (item: SidebarItemType) => {
         if (isMobile) {
