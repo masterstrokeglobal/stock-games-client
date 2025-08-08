@@ -4,6 +4,8 @@ import HowToPlay from "./dialogs/HowToPlay";
 import BettingHistory from "./dialogs/BettingHistory";
 import { StockListDesktop } from "./StocksList";
 import MenuDialog from "./dialogs/MenuDialog";
+import { useAudio } from "@/context/audio-context";
+import InfoDialog from "./dialogs/InfoDialog";
 
 interface GameScreenProps {
   stockStates: number[];
@@ -24,8 +26,9 @@ const StockSlot: React.FC<GameScreenProps> = ({
   setBetAmount,
   roundRecord,
 }) => {
+  const { isMuted, toggleMute } = useAudio();
   return (
-    <div className="flex flex-col items-center justify-center h-full p-2 lg:p-5 pb-0 lg:pb-0 font-wendy-one ">
+    <div className="flex flex-col items-center justify-center h-full p-2 lg:p-5 pb-0 lg:pb-0 font-wendy-one text-white">
       <div className="flex flex-col lg:grid lg:grid-cols-12 w-full max-w-2xl lg:max-w-none h-full">
         {/* //? menu mobile  */}
         <div className="lg:hidden flex justify-between relative h-fit flex-shrink-0">
@@ -37,9 +40,15 @@ const StockSlot: React.FC<GameScreenProps> = ({
                 alt=""
               />
             </MenuDialog>
-            <button className="w-10 h-10">
+            <button
+              onClick={toggleMute}
+              className="w-10 h-10 relative flex justify-center items-center"
+            >
+              {isMuted && (
+                <div className="w-[1px] h-3/4 bg-black absolute rotate-45 z-20 "></div>
+              )}
               <img
-                className="w-full h-full"
+                className="w-full h-full block z-10"
                 src="/images/slot-machine/btn-audio.png"
                 alt=""
               />
@@ -59,13 +68,15 @@ const StockSlot: React.FC<GameScreenProps> = ({
             STOCKSLOT
           </div>
           <div className="flex flex-col justify-center items-center gap-2">
-            <button className="w-10 h-10">
-              <img
-                className="w-full h-full"
-                src="/images/slot-machine/i-btn.png"
-                alt=""
-              />
-            </button>
+            <InfoDialog>
+              <button className="w-10 h-10">
+                <img
+                  className="w-full h-full"
+                  src="/images/slot-machine/i-btn.png"
+                  alt=""
+                />
+              </button>
+            </InfoDialog>
             <button className="w-10 h-10">
               <img
                 className="w-full h-full"
@@ -132,10 +143,11 @@ const StockSlot: React.FC<GameScreenProps> = ({
         </div>
 
         {/* //? stock list  */}
-        <StockListDesktop 
+        <StockListDesktop
           roundRecord={roundRecord}
           winningIdRoundRecord={winningIdRoundRecord}
         />
+        
       </div>
     </div>
   );

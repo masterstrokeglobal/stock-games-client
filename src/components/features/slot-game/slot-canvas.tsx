@@ -2,11 +2,11 @@ import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { gsap } from 'gsap'
+import { RoundRecord } from "@/models/round-record";
 
-export const SlotCanvas = ({ stockStates }: { stockStates: number[] }) => {
+export const SlotCanvas = ({ time, stockStates, isPlaceOver, winningIdRoundRecord }: { time: string, stockStates: number[], isPlaceOver: boolean, winningIdRoundRecord: RoundRecord | null }) => {
     const mountRef = useRef<HTMLDivElement>(null)
     const cylindersRef = useRef<THREE.Mesh[]>([])
-    
 
     useEffect(() => {
         if (!mountRef.current) return
@@ -19,7 +19,7 @@ export const SlotCanvas = ({ stockStates }: { stockStates: number[] }) => {
         
         // Orthographic camera setup
         const aspect = mountRef.current.offsetWidth / mountRef.current.offsetHeight
-        const frustumSize = 10
+        const frustumSize = 17.5
         const camera = new THREE.OrthographicCamera(
             frustumSize * aspect / -2,  // left
             frustumSize * aspect / 2,   // right
@@ -84,6 +84,7 @@ export const SlotCanvas = ({ stockStates }: { stockStates: number[] }) => {
         // Load texture
         const textureLoader = new THREE.TextureLoader()
         const slotTexture = textureLoader.load('/texture/3.png')
+        const slotTexture_emoji = textureLoader.load('/texture/emoji.png')
         
         // Configure texture wrapping and repeat
         slotTexture.wrapS = THREE.RepeatWrapping
@@ -100,14 +101,29 @@ export const SlotCanvas = ({ stockStates }: { stockStates: number[] }) => {
         slotTexture.rotation = Math.PI / 2
         slotTexture.center.set(0.5, 0.5) // Set rotation center to middle of texture
         
+        // Configure emoji texture
+        slotTexture_emoji.wrapS = THREE.RepeatWrapping
+        slotTexture_emoji.wrapT = THREE.RepeatWrapping
+        slotTexture_emoji.repeat.set(1, 1)
+        slotTexture_emoji.magFilter = THREE.LinearFilter
+        slotTexture_emoji.minFilter = THREE.LinearMipmapLinearFilter
+        slotTexture_emoji.generateMipmaps = false 
+        slotTexture_emoji.anisotropy = renderer.capabilities.getMaxAnisotropy()
+        slotTexture_emoji.rotation = Math.PI / 2
+        slotTexture_emoji.center.set(0.5, 0.5)
+        
         // CylinderGeometry(radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded)
-        const cylinderGeometry = new THREE.CylinderGeometry(5, 5, 2.7, 20, 1, true)
+        const radius = 8
+        const cylinderGeometry = new THREE.CylinderGeometry(radius, radius, 2.7, 20, 1, true)
         const gap = 2.8
         const cylinders: THREE.Mesh[] = []
 
         colors.forEach((color, index) => {
+            // Use emoji texture for the 6th wheel (index 5)
+            const textureToUse = index === 5 ? slotTexture_emoji : slotTexture
+            
             const material = new THREE.MeshStandardMaterial({
-                map: slotTexture,
+                map: textureToUse,
                 color: new THREE.Color(0xffd700),
                 metalness: 0.8,
                 roughness: 0.3,
@@ -128,7 +144,7 @@ export const SlotCanvas = ({ stockStates }: { stockStates: number[] }) => {
         })
 
         // Camera position
-        camera.position.z = 8
+        camera.position.z = 10
 
         // Orbit Controls
         const controls = new OrbitControls(camera, renderer.domElement)
@@ -141,6 +157,17 @@ export const SlotCanvas = ({ stockStates }: { stockStates: number[] }) => {
             requestAnimationFrame(animate)
             controls.update()
             renderer.render(scene, camera)
+            const isPlaceOver_local_store = window.localStorage.getItem('isPlaceOver') || false
+            if (isPlaceOver_local_store === 'true') {
+                const speed = 0.05
+                cylindersRef.current.forEach((cylinder, index) => {
+                    if (index % 2 === 0) {
+                        cylinder.rotation.x += speed
+                    } else {
+                        cylinder.rotation.x -= speed
+                    }
+                })
+            }
         }
         animate()
 
@@ -176,24 +203,47 @@ export const SlotCanvas = ({ stockStates }: { stockStates: number[] }) => {
         }
     }, [])
 
-    // Animate wheels based on stockStates changes
+    // Animate wheels based on stockStates changes - ONLY when betting is closed
     useEffect(() => {
         if (cylindersRef.current.length === 0) return
 
-        stockStates.forEach((value, index) => {
-            if (cylindersRef.current[index]) {
-                const targetRotation =  - ( Math.PI/2 + (value * 36) * (Math.PI / 180)) + Math.PI/2 + Math.PI/16 // Add to initial rotation
-                
-                gsap.to(cylindersRef.current[index].rotation, {
-                    x: targetRotation , // Adding to the existing Math.PI/2 rotation
-                    duration: 1,
-                    ease: "power2.inOut",
-                })
-            }
-        })
-    }, [stockStates])
+        // Only animate when betting is closed (isPlaceOver is true)
+        if (!isPlaceOver) {
+            window.localStorage.setItem('isPlaceOver', 'false')
+            return
+        }
+
+        if (winningIdRoundRecord !== null && isPlaceOver && time === "00" ) {
+            console.log(`sarthak sharma winningIdRoundRecord 2`, winningIdRoundRecord )
+            window.localStorage.setItem('isPlaceOver', 'false')
+
+            stockStates.forEach((value, index) => {
+                if (cylindersRef.current[index]) {
+                    const targetRotation = - (Math.PI / 2 + (value * 36) * (Math.PI / 180)) + Math.PI / 2 + Math.PI / 16 // Add to initial rotation
+
+                    gsap.to(cylindersRef.current[index].rotation, {
+                        x: targetRotation, // Adding to the existing Math.PI/2 rotation
+                        duration: 1,
+                        ease: "power2.out",
+                        onComplete: () => {
+                            console.log("sarthak sharma onComplete")
+                        }
+                    })
+                }
+            })
+            return;
+        }
+
+
+        if (isPlaceOver) {
+            // make all the wheels spin 360 degrees please and then repeat the animation
+            window.localStorage.setItem('isPlaceOver', 'true')
+            return
+        }
+
+    }, [stockStates, isPlaceOver, winningIdRoundRecord])
 
     return (
-        <div ref={mountRef} className="w-full h-full bg-black"></div>
+        <div ref={mountRef} className="w-full aspect-square relative bg-red-501 flex items-center justify-center slot-canvas-container"></div>
     )
 }

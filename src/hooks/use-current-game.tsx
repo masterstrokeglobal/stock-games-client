@@ -151,6 +151,10 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
             timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 5000;
         }
 
+        if(roundRecord.roundRecordGameType === RoundRecordGameType.STOCK_JACKPOT){
+            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 8000;
+        }
+
         const gameEnd = setTimeout(() => {
             queryClient.invalidateQueries({
                 predicate: (query) => {

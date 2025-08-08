@@ -52,10 +52,10 @@ const Page = () => {
 
       if (winningIdRoundRecord?.bonusMultiplier) {
         newStockStates[5] = Math.min(num, 4); // Ensure it's max 4
-      } else {
-        newStockStates[5] = Math.floor(Math.random() * 5); // Only 0-4 for multipliers
-        console.log("final result multiplier", newStockStates)
-      }
+      } 
+      // else {
+      //   newStockStates[5] = Math.floor(Math.random() * 5); // Only 0-4 for multipliers
+      // }
 
       setStockStates(newStockStates);
     }

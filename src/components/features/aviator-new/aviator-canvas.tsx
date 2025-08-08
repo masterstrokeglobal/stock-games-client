@@ -145,7 +145,6 @@ const AviatorCanvas = ({
 
           // Create actions for all animations
           animations.forEach((clip) => {
-            console.log("loki clip", clip.name);
             const action = mixer!.clipAction(clip);
             action.setLoop(THREE.LoopRepeat, Infinity);
             // Start animations but pause them immediately
@@ -332,7 +331,7 @@ const AviatorCanvas = ({
   useEffect(() => {
     if (!canvasContainerRef.current) return;
 
-    const isGameActive = multiplier > 1.0;
+    const isGameActive = multiplier > 0.0;
 
     if (shouldStartTakeOffAnimation || isGameActive) {
       // Scale up to full size and move to center when animation starts OR when game is active (multiplier > 1)
@@ -350,15 +349,13 @@ const AviatorCanvas = ({
   }, [shouldStartTakeOffAnimation, multiplier]);
 
   useEffect(() => {
-    console.log("loki canvas isGameOver", isGameOver);
-    console.log("loki canvas isPlaneAtBottom", isPlaneAtBottom);
     if (!canvasContainerRef.current) return;
     if (!isPlaneAtBottom) {
       console.log("📉 Scaling canvas to half size and moving to bottom-left");
       gsap.to(canvasContainerRef.current, {
         scale: isMobile ? 0.5 : 0.8,
         x: "-15%", // Move left
-        y: isMobile ? "0%" : "30%", // Move down
+        y: "30%", // Move down
         rotation: 0,
         duration: 1,
         ease: "power2.out",
@@ -370,7 +367,7 @@ const AviatorCanvas = ({
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 justify-center items-center"
+      className="absolute inset-0 justify-center items-center z-0"
       style={{ pointerEvents: "auto" }}
     >
       <div
@@ -379,14 +376,14 @@ const AviatorCanvas = ({
         data-canvas-container
         style={{
           transformOrigin: "center center",
-          transform: `scale(1)${isMobile ? " translate(0%, 0%)" : " translate(-30%, 40%)"} rotate(0deg)`, // Initial scale and position
+          transform: `scale(1) translate(-30%, 40%) rotate(0deg)`, // Initial scale and position
           opacity: opacity,
           transition: "opacity 0.3s ease-in-out",
         }}
       >
         <canvas
           ref={canvasRef}
-          className="w-full h-full"
+          className="w-full h-full z-0"
           style={{
             background: "transparent",
             cursor: "grab",
@@ -395,7 +392,7 @@ const AviatorCanvas = ({
           onMouseDown={(e) => (e.currentTarget.style.cursor = "grabbing")}
           onMouseUp={(e) => (e.currentTarget.style.cursor = "grab")}
           onMouseLeave={(e) => (e.currentTarget.style.cursor = "grab")}
-        />
+        />``
       </div>
     </div>
   );

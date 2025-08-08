@@ -30,7 +30,7 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
     const isMobile = width < 768;
 
     const isPlaceOver = useIsPlaceOver(roundRecord);
-    // const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+// const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
 
     useEffect(() => {

@@ -80,7 +80,8 @@ const ResultDialog: React.FC<ResultDialogProps> = ({ open, roundRecordId }) => {
   const { data: resultData } = useStockGameRoundResult(roundRecordId, open);
 
   const isWin = useMemo(() => {
-    return Number(resultData?.netProfitLoss ?? 0) > 0;
+    if(!resultData) return null
+    return resultData?.netProfitLoss ?? 0 > 0;
   }, [resultData]);
 
   useEffect(() => {
@@ -95,7 +96,7 @@ const ResultDialog: React.FC<ResultDialogProps> = ({ open, roundRecordId }) => {
   }, [open]);
 
   // Show win/loss animation for first 2 seconds, but only after data is loaded
-  if (showInitialAnimation && isWin !== null) {
+  if (showInitialAnimation) {
     return (
       <Dialog defaultOpen={open}>
         <DialogContent

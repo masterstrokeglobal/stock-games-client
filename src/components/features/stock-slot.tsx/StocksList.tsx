@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { useLeaderboard } from "@/hooks/use-leadboard";
 import { RoundRecord } from "@/models/round-record";
+import InfoDialog from "./dialogs/InfoDialog";
 
 // Helper function to highlight the first decimal digit with yellow color
 const formatPriceWithHighlightedDecimal = (price: string) => {
@@ -78,7 +79,7 @@ export const StockListMobile: React.FC<StockListProps> = ({
           const price = parseFloat(
             stockPrice[stock.code ?? ""]?.toString() || "0"
           ).toFixed(2);
-          const stockName = stock.name|| `Stock ${index + 1}`;
+          const stockName = stock.name || `Stock ${index + 1}`;
 
           return (
             <div
@@ -140,6 +141,18 @@ export const StockListDesktop: React.FC<StockListProps> = ({
 
   return (
     <div className="hidden lg:flex lg:col-span-2 justify-center items-start relative text-xl">
+      <div className="flex justify-center items-center absolute right-0">
+        <InfoDialog>
+          <button className="w-10 h-10">
+            <img
+              className="w-full h-full "
+              src="/images/slot-machine/i-btn.png"
+              alt=""
+            />
+          </button>
+        </InfoDialog>
+      </div>
+
       <div className="mt-[70px] flex flex-col items-center justify-center gap-3 w-full z-40">
         {currentStocks.slice(0, 5).map((stock, index) => {
           const price = parseFloat(

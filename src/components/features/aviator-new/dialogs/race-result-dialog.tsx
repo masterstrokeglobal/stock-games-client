@@ -36,7 +36,7 @@ const RaceResultDialog = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger>{children}</DialogTrigger>
+      <DialogTrigger className="z-20">{children}</DialogTrigger>
       <DialogContent
         showButton={false}
         className="bg-transparent border-none w-full max-w-2xl p-3"

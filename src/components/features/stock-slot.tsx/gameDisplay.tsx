@@ -26,10 +26,11 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
   setBetAmount,
   roundRecord,
 }) => {
-  const { gameTimeLeft, placeTimeLeft } = useGameState(roundRecord);
+  const { gameTimeLeft, placeTimeLeft, isGameOver } = useGameState(roundRecord);
   const { data: myPlacementData } =
     useGetMySlotGamePlacement(roundRecord.id);
   const { showResults, previousRoundId } = useShowResults(roundRecord, myPlacementData?.data ?? []);
+
 
   // Calculate the display time and status
   const displayTime = !isPlaceOver
@@ -43,7 +44,7 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
     <>
       {/* //? bet status and timer  */}
       <div className=" w-full lg:w-auto lg:absolute lg:top-0 z-[80] flex flex-col items-center justify-center">
-        <h1 className={`text-xl lg:text-4xl xl:text-5xl font-bold `}>
+        <h1 className={`text-xl lg:text-4xl xl:text-5xl font-bold text-white`}>
           {statusText}
         </h1>
 
@@ -56,7 +57,7 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
           }}
           className=" translate-y-1/3 lg:translate-y-0 lg:h-[80px] h-[43px] lg:w-[209px] w-[112px] flex items-center justify-center"
         >
-          <span className="translate-x-[40%] text-[15px] lg:text-2xl xl:text-[40px] font-bold">
+          <span className="text-white translate-x-[40%] text-[15px] lg:text-2xl xl:text-[40px] font-bold">
             {displayTime}
           </span>
         </div>
@@ -69,6 +70,7 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
           isGameActive={isGameActive}
           winningIdRoundRecord={winningIdRoundRecord}
           isPlaceOver={isPlaceOver}
+          isGameOver ={isGameOver}
         />
       </div>
 

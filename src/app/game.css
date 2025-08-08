@@ -144,6 +144,17 @@
     }
 }
 
+@keyframes slotWinPulse {
+    0%, 100% { 
+        box-shadow: 0px 0px 20px 20px #D3AF37;
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0px 0px 40px 40px #FFD700;
+        transform: scale(1.2);
+    }
+}
+
 
 
 /* .custom-toast ::before {

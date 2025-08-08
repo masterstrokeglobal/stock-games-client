@@ -13,12 +13,16 @@ interface StockSlot2DWheelProps {
   isGameActive?: boolean;
   winningIdRoundRecord?: any;
   isPlaceOver?: boolean;
+  isGameOver: boolean;
 }
+
+const defaultGlowState = [false, false, false, false, false];
 
 const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
   stockStates = [0, 0, 0, 0, 0, 0],
   isGameActive = false,
   winningIdRoundRecord,
+  isGameOver,
   isPlaceOver = false,
 }) => {
   const wheelRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -28,11 +32,12 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
     { id: 2, currentValue: 0, targetValue: 0, isSpinning: false },
     { id: 3, currentValue: 0, targetValue: 0, isSpinning: false },
     { id: 4, currentValue: 0, targetValue: 0, isSpinning: false },
-    { id: 5, currentValue: 0, targetValue: 0, isSpinning: false },
+    // { id: 5, currentValue: 0, targetValue: 0, isSpinning: false },
   ]);
   const [numberHeight, setNumberHeight] = useState(100);
   const wheelContainerRef = useRef<HTMLDivElement>(null);
   const hasInitializedRef = useRef(false);
+  const [glowSate, setGlowState] = useState<boolean[]>(defaultGlowState);
 
   // Numbers for regular columns (0-9) and multiplier column (0-4)
   // Regular: 3 sequences of 0-9 (indices 0-9, 10-19, 20-29) - target middle at 10-19
@@ -46,7 +51,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
     0, 1, 2, 3, 4,
   ];
 
-  // Start continuous spinning when game phase begins (betting is over)
+  //? Start continuous spinning when game phase begins (betting is over)
   useEffect(() => {
     if (isPlaceOver && isGameActive) {
       setWheels((prev) =>
@@ -105,6 +110,29 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
     ) {
       console.log("Stopping wheels with stockStates:", stockStates);
 
+      // Step 1: Count occurrences
+      const countMap = new Map<number, number>();
+      stockStates.slice(0, 5).forEach((num) => {
+        countMap.set(num, (countMap.get(num) || 0) + 1);
+      });
+
+      // Step 2: Find the max count
+      const maxCount = Math.max(...Array.from(countMap.values()));
+
+      if (maxCount > 1) {
+        // Step 3: Find all numbers with the max count
+        const mostRepeatedNumbers = Array.from(countMap.entries())
+          .filter(([, count]) => count === maxCount)
+          .map(([num]) => num);
+
+        // Step 4: Pick any one of the most repeated numbers (if tie, pick the first)
+        const chosenNumber = mostRepeatedNumbers[0];
+
+        // Step 5: Create the boolean array
+        const newglowState = stockStates.map((num) => num === chosenNumber);
+        setGlowState(newglowState);
+      }
+
       // Update target values and stop spinning state
       setWheels((prev) =>
         prev.map((wheel, index) => ({
@@ -114,7 +142,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
         }))
       );
 
-      // Animate each wheel to its final position with staggered timing
+      // Animate each wheel to its final position with staggered timin
       stockStates.forEach((targetValue, index) => {
         const wheelRef = wheelRefs.current[index];
         if (wheelRef && targetValue !== undefined) {
@@ -175,7 +203,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
     }
   }, [isGameActive, winningIdRoundRecord, stockStates, numberHeight]);
 
-
+  //? adjusting wheel height
   useEffect(() => {
     function handleResize() {
       if (wheelContainerRef.current) {
@@ -191,32 +219,32 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  //? reseeting wheel position during responsivenss
   useEffect(() => {
-  if (!numberHeight || !wheelRefs.current.length) return;
+    if (!numberHeight || !wheelRefs.current.length) return;
 
-  wheels.forEach((wheel, index) => {
-    const wheelRef = wheelRefs.current[index];
-    if (!wheelRef) return;
+    wheels.forEach((wheel, index) => {
+      const wheelRef = wheelRefs.current[index];
+      if (!wheelRef) return;
 
-    const value =
-      isGameActive && isPlaceOver
-        ? null // spinning, don't reset
-        : wheel.targetValue ?? 0;
+      const value =
+        isGameActive && isPlaceOver
+          ? null // spinning, don't reset
+          : wheel.targetValue ?? 0;
 
-    // Pick a safe default in case targetValue is null
-    const finalValue = index === 5 ? Math.min(value ?? 0, 4) : value ?? 0;
-    const targetIndex = 10 + finalValue;
-    const finalPosition = -(targetIndex * numberHeight) + numberHeight * 2;
+      // Pick a safe default in case targetValue is null
+      const finalValue = index === 5 ? Math.min(value ?? 0, 4) : value ?? 0;
+      const targetIndex = 10 + finalValue;
+      const finalPosition = -(targetIndex * numberHeight) + numberHeight * 2;
 
-    gsap.set(wheelRef, { y: finalPosition });
-  });
-}, [numberHeight]);
+      gsap.set(wheelRef, { y: finalPosition });
+    });
+  }, [numberHeight]);
 
-
-  // Initialize random positions only once when component mounts and isPlaceOver is false
+  //? Initialize random positions only once when component mounts and game hasnt statrted yet
   useEffect(() => {
-    if(isPlaceOver){
-      hasInitializedRef.current = true
+    if (isPlaceOver) {
+      hasInitializedRef.current = true;
     }
     if (
       !isPlaceOver &&
@@ -229,7 +257,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
       wheelRefs.current.forEach((wheelRef, index) => {
         if (wheelRef) {
           gsap.killTweensOf(wheelRef);
-          
+
           const randomValue =
             index === 5
               ? Math.floor(Math.random() * 5)
@@ -239,12 +267,17 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
           const randomPosition =
             -(targetIndex * numberHeight) + numberHeight * 2;
 
-
           gsap.set(wheelRef, { y: randomPosition });
         }
       });
-    } 
+    }
   }, [numberHeight, isPlaceOver]);
+
+  useEffect(() => {
+    if (!isGameOver) {
+      setGlowState(defaultGlowState);
+    }
+  }, [isGameOver]);
 
   return (
     <div
@@ -260,9 +293,12 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
         ref={wheelContainerRef}
         className="w-[60%] max-w-4xl mx-auto h-[50%] relative"
       >
-        <div className="grid grid-cols-6 px-4 h-full">
+        <div className="grid grid-cols-5 px-4 h-full relative justify-center items-center">
           {wheels.map((wheel, wheelIndex) => (
-            <div key={wheel.id} className="relative h-full overflow-hidden ">
+            <div
+              key={wheel.id}
+              className="relative h-full overflow-hidden z-30"
+            >
               {/* Wheel content */}
               <div
                 ref={(el) => {
@@ -275,7 +311,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
                   (number, numberIndex) => (
                     <div
                       key={`${wheelIndex}-${numberIndex}`}
-                      className="flex items-center justify-center"
+                      className="flex items-center justify-center relative"
                     >
                       <img
                         style={{ height: numberHeight }}
@@ -289,11 +325,48 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
                     </div>
                   )
                 )}
-                {/* Overlay for 3-row display */}
-                <div className="absolute inset-0 pointer-events-none"></div>
               </div>
             </div>
           ))}
+          {/* //? border for center lane */}
+          <div
+            style={{
+              height: isGameOver ? numberHeight :0 ,
+              backgroundImage: "url('/images/slot-machine/menu-bg.png')",
+              // backgroundImage: "url('/images/slot-machine/stock-list.png')",
+              backgroundSize: "100% 100%",
+              backgroundPosition: "center center",
+              backgroundRepeat: "no-repeat",
+            }}
+            className={`absolute ${
+              isGameOver ? "opacity-1" : "opacity-0"
+            } z-10 pointer-events-none w-full rounded-lg transition-all duration-300`}
+          ></div>
+          {/* //? glow effect for winning numbers */}
+          <div
+            style={{ height: numberHeight }}
+            className="grid grid-cols-5 justify-center items-center w-full z-20 absolute px-4"
+          >
+            {glowSate.map((glow, i) => (
+              <div
+                key={i}
+                style={{ height: numberHeight }}
+                className="w-full flex justify-center items-center"
+              >
+                <div
+                  key={i}
+                  style={{
+                    animation: "slotWinPulse 0.8s ease-in-out infinite",
+                    boxShadow: `0px 0px ${numberHeight / 3}px ${
+                      numberHeight / 3
+                    }px #D3AF37`,
+                    opacity: glow ? 1 : 0,
+                  }}
+                  className="pointer-events-none w-[1px] h-[1px] rounded-full z-10 transition-all duration-300"
+                ></div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

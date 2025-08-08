@@ -14,7 +14,7 @@ const HowToPlay = ({ children }: { children: React.ReactNode }) => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger className="w-full">{children}</DialogTrigger>
       <DialogContent
-        showButton={false}
+        // showButton={false}
         className="bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl"
       >
         <div
@@ -36,10 +36,11 @@ const HowToPlay = ({ children }: { children: React.ReactNode }) => {
               How to play
             </DialogTitle>
           </DialogHeader>
-          <DialogDescription className="text-center mb-5 p-2 flex flex-col gap-2 w-full overflow-y-auto max-h-[40vh] min-h-[200px] text-xs lg:text-base xl:text-2xl">
-            <div className="flex flex-col gap-2">
+          <DialogDescription className="text-center text-white mb-5 p-2 flex flex-col gap-2 w-full overflow-y-auto max-h-[40vh] min-h-[200px] text-xs lg:text-base xl:text-2xl">
+            <div className="flex flex-col gap-2 text-left text-white">
               <h3>1. Game Overview</h3>
-              <p>
+              <div className="ps-2 lg:ps-5">
+ <p>
                 The Stock Slot Game combines the excitement of stock market
                 numbers with slot-style gameplay.{" "}
               </p>
@@ -47,10 +48,13 @@ const HowToPlay = ({ children }: { children: React.ReactNode }) => {
                 You have <b>30 seconds to place your bets</b> and{" "}
                 <b>30 seconds to view the results</b> of the spin.
               </p>
+              </div>
+             
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 text-left">
               <h3>2. Betting Rules</h3>
+              <div className="ps-2 lg:ps-5">
               <p>
                 You can only place bets during the <b>Betting Open</b> state
                 (first 30 seconds).
@@ -66,33 +70,28 @@ const HowToPlay = ({ children }: { children: React.ReactNode }) => {
                 You can increase or decrease your bet in steps of <b>100</b>{" "}
                 during the betting period.
               </p>
+              </div>
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 text-left">
               <h3>3. Stock Selection & Price Logic</h3>
+              <div className="ps-2 lg:ps-5">
               <p>
                 The game uses <b>5 randomly selected stocks</b> from the chosen
                 market.
               </p>
               <p>
                 Stock values are derived from their{" "}
-                <b>.10 value (last decimal point)</b> to generate the slot
+                <b>.1 value (first decimal point)</b> to generate the slot
                 numbers.
               </p>
               <p>These 5 numbers form the base result for the slot reels.</p>
+              </div>
             </div>
 
-            <div className="flex flex-col gap-2">
-              <h3>4. Bonus Symbols</h3>
-              <p>
-                There are <b>5 unique Bonus Symbols</b> in the slot reels.
-              </p>
-              <p>Landing bonus symbols increases your winnings.</p>
-              <p>Bonus effects stack with normal payouts.</p>
-            </div>
-
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 text-left">
               <h3>5. Winning Conditions</h3>
+              <div className="ps-2 lg:ps-5">
               <p>
                 The slot machine result is decided by{" "}
                 <b>matching numbers on the middle row</b>.
@@ -116,10 +115,12 @@ const HowToPlay = ({ children }: { children: React.ReactNode }) => {
                 <b>Bonus symbols</b>, if present, add <b>extra rewards</b> on
                 top of your multiplier.
               </p>
+              </div>
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 text-left">
               <h3>6. Result & Payout</h3>
+              <div className="ps-2 lg:ps-5">
               <p>After the 30-second spin, results are displayed showing:</p>
               <p>
                 <b>Stock values</b>
@@ -134,6 +135,7 @@ const HowToPlay = ({ children }: { children: React.ReactNode }) => {
                 Winnings are automatically credited based on your bet and
                 multiplier.
               </p>
+              </div>
             </div>
           </DialogDescription>
         </div>

@@ -25,8 +25,8 @@ export default function LastRoundsPanel() {
 
   return (
     <div className="flex flex-shrink-0 max-w-[320px] xl:max-w-[420px] flex-1 h-full z-50">
-      <div className="w-full h-full flex flex-col overflow-x-auto">
-        <div className="flex-none space-y-6 text-[#FFFFFF80] h-full">
+      <div className="w-full h-full flex flex-col">
+        <div className="flex-none space-y-6 text-[#FFFFFF80] h-full overflow-hidden" >
           {/* Header Bar */}
           <div className="flex items-center justify-between gap-1 font-poppins flex-shrink-0">
             <BettingHistoryDialog />
@@ -75,11 +75,11 @@ export default function LastRoundsPanel() {
           </div>
 
           {/* results Table */}
-          <div className="w-full min-w-[320px] flex flex-col gap-4 text-sm xl:text-base flex-1 h-full">
+          <div className="w-full min-w-[320px] flex flex-col gap-4 text-sm xl:text-base flex-1">
             <h1 className="uppercase text-center font-quantico">
               Race results
             </h1>
-            <div className="w-full flex flex-col gap-2 h-full">
+            <div className="w-full flex flex-col gap-2 h-[50vh]">
               <div className="flex items-center gap-2 w-full px-2">
                 <div className="grid grid-cols-4 font-poppins uppercase w-full border border-transparent">
                   <div className="pb-2 text-left">Time</div>
@@ -88,7 +88,7 @@ export default function LastRoundsPanel() {
                   <div className="pb-2 text-right">Status</div>
                 </div>
               </div>
-              <div className="space-y-2 w-full overflow-y-auto flex-1">
+              <div className="space-y-2 w-full overflow-y-auto flex-1 ">
                 {lastRounds?.map((round, index) => (
                   <div
                     key={`${round.roundId}-${round.code}-${index}`}

@@ -4,11 +4,12 @@ import ParallaxObjectLayer from "./parallax-object-layer"
 import { layerConfigs, generateLayerObjects } from "./parallax-layer-config"
 
 interface ParallaxImageProps {
-  multiplier: number
+  multiplier: number,
+  isPlaceOver:boolean,
   isMoving?: boolean // Control whether the constant X movement is active
 }
 
-export default function ParallaxImage({ multiplier, isMoving = false }: ParallaxImageProps) {
+export default function ParallaxImage({ multiplier, isMoving = false, isPlaceOver }: ParallaxImageProps) {
   const imageRef = useRef<HTMLDivElement>(null)
   const imgContainerRef = useRef<HTMLDivElement>(null)
 
@@ -106,7 +107,9 @@ export default function ParallaxImage({ multiplier, isMoving = false }: Parallax
   }, [isMoving]) // Re-run when isMoving changes
 
   useEffect(() => {
-    if (!imageRef.current || !imgContainerRef.current) return
+    if (!imageRef.current || !imgContainerRef.current || isPlaceOver) return
+
+    console.log('debug plane - moving down')
 
     // Calculate the progress from 1x to 10x multiplier for Y-axis only
     const normalizedMultiplier = Math.max(1, Math.min(5, multiplier))
@@ -128,7 +131,7 @@ export default function ParallaxImage({ multiplier, isMoving = false }: Parallax
       duration: 1.2,
       ease: "power1.out",
     })
-  }, [multiplier, imgContainerRef.current])
+  }, [multiplier, imgContainerRef.current, isPlaceOver])
 
 
   return (
@@ -150,7 +153,6 @@ export default function ParallaxImage({ multiplier, isMoving = false }: Parallax
         {layerConfigs.map((layer) => {
           const containerRef = containerRefs[layer.ref as keyof typeof containerRefs]
           const objects = layerObjectsMap[layer.ref] || [] // Use stable objects from state
-          console.log("here layer")
 
           return (
             <ParallaxObjectLayer

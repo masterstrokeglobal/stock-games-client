@@ -9,7 +9,7 @@ import { AviatorPlacement } from "@/models/aviator-placement";
 import { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { useAviatorMyPlacement } from "@/react-query/aviator-queries";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { NextRoundTimer } from "./time-display";
 
 interface BettingPanelProps {
@@ -27,10 +27,6 @@ export default function BettingPanel({
   const { data: myPlacement } = useAviatorMyPlacement(roundRecord.id);
   const { stockSelectedAviator } = useStockSelectorAviator();
   const { gameType } = useGameType();
-
-  useEffect(() => {
-    console.log("loki betting panel", myPlacement);
-  }, [myPlacement]);
 
   // Get current plane information
   const currentPlane = useMemo(() => {
@@ -58,10 +54,6 @@ export default function BettingPanel({
         : currentPlane.codeName;
     return aviator.planeStatus.get(codeToCheck ?? "")?.multiplier || 0;
   }, [currentPlane, aviator.planeStatus, gameType]);
-
-  useEffect(() => {
-    console.log("loki currentPlaneMultiplier", currentPlaneMultiplier);
-  }, [currentPlaneMultiplier]);
 
   // Check if user has ANY bet in this round (single bet restriction)
   const hasAnyBetInRound = useMemo(() => {
@@ -219,7 +211,7 @@ export default function BettingPanel({
   };
 
   return (
-    <div className="betting-panel-container flex-shrink-0">
+    <div className="betting-panel-container flex-shrink-0 lg:overflow-y-auto">
       <div className="flex flex-col-reverse lg:flex-col lg:space-y-8 space-y-5 lg:w-[324px] w-full flex-shrink-0">
         {isPlaceOver && hasAnyBetInRound && (
           <div className="flex-col gap-2 justify-start items-start hidden lg:flex">

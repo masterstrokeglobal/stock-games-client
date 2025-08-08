@@ -4,56 +4,52 @@ import useAviator from "@/hooks/use-aviator";
 import { useGameState } from "@/hooks/use-current-game";
 import {
   useGameType,
-  useStockSelectorAviator,
 } from "@/hooks/use-market-selector";
-//  import useWindowSize from "@/hooks/use-window-size";
+import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { useEffect, useState, useMemo } from "react";
 import { useAviatorMyPlacement } from "@/react-query/aviator-queries";
 import TimeDisplay from "./time-display";
-
-// import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import BettingPanel from "./BettingPanel";
 import GameDisplay from "./GameDisplay";
-// import LastRoundsPanel from "./LastRoundsPanel";
+import LastRoundsPanel from "./LastRoundsPanel";
 import MenuDialog from "./dialogs/menu-dialog";
 import GameEndDialog from "./game-end-dialog";
 import RaceResultDialog from "./dialogs/race-result-dialog";
+import AviatorCanvas from "./aviator-canvas";
 
 type AviatorProps = {
   className?: string;
   roundRecord: RoundRecord;
   token: string;
-};  
+  stockSelectedAviator: any
+};
 
 export default function Aviator({
   className,
   roundRecord,
   token,
+  stockSelectedAviator
 }: AviatorProps) {
   const { gameType } = useGameType();
-  const { stockSelectedAviator } = useStockSelectorAviator();
-  const { isPlaceOver, placeTimeLeft, isGameOver } = useGameState(roundRecord);
+  const { isPlaceOver, placeTimeLeft, isGameOver, isPlaceStarted } = useGameState(roundRecord);
   const { data: myPlacement } = useAviatorMyPlacement(roundRecord.id);
 
   const [isParallaxMoving, setIsParallaxMoving] = useState(false);
   const [hasTriggeredFlying, setHasTriggeredFlying] = useState(false);
   const [canvasOpacity, setCanvasOpacity] = useState(1);
   const [isDialogVisible, setIsDialogVisible] = useState(false);
+  const [isCurrentPlaneCrashed, setIsCurrentPlaneCrashed] = useState(false);
+
+  const { isMobile } = useWindowSize();
 
   // Callback to handle when selected plane crashes
   const handleSelectedPlaneCrash = (crashed: boolean) => {
     if (crashed) {
       console.log("💥 SELECTED PLANE CRASHED - Triggering blast video!");
       setCanvasOpacity(0);
-
-      // Reset canvas opacity after blast video
-      // setTimeout(() => {
-      //   console.log("🎨 Resetting canvas opacity after blast");
-      //   setCanvasOpacity(1);
-      // }, 5000);
     }
   };
 
@@ -63,8 +59,6 @@ export default function Aviator({
     roundRecord: roundRecord,
     onSelectedPlaneCrash: handleSelectedPlaneCrash,
   });
-
-  // const { isMobile } = useWindowSize();
 
   // Get current stock information
   const currentStock = roundRecord.market.find(
@@ -83,24 +77,30 @@ export default function Aviator({
 
   const currentMultiplier = getCurrentMultiplier();
 
-  // Get the user's single bet placement (if any)
+  const planeStatus = useMemo(() => {
+    return currentStock
+      ? aviator.planeStatus?.get(
+          gameType === SchedulerType.CRYPTO
+            ? currentStock.code ?? ""
+            : currentStock.codeName ?? ""
+        )?.status
+      : undefined;
+  }, [currentStock, aviator]);
+
+  //? Get the user's single bet placement (if any)
   const userPlacement = useMemo(() => {
     if (!myPlacement || myPlacement.length === 0) return null;
     return myPlacement[0]; // Since we only allow one bet, get the first (and only) placement
   }, [myPlacement]);
 
-  // Check if user's bet is on the currently selected plane
+  //? Check if user's bet is on the currently selected plane
   const isBetOnCurrentPlane = useMemo(() => {
     if (!userPlacement || !stockSelectedAviator) return false;
     return userPlacement.marketItem.id === Number(stockSelectedAviator);
   }, [userPlacement, stockSelectedAviator]);
 
-  // Mobile responsiveness state
-  // const [showLastRounds, setShowLastRounds] = useState(false);
-
-  // Handle game state changes based on roundRecord
+  //? Handle game state changes based on roundRecord
   useEffect(() => {
-    console.log("🎯 isPlaceOver", isPlaceOver, placeTimeLeft);
     // Trigger flying sequence when 2 seconds left in betting phase
     if (
       (!isPlaceOver &&
@@ -141,19 +141,30 @@ export default function Aviator({
     isParallaxMoving,
   ]);
 
-  // Handle round end - play blast video when round ends regardless of selected plane
+  //? Handle round end 
   useEffect(() => {
     if (isGameOver) {
-      console.log("🎯 Round ended - Triggering blast video");
       setCanvasOpacity(0);
-
-      // Reset canvas opacity after blast video
-      setTimeout(() => {
-        console.log("🎨 Resetting canvas opacity after round end blast");
-        setCanvasOpacity(1);
-      }, 5000);
     }
   }, [isGameOver]);
+  
+
+  //? show canvas when round starts
+  useEffect(() => {
+    if (isPlaceStarted) {
+      setCanvasOpacity(1);
+    }
+  }, [isPlaceStarted]);
+
+  //? updating plane crash and parllax status
+  useEffect(() => {
+    if (planeStatus === "crashed" || planeStatus === "flew_away") {
+      setIsCurrentPlaneCrashed(true);
+      setIsParallaxMoving?.(false);
+    } else {
+      setIsCurrentPlaneCrashed(false);
+    }
+  }, [planeStatus]);
 
   return (
     <div
@@ -162,33 +173,23 @@ export default function Aviator({
         className
       )}
     >
-      {/* main game animations  */}
+      {/* mbackground */}
       <GameDisplay
         multiplier={currentMultiplier}
         isParallaxMoving={isParallaxMoving}
-        setIsParallaxMoving={setIsParallaxMoving}
-        canvasOpacity={canvasOpacity}
-        planeStatus={
-          currentStock
-            ? aviator.planeStatus?.get(
-                gameType === SchedulerType.CRYPTO
-                  ? currentStock.code ?? ""
-                  : currentStock.codeName ?? ""
-              )?.status
-            : undefined
-        }
-        isGameOver={isGameOver}
+        isCurrentPlaneCrashed={isCurrentPlaneCrashed}
+        isPlaceOver={isPlaceOver}
       />
 
-      <div className="w-full flex flex-col-reverse lg:flex-row justify-between lg:p-5 p-2 z-40 relative h-full overflow-y-auto">
-
+      <div className="w-full flex flex-col-reverse lg:flex-row justify-between lg:p-5 p-2 z-40 relative h-full">
+        {/* //? left side */}
         <BettingPanel
           roundRecord={roundRecord}
           aviator={aviator}
           multiplier={currentMultiplier}
         />
 
-        {/* time display center */}
+        {/* //?center */}
         <div className="flex justify-between items-start lg:justify-center flex-1 relative">
           {/* race result dialog at top left - mobile only */}
           <RaceResultDialog>
@@ -204,19 +205,20 @@ export default function Aviator({
             hasBet={isBetOnCurrentPlane}
             hasCashedOut={isBetOnCurrentPlane ? userPlacement?.isWinner : false}
             betAmount={isBetOnCurrentPlane ? userPlacement?.amount : undefined}
-            planeStatus={
-              currentStock
-                ? aviator.planeStatus?.get(
-                    gameType === SchedulerType.CRYPTO
-                      ? currentStock.code ?? ""
-                      : currentStock.codeName ?? ""
-                  )?.status
-                : undefined
-            }
+            planeStatus={planeStatus}
           />
 
           {/* menu dialog at top right for mobile */}
           <MenuDialog />
+
+          {!isCurrentPlaneCrashed && (
+            <AviatorCanvas
+              multiplier={currentMultiplier}
+              shouldStartTakeOffAnimation={isParallaxMoving}
+              opacity={canvasOpacity}
+              isGameOver={isGameOver}
+            />
+          )}
 
           {/* game end dialog at center */}
           <GameEndDialog
@@ -238,25 +240,9 @@ export default function Aviator({
             isDialogVisible={isDialogVisible}
           />
         </div>
-        {/* {isMobile ? (
-          <Sheet open={showLastRounds} onOpenChange={setShowLastRounds}>
-            <SheetContent
-              side="right"
-              className="w-full max-w-sm p-0 bg-primary-game  border-gray-600"
-            >
-              <div className="h-full flex flex-col">
-                <div className="flex items-center justify-between p-4 ">
-                  <SheetTitle className="text-white">Round History</SheetTitle>
-                </div>
-                <div className="flex-1 overflow-hidden">
-                  <LastRoundsPanel />
-                </div>
-              </div>
-            </SheetContent>
-          </Sheet>
-        ) : (
-          <LastRoundsPanel />
-        )} */}
+
+        {/* //? right */}
+        {!isMobile && <LastRoundsPanel />}
       </div>
     </div>
   );

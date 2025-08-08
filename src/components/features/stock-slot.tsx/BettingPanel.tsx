@@ -30,8 +30,23 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
     return myPlacementData?.data?.reduce((acc, curr) => acc + curr.amount, 0);
   }, [myPlacementData]);
 
+  const MAX_TOTAL_BET = 1000;
+  const currentTotal = totalBetAmount || 0;
+  const remainingAllowed = Math.max(0, MAX_TOTAL_BET - currentTotal);
+
   const placeBetHandler = async () => {
     try {
+      if (betAmount <= 0) {
+        toast.error("Please select a bet amount.");
+        return;
+      }
+
+      if (currentTotal + betAmount > MAX_TOTAL_BET) {
+        toast.error(
+          `Total bets cannot exceed ₹${MAX_TOTAL_BET}. Remaining: ₹${remainingAllowed}.`
+        );
+        return;
+      }
       createStockGamePlacement({
         roundId: roundRecord.id,
         amount: betAmount,
@@ -42,8 +57,19 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
   };
 
   const handleQuickBet = (amount: number) => {
-    setBetAmount(amount);
+    if (remainingAllowed <= 0) {
+      toast.error(`You have reached the total bet limit of ₹${MAX_TOTAL_BET}.`);
+      return;
+    }
+    const clamped = Math.min(amount, remainingAllowed);
+    if (clamped < amount) {
+      toast.error(
+        `Only ₹${remainingAllowed} remaining before reaching the ₹${MAX_TOTAL_BET} limit.`
+      );
+    }
+    setBetAmount(clamped);
   };
+
   return (
     <>
       <div
@@ -79,7 +105,10 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
                 className="grid grid-cols-3 items-center justify-center gap-1 w-full px-3 lg:px-5 text-center h-full"
               >
                 {/* //? bet amount and wallet  */}
-                <span className="leading-none col-span-1">{betAmount}</span>
+                <div className="leading-none col-span-1 flex gap-1">
+                  ₹
+                  {betAmount}
+                </div>
               </div>
               <div
                 style={{
@@ -127,7 +156,20 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
               }}
-              onClick={() => setBetAmount(betAmount + 100)}
+              onClick={() => {
+                if (remainingAllowed <= 0) {
+                  toast.error(`You have reached the total bet limit of ₹${MAX_TOTAL_BET}.`);
+                  return;
+                }
+                const next = Math.min(betAmount + 100, remainingAllowed);
+                if (next === betAmount) return;
+                if (betAmount + 100 > remainingAllowed) {
+                  toast.error(
+                    `Only ₹${remainingAllowed} remaining before reaching the ₹${MAX_TOTAL_BET} limit.`
+                  );
+                }
+                setBetAmount(next);
+              }}
               disabled={isPlaceOver}
             >
               <span className="text-transparent ">+</span>
@@ -147,7 +189,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
             </button>
           </div>
 
-          {/* //? place bet button  */}
+          {/* //? bet amount  */}
           <div
             style={{
               backgroundImage: "url('/images/slot-machine/green-btn.png')",
@@ -163,14 +205,18 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
             </div>
           </div>
 
-          {/* //? refresh and play button  */}
+          {/* //? play button  */}
           <div className="col-span-3 relative w-full h-full">
             <button
               onClick={isPlaceOver ? undefined : placeBetHandler}
-              disabled={isPlaceOver || isCreateStockGamePlacementPending}
+              disabled={
+                isPlaceOver ||
+                isCreateStockGamePlacementPending ||
+                remainingAllowed <= 0
+              }
               className={`absolute top-0 lg:top-3 left-0 rounded-full z-10 cursor-pointer
               ${
-                isPlaceOver || isCreateStockGamePlacementPending
+                isPlaceOver || isCreateStockGamePlacementPending || remainingAllowed <= 0
                   ? "cursor-not-allowed opacity-50"
                   : "cursor-pointer hover:brightness-110"
               }`}

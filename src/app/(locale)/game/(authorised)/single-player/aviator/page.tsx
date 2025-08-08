@@ -60,6 +60,8 @@ const AviatorPage = () => {
     setStockSelectedAviator,
   ]);
 
+  console.log('loki select',stockSelectedAviator)
+
   if (!marketSelected)
     return (
       <section className=" space-y-4 pt-14 min-h-screen ">
@@ -81,6 +83,7 @@ const AviatorPage = () => {
         <Navbar />
         <Aviator
           className=""
+          stockSelectedAviator={stockSelectedAviator}
           roundRecord={roundRecord}
           token={token}
         />
