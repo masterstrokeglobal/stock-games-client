@@ -80,6 +80,7 @@ const EditCompanyPage = () => {
                         isLoading={isPending}
                     />
                 )}
+
             </main>
         </section>
     );

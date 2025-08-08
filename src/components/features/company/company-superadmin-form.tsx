@@ -182,7 +182,6 @@ const CompanySuperAdminForm = ({ defaultValues, onSubmit, isLoading }: Props) =>
                 title="Dynamic QR for Payouts"
                 description=" Dynamic QR for Payouts"
                 label="Dynamic QR" />
-
             <FormImage
                 control={control}
                 name="paymentImage"
