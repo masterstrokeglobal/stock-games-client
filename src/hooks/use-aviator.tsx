@@ -4,59 +4,80 @@ import { useEffect, useState } from 'react';
 import { useStockSelectorAviator } from './use-market-selector';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-class WebSocketManager {
-    private static instance: WebSocketManager;
-    private sockets: { [key: string]: WebSocket } = {};
+import { io, Socket } from 'socket.io-client';
+
+class SocketIOManager {
+    private static instance: SocketIOManager;
+    private sockets: { [key: string]: Socket } = {};
     private listeners: { [key: string]: Set<(data: any) => void> } = {};
     private errorListeners: { [key: string]: Set<(error: string) => void> } = {};
 
     private constructor() { }
 
-    public static getInstance(): WebSocketManager {
-        if (!WebSocketManager.instance) {
-            WebSocketManager.instance = new WebSocketManager();
+    public static getInstance(): SocketIOManager {
+        if (!SocketIOManager.instance) {
+            SocketIOManager.instance = new SocketIOManager();
         }
-        return WebSocketManager.instance;
+        return SocketIOManager.instance;
     }
 
-    private getWebSocketUrl(type: SchedulerType): string {
+    private getSocketIOUrl(type: SchedulerType): { url: string; namespace: string } {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+        
         switch (type) {
             case SchedulerType.NSE:
-                return process.env.NEXT_PUBLIC_AVIATOR_WEBSOCKET_NSE || "ws://localhost:7070";
+                return { url: baseUrl, namespace: "/aviator-nse" };
             case SchedulerType.CRYPTO:
-                return process.env.NEXT_PUBLIC_AVIATOR_WEBSOCKET_CRYPTO || "ws://localhost:7071";
+                return { url: baseUrl, namespace: "/aviator-crypto" };
             case SchedulerType.USA_MARKET:
-                return process.env.NEXT_PUBLIC_AVIATOR_WEBSOCKET_USA_MARKET || "ws://localhost:7072";
+                return { url: baseUrl, namespace: "/aviator-usa" };
+            case SchedulerType.MCX:
+                return { url: baseUrl, namespace: "/aviator-mcx" };
             default:
                 throw new Error("Invalid scheduler type");
         }
     }
 
-    public getSocket(type: SchedulerType): WebSocket {
+    public getSocket(type: SchedulerType): Socket {
         if (!this.sockets[type]) {
-            const ws = new WebSocket(this.getWebSocketUrl(type));
+            const { url, namespace } = this.getSocketIOUrl(type);
+            const socket = io(`${url}${namespace}`, {
+                transports: ['websocket', 'polling'],
+                autoConnect: true,
+                reconnection: true,
+                reconnectionAttempts: 5,
+                reconnectionDelay: 1000,
+            });
+
             this.listeners[type] = new Set();
             this.errorListeners[type] = new Set();
 
-            ws.onopen = () => {
-                console.log(`WebSocket connected`);
-            };
+            socket.on('connect', () => {
+                console.log(`Socket.IO connected to ${namespace}`);
+            });
 
-            ws.onmessage = (event) => {
+            socket.on('disconnect', (reason) => {
+                console.log(`Socket.IO disconnected from ${namespace}:`, reason);
+            });
+
+            socket.on('connect_error', (error) => {
+                console.error(`Socket.IO connection error for ${namespace}:`, error);
+                this.errorListeners[type].forEach(listener => listener('Socket.IO connection error'));
+            });
+
+            // Listen to all aviator events
+            socket.onAny((eventName, data) => {
                 try {
-                    const parsedData = JSON.parse(event.data);
-                    this.listeners[type].forEach(listener => listener(parsedData));
+                    // Convert event name to WebSocketEventType format if needed
+                    const eventData = { type: eventName, ...data };
+                    this.listeners[type].forEach(listener => listener(eventData));
                 } catch (err) {
-                    console.log(err);
-                    this.errorListeners[type].forEach(listener => listener('Failed to parse websocket data'));
+                    console.error('Error processing socket data:', err);
+                    this.errorListeners[type].forEach(listener => listener('Failed to parse socket data'));
                 }
-            };
+            });
 
-            ws.onerror = () => {
-                this.errorListeners[type].forEach(listener => listener('WebSocket error occurred'));
-            };
-
-            this.sockets[type] = ws;
+            this.sockets[type] = socket;
         }
         return this.sockets[type];
     }
@@ -69,6 +90,15 @@ class WebSocketManager {
     public removeListener(type: SchedulerType, onMessage: (data: any) => void, onError: (error: string) => void) {
         this.listeners[type]?.delete(onMessage);
         this.errorListeners[type]?.delete(onError);
+    }
+
+    public disconnect(type: SchedulerType) {
+        if (this.sockets[type]) {
+            this.sockets[type].disconnect();
+            delete this.sockets[type];
+            delete this.listeners[type];
+            delete this.errorListeners[type];
+        }
     }
 }
 
@@ -116,7 +146,7 @@ const useAviator = ({ type, token, roundRecord, onSelectedPlaneCrash }: { type: 
 
     const queryClient = useQueryClient();
     const { stockSelectedAviator, setStockSelectedAviator } = useStockSelectorAviator();
-    const [socket, setSocket] = useState<WebSocket | null>(null);
+    const [socket, setSocket] = useState<Socket | null>(null);
     const [data, setData] = useState<ItemStatus[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [planeStatus, setPlaneStatus] = useState<Map<string, { status: "active" | "crashed" | "flew_away"; multiplier: number }> | null>(null);
@@ -124,7 +154,7 @@ const useAviator = ({ type, token, roundRecord, onSelectedPlaneCrash }: { type: 
 
     useEffect(() => {
         if (planeStatus === null) {
-            // get the items from teh round record and set the plane status to active and multiplier to 1
+            // get the items from the round record and set the plane status to active and multiplier to 1
             const items: [string, { status: "active" | "crashed" | "flew_away"; multiplier: number }][] = roundRecord.market
                 .filter((item) => item.code) // Filter out items with undefined code
                 .map((item) => [
@@ -172,20 +202,18 @@ const useAviator = ({ type, token, roundRecord, onSelectedPlaneCrash }: { type: 
             console.log("crashedState", crashedState);
     }, [crashedState]);
 
-
-
     useEffect(() => {
-        const wsManager = WebSocketManager.getInstance();
-        const ws = wsManager.getSocket(type);
+        const socketManager = SocketIOManager.getInstance();
+        const socketConnection = socketManager.getSocket(type);
         let timer: NodeJS.Timeout;
-        setSocket(ws);
+        setSocket(socketConnection);
 
         // Send register event when connected
-        if (ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify({ type: WebSocketEventType.REGISTER, jwtToken: token }));
+        if (socketConnection.connected) {
+            socketConnection.emit(WebSocketEventType.REGISTER, { jwtToken: token });
         } else {
-            ws.addEventListener('open', () => {
-                ws.send(JSON.stringify({ type: WebSocketEventType.REGISTER, jwtToken: token }));
+            socketConnection.on('connect', () => {
+                socketConnection.emit(WebSocketEventType.REGISTER, { jwtToken: token });
             });
         }
 
@@ -234,7 +262,6 @@ const useAviator = ({ type, token, roundRecord, onSelectedPlaneCrash }: { type: 
             if (event.type === WebSocketEventType.ROUND_CREATED) {
                 const round = event.round.roundRecord;
 
-
                 toast.success("new Round Select Your Market");
                 timer = setTimeout(() => {
                     queryClient.setQueryData(["current-round-record", type, RoundRecordGameType.AVIATOR], () => {
@@ -280,42 +307,47 @@ const useAviator = ({ type, token, roundRecord, onSelectedPlaneCrash }: { type: 
         };
         const onError = (newError: string) => setError(newError);
 
-        wsManager.addListener(type, onMessage, onError);
+        socketManager.addListener(type, onMessage, onError);
 
         return () => {
-            wsManager.removeListener(type, onMessage, onError);
+            socketManager.removeListener(type, onMessage, onError);
             if (timer) {
                 clearTimeout(timer);
             }
         };
     }, [type, token]);
 
-
     const placeBet = (amount: number) => {
         console.log("loki placeBet", amount, roundRecord.id, stockSelectedAviator);
-        if (socket) {
+        if (socket && socket.connected) {
             console.log(amount, roundRecord.id, stockSelectedAviator);
-            socket.send(JSON.stringify({ type: WebSocketEventType.PLACE_BET, amount, roundId: Number(roundRecord.id), marketItem: Number(stockSelectedAviator) }));
+            socket.emit(WebSocketEventType.PLACE_BET, { 
+                amount, 
+                roundId: Number(roundRecord.id), 
+                marketItem: Number(stockSelectedAviator) 
+            });
         }
     }
 
     const cashOut = () => {
-        if (socket) {
-            socket.send(JSON.stringify({ type: WebSocketEventType.CASH_OUT, roundId: roundRecord.id, jwtToken: token }));
+        if (socket && socket.connected) {
+            socket.emit(WebSocketEventType.CASH_OUT, { 
+                roundId: roundRecord.id, 
+                jwtToken: token 
+            });
         }
     }
+    
     return { socket, data, error, placeBet, cashOut, planeStatus } as AviatorHookReturn;
 };
 
 export default useAviator;
 
-
 export type AviatorHookReturn = {
-    socket: WebSocket | null;
+    socket: Socket | null;
     data: ItemStatus[];
     error: string | null;
     placeBet: (amount: number) => void;
     cashOut: () => void;
     planeStatus: Map<string, { status: "active" | "crashed" | "flew_away"; multiplier: number }> | null;
 }
-
