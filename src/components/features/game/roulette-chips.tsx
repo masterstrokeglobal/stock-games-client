@@ -56,6 +56,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                         </TabsTrigger>
                         <TabsTrigger
                             value="auto"
+                            disabled
                             className="flex-1 h-full rounded-full text-blue-300 bg-transparent font-semibold text-base data-[state=active]:bg-[#00214E] data-[state=active]:text-white data-[state=inactive]:text-blue-300"
                             tabIndex={-1}
                         >

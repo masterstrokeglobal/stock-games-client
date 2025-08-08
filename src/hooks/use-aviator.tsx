@@ -22,7 +22,7 @@ class SocketIOManager {
     }
 
     private getSocketIOUrl(type: SchedulerType): { url: string; namespace: string } {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+        const baseUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL || "http://localhost:8000";
         
         switch (type) {
             case SchedulerType.NSE:
