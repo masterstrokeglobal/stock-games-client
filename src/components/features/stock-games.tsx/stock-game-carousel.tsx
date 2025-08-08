@@ -3,58 +3,17 @@
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import { stockGames } from "@/lib/utils"
+import { useGetMyCompany } from "@/react-query/company-queries"
 import { useTranslations } from "next-intl"
 import Image from "next/image"
 import Link from "next/link"
 
 
-const stockGames = [
-    {
-        href: `/game`,
-        src: "/images/banner/roulette.png",
-        alt: "stock-roulette",
-    },
-    {
-        href: "/game/single-player/jackpot",
-        src: "/images/banner/hi-lo.png",
-        alt: "coming-soon",
-    },
-    {
-
-        href: "/game/single-player/stock-slot",
-        src: "/images/banner/stock-slot.png",
-        alt: "coming-soon",
-    },
-    {
-        href: "/game/single-player/7-up-down",
-        src: "/images/banner/7-up-down.png",
-        alt: "coming-soon",
-    },
-    {
-        href: "/game/single-player/head-tail",
-        src: "/images/banner/coin-toss.png",
-        alt: "coming-soon"
-    },
-    {
-        href: "/game/single-player/wheel-of-fortune",
-        src: "/images/banner/wheel-of-fortune.png",
-        alt: "coming-soon",
-    },
-    {
-        href: "/game/single-player/dice-game",
-        src: "/images/banner/dice-game.png",
-        alt: "coming-soon",
-    },
-    {
-        href: "/game/single-player/aviator",
-        // href: "/game/platform/stock-game/aviator",
-        src: "/images/banner/aviator.png",
-        alt: "coming-soon",
-    }
-]
 
 export default function StockGameCarousel() {   
     const t = useTranslations("platform.stock-game-carousel");
+    const { data: company } = useGetMyCompany();
     return (
         <Carousel opts={{ loop: false, startIndex: 0 }} className="w-full">
             <div className="space-y-4">
@@ -71,7 +30,7 @@ export default function StockGameCarousel() {
                     </div>
                 </div>
                 <CarouselContent>
-                    {stockGames.map((game, index) => (
+                    {stockGames.filter((game) => !company?.gameRestrictions.includes(game.type)).map((game, index) => (
                         <CarouselItem key={index} className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                             <Link href={game.href} className="w-full">
                                 <Card className={`overflow-hidden  rounded-none relative shadow-lg  border border-[#4467CC] dark:border-none`} style={{ aspectRatio: '170/240' }}>

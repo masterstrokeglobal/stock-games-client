@@ -23,6 +23,7 @@ export class Company {
     externalPayIn!: boolean;
     externalPayOut!: boolean;
     placementNotAllowed?: SchedulerType[];
+    gameRestrictions:RoundRecordGameType[];
     allowedCasino!: boolean;
     deletedAt?: Date;
     minPlacement: number;
@@ -32,6 +33,7 @@ export class Company {
     maxSinglePlacementPerGameType?: Record<RoundRecordGameType, number>;
     otpIntegration?: boolean;
     coinValues?: number[];
+    dynamicQR: boolean;
     cryptoPayIn?: boolean;
     cryptoPayOut?: boolean;
 
@@ -43,6 +45,7 @@ export class Company {
         this.contactPersonEmail = params.contactPersonEmail;
         this.logo = params.logo;
         this.placementNotAllowed = params.placementNotAllowed || [];
+        this.gameRestrictions = params.gameRestrictions || [];
         this.depositBonusPercentageEnabled = params.depositBonusPercentageEnabled;
         this.domain = params.domain;
         this.allowedCasino = params.allowedCasino || false;
@@ -63,6 +66,7 @@ export class Company {
         this.maxCasinoPlacement = params.maxCasinoPlacement;
         this.cryptoPayIn = params.cryptoPayIn || false;
         this.cryptoPayOut = params.cryptoPayOut || false;
+        this.dynamicQR = params.dynamicQR || false;
     }
 }
 

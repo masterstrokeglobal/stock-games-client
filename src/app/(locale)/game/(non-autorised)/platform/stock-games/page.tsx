@@ -1,20 +1,24 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
-import { StockDerbyGames } from "@/lib/constants";
-import { useState } from "react";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { stockGames } from "@/lib/utils";
+import { useGetMyCompany } from "@/react-query/company-queries";
+import { Search } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useState } from "react";
 
 export default function GamingAppInterface() {
     const t = useTranslations("platform.stock-games");
     const [searchTerm, setSearchTerm] = useState("");
+    const { data: company } = useGetMyCompany();
 
-    const filteredGames = StockDerbyGames.filter(game => 
-        game.title.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredGames = stockGames.filter(game =>
+        !company?.gameRestrictions.includes(game.type)
+    ).filter(game =>
+        game.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
@@ -39,19 +43,19 @@ export default function GamingAppInterface() {
                 <div className="mt-8">
                     {filteredGames.length === 0 ? (
                         <div className="flex justify-center items-center h-64">
-                        <p className="text-platform-text text-lg">{t("no-games-found")}</p>
+                            <p className="text-platform-text text-lg">{t("no-games-found")}</p>
                         </div>
                     ) : (
                         <div className="grid xs:grid-cols-2 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 md:gap-6 gap-2">
                             {filteredGames.map((game) => (
-                                <Link key={game.link} href={game.link} className="w-full">
+                                <Link key={game.type} href={game.href} className="w-full">
                                     <Card className="overflow-hidden rounded-none relative shadow-lg border border-platform-border " style={{ aspectRatio: '170/240' }}>
-                                        <Image 
-                                            src={game.image} 
-                                            alt={game.title} 
-                                            className="w-full h-full object-top" 
-                                            width={500} 
-                                            height={500} 
+                                        <Image
+                                            src={game.src}
+                                            alt={game.alt}
+                                            className="w-full h-full object-top"
+                                            width={500}
+                                            height={500}
                                         />
                                     </Card>
                                 </Link>

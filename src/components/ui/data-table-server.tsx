@@ -73,8 +73,7 @@ export default function DataTable<TData, TValue>({
 
 
   return (
-    <div>
-      <div className={cn("dark:bg-dark-primary border rounded-xl  bg-white", className)}>
+      <div className={cn("dark:bg-dark-primary border max-w-[calc(100vw-330px)] rounded-xl  bg-white", className)}>
         <ScrollArea type="always" className="w-full">
           <Table>
             {showHeader && (
@@ -168,6 +167,5 @@ export default function DataTable<TData, TValue>({
           />
         </div>
       </div>
-    </div>
   );
 }

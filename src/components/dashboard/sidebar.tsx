@@ -243,12 +243,23 @@ const Sidebar = ({ className }: PropsWithClassName) => {
                 icon: GiftIcon,
                 link: '/dashboard/affiliate'
             }];
-        } else if (userDetails.role === AdminRole.AFFILIATE ) {
+        } else if (userDetails.role === AdminRole.AFFILIATE) {
             menus = affiliateMenuItems;
         }
         if (userDetails.role === AdminRole.SUB_AFFILIATE) {
             menus = affiliateMenuItems;
         }
+    }
+
+    if (userDetails.role === AdminRole.COMPANY_ADMIN && userDetails.company?.dynamicQR) {
+        menus = [
+            ...menus,
+            {
+                name: "Dynamic QR",
+                icon: GiftIcon,
+                link: '/dashboard/company-qr'
+            }
+        ]
     }
 
     const renderMenuItem = (item: MenuItem) => {
@@ -307,16 +318,16 @@ const Sidebar = ({ className }: PropsWithClassName) => {
 
     return (
         <div className={cn("flex  flex-col ", className)}>
-                <ScrollArea className="h-full">
+            <ScrollArea className="h-full">
                 <div className="flex h-16 items-center  px-4">
                     <Logo dark={false} />
-            </div>
-            <nav className="flex-1 overflow-y-auto px-4 pt-8">
-                <Accordion type="multiple" className="w-full space-y-2">
-                    {menus.map(renderMenuItem)}
-                </Accordion>
-            </nav>
-        </ScrollArea>
+                </div>
+                <nav className="flex-1 overflow-y-auto pb-14 px-4 pt-8">
+                    <Accordion type="multiple" className="w-full space-y-2">
+                        {menus.map(renderMenuItem)}
+                    </Accordion>
+                </nav>
+            </ScrollArea>
         </div>
     );
 };

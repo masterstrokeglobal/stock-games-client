@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useMemo } from "react";
 import LoadingScreen from "@/components/common/loading-screen";
 import CompanyForm, { CompanyFormValues } from "@/components/features/company/company-form"; // Adjust the import
-import { useGetCompanyById, useUpdateCompanyById } from "@/react-query/company-queries"; // Import hooks for fetching and updating company
-import { useParams, useRouter } from "next/navigation";
+import CompanySuperAdminForm from "@/components/features/company/company-superadmin-form";
 import { useAuthStore } from "@/context/auth-context";
 import Admin from "@/models/admin";
+import { useGetCompanyById, useUpdateCompanyById } from "@/react-query/company-queries"; // Import hooks for fetching and updating company
+import { useParams, useRouter } from "next/navigation";
+import { useMemo } from "react";
 
 const EditCompanyPage = () => {
     const params = useParams();
@@ -14,9 +15,9 @@ const EditCompanyPage = () => {
     const { data, isLoading, isSuccess } = useGetCompanyById(id.toString()); // Fetch the company data by ID
     const { mutate, isPending } = useUpdateCompanyById(); // Hook for updating a company
     const router = useRouter();
-
     const { userDetails } = useAuthStore();
 
+    const user = userDetails as Admin;
     const defaultValues: CompanyFormValues | null = useMemo(() => {
         if (!isSuccess) return null;
 
@@ -33,20 +34,20 @@ const EditCompanyPage = () => {
             maxSinglePlacementPerGameType: company.maxSinglePlacementPerGameType,
             minPlacement: company.minPlacement,
             maxPlacement: company.maxPlacement,
+            gameRestrictions: company.gameRestrictions,
             minCasinoPlacement: company.minCasinoPlacement,
             maxCasinoPlacement: company.maxCasinoPlacement,
             depositBonusPercentage: company.depositBonusPercentage,
             depositBonusPercentageEnabled: company.depositBonusPercentageEnabled,
             domain: company.domain,
             paymentImage: company.paymentImage,
+            dynamicQR: company.dynamicQR,
             coinValues: company.coinValues,
-            theme: company.theme,  
+            theme: company.theme,
         };
     }, [data, isSuccess]);
 
     const onSubmit = (data: CompanyFormValues) => {
-
-        const user = userDetails as Admin;
         mutate(data, {
             onSuccess: () => {
                 if (user.isCompanyAdmin) {
@@ -66,12 +67,19 @@ const EditCompanyPage = () => {
                 <h2 className="text-xl font-semibold">Edit Company</h2>
             </header>
             <main className="mt-4">
-                <CompanyForm
-                    defaultValues={defaultValues as any}
-                    onSubmit={onSubmit}
-                    isLoading={isPending}
-                />
-
+                {user?.isSuperAdmin ? (
+                    <CompanySuperAdminForm
+                        defaultValues={defaultValues as any}
+                        onSubmit={onSubmit}
+                        isLoading={isPending}
+                    />
+                ) : (
+                    <CompanyForm
+                        defaultValues={defaultValues as any}
+                        onSubmit={onSubmit}
+                        isLoading={isPending}
+                    />
+                )}
             </main>
         </section>
     );

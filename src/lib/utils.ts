@@ -1,6 +1,6 @@
 import { PlacementType } from "@/models/game-record";
 import { SchedulerType } from "@/models/market-item";
-import { RoundRecord } from "@/models/round-record";
+import { RoundRecord, RoundRecordGameType } from "@/models/round-record";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -382,3 +382,65 @@ export const DICE_WINNING_MULTIPLIER_10 = 12;
 export const DICE_WINNING_MULTIPLIER_11 = 18;
 export const DICE_WINNING_MULTIPLIER_12 = 36;
 
+
+
+export const stockGames = [
+    {
+        href: `/game`,
+        src: "/images/banner/roulette.png",
+        alt: "stock-roulette",
+        name: "Stock Roulette",
+        type : RoundRecordGameType.DERBY
+    },
+    {
+        href: "/game/single-player/jackpot",
+        src: "/images/banner/hi-lo.png",
+        name: "Hi Low",
+        alt: "coming-soon",
+        type : RoundRecordGameType.STOCK_JACKPOT
+    },
+    {
+
+        href: "/game/single-player/stock-slot",
+        src: "/images/banner/stock-slot.png",
+        name: "Stock Slot",
+        alt: "coming-soon",
+        type : RoundRecordGameType.STOCK_SLOTS
+    },
+    {
+        href: "/game/single-player/7-up-down",
+        src: "/images/banner/7-up-down.png",
+        name: "7 Up Down",
+        alt: "coming-soon",
+        type : RoundRecordGameType.SEVEN_UP_DOWN
+    },
+    {
+        href: "/game/single-player/head-tail",
+        src: "/images/banner/coin-toss.png",
+        name: "Head Tail",
+        alt: "coming-soon",
+        type : RoundRecordGameType.HEAD_TAIL
+    },
+    {
+        href: "/game/single-player/wheel-of-fortune",
+        src: "/images/banner/wheel-of-fortune.png",
+        name: "Wheel Of Fortune",
+        alt: "coming-soon",
+        type : RoundRecordGameType.WHEEL_OF_FORTUNE
+      },
+    {
+        href: "/game/single-player/dice-game",
+        src: "/images/banner/dice-game.png",
+        name: "Dice Game",
+        alt: "coming-soon",
+        type : RoundRecordGameType.AVIATOR
+    },
+    {
+        href: "/game/single-player/aviator",
+        // href: "/game/platform/stock-game/aviator",
+        src: "/images/banner/aviator.png",
+        name: "Aviator",
+        alt: "coming-soon",
+        type : RoundRecordGameType.AVIATOR
+    }
+]

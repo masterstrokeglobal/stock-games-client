@@ -47,7 +47,7 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
             <FcmTokenComp />
             <div className="min-h-screen bg-[#f5f7f9] w-full md:p-4">
                 <Sidebar className="h-screen hidden md:block w-64 absolute top-0 left-0" />
-                <ScrollArea className="flex flex-col md:ml-64 bg-white relative h-[calc(100vh-32px)] border md:rounded-xl">
+                <ScrollArea className="flex flex-col md:ml-64 bg-white relative h-[calc(100vh-32px)] w-[calc(100vw-280px)] border md:rounded-xl">
                     <header className="flex h-16 items-center gap-4 border-b bg-muted/40 px-4 lg:h-16 lg:px-6">
                         <Sheet>
                             <SheetTrigger asChild>
