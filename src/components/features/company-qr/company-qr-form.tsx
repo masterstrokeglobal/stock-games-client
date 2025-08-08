@@ -33,17 +33,19 @@ export const companyQrSchema = z
     }),
     
     // Bank details - optional for UPI, required for BANK type
-    bankName: z.string().optional(),
+    bankName: z.string().optional().nullable(),
     
     accountNumber: z
       .string()
       .regex(/^\d+$/, 'Account number must contain only digits')
-      .optional(),
+      .optional()
+      .nullable(),
     
     ifscCode: z
       .string()
       .regex(/^[A-Z]{4}0[A-Z0-9]{6}$/, 'Invalid IFSC code format')
-      .optional(),
+      .optional()
+      .nullable(),
   })
   .superRefine((data, ctx) => {
     // Type-specific validation
@@ -100,6 +102,8 @@ export const CompanyQRForm = ({
   });
 
   const type = form.watch("type");
+
+  console.log(form.formState.errors);
 
   return (
     <FormProvider
