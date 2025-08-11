@@ -8,6 +8,8 @@ import Link from "next/link"; // Adjust import path
 import React from "react";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
 import { useConfirmWithdrawal, useUpdateTransactionById } from "@/react-query/transactions-queries";
+import { Dialog } from "@/components/ui/dialog";
+import { DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const transactionColumns: ColumnDef<Transaction>[] = [
     {
@@ -45,6 +47,11 @@ const transactionColumns: ColumnDef<Transaction>[] = [
             }
             return <div className="text-nowrap">Rs. {row.original.amount.toFixed(2)}</div>
         }
+    },
+    {
+        header: "Image URL",
+        accessorKey: "imageUrl",
+        cell: ({ row }) => <ImageColumn transaction={row.original} />,
     },
     {
         header: "Status",
@@ -183,5 +190,50 @@ const StatusChangeColumn = ({ transaction }: { transaction: Transaction }) => {
                 </AlertDialogContent>
             </AlertDialog>
         </>
+    );
+};
+
+const ImageColumn = ({ transaction }: { transaction: Transaction }) => {
+    const downloadImage = () => {
+        const link = document.createElement("a");
+        if (!transaction?.confirmationImageUrl) return;
+        link.href = transaction.confirmationImageUrl;
+        link.target = "_blank";
+        link.download = "transaction-image.jpg";
+        link.click();
+        link.remove();
+    };
+    return (
+        <div className="flex items-center gap-2">
+            <Dialog>
+                <DialogTrigger >
+                    <img
+                        src={transaction.confirmationImageUrl}
+                        alt="Transaction Image"
+                        width={50}
+                        height={50}
+                        className="rounded-md"
+                    />
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Transaction Image</DialogTitle>
+                        <DialogDescription>
+                            <img
+                                src={transaction.confirmationImageUrl}
+                                alt="Transaction Image"
+                                className="rounded-md w-auto mx-auto h-[500px] object-contain"
+                            />
+                        </DialogDescription>
+
+                        <Button
+                            onClick={downloadImage}
+                        >
+                            Download Image
+                        </Button>
+                    </DialogHeader>
+                </DialogContent>
+            </Dialog>
+        </div>
     );
 };

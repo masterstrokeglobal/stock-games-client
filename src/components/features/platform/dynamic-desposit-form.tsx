@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { AmountInput } from "./funds-transfer";
+import FormImage from "@/components/ui/form/form-image-compact";
 
 // Deposit Methods Component
 interface DepositMethodsProps {
@@ -72,13 +73,15 @@ const PaymentMethod = ({ icon, isSelected, onClick, label }: PaymentMethodProps)
 const depositSchema = (t: any) => z.object({
     pgId: z
         .string()
-        .min(1, t('validation.transaction-id-required'))
-        .max(50, t('validation.transaction-id-max')),
+        .optional(),
+    confirmationImageUrl: z
+        .string()
+        .url(t('validation.confirmation-image-url-invalid')),
     amount: z
         .coerce.number({
             message: t('validation.amount-invalid')
         })
-        .min(1, t('validation.amount-required'))
+        .min(100, t('validation.amount-required-100'))
 });
 
 type DepositFormValues = z.infer<ReturnType<typeof depositSchema>>;
@@ -95,13 +98,14 @@ const UPIDepositForm = () => {
             amount: data.amount,
             pgId: data.pgId,
             companyQrId: companyQR?.id,
+            confirmationImageUrl: data.confirmationImageUrl,
         }, {
             onSuccess: (data) => {
                 const responseLink = data.data?.response;
                 if (responseLink) {
                     window.open(responseLink, '_blank');
                 }
-                form.reset({ amount: 0, pgId: "" });
+                form.reset({ amount: 0, pgId: "", confirmationImageUrl: "" });
             },
             onError: () => {
                 toast.error('Error creating deposit request');
@@ -111,7 +115,7 @@ const UPIDepositForm = () => {
 
     const form = useForm<DepositFormValues>({
         resolver: zodResolver(depositSchema(t)),
-        defaultValues: { amount: 10, pgId: "" },
+        defaultValues: { amount: 100, pgId: "", confirmationImageUrl: "" },
     });
 
     if (isLoading) {
@@ -121,6 +125,17 @@ const UPIDepositForm = () => {
             </div>
         );
     }
+
+    const copyToClipboard = async (text: string) => {
+        try {
+            await navigator.clipboard.writeText(text);
+            toast.success("Copied to clipboard");
+        } catch (err) {
+            console.error(err);
+            toast.error("Failed to copy");
+        }
+    };
+
 
     if (companyQR == null && !isLoading) {
         return (
@@ -137,9 +152,28 @@ const UPIDepositForm = () => {
                 console.log(err);
             })}>
                 {companyQR?.qr && (
-                    <div className="bg-white overflow-hidden rounded-lg w-fit mx-auto max-w-sm p-4">
-                        <img src={companyQR.qr} alt="UPI QR Code" className="max-w-full w-full aspect-square h-auto" />
-                    </div>
+                    <>
+                        <div className="bg-white overflow-hidden rounded-lg w-fit mx-auto max-w-sm p-4">
+                            <img src={companyQR.qr} alt="UPI QR Code" className="max-w-full w-full aspect-square h-auto" />
+                        </div>
+                        {companyQR.upiId && (
+                            <div className="flex items-center justify-between">
+                                <span className="text-platform-text/80 text-sm">UPI ID:</span>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-platform-text font-medium">{companyQR.upiId}</span>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-6 w-6"
+                                        type="button"
+                                        onClick={() => copyToClipboard(companyQR.upiId || "")}
+                                    >
+                                        <Copy className="h-3 w-3" />
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                    </>
                 )}
 
 
@@ -157,6 +191,13 @@ const UPIDepositForm = () => {
                     onChange={(val) => form.setValue("pgId", val)}
                     placeholder="Enter the transaction ID"
                     error={form.formState.errors.pgId?.message}
+                    required={false}
+                />
+                
+                <FormImage
+                    label="Upload Confirmation Image"
+                    name="confirmationImageUrl"
+                    control={form.control}
                 />
 
                 <Button
@@ -203,14 +244,15 @@ const BankDepositForm = () => {
         mutate({
             companyQrId: companyQR?.id,
             pgId: data.pgId,
-            amount: data.amount ?? 0
+            amount: data.amount ?? 0,
+            confirmationImageUrl: data.confirmationImageUrl,
         }, {
             onSuccess: (data) => {
                 const responseLink = data.data?.response;
                 if (responseLink) {
                     window.open(responseLink, '_blank');
                 }
-                form.reset({ amount: 0, pgId: "" });
+                form.reset({ amount: 0, pgId: "", confirmationImageUrl: "" });
             },
             onError: () => {
                 toast.error('Error creating deposit request');
@@ -220,7 +262,7 @@ const BankDepositForm = () => {
 
     const form = useForm<DepositFormValues>({
         resolver: zodResolver(depositSchema(t)),
-        defaultValues: { amount: 10, pgId: "" },
+        defaultValues: { amount: 100, pgId: "" },
     });
 
     const copyToClipboard = async (text: string) => {
@@ -316,6 +358,15 @@ const BankDepositForm = () => {
                                         </div>
                                     </div>
                                 )}
+
+                                {companyQR.accountHolderName && (
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-platform-text/80 text-sm">Account Holder Name:</span>
+                                        <span className="text-platform-text font-medium">
+                                            {companyQR.accountHolderName}
+                                        </span>
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -336,6 +387,14 @@ const BankDepositForm = () => {
                     onChange={(val) => form.setValue("pgId", val)}
                     placeholder="Enter the transaction ID from your bank transfer"
                     error={form.formState.errors.pgId?.message}
+                    required={false}
+                />
+
+                <FormImage
+                    label="Confirmation Image"
+                    control={form.control}
+                    name="confirmationImageUrl"
+
                 />
 
                 <Button
@@ -376,7 +435,6 @@ const BankDepositForm = () => {
 // Main Deposit Tab Component
 const DepositTab = () => {
     const [selectedMethod, setSelectedMethod] = useState("upi");
-
     return (
         <div className="space-y-6">
             <div className="rounded-md bg-yellow-100 dark:bg-yellow-900/40 border border-yellow-300 dark:border-yellow-700 px-4 py-2 text-yellow-800 dark:text-yellow-200 font-medium mb-2">

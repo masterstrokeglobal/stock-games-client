@@ -12,10 +12,12 @@ import { z } from "zod";
 
 export const companyQrSchema = z
   .object({
-    qr: z
-      .string()
-      .url('Please provide a valid URL')
-      .min(1, 'QR URL is required'),
+    qr: z.string().optional().refine((val) => !val || val === '' || z.string().url().safeParse(val).success, {
+      message: 'Please provide a valid URL or leave empty',
+    }),
+    upiId: z.string().optional().refine((val) => !val || val === '' || z.string().safeParse(val).success, {
+      message: 'Please provide a valid UPI ID or leave empty',
+    }),
     
     maxLimit: z.coerce
       .number({
@@ -38,6 +40,11 @@ export const companyQrSchema = z
     accountNumber: z
       .string()
       .regex(/^\d+$/, 'Account number must contain only digits')
+      .optional()
+      .nullable(),
+
+    accountHolderName: z
+      .string()
       .optional()
       .nullable(),
     
@@ -66,6 +73,7 @@ export const companyQrSchema = z
         { field: 'bankName', name: 'Bank name' },
         { field: 'accountNumber', name: 'Account number' },
         { field: 'ifscCode', name: 'IFSC code' },
+        { field: 'accountHolderName', name: 'Account holder name' },  
       ] as const;
       
       requiredFields.forEach(({ field, name }) => {
@@ -103,7 +111,6 @@ export const CompanyQRForm = ({
 
   const type = form.watch("type");
 
-  console.log(form.formState.errors);
 
   return (
     <FormProvider
@@ -111,11 +118,18 @@ export const CompanyQRForm = ({
       onSubmit={form.handleSubmit(onSubmit)}
       className={cn("space-y-5", className)}
     >
+      {type === CompanyQRType.UPI &&
+      <>
+      <FormInput
+        control={form.control}
+        name="upiId"
+        label="UPI ID"
+        placeholder="Enter UPI ID"
+      />
+      </>}
       {type === CompanyQRType.UPI && <FormImage
         control={form.control}
         name="qr"
-        aspectRatio={1}
-        aspectRatioDescription="1:1"
         label="QR Image"
         description="Square image - width: 300px height: 300px max size: 5MB"
         maxSize={5}
@@ -126,6 +140,12 @@ export const CompanyQRForm = ({
           name="bankName"
           label="Bank Name"
           placeholder="Enter Bank Name"
+        />
+        <FormInput
+          control={form.control}
+          name="accountHolderName"
+          label="Account Holder Name"
+          placeholder="Enter Account Holder Name"
         />
         <FormInput
           control={form.control}

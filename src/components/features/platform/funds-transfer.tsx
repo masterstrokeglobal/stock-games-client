@@ -15,9 +15,10 @@ interface AmountInputProps {
     minAmount?: number;
     label?: string;
     error?: string;
+    required?: boolean; 
 }
 
-export const AmountInput = ({ value, onChange, placeholder, minAmount, error, label = "Amount", number = false }: AmountInputProps) => {
+export const AmountInput = ({ value, onChange, placeholder, minAmount, error, label = "Amount", number = false , required = true }: AmountInputProps) => {
     return (
         <div className="space-y-3">
             <fieldset className="relative border-2 dark:border-platform-border border-primary-game rounded-sm px-4 py-3">
@@ -28,7 +29,7 @@ export const AmountInput = ({ value, onChange, placeholder, minAmount, error, la
                     placeholder={placeholder}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    required
+                    required={required}
                 />
             </fieldset>
             {minAmount && (

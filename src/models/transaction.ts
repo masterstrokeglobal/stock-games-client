@@ -1,7 +1,8 @@
+
 import Agent from "./agent";
 import Company from "./company";
 import User from "./user";
-
+import CompanyQR from "./company-qr";
 
 export enum TransactionType {
     DEPOSIT = "deposit",
@@ -31,8 +32,10 @@ export class Transaction {
     id!: number;
     pgId?: string;
     type!: TransactionType;
+    confirmationImageUrl?: string;
     amount!: number;
     status!: TransactionStatus;
+    companyQR?: CompanyQR;
     bonusPercentage!: number;
     walletId!: number; // Foreign key
     companyId!: number; // Foreign key
@@ -50,8 +53,8 @@ export class Transaction {
         Object.assign(this, data);
         this.user = data?.wallet?.user ? new User(data?.wallet?.user) : undefined;
         this.agent = data?.agentWallet?.agent ? new Agent(data?.agentWallet?.agent) : undefined
-
         this.company = data?.company ? new Company(data.company) : undefined;
+        this.companyQR = data?.companyQR ? new CompanyQR(data.companyQR) : undefined;
     }
 
 
