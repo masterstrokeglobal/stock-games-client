@@ -433,7 +433,7 @@ export const stockGames = [
         src: "/images/banner/dice-game.png",
         name: "Dice Game",
         alt: "coming-soon",
-        type : RoundRecordGameType.AVIATOR
+        type : RoundRecordGameType.DICE
     },
     {
         href: "/game/single-player/aviator",
