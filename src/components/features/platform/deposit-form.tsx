@@ -73,17 +73,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import FormImage from "@/components/ui/form/form-image-compact";
+import FormProvider from "@/components/ui/form/form-provider";
 
 const upiDepositSchema = (t: any) => z.object({
     pgId: z
         .string()
         .min(0, t('validation.transaction-id-required'))
         .max(50, t('validation.transaction-id-max')).optional(),
+    confirmationImageUrl: z
+        .string()
+        .url(t('validation.confirmation-image-url-invalid')).optional(),
     amount: z
         .coerce.number({
             message: t('validation.amount-invalid')
         })
-        .min(1, t('validation.amount-required'))
+        .min(100, t('validation.amount-required'))
 });
 
 type UpiDepositFormValues = z.infer<ReturnType<typeof upiDepositSchema>>;
@@ -107,16 +112,8 @@ const UPIDepositForm = () => {
     const onSubmit = async (data: UpiDepositFormValues) => {
         data.amount = parseInt(data.amount.toString());
         mutate(data, {
-            onSuccess: (data) => {
-                const responseLink = data.data?.response;
-                if (responseLink) {
-                    window.open(responseLink, '_blank');
-                    toast.success('Deposit request created successfully');
-                    // router.push('/game/platform/transaction-history');
-                } else {
-                    // router.push('/game/platform/transaction-history');
-                }
-                form.reset({ amount: 0, pgId: "" });
+            onSuccess: () => {            
+                form.reset({ amount: 0, pgId: "", confirmationImageUrl: undefined });
             },
             onError: () => {
                 console.log('Error creating deposit request');
@@ -125,12 +122,12 @@ const UPIDepositForm = () => {
     }
     const form = useForm<UpiDepositFormValues>({
         resolver: zodResolver(upiDepositSchema(t)),
-        defaultValues: { amount: 10, pgId: "" },
+        defaultValues: { amount: 10, pgId: "", confirmationImageUrl: "" },
     });
 
 
     return (
-        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit, (err) => {
+        <FormProvider methods={form} className="space-y-4" onSubmit={form.handleSubmit(onSubmit, (err) => {
             console.log(err);
         })}>
             {paymentImage && (
@@ -152,6 +149,13 @@ const UPIDepositForm = () => {
                 onChange={(val) => form.setValue("pgId", val)}
                 placeholder="Enter the transaction id"
                 error={form.formState.errors.pgId?.message}
+                required={false}
+            />
+            <FormImage
+                control={form.control}
+                name="confirmationImageUrl"
+                label="Upload Confirmation Image"
+
             />
             <Button
                 variant="platform-gradient-secondary"
@@ -161,7 +165,7 @@ const UPIDepositForm = () => {
             >
                 Deposit Now
             </Button>
-        </form>
+        </FormProvider>
     );
 };
 

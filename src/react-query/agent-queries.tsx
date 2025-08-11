@@ -105,7 +105,7 @@ export const useUpdateAgentChipsDeposit = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === "agents";
+                    return query.queryKey[0] === "agents" || query.queryKey[0] === "transactions" 
                 },
             });
             toast.success("Agent chips deposit updated successfully");

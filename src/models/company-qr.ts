@@ -11,6 +11,8 @@ export class CompanyQR {
   type?: CompanyQRType;
   bankName?: string;
   accountNumber?: string;
+  upiId?: string;
+  accountHolderName?: string;
   ifscCode?: string;
   maxLimit?: number;
   limitUsed?: number;
@@ -25,10 +27,12 @@ export class CompanyQR {
     this.company = params.company;
     this.bankName = params.bankName;
     this.accountNumber = params.accountNumber;
+    this.accountHolderName = params.accountHolderName;
     this.ifscCode = params.ifscCode;
     this.type = params.type;
     this.maxLimit = params.maxLimit;
     this.limitUsed = params.limitUsed ?? 0;
+    this.upiId = params.upiId;
     this.active = params.active ?? true;
     this.createdAt = params.createdAt;
     this.updatedAt = params.updatedAt;
