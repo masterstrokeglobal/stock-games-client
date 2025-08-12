@@ -77,13 +77,15 @@ const StockSlot: React.FC<GameScreenProps> = ({
                 />
               </button>
             </InfoDialog>
-            <button className="w-10 h-10">
-              <img
-                className="w-full h-full"
-                src="/images/slot-machine/btn-pause.png"
-                alt=""
-              />
-            </button>
+            <HowToPlay>
+              <button className="w-10 h-10">
+                <img
+                  className="w-full h-full"
+                  src="/images/slot-machine/btn-pause.png"
+                  alt=""
+                />
+              </button>
+            </HowToPlay>
           </div>
         </div>
 
@@ -147,7 +149,6 @@ const StockSlot: React.FC<GameScreenProps> = ({
           roundRecord={roundRecord}
           winningIdRoundRecord={winningIdRoundRecord}
         />
-        
       </div>
     </div>
   );

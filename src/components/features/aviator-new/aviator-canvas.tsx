@@ -2,7 +2,7 @@
 
 import useWindowSize from "@/hooks/use-window-size";
 import { gsap } from "gsap";
-import {  useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
@@ -17,15 +17,13 @@ const AviatorCanvas = ({
   multiplier,
   shouldStartTakeOffAnimation = false,
   opacity = 1,
-  isGameOver,
 }: AviatorCanvasProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const [isModelLoaded, setIsModelLoaded] = useState(false);
-  // const [movePlaneAtBottom, setMovePlaneAtBottom] = useState(false);
-  const [isPlaneAtBottom, setIsPlaneAtBottom] = useState(false);
-  const { isMobile } = useWindowSize()
+  // const [isPlaneAtBottom, setIsPlaneAtBottom] = useState(false);
+  const { isMobile } = useWindowSize();
   const sceneRef = useRef<{
     scene: THREE.Scene;
     camera: THREE.PerspectiveCamera;
@@ -338,36 +336,30 @@ const AviatorCanvas = ({
       console.log("📈 Scaling canvas to full size and centering");
       gsap.to(canvasContainerRef.current, {
         scale: 1,
-        x: "0%",
-        y: "0%",
+        right: "0%",
+        top: "0%",
         /// make the plane face up
         rotation: -20,
+        duration: 1,
+        ease: "power2.out",
+      });
+    } else {
+      console.log("📉 Scaling canvas to half size and moving to bottom-left");
+      gsap.to(canvasContainerRef.current, {
+        scale: isMobile ? 0.5 : 0.8,
+        right: "15%", // Move left
+        top: "30%", // Move down
+        rotation: 0,
         duration: 1,
         ease: "power2.out",
       });
     }
   }, [shouldStartTakeOffAnimation, multiplier]);
 
-  useEffect(() => {
-    if (!canvasContainerRef.current) return;
-    if (!isPlaneAtBottom) {
-      console.log("📉 Scaling canvas to half size and moving to bottom-left");
-      gsap.to(canvasContainerRef.current, {
-        scale: isMobile ? 0.5 : 0.8,
-        x: "-15%", // Move left
-        y: "30%", // Move down
-        rotation: 0,
-        duration: 1,
-        ease: "power2.out",
-      });
-      setIsPlaneAtBottom(true);
-    }
-  }, [isGameOver, isPlaneAtBottom, isMobile]);
-
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 justify-center items-center z-0"
+      className="absolute inset-0 justify-center items-center z-0 h-full"
       style={{ pointerEvents: "auto" }}
     >
       <div
@@ -376,14 +368,16 @@ const AviatorCanvas = ({
         data-canvas-container
         style={{
           transformOrigin: "center center",
-          transform: `scale(1) translate(-30%, 40%) rotate(0deg)`, // Initial scale and position
+          transform: `scale(1) rotate(0deg)`, // Initial scale and position
           opacity: opacity,
           transition: "opacity 0.3s ease-in-out",
+          top:"30%",
+          right:"15%",
         }}
       >
         <canvas
           ref={canvasRef}
-          className="w-full h-full z-0"
+          className="w-full h-full z-0 flex-1"
           style={{
             background: "transparent",
             cursor: "grab",
@@ -392,7 +386,8 @@ const AviatorCanvas = ({
           onMouseDown={(e) => (e.currentTarget.style.cursor = "grabbing")}
           onMouseUp={(e) => (e.currentTarget.style.cursor = "grab")}
           onMouseLeave={(e) => (e.currentTarget.style.cursor = "grab")}
-        />``
+        />
+        
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ interface StockSlot2DWheelProps {
 const defaultGlowState = [false, false, false, false, false];
 
 const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
-  stockStates = [0, 0, 0, 0, 0, 0],
+  stockStates = [0, 0, 0, 0, 0],
   isGameActive = false,
   winningIdRoundRecord,
   isGameOver,
@@ -32,7 +32,6 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
     { id: 2, currentValue: 0, targetValue: 0, isSpinning: false },
     { id: 3, currentValue: 0, targetValue: 0, isSpinning: false },
     { id: 4, currentValue: 0, targetValue: 0, isSpinning: false },
-    // { id: 5, currentValue: 0, targetValue: 0, isSpinning: false },
   ]);
   const [numberHeight, setNumberHeight] = useState(100);
   const wheelContainerRef = useRef<HTMLDivElement>(null);
@@ -44,11 +43,6 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
   const regularNumbers = [
     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4,
     5, 6, 7, 8, 9,
-  ];
-  // Multiplier: 6 sequences of 0-4 (indices 0-4, 5-9, 10-14, 15-19, 20-24, 25-29) - target middle at 10-14
-  const multiplierNumbers = [
-    0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4, 0, 1, 2, 3, 4,
-    0, 1, 2, 3, 4,
   ];
 
   //? Start continuous spinning when game phase begins (betting is over)
@@ -110,9 +104,36 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
     ) {
       console.log("Stopping wheels with stockStates:", stockStates);
 
+      // Use finalDifferences if available, otherwise fallback to stockStates
+      let wheelValues = stockStates;
+      
+      if (winningIdRoundRecord?.finalPricesPresent && winningIdRoundRecord?.finalDifferences) {
+        console.log("Using finalDifferences for wheel values:", winningIdRoundRecord.finalDifferences);
+        
+        // Convert finalDifferences to wheel values (first decimal digit)
+        const finalDifferencesArray: number[] = [];
+        const sortedMarketItems = winningIdRoundRecord.sortedMarketItems || [];
+        
+        // Get first 5 stocks (sorted alphabetically like in other components)
+        sortedMarketItems.slice(0, 5).forEach((stock: any, index: number) => {
+          const stockCode = stock.code || stock.bitcode;
+          if (stockCode && winningIdRoundRecord.finalDifferences[stockCode]) {
+            const price = parseFloat(winningIdRoundRecord.finalDifferences[stockCode]).toFixed(2);
+            const [, decimalPart] = price.split('.');
+            const firstDecimalDigit = decimalPart ? parseInt(decimalPart[0]) : 0;
+            finalDifferencesArray[index] = firstDecimalDigit;
+          } else {
+            finalDifferencesArray[index] = stockStates[index] || 0;
+          }
+        });
+        
+        wheelValues = finalDifferencesArray;
+        console.log("Converted finalDifferences to wheel values:", wheelValues);
+      }
+
       // Step 1: Count occurrences
       const countMap = new Map<number, number>();
-      stockStates.slice(0, 5).forEach((num) => {
+      wheelValues.forEach((num) => {
         countMap.set(num, (countMap.get(num) || 0) + 1);
       });
 
@@ -129,7 +150,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
         const chosenNumber = mostRepeatedNumbers[0];
 
         // Step 5: Create the boolean array
-        const newglowState = stockStates.map((num) => num === chosenNumber);
+        const newglowState = wheelValues.map((num) => num === chosenNumber);
         setGlowState(newglowState);
       }
 
@@ -137,22 +158,19 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
       setWheels((prev) =>
         prev.map((wheel, index) => ({
           ...wheel,
-          targetValue: stockStates[index] || 0,
+          targetValue: wheelValues[index] || 0,
           isSpinning: false,
         }))
       );
 
       // Animate each wheel to its final position with staggered timin
-      stockStates.forEach((targetValue, index) => {
+      wheelValues.forEach((targetValue, index) => {
         const wheelRef = wheelRefs.current[index];
         if (wheelRef && targetValue !== undefined) {
-          // For multiplier wheel (index 5), ensure value is between 0-4
-          const finalValue =
-            index === 5 ? Math.min(targetValue, 4) : targetValue;
+          const finalValue = targetValue;
 
           // Calculate target index in the middle sequence
           // Regular numbers (0-9): 3 sequences, middle starts at index 10
-          // Multiplier numbers (0-4): 6 sequences, middle starts at index 10
           const targetIndex = 10 + finalValue;
 
           // Calculate final position to show the middle occurrence of the number
@@ -233,7 +251,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
           : wheel.targetValue ?? 0;
 
       // Pick a safe default in case targetValue is null
-      const finalValue = index === 5 ? Math.min(value ?? 0, 4) : value ?? 0;
+      const finalValue = value ?? 0;
       const targetIndex = 10 + finalValue;
       const finalPosition = -(targetIndex * numberHeight) + numberHeight * 2;
 
@@ -254,14 +272,12 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
     ) {
       hasInitializedRef.current = true;
 
-      wheelRefs.current.forEach((wheelRef, index) => {
+      wheelRefs.current.forEach((wheelRef) => {
         if (wheelRef) {
           gsap.killTweensOf(wheelRef);
 
           const randomValue =
-            index === 5
-              ? Math.floor(Math.random() * 5)
-              : Math.floor(Math.random() * 10);
+            Math.floor(Math.random() * 10);
 
           const targetIndex = 10 + randomValue;
           const randomPosition =
@@ -307,7 +323,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
                 className="absolute inset-x-0 flex flex-col"
                 style={{ top: -numberHeight }} // Start with first row hidden to center the view
               >
-                {(wheelIndex === 5 ? multiplierNumbers : regularNumbers).map(
+                {regularNumbers.map(
                   (number, numberIndex) => (
                     <div
                       key={`${wheelIndex}-${numberIndex}`}
@@ -316,7 +332,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
                       <img
                         style={{ height: numberHeight }}
                         src={`/images/slot-machine/${
-                          wheelIndex === 5 ? "mul" : "number"
+                          "number"
                         }-${number}.png`}
                         alt={`${number}`}
                         className="w-auto object-contain"
@@ -347,7 +363,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
             style={{ height: numberHeight }}
             className="grid grid-cols-5 justify-center items-center w-full z-20 absolute px-4"
           >
-            {glowSate.map((glow, i) => (
+            {glowSate.slice(0, 5).map((glow, i) => (
               <div
                 key={i}
                 style={{ height: numberHeight }}
@@ -357,9 +373,6 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
                   key={i}
                   style={{
                     animation: "slotWinPulse 0.8s ease-in-out infinite",
-                    boxShadow: `0px 0px ${numberHeight / 3}px ${
-                      numberHeight / 3
-                    }px #D3AF37`,
                     opacity: glow ? 1 : 0,
                   }}
                   className="pointer-events-none w-[1px] h-[1px] rounded-full z-10 transition-all duration-300"

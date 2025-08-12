@@ -142,17 +142,17 @@ const ResultDialog: React.FC<ResultDialogProps> = ({ open, roundRecordId }) => {
             <div className="flex flex-col gap-2">
               {isWin ? (
                 <>
-                  <p className="capitalize text-base lg:text-[40px]">
-                    You won {resultData?.amountWon}INR
+                  <p className="capitalize text-base lg:text-[40px] ">
+                    You won  <span className="text-green-500">{resultData?.amountWon}INR</span>
                   </p>
-                  <p className="text-base lg:text-[30px]">
+                  <p className="text-base lg:text-[30px] mt-2">
                     Place Bet {resultData?.totalPlaced}INR
                   </p>
                 </>
               ) : (
                 <>
                   <p className="capitalize text-base lg:text-[40px]">
-                    You lost {Math.abs(resultData?.netProfitLoss || 0)}INR
+                    You lost <span className="text-red-500">{Math.abs(resultData?.netProfitLoss || 0)}INR</span>
                   </p>
                 </>
               )}

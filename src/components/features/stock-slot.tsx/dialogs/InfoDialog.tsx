@@ -24,12 +24,12 @@ const InfoDialog = ({ children }: { children: React.ReactNode }) => {
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
           }}
-          className="w-full h-full relative flex flex-col items-center justify-center p-[10%] font-wendy-one text-[#FFFFFFB2]"
+          className="w-full h-full relative flex flex-col items-center justify-center p-[10%] pt-[15%] font-wendy-one text-[#FFFFFFB2]"
         >
           <img
             src="/images/slot-machine/happy-bull.png"
             alt=""
-            className="absolute w-[100px] lg:w-[130px] top-0 translate-y-[-50%]"
+            className="absolute w-[100px] lg:w-[150px] top-0 translate-y-[-50%]"
           />
           <DialogHeader className="p-1">
             <DialogTitle className="text-[15px] lg:text-[30px] xl:text-[40px]">

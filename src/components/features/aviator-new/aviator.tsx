@@ -211,6 +211,7 @@ export default function Aviator({
           {/* menu dialog at top right for mobile */}
           <MenuDialog />
 
+          {/* canvas */}
           {!isCurrentPlaneCrashed && (
             <AviatorCanvas
               multiplier={currentMultiplier}
