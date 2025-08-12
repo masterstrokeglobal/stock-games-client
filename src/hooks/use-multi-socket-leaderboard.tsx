@@ -1,8 +1,7 @@
 import MarketItem, { NSEMarketItem, SchedulerType } from '@/models/market-item';
 import { RoundRecord, RoundRecordGameType } from '@/models/round-record';
+import LeaderboardSocketManager from '@/services/leaderboard-websocket';
 import { useEffect, useRef, useState } from 'react';
-import SocketManager from '@/lib/socket-manager';
-import { Socket } from 'socket.io-client';
 
 export interface RankedMarketItem extends MarketItem {
     change_percent: string;
@@ -11,20 +10,7 @@ export interface RankedMarketItem extends MarketItem {
     initialPrice?: number;
 }
 
-// Configuration for socket connections
-interface SocketConfig {
-    namespace: string;
-    schedulerType: SchedulerType;
-}
-
-const SOCKET_CONFIGS: SocketConfig[] = [
-    { namespace: '/crypto', schedulerType: SchedulerType.CRYPTO },
-    { namespace: '/nse', schedulerType: SchedulerType.NSE },
-    { namespace: '/usa', schedulerType: SchedulerType.USA_MARKET },
-    { namespace: '/mcx', schedulerType: SchedulerType.MCX },
-    { namespace: '/comex', schedulerType: SchedulerType.COMEX }
-];
-
+// Helper function to parse COMEX messages (same as original)
 const parseCOMEXMessage = (data: any): { [key: string]: number } => {
     const parsedPrices: { [key: string]: number } = {};
 
@@ -126,11 +112,12 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
     const [stocks, setStocks] = useState<RankedMarketItem[]>([]);
     const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected'>('disconnected');
 
-    const socketRef = useRef<Socket | null>(null);
-    // For multi-market scenario, store multiple sockets
-    const socketsRef = useRef<Map<SchedulerType, Socket>>(new Map());
     const latestDataRef = useRef<RankedMarketItem[]>([]);
     const initialPricesRef = useRef<Map<string, number>>(new Map());
+    const activeSocketTypes = useRef<SchedulerType[]>([]);
+    const connectedSockets = useRef<Set<SchedulerType>>(new Set());
+    const messageHandlers = useRef<Map<SchedulerType, (data: any) => void>>(new Map());
+    const connectionHandlers = useRef<Map<SchedulerType, (status: 'connecting' | 'connected' | 'disconnected') => void>>(new Map());
 
     const getRoundStatus = () => {
         if (!roundRecord) return 'pre-tracking';
@@ -282,62 +269,59 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
         });
     };
 
-    const getSocketConfigForRoundType = (schedulerType: SchedulerType): SocketConfig | null => {
-        return SOCKET_CONFIGS.find(config => config.schedulerType === schedulerType) || null;
+    const getRequiredSocketTypes = (roundRecord: RoundRecord): SchedulerType[] => {
+        // Multi-market scenario (NSE Seven Up Down)
+        if (roundRecord.type === SchedulerType.NSE && roundRecord.roundRecordGameType === RoundRecordGameType.SEVEN_UP_DOWN) {
+            return [SchedulerType.NSE, SchedulerType.CRYPTO, SchedulerType.MCX, SchedulerType.COMEX];
+        }
+
+        // Multi-market scenario (USA Market Seven Up Down)
+        if (roundRecord.type === SchedulerType.USA_MARKET && roundRecord.roundRecordGameType === RoundRecordGameType.SEVEN_UP_DOWN) {
+            return [SchedulerType.USA_MARKET, SchedulerType.CRYPTO, SchedulerType.MCX, SchedulerType.COMEX];
+        }
+
+        // Multi-market scenario (Crypto Market Seven Up Down)
+        if (roundRecord.type === SchedulerType.CRYPTO && roundRecord.roundRecordGameType === RoundRecordGameType.SEVEN_UP_DOWN) {
+            return [SchedulerType.CRYPTO, SchedulerType.MCX, SchedulerType.COMEX];
+        }
+
+
+        // Multi-market scenario (COMEX Stock Slots)
+        if (roundRecord.type === SchedulerType.COMEX && roundRecord.roundRecordGameType === RoundRecordGameType.STOCK_SLOTS) {
+            return [SchedulerType.CRYPTO, SchedulerType.COMEX];
+        }
+
+        // COMEX always uses multi-connection (with CRYPTO)
+        if (roundRecord.type === SchedulerType.COMEX) {
+            return [SchedulerType.CRYPTO, SchedulerType.COMEX];
+        }
+
+        // Single market scenarios
+        return [roundRecord.type];
     };
 
-    // Function to create a single Socket.IO connection
-    const createSocket = (schedulerType: SchedulerType, namespace: string): Socket => {
-        const url = `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}${namespace}`;
-        const socket = SocketManager.getSocket(namespace, url);
+    const checkMultiMarketConnection = () => {
+        if (activeSocketTypes.current.length <= 1) {
+            // Single socket scenario - use individual connection status
+            return;
+        }
 
-        socket.on('connect', () => {
-            console.log(`Connected to ${schedulerType} Socket.IO`);
+        // Multi-socket scenario - all must be connected
+        const allConnected = activeSocketTypes.current.every(type =>
+            connectedSockets.current.has(type)
+        );
 
-            // Check if all required sockets are connected for multi-market scenario
-            if (roundRecord?.roundRecordGameType === RoundRecordGameType.SEVEN_UP_DOWN ||
-                roundRecord?.roundRecordGameType === RoundRecordGameType.STOCK_SLOTS ||
-                (roundRecord?.type === SchedulerType.COMEX)) {
-                const allConnected = Array.from(socketsRef.current.values()).every(s => s.connected);
-                if (allConnected || socketsRef.current.size === 1) {
-                    setConnectionStatus('connected');
-                }
-            } else {
-                setConnectionStatus('connected');
-            }
-        });
+        if (allConnected) {
+            setConnectionStatus('connected');
+        } else {
+            // Check if any are connecting by checking if sockets exist but not connected
+            const anyConnecting = activeSocketTypes.current.some(type => {
+                // We can't directly check if socket is connecting, so we assume connecting if not connected
+                return !connectedSockets.current.has(type);
+            });
 
-        socket.on('disconnect', () => {
-            console.log(`Disconnected from ${schedulerType} Socket.IO`);
-            setConnectionStatus('disconnected');
-        });
-
-        socket.on('data', (messageEvent: any) => {
-            try {
-                const data = typeof messageEvent === 'string' ? JSON.parse(messageEvent) : messageEvent;
-
-                // Route data to appropriate handler based on scheduler type
-                switch (schedulerType) {
-                    case SchedulerType.CRYPTO:
-                        handleCryptoData(data);
-                        break;
-                    case SchedulerType.NSE:
-                    case SchedulerType.USA_MARKET:
-                        handleNSEUSAData(data);
-                        break;
-                    case SchedulerType.MCX:
-                        handleMCXData(data);
-                        break;
-                    case SchedulerType.COMEX:
-                        handleCOMEXData(data);
-                        break;
-                }
-            } catch (error) {
-                console.error(`Error processing ${schedulerType} Socket.IO message:`, error);
-            }
-        });
-
-        return socket;
+            setConnectionStatus(anyConnecting ? 'connecting' : 'disconnected');
+        }
     };
 
     useEffect(() => {
@@ -367,107 +351,87 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
         latestDataRef.current = initialStocks;
         setStocks(initialStocks);
 
-        // Close existing connections
-        if (socketRef.current) {
-            socketRef.current.off('connect');
-            socketRef.current.off('disconnect');
-            socketRef.current.off('data');
-            const name = getSocketConfigForRoundType(roundRecord.type)?.namespace;
-            if (name) {
-                SocketManager.releaseSocket(name);
-            }
-            socketRef.current = null;
-        }
+        const socketManager = LeaderboardSocketManager.getInstance();
 
-        // Close all multi-market connections
-        socketsRef.current.forEach((socket, schedulerType) => {
-            socket.off('connect');
-            socket.off('disconnect');
-            socket.off('data');
-            const name = getSocketConfigForRoundType(schedulerType)?.namespace;
-            if (name) {
-                SocketManager.releaseSocket(name);
+        // Clean up existing connections
+        activeSocketTypes.current.forEach(type => {
+            const messageHandler = messageHandlers.current.get(type);
+            const connectionHandler = connectionHandlers.current.get(type);
+
+            if (messageHandler) {
+                socketManager.removeListener(type, messageHandler);
+            }
+            if (connectionHandler) {
+                socketManager.removeConnectionListener(type, connectionHandler);
             }
         });
-        socketsRef.current.clear();
+
+        messageHandlers.current.clear();
+        connectionHandlers.current.clear();
+        connectedSockets.current.clear();
+
+        // Determine required socket types
+        activeSocketTypes.current = getRequiredSocketTypes(roundRecord);
 
         setConnectionStatus('connecting');
-        console.log('Connecting to Socket.IO', roundRecord?.type, roundRecord?.roundRecordGameType);
+        console.log('Connecting to Socket.IO', roundRecord?.type, roundRecord?.roundRecordGameType, 'Required sockets:', activeSocketTypes.current);
 
-        try {
-            // Multi-market scenario (NSE Seven Up Down)
-            if (roundRecord.type === SchedulerType.NSE && roundRecord.roundRecordGameType === RoundRecordGameType.SEVEN_UP_DOWN) {
-                const markets = [
-                    { type: SchedulerType.NSE, namespace: '/nse' },
-                    { type: SchedulerType.CRYPTO, namespace: '/crypto' },
-                    { type: SchedulerType.MCX, namespace: '/mcx' },
-                    { type: SchedulerType.COMEX, namespace: '/comex' }, 
-                ];
+        // Set up connections for all required socket types
+        activeSocketTypes.current.forEach(schedulerType => {
+            // Create message handler for this socket type
+            const messageHandler = (data: any) => {
+                try {
+                    // Route data to appropriate handler based on scheduler type
+                    switch (schedulerType) {
+                        case SchedulerType.CRYPTO:
+                            handleCryptoData(data);
+                            break;
+                        case SchedulerType.NSE:
+                        case SchedulerType.USA_MARKET:
+                            handleNSEUSAData(data);
+                            break;
+                        case SchedulerType.MCX:
+                            handleMCXData(data);
+                            break;
+                        case SchedulerType.COMEX:
+                            handleCOMEXData(data);
+                            break;
+                    }
+                } catch (error) {
+                    console.error(`Error processing ${schedulerType} Socket.IO message:`, error);
+                }
+            };
 
-                markets.forEach(market => {
-                    const socket = createSocket(market.type, market.namespace);
-                    socketsRef.current.set(market.type, socket);
-                });
-            }
-            // Multi-market scenario (USA Market Seven Up Down)
-            else if (roundRecord.type === SchedulerType.USA_MARKET && roundRecord.roundRecordGameType === RoundRecordGameType.SEVEN_UP_DOWN) {
-                const markets = [
-                    { type: SchedulerType.USA_MARKET, namespace: '/usa' },
-                    { type: SchedulerType.CRYPTO, namespace: '/crypto' },
-                    { type: SchedulerType.MCX, namespace: '/mcx' },
-                    { type: SchedulerType.COMEX, namespace: '/comex' },
-                ];
-
-                markets.forEach(market => {
-                    const socket = createSocket(market.type, market.namespace);
-                    socketsRef.current.set(market.type, socket);
-                });
-            }
-            // Multi-market scenario (COMEX Stock Slots)
-            else if (roundRecord.type === SchedulerType.COMEX && roundRecord.roundRecordGameType === RoundRecordGameType.STOCK_SLOTS) {
-                const markets = [
-                    { type: SchedulerType.CRYPTO, namespace: '/crypto' },
-                    { type: SchedulerType.COMEX, namespace: '/comex' },
-                ];
-
-                markets.forEach(market => {
-                    const socket = createSocket(market.type, market.namespace);
-                    socketsRef.current.set(market.type, socket);
-                });
-            }
-            // COMEX always uses multi-connection (with CRYPTO)
-            else if (roundRecord.type === SchedulerType.COMEX) {
-                const markets = [
-                    { type: SchedulerType.CRYPTO, namespace: '/crypto' },
-                    { type: SchedulerType.COMEX, namespace: '/comex' }
-                ];
-
-                markets.forEach(market => {
-                    const socket = createSocket(market.type, market.namespace);
-                    socketsRef.current.set(market.type, socket);
-                });
-            }
-            // Single market scenarios
-            else {
-                // Get socket configuration for the round type
-                const socketConfig = getSocketConfigForRoundType(roundRecord.type);
-                if (!socketConfig) {
-                    console.warn(`No socket configuration found for scheduler type: ${roundRecord.type}`);
-                    return;
+            // Create connection handler for this socket type
+            const connectionHandler = (status: 'connecting' | 'connected' | 'disconnected') => {
+                if (status === 'connected') {
+                    connectedSockets.current.add(schedulerType);
+                } else {
+                    connectedSockets.current.delete(schedulerType);
                 }
 
-                socketRef.current = createSocket(roundRecord.type, socketConfig.namespace);
-            }
+                // Update overall connection status for multi-market scenarios
+                checkMultiMarketConnection();
 
-        } catch (error) {
-            console.error('Error setting up Socket.IO connections:', error);
-            setConnectionStatus('disconnected');
-        }
+                // For single socket scenarios, use individual status
+                if (activeSocketTypes.current.length === 1) {
+                    setConnectionStatus(status);
+                }
+            };
+
+            // Store handlers for cleanup
+            messageHandlers.current.set(schedulerType, messageHandler);
+            connectionHandlers.current.set(schedulerType, connectionHandler);
+
+            // Get socket and add listeners
+            socketManager.addListener(schedulerType, messageHandler);
+            socketManager.addConnectionListener(schedulerType, connectionHandler);
+        });
 
         // Update stocks periodically
         const intervalId = setInterval(() => {
             setStocks([...latestDataRef.current]);
-        }, 2000);
+        }, 1000);
 
         // Set up round end check
         let roundEndCheckRef: NodeJS.Timeout;
@@ -475,27 +439,17 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
             const now = new Date();
             if (now >= roundRecord.endTime) {
                 // Clean up after round ends
-                if (socketRef.current) {
-                    socketRef.current.off('connect');
-                    socketRef.current.off('disconnect');
-                    socketRef.current.off('data');
-                    const name = getSocketConfigForRoundType(roundRecord.type)?.namespace;
-                    if (name) {
-                        SocketManager.releaseSocket(name);
-                    }
-                }
+                activeSocketTypes.current.forEach(type => {
+                    const messageHandler = messageHandlers.current.get(type);
+                    const connectionHandler = connectionHandlers.current.get(type);
 
-                // Clean up multi-market connections
-                socketsRef.current.forEach((socket, schedulerType) => {
-                    socket.off('connect');
-                    socket.off('disconnect');
-                    socket.off('data');
-                    const name = getSocketConfigForRoundType(schedulerType)?.namespace;
-                    if (name) {
-                        SocketManager.releaseSocket(name);
+                    if (messageHandler) {
+                        socketManager.removeListener(type, messageHandler);
+                    }
+                    if (connectionHandler) {
+                        socketManager.removeConnectionListener(type, connectionHandler);
                     }
                 });
-                socketsRef.current.clear();
 
                 clearInterval(intervalId);
                 return;
@@ -514,28 +468,22 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                 clearTimeout(roundEndCheckRef);
             }
 
-            if (socketRef.current) {
-                socketRef.current.off('connect');
-                socketRef.current.off('disconnect');
-                socketRef.current.off('data');
-                const name = getSocketConfigForRoundType(roundRecord.type)?.namespace;
-                if (name) {
-                    SocketManager.releaseSocket(name);
-                }
-            }
+            // Clean up all connections
+            activeSocketTypes.current.forEach(type => {
+                const messageHandler = messageHandlers.current.get(type);
+                const connectionHandler = connectionHandlers.current.get(type);
 
-            // Clean up multi-market connections
-            socketsRef.current.forEach((socket, schedulerType) => {
-                socket.off('connect');
-                socket.off('disconnect');
-                socket.off('data');
-                const name = getSocketConfigForRoundType(schedulerType)?.namespace;
-                if (name) {
-                    SocketManager.releaseSocket(name);
+                if (messageHandler) {
+                    socketManager.removeListener(type, messageHandler);
+                }
+                if (connectionHandler) {
+                    socketManager.removeConnectionListener(type, connectionHandler);
                 }
             });
-            socketsRef.current.clear();
 
+            messageHandlers.current.clear();
+            connectionHandlers.current.clear();
+            connectedSockets.current.clear();
             initialPricesRef.current.clear();
             setConnectionStatus('disconnected');
         };

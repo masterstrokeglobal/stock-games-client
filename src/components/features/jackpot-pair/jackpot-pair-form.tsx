@@ -24,7 +24,7 @@ const createJackpotPairSchema = z.object({
     marketItems: z.array(z.string())
         .max(14, "Maximum 14 jackpots are allowed")
         .refine((items) => {
-            const uniqueItems = new Set(items.filter(item => item)); // Filter out empty strings
+            const uniqueItems = new Set(items.filter(item => item)); 
             return uniqueItems.size === items.filter(item => item).length;
         }, "No duplicate market items are allowed"),
     active: z.boolean().default(false),
