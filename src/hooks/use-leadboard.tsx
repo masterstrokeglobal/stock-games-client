@@ -119,7 +119,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                     namespace = '';
             }
             if (!namespace) return;
-            const url = `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}${namespace}`;
+            const url = `${process.env.NEXT_PUBLIC_API_URL}${namespace}`;
             socketRef.current = io(url, { transports: ['websocket'] });
 
             socketRef.current.on('connect', () => {

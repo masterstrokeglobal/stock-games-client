@@ -4,16 +4,17 @@ import AdvertismentDialog from "@/components/features/advertisement/advertismemn
 import CurrentBets from "@/components/features/game/current-bets";
 import LastWinners from "@/components/features/game/last-winners";
 import LeaderBoard from "@/components/features/game/leaderboard";
+import Navbar from "@/components/features/game/navbar";
 import RouletteGame from "@/components/features/game/roulette-game";
 import GameHeaderMobile from "@/components/features/game/roulette-mobile-header";
 import HorseRace from "@/components/features/horse-animation/horse";
 import { useHorseRaceSound } from "@/context/audio-context";
 import { useCurrentGame, useIsPlaceOver } from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
-import { cn } from "@/lib/utils";
+import { cn, TAWK_PROPERTY_ID, TAWK_WIDGET_ID } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
 import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
-import Navbar from "@/components/features/game/navbar";
+import { isTawkEnabled } from "@/lib/utils";
 
 declare global {
     interface Window {
@@ -54,11 +55,10 @@ const GamePage = () => {
 
             </main>}
             <AdvertismentDialog />
-            <TawkMessengerReact
-                propertyId="/67fcabcc5de05719072dd2b9"
-                widgetId="1iopfu6mp"
-                onLoad={() => console.log('Tawk loaded')}
-            />
+            {isTawkEnabled && <TawkMessengerReact
+                propertyId={TAWK_PROPERTY_ID}
+                widgetId={TAWK_WIDGET_ID}
+            />}
             {isMobile && roundRecord && <MobileGame roundRecord={roundRecord} />}
         </section>
     </>

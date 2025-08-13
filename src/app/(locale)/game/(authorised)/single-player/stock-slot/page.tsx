@@ -1,6 +1,7 @@
 "use client";
 import Navbar from "@/components/features/game/navbar";
-import GameLoadingScreen from "@/components/common/game-loading-screen";
+// import GameLoadingScreen from "@/components/common/game-loading-screen";
+import StockSlotLoading from "@/components/features/stock-slot.tsx/StockSlotLoading";
 import MarketSelector from "@/components/common/market-selector";
 import { useCurrentGame } from "@/hooks/use-current-game";
 import { useMarketSelector } from "@/hooks/use-market-selector";
@@ -18,7 +19,12 @@ const Page = () => {
   );
 
   const [betAmount, setBetAmount] = useState<number>(100);
-  const [stockStates, setStockStates] = useState<number[]>([0, 0, 0, 0, 0, 0]);
+  const [stockStates, setStockStates] = useState<number[]>([0, 0, 0, 0, 0]);
+  
+  // Add component loading state
+  const [isComponentLoaded, setIsComponentLoaded] = useState(false);
+  const [assetsLoaded, setAssetsLoaded] = useState(false);
+  const [percentageLoaded, setPercentageLoaded] = useState(20);
 
   const winningIdRoundRecord = useWinningId(roundRecord);
   const { gameTimeLeft, isPlaceOver } = useGameState(roundRecord);
@@ -40,26 +46,63 @@ const Page = () => {
       // Handle first 5 columns (stock prices)
       localStocks.slice(0, 5).forEach((stock: any, index: any) => {
         if (stock.price) {
-          const price = parseFloat(stock.price).toFixed(2);
+          const price = parseFloat(stock.price).toFixed(1);
           const [, decimalPart] = price.split('.');
           const firstDecimalDigit = decimalPart ? parseInt(decimalPart[0]) : 0;
           newStockStates[index] = firstDecimalDigit;
         }
       });
-
-      // Handle 6th column (bonus symbol logic) - multipliers only 0-4
-      const num: number = Number((winningIdRoundRecord?.bonusSymbol || "0X")[0]) || 0;
-
-      if (winningIdRoundRecord?.bonusMultiplier) {
-        newStockStates[5] = Math.min(num, 4); // Ensure it's max 4
-      } 
-      // else {
-      //   newStockStates[5] = Math.floor(Math.random() * 5); // Only 0-4 for multipliers
-      // }
-
       setStockStates(newStockStates);
     }
   }, [stocks, winningIdRoundRecord]);
+
+  // Preload critical assets
+  useEffect(() => {
+    const imagesToPreload = [
+      '/images/slot-machine/stock-slot-bg.png',
+      '/images/slot-machine/menu-bg.png',
+      '/images/slot-machine/menu-btn.png',
+      '/images/slot-machine/btn-audio.png',
+      '/images/slot-machine/i-btn.png',
+      '/images/slot-machine/btn-pause.png',
+      '/images/slot-machine/menu-item-bg-1.png',
+      '/images/slot-machine/menu-item-bg-2.png',
+    ];
+
+    let loadedCount = 0;
+    const totalImages = imagesToPreload.length;
+
+    const imagePromises = imagesToPreload.map((src) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => {
+          loadedCount++;
+          setPercentageLoaded((loadedCount / totalImages) * 100);
+          resolve(src);
+        };
+        img.onerror = reject;
+        img.src = src;
+      });
+    });
+
+    Promise.allSettled(imagePromises).then(() => {
+      setAssetsLoaded(true);
+    });
+  }, []);
+
+  // Component initialization delay 
+  useEffect(() => {
+    if (roundRecord && !isLoading) {
+      const timer = setTimeout(() => {
+        setIsComponentLoaded(true);
+      }, 200); 
+
+      return () => clearTimeout(timer);
+    }
+  }, [roundRecord, isLoading]);
+
+
+  const isFullyLoaded = !isLoading && roundRecord && isComponentLoaded && assetsLoaded;
 
   if (!marketSelected)
     return (
@@ -69,8 +112,9 @@ const Page = () => {
       />
     );
 
-  if (isLoading || !roundRecord)
-    return <GameLoadingScreen className="min-h-[calc(100svh-100px)]" />;
+
+  if (!isFullyLoaded)
+    return <StockSlotLoading percentageLoaded={percentageLoaded} />;
 
   return (
     <section

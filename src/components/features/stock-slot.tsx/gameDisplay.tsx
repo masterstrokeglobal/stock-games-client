@@ -27,10 +27,11 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
   roundRecord,
 }) => {
   const { gameTimeLeft, placeTimeLeft, isGameOver } = useGameState(roundRecord);
-  const { data: myPlacementData } =
-    useGetMySlotGamePlacement(roundRecord.id);
-  const { showResults, previousRoundId } = useShowResults(roundRecord, myPlacementData?.data ?? []);
-
+  const { data: myPlacementData } = useGetMySlotGamePlacement(roundRecord.id);
+  const { showResults, previousRoundId } = useShowResults(
+    roundRecord,
+    myPlacementData?.data ?? []
+  );
 
   // Calculate the display time and status
   const displayTime = !isPlaceOver
@@ -38,7 +39,6 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
     : gameTimeLeft.formatted;
 
   const statusText = isPlaceOver ? "Betting Closed" : "Betting Open";
-
 
   return (
     <>
@@ -70,7 +70,8 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
           isGameActive={isGameActive}
           winningIdRoundRecord={winningIdRoundRecord}
           isPlaceOver={isPlaceOver}
-          isGameOver ={isGameOver}
+          isGameOver={isGameOver}
+          roundRecord={roundRecord}
         />
       </div>
 
@@ -86,12 +87,13 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
         setBetAmount={setBetAmount}
         roundRecord={roundRecord}
       />
-      {previousRoundId &&
+      {previousRoundId && (
         <ResultDialog
           key={String(showResults)}
           open={showResults}
           roundRecordId={previousRoundId}
-        />}
+        />
+      )}
     </>
   );
 };

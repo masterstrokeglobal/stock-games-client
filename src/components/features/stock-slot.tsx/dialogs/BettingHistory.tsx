@@ -84,7 +84,6 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger className="w-full">{children}</DialogTrigger>
       <DialogContent
-        // showButton={false}
         className="bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl"
       >
         <div
@@ -94,7 +93,7 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
           }}
-          className="w-full h-full relative flex flex-col items-center justify-center p-[10%] pt-[15%] font-wendy-one text-[#FFFFFFB2]"
+          className="w-full h-full md:max-h-[70vh] relative flex flex-col items-center justify-center p-[10%] pt-[15%] font-wendy-one text-[#FFFFFFB2]"
         >
           <img
             src="/images/slot-machine/happy-bull.png"

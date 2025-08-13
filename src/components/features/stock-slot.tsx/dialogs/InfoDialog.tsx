@@ -29,7 +29,7 @@ const InfoDialog = ({ children }: { children: React.ReactNode }) => {
           <img
             src="/images/slot-machine/happy-bull.png"
             alt=""
-            className="absolute w-[100px] lg:w-[150px] top-0 translate-y-[-50%]"
+            className="absolute w-[100px] lg:w-[160px] top-0 translate-y-[-50%]"
           />
           <DialogHeader className="p-1">
             <DialogTitle className="text-[15px] lg:text-[30px] xl:text-[40px]">

@@ -22,7 +22,6 @@ const AviatorCanvas = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasContainerRef = useRef<HTMLDivElement>(null);
   const [isModelLoaded, setIsModelLoaded] = useState(false);
-  // const [isPlaneAtBottom, setIsPlaneAtBottom] = useState(false);
   const { isMobile } = useWindowSize();
   const sceneRef = useRef<{
     scene: THREE.Scene;
@@ -387,7 +386,6 @@ const AviatorCanvas = ({
           onMouseUp={(e) => (e.currentTarget.style.cursor = "grab")}
           onMouseLeave={(e) => (e.currentTarget.style.cursor = "grab")}
         />
-        
       </div>
     </div>
   );

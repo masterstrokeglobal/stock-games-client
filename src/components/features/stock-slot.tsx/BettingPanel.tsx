@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { usePlacementOver } from "@/hooks/use-current-game";
+import React, { useCallback, useEffect, useMemo } from "react";
+import { useIsPlaceOver } from "@/hooks/use-current-game";
 import { RoundRecord } from "@/models/round-record";
 import {
   useCreateStockGamePlacement,
@@ -20,45 +20,58 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
   setBetAmount,
 }) => {
   const { data: myPlacementData } = useGetMySlotGamePlacement(roundRecord.id);
-  const {
-    mutate: createStockGamePlacement,
-    isPending: isCreateStockGamePlacementPending,
-  } = useCreateStockGamePlacement();
+  const { mutate: createStockGamePlacement, isPending: isPlacingBet } =
+    useCreateStockGamePlacement();
 
-  const isPlaceOver = usePlacementOver(roundRecord);
-  const { maxPlacement = 1000 } = useMaxPlacement(roundRecord.gameType);
+  const isPlaceOver = useIsPlaceOver(roundRecord);
+  const { maxPlacement = 1000, minPlacement = 100 } = useMaxPlacement(
+    roundRecord.gameType
+  );
 
   const totalBetAmount = useMemo(() => {
-    return myPlacementData?.data?.reduce((acc, curr) => acc + curr.amount, 0);
+    return (
+      myPlacementData?.data?.reduce((acc, curr) => acc + curr.amount, 0) || 0
+    );
   }, [myPlacementData]);
 
-  const currentTotal = totalBetAmount || 0;
-  const remainingAllowed = Math.max(0, maxPlacement - currentTotal);
+  const remainingAllowed = useMemo(
+    () => Math.max(0, maxPlacement - totalBetAmount),
+    [maxPlacement, totalBetAmount]
+  );
 
-  const placeBetHandler = async () => {
-    try {
-      if (betAmount <= 0) {
-        toast.error("Please select a bet amount.");
-        return;
-      }
+  const placeBetHandler = useCallback(() => {
+    if (isPlacingBet) return;
+    console.log('totalBetAmount', totalBetAmount)
+    if (!roundRecord.id || betAmount <= 0) return;
 
-      if (currentTotal + betAmount > maxPlacement) {
-        toast.error(
-          `Total bets cannot exceed ₹${maxPlacement}. Remaining: ₹${remainingAllowed}.`
-        );
-        return;
-      }
-      createStockGamePlacement({
-        roundId: roundRecord.id,
-        amount: betAmount,
-      });
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Something went wrong.");
+    if (totalBetAmount + betAmount > maxPlacement) {
+      toast.error(
+        `Total bets cannot exceed ₹${maxPlacement}. Remaining: ₹${remainingAllowed}.`
+      );
+      return;
     }
-  };
 
-  const handleQuickBet = (amount: number) => {
+    createStockGamePlacement({
+      roundId: roundRecord.id,
+      amount: betAmount,
+    });
+  }, [
+    roundRecord.id,
+    betAmount,
+    totalBetAmount,
+    maxPlacement,
+    remainingAllowed,
+    createStockGamePlacement,
+    isPlacingBet,
+  ]);
+
+  useEffect(() => {
+    console.log('isPlacingBet', isPlacingBet)
+  }, [isPlacingBet])
+
+  const handleQuickBet = useCallback((amount: number) => {
     if (remainingAllowed <= 0) {
+      toast.error(`You have reached the total bet limit of ₹${maxPlacement}.`);
       toast.error(`You have reached the total bet limit of ₹${maxPlacement}.`);
       return;
     }
@@ -69,8 +82,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
       );
     }
     setBetAmount(clamped);
-  };
-
+  }, [remainingAllowed, maxPlacement, setBetAmount]);
 
   return (
     <>
@@ -108,8 +120,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
               >
                 {/* //? bet amount and wallet  */}
                 <div className="leading-none col-span-1 flex gap-1">
-                  ₹
-                  {betAmount}
+                  ₹{betAmount}
                 </div>
               </div>
               <div
@@ -123,27 +134,15 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
                 className="grid grid-cols-3 items-center justify-center gap-1 w-full px-3 lg:px-5 text-center h-full"
               >
                 {/* //? quick bet options  */}
-                <button
-                  className="leading-none hover:text-yellow-400 transition-colors"
-                  onClick={() => handleQuickBet(100)}
-                  disabled={isPlaceOver}
-                >
-                  100
-                </button>
-                <button
-                  className="leading-none hover:text-yellow-400 transition-colors"
-                  onClick={() => handleQuickBet(500)}
-                  disabled={isPlaceOver}
-                >
-                  500
-                </button>
-                <button
-                  className="leading-none hover:text-yellow-400 transition-colors"
-                  onClick={() => handleQuickBet(1000)}
-                  disabled={isPlaceOver}
-                >
-                  1000
-                </button>
+                {[100, 500, 1000].map((amount) => (
+                  <button
+                    key={amount}
+                    className="leading-none hover:text-yellow-400 transition-colors"
+                    onClick={() => handleQuickBet(amount)}
+                  >
+                    {amount}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
@@ -160,19 +159,26 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
               }}
               onClick={() => {
                 if (remainingAllowed <= 0) {
-                  toast.error(`You have reached the total bet limit of ₹${maxPlacement}.`);
+                  toast.error(
+                    `You have reached the total bet limit of ₹${maxPlacement}.`
+                  );
                   return;
                 }
-                const next = Math.min(betAmount + 100, remainingAllowed);
-                if (next === betAmount) return;
-                if (betAmount + 100 > remainingAllowed) {
+                const increment = 100;
+                const next = Math.min(betAmount + increment, remainingAllowed);
+                if (next === betAmount) {
+                  toast.error(
+                    `Cannot increase bet amount. Limit reached: ₹${maxPlacement}.`
+                  );
+                  return;
+                }
+                if (betAmount + increment > remainingAllowed) {
                   toast.error(
                     `Only ₹${remainingAllowed} remaining before reaching the ₹${maxPlacement} limit.`
                   );
                 }
                 setBetAmount(next);
               }}
-              disabled={isPlaceOver}
             >
               <span className="text-transparent ">+</span>
             </button>
@@ -184,8 +190,9 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
               }}
-              onClick={() => setBetAmount(Math.max(100, betAmount - 100))}
-              disabled={isPlaceOver}
+              onClick={() =>
+                setBetAmount(Math.max(minPlacement, betAmount - 100))
+              }
             >
               <span className="text-transparent">-</span>
             </button>
@@ -211,14 +218,10 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
           <div className="col-span-3 relative w-full h-full">
             <button
               onClick={isPlaceOver ? undefined : placeBetHandler}
-              disabled={
-                isPlaceOver ||
-                isCreateStockGamePlacementPending ||
-                remainingAllowed <= 0
-              }
+              disabled={isPlacingBet || isPlaceOver || betAmount <= 0 || totalBetAmount + betAmount > maxPlacement || totalBetAmount >= maxPlacement}
               className={`absolute top-0 lg:top-3 left-0 rounded-full z-10 cursor-pointer
               ${
-                isPlaceOver || isCreateStockGamePlacementPending || remainingAllowed <= 0
+                isPlacingBet || isPlaceOver || betAmount <= 0 || totalBetAmount + betAmount > maxPlacement || totalBetAmount >= maxPlacement
                   ? "cursor-not-allowed opacity-50"
                   : "cursor-pointer hover:brightness-110"
               }`}
@@ -237,18 +240,6 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
               />
             </button>
           </div>
-
-          {/* //? total bet display  */}
-          {/* <div className="col-span-3 relative w-full h-full flex items-center justify-center">
-            <div className="text-center">
-              <div className="text-xs lg:text-sm text-yellow-400 font-bold">
-                Total Bet
-              </div>
-              <div className="text-sm lg:text-lg text-white">
-                ₹{totalBetAmount || 0}
-              </div>
-            </div>
-          </div> */}
         </div>
       </div>
     </>

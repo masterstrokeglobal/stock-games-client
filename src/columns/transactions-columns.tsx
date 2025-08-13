@@ -1,15 +1,14 @@
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Transaction, TransactionStatus, TransactionType } from "@/models/transaction";
+import { useConfirmWithdrawal, useUpdateTransactionById } from "@/react-query/transactions-queries";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { Edit2 } from "lucide-react"; // Import necessary icons
 import Link from "next/link"; // Adjust import path
 import React from "react";
-import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
-import { useConfirmWithdrawal, useUpdateTransactionById } from "@/react-query/transactions-queries";
-import { Dialog } from "@/components/ui/dialog";
-import { DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const transactionColumns: ColumnDef<Transaction>[] = [
     {
@@ -61,6 +60,20 @@ const transactionColumns: ColumnDef<Transaction>[] = [
                 {row.original.status.split("_").join(" ")}
             </Badge>
         ),
+    },
+    {
+        header: "Agent",
+        accessorKey: "agent",
+        cell: ({ row }) => {
+            if (row.original.agent) {
+                return <Link href={`/dashboard/agents/${row.original.agent?.id}`}>
+                    <Badge variant="outline">
+                        {row.original.agent?.name ?? "N/A"}
+                    </Badge>
+                </Link>
+            }
+            return <div className="text-nowrap">N/A</div>
+        }
     },
     {
         header: "Bonus Percentage",
