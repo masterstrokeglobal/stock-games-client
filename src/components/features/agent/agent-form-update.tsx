@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import FormInput from "@/components/ui/form/form-input";
-import FormPassword from "@/components/ui/form/form-password";
+import 
+FormInput from "@/components/ui/form/form-input";
 import FormProvider from "@/components/ui/form/form-provider";
 import FormSwitch from "@/components/ui/form/form-switch";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,18 +12,13 @@ export const createAgentInputSchema = z.object({
     lastname: z.string().min(2, "Last name is required").max(50),
     email: z.string().email("Invalid email address"),
     enableTransactions: z.boolean().default(false),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string().min(6, "Confirm password is required")
-}).refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"]
 });
 
 export type AgentFormValues = z.infer<typeof createAgentInputSchema>;
 
 type Props = {
     onSubmit: (data: AgentFormValues) => void;
-    defaultValues?:AgentFormValues;
+    defaultValues?: AgentFormValues;
     isLoading?: boolean;
 };
 
@@ -34,18 +29,15 @@ const AgentForm = ({
         lastname: '',
         email: '',
         enableTransactions: false,
-        password: '',
-        confirmPassword: ''
     },
     isLoading
 }: Props) => {
     const form = useForm<AgentFormValues>({
         resolver: zodResolver(createAgentInputSchema),
-            defaultValues,
+        defaultValues,
     });
 
-    const { control, handleSubmit, watch } = form;
-    const passwordValue = watch("password");
+    const { control, handleSubmit } = form;
 
     return (
         <FormProvider
@@ -74,23 +66,6 @@ const AgentForm = ({
                 label="Email*"
                 type="email"
                 placeholder="Enter email address"
-            />
-
-            <FormPassword
-                control={control}
-                name="password"
-                label="Password*"
-                type="password"
-                placeholder="Enter password"
-            />
-
-            <FormPassword
-                control={control}
-                name="confirmPassword"
-                label="Confirm Password*"
-                type="password"
-                placeholder="Confirm password"
-                disabled={!passwordValue}
             />
 
             <FormSwitch
