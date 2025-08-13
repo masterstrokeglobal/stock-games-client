@@ -12,6 +12,7 @@ import React, { useState } from 'react';
 import BettingHistoryDialog from './betting-history';
 import GameHistoryDialog from './game-history';
 import HowToPlayDialog from './how-to-play';
+import GameRulesDialog from './game-rules';
 interface GameSettingsPopoverProps {
     children: React.ReactNode;
 }
@@ -81,11 +82,11 @@ const GameSettingsPopover = ({ children }: GameSettingsPopoverProps) => {
                             </button>
                         </HowToPlayDialog>
 
-                        <HowToPlayDialog>
+                        <GameRulesDialog>
                             <button className="w-full border-b h-14 px-4 border-[#0074FF] text-[#BEDBFF] text-left">
                                 <span className="text-[#BEDBFF] text-lg font-light">Game Rules</span>
                             </button>
-                        </HowToPlayDialog>
+                        </GameRulesDialog>
                     </div>
 
                     {/* Home Button */}
