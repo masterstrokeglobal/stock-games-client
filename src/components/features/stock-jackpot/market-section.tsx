@@ -61,6 +61,7 @@ const MarketSection = ({ globalBetAmount, className }: { globalBetAmount: number
                     {sortedMarketItems?.slice(0, 7).map((marketItem) => (
                         <BettingCard
                             key={marketItem.id}
+                            skew="right"
                             roundRecord={roundRecord}
                             globalBetAmount={globalBetAmount}
                             marketItem={marketItem}
@@ -72,19 +73,33 @@ const MarketSection = ({ globalBetAmount, className }: { globalBetAmount: number
                     <div className="flex justify-center mt-4 flex-col gap-2 items-center">
                         {roundRecord && <TimeDisplay className="mb-8" roundRecord={roundRecord} />}
                     </div>
-                    <div className="flex justify-between flex-col md:flex-row items-start ">
+                    <div className="flex justify-between relative z-20 flex-col md:flex-row items-start ">
                         <TabsList className="w-full md:max-w-md grid grid-cols-2 gap-2  p-1 rounded-lg">
                             <TabsTrigger
                                 value={SchedulerType.NSE}
                                 disabled={!isNSEAllowed || !isNSEAvailable}
-                                className="w-full rounded-lg data-[state=active]:bg-[#008DC2] data-[state=active]:text-white data-[state=inactive]:bg-[#002C3E] data-[state=inactive]:text-white transition-colors"
+                                className={`w-full rounded-lg font-spacemono transition-colors ${
+                                    (!isNSEAllowed || !isNSEAvailable) 
+                                        ? 'text-white' 
+                                        : 'data-[state=active]:bg-gradient-to-b data-[state=active]:from-[#B0FF2A] data-[state=active]:to-[#3E8100] data-[state=active]:text-white data-[state=inactive]:bg-[#002C3E] data-[state=inactive]:text-white'
+                                }`}
+                                style={(!isNSEAllowed || !isNSEAvailable) ? {
+                                    background: 'linear-gradient(0deg, #B80033 0%, #C42C65 100%)'
+                                } : undefined}
                             >
                                 NSE
                             </TabsTrigger>
                             <TabsTrigger
                                 value={SchedulerType.USA_MARKET}
                                 disabled={!isUSAMarketAllowed || !isUSAMarketAvailable}
-                                className="w-full rounded-lg data-[state=active]:bg-[#008DC2] data-[state=active]:text-white data-[state=inactive]:bg-[#002C3E] data-[state=inactive]:text-white transition-colors"
+                                className={`w-full rounded-lg font-spacemono transition-colors ${
+                                    (!isUSAMarketAllowed || !isUSAMarketAvailable) 
+                                        ? 'text-white' 
+                                        : 'data-[state=active]:bg-gradient-to-b data-[state=active]:from-[#B0FF2A] data-[state=active]:to-[#3E8100] data-[state=active]:text-white data-[state=inactive]:bg-[#002C3E] data-[state=inactive]:text-white'
+                                }`}
+                                style={(!isUSAMarketAllowed || !isUSAMarketAvailable) ? {
+                                    background: 'linear-gradient(0deg, #B80033 0%, #C42C65 100%)'
+                                } : undefined}
                             >
                                 US Stock
                             </TabsTrigger>
@@ -92,7 +107,14 @@ const MarketSection = ({ globalBetAmount, className }: { globalBetAmount: number
                                 <TabsTrigger
                                     value={SchedulerType.MCX}
                                     disabled={!isMCXAllowed || !isMCXAvailable}
-                                    className="w-full rounded-lg data-[state=active]:bg-[#008DC2] data-[state=active]:text-white data-[state=inactive]:bg-[#002C3E] data-[state=inactive]:text-white transition-colors"
+                                    className={`w-full rounded-lg font-spacemono transition-colors ${
+                                        (!isMCXAllowed || !isMCXAvailable) 
+                                            ? 'text-white' 
+                                            : 'data-[state=active]:bg-gradient-to-b data-[state=active]:from-[#B0FF2A] data-[state=active]:to-[#3E8100] data-[state=active]:text-white data-[state=inactive]:bg-[#002C3E] data-[state=inactive]:text-white'
+                                    }`}
+                                    style={(!isMCXAllowed || !isMCXAvailable) ? {
+                                        background: 'linear-gradient(0deg, #B80033 0%, #C42C65 100%)'
+                                    } : undefined}
                                 >
                                     MCX
                                 </TabsTrigger>
@@ -101,7 +123,14 @@ const MarketSection = ({ globalBetAmount, className }: { globalBetAmount: number
                                 <TabsTrigger
                                     value={SchedulerType.COMEX}
                                     disabled={!isCOMEXAllowed || !isComexAvailable}
-                                    className="w-full rounded-lg data-[state=active]:bg-[#008DC2] data-[state=active]:text-white data-[state=inactive]:bg-[#002C3E] data-[state=inactive]:text-white transition-colors"
+                                    className={`w-full rounded-lg font-spacemono transition-colors ${
+                                        (!isCOMEXAllowed || !isComexAvailable) 
+                                            ? 'text-white' 
+                                            : 'data-[state=active]:bg-gradient-to-b data-[state=active]:from-[#B0FF2A] data-[state=active]:to-[#3E8100] data-[state=active]:text-white data-[state=inactive]:bg-[#002C3E] data-[state=inactive]:text-white'
+                                    }`}
+                                    style={(!isCOMEXAllowed || !isComexAvailable) ? {
+                                        background: 'linear-gradient(0deg, #B80033 0%, #C42C65 100%)'
+                                    } : undefined}
                                 >
                                     International
                                 </TabsTrigger>
@@ -114,6 +143,7 @@ const MarketSection = ({ globalBetAmount, className }: { globalBetAmount: number
                         {sortedMarketItems?.slice(7, 14).map((marketItem) => (
                             <BettingCard
                                 key={marketItem.id}
+                                skew="left"
                                 roundRecord={roundRecord}
                                 globalBetAmount={globalBetAmount}
                                 marketItem={marketItem}

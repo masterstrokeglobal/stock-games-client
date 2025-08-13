@@ -2,7 +2,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 
 const GameRule = () => {
     return <div className="max-w-xl mx-auto rounded-2xl" style={{ backgroundColor: '#003B4952' }}>
-        <ScrollArea className="h-[40vh] pr-2" scrollThumbClassName="bg-[#C7F4FF80]">
+        <ScrollArea className="h-[40vh] font-space-grotesk pr-2" scrollThumbClassName="bg-[#C7F4FF80]">
             <div className="space-y-4 p-4 text-white">
                 <div>
                     <h3 className="text-white font-medium mb-2">Step 1: Choose Your Stock</h3>

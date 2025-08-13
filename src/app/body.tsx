@@ -95,7 +95,7 @@ const SpaceMono = Space_Mono({
 })
 
 const OrbitronFont = Orbitron({
-  weight: ['400', '500', '600'],
+  weight: ['400', '500', '600', '700', '800', '900'],
   subsets: ['latin'],
   variable: '--font-orbitron'
 })

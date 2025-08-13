@@ -30,7 +30,7 @@ const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
     const roundStartTime = round?.createdAt ?? (placements[0]?.createdAt ?? null);
 
     return (
-        <Dialog defaultOpen={open}>
+        <Dialog  defaultOpen={open}>
             <DialogContent
                 showButton={false}
                 className={cn(
@@ -38,38 +38,38 @@ const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
                 )}
             >
                 <img src='/images/jackpot/bg.png' className='absolute w-full h-full' />
+                <div className='w-full h-full bg-black/40 backdrop-blur absolute' />
                 <img src='/images/jackpot/result-bg.png' className='absolute w-full h-full' />
-                <div className='w-full h-full bg-black/20 backdrop-blur absolute' />
                 <div className="relative w-full max-w-2xl mx-auto flex flex-col items-center justify-center min-h-[70vh]">
                     <div className="w-full flex flex-col items-center">
                         <div
-                            className="text-center text-white sm:text-3xl text-2xl font-audiowale xl:text-4xl  tracking-wide mb-4"
+                            className="text-center text-white font-normal sm:text-3xl text-2xl font-audiowale xl:text-4xl  tracking-wide mb-4"
                         >
                             Result
                         </div>
-                        <div className="w-full flex flex-col items-center">
+                        <div className="w-full flex flex-col font-spacemono items-center">
                             <div className="w-full max-w-2xl px-4 mx-auto">
                                 <div
                                     className="rounded-3xl w-full border-[#50D8F2] md:border-[6px] border-[4px] mx-auto p-0"
                                     style={{
                                         background: "linear-gradient(90deg, rgba(116, 245, 255, 0.6) 0%, rgba(0, 150, 162, 0.6) 100%)",
-                                        boxShadow: "0px 0px 16.1px 0px #51C5CD",
+                                        boxShadow: "0px 0px 24px 0px #51C5CD, 0px 0px 48px 0px rgba(81, 197, 205, 0.5)",
                                     }}
                                 >
                                     <div className="flex items-center font-orbitron justify-between px-4 pt-6 pb-2">
                                         <span
-                                            className="text-[#00586E]  font-semibold"
+                                            className="text-[#00586E] lg:text-[17px] text-base font-semibold"
                                         >
-                                            Round: <span className="text-white text-sm font-space-grotesk">#{roundId ?? "--"}</span>
+                                            Round: <span className="text-white lg:text-[15px] text-sm font-medium font-space-grotesk">#{roundId ?? "--"}</span>
                                         </span>
                                         <span
-                                            className="text-[#00586E]  font-semibold"
+                                            className="text-[#00586E] lg:text-[17px] text-base font-semibold"
                                         >
-                                            Time: <span className="text-white text-sm font-space-grotesk">{roundStartTime ? dayjs(roundStartTime).format("hh:mm A") : "--"}</span>
+                                            Time: <span className="text-white lg:text-[15px] text-sm font-medium font-space-grotesk">{roundStartTime ? dayjs(roundStartTime).format("hh:mm A") : "--"}</span>
                                         </span>
                                     </div>
                                     <div className="px-4 pb-4">
-                                        <div className="grid grid-cols-3 items-center sm:text-base text-xs text-white px-4 font-orbitron font-semibold uppercase bg-[#007E9F] bg-opacity-60  rounded-full py-2 mb-2">
+                                        <div className="grid grid-cols-3 items-center sm:text-base text-xs text-white px-4 font-orbitron font-semibold uppercase bg-[#007E9F99]   rounded-full py-2 mb-2">
                                             <div className="text-left whitespace-nowrap">BETTED ON</div>
                                             <div className="text-center whitespace-nowrap">BET INR</div>
                                             <div className="text-center whitespace-nowrap">CASHOUT INR</div>
@@ -84,7 +84,7 @@ const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
                                                     placements.map((result, idx) => (
                                                         <div
                                                             key={idx}
-                                                            className="grid grid-cols-3 px-4 font-space-grotesk items-center text-white font-normal sm:text-sm text-xs py-1 rounded-xl mb-2"
+                                                            className="grid grid-cols-3 px-4 font-space-grotesk items-center text-[#C2F2FF] font-medium sm:text-sm text-xs py-1 rounded-xl mb-2"
                                                         >
                                                             <div className="text-left pl-2">{result.placement?.toUpperCase() ?? "--"}</div>
                                                             <div className="text-center">{INR(result.amount)}</div>
@@ -109,14 +109,14 @@ const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
                                     </div>
                                     <div className="flex justify-center mb-4">
                                         <div
-                                            className="text-center sm:text-2xl text-xl md:text-3xl font-bold text-white font-audiowale">
+                                            className="text-center sm:text-2xl text-xl md:text-[28px] font-normal text-white font-audiowale">
                                             Net Result : {INR(totalNetResult)}
                                         </div>
                                     </div>
                                 </div>
                                 <NextRound round={round ?? undefined} className="my-4" />
                             </div>
-                            <div className="flex w-full max-w-40 justify-center gap-6 mt-8">
+                            <div className="flex w-full max-w-40 justify-center gap-6 ">
                                 <DialogClose asChild>
                                     <SkewedButton
                                         size="md"
@@ -179,7 +179,7 @@ const NextRound = ({ round, className }: { round?: RoundRecord, className?: stri
 
     return (
         <div
-            className={cn("text-center font-medium text-[#86EBFF] font-orbitron md:text-xl sm:text-lg ", className)}
+            className={cn("text-center font-medium text-[#86EBFF]  font-orbitron md:text-xl sm:text-lg ", className)}
             style={{
                 textShadow: "0px 0px 10px #001B50",
             }}
