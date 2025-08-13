@@ -8,11 +8,11 @@ const HowToPlay = () => {
     const videoUrl = useMemo(() => {
         switch (locale) {
             case "en":
-                return "/images/how-to-play/videos/wheel-of-fortune-en.mp4";
+                return "/images/how-to-play/videos/hi-lo-en.mp4";
             case "hi":
-                return "/images/how-to-play/videos/wheel-of-fortune-hi.mp4";
+                return "/images/how-to-play/videos/hi-lo-hi.mp4";
             default:
-                return "/images/how-to-play/videos/wheel-of-fortune-en.mp4";
+                return "/images/how-to-play/videos/hi-lo-en.mp4";
         }
     }, [locale]);
 
