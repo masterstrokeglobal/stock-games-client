@@ -42,6 +42,8 @@ const EditCompanyPage = () => {
             domain: company.domain,
             paymentImage: company.paymentImage,
             dynamicQR: company.dynamicQR,
+            otpIntegration: company.otpIntegration,
+            userVerfication: company.userVerfication,
             coinValues: company.coinValues,
             theme: company.theme,
         };

@@ -25,6 +25,7 @@ export class Company {
     placementNotAllowed?: SchedulerType[];
     gameRestrictions:RoundRecordGameType[];
     allowedCasino!: boolean;
+    userVerfication!: boolean;
     deletedAt?: Date;
     minPlacement: number;
     maxPlacement: number;
@@ -53,6 +54,7 @@ export class Company {
         this.externalPayIn = params.externalPayIn || false;
         this.externalPayOut = params.externalPayOut || false;
         this.createdAt = params.createdAt;
+        this.userVerfication = params.userVerfication || false;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;
         this.paymentImage = params.paymentImage;
