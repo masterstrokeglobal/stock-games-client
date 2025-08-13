@@ -11,10 +11,10 @@ import HorseRace from "@/components/features/horse-animation/horse";
 import { useHorseRaceSound } from "@/context/audio-context";
 import { useCurrentGame, useIsPlaceOver } from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
-import { cn } from "@/lib/utils";
+import { cn, TAWK_PROPERTY_ID, TAWK_WIDGET_ID } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
 import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
-import { isTawkEnabled } from "@/lib/utils";    
+import { isTawkEnabled } from "@/lib/utils";
 
 declare global {
     interface Window {
@@ -55,9 +55,9 @@ const GamePage = () => {
 
             </main>}
             <AdvertismentDialog />
-         {isTawkEnabled && <TawkMessengerReact
-                propertyId="67fcabcc5de05719072dd2b9"
-                widgetId="1iopfu6mp"
+            {isTawkEnabled && <TawkMessengerReact
+                propertyId={TAWK_PROPERTY_ID}
+                widgetId={TAWK_WIDGET_ID}
             />}
             {isMobile && roundRecord && <MobileGame roundRecord={roundRecord} />}
         </section>
