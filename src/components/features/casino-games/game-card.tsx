@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useGetAllFavoriteGames, useAddFavoriteGame, useRemoveFavoriteGame } from "@/react-query/favorite-game"
 import { useMemo } from "react"
 import { Heart } from "lucide-react"
+import { useAuthStore } from "@/context/auth-context"
 interface GameCardProps {
   game: CasinoGames
 }
@@ -11,6 +12,7 @@ interface GameCardProps {
 export default function GameCard({ game }: GameCardProps) {
   const { data: favorites = [] } = useGetAllFavoriteGames();
   const addFavorite = useAddFavoriteGame();
+  const { isLoggedIn } = useAuthStore();
   const removeFavorite = useRemoveFavoriteGame();
 
   // Check if current game is in favorites based on gameType (enum)
@@ -47,18 +49,19 @@ export default function GameCard({ game }: GameCardProps) {
         )}
 
         {/* Favorite Toggle Button */}
-        <button
-          onClick={handleFavoriteToggle}
-          disabled={addFavorite.isPending || removeFavorite.isPending}
-          className="absolute top-2 right-2 z-10 p-2 rounded-full bg-black/50 hover:bg-black/70 transition-all duration-200 disabled:opacity-50"
-        >
-          <Heart
-            className={`w-5 h-5 transition-all duration-200 ${isFavorite
-              ? 'text-red-500 fill-red-500'
-              : 'text-white hover:text-red-300'
-              }`}
-          />
-        </button>
+        {isLoggedIn &&
+          <button
+            onClick={handleFavoriteToggle}
+            disabled={addFavorite.isPending || removeFavorite.isPending}
+            className="absolute top-2 right-2 z-10 p-2 rounded-full bg-black/50 hover:bg-black/70 transition-all duration-200 disabled:opacity-50"
+          >
+            <Heart
+              className={`w-5 h-5 transition-all duration-200 ${isFavorite
+                ? 'text-red-500 fill-red-500'
+                : 'text-white hover:text-red-300'
+                }`}
+            />
+          </button>}
       </Card>
     </Link>
   )

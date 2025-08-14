@@ -5,8 +5,11 @@ import Image from "next/image"
 import { Heart } from "lucide-react"
 import { useGetAllFavoriteGames, useAddFavoriteGame, useRemoveFavoriteGame } from "@/react-query/favorite-game"
 import { useMemo } from "react"
+import { useAuthStore } from "@/context/auth-context"
 
 const StockGameCard = ({ game }: { game: StockGame }) => {
+    const { isLoggedIn } = useAuthStore();
+
     const { data: favorites = [] } = useGetAllFavoriteGames();
     const addFavorite = useAddFavoriteGame();
     const removeFavorite = useRemoveFavoriteGame();
@@ -43,7 +46,7 @@ const StockGameCard = ({ game }: { game: StockGame }) => {
                 </Card>
             </Link>
 
-            {/* Favorite Toggle Button */}
+          {isLoggedIn && (
             <button
                 onClick={handleFavoriteToggle}
                 disabled={addFavorite.isPending || removeFavorite.isPending}
@@ -55,7 +58,7 @@ const StockGameCard = ({ game }: { game: StockGame }) => {
                             : 'text-white hover:text-red-300'
                         }`}
                 />
-            </button>
+            </button>)}
         </div>
     )
 }
