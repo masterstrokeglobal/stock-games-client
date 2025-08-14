@@ -445,6 +445,13 @@ export const stockGames = [
     }
 ]
 
+export type StockGame = {
+    href: string;
+    src: string;
+    name: string;
+    alt: string;
+    type: RoundRecordGameType;
+}
 export const TAWK_PROPERTY_ID = process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID??""
 export const TAWK_WIDGET_ID = process.env.NEXT_PUBLIC_TAWK_WIDGET_ID??""
 

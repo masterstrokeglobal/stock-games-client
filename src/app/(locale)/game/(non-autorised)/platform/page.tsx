@@ -1,6 +1,7 @@
 "use client";
 import CategoryCarousel from "@/components/features/casino-games/category-carousel";
 import { CasinoProvidersCarousel } from "@/components/features/casino-games/game-providers";
+import FavoriteGameCarousel from "@/components/features/favorite-games/favorite-game-carousel";
 import AdMarquee from "@/components/features/platform/ad-marquee";
 import CtaSection from "@/components/features/platform/cta-section";
 import WalletDialog from "@/components/features/platform/wallet-dialog";
@@ -23,7 +24,7 @@ const PlatformPage = () => {
 
     return (
         <section className="space-y-4 md:space-y-8 font-inter">
-            <AdMarquee />  
+            <AdMarquee />
             {isLoggedIn && !user.isDemoUser && (
                 <div className="flex gap-2">
                     <WalletDialog activeTab="deposit">
@@ -42,15 +43,15 @@ const PlatformPage = () => {
             )}
 
             {isLoggedIn && <ActiveTierCard className="my-12" />}
-
+            {isLoggedIn && <FavoriteGameCarousel />}
             <StockGameCarousel />
-            {isCasinoAllowed  && (
+            {isCasinoAllowed && (
                 <>
                     <CasinoProvidersCarousel title={tPlatform("game-providers")} />
                     <CategoryCarousel title={tPlatform("new-released")} new={true} direction="backward" />
                     <CategoryCarousel title={tPlatform("hot-games")} popular={true} direction="forward" />
-                    <CategoryCarousel title={"Stock Game Choices"}  stockGameChoice/>
-                    <CategoryCarousel title={"Provider of the Week"}  providerOfWeek/>
+                    <CategoryCarousel title={"Stock Game Choices"} stockGameChoice />
+                    <CategoryCarousel title={"Provider of the Week"} providerOfWeek />
                     <CategoryCarousel title={tPlatform("crash-games")} type={GameTypeEnum.CRASH_GAME} direction="backward" />
                     <CategoryCarousel title={tPlatform("game-show")} type={GameTypeEnum.GAME_SHOW} direction="forward" />
                     <CategoryCarousel title={tPlatform("instant-win")} type={GameTypeEnum.INSTANT_WIN} direction="backward" />

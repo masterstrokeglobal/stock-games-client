@@ -49,9 +49,9 @@ const EditTransactionPage = () => {
     };
 
     const withdrawldetails = useMemo(() => {
-        if (transaction.type != TransactionType.WITHDRAWAL) return null;
+        if (!data?.data?.transaction.withdrawDetails) return null;
         return new WithdrawDetailsRecord(data?.data?.transaction.withdrawDetails);
-    }, [data, transaction]);
+    }, [data]);
 
     if (isLoading) return <LoadingScreen>Loading transaction...</LoadingScreen>;
 

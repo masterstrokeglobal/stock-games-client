@@ -18,6 +18,7 @@ import { isTawkEnabled } from "@/lib/utils";
 import GameMaintenanceMarquee from "@/components/common/game-maintainaince-screen";
 import useSchedularInactive from "@/hooks/use-schedular-inactive";
 import { useGameType } from "@/hooks/use-game-type";
+import RouletteGameHeader from "@/components/features/game/roulette-game-header";
 
 declare global {
     interface Window {
@@ -38,6 +39,7 @@ const GamePage = () => {
     return (<>
         <section className={cn("bg-background-game pt-14 md:min-h-screen")}>
             <Navbar />
+            <RouletteGameHeader />
             {(!isActive && !isFetching) && (
                 <GameMaintenanceMarquee />
             )}
@@ -51,7 +53,7 @@ const GamePage = () => {
                     {roundRecord && <LeaderBoard roundRecord={roundRecord} />}
                 </div>
                 <div
-                    className="lg:col-span-7 col-span-8 bg-las relative  row-span-5 h-fit   rounded-sm overflow-y-auto game-gradient-card-parent">
+                    className="lg:col-span-7 col-span-8 bg-las relative row-span-5 h-fit rounded-sm overflow-y-auto game-gradient-card-parent">
                     {roundRecord && <RouletteGame roundRecord={roundRecord} />}
                 </div>
                 <div
