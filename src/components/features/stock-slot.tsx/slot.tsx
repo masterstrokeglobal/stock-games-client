@@ -6,6 +6,7 @@ import { StockListDesktop } from "./StocksList";
 import MenuDialog from "./dialogs/MenuDialog";
 import { useAudio } from "@/context/audio-context";
 import InfoDialog from "./dialogs/InfoDialog";
+import DemoVideo from "./dialogs/demo-video";
 
 interface GameScreenProps {
   stockStates: number[];
@@ -128,6 +129,20 @@ const StockSlot: React.FC<GameScreenProps> = ({
                 How to play
               </div>
             </HowToPlay>
+            <DemoVideo>
+              <div
+                style={{
+                  backgroundImage:
+                    "url('/images/slot-machine/menu-item-bg-2.png')",
+                  backgroundSize: "100% 100%",
+                  backgroundPosition: "center center",
+                  backgroundRepeat: "no-repeat",
+                }}
+                className="text-center px-3 py-2"
+              >
+                Demo Video
+              </div>
+            </DemoVideo>
           </div>
         </div>
 

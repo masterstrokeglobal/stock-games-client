@@ -3,6 +3,7 @@ import BettingHistoryDialog from "./betting-history";
 import HowToPlayDialog from "./how-to-play";
 import Link from "next/link";
 import DemoVideoDialog from "./demo-video";
+import GameRules from "./game-rules";
 
 const HelpButton = () => {
     return (
@@ -12,11 +13,11 @@ const HelpButton = () => {
                     Betting History
                 </Button>
             </BettingHistoryDialog>
-            <HowToPlayDialog>
+            <GameRules>
                 <Button className="w-full h-11 bg-[#0C309E] hover:bg-[#0C309E]/80 text-white dice-header ">
                 Game Rules
                 </Button>
-            </HowToPlayDialog>
+            </GameRules>
             <DemoVideoDialog    >
                 <Button className="w-full h-11 bg-[#0C309E] hover:bg-[#0C309E]/80 text-white dice-header ">
                     Demo Video

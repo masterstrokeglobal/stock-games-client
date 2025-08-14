@@ -3,38 +3,20 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { X } from "lucide-react";
 import Image from "next/image";
 
 interface HowToPlayDialogProps {
     children: React.ReactNode;
-    instructions?: string;
 }
 
-const DEFAULT_INSTRUCTIONS = `
-1. Each round features 12 carefully selected stocks from the market.
-
-2. Six stocks are assigned to each dice, with each face representing a particular stock.
-
-3. Choose your lucky number (2-12) and place your bet before the round starts.
-
-4. Watch as the dice roll and reveal which stocks performed the best!
-
-5. The winning stocks are determined by the highest percentage change during the round.
-
-6. Each dice counts as a winner, and the sum of both dice becomes the winning number.
-
-7. If you bet on the correct number, congratulations! You win based on the payout multiplier shown.
-
-8. Check your winnings and get ready for the next exciting round!
-`;
 
 const HowToPlayDialog: React.FC<HowToPlayDialogProps> = ({
     children,
-    instructions = DEFAULT_INSTRUCTIONS,
 }) => {
     const [open, setOpen] = useState(false);
+    const [lang, setLang] = useState('en');
 
     return (
         <Dialog open={open} onOpenChange={setOpen} modal={true}>
@@ -63,12 +45,8 @@ const HowToPlayDialog: React.FC<HowToPlayDialogProps> = ({
                         <Image src="/images/dice-game/table-bg.png" alt="dice-1" fill />
                         <div className="absolute top-0 left-0 w-full h-full backdrop-blur-sm bg-[#520B8E] bg-opacity-30" />
                         <div className="relative z-10 text-white p-4">
-                            <div className="text-white text-base font-semibold mb-4">
-                                Instructions:
-                            </div>
-                            <div className="text-white text-sm whitespace-pre-line leading-relaxed">
-                                {instructions}
-                            </div>
+                           
+
                         </div>
                     </div>
                 </div>

@@ -57,7 +57,7 @@ const MarketSection = ({ globalBetAmount, className }: { globalBetAmount: number
 
             <div className="flex lg:justify-between justify-center mx-auto w-full gap-4 mt-6">
                 {/* Left side: first 7 market items */}
-                {isDesktop && <div className="flex flex-col gap-2 bg-[#195A6D] bg-opacity-55 backdrop-blur-sm rounded-r-md overflow-hidden w-full max-w-[300px]">
+                {isDesktop && <div className="flex flex-col relative z-20 gap-2 bg-[#195A6D] bg-opacity-55 backdrop-blur-sm rounded-r-md overflow-hidden w-full max-w-[300px]">
                     {sortedMarketItems?.slice(0, 7).map((marketItem) => (
                         <BettingCard
                             key={marketItem.id}
@@ -78,11 +78,10 @@ const MarketSection = ({ globalBetAmount, className }: { globalBetAmount: number
                             <TabsTrigger
                                 value={SchedulerType.NSE}
                                 disabled={!isNSEAllowed || !isNSEAvailable}
-                                className={`w-full rounded-lg font-spacemono transition-colors ${
-                                    (!isNSEAllowed || !isNSEAvailable) 
-                                        ? 'text-white' 
+                                className={`w-full rounded-lg font-spacemono transition-colors ${(!isNSEAllowed || !isNSEAvailable)
+                                        ? 'text-white'
                                         : 'data-[state=active]:bg-gradient-to-b data-[state=active]:from-[#B0FF2A] data-[state=active]:to-[#3E8100] data-[state=active]:text-white data-[state=inactive]:bg-[#002C3E] data-[state=inactive]:text-white'
-                                }`}
+                                    }`}
                                 style={(!isNSEAllowed || !isNSEAvailable) ? {
                                     background: 'linear-gradient(0deg, #B80033 0%, #C42C65 100%)'
                                 } : undefined}
@@ -92,11 +91,10 @@ const MarketSection = ({ globalBetAmount, className }: { globalBetAmount: number
                             <TabsTrigger
                                 value={SchedulerType.USA_MARKET}
                                 disabled={!isUSAMarketAllowed || !isUSAMarketAvailable}
-                                className={`w-full rounded-lg font-spacemono transition-colors ${
-                                    (!isUSAMarketAllowed || !isUSAMarketAvailable) 
-                                        ? 'text-white' 
+                                className={`w-full rounded-lg font-spacemono transition-colors ${(!isUSAMarketAllowed || !isUSAMarketAvailable)
+                                        ? 'text-white'
                                         : 'data-[state=active]:bg-gradient-to-b data-[state=active]:from-[#B0FF2A] data-[state=active]:to-[#3E8100] data-[state=active]:text-white data-[state=inactive]:bg-[#002C3E] data-[state=inactive]:text-white'
-                                }`}
+                                    }`}
                                 style={(!isUSAMarketAllowed || !isUSAMarketAvailable) ? {
                                     background: 'linear-gradient(0deg, #B80033 0%, #C42C65 100%)'
                                 } : undefined}
@@ -107,11 +105,10 @@ const MarketSection = ({ globalBetAmount, className }: { globalBetAmount: number
                                 <TabsTrigger
                                     value={SchedulerType.MCX}
                                     disabled={!isMCXAllowed || !isMCXAvailable}
-                                    className={`w-full rounded-lg font-spacemono transition-colors ${
-                                        (!isMCXAllowed || !isMCXAvailable) 
-                                            ? 'text-white' 
+                                    className={`w-full rounded-lg font-spacemono transition-colors ${(!isMCXAllowed || !isMCXAvailable)
+                                            ? 'text-white'
                                             : 'data-[state=active]:bg-gradient-to-b data-[state=active]:from-[#B0FF2A] data-[state=active]:to-[#3E8100] data-[state=active]:text-white data-[state=inactive]:bg-[#002C3E] data-[state=inactive]:text-white'
-                                    }`}
+                                        }`}
                                     style={(!isMCXAllowed || !isMCXAvailable) ? {
                                         background: 'linear-gradient(0deg, #B80033 0%, #C42C65 100%)'
                                     } : undefined}
@@ -123,11 +120,10 @@ const MarketSection = ({ globalBetAmount, className }: { globalBetAmount: number
                                 <TabsTrigger
                                     value={SchedulerType.COMEX}
                                     disabled={!isCOMEXAllowed || !isComexAvailable}
-                                    className={`w-full rounded-lg font-spacemono transition-colors ${
-                                        (!isCOMEXAllowed || !isComexAvailable) 
-                                            ? 'text-white' 
+                                    className={`w-full rounded-lg font-spacemono transition-colors ${(!isCOMEXAllowed || !isComexAvailable)
+                                            ? 'text-white'
                                             : 'data-[state=active]:bg-gradient-to-b data-[state=active]:from-[#B0FF2A] data-[state=active]:to-[#3E8100] data-[state=active]:text-white data-[state=inactive]:bg-[#002C3E] data-[state=inactive]:text-white'
-                                    }`}
+                                        }`}
                                     style={(!isCOMEXAllowed || !isComexAvailable) ? {
                                         background: 'linear-gradient(0deg, #B80033 0%, #C42C65 100%)'
                                     } : undefined}
@@ -139,7 +135,7 @@ const MarketSection = ({ globalBetAmount, className }: { globalBetAmount: number
                     </div>
                 </div>
                 {isDesktop &&
-                    <div className={cn("flex flex-col gap-2 bg-[#195A6D] bg-opacity-55 backdrop-blur-sm rounded-l-md overflow-hidden w-full max-w-[300px]", !sortedMarketItems || sortedMarketItems.length <= 7 ? "h-0" : "")}>
+                    <div className={cn("flex flex-col gap-2 relative z-20 bg-[#195A6D] bg-opacity-55 backdrop-blur-sm rounded-l-md overflow-hidden w-full max-w-[300px]", !sortedMarketItems || sortedMarketItems.length <= 7 ? "h-0" : "")}>
                         {sortedMarketItems?.slice(7, 14).map((marketItem) => (
                             <BettingCard
                                 key={marketItem.id}
