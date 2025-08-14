@@ -15,7 +15,7 @@ const HowToPlay = ({ children }: { children: React.ReactNode }) => {
       <DialogTrigger className="w-full">{children}</DialogTrigger>
       <DialogContent
         // showButton={false}
-        className="bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl"
+        className="bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl md:max-h-[70vh]"
       >
         <div
           style={{
@@ -29,7 +29,7 @@ const HowToPlay = ({ children }: { children: React.ReactNode }) => {
           <img
             src="/images/slot-machine/happy-bull.png"
             alt=""
-            className="absolute w-[100px] lg:w-[150px] top-0 translate-y-[-50%]"
+            className="absolute w-[100px] md:w-[120px] lg:w-[160px] top-0 translate-y-[-50%]"
           />
           <DialogHeader className="p-1">
             <DialogTitle className="text-[15px] lg:text-[30px] xl:text-[40px]">

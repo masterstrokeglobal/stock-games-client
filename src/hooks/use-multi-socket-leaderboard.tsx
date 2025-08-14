@@ -288,7 +288,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
 
     // Function to create a single Socket.IO connection
     const createSocket = (schedulerType: SchedulerType, namespace: string): Socket => {
-        const url = `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}${namespace}`;
+        const url = `${process.env.NEXT_PUBLIC_API_URL}${namespace}`;
         const socket = SocketManager.getSocket(namespace, url);
 
         socket.on('connect', () => {

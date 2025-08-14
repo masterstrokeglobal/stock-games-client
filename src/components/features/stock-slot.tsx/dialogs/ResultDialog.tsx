@@ -81,7 +81,7 @@ const ResultDialog: React.FC<ResultDialogProps> = ({ open, roundRecordId }) => {
 
   const isWin = useMemo(() => {
     if(!resultData) return null
-    return resultData?.netProfitLoss ?? 0 > 0;
+    return (resultData?.netProfitLoss ?? 0) > 0;
   }, [resultData]);
 
   useEffect(() => {
@@ -131,19 +131,19 @@ const ResultDialog: React.FC<ResultDialogProps> = ({ open, roundRecordId }) => {
           <img
             src={"/images/slot-machine/happy-bull.png"}
             alt=""
-            className="absolute w-[100px] lg:w-[130px] top-0 translate-y-[-50%]"
+            className="absolute w-[100px] lg:w-[160px] top-0 translate-y-[-50%]"
           />
           <DialogHeader className="p-1">
             <DialogTitle className="text-xl lg:text-[30px] xl:text-[40px]">
               Game Over
             </DialogTitle>
           </DialogHeader>
-          <DialogDescription className="text-center flex flex-col justify-center items-center gap-4 p-5 pt-2 overflow-y-auto min-h-[200px] text-xs lg:text-base xl:text-2xl">
+          <DialogDescription className="text-center flex flex-col justify-between items-center gap-4 p-5 pt-2 overflow-y-auto min-h-[200px] text-xs lg:text-base xl:text-2xl">
             <div className="flex flex-col gap-2">
               {isWin ? (
                 <>
                   <p className="capitalize text-base lg:text-[40px] ">
-                    You won  <span className="text-green-500">{resultData?.amountWon}INR</span>
+                    You won  <span className="text-green-500">{resultData?.amountWon?.toFixed(2)}INR</span>
                   </p>
                   <p className="text-base lg:text-[30px] mt-2">
                     Place Bet {resultData?.totalPlaced}INR

@@ -14,6 +14,7 @@ interface StockSlot2DWheelProps {
   winningIdRoundRecord?: any;
   isPlaceOver?: boolean;
   isGameOver: boolean;
+  roundRecord: any;
 }
 
 const defaultGlowState = [false, false, false, false, false];
@@ -24,6 +25,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
   winningIdRoundRecord,
   isGameOver,
   isPlaceOver = false,
+  roundRecord,
 }) => {
   const wheelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [wheels, setWheels] = useState<Wheel[]>([
@@ -38,7 +40,6 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
   const hasInitializedRef = useRef(false);
   const [glowSate, setGlowState] = useState<boolean[]>(defaultGlowState);
 
-  // Numbers for regular columns (0-9) and multiplier column (0-4)
   // Regular: 3 sequences of 0-9 (indices 0-9, 10-19, 20-29) - target middle at 10-19
   const regularNumbers = [
     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4,
@@ -52,17 +53,10 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
         prev.map((wheel) => ({ ...wheel, isSpinning: true }))
       );
 
-      // Small delay to ensure any previous animations are cleared
       const timeoutId = setTimeout(() => {
-        // Start continuous rotation for all wheels with alternating directions
         wheelRefs.current.forEach((wheelRef, index) => {
           if (wheelRef) {
-            // Ensure no previous animations are running
             gsap.killTweensOf(wheelRef);
-
-            // Determine spin direction based on wheel index
-            // Odd wheels (1, 3, 5): clockwise (negative Y / upward)
-            // Even wheels (0, 2, 4): anticlockwise (positive Y / downward)
             const isOddWheel = index % 2 === 1;
 
             if (isOddWheel) {
@@ -86,14 +80,13 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
             }
           }
         });
-      }, 50); // 50ms delay to ensure clean start
+      }, 50);
 
-      // Cleanup function to clear timeout if effect runs again
       return () => {
         clearTimeout(timeoutId);
       };
     }
-  }, [isPlaceOver, isGameActive, winningIdRoundRecord, numberHeight]);
+  }, [isPlaceOver, isGameActive, numberHeight]);
 
   // Stop spinning and animate to final positions only when final results are available
   useEffect(() => {
@@ -102,56 +95,78 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
       winningIdRoundRecord &&
       stockStates.some((state) => state !== 0)
     ) {
-      console.log("Stopping wheels with stockStates:", stockStates);
-
       // Use finalDifferences if available, otherwise fallback to stockStates
       let wheelValues = stockStates;
-      
-      if (winningIdRoundRecord?.finalPricesPresent && winningIdRoundRecord?.finalDifferences) {
-        console.log("Using finalDifferences for wheel values:", winningIdRoundRecord.finalDifferences);
-        
-        // Convert finalDifferences to wheel values (first decimal digit)
+
+      if (
+        winningIdRoundRecord?.finalPricesPresent &&
+        winningIdRoundRecord?.finalDifferences &&
+        roundRecord?.market
+      ) {
         const finalDifferencesArray: number[] = [];
-        const sortedMarketItems = winningIdRoundRecord.sortedMarketItems || [];
-        
+
+        const sortedMarketItems = roundRecord.market.sort(
+          (a: any, b: any) => a.name?.localeCompare(b.name ?? "") ?? 0
+        );
+
         // Get first 5 stocks (sorted alphabetically like in other components)
         sortedMarketItems.slice(0, 5).forEach((stock: any, index: number) => {
           const stockCode = stock.code || stock.bitcode;
           if (stockCode && winningIdRoundRecord.finalDifferences[stockCode]) {
-            const price = parseFloat(winningIdRoundRecord.finalDifferences[stockCode]).toFixed(2);
-            const [, decimalPart] = price.split('.');
-            const firstDecimalDigit = decimalPart ? parseInt(decimalPart[0]) : 0;
+            // Use same precision as StocksList (.toFixed(1)) for consistency
+            const price = parseFloat(
+              winningIdRoundRecord.finalDifferences[stockCode]
+            ).toFixed(1);
+            const [, decimalPart] = price.split(".");
+            const firstDecimalDigit = decimalPart
+              ? parseInt(decimalPart[0])
+              : 0;
             finalDifferencesArray[index] = firstDecimalDigit;
           } else {
             finalDifferencesArray[index] = stockStates[index] || 0;
+            console.log(`Fallback for index ${index}: ${stockStates[index] || 0}`);
           }
         });
-        
+
         wheelValues = finalDifferencesArray;
-        console.log("Converted finalDifferences to wheel values:", wheelValues);
+        console.log("Final wheel values:", wheelValues);
+      } else {
+        console.log("Using fallback stockStates:", stockStates);
       }
 
-      // Step 1: Count occurrences
-      const countMap = new Map<number, number>();
-      wheelValues.forEach((num) => {
-        countMap.set(num, (countMap.get(num) || 0) + 1);
-      });
+      // Reset glow state first
+      setGlowState(defaultGlowState);
 
-      // Step 2: Find the max count
-      const maxCount = Math.max(...Array.from(countMap.values()));
+      // Only proceed if we have valid wheel values
+      if (wheelValues && wheelValues.length === 5) {
+        // Step 1: Count occurrences of each number
+        const countMap = new Map<number, number>();
+        wheelValues.forEach((num) => {
+          if (typeof num === 'number' && !isNaN(num)) {
+            countMap.set(num, (countMap.get(num) || 0) + 1);
+          }
+        });
 
-      if (maxCount > 1) {
-        // Step 3: Find all numbers with the max count
-        const mostRepeatedNumbers = Array.from(countMap.entries())
-          .filter(([, count]) => count === maxCount)
-          .map(([num]) => num);
+        // Step 2: Find numbers that appear 2 or more times
+        const repeatedNumbers = Array.from(countMap.entries())
+          .filter(([, count]) => count >= 2);
 
-        // Step 4: Pick any one of the most repeated numbers (if tie, pick the first)
-        const chosenNumber = mostRepeatedNumbers[0];
+        if (repeatedNumbers.length > 0) {
+          // Step 3: Find the highest count among repeated numbers
+          const maxCount = Math.max(...repeatedNumbers.map(([, count]) => count));
+          
+          // Step 4: Get all numbers with the highest count
+          const mostRepeatedNumbers = repeatedNumbers
+            .filter(([, count]) => count === maxCount)
+            .map(([num]) => num);
 
-        // Step 5: Create the boolean array
-        const newglowState = wheelValues.map((num) => num === chosenNumber);
-        setGlowState(newglowState);
+          // Step 5: Pick the first number (if multiple have same highest count)
+          const chosenNumber = mostRepeatedNumbers[0];
+
+          // Step 6: Create glow state - true only for positions with the chosen number
+          const newGlowState = wheelValues.map((num) => num === chosenNumber);
+          setGlowState(newGlowState);
+        }
       }
 
       // Update target values and stop spinning state
@@ -164,17 +179,15 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
       );
 
       // Animate each wheel to its final position with staggered timin
-      wheelValues.forEach((targetValue, index) => {
+      stockStates.forEach((targetValue, index) => {
         const wheelRef = wheelRefs.current[index];
         if (wheelRef && targetValue !== undefined) {
           const finalValue = targetValue;
 
-          // Calculate target index in the middle sequence
           // Regular numbers (0-9): 3 sequences, middle starts at index 10
           const targetIndex = 10 + finalValue;
 
           // Calculate final position to show the middle occurrence of the number
-          // Adjust to center the target value in the middle visible row
           const finalPosition =
             -(targetIndex * numberHeight) + numberHeight * 2;
 
@@ -194,7 +207,6 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
           const wrapAroundDistance = cycleHeight - directDistance;
 
           if (wrapAroundDistance < directDistance) {
-            // Use wrap-around path
             if (finalPosition > currentY) {
               shortestPath = finalPosition - cycleHeight;
             } else {
@@ -202,18 +214,15 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
             }
           }
 
-          // Animate to final position with optimized path and smooth easing
           gsap.to(wheelRef, {
             y: shortestPath,
-            duration: 1.5, // Slightly longer duration for smoother feel
-            // delay: delay,
-            ease: "elastic.out(1, 0.5)", // Smooth easing that works well from any position
+            duration: 1.5,
+            ease: "elastic.out(1, 0.5)",
             onComplete: () => {
-              // Ensure final position is exactly correct (handle any floating point errors)
               gsap.set(wheelRef, { y: finalPosition });
-              console.log(
-                `Wheel ${index} stopped at value ${finalValue} (middle sequence)`
-              );
+              // console.log(
+              //   `Wheel ${index} stopped at value ${finalValue} (middle sequence)`
+              // );
             },
           });
         }
@@ -276,8 +285,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
         if (wheelRef) {
           gsap.killTweensOf(wheelRef);
 
-          const randomValue =
-            Math.floor(Math.random() * 10);
+          const randomValue = Math.floor(Math.random() * 10);
 
           const targetIndex = 10 + randomValue;
           const randomPosition =
@@ -323,33 +331,28 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
                 className="absolute inset-x-0 flex flex-col"
                 style={{ top: -numberHeight }} // Start with first row hidden to center the view
               >
-                {regularNumbers.map(
-                  (number, numberIndex) => (
-                    <div
-                      key={`${wheelIndex}-${numberIndex}`}
-                      className="flex items-center justify-center relative"
-                    >
-                      <img
-                        style={{ height: numberHeight }}
-                        src={`/images/slot-machine/${
-                          "number"
-                        }-${number}.png`}
-                        alt={`${number}`}
-                        className="w-auto object-contain"
-                        draggable={false}
-                      />
-                    </div>
-                  )
-                )}
+                {regularNumbers.map((number, numberIndex) => (
+                  <div
+                    key={`${wheelIndex}-${numberIndex}`}
+                    className="flex items-center justify-center relative"
+                  >
+                    <img
+                      style={{ height: numberHeight }}
+                      src={`/images/slot-machine/${"number"}-${number}.png`}
+                      alt={`${number}`}
+                      className="w-auto object-contain"
+                      draggable={false}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           ))}
           {/* //? border for center lane */}
           <div
             style={{
-              height: isGameOver ? numberHeight :0 ,
+              height: isGameOver ? numberHeight : 0,
               backgroundImage: "url('/images/slot-machine/menu-bg.png')",
-              // backgroundImage: "url('/images/slot-machine/stock-list.png')",
               backgroundSize: "100% 100%",
               backgroundPosition: "center center",
               backgroundRepeat: "no-repeat",

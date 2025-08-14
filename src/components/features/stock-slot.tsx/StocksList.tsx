@@ -78,7 +78,7 @@ export const StockListMobile: React.FC<StockListProps> = ({
         {currentStocks?.slice(0, 5).map((stock, index) => {
           const price = parseFloat(
             stockPrice[stock.code ?? ""]?.toString() || "0"
-          ).toFixed(2);
+          ).toFixed(1);
           const stockName = stock.name || `Stock ${index + 1}`;
 
           return (
