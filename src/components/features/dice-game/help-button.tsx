@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
-import BettingHistoryDialog from "./betting-history";
-import HowToPlayDialog from "./how-to-play";
 import Link from "next/link";
+import BettingHistoryDialog from "./betting-history";
 import DemoVideoDialog from "./demo-video";
 import GameRules from "./game-rules";
 
