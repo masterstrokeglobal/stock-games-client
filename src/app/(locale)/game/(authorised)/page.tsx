@@ -15,6 +15,9 @@ import { cn, TAWK_PROPERTY_ID, TAWK_WIDGET_ID } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
 import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
 import { isTawkEnabled } from "@/lib/utils";
+import GameMaintenanceMarquee from "@/components/common/game-maintainaince-screen";
+import useSchedularInactive from "@/hooks/use-schedular-inactive";
+import { useGameType } from "@/hooks/use-game-type";
 
 declare global {
     interface Window {
@@ -26,11 +29,18 @@ const GamePage = () => {
     const { roundRecord, isLoading } = useCurrentGame();
     const { isMobile } = useWindowSize();
     useHorseRaceSound(roundRecord);
+    const [gameType] = useGameType();
+    const { isActive, isFetching } = useSchedularInactive(gameType);
+
 
     if (isLoading) return <GameLoadingScreen className="h-screen" />;
+
     return (<>
         <section className={cn("bg-background-game pt-14 md:min-h-screen")}>
             <Navbar />
+            {(!isActive && !isFetching) && (
+                <GameMaintenanceMarquee />
+            )}
             {!isMobile && <main className="grid grid-cols-12 grid-rows-12 mt-4  md:gap-4 gap-2 md:max-h-[1100px] px-4 pb-4">
                 <div
                     className="lg:col-span-7 col-span-8 row-span-4 rounded-sm  overflow-hidden">

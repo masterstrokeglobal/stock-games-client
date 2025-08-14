@@ -48,8 +48,6 @@ export const BetSuccessToast = ({ className, onClose, betAmount, betNumber }: Pr
             <div className="flex items-center gap-4 ">
                 {/* Character illustration */}
 
-
-
                 {/* Text content */}
                 <div className="flex-1">
                     {/* Close button */}
@@ -124,7 +122,7 @@ export const useGetDiceGameRoundResult = (roundId: number, open: boolean) => {
     return useQuery({
         queryKey: ["dice-game-round-result", roundId],
         queryFn: async () => {
-            const {data} = await diceGameAPI.getDiceGameRoundResult(roundId);
+            const { data } = await diceGameAPI.getDiceGameRoundResult(roundId);
             return data.data;
         },
         enabled: !!roundId && open
