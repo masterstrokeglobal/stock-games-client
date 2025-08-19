@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { RoundRecordGameType } from '@/models/round-record';
 import { useGetAllGameHistory } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
-import { ChevronLeft, ChevronRight, Loader, RefreshCcw, RefreshCw, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader, RefreshCw, X } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 
 // Pagination component

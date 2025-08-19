@@ -1,9 +1,7 @@
 'use client';
 import bettingHistoryColumns from "@/columns/betting-history-column";
-import GameSettingsPopover from "@/components/features/game/game-menu";
 import Navbar from "@/components/features/game/navbar";
 import RouletteGameHeader from "@/components/features/game/roulette-game-header";
-import { Button } from "@/components/ui/button";
 import DataTable from "@/components/ui/data-table-server-game";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

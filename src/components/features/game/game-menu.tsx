@@ -1,19 +1,16 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { useAuthStore } from '@/context/auth-context';
-import User from '@/models/user';
-import { PopoverClose } from '@radix-ui/react-popover';
-import { ArrowLeft, ChevronLeft, X } from 'lucide-react';
-import React, { useState } from 'react';
-import HowToPlayDialog from './how-to-play';
-import GameRulesDialog from '../stock-roulette/game-rules';
 import { Separator } from '@/components/ui/separator';
-import GameHistoryDialog from '../stock-roulette/game-history';
+import { PopoverClose } from '@radix-ui/react-popover';
+import { ChevronLeft, X } from 'lucide-react';
 import Link from 'next/link';
+import React, { useState } from 'react';
+import GameHistoryDialog from '../stock-roulette/game-history';
+import GameRulesDialog from '../stock-roulette/game-rules';
+import HowToPlayDialog from './how-to-play';
 
 interface GameSettingsPopoverProps {
     children: React.ReactNode;
@@ -21,9 +18,7 @@ interface GameSettingsPopoverProps {
 
 const GameSettingsPopover = ({ children }: GameSettingsPopoverProps) => {
     const [open, setOpen] = useState(false);
-    const { userDetails } = useAuthStore()
 
-    const user = userDetails as User;
     return (
         <Popover open={open} onOpenChange={setOpen} >
             <PopoverTrigger asChild>

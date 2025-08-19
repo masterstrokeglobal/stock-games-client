@@ -1,18 +1,17 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Container from "@/components/common/container";
-import TopBar from "@/components/common/top-bar";
-import { ArrowUpCircle, ArrowDownCircle, Timer, Calendar, Trophy, ArrowLeft } from "lucide-react";
-import { useParams } from 'next/navigation';
-import dayjs from "dayjs";
+import Navbar from '@/components/features/game/navbar';
+import RoundResult from '@/components/features/round-record/round-record-result';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RoundRecord } from '@/models/round-record';
 import { useGetRoundRecordById, useRoundBets } from '@/react-query/round-record-queries';
-import RoundResult from '@/components/features/round-record/round-record-result';
+import dayjs from "dayjs";
+import { ArrowDownCircle, ArrowLeft, ArrowUpCircle, Calendar, Timer, Trophy } from "lucide-react";
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import Navbar from '@/components/features/game/navbar';
+import { useParams } from 'next/navigation';
 
 interface Bet {
     id: number;
