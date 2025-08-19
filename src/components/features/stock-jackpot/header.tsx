@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { PropsWithChildren } from "react";
 
 
 
@@ -65,10 +66,12 @@ const MenuIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 
-const Header = ({ className }: PropsWithClassName) => {
+const Header = ({ className, children }: PropsWithClassName<PropsWithChildren>) => {
     return <header className={cn("flex justify-between lg:px-8 sm:px-4 px-2 xl:gap-8  mx-auto w-full items-center", className)}>
         <h1 className="font-audiowale lg:text-xl font-bold">Hi - Lo</h1>
-
+        {
+            children
+        }
         <Link href="/game/single-player/jackpot/setting" >
             <Button className="bg-[#008CB3]" size={"icon"}>
                 <MenuIcon />

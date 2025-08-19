@@ -6,6 +6,7 @@ import BettingChips from "@/components/features/slot-jackpot/betting-chips"
 import Header from "@/components/features/stock-jackpot/header"
 import MarketSection, { MarketSectionMobile } from "@/components/features/stock-jackpot/market-section"
 import StockCardStack from "@/components/features/stock-jackpot/stock-card"
+import TimeDisplay from "@/components/features/stock-jackpot/time-left"
 import { Tabs } from "@/components/ui/tabs"
 import { useCurrentGame, usePlacementOver } from "@/hooks/use-current-game"
 import { useGameType } from "@/hooks/use-game-type"
@@ -14,13 +15,12 @@ import useWindowSize from "@/hooks/use-window-size"
 import useWinningId from "@/hooks/use-winning-id"
 import { SchedulerType } from "@/models/market-item"
 import { RoundRecordGameType } from "@/models/round-record"
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 
 
 export default function Home() {
     const [globalBetAmount, setGlobalBetAmount] = useState(100)
     const { roundRecord, isLoading } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
-    const [scrollHeight, setScrollHeight] = useState(0);
     const stocksRef = useRef<HTMLDivElement>(null);
     const [tab, setTab] = useGameType();
     const { isDesktop } = useWindowSize()
@@ -32,19 +32,6 @@ export default function Home() {
         setGlobalBetAmount(amount)
     }
 
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            if (stocksRef.current) {
-                console.log(stocksRef.current.clientHeight, "clientHeight");
-                const stocksHeight = stocksRef.current.clientHeight;
-                setScrollHeight(stocksHeight);
-            }
-        }, 1500);
-        return () => {
-            clearTimeout(timeout);
-        };
-        
-    }, [stocksRef]);
     if (isLoading || !roundRecord) return <GameLoadingScreen className="min-h-[calc(100svh)]" />;
 
 
@@ -59,9 +46,11 @@ export default function Home() {
 
     return (
         <div className="flex flex-col h-[100svh] min-h-[650px] pt-12 bg-[#00627A] overflow-hidden  relative bg-repeat bg-center text-white  mx-auto">
-            <img src="/images/jackpot/bg.png" className="w-full hidden; md:h-full h-[380px] object-cover absolute z-0" />
+            <img src="/images/jackpot/bg.png" className="w-full hidden; md:h-full h-[350px] object-cover absolute z-0" />
             <Navbar />
-            <Header className="z-10 relative sm:mt-4 mt-2 px-4" />
+            <Header className="z-10 relative sm:mt-4 mt-2 px-4">
+                {roundRecord && <TimeDisplay className="md:hidden flex" roundRecord={roundRecord} />}
+            </Header>
             <Tabs className="flex-1 w-full flex justify-between flex-col" value={tab} onValueChange={(value) => setTab(value as SchedulerType)}>
                 <MarketSection
                     globalBetAmount={globalBetAmount}
@@ -79,20 +68,21 @@ export default function Home() {
                                 {roundRecord && <StockCardStack roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />}
                             </div>
                         </div>
+                        {!isDesktop &&
+                            <div ref={stocksRef} className="md:px-4 px-2 h-full flex w-full justify-center">
+                                <MarketSectionMobile className="flex-1 h-[calc(100svh-410px)]" globalBetAmount={globalBetAmount} />
+                            </div>
+                        }
                         {roundRecord && <BettingChips
                             roundRecord={roundRecord}
                             showBetting={!isPlacementOver}
-                            className="lg:absolute lg:bottom-0 lg:left-1/2 pb-2 lg:-translate-x-1/2 z-30 w-full "
+                            className="lg:absolute lg:bottom-0 lg:left-1/2 px-2 py-2 lg:-translate-x-1/2 z-30 w-full "
                             globalBetAmount={globalBetAmount}
                             handleGlobalBetAmountChange={handleGlobalBetAmountChange}
                         />}
                     </div>
                 </div>
-                {!isDesktop &&
-                    <div ref={stocksRef} className="px-4 h-full flex w-full justify-center">
-                        <MarketSectionMobile styles={{ height: scrollHeight }} className="flex-1" globalBetAmount={globalBetAmount} />
-                    </div>
-                }
+
             </Tabs>
         </div>
 
