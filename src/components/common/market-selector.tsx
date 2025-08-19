@@ -53,14 +53,14 @@ const MarketSelector = ({
     const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
     const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO) && (roundRecordType !== RoundRecordGameType.HEAD_TAIL && roundRecordType !== RoundRecordGameType.STOCK_JACKPOT);
     const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
-    const isCOMEXAllowed = (!currentUser.isNotAllowedToPlaceOrder(SchedulerType.COMEX) && roundRecordType === RoundRecordGameType.HEAD_TAIL) || roundRecordType === RoundRecordGameType.STOCK_JACKPOT;
+    const isCOMEXAllowed = (!currentUser.isNotAllowedToPlaceOrder(SchedulerType.COMEX) && (roundRecordType === RoundRecordGameType.HEAD_TAIL || roundRecordType === RoundRecordGameType.STOCK_JACKPOT || roundRecordType === RoundRecordGameType.STOCK_SLOTS));
 
     const handleMarketSelection = (market: SchedulerType) => {
         setGameType(market);
         setMarketSelected(true);
     }
 
-    const isMCXAllowed = (roundRecordType === RoundRecordGameType.HEAD_TAIL || roundRecordType === RoundRecordGameType.SEVEN_UP_DOWN) && isMCXAvailable;
+    const isMCXAllowed = (roundRecordType === RoundRecordGameType.HEAD_TAIL || roundRecordType === RoundRecordGameType.SEVEN_UP_DOWN || roundRecordType === RoundRecordGameType.STOCK_SLOTS) && isMCXAvailable;
 
     // Use the market schedule hook
     const marketStatuses = useMarketSchedule();
@@ -115,9 +115,12 @@ const MarketSelector = ({
             title: "International",
             subtitle: "International Stock Market (Start: 3:30 PM IST, End: 7:30 PM IST)",
             available: schedulerStatus[SchedulerType.COMEX] && isCOMEXAvailable,
-            allowed: isCOMEXAllowed && schedulerStatus[SchedulerType.COMEX] && isCOMEXAvailable,
+            allowed: isCOMEXAllowed && schedulerStatus[SchedulerType.COMEX],
         }
     ];
+    
+
+    console.log( isCOMEXAllowed , schedulerStatus[SchedulerType.COMEX], "isCOMEXAllowed && schedulerStatus[SchedulerType.COMEX]")
 
     const availableMarkets = markets.filter(market => market.allowed);
 
@@ -149,7 +152,7 @@ const MarketSelector = ({
                                 onClick={() => market.available && handleMarketSelection(market.id)}
                             >
                                 {/* Card Content */}
-                                <div className="p-6 h-40 flex flex-col justify-between relative">
+                                <div className="p-6 min-h-40 flex flex-col justify-between relative">
                                     {/* Top Section */}
                                     <div className="flex justify-between items-start">
                                         <div>
@@ -185,7 +188,7 @@ const MarketSelector = ({
                                     </div>
 
                                     {/* Bottom Section */}
-                                    <div className="flex justify-between items-end">
+                                    <div className="flex justify-between flex-wrap items-end">
                                         <div className="">
                                             <h3 className="md:text-2xl sm:text-xl text-lg font-bold text-platform-text mb-2">
                                                 {market.title}

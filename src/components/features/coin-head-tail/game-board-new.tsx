@@ -134,7 +134,7 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
                         />
                     </div>
                 </div>
-                <div className="flex flex-col items-center mt-8">
+                <div className="flex flex-col items-center md:mt-8 mt-2">
                     <GameTimer className="md:hidden flex relative z-10" roundRecord={roundRecord} />
                     <BettingArea
                         roundRecordId={roundRecord.id}

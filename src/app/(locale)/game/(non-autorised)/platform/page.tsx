@@ -43,8 +43,8 @@ const PlatformPage = () => {
             )}
 
             {isLoggedIn && <ActiveTierCard className="my-12" />}
-            {isLoggedIn && <FavoriteGameCarousel />}
             <StockGameCarousel />
+            {isLoggedIn && <FavoriteGameCarousel />}
             {isCasinoAllowed && (
                 <>
                     <CasinoProvidersCarousel title={tPlatform("game-providers")} />

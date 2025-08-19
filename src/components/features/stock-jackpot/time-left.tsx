@@ -20,8 +20,8 @@ const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, cla
       <div className="relative flex items-center justify-center">
         <div
           className={cn(
-            "flex items-center sm:gap-4 px-3 sm:px-6 rounded-full border",
-            "h-9 sm:h-12 min-w-[260px] sm:min-w-[260px] max-w-full",
+            "flex items-center gap-4 px-3 sm:px-6 rounded-full border",
+            "h-9 sm:h-12 w-fit sm:min-w-[260px] max-w-full",
             "border-[#FFFFFFB2] shadow-lg transition-all duration-500",
             // Dynamic background based on betting status
             isPlaceOver 
