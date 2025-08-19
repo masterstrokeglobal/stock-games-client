@@ -47,14 +47,14 @@ const GameBoard = ({ className, roundRecord, betAmount, setBetAmount, roundRecor
             timeout = setTimeout(() => {
                 setShowCoinToss(true);
                 setShowLady(false);
-            }, 1300)
+            }, 2000)
         } else {
             setShowLady(false);
         }
         return () => {
             if (timeout) clearTimeout(timeout);
         }
-    }, [isPlaceOver, roundRecordWithWinningSide]);
+    }, [isPlaceOver]);
 
     const handleCardClick = (side: HeadTailPlacementType) => {
         if (isPending) return;
