@@ -39,7 +39,7 @@ export default function Home() {
                 const stocksHeight = stocksRef.current.clientHeight;
                 setScrollHeight(stocksHeight);
             }
-        }, 500);
+        }, 1500);
         return () => {
             clearTimeout(timeout);
         };
