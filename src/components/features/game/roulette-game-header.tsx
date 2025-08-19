@@ -1,11 +1,15 @@
 import { Button } from "@/components/ui/button";
 import GameSettingsPopover from "./game-menu";
 import { MenuIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-const RouletteGameHeader = () => {
+type Props = PropsWithClassName<{
+    title: string;
+}>;
+const RouletteGameHeader = ({ title, className }: Props) => {
     return (
-        <header className='text-center px-6  relative h-16 flex justify-between items-center  '>
-            <h2 className="text-xl font-semibold">Stock Roulette</h2>
+        <header className={cn('text-center md:px-6 px-4  relative h-16 flex justify-between items-center  ', className)}>
+            <h2 className="text-xl font-semibold">{title}</h2>
             <GameSettingsPopover>
                 <Button size="icon" className="bg-[#008CB3]">
                     <MenuIcon />

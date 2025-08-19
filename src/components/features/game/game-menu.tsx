@@ -7,9 +7,13 @@ import {
 import { useAuthStore } from '@/context/auth-context';
 import User from '@/models/user';
 import { PopoverClose } from '@radix-ui/react-popover';
-import { X } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, X } from 'lucide-react';
 import React, { useState } from 'react';
 import HowToPlayDialog from './how-to-play';
+import GameRulesDialog from '../stock-roulette/game-rules';
+import { Separator } from '@/components/ui/separator';
+import GameHistoryDialog from '../stock-roulette/game-history';
+import Link from 'next/link';
 
 interface GameSettingsPopoverProps {
     children: React.ReactNode;
@@ -25,39 +29,51 @@ const GameSettingsPopover = ({ children }: GameSettingsPopoverProps) => {
             <PopoverTrigger asChild>
                 {children}
             </PopoverTrigger>
-            <PopoverContent className="md:w-80 w-64 p-0 bg-[#000E37] border-none" align="end" onInteractOutside={(e) => e.preventDefault()} onPointerDownOutside={(e) => e.preventDefault()}     >
-                <div 
+            <PopoverContent className="md:w-80 w-64 p-0 game-gradient-card border-platform-border shadow-lg " align="end" onInteractOutside={(e) => e.preventDefault()} onPointerDownOutside={(e) => e.preventDefault()}     >
+                <div
                     className="w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden">
                     {/* Header */}
-                    <div className="flex items-center justify-between p-6 pb-4">
-                        <div className="flex items-center space-x-3">
-                            <Avatar>
-                                <AvatarImage src={user?.profileImage} />
-                                <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <span className="text-white  font-medium">{user?.name}</span>
-                        </div>
-
-                        <PopoverClose asChild>
-                            <button
-                                className="text-white hover:text-gray-200 transition-colors"
-                            >
-                                <X size={24} />
-                            </button>
-                        </PopoverClose>
-                    </div>
-
+                    <PopoverClose asChild>
+                        <button
+                            className="text-white absolute top-2 right-2 hover:text-gray-200 transition-colors"
+                        >
+                            <X size={24} />
+                        </button>
+                    </PopoverClose>
                     {/* Menu Items */}
                     <div className="p-6 space-y-3">
 
+                        <Link href="/game">
+                            <button className="w-full text-left">
+                                <span className="text-white h-10 font-light flex items-center gap-2"> <ChevronLeft className='size-4' /> Back to Game</span>
+                            </button>
+                        </Link>
+                        <Separator className="bg-platform-border" />
                         {/* How to Play */}
                         <HowToPlayDialog>
-                            <button className="w-full  h-14 text-left">
-                                <span className="text-white text-lg font-light">How to Play ?</span>
+                            <button className="w-full   text-left">
+                                <span className="text-white h-10 font-light">How to Play ?</span>
                             </button>
                         </HowToPlayDialog>
-
-                    </div>
+                        <Separator className="bg-platform-border" />
+                        <GameRulesDialog>
+                            <button className="w-full   text-left">
+                                <span className="text-white h-10 font-light">Game Rules</span>
+                            </button>
+                        </GameRulesDialog>
+                        <Separator className="bg-platform-border" />
+                        <GameHistoryDialog>
+                            <button className="w-full   text-left">
+                                <span className="text-white h-10 font-light">Game History</span>
+                            </button>
+                        </GameHistoryDialog>
+                        <Separator className="bg-platform-border" />
+                        <Link href="/game/single-player/stock-roulette/betting-history">
+                            <button className="w-full text-left h-10">
+                                <span className="text-white font-light">Bet History</span>
+                            </button>
+                        </Link>
+                                            </div>
                 </div>
             </PopoverContent>
         </Popover>

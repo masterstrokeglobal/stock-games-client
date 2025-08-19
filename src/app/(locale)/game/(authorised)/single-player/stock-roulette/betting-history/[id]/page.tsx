@@ -4,12 +4,15 @@ import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Container from "@/components/common/container";
 import TopBar from "@/components/common/top-bar";
-import { ArrowUpCircle, ArrowDownCircle, Timer, Calendar, Trophy } from "lucide-react";
+import { ArrowUpCircle, ArrowDownCircle, Timer, Calendar, Trophy, ArrowLeft } from "lucide-react";
 import { useParams } from 'next/navigation';
 import dayjs from "dayjs";
 import { RoundRecord } from '@/models/round-record';
 import { useGetRoundRecordById, useRoundBets } from '@/react-query/round-record-queries';
 import RoundResult from '@/components/features/round-record/round-record-result';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import Navbar from '@/components/features/game/navbar';
 
 interface Bet {
     id: number;
@@ -28,7 +31,7 @@ const BetCard: React.FC<{ bet: Bet }> = ({ bet }) => {
     const t = useTranslations('round-detail');
 
     return (
-        <Card className="bg-tertiary border-[#EFF8FF17]">
+        <Card className="game-gradient-card border-platform-border">
             <CardContent className="pt-6 px-3 sm:px-6">
                 <div className="grid gap-4 text-white text-sm sm:text-base">
                     <div className="flex justify-between items-center">
@@ -70,7 +73,7 @@ const BetCard: React.FC<{ bet: Bet }> = ({ bet }) => {
 };
 
 const LoadingState = () => (
-    <Container className="bg-secondary-game w-fit rounded-xl relative flex flex-col pt-16 sm:pt-24 gap-6 items-center min-h-screen">
+    <Container className="bg-background-game w-full rounded-xl relative flex flex-col pt-16 sm:pt-24 gap-6 items-center min-h-screen">
         <div className="flex justify-center py-8">
             <Timer className="h-6 w-6 animate-spin" />
         </div>
@@ -78,7 +81,7 @@ const LoadingState = () => (
 );
 
 const ErrorState = ({ message }: { message: string }) => (
-    <Container className="bg-secondary-game w-fit rounded-xl relative flex flex-col pt-16 sm:pt-24 gap-6 items-center min-h-screen">
+    <Container className="bg-secondary-game w-full rounded-xl relative flex flex-col pt-16 sm:pt-24 gap-6 items-center min-h-screen">
         <div className="text-center py-8 text-red-500 px-4">
             {message}
         </div>
@@ -118,13 +121,17 @@ const RoundDetailPage = () => {
     const bets = betsData.data;
 
     return (
-        <Container className="bg-primary-game w-fit rounded-xl relative flex flex-col pt-16 sm:pt-24 gap-4 sm:gap-6 items-center min-h-screen">
-            <TopBar>
-                <h1 className="text-lg sm:text-xl font-semibold">{t('title')}</h1>
-            </TopBar>
-
-            <section className="container-main w-full max-w-6xl px-3 sm:px-4 md:px-6">
-                <Card className="bg-tertiary border-[#EFF8FF17] mb-6 sm:mb-8">
+        <Container className="bg-background-game w-fit rounded-xl  relative flex flex-col pb-12 pt-20 gap-4 sm:gap-6 items-center min-h-screen">
+            <Navbar />
+            <header className="w-full px-3 sm:px-4 md:px-6">
+                <Link href="/game/single-player/stock-roulette/betting-history">
+                    <Button variant="platform-outline" className="w-fit !rounded-sm">
+                        <ArrowLeft className="size-5 mr-2" />
+                        Back                </Button>
+                </Link>
+            </header>
+            <section className="w-full px-3 sm:px-4 max-w-6xl md:px-6">
+                <Card className="game-gradient-card  border-platform-border mb-6 sm:mb-8">
                     <CardHeader className="px-4 sm:px-6">
                         <CardTitle className="text-white text-lg sm:text-xl">{t('round.details')}</CardTitle>
                     </CardHeader>
@@ -166,7 +173,7 @@ const RoundDetailPage = () => {
                     </CardContent>
                 </Card>
 
-                <RoundResult  roundRecordId={Number(roundId)} />
+                <RoundResult roundRecordId={Number(roundId)} />
                 <div className="space-y-4 mt-4">
                     <h2 className="text-lg sm:text-xl font-semibold text-white mb-4 sm:mb-6 px-1">{t('bets.title')}</h2>
                     <div className="grid sm:grid-cols-2 gap-4">

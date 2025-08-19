@@ -1,0 +1,127 @@
+'use client';
+import bettingHistoryColumns from "@/columns/betting-history-column";
+import GameSettingsPopover from "@/components/features/game/game-menu";
+import Navbar from "@/components/features/game/navbar";
+import RouletteGameHeader from "@/components/features/game/roulette-game-header";
+import { Button } from "@/components/ui/button";
+import DataTable from "@/components/ui/data-table-server-game";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+import { useGameRecordHistory } from "@/react-query/game-record-queries";
+import dayjs from "dayjs";
+import { Loader2 } from "lucide-react";
+import { useTranslations } from 'next-intl';
+import { useMemo, useState } from "react";
+
+const BettingHistoryPage = () => {
+    const t = useTranslations('betting-history');
+    const [pageSize, setPageSize] = useState(10);
+    const [page, setPage] = useState(1);
+    const [filter, setFilter] = useState({
+        startDate: dayjs().startOf('week').format("YYYY-MM-DD"),
+        endDate: dayjs().endOf('week').format("YYYY-MM-DD"),
+    });
+
+    const {
+        data,
+        isLoading,
+        isError,
+    } = useGameRecordHistory({
+        page,
+        limit: pageSize,
+        startDate: dayjs(filter.startDate).startOf('day').toDate(),
+        endDate: dayjs(filter.endDate).endOf('day').toDate(),
+    });
+
+    const records = useMemo(() => {
+        if (!data?.data) return [];
+        return data.data.gameRecordHistory.roundRecords;
+    }, [data]);
+
+    const totalPages = useMemo(() => {
+        if (!data?.data?.gameRecordHistory.count) return 1;
+        return Math.ceil(data.data.gameRecordHistory.count / pageSize);
+    }, [data, pageSize]);
+
+    const changePage = (newPage: number) => {
+        setPage(newPage);
+    };
+
+    return (
+        <section className={cn("bg-background-game pt-14 md:min-h-screen")}>
+            <Navbar />
+            <RouletteGameHeader title="Stock Roulette History" className="max-w-6xl mx-auto" />
+            <main className="container-main min-h-screen bg-background-game px-4 py-4 mx-auto w-full max-w-6xl">
+                <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between mb-6">
+                    <div className="flex sm:gap-5 gap-2 items-center flex-wrap text-platform-text w-full">
+                        <div className="flex gap-2 items-center">
+                            <Input
+                                type="date"
+                                value={filter.startDate}
+                                onChange={(e) => setFilter({ ...filter, startDate: e.target.value })}
+                                className="h-10 input-dark-calendar text-white bg-primary-game border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF] "
+                            />
+                            <span>{t('date-range.to')}</span>
+                            <Input
+                                type="date"
+                                value={filter.endDate}
+                                onChange={(e) => setFilter({ ...filter, endDate: e.target.value })}
+                                className="h-10 input-dark-calendar text-white bg-primary-game border sm:max-w-44 border-[#EFF8FF17] focus:border-[#55B0FF] "
+                            />
+                        </div>
+                        <div className="sm:ml-auto sm:w-fit w-full flex sm:flex-row flex-col gap-2 sm:items-center">
+                            <Label>
+                                <span>{t('date-range.page-size')}</span>
+                            </Label>
+
+                            <Select value={pageSize.toString()} onValueChange={(val) => setPageSize(Number(val))}>
+                                <SelectTrigger className="h-10 text-white bg-primary-game border border-[#EFF8FF17] focus:border-[#55B0FF] sm:w-[100px] w-full">
+                                    <SelectValue placeholder={t('date-range.page-size')} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="10">10</SelectItem>
+                                        <SelectItem value="25">25</SelectItem>
+                                        <SelectItem value="100">100</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+                </header>
+
+                {isLoading ? (
+                    <div className="flex justify-center py-8">
+                        <Loader2 className="h-6 w-6 animate-spin" />
+                    </div>
+                ) : isError ? (
+                    <div className="text-center py-8 text-red-500">
+                        {t('errors.load-failed')}
+                    </div>
+                ) : (
+                    <div>
+                        <DataTable
+                            page={page}
+                            loading={isLoading}
+                            columns={bettingHistoryColumns}
+                            data={records}
+                            totalPage={totalPages}
+                            changePage={changePage}
+                        />
+                    </div>
+                )}
+            </main>
+        </section >
+    );
+};
+
+export default BettingHistoryPage;

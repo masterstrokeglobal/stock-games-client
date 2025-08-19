@@ -10,8 +10,10 @@ import ActiveTierCard from "@/components/features/tier/user-tier-card";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
 import useCasinoAllowed from "@/hooks/use-is-casino-allowed";
+import { isTawkEnabled, TAWK_PROPERTY_ID, TAWK_WIDGET_ID } from "@/lib/utils";
 import { GameTypeEnum } from "@/models/casino-games";
 import User from "@/models/user";
+import TawkMessengerReact from "@tawk.to/tawk-messenger-react";
 import { useTranslations } from "next-intl";
 
 const PlatformPage = () => {
@@ -70,6 +72,11 @@ const PlatformPage = () => {
             )}
 
             <CtaSection />
+
+            {isTawkEnabled && <TawkMessengerReact
+                propertyId={TAWK_PROPERTY_ID}
+                widgetId={TAWK_WIDGET_ID}
+            />}
 
         </section>
     )

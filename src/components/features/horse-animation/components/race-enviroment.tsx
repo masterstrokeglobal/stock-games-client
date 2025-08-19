@@ -26,7 +26,7 @@ const HorseRaceEnvironment = ({
   filteredMarket,
   currentCameraView
 }: Props) => {
-  
+
   const { camera } = useThree();
 
   // Update camera position based on currentCameraView prop
@@ -49,6 +49,10 @@ const HorseRaceEnvironment = ({
         maxPolarAngle={Math.PI / 2 - 0.1 - .02}
         minPolarAngle={Math.PI / 2 - 0.1}
         maxDistance={1000}
+        enableRotate={false}
+        enablePan={false}
+        enableZoom={false}
+        enableDamping={false}
         target={[0, 15, 0]} // <-- move this up to pan the view upward
       />
       <directionalLight
@@ -60,7 +64,7 @@ const HorseRaceEnvironment = ({
       <Physics>
         <MovingPeople position={[120, -2, 0]} rotation={[0, 40.8, 0]} scale={[15, 15, 15]} />
         <FenceRow x={-35} count={1000} spacing={16} />
-        <MovingCloud position={[700, 30, 0]}   />
+        <MovingCloud position={[700, 30, 0]} />
         <FenceRow x={85} count={1000} spacing={16} />
         <HorseAnimation roundRecord={roundRecord} filteredMarket={filteredMarket} />
         <Ground />

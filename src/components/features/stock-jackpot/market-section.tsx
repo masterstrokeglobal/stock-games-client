@@ -4,7 +4,7 @@ import { BettingCard } from "@/components/features/stock-jackpot/betting-card"
 import JackpotResultDialog from "@/components/features/stock-jackpot/game-result"
 import TimeDisplay from "@/components/features/stock-jackpot/time-left"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { useCurrentGame, useIsPlaceOver, useShowResults } from "@/hooks/use-current-game"
+import { useCurrentGame, useShowResults } from "@/hooks/use-current-game"
 import useWindowSize from "@/hooks/use-window-size"
 import { cn } from "@/lib/utils"
 import { RoundRecordGameType } from "@/models/round-record"
@@ -15,18 +15,12 @@ const MarketSection = ({ globalBetAmount, className }: { globalBetAmount: number
     const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
     const { data: stockSlotPlacements } = useGetMyStockJackpotGameRecord(roundRecord?.id);
     const { showResults, previousRoundId } = useShowResults(roundRecord, stockSlotPlacements as any);
-    const isPlacementOver = useIsPlaceOver(roundRecord);
     const { isDesktop } = useWindowSize();
 
     const sortedMarketItems = useMemo(() => {
         const filteredMarketItems = roundRecord?.market.sort((a, b) => (a.id || 0) - (b.id || 0))
-
-        if (isPlacementOver) {
-            const placedMarketItems = stockSlotPlacements?.map((placement) => placement.marketItem.id ?? 0);
-            return filteredMarketItems?.filter((marketItem) => placedMarketItems?.includes(marketItem.id ?? 0));
-        }
         return filteredMarketItems;
-    }, [roundRecord, isPlacementOver, stockSlotPlacements]);
+    }, [roundRecord]);
 
 
 
@@ -84,18 +78,11 @@ const MarketSection = ({ globalBetAmount, className }: { globalBetAmount: number
 
 export const MarketSectionMobile = ({ globalBetAmount, className, styles }: { globalBetAmount: number, className?: string, styles?: CSSProperties }) => {
     const { roundRecord } = useCurrentGame(RoundRecordGameType.STOCK_SLOTS);
-    const { data: stockSlotPlacements } = useGetMyStockJackpotGameRecord(roundRecord?.id);
-    const isPlacementOver = useIsPlaceOver(roundRecord);
 
     const sortedMarketItems = useMemo(() => {
         const filteredMarketItems = roundRecord?.market.sort((a, b) => (a.id || 0) - (b.id || 0))
-
-        if (isPlacementOver) {
-            const placedMarketItems = stockSlotPlacements?.map((placement) => placement.marketItem.id ?? 0);
-            return filteredMarketItems?.filter((marketItem) => placedMarketItems?.includes(marketItem.id ?? 0));
-        }
         return filteredMarketItems ?? [];
-    }, [roundRecord, isPlacementOver, stockSlotPlacements]);
+    }, [roundRecord]);
 
 
     return <ScrollArea style={styles} className={cn("flex flex-col gap-2 bg-[#195A6D] z-10 border-[#7DE2FF75] border rounded-xl", className)}>
