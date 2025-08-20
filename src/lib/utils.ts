@@ -2,6 +2,7 @@ import { PlacementType } from "@/models/game-record";
 import { SchedulerType } from "@/models/market-item";
 import { RoundRecord, RoundRecordGameType } from "@/models/round-record";
 import { clsx, type ClassValue } from "clsx";
+import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -456,3 +457,14 @@ export const TAWK_PROPERTY_ID = process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID??""
 export const TAWK_WIDGET_ID = process.env.NEXT_PUBLIC_TAWK_WIDGET_ID??""
 
 export const isTawkEnabled = !!TAWK_PROPERTY_ID && !!TAWK_WIDGET_ID;
+
+
+export const copyToClipboard = async (text: string) => {
+  try {
+      await navigator.clipboard.writeText(text);
+      toast.success("Wallet address copied to clipboard");
+  } catch (err) {
+      console.error(err);
+      toast.error("Failed to copy wallet address");
+  }
+};

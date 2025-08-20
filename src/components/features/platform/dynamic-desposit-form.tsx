@@ -17,6 +17,7 @@ import FormImage from "@/components/ui/form/form-image-compact";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useGetMyCompany } from "@/react-query/company-queries";
+import { CryptoDepositForm } from "./deposit-form";
 
 // Deposit Methods Component
 interface DepositMethodsProps {
@@ -29,7 +30,12 @@ const DepositMethods = ({ selectedMethod, onMethodChange }: DepositMethodsProps)
         { id: 'upi', label: 'UPI', icon: <Smartphone className="w-6 h-6" /> },
         { id: 'bank', label: 'Bank Transfer', icon: <Building2 className="w-6 h-6" /> },
     ];
-
+    const { data: company } = useGetMyCompany();
+    const isCryptoPayIn = company?.cryptoPayIn;
+    console.log(isCryptoPayIn);
+    if (isCryptoPayIn) {
+        methods.push({ id: 'crypto', label: 'Crypto', icon: <img src="/images/platform/wallet/crypto.png" className="w-auto h-10" alt="crypto" /> });
+    }
     return (
         <div className="space-y-4">
             <div>
@@ -623,6 +629,9 @@ const DepositTab = () => {
 
             {selectedMethod === "upi" && <UPIDepositForm />}
             {selectedMethod === "bank" && <BankDepositForm />}
+            {selectedMethod === "crypto" && (
+                <CryptoDepositForm />
+            )}
         </div>
     );
 };

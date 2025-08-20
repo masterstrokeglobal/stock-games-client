@@ -68,13 +68,14 @@ const PaymentMethod = ({ icon, isSelected, onClick, label }: PaymentMethodProps)
     );
 };
 
+import FormImage from "@/components/ui/form/form-image-compact";
+import FormProvider from "@/components/ui/form/form-provider";
+import { copyToClipboard } from "@/lib/utils";
 import { useCreateDepositRequest } from "@/react-query/payment-queries";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import FormImage from "@/components/ui/form/form-image-compact";
-import FormProvider from "@/components/ui/form/form-provider";
 
 const upiDepositSchema = (t: any) => z.object({
     pgId: z
@@ -112,7 +113,7 @@ const UPIDepositForm = () => {
     const onSubmit = async (data: UpiDepositFormValues) => {
         data.amount = parseInt(data.amount.toString());
         mutate(data, {
-            onSuccess: () => {            
+            onSuccess: () => {
                 form.reset({ amount: 0, pgId: "", confirmationImageUrl: undefined });
             },
             onError: () => {
@@ -169,13 +170,10 @@ const UPIDepositForm = () => {
     );
 };
 
-const CryptoDepositForm = ({
-    user,
-    copyToClipboard,
-}: {
-    user: User;
-    copyToClipboard: (text: string) => void;
-}) => {
+export const CryptoDepositForm = () => {
+
+    const { userDetails } = useAuthStore();
+    const user: User = userDetails as User;
     const [rate, setRate] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
@@ -186,6 +184,8 @@ const CryptoDepositForm = ({
     });
 
     const selectedCrypto = form.watch("crypto");
+
+
 
     useEffect(() => {
         const fetchRate = async () => {
@@ -306,18 +306,6 @@ const CryptoDepositForm = ({
 // Tab Content Components
 const DepositTab = () => {
     const [selectedMethod, setSelectedMethod] = useState("upi");
-    const { userDetails } = useAuthStore();
-    const user: User = userDetails as User;
-
-    const copyToClipboard = async (text: string) => {
-        try {
-            await navigator.clipboard.writeText(text);
-            toast.success("Wallet address copied to clipboard");
-        } catch (err) {
-            console.error(err);
-            toast.error("Failed to copy wallet address");
-        }
-    };
 
     return (
         <div className="space-y-6">
@@ -331,7 +319,7 @@ const DepositTab = () => {
                 <UPIDepositForm />
             )}
             {selectedMethod === "crypto" && (
-                <CryptoDepositForm user={user} copyToClipboard={copyToClipboard} />
+                <CryptoDepositForm />
             )}
             <DepositMethods
                 selectedMethod={selectedMethod}
