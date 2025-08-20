@@ -7,6 +7,7 @@ import User from "@/models/user";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
+import BonusProgressComponent from "@/components/features/bonus/bonus-progress";
 
 type BalanceCardProps = {
     onDeposit: () => void;
@@ -46,6 +47,15 @@ const BalanceCard = ({ onDeposit, onWithdraw, onClose }: BalanceCardProps) => {
                         {INR(wallet.bonusBalance) ?? "--"}
                     </div>
                 </div>
+            </div>
+
+            {/* Bonus Progress */}
+            <div className="w-full max-w-sm">
+                <BonusProgressComponent 
+                    compact={true}
+                    showHeader={false}
+                    className="w-full"
+                />
             </div>
 
             {

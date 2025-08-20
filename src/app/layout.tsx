@@ -3,8 +3,6 @@ import { HighlightInit } from '@highlight-run/next/client';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Analytics } from "@vercel/analytics/react";
-import { NextIntlClientProvider } from 'next-intl';
-import { getLocale, getMessages } from "next-intl/server";
 import Script from 'next/script';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import "./game.css";
@@ -22,8 +20,8 @@ children,
 }: Readonly<{
 children: React.ReactNode;
 }>) {
-const locale = await getLocale();
-const messages = await getMessages();
+// Note: Locale handling is done in the (locale) folder structure
+// Remove getLocale() and getMessages() from root layout to avoid notFound() error
 
 const fingerprintAPIKey = process.env.NEXT_PUBLIC_FINGERPRINT_ID ?? "";
 const oneSingnalCode = process.env.NEXT_PUBLIC_ONE_SIGNAL ?? "";
@@ -48,7 +46,7 @@ return (
       }}
     >
       <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID!}>
-        <html lang={locale}>
+        <html lang="en">
           <head>
             <meta charSet="UTF-8" />
             <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -73,9 +71,7 @@ return (
           </head>
             <Body>
               <NuqsAdapter>
-                <NextIntlClientProvider messages={messages}>
-                  {children}
-                </NextIntlClientProvider>
+                {children}
               </NuqsAdapter>
             </Body>
         </html>

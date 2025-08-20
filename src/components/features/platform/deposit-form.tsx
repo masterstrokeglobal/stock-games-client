@@ -8,6 +8,7 @@ import { Copy, Loader2 } from "lucide-react";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { AmountInput } from "./funds-transfer";
+import enhancedBonusAPI from "@/lib/axios/enhanced-bonus-API";
 
 // Deposit Methods Component
 interface DepositMethodsProps {
@@ -109,32 +110,110 @@ const UPIDepositForm = () => {
     const { userDetails } = useAuthStore();
     const paymentImage = userDetails?.company?.paymentImage;
 
+    const [eligible, setEligible] = useState<any | null>(null);
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("");
+
     const onSubmit = async (data: UpiDepositFormValues) => {
+        // Validate payment method is selected
+        if (!selectedPaymentMethod) {
+            toast.error("Please select a payment method");
+            return;
+        }
+
         data.amount = parseInt(data.amount.toString());
-        mutate(data, {
+        // Add payment method to the deposit data
+        const depositData = {
+            ...data,
+            paymentMethod: selectedPaymentMethod
+        };
+        
+        console.log("Submitting deposit data:", depositData); // Debug log
+        
+        mutate(depositData, {
             onSuccess: () => {            
-                form.reset({ amount: 0, pgId: "", confirmationImageUrl: undefined });
+                form.reset({ amount: 0, pgId: "", confirmationImageUrl: "" });
+                setSelectedPaymentMethod("");
+                toast.success("Deposit request submitted successfully!");
             },
-            onError: () => {
-                console.log('Error creating deposit request');
+            onError: (error) => {
+                console.log('Error creating deposit request:', error);
+                toast.error("Failed to submit deposit request");
             }
         });
     }
+    
     const form = useForm<UpiDepositFormValues>({
         resolver: zodResolver(upiDepositSchema(t)),
         defaultValues: { amount: 10, pgId: "", confirmationImageUrl: "" },
     });
 
+    // Update useEffect to use selected payment method for bonus eligibility
+    useEffect(() => {
+        const amount = form.watch("amount");
+        if (amount && amount > 0 && selectedPaymentMethod) {
+            // Determine payment category based on selected method
+            let paymentCategory = 'BANK_TRANSFER'; // Default for RTGS, NEFT, UPI
+            if (selectedPaymentMethod === 'CRYPTO') {
+                paymentCategory = 'CRYPTOCURRENCY';
+            }
+            
+            enhancedBonusAPI.getBonusEligibility(Number(amount), paymentCategory)
+                .then((res) => setEligible(res))
+                .catch(() => setEligible(null));
+        } else {
+            setEligible(null);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [form.watch("amount"), selectedPaymentMethod]);
+
+    // Payment method options
+    const paymentMethods = [
+        { value: "UPI", label: "UPI", icon: "💳", description: "Instant UPI transfers" },
+        { value: "NEFT", label: "NEFT", icon: "🏦", description: "National Electronic Fund Transfer" },
+        { value: "RTGS", label: "RTGS", icon: "⚡", description: "Real Time Gross Settlement" },
+        { value: "CRYPTO", label: "Crypto", icon: "🪙", description: "Cryptocurrency payments" }
+    ];
 
     return (
         <FormProvider methods={form} className="space-y-4" onSubmit={form.handleSubmit(onSubmit, (err) => {
             console.log(err);
         })}>
-            {paymentImage && (
+            {/* Payment Method Selection */}
+            <div className="space-y-3">
+                <label className="text-sm font-medium text-platform-text">
+                    Select Payment Method *
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                    {paymentMethods.map((method) => (
+                        <button
+                            key={method.value}
+                            type="button"
+                            onClick={() => setSelectedPaymentMethod(method.value)}
+                            className={`p-3 border-2 rounded-lg transition-all text-left ${
+                                selectedPaymentMethod === method.value
+                                    ? 'border-[#3B4BFF] bg-[#3B4BFF]/10'
+                                    : 'border-gray-300 hover:border-[#3B4BFF]/50'
+                            }`}
+                        >
+                            <div className="flex items-center gap-2 mb-1">
+                                <span className="text-xl">{method.icon}</span>
+                                <span className="font-medium">{method.label}</span>
+                            </div>
+                            <p className="text-xs text-gray-600">{method.description}</p>
+                        </button>
+                    ))}
+                </div>
+                {!selectedPaymentMethod && (
+                    <p className="text-sm text-red-500">Please select a payment method</p>
+                )}
+            </div>
+
+            {paymentImage && selectedPaymentMethod && (
                 <div className="bg-white overflow-hidden rounded-lg w-fit mx-auto">
                     <img src={paymentImage} alt="QR Code" />
                 </div>
             )}
+            
             <AmountInput
                 number
                 value={form.watch("amount")?.toString() ?? ""}
@@ -151,19 +230,37 @@ const UPIDepositForm = () => {
                 error={form.formState.errors.pgId?.message}
                 required={false}
             />
+            
             <FormImage
                 control={form.control}
                 name="confirmationImageUrl"
                 label="Upload Confirmation Image"
-
             />
+            
+            {eligible?.eligibleBonuses?.length > 0 && (
+                <div className="bg-green-50 text-green-800 border border-green-200 p-3 rounded-md text-sm">
+                    <div className="font-medium mb-1">🎁 Available Bonuses</div>
+                    {eligible.eligibleBonuses.map((b: any) => (
+                        <div key={b.bonusId} className="flex justify-between items-center mb-1">
+                            <span>{b.bonusName}</span>
+                            <span className="font-semibold">+${b.estimatedBonusAmount}</span>
+                        </div>
+                    ))}
+                    {eligible.eligibleBonuses.some((b: any) => b.directCredit) && (
+                        <div className="text-xs text-green-700 mt-2">
+                            💰 Some bonuses go directly to main balance (no wagering required)
+                        </div>
+                    )}
+                </div>
+            )}
+            
             <Button
                 variant="platform-gradient-secondary"
                 size="lg"
                 type="submit"
-                disabled={form.formState.isSubmitting || isPending}
+                disabled={form.formState.isSubmitting || isPending || !selectedPaymentMethod}
             >
-                Deposit Now
+                {isPending ? "Submitting..." : "Deposit Now"}
             </Button>
         </FormProvider>
     );
