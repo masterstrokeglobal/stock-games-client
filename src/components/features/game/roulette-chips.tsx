@@ -2,11 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuthStore } from "@/context/auth-context";
 import { RoundRecordGameType } from "@/models/round-record";
+import { useCreateAutoBet, useDeleteAutoBet } from "@/react-query/game-record-queries";
 import { Minus, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import * as React from "react";
 import { useState } from "react";
-import { useCreateAutoBet, useDeleteAutoBet, useAutoBets } from "@/react-query/game-record-queries";
 
 
 interface BettingControlsProps {
@@ -28,11 +28,8 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
     const { userDetails } = useAuthStore();
 
     const coinValues = userDetails?.company?.coinValues || [100, 200, 1000, 2000];
-    const minPlacement = userDetails?.company?.minPlacement ?? 1;
-    const maxPlacement = userDetails?.company?.maxPlacement ?? 1000000;
     const { mutate: createAutoBet, isPending: isCreating } = useCreateAutoBet();
     const { mutate: deleteAutoBet, isPending: isDeleting } = useDeleteAutoBet();
-    const { data: autoBetData } = useAutoBets();
     const [autoRoundCount, setAutoRoundCount] = useState<number | null>(null);
     const minPlacement = userDetails?.company?.minPlacement ?? 0;
     const maxPlacement = userDetails?.company?.maxSinglePlacementPerGameType?.[RoundRecordGameType.DERBY] ?? 1000000;
