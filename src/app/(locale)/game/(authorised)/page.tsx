@@ -81,7 +81,7 @@ const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
         {
             roundRecord && <GameHeaderMobile roundRecord={roundRecord} />
         }
-       {isPlaceOver && <HorseRace roundRecord={roundRecord} />}
+        {isPlaceOver && <HorseRace roundRecord={roundRecord} />}
         {!isPlaceOver && <main className="bg-[#0A1634]">
             <div className="md:px-2">
                 {roundRecord && <RouletteGame className="mb-4" roundRecord={roundRecord} />}

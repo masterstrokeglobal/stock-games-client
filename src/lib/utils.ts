@@ -78,6 +78,8 @@ export const getPlacementString = (bet: { market: number[], placementType: Place
 }
 
 
+
+
 export const HIGHLIGHT_APP_KEY = process.env.NEXT_PUBLIC_HIGHLIGHT_APP_KEY
 
 export const indianNames: string[] = [
@@ -468,3 +470,22 @@ export const copyToClipboard = async (text: string) => {
       toast.error("Failed to copy wallet address");
   }
 };
+
+export const getRandomPlacementString = () => {
+  const randomIndex = randomNumber(0,5,1);
+    switch(randomIndex){
+      case 0:
+        return `Single ${randomNumber(1,16,1)}`
+      case 1:
+        return "Red"
+      case 2:
+        return "Black"
+      case 3:
+        return "Even"
+      case 4:
+        return "Odd"
+
+      default:
+        return `Single ${randomNumber(1,16,1)}`
+    }
+}
