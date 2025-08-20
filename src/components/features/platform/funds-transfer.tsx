@@ -2,8 +2,9 @@
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DepositTab from "./deposit-form";
+import DynamicDepositTab from "./dynamic-desposit-form";
 import WithdrawTab from "./withdrawl-form";
-
+import { useGetMyCompany } from '@/react-query/company-queries';
 
 // Amount Input Component
 interface AmountInputProps {
@@ -14,9 +15,10 @@ interface AmountInputProps {
     minAmount?: number;
     label?: string;
     error?: string;
+    required?: boolean; 
 }
 
-export const AmountInput = ({ value, onChange, placeholder, minAmount, error, label = "Amount", number = false }: AmountInputProps) => {
+export const AmountInput = ({ value, onChange, placeholder, minAmount, error, label = "Amount", number = false , required = true }: AmountInputProps) => {
     return (
         <div className="space-y-3">
             <fieldset className="relative border-2 dark:border-platform-border border-primary-game rounded-sm px-4 py-3">
@@ -27,7 +29,7 @@ export const AmountInput = ({ value, onChange, placeholder, minAmount, error, la
                     placeholder={placeholder}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
-                    required
+                    required={required}
                 />
             </fieldset>
             {minAmount && (
@@ -54,6 +56,8 @@ interface FundsTransfersDialogProps {
 }
 
 const FundsTransfers = ({ defaultTab = "deposit" }: FundsTransfersDialogProps) => {
+    const { data: company } = useGetMyCompany();
+    const isDynamicDeposit = company?.dynamicQR;
     return (
         <div className="dark:bg-[#050128] bg-[#C3E3FF] border-t-2 border-platform-border rounded-t-3xl md:px-6 px-4 py-8">
             <Tabs defaultValue={defaultTab} className="w-full">
@@ -73,7 +77,7 @@ const FundsTransfers = ({ defaultTab = "deposit" }: FundsTransfersDialogProps) =
                 </TabsList>
                 <div className="mt-6">
                     <TabsContent value="deposit" className="mt-0">
-                        <DepositTab />
+                        {isDynamicDeposit ? <DynamicDepositTab /> : <DepositTab />}
                     </TabsContent>
                     <TabsContent value="withdraw" className="mt-0">
                         <WithdrawTab />

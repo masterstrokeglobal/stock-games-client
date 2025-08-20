@@ -1,20 +1,20 @@
-import { useGetWheelOfFortuneRoundResult } from '@/react-query/wheel-of-fortune-queries';
-import { useMemo } from 'react';
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, Loader2, X } from "lucide-react";
-import { cn, INR } from "@/lib/utils";
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
+    DialogClose,
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogClose,
 } from "@/components/ui/dialog";
-import { Button } from '@/components/ui/button';
-import TriangleUpGlow from '../common/triangle-up-glow';
-import TriangleDownGlow from '../common/triangle-down-glow';
+import { cn, INR } from "@/lib/utils";
 import { WHEEL_COLOR_CONFIG } from '@/models/round-record';
 import { WheelColor } from '@/models/wheel-of-fortune-placement';
+import { useGetWheelOfFortuneRoundResult } from '@/react-query/wheel-of-fortune-queries';
+import { AlertCircle, Loader2, X } from "lucide-react";
+import { useMemo } from 'react';
+import TriangleDownGlow from '../common/triangle-down-glow';
+import TriangleUpGlow from '../common/triangle-up-glow';
 
 interface GameResultDialogProps {
     open: boolean;
@@ -23,20 +23,21 @@ interface GameResultDialogProps {
 
 const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
     const { data, isLoading, isError } = useGetWheelOfFortuneRoundResult(roundRecordId, open);
-    const netProfitLoss = useMemo(() => {
-        if (!data) return 0;
-        return data.placements.reduce((acc: number, placement: any) => acc + placement.amountWon, 0);
-    }, [data]);
-
 
     const totalPlaced = useMemo(() => {
         if (!data) return 0;
         return data.placements.reduce((acc: number, placement: any) => acc + placement.amountPlaced, 0);
     }, [data]);
 
-    const netWinning = netProfitLoss - totalPlaced;
 
+    const grossProfit = useMemo(() => {
+        if (!data) return 0;
+        return data.placements.reduce((acc: number, placement: any) => acc + (placement.isWinner ? placement.amountWon : 0), 0);
+    }, [data]);
+
+    const netWinning = grossProfit - totalPlaced;
     const isWin = netWinning > 0;
+
 
     return (
         <Dialog defaultOpen={open} >
@@ -44,8 +45,8 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
                 showButton={false}
                 className={cn(" border-2 shadow-2xl backdrop-blur-md max-w-md mx-auto", isWin ? "border-[#2be37c]" : "border-[#FF0000]")}
                 style={{
-                    boxShadow: isWin 
-                        ? "0px 0px 35.1px 0px rgba(6, 92, 0, 1)" 
+                    boxShadow: isWin
+                        ? "0px 0px 35.1px 0px rgba(6, 92, 0, 1)"
                         : "0px 0px 35.1px 0px rgba(171, 0, 0, 1)",
                     background: "linear-gradient(299.61deg, rgba(1, 14, 2, 0.4) -20.13%, rgba(48, 63, 61, 0.4) 100.88%)",
 
@@ -104,9 +105,9 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
                                                     <span className="font-normal">({INR(placement.amountWon, true)})</span>
                                                 </span>
                                             ) : (
-                                                <span className="text-red-400 font-bold flex items-center gap-1">
+                                                <span className="text-red-400 font-bold flex items-center justify-end gap-1">
                                                     Loss <TriangleDownGlow />
-                                                    <span className="font-normal">({INR(placement.amountWon, true)})</span>
+                                                    <span className="font-normal">-</span>
                                                 </span>
                                             )}
                                         </div>
@@ -114,11 +115,22 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
                                 );
                             })}
                         </div>
+                        <div className='grid grid-cols-3 text-white  border-t py-2 border-[#AFE7CC]'>
+                            <span className='font-montserrat'>
+                                Total :
+                            </span>
+                            <span className='font-montserrat text-center'>
+                                {INR(totalPlaced, true)}
+                            </span> 
+                            <span className=' font-montserrat text-end font-semibold'>
+                                {INR(grossProfit, true)}
+                            </span>
+                        </div>
                         <div className="flex justify-center">
                             <div
                                 className={cn(
                                     "rounded-lg px-6 py-3 text-center border-2",
-                                    isWin                                        ? "bg-[#0983002E] border-[#2be37c]"
+                                    isWin ? "bg-[#0983002E] border-[#2be37c]"
                                         : "bg-[#67000057] border-[#FF0000]"
                                 )}
                                 style={{
@@ -127,15 +139,15 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
                                         : "0 0 8px 0 rgba(239, 68, 68, 0.5)"
                                 }}
                             >
-                                <span 
+                                <span
                                     className={cn("block text-lg font-bold tracking-wide text-white")}
                                     style={{
-                                        textShadow: isWin 
+                                        textShadow: isWin
                                             ? "0px 0px 10.4px rgba(46, 183, 36, 1)"
                                             : "0px 0px 10.4px rgba(255, 0, 0, 1)"
                                     }}
                                 >
-                                    Net Result : ₹ {Math.abs(netWinning)}
+                                    Net Result : ₹ {netWinning}
                                 </span>
                             </div>
                         </div>

@@ -2,7 +2,7 @@ import { usePlacementOver } from '@/hooks/use-current-game';
 import useWindowSize from '@/hooks/use-window-size';
 import { cn, INR } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
-import { BetErrorToast, useCreateDiceGamePlacement, useGetMyCurrentRoundDiceGamePlacement    } from '@/react-query/dice-game-queries';
+import { BetErrorToast, useCreateDiceGamePlacement, useGetMyCurrentRoundDiceGamePlacement } from '@/react-query/dice-game-queries';
 import Image from 'next/image';
 import { PropsWithChildren, useMemo, useState } from 'react';
 import { Cube } from './dice-3d';
@@ -13,7 +13,7 @@ import { DICE_WINNING_MULTIPLIER_2, DICE_WINNING_MULTIPLIER_3, DICE_WINNING_MULT
 interface GameBoardProps extends PropsWithChildren<PropsWithClassName> {
     roundRecord: RoundRecord;
     globalBetAmount: number;
-    winningSum: Record<DicePlacementType, number>;  
+    winningSum: Record<DicePlacementType, number>;
     winningMarketId: number[] | null;
 }
 
@@ -38,7 +38,7 @@ const secondRow = [
     { number: 12, multiplier: `${DICE_WINNING_MULTIPLIER_12}x` }
 ];
 // Bet configurations for different types
-const betConfigs  = {
+const betConfigs = {
     [DicePlacementType.BOTH]: {
         firstRow: firstRow,
         secondRow: secondRow
@@ -68,8 +68,8 @@ const betConfigs  = {
 };
 
 
-const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningMarketId,winningSum}: GameBoardProps) => {
-    const createPlacement = useCreateDiceGamePlacement();
+const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningMarketId, winningSum }: GameBoardProps) => {
+    const { mutate: createPlacement, isPending } = useCreateDiceGamePlacement();
     const isPlaceOver = usePlacementOver(roundRecord);
     const [selectedBetType, setSelectedBetType] = useState<DicePlacementType>(DicePlacementType.BOTH);
     const { data: placements } = useGetMyCurrentRoundDiceGamePlacement(roundRecord.id);
@@ -85,6 +85,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
 
 
     const handleBetSelect = (number: number) => {
+        if (isPending) return;
         if (globalBetAmount <= 0 || isPlaceOver) {
             toast.custom((t) => (
                 <BetErrorToast message="Time's up! No more bets" onClose={() => toast.dismiss(t)} />
@@ -93,7 +94,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
             });
             return;
         }
-        createPlacement.mutate({
+        createPlacement({
             roundId: roundRecord.id,
             amount: globalBetAmount,
             placementType: selectedBetType,
@@ -116,7 +117,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
             }
         });
 
-        const firstDice = winningMarketId.length > 0 ? 
+        const firstDice = winningMarketId.length > 0 ?
             (() => {
                 const firstWinningIndex = roundRecord.market.findIndex(market => market.id === winningMarketId[0]);
                 if (firstWinningIndex >= 6) {
@@ -129,7 +130,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
                 }
             })() : null;
 
-        const secondDice = winningMarketId.length > 1 ? 
+        const secondDice = winningMarketId.length > 1 ?
             (() => {
                 const secondWinningIndex = roundRecord.market.findIndex(market => market.id === winningMarketId[1]);
                 if (secondWinningIndex >= 6) {
@@ -151,7 +152,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
     const currentConfig = betConfigs[selectedBetType];
 
     return (
-        <div className={cn("flex flex-col justify-center items-center gap-4 p-4", className)}>
+        <div className={cn("flex flex-col justify-center items-center gap-4 sm:px-4 sm:py4 px-2 py-2", className)}>
             {/* Header */}
             {children}
 
@@ -160,6 +161,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
                 {([DicePlacementType.FIRST, DicePlacementType.BOTH, DicePlacementType.SECOND] as DicePlacementType[]).map((betType) => (
                     <button
                         key={betType}
+                        disabled={isPending}
                         onClick={() => setSelectedBetType(betType)}
                         className={cn(
                             "flex-1 py-1 px-2 rounded-md text-xs font-medium transition-all duration-200",
@@ -184,6 +186,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
                             key={bet.number}
                             number={bet.number}
                             multiplier={bet.multiplier}
+                            className={isPending ? "opacity-50 pointer-events-none" : ""}
                         />
                     ))}
                 </div>
@@ -198,6 +201,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
                                 key={bet.number}
                                 number={bet.number}
                                 multiplier={bet.multiplier}
+                                className={isPending ? "opacity-50 pointer-events-none" : ""}
                             />
                         ))}
                     </div>
@@ -215,6 +219,7 @@ const BetButton = ({ number, multiplier, handleBetSelect, isWinner, isWinning, b
     isWinner: boolean,
     isWinning: boolean,
     betAmount: number,
+    className?: string,
     handleBetSelect: (number: number) => void
 }) => {
 
@@ -222,18 +227,18 @@ const BetButton = ({ number, multiplier, handleBetSelect, isWinner, isWinning, b
         <button
             onClick={() => handleBetSelect(number)}
             className={cn(
-                "relative z-10 w-14  h-9 md:w-20 md:h-14 py-2 rounded-[8px] transition-all duration-200 flex flex-col items-center justify-center group hover:scale-105",
+                "relative z-10 w-14  h-9 md:w-20 md:h-14 py-2 rounded-[8px] transition-all duration-200 flex flex-col items-center justify-center group hover:scale-105 cursor-pointer",
                 isWinner && "border-2 border-[#4467CC]",
                 isWinning && "animate-pulse"
             )}
         >
             <div className='absolute top-0 left-0 blur-[2px] rounded-[8px] w-full h-full bg-gradient-to-b from-[#1294E2] to-[#1294E2]' />
             {betAmount > 0 && <div className="absolute -top-3 -left-3 -rotate-12 p-1.5 flex items-center justify-center aspect-square rounded-full  z-10">
-            <span className="text-white md:text-[10px] text-[8px] z-10 relative  font-poppins">
-                {INR(betAmount, true, false)}
-            </span>
-            <img src="/images/head-tail/betting-chip.png" alt="" className="w-full h-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-        </div>}
+                <span className="text-white md:text-[10px] text-[8px] z-10 relative  font-poppins">
+                    {INR(betAmount, true, false)}
+                </span>
+                <img src="/images/head-tail/betting-chip.png" alt="" className="w-full h-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+            </div>}
             {/* Crown emoji for winner */}
             {
                 isWinner && (

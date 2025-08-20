@@ -63,7 +63,6 @@ return (
 
             });
           `}} />
-            <title>Stock Games </title>
             <link rel="preconnect" href="https://fonts.gstatic.com" />
             <link rel="preconnect" href="https://fonts.googleapis.com" />
             <link rel="preload" href="https://fonts.googleapis.com/css2?family=Keania+One:wght@400&display=swap" as="style" />

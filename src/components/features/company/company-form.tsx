@@ -4,6 +4,7 @@ import FormInput from "@/components/ui/form/form-input";
 import FormMultiInput from "@/components/ui/form/form-multi-input";
 import FormProvider from "@/components/ui/form/form-provider";
 import FormRecord from "@/components/ui/form/form-record";
+import { RoundRecordGameType } from "@/models/round-record";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -21,6 +22,7 @@ export const createCompanyInputSchema = z.object({
     minPlacement: z.coerce.number().optional(),
     allowedCasino:z.boolean().optional(),
     coinValues: z.array(z.coerce.number()).min(4).max(4).default([]),
+    maxSinglePlacementPerGameType: z.record(z.nativeEnum(RoundRecordGameType), z.coerce.number()).optional(),
     maxPlacement: z.coerce.number().optional(),
     minCasinoPlacement: z.coerce.number().optional(),
     maxCasinoPlacement: z.coerce.number().optional(),
@@ -98,6 +100,16 @@ const CompanyForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 control={control}
                 name="theme"
                 label="Theme"
+            />
+            <FormRecord
+                control={control}
+                name="maxSinglePlacementPerGameType"
+                label="Max Single Placement Per Game Type"
+            />
+            <FormInput
+                control={control}
+                name="minPlacement"
+                label="Minimum Placement"
             />
             <FormInput
                 control={control}

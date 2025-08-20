@@ -325,6 +325,8 @@
         "validation": {
             "transaction-id-required": "Transaction ID is required",
             "transaction-id-max": "Transaction ID cannot exceed 50 characters",
+            "confirmation-image-url-invalid": "Invalid confirmation image URL",
+            "confirmation-image-url-required": "Confirmation image URL is required",
             "amount-required": "Amount is required",
             "amount-invalid": "Please enter a valid amount"
         }
@@ -340,7 +342,9 @@
         "errors": {
             "transaction-id-required": "Transaction ID is required",
             "transaction-id-max-length": "Transaction ID is too long",
+            "confirmation-image-url-invalid": "Invalid confirmation image URL",
             "amount-required": "Amount is required",
+            "amount-required-100": "Amount must be greater than 100",
             "amount-number": "Amount must be a number",
             "amount-min": "Amount must be greater than zero"
         }
@@ -469,7 +473,7 @@
                 "total-winning": "Total Winning",
                 "winner": "Winner",
                 "profit-loss": "Profit/Loss",
-                "actions": "Actions"
+                "actions": "Details"
             }
         }
     },

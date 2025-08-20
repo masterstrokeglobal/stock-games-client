@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import FormInput from "@/components/ui/form/form-input";
 import FormPassword from "@/components/ui/form/form-password";
 import FormProvider from "@/components/ui/form/form-provider";
+import FormSwitch from "@/components/ui/form/form-switch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -10,6 +11,7 @@ export const createAgentInputSchema = z.object({
     firstname: z.string().min(2, "First name is required").max(50),
     lastname: z.string().min(2, "Last name is required").max(50),
     email: z.string().email("Invalid email address"),
+    enableTransactions: z.boolean().default(false),
     password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string().min(6, "Confirm password is required")
 }).refine((data) => data.password === data.confirmPassword, {
@@ -21,22 +23,25 @@ export type AgentFormValues = z.infer<typeof createAgentInputSchema>;
 
 type Props = {
     onSubmit: (data: AgentFormValues) => void;
+    defaultValues?:AgentFormValues;
     isLoading?: boolean;
 };
 
 const AgentForm = ({
     onSubmit,
+    defaultValues = {
+        firstname: '',
+        lastname: '',
+        email: '',
+        enableTransactions: false,
+        password: '',
+        confirmPassword: ''
+    },
     isLoading
 }: Props) => {
     const form = useForm<AgentFormValues>({
         resolver: zodResolver(createAgentInputSchema),
-        defaultValues: {
-            firstname: '',
-            lastname: '',
-            email: '',
-            password: '',
-            confirmPassword: ''
-        }
+            defaultValues,
     });
 
     const { control, handleSubmit, watch } = form;
@@ -86,6 +91,14 @@ const AgentForm = ({
                 type="password"
                 placeholder="Confirm password"
                 disabled={!passwordValue}
+            />
+
+            <FormSwitch
+                control={control}
+                name="enableTransactions"
+                label="Enable Transactions"
+                description=" If enabled, the agent can perform transactions for user deposit and withdrawal"
+
             />
 
             <footer className="flex justify-end gap-4 mt-8">

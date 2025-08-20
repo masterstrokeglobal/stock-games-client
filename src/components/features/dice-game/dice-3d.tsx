@@ -63,6 +63,7 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
 
   const firstCube = marketItems.slice(0, 6);
   const secondCube = marketItems.slice(6, 12);
+// const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   const marketItemsStocks = useMemo(() => {
     return marketItems.map((item) => {

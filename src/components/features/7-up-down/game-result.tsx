@@ -15,13 +15,7 @@ interface GameResultDialogProps {
 }
 
 const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
-  const [showDialog, setShowDialog] = useState(open);
-  const { data: roundResult, isLoading } = useGetSevenUpDownRoundResult(roundRecordId, true);
-
-  useEffect(() => {
-    setShowDialog(open);
-  }, [open]);
-
+  const { data: roundResult, isLoading } = useGetSevenUpDownRoundResult(roundRecordId, open);
 
 
   const totalPlaced = roundResult?.reduce((total, bet) => {
@@ -34,10 +28,11 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
 
   const totalNetResult = totalWon - totalPlaced;
 
+
   const round = roundResult?.[0]?.round ? new RoundRecord(roundResult[0].round) : null;
 
   return (
-    <Dialog  defaultOpen={showDialog}>
+    <Dialog defaultOpen={open}>
       <DialogContent
         showButton={false}
         className={cn(
@@ -97,7 +92,7 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
                     <div className="grid grid-cols-3 items-center md:text-base sm:text-sm text-xs font-bold font-montserrat uppercase xs:px-4 gap-2 border-b border-[#6FB0FF] text-[#8EC2FF] pb-2 mb-2">
                       <div className="text-left whitespace-nowrap">Selected Side</div>
                       <div className="text-center whitespace-nowrap">Bet INR</div>
-                      <div className="text-center whitespace-nowrap">Winner</div>
+                      <div className="text-end whitespace-nowrap">Winner</div>
                     </div>
 
                     <ScrollArea className='h-[150px]' scrollThumbClassName="bg-[#517ED4]">
@@ -107,12 +102,26 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
                             <div key={index} className="grid grid-cols-3 text-white font-poppins font-light uppercase xs:px-4 gap-2 sm:text-[15px] text-xs bg-[#355DAE] py-2 rounded-xl mb-2">
                               <div className="text-left"><SevenUpDownChip className='justify-start' side={result.selectedSide} /></div>
                               <div className="text-center">{INR(result.amountPlaced)}</div>
-                              <div className="text-center">{<SevenUpDownChip className='justify-center' side={getWinnerSide(result.winner)} />}</div>
+                              <div className="text-center justify-end flex gap-2">
+                                <SevenUpDownChip className='justify-center' side={getWinnerSide(result.winner)} />
+                                <span >({result.isWinner ? INR(result.amountWon) : "-"})</span>
+                              </div>
                             </div>
                           )
                         })
                       }
                     </ScrollArea>
+                    <div className=' grid grid-cols-3 justify-between text-white  border-t py-2 border-white'>
+                      <span className='font-poppins'>
+                        Total :
+                      </span>
+                      <span className='font-poppins text-center'>
+                        {INR(totalPlaced)}
+                      </span>
+                      <span className=' font-poppins font-semibold text-end'>
+                        {INR(totalWon)}
+                      </span>
+                    </div>
                   </div>
                   <div className='flex justify-center sm:mb-2 sm:mt-4 h-fit'>
                     <div className='text-center text-lg font-poppins  leading-none xl:text-4xl md:text-3xl font-bold sm:text-2xl xs:text-xl text-white' style={{ textShadow: '0px 0px 9.5px #2A8BFF' }}>

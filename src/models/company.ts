@@ -1,3 +1,4 @@
+import { RoundRecordGameType } from "./round-record";
 import { SchedulerType } from "./market-item";
 
 interface Theme {
@@ -17,19 +18,24 @@ export class Company {
     depositBonusPercentageEnabled?: boolean;
     paymentImage?: string;
     domain?: string;
+    askWithdrawlOption?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
     externalPayIn!: boolean;
     externalPayOut!: boolean;
     placementNotAllowed?: SchedulerType[];
+    gameRestrictions:RoundRecordGameType[];
     allowedCasino!: boolean;
+    userVerfication!: boolean;
     deletedAt?: Date;
-    minPlacement?: number;
-    maxPlacement?: number;
+    minPlacement: number;
+    maxPlacement: number;
     minCasinoPlacement?: number;
     maxCasinoPlacement?: number;
+    maxSinglePlacementPerGameType?: Record<RoundRecordGameType, number>;
     otpIntegration?: boolean;
     coinValues?: number[];
+    dynamicQR: boolean;
     cryptoPayIn?: boolean;
     cryptoPayOut?: boolean;
 
@@ -41,6 +47,7 @@ export class Company {
         this.contactPersonEmail = params.contactPersonEmail;
         this.logo = params.logo;
         this.placementNotAllowed = params.placementNotAllowed || [];
+        this.gameRestrictions = params.gameRestrictions || [];
         this.depositBonusPercentageEnabled = params.depositBonusPercentageEnabled;
         this.domain = params.domain;
         this.allowedCasino = params.allowedCasino || false;
@@ -48,18 +55,22 @@ export class Company {
         this.externalPayIn = params.externalPayIn || false;
         this.externalPayOut = params.externalPayOut || false;
         this.createdAt = params.createdAt;
+        this.userVerfication = params.userVerfication || false;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;
+        this.askWithdrawlOption = params.askWithdrawlOption || false;
         this.paymentImage = params.paymentImage;
         this.depositBonusPercentage = params.depositBonusPercentage;
         this.otpIntegration = params.otpIntegration || false;
         this.minPlacement = params.minPlacement ?? 0;
-        this.maxPlacement = params.maxPlacement;
+        this.maxPlacement = params.maxPlacement ?? Infinity;
+        this.maxSinglePlacementPerGameType = params.maxSinglePlacementPerGameType;
         this.coinValues = params.coinValues;
         this.minCasinoPlacement = params.minCasinoPlacement;
         this.maxCasinoPlacement = params.maxCasinoPlacement;
         this.cryptoPayIn = params.cryptoPayIn || false;
         this.cryptoPayOut = params.cryptoPayOut || false;
+        this.dynamicQR = params.dynamicQR || false;
     }
 }
 

@@ -8,6 +8,8 @@ import { useUpdateDepositRequestStatus, useUpdateWithdrawRequestStatus } from "@
 import { useGetTransactionById } from "@/react-query/transactions-queries";
 import { useParams, useRouter } from "next/navigation";
 import { useMemo } from "react";
+import { useAuthStore } from "@/context/auth-context";
+import Admin, { AdminRole } from "@/models/admin";
 
 const EditTransactionPage = () => {
     const params = useParams();
@@ -15,14 +17,20 @@ const EditTransactionPage = () => {
     const { data, isLoading, isSuccess } = useGetTransactionById(id.toString());
     const { mutate: deposit, isPending } = useUpdateDepositRequestStatus();
     const { mutate: withdrawl, isPending: confirmPending } = useUpdateWithdrawRequestStatus();
+    const {userDetails} = useAuthStore();
     const router = useRouter();
+
+    const currentUser = userDetails as Admin;
+
+  const isAgentAndTransactionDisabled = useMemo(() => {
+    return currentUser.role === AdminRole.AGENT && currentUser.enableTransactions == false;
+  }, [currentUser]);
 
     const transaction = useMemo(() => {
         return new Transaction(data?.data?.transaction);
     }, [data]);
 
     const onSubmit = (updatedData: any) => {
-
         if (transaction.type == TransactionType.DEPOSIT) {
             deposit({
                 transactionId: id,
@@ -52,7 +60,7 @@ const EditTransactionPage = () => {
         <>
 
             {transaction.agent && <AgentDetailsCard agent={transaction.agent} />}
-            {isSuccess && data && (
+            {isSuccess && data && !isAgentAndTransactionDisabled && (
                 <TransactionEditForm
                     transaction={data.data.transaction}
                     onSubmit={onSubmit}

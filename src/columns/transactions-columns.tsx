@@ -1,13 +1,14 @@
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Transaction, TransactionStatus, TransactionType } from "@/models/transaction";
+import { useConfirmWithdrawal, useUpdateTransactionById } from "@/react-query/transactions-queries";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { Edit2 } from "lucide-react"; // Import necessary icons
 import Link from "next/link"; // Adjust import path
 import React from "react";
-import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
-import { useConfirmWithdrawal, useUpdateTransactionById } from "@/react-query/transactions-queries";
 
 const transactionColumns: ColumnDef<Transaction>[] = [
     {
@@ -47,6 +48,11 @@ const transactionColumns: ColumnDef<Transaction>[] = [
         }
     },
     {
+        header: "Image URL",
+        accessorKey: "imageUrl",
+        cell: ({ row }) => <ImageColumn transaction={row.original} />,
+    },
+    {
         header: "Status",
         accessorKey: "status",
         cell: ({ row }) => (
@@ -54,6 +60,20 @@ const transactionColumns: ColumnDef<Transaction>[] = [
                 {row.original.status.split("_").join(" ")}
             </Badge>
         ),
+    },
+    {
+        header: "Agent",
+        accessorKey: "agent",
+        cell: ({ row }) => {
+            if (row.original.agent) {
+                return <Link href={`/dashboard/agents/${row.original.agent?.id}`}>
+                    <Badge variant="outline">
+                        {row.original.agent?.name ?? "N/A"}
+                    </Badge>
+                </Link>
+            }
+            return <div className="text-nowrap">N/A</div>
+        }
     },
     {
         header: "Bonus Percentage",
@@ -183,5 +203,50 @@ const StatusChangeColumn = ({ transaction }: { transaction: Transaction }) => {
                 </AlertDialogContent>
             </AlertDialog>
         </>
+    );
+};
+
+const ImageColumn = ({ transaction }: { transaction: Transaction }) => {
+    const downloadImage = () => {
+        const link = document.createElement("a");
+        if (!transaction?.confirmationImageUrl) return;
+        link.href = transaction.confirmationImageUrl;
+        link.target = "_blank";
+        link.download = "transaction-image.jpg";
+        link.click();
+        link.remove();
+    };
+    return (
+        <div className="flex items-center gap-2">
+            <Dialog>
+                <DialogTrigger >
+                    <img
+                        src={transaction.confirmationImageUrl}
+                        alt="Transaction Image"
+                        width={50}
+                        height={50}
+                        className="rounded-md"
+                    />
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Transaction Image</DialogTitle>
+                        <DialogDescription>
+                            <img
+                                src={transaction.confirmationImageUrl}
+                                alt="Transaction Image"
+                                className="rounded-md w-auto mx-auto h-[500px] object-contain"
+                            />
+                        </DialogDescription>
+
+                        <Button
+                            onClick={downloadImage}
+                        >
+                            Download Image
+                        </Button>
+                    </DialogHeader>
+                </DialogContent>
+            </Dialog>
+        </div>
     );
 };

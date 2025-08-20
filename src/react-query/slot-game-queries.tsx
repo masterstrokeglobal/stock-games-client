@@ -49,12 +49,21 @@ export const useCreateStockGamePlacement = () => {
     });
 };
 
+type StockSlotResult = {
+    netProfitLoss: number;
+    netWinning: number;
+    platformFeeAmount: number;
+    amountWon: number;
+    grossWinning: number;
+    totalPlaced: number;
+};
+
 export const useStockGameRoundResult = (roundId: number,open=false) => {
     return useQuery({
         queryKey: ["slot-jackpot-result", roundId],
         queryFn: async () => {
             const response = await slotGameAPI.getStockJackpotRoundResult(roundId);
-            return response.data;
+            return response.data.data as StockSlotResult;
         },
         enabled: open
     });

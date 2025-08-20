@@ -140,18 +140,18 @@ export const IndexwithColorBands = [
             actualColor: '#FFD700', // Golden yellow (1 item - rarest)
             multiplier: 21
         },
-        [WheelColor.COLOR6]: {
-            name: 'WHITE',
-            backgroundGradient: 'linear-gradient(90.33deg, rgba(175, 2, 45, 0.85) 1.64%, rgba(84, 0, 6, 0.85) 115.74%)',
-            bgColor: 'bg-white',
-            textColor: 'text-black',
-            borderColor: 'border-white',
-            chipColor: '#FFFFFF',
-            shadowColor: 'shadow-yellow-400/50',
-            shadow: "0px 0px 30px 0px rgba(255, 255, 255, 1)",
-            actualColor: '#FFD700', // Golden yellow (1 item - rarest)
-            multiplier: 2
-        }
+        // [WheelColor.COLOR6]: {
+        //     name: 'WHITE',
+        //     backgroundGradient: 'linear-gradient(90.33deg, rgba(175, 2, 45, 0.85) 1.64%, rgba(84, 0, 6, 0.85) 115.74%)',
+        //     bgColor: 'bg-white',
+        //     textColor: 'text-black',
+        //     borderColor: 'border-white',
+        //     chipColor: '#FFFFFF',
+        //     shadowColor: 'shadow-yellow-400/50',
+        //     shadow: "0px 0px 30px 0px rgba(255, 255, 255, 1)",
+        //     actualColor: '#FFD700', // Golden yellow (1 item - rarest)
+        //     multiplier: 2
+        // }
     };
 
 export class RoundRecord {
@@ -176,6 +176,9 @@ export class RoundRecord {
     deletedAt?: Date;
     initialValues: Record<string, number> | null;
     finalDifferences: Record<string, number> | null;
+    bonusSymbol?: string;
+bonusMultiplier?: number;
+
     winningSide?: HeadTailPlacementType;
     marketColors: {
         color: WheelColor;
@@ -202,6 +205,8 @@ export class RoundRecord {
         this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : undefined;
         this.initialValues = data.initialValues || null;
         this.finalDifferences = data.finalDifferences || null;
+        this.bonusSymbol = data.bonusSymbol;
+        this.bonusMultiplier = data.bonusMultiplier;
         this.coinTossPair = data.coinTossPair ? new CoinTossPair(data.coinTossPair) : undefined;
         this.winningSide = data.winningSide || undefined;
         this.marketColors = data.marketColors || [];

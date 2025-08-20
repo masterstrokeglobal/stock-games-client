@@ -137,7 +137,6 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
     }, [data?.data?.roundRecords?.[0], isSuccess]);
 
 
-
     useEffect(() => {
 
         if (!roundRecord) return;
@@ -149,13 +148,17 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         let timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 5000;
 
         if (roundRecord.roundRecordGameType !== RoundRecordGameType.DERBY) {
-            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 10000;
+            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 5000;
+        }
+
+        if(roundRecord.roundRecordGameType === RoundRecordGameType.STOCK_JACKPOT){
+            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 8000;
         }
 
         const gameEnd = setTimeout(() => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
+                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet' || query.queryKey[0] === 'userGameHistory';
                 },
             });
         }, timeToGameEnd);
@@ -163,7 +166,7 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         const placeEnd = setTimeout(() => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
+                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet' ;
                 },
             });
         }, timeToPlace);

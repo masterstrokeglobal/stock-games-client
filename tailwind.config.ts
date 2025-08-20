@@ -34,6 +34,8 @@ const config: Config = {
 				"space-grotesk": ['var(--font-space-grotesk)'],
 				"rajdhani": ['var(--font-rajdhani)'],
 				
+				'quantico': ['var(--font-quantico)', 'sans-serif'],
+				'wendy-one': ['var(--font-wendy-one)', 'sans-serif'],
 			},
 			animation: {
 				marquee: 'marquee 6s linear infinite',

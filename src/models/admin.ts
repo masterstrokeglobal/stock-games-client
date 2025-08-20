@@ -20,6 +20,7 @@ interface AdminParams {
     updatedAt?: Date;
     deletedAt?: Date;
     canCreateSubAffiliate?: boolean;
+    enableTransactions?:boolean;
     firstname?: string;
     lastname?: string;
 }
@@ -31,6 +32,7 @@ class Admin {
     company?: Company;
     referenceCode?: string;
     password?: string;
+    enableTransactions:boolean;
     role?: AdminRole;
     canCreateSubAffiliate?: boolean;
     createdAt?: Date;
@@ -41,6 +43,7 @@ class Admin {
         this.id = params.id;
         this.name = params.name;
         this.email = params.email;
+        this.enableTransactions = params.enableTransactions ?? false
         this.password = params.password;
         this.role = params.role;
         this.referenceCode = params.referenceCode;

@@ -51,11 +51,6 @@ const UserMenu = () => {
             label: t('transaction-history')
         },
         {
-            href: "/game/betting-history",
-            icon: "/images/platform/user-menu/betting-history.png",
-            label: t('betting-history')
-        },
-        {
             href: "/game/wallet/menu",
             icon: "/images/platform/user-menu/wallet.png",
             parent:WalletDialog,
@@ -77,11 +72,6 @@ const UserMenu = () => {
             icon: "/images/platform/user-menu/rules.png",
             label: t('rules')
         },
-        // {
-        //     href: "/game/faq",
-        //     icon: HelpCircleIcon,
-        //     label: t('faq')
-        // }
     ];
 
     return (

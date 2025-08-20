@@ -1,7 +1,7 @@
 "use client"
 import GameLoadingScreen from '@/components/common/game-loading-screen';
 import MarketSelector from '@/components/common/market-selector';
-import Aviator from '@/components/features/aviator/aviator';
+import Aviator from '@/components/features/avaitor/aviator';
 import { useCurrentGame } from '@/hooks/use-current-game';
 import { useMarketSelector, useStockSelectorAviator } from '@/hooks/use-market-selector';
 import { MarketItem } from '@/models/market-item';

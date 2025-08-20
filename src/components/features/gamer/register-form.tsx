@@ -17,32 +17,34 @@ import AuthTabs from "./auth-tabs";
 import GoogleLoginButton from "./google-login-button";
 
 // Zod schema for validating the registration form fields
-export const createRegisterSchema = (t: any, isPhoneAllowed: boolean = false) => z.object({
+export const createRegisterSchema = (t: any, isPhoneAllowed: boolean = false, userVerfication: boolean = false) => z.object({
     // Full name with first and last name
     name: z.string().min(3, { message: t('validation.name-length') }).max(100, { message: t('validation.name-max') }).refine((data) => data.split(" ").length > 1, {
         message: t('validation.name-full'),
     }),
 
     // Email or phone
-    email: z
-        .string()
-        .refine(
-            (value) => {
-                // Email regex pattern
-                const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    email: userVerfication
+        ? z
+            .string()
+            .refine(
+                (value) => {
+                    // Email regex pattern
+                    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-                if (isPhoneAllowed) {
-                    // Phone regex pattern (basic international format)
-                    const phonePattern = /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,4}[-\s.]?[0-9]{1,9}$/;
-                    return emailPattern.test(value) || phonePattern.test(value);
+                    if (isPhoneAllowed) {
+                        // Phone regex pattern (basic international format)
+                        const phonePattern = /^[+]?[(]?[0-9]{1,4}[)]?[-\s.]?[0-9]{1,4}[-\s.]?[0-9]{1,9}$/;
+                        return emailPattern.test(value) || phonePattern.test(value);
+                    }
+
+                    return emailPattern.test(value);
+                },
+                {
+                    message: t('validation.email-invalid'),
                 }
-
-                return emailPattern.test(value);
-            },
-            {
-                message: t('validation.email-invalid'),
-            }
-        ),
+            )
+        : z.string().optional(),
 
     // Optional reference code
     referenceCode: z.string().optional(),
@@ -70,6 +72,7 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
     const t = useTranslations("register"); // Translation hook for register form
 
     const { data, isSuccess } = useGetCompanyById(COMPANYID.toString());
+    const isUserVerificationRequired = data?.data?.userVerfication;
 
     const company = useMemo(() => {
         if (isSuccess) {
@@ -78,7 +81,7 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
     }, [isSuccess, data]);
 
     const form = useForm<RegisterFormValues>({
-        resolver: zodResolver(createRegisterSchema(t, company?.otpIntegration)),
+        resolver: zodResolver(createRegisterSchema(t, company?.otpIntegration, isUserVerificationRequired)),
         defaultValues,
     });
 
@@ -109,7 +112,8 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         label={t('label-username')}
                         required
                     />
-                    {
+
+                    {isUserVerificationRequired && <>{
                         company?.otpIntegration ? (
                             <FormPhoneNumber
                                 control={control}
@@ -128,6 +132,7 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                             />
                         )
                     }
+                    </>}
                     {/* Reference Code Field */}
                     <FormInput
                         control={control}

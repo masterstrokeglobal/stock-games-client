@@ -21,11 +21,6 @@ export const GameHeaderBackground: React.FC<GameHeaderProps> = ({ gameState, cla
             : gameState.placeTimeLeft.formatted;
     };
 
-    // // Gradient background style matching the image
-    // const gradientStyle: React.CSSProperties = {
-    //     background: "radial-gradient(ellipse at center, #07305B 0%, #00143A 100%)",
-    // };
-
     return (
         <header
             className={cn(
@@ -35,7 +30,6 @@ export const GameHeaderBackground: React.FC<GameHeaderProps> = ({ gameState, cla
         >
             <div className="mb-2">
                 <span
-                
                     className="inline-block px-3 py-1 text-white text-2xl font-semibold rounded bg-transparent  tracking-wide"
                     style={{ letterSpacing: "0.04em" }}
                 >
@@ -43,11 +37,10 @@ export const GameHeaderBackground: React.FC<GameHeaderProps> = ({ gameState, cla
                 </span>
             </div>
             <p
-            style={{
-                textShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
-            }}
+                style={{
+                    textShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
+                }}
                 className='text-5xl font-bold text-white  mt-2 relative'>
-            {/* <div style={gradientStyle} className='absolute top-0 left-0 h-full w-auto aspect-square' /> */}
                 {getTime()}
             </p>
         </header>
@@ -55,8 +48,8 @@ export const GameHeaderBackground: React.FC<GameHeaderProps> = ({ gameState, cla
 }
 
 export const GameHeader: React.FC<GameHeaderProps> = ({ gameState, className }) => {
-
     const t = useTranslations('game');
+    
     const getTime = () => {
         if (gameState.isGameOver) {
             return "00:00";

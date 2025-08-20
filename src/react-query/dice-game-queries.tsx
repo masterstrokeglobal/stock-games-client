@@ -48,8 +48,6 @@ export const BetSuccessToast = ({ className, onClose, betAmount, betNumber }: Pr
             <div className="flex items-center gap-4 ">
                 {/* Character illustration */}
 
-
-
                 {/* Text content */}
                 <div className="flex-1">
                     {/* Close button */}

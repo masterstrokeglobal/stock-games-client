@@ -35,11 +35,20 @@ const agentColumns: ColumnDef<Agent>[] = [
             // show in badges
             <div className="flex space-x-2">
                 {row.original.placementNotAllowed.map((type) => (
-                    <Badge key={type} variant="default" >
+                    <Badge key={type} variant="default">
                         {type}
                     </Badge>
                 ))}
                 {row.original.placementNotAllowed.length === 0 && <span className="text-[#6B7280]">No Restriction</span>}
+            </div>
+        )
+    },
+    {
+        header: "Transaction Access",
+        accessorKey: "transactionAccess",
+        cell: ({ row }) => (
+            <div className="flex space-x-2">
+                <Badge variant={row.original.enableTransactions ? "success" : "destructive"}>{row.original.enableTransactions ? "Enabled" : "Disabled"}</Badge>
             </div>
         )
     },

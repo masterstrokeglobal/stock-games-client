@@ -27,20 +27,26 @@ const FormImage = <TFieldValues extends FieldValues>({
     aspectRatioDescription,
     maxSize = 5, // Default 5MB
 }: FormImageProps<TFieldValues>) => {
-    const { setValue, getFieldState, getValues } = useFormContext()
+    const { setValue, getFieldState, watch, formState: {  isSubmitSuccessful } } = useFormContext()
     const [previewUrl, setPreviewUrl] = useState<string | null>(null)
     const [isUploading, setIsUploading] = useState(false)
 
-    const uploadImageMutation = useUploadImage();
+    const uploadImageMutation = useUploadImage();   
 
     const error = getFieldState(name).error?.message;
-    const previewUrlValue = getValues(name);
+    const previewUrlValue = watch(name);    
 
+    // Handle form reset and field value changes
     useEffect(() => {
-        if (previewUrlValue) {
-            setPreviewUrl(previewUrlValue);
-        }
+        setPreviewUrl(previewUrlValue || null);
     }, [previewUrlValue]);
+    
+    // Reset preview when form is reset after successful submission
+    useEffect(() => {
+        if (isSubmitSuccessful) {
+            setPreviewUrl(previewUrlValue || null);
+        }
+    }, [isSubmitSuccessful, previewUrlValue]);
 
     const validateImageDimensions = (file: File): Promise<boolean> => {
         return new Promise((resolve) => {

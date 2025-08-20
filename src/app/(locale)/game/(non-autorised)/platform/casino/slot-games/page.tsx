@@ -15,9 +15,9 @@ export default function SlotGamesPage() {
         provider: "all"
     });
 
-    const isCasinoAllowed = useCasinoAllowed();
+    const { isLoading, isCasinoAllowed } = useCasinoAllowed();
 
-    if (!isCasinoAllowed) notFound();
+    if (!isCasinoAllowed && !isLoading) notFound();
 
     return (
         <div className="flex flex-col min-h-screen">
