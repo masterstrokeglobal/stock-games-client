@@ -116,7 +116,7 @@ const Page = () => {
   if (!marketSelected)
     return (
       <MarketSelector
-        className="min-h-[calc(100svh-100px)] max-w-2xl mx-auto"
+        className="min-h-[calc(100svh)]mx-auto"
         title="Stock Slot Market"
       />
     );
