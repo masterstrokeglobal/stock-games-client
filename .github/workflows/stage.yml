@@ -1,6 +1,6 @@
 
 
-name: Node.js CI/CD
+name: Next.js Stage CI/CD
 
 on:
   push:
