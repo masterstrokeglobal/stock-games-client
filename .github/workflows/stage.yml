@@ -1,10 +1,8 @@
-
-
 name: Next.js Stage CI/CD
 
 on:
   push:
-    branches: [ "stage" ]
+    branches: ["stage"]
 
 jobs:
   build:
@@ -12,17 +10,36 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
-      
+
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci  #clean install
-    - run: |
-        touch .env
-        echo "${{ secrets.PROD_ENV_FILE }}" > .env #will create evn in hidden in vps can list out (ls -a)
-        
-       
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with: 
+          clean: true 
+
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: |
+          npm install -g pnpm
+          pnpm install --force
+  
+
+      - name: Create .env file
+        run: |
+          cat <<EOF > .env
+          ${{ secrets.STAGE_ENV_FILE }}
+          EOF
+
+      - name: Build app
+        run: pnpm run build
+
+      # - name: Start app with PM2
+      #   run: |
+      #     pm2 describe stock-derby-backend > /dev/null \
+      #       && pm2 restart stock-derby-backend \
+      #       || pm2 start dist/app.js --name stock-derby-backend
