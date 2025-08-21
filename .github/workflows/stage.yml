@@ -38,8 +38,6 @@ jobs:
       - name: Build app
         run: pnpm run build
 
-      # - name: Start app with PM2
-      #   run: |
-      #     pm2 describe stock-derby-backend > /dev/null \
-      #       && pm2 restart stock-derby-backend \
-      #       || pm2 start dist/app.js --name stock-derby-backend
+      - name: Start app with PM2
+        run: |
+          pm2 restart stock-derby-client
