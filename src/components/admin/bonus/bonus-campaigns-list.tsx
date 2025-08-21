@@ -221,7 +221,7 @@ const BonusCampaignsList: React.FC = () => {
                                     {campaign.bonusType === 'PERCENTAGE' ? `${campaign.bonusValue}%` : `$${campaign.bonusValue}`}
                                 </TableCell>
                                 <TableCell>
-                                    {campaign.wagerRequirementType === 'NONE' ? 'None' : `${campaign.wagerRequirementValue}x`}
+                                    {campaign.wagerRequirementType === 'NONE' ? 'None' : `${campaign.wagerRequirementValue}`}
                                 </TableCell>
                                 <TableCell>
                                     {campaign.directMainCredit ? 'Yes' : 'No'}

@@ -13,23 +13,23 @@ const CreateCampaignPage: React.FC = () => {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                    <Link href="/dashboard/bonus">
+                    {/* <Link href="/dashboard/bonus">
                         <Button variant="outline" size="sm">
                             <ArrowLeft className="w-4 h-4 mr-2" />
                             Back to Bonus Overview
                         </Button>
-                    </Link>
-                    <div>
+                    </Link> */}
+                    {/* <div>
                         <h1 className="text-3xl font-bold tracking-tight">Create Bonus Campaign</h1>
                         <p className="text-muted-foreground">
                             Create a new bonus campaign with advanced trigger events and configurations
                         </p>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
             {/* Breadcrumb */}
-            <nav className="flex" aria-label="Breadcrumb">
+            {/* <nav className="flex" aria-label="Breadcrumb">
                 <ol className="inline-flex items-center space-x-1 md:space-x-3">
                     <li>
                         <Link href="/dashboard" className="text-gray-500 hover:text-gray-700">
@@ -49,19 +49,13 @@ const CreateCampaignPage: React.FC = () => {
                     </li>
                     <li className="text-gray-900">Create Campaign</li>
                 </ol>
-            </nav>
+            </nav> */}
 
             {/* Main Content */}
             <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <Plus className="w-5 h-5 text-blue-500" />
-                        New Bonus Campaign
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
+             
+              
                     <CreateBonusCampaign />
-                </CardContent>
             </Card>
         </div>
     );

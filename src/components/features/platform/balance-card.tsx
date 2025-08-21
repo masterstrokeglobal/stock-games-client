@@ -50,13 +50,13 @@ const BalanceCard = ({ onDeposit, onWithdraw, onClose }: BalanceCardProps) => {
             </div>
 
             {/* Bonus Progress */}
-            <div className="w-full max-w-sm">
+            {/* <div className="w-full max-w-sm">
                 <BonusProgressComponent 
                     compact={true}
                     showHeader={false}
                     className="w-full"
                 />
-            </div>
+            </div> */}
 
             {
                 !user.isDemoUser ? (

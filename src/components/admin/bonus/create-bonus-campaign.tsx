@@ -35,24 +35,24 @@ const CreateBonusCampaign: React.FC = () => {
     const triggerEvents = [
         { value: 'FIRST_DEPOSIT', label: 'First Deposit' },
         { value: 'EVERY_DEPOSIT', label: 'Every Deposit' },
-        { value: 'LOSS_BASED', label: 'Loss Based' },
-        { value: 'WAGER_BASED', label: 'Wager Based' },
-        { value: 'LOGIN_BASED', label: 'Login Based' },
-        { value: 'GAME_SPECIFIC', label: 'Game Specific' },
-        { value: 'TIME_LIMITED', label: 'Time Limited' },
-        { value: 'CUSTOM_EVENT', label: 'Custom Event' }
+        // { value: 'LOSS_BASED', label: 'Loss Based' },
+        // { value: 'WAGER_BASED', label: 'Wager Based' },
+        // { value: 'LOGIN_BASED', label: 'Login Based' },
+        // { value: 'GAME_SPECIFIC', label: 'Game Specific' },
+        // { value: 'TIME_LIMITED', label: 'Time Limited' },
+        // { value: 'CUSTOM_EVENT', label: 'Custom Event' }
     ];
 
     const bonusTypes = [
         { value: 'PERCENTAGE', label: 'Percentage' },
         { value: 'FIXED_AMOUNT', label: 'Fixed Amount' },
-        { value: 'FREE_SPINS', label: 'Free Spins' },
-        { value: 'CASHBACK', label: 'Cashback' }
+        // { value: 'FREE_SPINS', label: 'Free Spins' },
+        // { value: 'CASHBACK', label: 'Cashback' }
     ];
 
     const wagerRequirementTypes = [
         { value: 'NONE', label: 'No Wager Requirement' },
-        { value: 'TURNOVER_MULTIPLIER', label: 'Turnover Multiplier' },
+        // { value: 'TURNOVER_MULTIPLIER', label: 'Turnover Multiplier' },
         { value: 'FIXED_AMOUNT', label: 'Fixed Amount' }
     ];
 
@@ -60,7 +60,7 @@ const CreateBonusCampaign: React.FC = () => {
     const paymentCategories = [
         { value: "CRYPTOCURRENCY", label: "🪙 Cryptocurrency (All crypto payments)" },
         { value: "BANK_TRANSFER", label: "🏦 Bank Transfer (UPI, RTGS, NEFT, cards)" },
-        { value: "INTERNAL_TRANSFER", label: "🔄 Internal Transfer (Agent/Admin)" }
+        // { value: "INTERNAL_TRANSFER", label: "🔄 Internal Transfer (Agent/Admin)" }
     ];
 
     const handleProviderChange = (providerId: ProviderType, checked: boolean) => {
@@ -224,7 +224,7 @@ const CreateBonusCampaign: React.FC = () => {
                             </Select>
                         </div>
 
-                        <div className="space-y-2">
+                        {/* <div className="space-y-2">
                             <Label htmlFor="wagerRequirementValue">Wager Requirement Value *</Label>
                             <Input
                                 id="wagerRequirementValue"
@@ -237,7 +237,7 @@ const CreateBonusCampaign: React.FC = () => {
                                 placeholder="0.00"
                                 disabled={formData.wagerRequirementType === 'NONE' || !!formData.directMainCredit}
                             />
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* Advanced Configuration */}
@@ -255,7 +255,7 @@ const CreateBonusCampaign: React.FC = () => {
                             />
                         </div>
 
-                        <div className="space-y-2">
+                        {/* <div className="space-y-2">
                             <Label htmlFor="validityDays">Validity (Days)</Label>
                             <Input
                                 id="validityDays"
@@ -265,7 +265,7 @@ const CreateBonusCampaign: React.FC = () => {
                                 min="1"
                                 placeholder="30"
                             />
-                        </div>
+                        </div> */}
 
                         <div className="space-y-2">
                             <Label htmlFor="spendingRequirement">Spending Requirement</Label>
