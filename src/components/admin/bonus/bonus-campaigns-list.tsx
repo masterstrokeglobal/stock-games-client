@@ -37,8 +37,16 @@ import {
 } from '@/react-query/enhanced-bonus-queries';
 import { Eye, Edit, Users, TrendingUp, Play, Pause, Trash2, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
+import CompanyContextBanner from './company-context-banner';
+import { 
+    handleBonusUpdateError, 
+    handleBonusDeletionError, 
+    handleBonusAssignmentError 
+} from '@/lib/utils/bonus-error-handler';
+import { useRouter } from 'next/navigation';
 
 const BonusCampaignsList: React.FC = () => {
+    const router = useRouter();
     const [statusFilter, setStatusFilter] = useState('all');
     const [triggerFilter, setTriggerFilter] = useState('all');
     const [selectedCampaign, setSelectedCampaign] = useState<any>(null);
@@ -94,9 +102,9 @@ const BonusCampaignsList: React.FC = () => {
                 status: newStatus
             });
             toast.success(`Campaign ${newStatus === 'active' ? 'activated' : newStatus === 'inactive' ? 'deactivated' : newStatus} successfully`);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error updating status:', error);
-            toast.error('Failed to update campaign status');
+            handleBonusUpdateError(error, router.push);
         }
     };
 
@@ -108,9 +116,9 @@ const BonusCampaignsList: React.FC = () => {
             toast.success('Campaign deleted successfully');
             setDeleteDialog(false);
             setCampaignToDelete(null);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error deleting campaign:', error);
-            toast.error('Failed to delete campaign');
+            handleBonusDeletionError(error, router.push);
         }
     };
 
@@ -130,8 +138,9 @@ const BonusCampaignsList: React.FC = () => {
             setAssignmentDialog(false);
             setUserId('');
             setDepositAmount(undefined);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error assigning bonus:', error);
+            handleBonusAssignmentError(error, router.push);
         }
     };
 
@@ -148,13 +157,14 @@ const BonusCampaignsList: React.FC = () => {
     }
 
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5" />
-                    Bonus Campaigns Management
-                </CardTitle>
-                
+        <div className="space-y-6">
+            <CompanyContextBanner />
+            
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-2xl font-bold">Bonus Campaigns</CardTitle>
+                </CardHeader>
+
                 {/* Filters */}
                 <div className="flex gap-4 mt-4">
                     <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -187,7 +197,7 @@ const BonusCampaignsList: React.FC = () => {
                         </SelectContent>
                     </Select>
                 </div>
-            </CardHeader>
+            </Card>
 
             <CardContent>
                 <Table>
@@ -228,7 +238,7 @@ const BonusCampaignsList: React.FC = () => {
                                 </TableCell>
                                 <TableCell className="max-w-[240px] truncate">
                                     {Array.isArray(campaign.applicablePaymentCategories) && campaign.applicablePaymentCategories.length > 0
-                                        ? campaign.applicablePaymentCategories.map(cat => {
+                                        ? campaign.applicablePaymentCategories.map((cat: string) => {
                                             const icon = cat === 'CRYPTOCURRENCY' ? '🪙' : 
                                                        cat === 'BANK_TRANSFER' ? '🏦' : 
                                                        cat === 'INTERNAL_TRANSFER' ? '🔄' : '';
@@ -436,7 +446,7 @@ const BonusCampaignsList: React.FC = () => {
                     </div>
                 </DialogContent>
             </Dialog>
-        </Card>
+        </div>
     );
 };
 

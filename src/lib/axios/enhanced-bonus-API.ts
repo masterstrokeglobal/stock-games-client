@@ -20,7 +20,6 @@ export interface CreateBonusCampaignRequest {
     validityDays?: number;
     currentUsageCount: number;
     isActive: boolean;
-    companyId?: number;
     // Optional scheduling/status fields
     termsAndConditions?: string;
     startDate?: string;

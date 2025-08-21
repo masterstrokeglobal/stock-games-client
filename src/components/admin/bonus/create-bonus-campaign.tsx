@@ -12,8 +12,12 @@ import { useCreateBonusCampaign, useGetAvailableProviders } from '@/react-query/
 import { CreateBonusCampaignRequest } from '@/lib/axios/enhanced-bonus-API';
 import { ProviderType } from '@/models/enhanced-bonus';
 import { toast } from 'sonner';
+import CompanyContextBanner from './company-context-banner';
+import { handleBonusCreationError } from '@/lib/utils/bonus-error-handler';
+import { useRouter } from 'next/navigation';
 
 const CreateBonusCampaign: React.FC = () => {
+    const router = useRouter();
     const [formData, setFormData] = useState<CreateBonusCampaignRequest>({
         bonusName: '',
         description: '',
@@ -98,13 +102,15 @@ const CreateBonusCampaign: React.FC = () => {
                 currentUsageCount: 0,
                 isActive: true
             });
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error creating bonus campaign:', error);
+            handleBonusCreationError(error, router.push);
         }
     };
 
     return (
         <Card className="w-full max-w-4xl mx-auto">
+            <CompanyContextBanner />
             <CardHeader>
                 <CardTitle className="text-2xl font-bold">Create Bonus Campaign</CardTitle>
             </CardHeader>
@@ -224,7 +230,7 @@ const CreateBonusCampaign: React.FC = () => {
                             </Select>
                         </div>
 
-                        {/* <div className="space-y-2">
+                        <div className="space-y-2">
                             <Label htmlFor="wagerRequirementValue">Wager Requirement Value *</Label>
                             <Input
                                 id="wagerRequirementValue"
@@ -237,7 +243,7 @@ const CreateBonusCampaign: React.FC = () => {
                                 placeholder="0.00"
                                 disabled={formData.wagerRequirementType === 'NONE' || !!formData.directMainCredit}
                             />
-                        </div> */}
+                        </div>
                     </div>
 
                     {/* Advanced Configuration */}
@@ -267,7 +273,7 @@ const CreateBonusCampaign: React.FC = () => {
                             />
                         </div> */}
 
-                        <div className="space-y-2">
+                        {/* <div className="space-y-2">
                             <Label htmlFor="spendingRequirement">Spending Requirement</Label>
                             <Input
                                 id="spendingRequirement"
@@ -278,7 +284,7 @@ const CreateBonusCampaign: React.FC = () => {
                                 step="0.01"
                                 placeholder="0.00"
                             />
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* Provider Selection */}

@@ -178,18 +178,18 @@ const companyMenuItems: MenuItem[] = [
         icon: Users,
         link: '/dashboard/affiliate'
     },
-    // {
-    //     name: "Bonus Management",
-    //     icon: GiftIcon,
-    //     subItems: [
-    //         { name: 'Overview', link: '/dashboard/bonus' },
-    //         { name: 'Create Campaign', link: '/dashboard/bonus/create-campaign' },
-    //         { name: 'Manage Campaigns', link: '/dashboard/bonus/campaigns' },
-    //         { name: 'Analytics Dashboard', link: '/dashboard/bonus/analytics' },
-    //         { name: 'User Progress', link: '/dashboard/bonus/user-progress' },
-    //         { name: 'Legacy Create', link: '/dashboard/bonus/create' },
-    //     ],
-    // },
+    {
+        name: "Bonus Management",
+        icon: GiftIcon,
+        subItems: [
+            { name: 'Overview', link: '/dashboard/bonus' },
+            { name: 'Create Campaign', link: '/dashboard/bonus/create-campaign' },
+            { name: 'Manage Campaigns', link: '/dashboard/bonus/campaigns' },
+            // { name: 'Analytics Dashboard', link: '/dashboard/bonus/analytics' },
+            // { name: 'User Progress', link: '/dashboard/bonus/user-progress' },
+            // { name: 'Legacy Create', link: '/dashboard/bonus/create' },
+        ],
+    },
     {
         name: "Casino Games",
         icon: GamepadIcon,
