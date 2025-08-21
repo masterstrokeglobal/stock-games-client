@@ -24,7 +24,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
     useCreateStockGamePlacement();
 
   const isPlaceOver = useIsPlaceOver(roundRecord);
-  const { maxPlacement = 1000, minPlacement = 100 } = useMaxPlacement(
+  const { maxPlacement , minPlacement = 100 } = useMaxPlacement(
     roundRecord.gameType
   );
 

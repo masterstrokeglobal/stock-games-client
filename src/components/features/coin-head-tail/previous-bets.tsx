@@ -5,7 +5,7 @@ import { RoundRecordGameType } from "@/models/round-record";
 import { useGetUserGameHistory } from "@/react-query/game-user-queries";
 import dayjs from "dayjs";
 import Image from "next/image";
-import { useMemo } from "react";
+import { useMemo, memo } from "react";
 import { CoinHeadTailHistory } from "./betting-history";
 
 // --- Coin Head/Tail Config ---
@@ -114,4 +114,4 @@ const BetsTable = ({ placements, listClassName }: { placements: CoinHeadTailHist
     );
 };
 
-export default PreviousBets;
+export default memo(PreviousBets);

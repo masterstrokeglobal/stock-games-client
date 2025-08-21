@@ -40,6 +40,8 @@ const WheelOfFortune = () => {
 
   if (isLoading || !roundRecord)
     return <GameLoadingScreen className="min-h-[calc(100svh)]" />;
+  if (isLoading || !roundRecord)
+    return <GameLoadingScreen className="min-h-[calc(100svh)]" />;
 
   if (isMobile) {
     return (
@@ -52,7 +54,7 @@ const WheelOfFortune = () => {
           autoPlay
           muted
           loop
-          className="absolute top-0 left-0 w-full h-[900px] object-cover"
+          className="absolute top-0 left-0 w-full h-[calc(75svh)] object-cover"
         />
         <StockPriceDisplay
           roundRecord={roundRecord}
