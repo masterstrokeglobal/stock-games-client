@@ -188,6 +188,12 @@ const CompanySuperAdminForm = ({ defaultValues, onSubmit, isLoading }: Props) =>
 
             <FormSwitch
                 control={control}
+                name="allowedCasino"
+                title="Allowed Casino"
+                description=" Allowed Casino games for the company"
+                label="Allowed Casino" />
+            <FormSwitch
+                control={control}
                 name="userVerfication"
                 title="User Verification"
                 description=" User Verification is required for creating an account"
