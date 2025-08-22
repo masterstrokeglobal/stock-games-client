@@ -29,9 +29,9 @@ const GameLayout = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         const timeout = setTimeout(() => {
             if (pathName !== "/game/platform") {
-                window.Tawk_API.hideWidget();
+                window.Tawk_API?.hideWidget();
             } else {
-                window.Tawk_API.showWidget();
+                window.Tawk_API?.showWidget();
             }
         }, 1000);
         return () => clearTimeout(timeout);
