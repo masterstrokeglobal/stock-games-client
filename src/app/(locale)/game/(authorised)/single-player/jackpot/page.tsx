@@ -39,7 +39,7 @@ export default function Home() {
         return (
             <MarketSelector
                 title="HI - LO Market"
-                roundRecordType={RoundRecordGameType.STOCK_SLOTS}
+                roundRecordType={RoundRecordGameType.STOCK_JACKPOT}
             />
         );
 
