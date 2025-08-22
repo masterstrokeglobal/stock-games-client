@@ -54,3 +54,19 @@ export const useUpdateSlotPair = () => {
         }
     });
 };
+
+export const useDeleteSlotPair = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: slotPairAPI.deleteSlotPair,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "slotPairs"
+            });
+            toast.success("Slot pair deleted successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error deleting slot pair");
+        }
+    });
+};
