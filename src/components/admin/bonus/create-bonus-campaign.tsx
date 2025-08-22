@@ -1,20 +1,19 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useCreateBonusCampaign, useGetAvailableProviders } from '@/react-query/enhanced-bonus-queries';
 import { CreateBonusCampaignRequest } from '@/lib/axios/enhanced-bonus-API';
-import { ProviderType } from '@/models/enhanced-bonus';
-import { toast } from 'sonner';
-import CompanyContextBanner from './company-context-banner';
 import { handleBonusCreationError } from '@/lib/utils/bonus-error-handler';
+import { ProviderType } from '@/models/enhanced-bonus';
+import { useCreateBonusCampaign, useGetAvailableProviders } from '@/react-query/enhanced-bonus-queries';
 import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
 
 const CreateBonusCampaign: React.FC = () => {
     const router = useRouter();
@@ -110,7 +109,6 @@ const CreateBonusCampaign: React.FC = () => {
 
     return (
         <Card className="w-full max-w-4xl mx-auto">
-            <CompanyContextBanner />
             <CardHeader>
                 <CardTitle className="text-2xl font-bold">Create Bonus Campaign</CardTitle>
             </CardHeader>
