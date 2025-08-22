@@ -39,7 +39,8 @@ const DepositForm = ({ userId }: { userId: string }) => {
                 await onDeposit(amount);
                 toast.success('Deposit successful!');
             }
-        } catch (error) {
+        } catch (error: any) {
+            console.error('Error depositing:', error);
             toast.error('Deposit failed');
         }
     };
@@ -76,7 +77,8 @@ const GameBetting = ({ userId }: { userId: string }) => {
                 await onBet(betAmount, providerId);
                 toast.success('Bet placed!');
             }
-        } catch (error) {
+        } catch (error: any) {
+            console.error('Error placing bet:', error);
             toast.error('Bet failed');
         }
     };
@@ -113,6 +115,7 @@ const BonusClaim = ({ userId, bonusId }: { userId: string; bonusId: string }) =>
                 toast.success('Bonus claimed!');
             }
         } catch (error) {
+            console.error('Error claiming bonus:', error);
             toast.error('Claim failed');
         }
     };

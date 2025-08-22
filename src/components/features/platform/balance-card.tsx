@@ -7,7 +7,6 @@ import User from "@/models/user";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
-import BonusProgressComponent from "@/components/features/bonus/bonus-progress";
 
 type BalanceCardProps = {
     onDeposit: () => void;

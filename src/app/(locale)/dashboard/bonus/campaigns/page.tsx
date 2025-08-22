@@ -1,11 +1,11 @@
 "use client";
 
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import BonusCampaignsList from '@/components/admin/bonus/bonus-campaigns-list';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, List } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import React from 'react';
 
 const ManageCampaignsPage: React.FC = () => {
     return (
@@ -33,28 +33,7 @@ const ManageCampaignsPage: React.FC = () => {
                 </Link>
             </div>
 
-            {/* Breadcrumb */}
-            <nav className="flex" aria-label="Breadcrumb">
-                <ol className="inline-flex items-center space-x-1 md:space-x-3">
-                    <li>
-                        <Link href="/dashboard" className="text-gray-500 hover:text-gray-700">
-                            Dashboard
-                        </Link>
-                    </li>
-                    <li>
-                        <span className="text-gray-400">/</span>
-                    </li>
-                    <li>
-                        <Link href="/dashboard/bonus" className="text-gray-500 hover:text-gray-700">
-                            Bonus Management
-                        </Link>
-                    </li>
-                    <li>
-                        <span className="text-gray-400">/</span>
-                    </li>
-                    <li className="text-gray-900">Manage Campaigns</li>
-                </ol>
-            </nav>
+
 
             {/* Main Content */}
             <Card>

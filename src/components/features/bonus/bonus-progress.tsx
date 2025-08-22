@@ -51,6 +51,7 @@ const BonusProgressComponent: React.FC<BonusProgressProps> = ({
                 await onTransaction('BONUS_CLAIM');
             }
         } catch (error) {
+            console.error('Error claiming bonus:', error);
             toast.error('Failed to claim bonus. Please try again.');
         }
     };

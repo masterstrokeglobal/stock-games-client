@@ -88,9 +88,9 @@ export const useRealTimeWallet = (options: UseRealTimeWalletOptions) => {
         }
     }, [userId]);
 
-    const onTransaction = useCallback(async (transactionType: string, amount?: number) => {
+    const onTransaction = useCallback(async (transactionType: string) => {
         if (userId) {
-            await realTimeUpdateService.onTransaction(userId, transactionType, amount);
+            await realTimeUpdateService.onTransaction(userId, transactionType);
         }
     }, [userId]);
 
