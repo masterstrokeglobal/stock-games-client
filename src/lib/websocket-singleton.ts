@@ -1,30 +1,8 @@
-interface BonusUpdateMessage {
-    type: 'BONUS_PROGRESS' | 'BONUS_COMPLETED' | 'BONUS_ASSIGNED' | 'BONUS_EXPIRED';
-    data: {
-        assignmentId?: string;
-        bonusName?: string;
-        potBalance?: number;
-        remainingWager?: number;
-        providerId?: number;
-        betAmount?: number;
-        totalProgress?: number;
-    };
-}
-
-interface WebSocketMessage {
-    type: string;
-    data: any;
-    bonusUpdate?: BonusUpdateMessage;
-}
-
 class WebSocketSingleton {
     private static instance: WebSocketSingleton;
     private ws: WebSocket | null = null;
-    private bonusWs: WebSocket | null = null;
     private listeners: Set<(message: any) => void> = new Set();
-    private bonusListeners: Set<(message: BonusUpdateMessage) => void> = new Set();
     private reconnectCount = 0;
-    private bonusReconnectCount = 0;
     private readonly DEFAULT_CONFIG = {
         reconnectAttempts: 5,
         reconnectInterval: 0,
@@ -58,13 +36,8 @@ class WebSocketSingleton {
 
         this.ws.onmessage = (event: MessageEvent) => {
             try {
-                const message: WebSocketMessage = JSON.parse(event.data);
+                const message = JSON.parse(event.data);
                 this.notifyListeners(message);
-                
-                // Handle bonus updates if present
-                if (message.bonusUpdate) {
-                    this.notifyBonusListeners(message.bonusUpdate);
-                }
             } catch (error) {
                 console.error('Error parsing WebSocket message:', error);
             }
@@ -84,45 +57,6 @@ class WebSocketSingleton {
         };
     }
 
-    connectBonusTracking(userId: string) {
-        if (this.bonusWs?.url
-            && this.bonusWs.url.includes(`userId=${userId}`)
-            && this.bonusWs.readyState === WebSocket.OPEN
-        ) {
-            return;
-        }
-
-        const bonusWebsocketUrl = process.env.NEXT_PUBLIC_BONUS_WEBSOCKET_URL || 'ws://localhost:8080/bonus';
-        this.bonusWs = new WebSocket(`${bonusWebsocketUrl}?userId=${userId}`);
-
-        this.bonusWs.onopen = () => {
-            console.log('Bonus WebSocket Connected');
-            this.bonusReconnectCount = 0;
-        };
-
-        this.bonusWs.onmessage = (event: MessageEvent) => {
-            try {
-                const message: BonusUpdateMessage = JSON.parse(event.data);
-                this.notifyBonusListeners(message);
-            } catch (error) {
-                console.error('Error parsing Bonus WebSocket message:', error);
-            }
-        };
-
-        this.bonusWs.onerror = (error: Event) => {
-            console.error('Bonus WebSocket error:', error);
-        };
-
-        this.bonusWs.onclose = (error) => {
-            this.bonusWs = null;
-            console.log('Bonus WebSocket Closed:', error);
-            if (this.bonusReconnectCount < this.DEFAULT_CONFIG.reconnectAttempts) {
-                this.bonusReconnectCount++;
-                this.connectBonusTracking(userId);
-            }
-        };
-    }
-
     addListener(callback: (message: any) => void) {
         this.listeners.add(callback);
     }
@@ -131,20 +65,8 @@ class WebSocketSingleton {
         this.listeners.delete(callback);
     }
 
-    addBonusListener(callback: (message: BonusUpdateMessage) => void) {
-        this.bonusListeners.add(callback);
-    }
-
-    removeBonusListener(callback: (message: BonusUpdateMessage) => void) {
-        this.bonusListeners.delete(callback);
-    }
-
     private notifyListeners(message: any) {
         this.listeners.forEach(listener => listener(message));
-    }
-
-    private notifyBonusListeners(message: BonusUpdateMessage) {
-        this.bonusListeners.forEach(listener => listener(message));
     }
 
     sendMessage(message: string) {
@@ -165,20 +87,7 @@ class WebSocketSingleton {
             this.ws.close();
             this.ws = null;
         }
-        if (this.bonusWs) {
-            this.bonusWs.close();
-            this.bonusWs = null;
-        }
         this.listeners.clear();
-        this.bonusListeners.clear();
-    }
-
-    disconnectBonusTracking() {
-        if (this.bonusWs) {
-            this.bonusWs.close();
-            this.bonusWs = null;
-        }
-        this.bonusListeners.clear();
     }
 }
 
