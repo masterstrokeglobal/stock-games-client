@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import React, { useState } from "react";
 import BettingHistory from "./BettingHistory";
 import HowToPlay from "./HowToPlay";
+import DemoVideo from "./demo-video";
 
 const MenuDialog = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +11,7 @@ const MenuDialog = ({ children }: { children: React.ReactNode }) => {
       <DialogTrigger className="w-full">{children}</DialogTrigger>
       <DialogContent
         showButton={false}
-        className="bg-transparent border-none w-full max-w-xl lg:max-w-3xl font-wendy-one text-xl"
+        className="bg-transparent border-none w-full max-w-xl lg:max-w-3xl font-wendy-one text-xl lg:max-h-[70vh]"
       >
         <div className="flex flex-col justify-start items-start relative">
           <div
@@ -50,6 +51,20 @@ const MenuDialog = ({ children }: { children: React.ReactNode }) => {
                 How to play
               </div>
             </HowToPlay>
+            <DemoVideo>
+              <div
+                style={{
+                  backgroundImage:
+                    "url('/images/slot-machine/menu-item-bg-2.png')",
+                  backgroundSize: "100% 100%",
+                  backgroundPosition: "center center",
+                  backgroundRepeat: "no-repeat",
+                }}
+                className="text-center px-3 py-2"
+              >
+                Demo Video
+              </div>
+            </DemoVideo>
           </div>
         </div>
       </DialogContent>

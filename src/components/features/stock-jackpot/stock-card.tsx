@@ -17,12 +17,12 @@ const StockCard = ({ stock, className, amount, roundRecord }: { stock?: RankedMa
     return (
         <div className="relative  bg-[#D9D9D9] rounded-xl p-1">
             <div className={cn(
-                "w-10 md:w-16 lg:w-20 min-h-14 md:min-h-16 flex flex-col justify-between lg:min-h-20 xl:min-h-24 rounded-lg shadow-lg relative transform  transition-transform cursor-pointer md:p-2 p-1",
+                "w-12 md:w-16 lg:w-20 min-h-14 md:min-h-16 flex flex-col justify-between lg:min-h-20 xl:min-h-24 rounded-lg shadow-lg relative transform  transition-transform cursor-pointer md:p-2 sm:p-1 p-0.5",
                 className
             )} style={{ boxShadow: "0px 0px 1.5px 1px #005A7B" }} >
                 <div className="h-full flex flex-col items-center justify-center sm:gap-0.5">
                     <span className="font-spacemono text-[8px] md:text-[10px] lg:text-xs uppercase tracking-tighter text-[#005C80] text-center font-bold truncate w-full">{stock.name}</span>
-                    <span className={cn(" whitespace-nowrap  font-space-grotesk text-center md:text-[10px] text-[8px]  font-bold truncate w-full", Number(stock.change_percent) >= 0 ? "text-[#519900]" : "text-[#E60004]")}>
+                    <span className={cn(" whitespace-nowrap  font-space-grotesk text-center md:text-[10px] sm:text-[8px] xs:text-[6px] text-[5px]  font-bold truncate w-full", Number(stock.change_percent) >= 0 ? "text-[#519900]" : "text-[#E60004]")}>
                         {stock.currency}
                         {price ? price.toFixed(2) :     "-"}
                     </span>
@@ -89,7 +89,7 @@ const StockCardStack = ({ roundRecord, roundRecordWithWinningId }: { roundRecord
                             <StockCard key={item.id} stock={item.stock} amount={item.amount} roundRecord={roundRecord} />
                         ))
                     ) : (
-                        <div className="text-center border border-dashed border-red-600  md:p-2 p-1 text-red-600 font-semibold text-[10px] md:text-sm rounded-lg">No Low stocks selected</div>
+                        <div className="text-center border border-dashed h-fit border-red-600  md:p-2 p-1 text-red-600 font-semibold text-[10px] md:text-sm rounded-lg">No Low stocks selected&nbsp;</div>
                     )}
                 </div>
             </div>
@@ -101,7 +101,7 @@ const StockCardStack = ({ roundRecord, roundRecordWithWinningId }: { roundRecord
                             <StockCard key={item.id} stock={item.stock} amount={item.amount} roundRecord={roundRecord} />
                         ))
                     ) : (
-                        <div className="text-center text-green-600 text-[10px] md:text-sm border border-dashed border-green-600  font-semibold md:p-2 p-1 rounded-lg">No High stocks selected</div>
+                        <div className="text-center text-green-600 h-fit text-[10px] md:text-sm border border-dashed border-green-600  font-semibold md:p-2 p-1 rounded-lg">No High stocks selected</div>
                     )}
                 </div>
             </div>

@@ -66,20 +66,20 @@ const gameHistoryColumns: ColumnDef<GameRecord>[] = [
     ),
   },
   {
+    accessorKey: "winningMarketItem",
+    header: () => <TranslatedHeader translationKey="headers.winner" />,
+    cell: ({ row }) => (
+      <span className="font-semibold capitalize">
+        {row.original.winningMarketItem.name}
+      </span>
+    ),
+  },
+  {
     accessorKey: "startTime",
     header: () => <TranslatedHeader translationKey="headers.start-time" />,
     cell: ({ row }) => (
       <span className="whitespace-nowrap">
         {dayjs(row.original.startTime).format('DD MMM YYYY, hh:mm A')}
-      </span>
-    ),
-  },
-  {
-    accessorKey: "endTime",
-    header: () => <TranslatedHeader translationKey="headers.end-time" />,
-    cell: ({ row }) => (
-      <span className="whitespace-nowrap">
-        {dayjs(row.original.endTime).format('DD MMM YYYY, hh:mm A')}
       </span>
     ),
   },
@@ -101,15 +101,7 @@ const gameHistoryColumns: ColumnDef<GameRecord>[] = [
       </span>
     ),
   },
-  {
-    accessorKey: "winningMarketItem",
-    header: () => <TranslatedHeader translationKey="headers.winner" />,
-    cell: ({ row }) => (
-      <span className="font-semibold capitalize">
-        {row.original.winningMarketItem.name}
-      </span>
-    ),
-  },
+ 
   {
     accessorKey: "netProfitLoss",
     header: () => <TranslatedHeader translationKey="headers.profit-loss" />,
@@ -120,7 +112,7 @@ const gameHistoryColumns: ColumnDef<GameRecord>[] = [
     header: () => <TranslatedHeader translationKey="headers.actions" />,
     cell: ({ row }) => (
       <div className="flex items-center justify-center space-x-2">
-        <Link href={`/game/betting-history/${row.original.roundId}`}>
+        <Link href={`/game/single-player/stock-roulette/betting-history/${row.original.roundId}`}>
           <Button size="sm" variant="secondary">
             <span className="text-sm">View</span>
           </Button>

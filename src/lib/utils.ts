@@ -2,6 +2,7 @@ import { PlacementType } from "@/models/game-record";
 import { SchedulerType } from "@/models/market-item";
 import { RoundRecord, RoundRecordGameType } from "@/models/round-record";
 import { clsx, type ClassValue } from "clsx";
+import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -75,6 +76,8 @@ export const getPlacementString = (bet: { market: number[], placementType: Place
 
   }
 }
+
+
 
 
 export const HIGHLIGHT_APP_KEY = process.env.NEXT_PUBLIC_HIGHLIGHT_APP_KEY
@@ -445,7 +448,44 @@ export const stockGames = [
     }
 ]
 
+export type StockGame = {
+    href: string;
+    src: string;
+    name: string;
+    alt: string;
+    type: RoundRecordGameType;
+}
 export const TAWK_PROPERTY_ID = process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID??""
 export const TAWK_WIDGET_ID = process.env.NEXT_PUBLIC_TAWK_WIDGET_ID??""
 
 export const isTawkEnabled = !!TAWK_PROPERTY_ID && !!TAWK_WIDGET_ID;
+
+
+export const copyToClipboard = async (text: string) => {
+  try {
+      await navigator.clipboard.writeText(text);
+      toast.success("Wallet address copied to clipboard");
+  } catch (err) {
+      console.error(err);
+      toast.error("Failed to copy wallet address");
+  }
+};
+
+export const getRandomPlacementString = () => {
+  const randomIndex = randomNumber(0,5,1);
+    switch(randomIndex){
+      case 0:
+        return `Single ${randomNumber(1,16,1)}`
+      case 1:
+        return "Red"
+      case 2:
+        return "Black"
+      case 3:
+        return "Even"
+      case 4:
+        return "Odd"
+
+      default:
+        return `Single ${randomNumber(1,16,1)}`
+    }
+}

@@ -13,9 +13,7 @@ const MarketRow: React.FC<{
 }> = ({ items }) => (
   <div
     className={cn(
-      "xsm:flex grid grid-cols-3 overflow-x-auto w-full justify-around items-center px-2",
-      "xs:flex-row flex-col"
-    )}
+      "flex overflow-x-auto w-full justify-around items-center px-2")}
     style={{
       zIndex: 20,
       background: 'linear-gradient(91deg, #0E377B 1.49%, #000E38 100%)',
@@ -484,7 +482,7 @@ export const GameBoard: React.FC<PropsWithChildren<{
       {children}
       <div className="flex xl:justify-around justify-between flex-col h-full gap-2 w-full">
         <MarketRow items={displayItems.slice(0, 7)} />
-        <div className="relative z-0 h-[20rem]   w-full">
+        <div className="relative z-0 sm:h-[18rem] h-[15rem] w-full">
           {/* Market items display */}
           <WinnerOverlay roundRecordWithWinningId={roundRecordWithWinningId} />
           <img src="/images/seven-up-down/board.png" alt="board" className={cn("absolute inset-0 w-full h-full object-fill",isPending && "animate-pulse")} />
@@ -505,7 +503,7 @@ export const GameBoard: React.FC<PropsWithChildren<{
           <div
             onClick={() => handleBoardClick(SevenUpDownPlacementType.UP)}
             className={cn(
-              "absolute inset-x-0 top-0 h-[10rem] cursor-pointer transition-all duration-500 flex flex-col items-center justify-start pt-4",
+              "absolute inset-x-0 top-0 sm:h-[9rem] h-[7.5rem] cursor-pointer transition-all duration-500 flex flex-col items-center justify-start pt-4",
             )}
           >
             <div className="text-2xl font-protest-strike opacity-80 text-white">7 Up</div>
@@ -521,7 +519,7 @@ export const GameBoard: React.FC<PropsWithChildren<{
           <div
             onClick={() => handleBoardClick(SevenUpDownPlacementType.DOWN)}
             className={cn(
-              "absolute inset-x-0 bottom-0 cursor-pointer transition-all duration-500 h-[10rem] flex flex-col items-center justify-end py-4",
+              "absolute inset-x-0 bottom-0 cursor-pointer transition-all duration-500 sm:h-[9rem] h-[7.5rem] flex flex-col items-center justify-end py-4",
             )}
           >
             <div className="text-2xl font-protest-strike opacity-80  text-white">7 Down</div>

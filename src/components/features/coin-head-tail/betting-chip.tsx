@@ -32,7 +32,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
     return (
         <>
-            <div className="w-full flex relative z-10 flex-col md:flex-row items-center justify-center gap-4 bg-transparent px-2 ">
+            <div className="w-full flex relative z-10 flex-col md:flex-row items-center justify-center bg-transparent px-2 ">
                 {/* Chips */}
                 <div className="flex ">
                     {coinValues?.map((amount, idx) => (

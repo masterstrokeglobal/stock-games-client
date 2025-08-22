@@ -1,9 +1,9 @@
 "use client";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { cn, getPlacementString, randomNumber, randomUsername } from "@/lib/utils";
+import { cn, getPlacementString, getRandomPlacementString, randomNumber, randomUsername } from "@/lib/utils";
 import GameRecord from "@/models/game-record";
 import { RoundRecord } from "@/models/round-record";
-import { useGetMyPlacements } from "@/react-query/game-record-queries";
+import { useGetMyPlacements, useGetTopPlacements } from "@/react-query/game-record-queries";
 import { useTranslations } from "next-intl";
 import { useMemo, useRef } from "react";
 
@@ -15,6 +15,7 @@ type Props = {
 const CurrentBets = ({ className, round }: Props) => {
     const t = useTranslations("game");
     const { data, isSuccess } = useGetMyPlacements({ roundId: round.id.toString() });
+    const { data: topPlacements ,isSuccess:topBetsSuccess} = useGetTopPlacements(round.id.toString());
 
     const currentBetsData: GameRecord[] = useMemo(() => {
         if (isSuccess) {
@@ -71,7 +72,7 @@ const CurrentBets = ({ className, round }: Props) => {
                                         style={{ display: 'flex', flexDirection: 'row' }}
                                     >
                                         <td className="p-2 text-sm text-balance text-game-secondary rounded-l-lg flex-1">
-                                            {getPlacementString(bet, round)}
+                                            {getPlacementString(bet, round) == "-" ? getRandomPlacementString() : getPlacementString(bet, round)}
                                         </td>
                                         <td className="p-2 text-sm text-game-secondary flex-1">
                                             {bet.user?.username || randomUsername()}
@@ -101,6 +102,24 @@ const CurrentBets = ({ className, round }: Props) => {
         </div>
     );
 
+    const topBets: GameRecord[] = useMemo(() => {
+        if (topBetsSuccess) {
+            const data = topPlacements.data || [];
+            
+            // If we have 10 or more items, return first 10
+            if (data.length >= 10) {
+                return data.slice(0, 10);
+            }
+            
+            // If we have less than 10 items, pad with empty objects
+            const emptyItems = Array(10 - data.length).fill({} as GameRecord);
+            return [...data, ...emptyItems];
+        }
+        
+        // If not successful, return 10 empty objects
+        return Array(10).fill({} as GameRecord);
+    }, [topBetsSuccess, topPlacements]);
+
     return (
         <section
             ref={sectionRef}
@@ -111,7 +130,7 @@ const CurrentBets = ({ className, round }: Props) => {
                     <BetTable title={t("current-bets")} data={currentBetsData} showTotal={true} />
                 </div>
                 <div className="max-h-96 w-full flex-1 md:rounded-sm overflow-hidden game-gradient-card-parent">
-                    <BetTable title={t("top-bets")} data={Array.from({ length: 10 }).map(() => ({}))} />
+                    <BetTable title={t("top-bets")} data={topBets} />
                 </div>
             </div>
         </section>

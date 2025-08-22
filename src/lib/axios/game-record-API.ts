@@ -83,4 +83,14 @@ export const gameRecordAPI = {
     return api.get(`/stock-slot-placement/result/${roundId}`);
   },
 
+  //auto-bets
+  createAutoBet: async (data: any) => {
+    return api.post("/game-records/auto-bets", data);
+  },
+  getAutoBet: async () => {
+    return api.get("/game-records/auto-bets");
+  },
+  deleteAutoBet: async () => {
+    return api.delete("/game-records/auto-bets");
+  },
 };

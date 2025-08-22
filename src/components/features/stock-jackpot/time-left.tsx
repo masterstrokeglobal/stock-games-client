@@ -20,11 +20,11 @@ const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, cla
       <div className="relative flex items-center justify-center">
         <div
           className={cn(
-            "flex items-center sm:gap-4 px-3 sm:px-6 rounded-full border",
-            "h-9 sm:h-12 min-w-[260px] sm:min-w-[260px] max-w-full",
+            "flex items-center gap-4 px-3 sm:px-6 rounded-full border",
+            "h-10 sm:h-12 w-fit sm:min-w-[260px] max-w-full",
             "border-[#FFFFFFB2] shadow-lg transition-all duration-500",
             // Dynamic background based on betting status
-            isPlaceOver 
+            isPlaceOver
               ? "bg-red-500/80 border-red-300/80" // Red when betting is closed
               : "bg-green-500/80 border-green-300/80" // Green when betting is open
           )}
@@ -48,11 +48,10 @@ const TimeDisplay = ({ roundRecord, className }: { roundRecord: RoundRecord, cla
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={displayNumber}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                     transition={{
-                      y: { type: "spring", stiffness: 400, damping: 25 },
                       opacity: { duration: 0.15 }
                     }}
                     className={cn(

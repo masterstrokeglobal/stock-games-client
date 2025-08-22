@@ -18,6 +18,7 @@ export class Company {
     depositBonusPercentageEnabled?: boolean;
     paymentImage?: string;
     domain?: string;
+    askWithdrawlOption?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
     externalPayIn!: boolean;
@@ -57,6 +58,7 @@ export class Company {
         this.userVerfication = params.userVerfication || false;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;
+        this.askWithdrawlOption = params.askWithdrawlOption || false;
         this.paymentImage = params.paymentImage;
         this.depositBonusPercentage = params.depositBonusPercentage;
         this.otpIntegration = params.otpIntegration || false;

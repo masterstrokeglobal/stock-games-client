@@ -1,23 +1,22 @@
 "use client";
 import GameLoadingScreen from "@/components/common/game-loading-screen";
+import GameMaintenanceMarquee from "@/components/common/game-maintainaince-screen";
 import AdvertismentDialog from "@/components/features/advertisement/advertismemnt-dialog";
 import CurrentBets from "@/components/features/game/current-bets";
 import LastWinners from "@/components/features/game/last-winners";
 import LeaderBoard from "@/components/features/game/leaderboard";
 import Navbar from "@/components/features/game/navbar";
 import RouletteGame from "@/components/features/game/roulette-game";
+import RouletteGameHeader from "@/components/features/game/roulette-game-header";
 import GameHeaderMobile from "@/components/features/game/roulette-mobile-header";
 import HorseRace from "@/components/features/horse-animation/horse";
 import { useHorseRaceSound } from "@/context/audio-context";
 import { useCurrentGame, useIsPlaceOver } from "@/hooks/use-current-game";
-import useWindowSize from "@/hooks/use-window-size";
-import { cn, TAWK_PROPERTY_ID, TAWK_WIDGET_ID } from "@/lib/utils";
-import { RoundRecord } from "@/models/round-record";
-import TawkMessengerReact from '@tawk.to/tawk-messenger-react';
-import { isTawkEnabled } from "@/lib/utils";
-import GameMaintenanceMarquee from "@/components/common/game-maintainaince-screen";
-import useSchedularInactive from "@/hooks/use-schedular-inactive";
 import { useGameType } from "@/hooks/use-game-type";
+import useSchedularInactive from "@/hooks/use-schedular-inactive";
+import useWindowSize from "@/hooks/use-window-size";
+import { cn } from "@/lib/utils";
+import { RoundRecord } from "@/models/round-record";
 
 declare global {
     interface Window {
@@ -38,6 +37,7 @@ const GamePage = () => {
     return (<>
         <section className={cn("bg-background-game pt-14 md:min-h-screen")}>
             <Navbar />
+            <RouletteGameHeader title="Stock Roulette" />
             {(!isActive && !isFetching) && (
                 <GameMaintenanceMarquee />
             )}
@@ -51,7 +51,7 @@ const GamePage = () => {
                     {roundRecord && <LeaderBoard roundRecord={roundRecord} />}
                 </div>
                 <div
-                    className="lg:col-span-7 col-span-8 bg-las relative  row-span-5 h-fit   rounded-sm overflow-y-auto game-gradient-card-parent">
+                    className="lg:col-span-7 col-span-8 bg-las relative row-span-5 h-fit rounded-sm overflow-y-auto game-gradient-card-parent">
                     {roundRecord && <RouletteGame roundRecord={roundRecord} />}
                 </div>
                 <div
@@ -65,10 +65,6 @@ const GamePage = () => {
 
             </main>}
             <AdvertismentDialog />
-            {isTawkEnabled && <TawkMessengerReact
-                propertyId={TAWK_PROPERTY_ID}
-                widgetId={TAWK_WIDGET_ID}
-            />}
             {isMobile && roundRecord && <MobileGame roundRecord={roundRecord} />}
         </section>
     </>
@@ -85,7 +81,7 @@ const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
         {
             roundRecord && <GameHeaderMobile roundRecord={roundRecord} />
         }
-        <HorseRace roundRecord={roundRecord} />
+        {isPlaceOver && <HorseRace roundRecord={roundRecord} />}
         {!isPlaceOver && <main className="bg-[#0A1634]">
             <div className="md:px-2">
                 {roundRecord && <RouletteGame className="mb-4" roundRecord={roundRecord} />}
