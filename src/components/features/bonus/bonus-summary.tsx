@@ -1,20 +1,20 @@
 "use client";
 
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { Coins, TrendingUp, Trophy, Wallet, Gift, Target, Timer } from 'lucide-react';
-import { useGetUserBonusSummary, useEnhancedUserBonusStatus } from '@/react-query/enhanced-bonus-queries';
 import { useAuthStore } from '@/context/auth-context';
 import { cn } from '@/lib/utils';
+import { useEnhancedUserBonusStatus, useGetUserBonusSummary } from '@/react-query/enhanced-bonus-queries';
+import { Gift, Target, TrendingUp, Trophy, Wallet } from 'lucide-react';
+import React from 'react';
 
 interface BonusSummaryProps {
     className?: string;
     showHeader?: boolean;
 }
 
-interface BonusAssignmentData {
+export interface BonusAssignmentData {
     id: number;
     initialBonusAmount: number;
     potBalance: number;

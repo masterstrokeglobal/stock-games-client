@@ -27,9 +27,6 @@ const BonusProgressComponent: React.FC<BonusProgressProps> = ({
     
     // Real-time wallet integration
     const { 
-        mainBalance, 
-        bonusBalance, 
-        onBet, 
         onTransaction 
     } = useRealTimeWallet({ 
         userId: userDetails?.id?.toString() || null,
