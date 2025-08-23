@@ -27,9 +27,6 @@ const BonusProgressComponent: React.FC<BonusProgressProps> = ({
     
     // Real-time wallet integration
     const { 
-        mainBalance, 
-        bonusBalance, 
-        onBet, 
         onTransaction 
     } = useRealTimeWallet({ 
         userId: userDetails?.id?.toString() || null,
@@ -54,7 +51,7 @@ const BonusProgressComponent: React.FC<BonusProgressProps> = ({
                 await onTransaction('BONUS_CLAIM');
             }
         } catch (error) {
-            toast.error('Failed to claim bonus. Please try again.');
+            toast.error(`Failed to claim bonus. Please try again ${error}`);
         }
     };
 

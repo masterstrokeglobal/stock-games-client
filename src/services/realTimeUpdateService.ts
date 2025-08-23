@@ -209,7 +209,7 @@ class RealTimeUpdateService {
      * Handle any wallet-affecting transaction
      */
     async onTransaction(userId: string, transactionType: string, amount?: number) {
-        console.log(`Transaction ${transactionType} completed for user ${userId}`);
+        console.log(`Transaction ${transactionType} completed for user ${userId} , amount: ${amount}`);
         // The balance will ALWAYS be accurate because auto-sync runs after every wallet update
         await this.checkAfterTransaction(userId, 1000);
     }

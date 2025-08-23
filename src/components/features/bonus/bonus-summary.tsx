@@ -4,7 +4,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Coins, TrendingUp, Trophy, Wallet, Gift, Target, Timer } from 'lucide-react';
+import {  TrendingUp, Trophy, Wallet, Gift, Target } from 'lucide-react';
 import { useGetUserBonusSummary, useEnhancedUserBonusStatus } from '@/react-query/enhanced-bonus-queries';
 import { useAuthStore } from '@/context/auth-context';
 import { cn } from '@/lib/utils';
@@ -14,23 +14,23 @@ interface BonusSummaryProps {
     showHeader?: boolean;
 }
 
-interface BonusAssignmentData {
-    id: number;
-    initialBonusAmount: number;
-    potBalance: number;
-    requiredWager: number;
-    completedWager: number;
-    remainingWager: number;
-    status: string;
-    wagerProgress: string;
-    wagerProgressNumeric: number;
-    isExpired: boolean;
-    daysUntilExpiry: number | null;
-    statusDisplay: string;
-    bonusName: string;
-    triggerEvent: string;
-    createdAt: string;
-}
+// interface BonusAssignmentData {
+//     id: number;
+//     initialBonusAmount: number;
+//     potBalance: number;
+//     requiredWager: number;
+//     completedWager: number;
+//     remainingWager: number;
+//     status: string;
+//     wagerProgress: string;
+//     wagerProgressNumeric: number;
+//     isExpired: boolean;
+//     daysUntilExpiry: number | null;
+//     statusDisplay: string;
+//     bonusName: string;
+//     triggerEvent: string;
+//     createdAt: string;
+// }
 
 const BonusSummaryComponent: React.FC<BonusSummaryProps> = ({ 
     className, 

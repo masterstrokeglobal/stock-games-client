@@ -30,12 +30,11 @@ import {
 } from '@/components/ui/dialog';
 import { 
     useGetAllBonusCampaigns, 
-    useUpdateBonusCampaign,
     useAssignBonus,
     useUpdateCampaignStatus,
     useDeleteBonusCampaign
 } from '@/react-query/enhanced-bonus-queries';
-import { Eye, Edit, Users, TrendingUp, Play, Pause, Trash2, AlertTriangle } from 'lucide-react';
+import { Eye, Edit, Users, Play, Pause, Trash2, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import CompanyContextBanner from './company-context-banner';
 import { 
@@ -61,7 +60,7 @@ const BonusCampaignsList: React.FC = () => {
         triggerEvent: triggerFilter !== 'all' ? triggerFilter : undefined
     });
 
-    const updateCampaignMutation = useUpdateBonusCampaign();
+    // const updateCampaignMutation = useUpdateBonusCampaign();
     const assignBonusMutation = useAssignBonus();
     const updateStatusMutation = useUpdateCampaignStatus();
     const deleteCampaignMutation = useDeleteBonusCampaign();
@@ -361,7 +360,7 @@ const BonusCampaignsList: React.FC = () => {
                                                 <DialogHeader>
                                                     <DialogTitle>Manual Bonus Assignment</DialogTitle>
                                                     <DialogDescription>
-                                                        Assign "{selectedCampaign?.bonusName}" to a specific user
+                                                        Assign {selectedCampaign?.bonusName} to a specific user
                                                     </DialogDescription>
                                                 </DialogHeader>
                                                 <div className="space-y-4">
@@ -422,7 +421,7 @@ const BonusCampaignsList: React.FC = () => {
                             Delete Campaign
                         </DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to delete the campaign "{campaignToDelete?.name}"? 
+                            Are you sure you want to delete the campaign {campaignToDelete?.name}? 
                             This action cannot be undone and will permanently remove all associated data.
                         </DialogDescription>
                     </DialogHeader>

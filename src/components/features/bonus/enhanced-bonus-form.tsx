@@ -54,7 +54,7 @@ const EnhancedBonusForm: React.FC<EnhancedBonusFormProps> = ({ onSuccess, onCanc
         handleSubmit,
         watch,
         setValue,
-        formState: { errors, isValid, isValidating, isDirty }
+        formState: { errors}
     } = useForm<BonusFormData>({
         resolver: zodResolver(bonusFormSchema),
         mode: 'onChange',
