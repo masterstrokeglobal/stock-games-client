@@ -25,7 +25,7 @@ export default function Home() {
     const [tab, setTab] = useGameType();
     const { isDesktop } = useWindowSize()
     const isPlacementOver = usePlacementOver(roundRecord);
-    const roundRecordWithWinningId = useWinningId(roundRecord);
+    const roundRecordWithWinningId = useWinningId(roundRecord, 0);
     const { marketSelected } = useMarketSelector();
 
     const handleGlobalBetAmountChange = (amount: number) => {
@@ -48,7 +48,7 @@ export default function Home() {
         <div className="flex flex-col h-[100svh] min-h-[650px] pt-12 bg-[#00627A] overflow-hidden  relative bg-repeat bg-center text-white  mx-auto">
             <img src="/images/jackpot/bg.png" className="w-full hidden; md:h-full h-[350px] object-cover absolute z-0" />
             <Navbar />
-            <Header className="z-10 relative sm:mt-4 mt-2 px-4">
+            <Header className="z-10 relative mt-4 px-4">
                 {roundRecord && <TimeDisplay className="md:hidden flex" roundRecord={roundRecord} />}
             </Header>
             <Tabs className="flex-1 w-full flex justify-between flex-col" value={tab} onValueChange={(value) => setTab(value as SchedulerType)}>
