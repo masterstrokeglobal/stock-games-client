@@ -12,7 +12,7 @@ First, run a development server:
               
               
 ```bash  
-pnpm dev   
+pnpm dev    
 ```   
   
     
