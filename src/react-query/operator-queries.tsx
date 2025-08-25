@@ -72,3 +72,34 @@ export const useCreateUser = () => {
         },
     });
 };
+
+// Update operator
+export const useUpdateOperator = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: operatorAPI.updateOperator,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "operators";
+                },
+            });
+            toast.success("Operator updated successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error updating operator");
+        },
+    });
+};
+
+// Get operator by id
+export const useGetOperatorById = (id: number) => {
+    return useQuery({
+        queryKey: ["operator", id],
+        queryFn: async () => {
+            const operator = await operatorAPI.getOperatorById(id);
+            return operator.data;
+        },
+    });
+};

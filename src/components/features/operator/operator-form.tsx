@@ -9,25 +9,44 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+const createOperatorInputSchema = (isEditing: boolean = false) => {
+    const baseSchema = z.object({
+        name: z.string().min(2, "Name is required").max(100),
+        email: z.string().email("Invalid email address"),
+        password: isEditing 
+            ? z.string().optional().or(z.string().min(6, "Password must be at least 6 characters"))
+            : z.string().min(6, "Password must be at least 6 characters"),
+        confirmPassword: isEditing 
+            ? z.string().optional()
+            : z.string().min(6, "Confirm password is required"),
+        role: z.nativeEnum(OperatorRole, { required_error: "Role is required" }),
+        maxBalance: z.coerce.number().min(0, "Max balance must be non-negative").default(0),
+        percentageShare: z.coerce.number().min(0, "Percentage share must be non-negative").max(100, "Percentage share cannot exceed 100").default(0),
+        dmMaxBalance: z.coerce.number().min(0, "DM max balance must be non-negative").default(0).optional(),
+        masterMaxBalance: z.coerce.number().min(0, "Master max balance must be non-negative").default(0).optional(),
+        agentMaxBalance: z.coerce.number().min(0, "Agent max balance must be non-negative").default(0).optional(),
+    });
 
+    if (isEditing) {
+        return baseSchema.refine((data) => {
+            // Only validate password match if password is provided
+            if (data.password && data.password.length > 0) {
+                return data.password === data.confirmPassword;
+            }
+            return true;
+        }, {
+            message: "Passwords do not match",
+            path: ["confirmPassword"]
+        });
+    } else {
+        return baseSchema.refine((data) => data.password === data.confirmPassword, {
+            message: "Passwords do not match",
+            path: ["confirmPassword"]
+        });
+    }
+};
 
-export const createOperatorInputSchema = z.object({
-    name: z.string().min(2, "Name is required").max(100),
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string().min(6, "Confirm password is required"),
-    role: z.nativeEnum(OperatorRole, { required_error: "Role is required" }),
-    maxBalance: z.coerce.number().min(0, "Max balance must be non-negative").default(0),
-    percentageShare: z.coerce.number().min(0, "Percentage share must be non-negative").max(100, "Percentage share cannot exceed 100").default(0),
-    dmMaxBalance: z.coerce.number().min(0, "DM max balance must be non-negative").default(0).optional(),
-    masterMaxBalance: z.coerce.number().min(0, "Master max balance must be non-negative").default(0).optional(),
-    agentMaxBalance: z.coerce.number().min(0, "Agent max balance must be non-negative").default(0).optional(),
-}).refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"]
-});
-
-export type OperatorFormValues = z.infer<typeof createOperatorInputSchema>;
+export type OperatorFormValues = z.infer<ReturnType<typeof createOperatorInputSchema>>;
 
 type Props = {
     onSubmit: (data: OperatorFormValues) => void;
@@ -56,13 +75,12 @@ const OperatorForm = ({
     currentUserRole
 }: Props) => {
     const form = useForm<OperatorFormValues>({
-        resolver: zodResolver(createOperatorInputSchema),
+        resolver: zodResolver(createOperatorInputSchema(isEditing)),
         defaultValues,
     });
 
     const { control, handleSubmit, watch } = form;
     const passwordValue = watch("password");
-    const selectedRole = watch("role");
 
     // Check if current user is super duper master (can set balance limits)
     const canSetBalanceLimits = currentUserRole === AdminRole.SUPER_ADMIN;
@@ -124,6 +142,7 @@ const OperatorForm = ({
                 control={control}
                 name="role"
                 label="Role*"
+                disabled
                 placeholder="Select role"
                 options={roleOptions}
             />
@@ -179,15 +198,15 @@ const OperatorForm = ({
             <FormPassword
                 control={control}
                 name="password"
-                label="Password*"
+                label={isEditing ? "Password (leave empty to keep current)" : "Password*"}
                 type="password"
-                placeholder="Enter password"
+                placeholder={isEditing ? "Enter new password (optional)" : "Enter password"}
             />
 
             <FormPassword
                 control={control}
                 name="confirmPassword"
-                label="Confirm Password*"
+                label={isEditing ? "Confirm Password" : "Confirm Password*"}
                 type="password"
                 placeholder="Confirm password"
                 disabled={!passwordValue}
@@ -197,6 +216,7 @@ const OperatorForm = ({
                 <Button
                     type="button"
                     variant="outline"
+                    className="w-full md:w-auto"
                     onClick={() => form.reset()}
                 >
                     Reset
@@ -204,6 +224,7 @@ const OperatorForm = ({
                 <Button
                     type="submit"
                     disabled={isLoading}
+                    className="w-full md:w-auto"
                 >
                     {isLoading ? "Saving..." : isEditing ? "Update Operator" : "Create Operator"}
                 </Button>

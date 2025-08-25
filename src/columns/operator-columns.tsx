@@ -58,17 +58,17 @@ const operatorColumns: ColumnDef<Operator>[] = [
     {
         header: "PERCENTAGE",
         accessorKey: "percentage",
-        cell: ({ row }) => <div className="text-center">{row.original.percentage}%</div>,
+        cell: ({ row }) => <div className="text-left">{row.original.percentage}%</div>,
     },
     {
         header: "BALANCE",
         accessorKey: "balance",
-        cell: ({ row }) => <div className="text-center">{row.original.balance}</div>,
+        cell: ({ row }) => <div className="text-left">{row.original.balance}</div>,
     },
     {
         header: "MAX BALANCE",
         accessorKey: "maxBalance",
-        cell: ({ row }) => <div className="text-center">{row.original.maxBalance}</div>,
+        cell: ({ row }) => <div className="text-left">{row.original.maxBalance}</div>,
     },
     {
         header: "STATUS",
@@ -123,17 +123,17 @@ const operatorColumns: ColumnDef<Operator>[] = [
 const ActionColumn = ({ operator }: { operator: Operator }) => {
     return (
         <div className="flex space-x-4 w-36 justify-end">
-            <Link href={`/dashboard/operators/${operator.id}`}>
+            <Link href={`/dashboard/operator/${operator.id}`}>
                 <Button size="icon" variant="ghost" aria-label="View Operator">
                     <Eye className="w-5 h-5" />
                 </Button>
             </Link>
-            <Link href={`/dashboard/operators/${operator.id}/sub-operators`}>
+            <Link href={`/dashboard/operator/${operator.id}/sub-operators`}>
                 <Button size="icon" variant="ghost" aria-label="View Sub-operators">
                     <Users2 className="w-5 h-5" />
                 </Button>
             </Link>
-            <Link href={`/dashboard/operators/${operator.id}/wallet`}>
+            <Link href={`/dashboard/operator/${operator.id}/wallet`}>
                 <Button size="icon" variant="ghost" aria-label="View Wallet">
                     <Wallet className="w-5 h-5" />
                 </Button>
