@@ -26,7 +26,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
 
   const isPlaceOver = useIsPlaceOver(roundRecord);
 
-  const { maxPlacement , minPlacement = 100 } = useMaxPlacement(
+  const { maxPlacement, minPlacement = 100 } = useMaxPlacement(
 
     roundRecord.gameType
   );
@@ -69,27 +69,22 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
     isPlacingBet,
   ]);
 
-  const handleQuickBet = useCallback(
-    (amount: number) => {
-      if (remainingAllowed <= 0) {
-        toast.error(
-          `You have reached the total bet limit of ₹${maxPlacement}.`
-        );
-        toast.error(
-          `You have reached the total bet limit of ₹${maxPlacement}.`
-        );
-        return;
-      }
-      const clamped = Math.min(amount, remainingAllowed);
-      if (clamped < amount) {
-        toast.error(
-          `Only ₹${remainingAllowed} remaining before reaching the ₹${maxPlacement} limit.`
-        );
-      }
-      setBetAmount(clamped);
-    },
-    [remainingAllowed, maxPlacement, setBetAmount]
-  );
+
+
+  const handleQuickBet = useCallback((amount: number) => {
+    if (remainingAllowed <= 0) {
+      toast.error(`You have reached the total bet limit of ₹${maxPlacement}.`);
+      return;
+    }
+    const clamped = Math.min(amount, remainingAllowed);
+    if (clamped < amount) {
+      toast.error(
+        `Only ₹${remainingAllowed} remaining before reaching the ₹${maxPlacement} limit.`
+      );
+    }
+    setBetAmount(clamped);
+  }, [remainingAllowed, maxPlacement, setBetAmount]);
+
 
   return (
     <>

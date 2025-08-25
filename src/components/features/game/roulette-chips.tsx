@@ -28,7 +28,9 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
     const { userDetails } = useAuthStore();
 
 
-    const coinValues = userDetails?.company?.coinValues || [100, 200, 1000, 2000];
+
+    const coinValues = userDetails?.company?.coinValues || [100, 200,500, 1000, 2000, 5000];
+    // const coinValues = [100, 200,500, 1000, 2000, 5000];
 
     const { data: autoBets, isLoading } = useAutoBets(roundId);
     const { mutate: createAutoBet, isPending: isCreating } = useCreateAutoBet();
@@ -135,79 +137,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                                     </Button>
                                 ))}
                             </div>
-                        </div>
-                    </div>
-                </TabsContent>
-                <TabsContent value="auto">
-                    {autoBets && autoBets > 0 ? (
-                        <div className="flex flex-col items-center justify-center gap-4 py-2 w-full">
-                            <div className="text-white text-lg text-center border w-full overflow-hidden border-[#0B4A8F]  font-semibold rounded-lg">
-                                <h1 className="block border-b border-[#0B4A8F] bg-[#00214E] py-2">Auto Bet left:</h1>
-                                <main className="text-4xl flex justify-center py-4 items-center font-bold">
-                                    {autoBets}
-                                </main>
-                            </div>
-                            <Button
-                                className="w-full h-12 text-lg"
-                                variant="destructive"
-                                onClick={() => {
-                                    deleteAutoBet();
-                                    setAutoRoundCount(null);
-                                }}
-                                disabled={isDeleting}
-                                tabIndex={-1}
-                                type="button"
-                            >
-                                Cancel
-                            </Button>
-                        </div>
-                    ) : (
-                        <div className="flex flex-col gap-4 py-2 w-full">
-                            <div className="grid grid-cols-2 gap-2">
-                                {[1, 2, 5, 10].map((amount) => (
-                                    <Button
-                                        key={amount}
-                                        className={`w-full h-10 bg-transparent border ${autoRoundCount === amount ? "bg-[#0B4A8F]" : ""} border-[#0B4A8F] text-white text-lg font-semibold rounded-lg`}
-                                        variant="ghost"
-                                        onClick={() => setAutoRoundCount(amount)}
-                                        disabled={isPlaceOver}
-                                        tabIndex={-1}
-                                        type="button"
-                                    >
-                                        {amount}
-                                    </Button>
-                                ))}
-                            </div>
 
-                            <div className="flex gap-2">
-                                <Button
-                                    className="flex-1 h-12 bg-[#2ECC40] text-white text-lg font-bold rounded-lg"
-                                    disabled={isPlaceOver || autoRoundCount === null || isCreating || isLoading}
-                                    tabIndex={-1}
-                                    type="button"
-                                    onClick={() => {
-                                        if (autoRoundCount !== null) {
-                                            createAutoBet({ rounds: autoRoundCount, roundId });
-                                        }
-                                    }}
-                                >
-                                    {t("bet").toUpperCase()}
-                                </Button>
-
-                                <Button
-                                    className="flex-1 h-12 bg-destructive border border-[#0B4A8F] text-white text-lg font-semibold rounded-lg"
-                                    variant="ghost"
-                                    onClick={() => {
-                                        deleteAutoBet();
-                                        setAutoRoundCount(null);
-                                    }}
-                                    disabled={isPlaceOver || isDeleting || isLoading}
-                                    tabIndex={-1}
-                                    type="button"
-                                >
-                                    Cancel
-                                </Button>
-                            </div>
                         </div>
 
                     </div>
