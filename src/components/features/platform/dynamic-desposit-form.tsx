@@ -18,22 +18,26 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useGetMyCompany } from "@/react-query/company-queries";
 import { CryptoDepositForm } from "./deposit-form";
+import { BankIcon } from "../user-menu/icons";
+import { PaymentMethod } from "@/models/transaction";
 
 // Deposit Methods Component
 interface DepositMethodsProps {
-    selectedMethod: string;
-    onMethodChange: (method: string) => void;
+    selectedMethod: PaymentMethod;
+    onMethodChange: (method: PaymentMethod) => void;
 }
 
 const DepositMethods = ({ selectedMethod, onMethodChange }: DepositMethodsProps) => {
     const methods = [
-        { id: 'upi', label: 'UPI', icon: <Smartphone className="w-6 h-6" /> },
-        { id: 'bank', label: 'Bank Transfer', icon: <Building2 className="w-6 h-6" /> },
+        { id: PaymentMethod.UPI, label: 'UPI', icon: <Smartphone className="w-6 h-6" /> },
+        { id: PaymentMethod.RTGS, label: 'RTGS', icon: <BankIcon className="w-6 h-6" /> },
+        { id: PaymentMethod.NEFT, label: 'NEFT', icon: <Building2 className="w-6 h-6" /> },
     ];
     const { data: company } = useGetMyCompany();
     const isCryptoPayIn = company?.cryptoPayIn;
+
     if (isCryptoPayIn) {
-        methods.push({ id: 'crypto', label: 'Crypto', icon: <img src="/images/platform/wallet/crypto.png" className="w-auto h-10" alt="crypto" /> });
+        methods.push({ id: PaymentMethod.CRYPTO, label: 'Crypto', icon: <img src="/images/platform/wallet/crypto.png" className="w-auto h-10" alt="crypto" /> });
     }
     return (
         <div className="space-y-4">
@@ -41,9 +45,9 @@ const DepositMethods = ({ selectedMethod, onMethodChange }: DepositMethodsProps)
                 <h3 className="text-platform-text text-base font-medium mb-2">Select Deposit Method</h3>
                 <p className="text-platform-text text-sm mb-4">Each Option May Have Different Processing Times And Limits.</p>
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div className=" gap-3 grid grid-cols-2">
                 {methods.map((method) => (
-                    <PaymentMethod
+                    <PaymentMethodButton
                         key={method.id}
                         icon={method.icon}
                         label={method.label ?? ""}
@@ -57,21 +61,18 @@ const DepositMethods = ({ selectedMethod, onMethodChange }: DepositMethodsProps)
 };
 
 // Payment Method Component
-interface PaymentMethodProps {
+interface PaymentMethodButtonProps {
     icon: ReactNode;
     label?: string;
     isSelected: boolean;
     onClick: () => void;
 }
 
-const PaymentMethod = ({ icon, isSelected, onClick, label }: PaymentMethodProps) => {
+const PaymentMethodButton = ({ icon, isSelected, onClick, label }: PaymentMethodButtonProps) => {
     return (
         <button
             onClick={onClick}
-            className={`flex items-center flex-1 justify-center gap-2 rounded-sm px-4 py-3 border-2 transition-all ${isSelected
-                ? 'dark:border-[#3B4BFF] border-primary-game bg-[#3B4BFF]/20 text-white'
-                : 'dark:border-platform-border border-primary-game bg-transparent text-white/80 hover:border-[#3B4BFF]/50'
-                }`}
+            className={`flex items-center flex-1 justify-center gap-2 h-12 rounded-sm px-4 py-3 border-2 transition-all ${isSelected ? 'dark:border-[#3B4BFF] border-primary-game bg-[#3B4BFF]/20 text-white' : 'dark:border-platform-border border-primary-game bg-transparent text-white/80 hover:border-[#3B4BFF]/50'}`}
         >
             {icon}
             <span className="text-platform-text text-sm">{label}</span>
@@ -178,8 +179,10 @@ const UPIDepositForm = () => {
             pgId: data.pgId,
             companyQrId: companyQR?.id,
             confirmationImageUrl: data.confirmationImageUrl,
+            paymentMethod: PaymentMethod.UPI,
+            withdrawlDetailsId: data.withdrawlDetailsId,
         }
-        if (data.withdrawlDetailsId) {
+        if (company?.askWithdrawlOption && data.withdrawlDetailsId) {
             payload.withdrawlDetailsId = data.withdrawlDetailsId;
         }
         mutate(payload, {
@@ -363,7 +366,7 @@ const UPIDepositForm = () => {
 };
 
 // Bank Transfer Deposit Form
-const BankDepositForm = () => {
+const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) => {
     const t = useTranslations('deposit');
     const tWithdraw = useTranslations('withdraw');
     const { mutate, isPending } = useCreateDepositRequest();
@@ -389,8 +392,9 @@ const BankDepositForm = () => {
             pgId: data.pgId,
             amount: data.amount ?? 0,
             confirmationImageUrl: data.confirmationImageUrl,
+            withdrawlDetailsId: data.withdrawlDetailsId,
+            paymentMethod,
         }
-
         if (company?.askWithdrawlOption && data.withdrawlDetailsId) {
             payload.withdrawlDetailsId = data.withdrawlDetailsId;
         }
@@ -627,7 +631,7 @@ const BankDepositForm = () => {
 
 // Main Deposit Tab Component
 const DepositTab = () => {
-    const [selectedMethod, setSelectedMethod] = useState("upi");
+    const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>(PaymentMethod.UPI);
     return (
         <div className="space-y-6">
             <div className="rounded-md bg-yellow-100 dark:bg-yellow-900/40 border border-yellow-300 dark:border-yellow-700 px-4 py-2 text-yellow-800 dark:text-yellow-200 font-medium mb-2">
@@ -642,11 +646,10 @@ const DepositTab = () => {
                 onMethodChange={setSelectedMethod}
             />
 
-            {selectedMethod === "upi" && <UPIDepositForm />}
-            {selectedMethod === "bank" && <BankDepositForm />}
-            {selectedMethod === "crypto" && (
-                <CryptoDepositForm />
-            )}
+            {selectedMethod === PaymentMethod.UPI && <UPIDepositForm />}
+            {selectedMethod === PaymentMethod.NEFT && <BankDepositForm paymentMethod={PaymentMethod.NEFT} />}
+            {selectedMethod === PaymentMethod.RTGS && <BankDepositForm paymentMethod={PaymentMethod.RTGS} />}
+            {selectedMethod === PaymentMethod.CRYPTO && <CryptoDepositForm />}
         </div>
     );
 };
