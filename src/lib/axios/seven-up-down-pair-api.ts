@@ -17,6 +17,9 @@ const sevenUpDownPairAPI = {
 
     updateSevenUpDownPair: async (sevenUpDownPairData: any & { id: string }) => {
         return api.patch(`/seven-up-down-pair/${sevenUpDownPairData.id}`, sevenUpDownPairData);
+    },
+    deleteSevenUpDownPair: async (id: string) => {
+        return api.delete(`/seven-up-down-pair/${id}`);
     }
 }
 

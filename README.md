@@ -2,17 +2,17 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started 
    
-First, run a development server:         
+First, run a development server:          
 
    
 ```bash      
 pnpm dev         
-``` 
+```   
 First, run a development server: 
               
-             
+              
 ```bash  
-pnpm dev   
+pnpm dev    
 ```   
   
     

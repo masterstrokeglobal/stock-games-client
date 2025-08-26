@@ -116,8 +116,7 @@ const ResultDialog: React.FC<ResultDialogProps> = ({ open, roundRecordId }) => {
   return (
     <Dialog defaultOpen={open}>
       <DialogContent
-        showButton={false}
-        className="bg-transparent border-none w-full max-w-xl lg:max-w-3xl focus:outline-none"
+        className="[&>button]:text-white [&>button]:focus:ring-0 bg-transparent border-none w-full max-w-xl lg:max-w-3xl focus:outline-none"
       >
         <div
           style={{

@@ -8,7 +8,7 @@ type Props = PropsWithClassName<{
 }>;
 const RouletteGameHeader = ({ title, className }: Props) => {
     return (
-        <header className={cn('text-center md:px-6 px-4  relative h-16 flex justify-between items-center  ', className)}>
+        <header id="roulette-game-header" className={cn('text-center md:px-6 px-4  relative h-16 flex justify-between items-center  ', className)}>
             <h2 className="text-xl font-semibold">{title}</h2>
             <GameSettingsPopover>
                 <Button size="icon" className="bg-[#008CB3]">

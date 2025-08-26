@@ -16,6 +16,9 @@ const jackpotPairAPI = {
 
     updateJackpotPair: async (jackpotPairData: any & { id: string }) => {
         return api.patch(`/jackpot-pair/${jackpotPairData.id}`, jackpotPairData);
+    },
+    deleteJackpotPair: async (id: string) => {
+        return api.delete(`/jackpot-pair/${id}`);
     }
 }
 
