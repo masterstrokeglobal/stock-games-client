@@ -1,18 +1,23 @@
 "use client";
 
 import DepositOperatorForm, { DepositOperatorFormValues } from "@/components/features/operator/deposit-form";
-import { useDepositOperatorWallet, useGetCurrentOperator } from "@/react-query/operator-queries";
+import OperatorInfoCard from "@/components/features/operator/operator-info-card";
+import { useDepositOperatorWallet, useGetCurrentOperator, useGetOperatorById } from "@/react-query/operator-queries";
 import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
 export default function DepositPage() {
     const router = useRouter();
     const depositMutation = useDepositOperatorWallet();
     const { data: currentOperator, isLoading: isLoadingOperator } = useGetCurrentOperator();
+    const params = useParams<{ id: string }>();
+    const operatorId = parseInt(params.id);
+    const { data: operator } = useGetOperatorById(operatorId);
 
     const handleSubmit = async (data: DepositOperatorFormValues) => {
         try {
             await depositMutation.mutateAsync({
-                operatorId: parseInt(currentOperator?.id?.toString() || "0"),
+                operatorId: operatorId,
                 amount: data.amount
             });
             router.push("/operator-dashboard");
@@ -42,13 +47,14 @@ export default function DepositPage() {
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-gray-900">Deposit to Operator Wallet</h1>
                     <p className="text-gray-600 mt-2">
-{`                        Transfer funds from your wallet to an operator's wallet
+                        {`                        Transfer funds from your wallet to an operator's wallet
 `}                    </p>
                 </div>
+                {operator && <OperatorInfoCard operator={operator} />}
 
                 <DepositOperatorForm
                     onSubmit={handleSubmit}
-                    operatorId={currentOperator?.id?.toString() || "N/A"}
+                    operatorId={operatorId.toString()}
                     isLoading={depositMutation.isPending}
                     currentBalance={currentOperator?.operatorWallet?.balance || 0}
                 />

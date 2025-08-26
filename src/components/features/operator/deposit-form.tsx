@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 export const depositOperatorSchema = z.object({
-    amount: z.number().min(0.01, "Amount must be greater than 0"),
+    amount: z.coerce.number().min(1, "Amount must be greater than 0"),
 });
 
 export type DepositOperatorFormValues = z.infer<typeof depositOperatorSchema>;

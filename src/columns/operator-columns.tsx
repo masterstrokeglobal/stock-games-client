@@ -1,10 +1,10 @@
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { OperatorRole } from "@/models/operator";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
+import { Eye, Wallet } from 'lucide-react';
 import Link from "next/link";
-import { Eye, Users2, Wallet } from 'lucide-react';
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { OperatorRole } from "@/models/operator";
 
 type Operator = {
     id: number;
@@ -123,17 +123,12 @@ const operatorColumns: ColumnDef<Operator>[] = [
 const ActionColumn = ({ operator }: { operator: Operator }) => {
     return (
         <div className="flex space-x-4 w-36 justify-end">
-            <Link href={`/dashboard/operator/${operator.id}`}>
+            <Link href={`/operator-dashboard/operator/${operator.id}`}>
                 <Button size="icon" variant="ghost" aria-label="View Operator">
                     <Eye className="w-5 h-5" />
                 </Button>
             </Link>
-            <Link href={`/dashboard/operator/${operator.id}/sub-operators`}>
-                <Button size="icon" variant="ghost" aria-label="View Sub-operators">
-                    <Users2 className="w-5 h-5" />
-                </Button>
-            </Link>
-            <Link href={`/dashboard/operator/${operator.id}/wallet`}>
+            <Link href={`/operator-dashboard/operator/${operator.id}/deposit`}>
                 <Button size="icon" variant="ghost" aria-label="View Wallet">
                     <Wallet className="w-5 h-5" />
                 </Button>

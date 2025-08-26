@@ -16,6 +16,11 @@ export const operatorAPI = {
             params: filter
         });
     },
+    getBelowOperators: async (filter?: {operatorId: number, page: number, limit: number}) => {
+        return api.get(`/operator/hierarchy/${filter?.operatorId}`, {
+            params: filter
+        });
+    },
 
     depositOperatorWallet: async (payload: any) => {
         return api.post("/operator/wallet-deposit", payload);
@@ -27,4 +32,25 @@ export const operatorAPI = {
     getCurrentOperator: async () => {
         return api.get("/admin/profile");
     },
+
+    agentDepositToUser: async (payload: any) => {
+        return api.post("/operator/agent-deposit-to-user", payload);
+    },
+    updateBettingStatus: async (payload: any) => {
+        return api.patch(`/operator/update-betting-status/${payload.id}`, payload);
+    },
+    updateTransferStatus: async (payload: any) => {
+        return api.patch(`/operator/update-transfer-status/${payload.id}`, payload);
+    },
+    getOperatorUsers: async (filter: { operatorId: number, page: number, limit: number }) => {
+        return api.get(`/operator/users/${filter.operatorId}`, {
+            params: filter
+        });
+    },
+    getOpertorTransactions: async (operatorId: number) => {
+        return api.get(`/operator/transactions/${operatorId}`);
+    },
+    settleTransaction: async (transactionId: number) => {
+        return api.patch(`/operator/settle-transaction/${transactionId}`);
+    }
 };

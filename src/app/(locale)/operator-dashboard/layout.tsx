@@ -3,6 +3,7 @@ import {
     ArrowLeft,
     CircleUser,
     Menu,
+    WalletCardsIcon,
 } from "lucide-react";
 
 import LoadingScreen from "@/components/common/loading-screen";
@@ -24,10 +25,14 @@ import { useAdminLogout } from "@/react-query/admin-auth-queries";
 import { useRouter } from "next/navigation";
 import { PropsWithChildren, useEffect } from "react";
 import Sidebar from "@/components/dashboard/operator-sidebar";
+import { useGetCurrentOperator } from "@/react-query/operator-queries";
+import { Badge } from "@/components/ui/badge";
+import { INR } from "@/lib/utils";
 
 const DashboardLayout = ({ children }: PropsWithChildren) => {
     const { loading, userDetails } = useAuthStore();
     const { mutate } = useAdminLogout();
+    const { data: operator } = useGetCurrentOperator();
     const router = useRouter();
     useLogin();
     useDefaultTheme("light")
@@ -66,10 +71,14 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
                             <ArrowLeft className="size-4 mr-2" />
                             <span>Go back</span>
                         </Button>
+                        <Badge className="ml-auto h-10" variant="outline">
+                            <WalletCardsIcon className="size-4 mr-2" />
+                            {INR(operator?.operatorWallet?.balance)}
+                        </Badge>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="secondary" size="icon" className="rounded-full ml-auto">
-                                    <CircleUser className="size-4 mr-2" />
+                                <Button variant="secondary" size="icon" className="rounded-full">
+                                    <CircleUser className="size-4" />
                                     <span className="sr-only">Toggle user menu</span>
                                 </Button>
                             </DropdownMenuTrigger>

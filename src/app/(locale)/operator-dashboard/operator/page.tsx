@@ -18,10 +18,9 @@ const OperatorTable = () => {
         search,
     });
 
-
-
+    console.log(data);
     const totalPages = useMemo(() => {
-        return Math.ceil(data?.data?.count / 10) || 1;
+        return Math.ceil(data?.count / 10) || 1;
     }, [data]);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +59,7 @@ const OperatorTable = () => {
                     page={page}
                     loading={isFetching}
                     columns={operatorColumns}
-                    data={data}
+                    data={data?.data ??[]}
                     totalPage={totalPages}
                     changePage={changePage}
                 />

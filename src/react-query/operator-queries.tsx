@@ -8,8 +8,8 @@ export const useGetAllOperators = (filter: any) => {
     return useQuery({
         queryKey: ["operators", filter],
         queryFn: async () => {
-            const operators = await operatorAPI.getAllOperators(filter);
-            return operators.data;
+            const response = await operatorAPI.getAllOperators(filter);
+            return response.data;
         },
     });
 };
@@ -100,7 +100,7 @@ export const useGetOperatorById = (id: number) => {
         queryKey: ["operator", id],
         queryFn: async () => {
             const operator = await operatorAPI.getOperatorById(id);
-            return operator.data;
+            return new Operator (operator.data);
         },
     });
 };
@@ -112,6 +112,55 @@ export const useGetCurrentOperator = () => {
         queryFn: async () => {
             const operator = await operatorAPI.getCurrentOperator();
             return new Operator(operator.data);
+        },
+    });
+};
+
+// Get below operators
+export const useGetBelowOperators = (filter?: { operatorId: number, page: number, limit: number }, options?: { enabled?: boolean }) => {
+    return useQuery({
+        queryKey: ["operators", filter],
+        queryFn: async () => {
+            const response = await operatorAPI.getBelowOperators(filter);
+            const operator = response.data.data;
+            return {
+                data: operator,
+                count: response.data.count
+            }
+        },
+        enabled: options?.enabled ?? true,
+    });
+};
+
+// Get operator users
+export const useGetOperatorUsers = (filter: { operatorId: number, page: number, limit: number }) => {
+    return useQuery({
+        queryKey: ["operator-users", filter],
+        queryFn: async () => {
+            const response = await operatorAPI.getOperatorUsers(filter);
+            return response.data;
+        },
+    });
+};
+
+
+
+// Settle transaction
+export const useSettleTransaction = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: operatorAPI.settleTransaction,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "operators";
+                },
+            });
+            toast.success("Transaction settled successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error settling transaction");
         },
     });
 };
