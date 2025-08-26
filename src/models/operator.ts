@@ -8,6 +8,22 @@ export enum OperatorRole {
     AGENT = "agent",
 }
 
+export const isOperatorRole = (role: string): role is OperatorRole => {
+    return Object.values(OperatorRole).includes(role as OperatorRole);
+}
+
+export const getLowerRankRole = (role: OperatorRole): OperatorRole => {
+    switch (role) {
+        case OperatorRole.SUPER_DUPER_MASTER:
+            return OperatorRole.DUPER_MASTER;
+        case OperatorRole.DUPER_MASTER:
+            return OperatorRole.MASTER;
+        case OperatorRole.MASTER:
+            return OperatorRole.AGENT;
+        default:
+            return OperatorRole.AGENT;
+    }
+}
 class Operator {
     id?: number;
     name?: string;
@@ -36,23 +52,23 @@ class Operator {
         this.dmMaxBalance = params.dmMaxBalance ?? 0;
         this.masterMaxBalance = params.masterMaxBalance ?? 0;
         this.agentMaxBalance = params.agentMaxBalance ?? 0;
-        
+
         if (params.parentOperator) {
             this.parentOperator = new Operator(params.parentOperator);
         }
-        
+
         if (params.children) {
             this.children = params.children.map(child => new Operator(child));
         }
-        
+
         if (params.company) {
             this.company = new Company(params.company);
         }
-        
+
         if (params.operatorWallet) {
             this.operatorWallet = new OperatorWallet(params.operatorWallet);
         }
-        
+
         this.createdAt = params.createdAt;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;
@@ -100,17 +116,17 @@ class Operator {
         if (this.isSuperDuperMaster) {
             return true;
         }
-        
+
         // Duper master can manage master and agent
         if (this.isDuperMaster) {
             return targetOperator.isMaster || targetOperator.isAgent;
         }
-        
+
         // Master can manage agent
         if (this.isMaster) {
             return targetOperator.isAgent;
         }
-        
+
         // Agent cannot manage anyone
         return false;
     }
@@ -128,14 +144,14 @@ class Operator {
 
     getAllDescendants(): Operator[] {
         const descendants: Operator[] = [];
-        
+
         if (this.children) {
             for (const child of this.children) {
                 descendants.push(child);
                 descendants.push(...child.getAllDescendants());
             }
         }
-        
+
         return descendants;
     }
 }

@@ -24,4 +24,7 @@ export const operatorAPI = {
     createUser: async (userData: any) => {
         return api.post("/operator/create-user", userData);
     },
+    getCurrentOperator: async () => {
+        return api.get("/admin/profile");
+    },
 };

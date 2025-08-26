@@ -1,4 +1,5 @@
 import { operatorAPI } from "@/lib/axios/operator-API";
+import Operator from "@/models/operator";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -100,6 +101,17 @@ export const useGetOperatorById = (id: number) => {
         queryFn: async () => {
             const operator = await operatorAPI.getOperatorById(id);
             return operator.data;
+        },
+    });
+};
+
+
+export const useGetCurrentOperator = () => {
+    return useQuery({
+        queryKey: ["current-operator"],
+        queryFn: async () => {
+            const operator = await operatorAPI.getCurrentOperator();
+            return new Operator(operator.data);
         },
     });
 };

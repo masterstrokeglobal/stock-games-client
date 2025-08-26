@@ -17,7 +17,7 @@ const loginFormSchema = z.object({
         .string()
         .email({ message: "Invalid email format" })
         .max(255, { message: "Email must be less than 255 characters" }),
-    loginAs: z.enum([AdminRole.SUPER_ADMIN, AdminRole.AGENT, AdminRole.COMPANY_ADMIN ||"affiliate"]),
+    loginAs: z.enum([AdminRole.SUPER_ADMIN, AdminRole.AGENT, AdminRole.COMPANY_ADMIN, AdminRole.OPERATOR, "affiliate" , ]),
     password: z.string().min(4, { message: "Password must be at least 4  characters" }),
 });
 
@@ -73,6 +73,7 @@ const LoginForm = () => {
                 options={[
                     { label: "Admin", value: AdminRole.SUPER_ADMIN },
                     { label: "Agent", value: AdminRole.AGENT },
+                    { label: "Operator", value: AdminRole.OPERATOR },
                     { label: "Affiliate", value: "affiliate" },
                 ]}
             />

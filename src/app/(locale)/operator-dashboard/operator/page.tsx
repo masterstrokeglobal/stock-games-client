@@ -1,9 +1,11 @@
 "use client";
 import operatorColumns from "@/columns/operator-columns";
+import { Button } from "@/components/ui/button";
 import DataTable from "@/components/ui/data-table-server";
 import { Input } from "@/components/ui/input";
 import { useGetAllOperators } from "@/react-query/operator-queries";
-import { Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
+import Link from "next/link";
 import React, { useMemo, useState } from "react";
 
 const OperatorTable = () => {
@@ -44,6 +46,12 @@ const OperatorTable = () => {
                             className="pl-10"
                         />
                     </div>
+                    <Link href="/operator-dashboard/operator/create" className="flex items-center gap-2">
+                    <Button>
+                        <Plus size={18} className="mr-2" />
+                        Create Operator
+                    </Button>
+                    </Link>
                 </div>
             </header>
 

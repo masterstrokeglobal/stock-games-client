@@ -6,6 +6,7 @@ export enum AdminRole {
     AGENT = "agent",
     AFFILIATE = "master_affiliate",
     SUB_AFFILIATE = "sub_affiliate",
+    OPERATOR = "operator",
 }
 
 interface AdminParams {
