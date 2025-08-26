@@ -389,7 +389,7 @@ export const DICE_WINNING_MULTIPLIER_12 = 36;
 
 export const stockGames = [
     {
-        href: `/game`,
+        href: `/game/single-player/roulette`,
         src: "/images/banner/roulette.png",
         alt: "stock-roulette",
         name: "Stock Roulette",
@@ -438,14 +438,14 @@ export const stockGames = [
         alt: "coming-soon",
         type : RoundRecordGameType.DICE
     },
-    {
-        href: "/game/single-player/aviator",
-        // href: "/game/platform/stock-game/aviator",
-        src: "/images/banner/aviator.png",
-        name: "Aviator",
-        alt: "coming-soon",
-        type : RoundRecordGameType.AVIATOR
-    }
+    // {
+    //     href: "/game/single-player/aviator",
+    //     // href: "/game/platform/stock-game/aviator",
+    //     src: "/images/banner/aviator.png",
+    //     name: "Aviator",
+    //     alt: "coming-soon",
+    //     type : RoundRecordGameType.AVIATOR
+    // }
 ]
 
 export type StockGame = {

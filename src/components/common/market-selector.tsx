@@ -1,17 +1,17 @@
 import { useAuthStore } from "@/context/auth-context";
+import { useTheme } from "@/context/theme-context";
+import useCOMEXAvailable from "@/hooks/use-comex-available";
 import { useGameType, useMarketSelector } from "@/hooks/use-market-selector";
+import useMCXAvailable from "@/hooks/use-mcx-available";
 import useNSEAvailable from "@/hooks/use-nse-available";
+import useSchedularCheck from "@/hooks/use-schedular-check";
+import useMarketSchedule from "@/hooks/use-schedular-timings";
 import useUSAMarketAvailable from "@/hooks/use-usa-available";
 import { cn } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
-import User from "@/models/user";
 import { RoundRecordGameType } from "@/models/round-record";
-import useSchedularCheck from "@/hooks/use-schedular-check";
-import { useTheme } from "@/context/theme-context";
+import User from "@/models/user";
 import Navbar from "../features/game/navbar";
-import useMCXAvailable from "@/hooks/use-mcx-available";
-import useCOMEXAvailable from "@/hooks/use-comex-available";
-import useMarketSchedule from "@/hooks/use-schedular-timings";
 
 type MarketSelectorProps = {
     title: string;
@@ -51,7 +51,7 @@ const MarketSelector = ({
 
     const currentUser = userDetails as User;
     const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
-    const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO) && (roundRecordType !== RoundRecordGameType.HEAD_TAIL && roundRecordType !== RoundRecordGameType.STOCK_JACKPOT);
+    const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO) && !(roundRecordType == RoundRecordGameType.HEAD_TAIL || roundRecordType == RoundRecordGameType.STOCK_JACKPOT);
     const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
     const isCOMEXAllowed = (!currentUser.isNotAllowedToPlaceOrder(SchedulerType.COMEX) && (roundRecordType === RoundRecordGameType.HEAD_TAIL || roundRecordType === RoundRecordGameType.STOCK_JACKPOT || roundRecordType === RoundRecordGameType.STOCK_SLOTS));
 

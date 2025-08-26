@@ -11,6 +11,7 @@ import { useGetRoundRecordById } from "@/react-query/round-record-queries";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef } from "react";
 import LeaderboardHeader from "./leaderboard-header";
+import { getStockName } from "@/components/common/StockName";
 
 
 // Enhanced interface for ranked market items
@@ -76,7 +77,7 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
     return (
         <section
             ref={sectionRef}
-            className={cn("md:rounded-sm h-full game-gradient-card-parent !pb-0.5 overflow-hidden w-full", className)}
+            className={cn("md:rounded-sm h-full game-gradient-card-parent !pb-0.5 overflow-hidden w-full mt-2 md:mt-0", className)}
         >
             <div className="game-gradient-card md:rounded-sm h-full">
                 <LeaderboardHeader />
@@ -84,24 +85,24 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                     style={{ height: isMobile ? "300px" : "100%" }}
                     type="auto"
                 >
-                    <table className="min-w-full mb-12 relative  ">
+                    <table className="min-w-full -mb-4 relative ">
                         <div className="gradient-line " />
-                        <thead className="game-gradient-card-header sticky top-0 py-2">
+                        <thead className="game-gradient-card-header sticky top-0">
                             <tr className="gradient-line"/>
                             <tr className="text-game-text text-sm ">
-                                <th className="p-2 py-3 text-left w-12 text-white">
+                                <th className="px-1 py-3 text-left w-12 text-white truncate">
                                     {t("rank")}
                                 </th>
-                                <th className="p-2 py-3 text-left text-white">
+                                <th className="px-1 py-3 text-center text-white truncate">
                                     {t("bull")}
                                 </th>
-                                <th className="p-2 py-3 text-left text-white">
+                                <th className="px-1 py-3 text-left text-white truncate">
                                     {t("name")}
                                 </th>
-                                <th className="p-2 py-3 text-right text-white">
-                                    {t("price")}
+                                <th className="px-1 py-3 text-right text-white truncate">
+                                    {t("price")} <span className="text-xs">({roundRecord.type === SchedulerType.CRYPTO ? "USDC " : roundRecord.type === SchedulerType.USA_MARKET ? "$" : "Rs."})</span>
                                 </th>
-                                <th className="p-2 py-3 text-right whitespace-nowrap text-white">
+                                <th className="px-1 py-3 text-center whitespace-nowrap text-white truncate">
                                     {t("change")}
                                 </th>
                             </tr>
@@ -110,21 +111,21 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                         <tbody>
                             {winnerMarketItems.map((winnerMarketItem) => (
                                 <tr className="border-b last:border-none rounded-lg text-game-secondary border-[#DADCE00D] overflow-hidden" key={winnerMarketItem.horse}>
-                                    <td className="p-2 ">
+                                    <td className="px-1 ">
                                         <img src="/crown.png" alt="Rank 1" className="w-8 h-8" />
                                     </td>
-                                    <td className="p-2  ">
+                                    <td className="px-1  ">
                                         {winnerMarketItem.horse}
                                     </td>
-                                    <td className="p-2">
+                                    <td className="px-1">
                                         {winnerMarketItem.name}
                                     </td>
-                                    <td className="p-2  text-right font-bold ">
+                                    <td className="px-1  text-right font-bold ">
                                         {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : roundRecord.type === SchedulerType.USA_MARKET ? "$" : "Rs."}
                                         {winnerMarketItem.price ? formatPrice(winnerMarketItem.price) : "-"}
                                     </td>
                                     <td className={cn(
-                                        "p-2 text-right font-bold",
+                                        "px-1 text-right font-bold",
                                         getChangeColor(winnerMarketItem.change_percent)
                                     )}>
                                         {parseFloat(winnerMarketItem.change_percent) > 0 ? '+' : ''}
@@ -138,7 +139,7 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
 
                                     className={cn("border-b last:border-none text-game-secondary rounded-lg border-[#DADCE00D] overflow-hidden", (index === 0 && winnerNumbers[0] == 0) ? "bg-[#ffb71a]/30 text-base font-bold" : "text-sm")}
                                 >
-                                    <td className="p-2">
+                                    <td className="px-1">
 
                                         {(index === 0  && !isGameOver) ? (
                                             <img
@@ -158,18 +159,18 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                                             </div>
                                         )}
                                     </td>
-                                    <td className="p-2  ">
+                                    <td className="px-1 text-center">
                                         {marketItem.horse == 17 ? 0 : marketItem.horse}
                                     </td>
-                                    <td className="p-2">
-                                        {marketItem.name}
+                                    <td className="px-1 truncate">
+                                        {getStockName(marketItem.name ?? "", marketItem.codeName ?? "")}
                                     </td>
-                                    <td className="p-2  text-right font-semibold whitespace-nowrap ">
-                                        {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : roundRecord.type === SchedulerType.USA_MARKET ? "$" : "Rs."}
+                                    <td className="px-1 text-right font-semibold whitespace-nowrap">
+                                        {/* {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : roundRecord.type === SchedulerType.USA_MARKET ? "$" : "Rs."} */}
                                         {marketItem.price ? formatPrice(marketItem.price) : "-"}
                                     </td>
                                     <td className={cn(
-                                        "p-2  text-right font-semibold",
+                                        "px-1 font-semibold text-center truncate",
                                         getChangeColor(marketItem.change_percent)
                                     )}>
 

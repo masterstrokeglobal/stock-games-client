@@ -32,7 +32,6 @@ const DepositMethods = ({ selectedMethod, onMethodChange }: DepositMethodsProps)
     ];
     const { data: company } = useGetMyCompany();
     const isCryptoPayIn = company?.cryptoPayIn;
-    console.log(isCryptoPayIn);
     if (isCryptoPayIn) {
         methods.push({ id: 'crypto', label: 'Crypto', icon: <img src="/images/platform/wallet/crypto.png" className="w-auto h-10" alt="crypto" /> });
     }
@@ -131,7 +130,9 @@ const depositSchema = (t: any, askWithdrawlOption?: boolean) => z.object({
         .optional(),
     confirmationImageUrl: z
         .string()
-        .url(t('validation.confirmation-image-url-invalid')),
+        .url(t('validation.confirmation-image-url-invalid'))
+        .or(z.literal(""))
+        .or(z.undefined()),
     amount: z
         .coerce.number({
             message: t('validation.amount-invalid')
@@ -140,7 +141,13 @@ const depositSchema = (t: any, askWithdrawlOption?: boolean) => z.object({
     withdrawlDetailsId: askWithdrawlOption
         ? z.string().min(1, 'deposit method is required')
         : z.string().optional(),
-});
+}).refine(
+    (data) => !!data.pgId || !!data.confirmationImageUrl,
+    {
+        message: "Either Transaction ID or Confirmation Image is required",
+        path: ["pgId"],
+    }
+);
 
 type DepositFormValues = z.infer<ReturnType<typeof depositSchema>>;
 
@@ -166,13 +173,16 @@ const UPIDepositForm = () => {
 
     const onSubmit = async (data: DepositFormValues) => {
         data.amount = parseInt(data.amount.toString());
-        mutate({
+        const payload: any = {
             amount: data.amount,
             pgId: data.pgId,
             companyQrId: companyQR?.id,
             confirmationImageUrl: data.confirmationImageUrl,
-            withdrawlDetailsId: data.withdrawlDetailsId,
-        }, {
+        }
+        if (data.withdrawlDetailsId) {
+            payload.withdrawlDetailsId = data.withdrawlDetailsId;
+        }
+        mutate(payload, {
             onSuccess: (data) => {
                 const responseLink = data.data?.response;
                 if (responseLink) {
@@ -183,7 +193,7 @@ const UPIDepositForm = () => {
             onError: () => {
                 toast.error('Error creating deposit request');
             }
-        });
+        })
     }
 
     const form = useForm<DepositFormValues>({
@@ -323,7 +333,7 @@ const UPIDepositForm = () => {
                     variant="platform-gradient-secondary"
                     size="lg"
                     type="submit"
-                    disabled={form.formState.isSubmitting || isPending || activeWithdrawDetails.length === 0}
+                    disabled={form.formState.isSubmitting || isPending}
                 >
                     {isPending ? (
                         <>
@@ -359,6 +369,7 @@ const BankDepositForm = () => {
     const { mutate, isPending } = useCreateDepositRequest();
     const { data: companyQR, isFetching: isLoading, refetch } = useGetActiveCompanyQR({ type: CompanyQRType.BANK });
     const { data: withdrawDetailsData, isLoading: isLoadingWithdrawDetails } = useGetAllWithdrawDetails({});
+    const { data: company } = useGetMyCompany();
 
     const withdrawDetails = useMemo(() => {
         if (withdrawDetailsData?.data) {
@@ -373,13 +384,17 @@ const BankDepositForm = () => {
 
     const onSubmit = async (data: DepositFormValues) => {
         data.amount = parseInt(data.amount.toString());
-        mutate({
+        const payload: any = {
             companyQrId: companyQR?.id,
             pgId: data.pgId,
             amount: data.amount ?? 0,
             confirmationImageUrl: data.confirmationImageUrl,
-            withdrawlDetailsId: data.withdrawlDetailsId,
-        }, {
+        }
+
+        if (company?.askWithdrawlOption && data.withdrawlDetailsId) {
+            payload.withdrawlDetailsId = data.withdrawlDetailsId;
+        }
+        mutate(payload, {
             onSuccess: (data) => {
                 const responseLink = data.data?.response;
                 if (responseLink) {
@@ -523,7 +538,7 @@ const BankDepositForm = () => {
                 />
 
                 {/* Withdrawal Methods Selection */}
-                <div className="space-y-2">
+                {company?.askWithdrawlOption && <div className="space-y-2">
                     <div>
                         <span className="text-platform-text text-base font-medium">
                             {tWithdraw('select-method-label')}
@@ -570,7 +585,7 @@ const BankDepositForm = () => {
                         </p>
                     )}
                 </div>
-
+                }
                 <FormImage
                     label="Confirmation Image"
                     control={form.control}
@@ -581,7 +596,7 @@ const BankDepositForm = () => {
                     variant="platform-gradient-secondary"
                     size="lg"
                     type="submit"
-                    disabled={form.formState.isSubmitting || isPending || activeWithdrawDetails.length === 0}
+                    disabled={form.formState.isSubmitting || isPending}
                 >
                     {isPending ? (
                         <>
