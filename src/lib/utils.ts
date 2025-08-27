@@ -438,14 +438,14 @@ export const stockGames = [
         alt: "coming-soon",
         type : RoundRecordGameType.DICE
     },
-    // {
-    //     href: "/game/single-player/aviator",
-    //     // href: "/game/platform/stock-game/aviator",
-    //     src: "/images/banner/aviator.png",
-    //     name: "Aviator",
-    //     alt: "coming-soon",
-    //     type : RoundRecordGameType.AVIATOR
-    // }
+    {
+        href: "/game/single-player/aviator",
+        // href: "/game/platform/stock-game/aviator",
+        src: "/images/banner/aviator.png",
+        name: "Aviator",
+        alt: "coming-soon",
+        type : RoundRecordGameType.AVIATOR
+    }
 ]
 
 export type StockGame = {
