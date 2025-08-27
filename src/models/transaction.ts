@@ -3,6 +3,7 @@ import Agent from "./agent";
 import Company from "./company";
 import User from "./user";
 import CompanyQR from "./company-qr";
+import OperatorWallet from "./operator-wallet";
 
 export enum TransactionType {
     DEPOSIT = "deposit",
@@ -35,6 +36,8 @@ export class Transaction {
     confirmationImageUrl?: string;
     amount!: number;
     status!: TransactionStatus;
+    creditorOperatorWallet?: OperatorWallet;
+    depositorOperatorWallet ?: OperatorWallet;
     companyQR?: CompanyQR;
     bonusPercentage!: number;
     walletId!: number; // Foreign key
@@ -55,6 +58,8 @@ export class Transaction {
         this.agent = data?.agentWallet?.agent ? new Agent(data?.agentWallet?.agent) : undefined
         this.company = data?.company ? new Company(data.company) : undefined;
         this.companyQR = data?.companyQR ? new CompanyQR(data.companyQR) : undefined;
+        this.creditorOperatorWallet = data?.creditorOperatorWallet ? new OperatorWallet(data.creditorOperatorWallet) : undefined;
+        this.depositorOperatorWallet = data?.depositorOperatorWallet ? new OperatorWallet(data.depositorOperatorWallet) : undefined;
     }
 
 

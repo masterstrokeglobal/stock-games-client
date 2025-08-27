@@ -39,19 +39,18 @@ const baseOperatorMenuItems: MenuItem[] = [
         icon: DollarSign,
         link: '/operator-dashboard/transactions',
     },
-    {
-        name: 'Users',
-        icon: Users,
-        link: '/operator-dashboard/users',
-    },
+   
 ];
 
 // Additional menu items for Agent role only
 const agentOnlyMenuItems: MenuItem[] = [
     {
-        name: 'Create User',
+        name: 'Users',
         icon: Users,
-        link: '/operator-dashboard/create-user',
+        subItems: [
+            { name: 'View Users', link: '/operator-dashboard/users' },
+            { name: 'Create User', link: '/operator-dashboard/create-user' },
+        ],
     },
 ];
 

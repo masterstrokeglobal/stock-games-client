@@ -72,7 +72,6 @@ const LoginForm = () => {
                 name="loginAs"
                 options={[
                     { label: "Admin", value: AdminRole.SUPER_ADMIN },
-                    { label: "Agent", value: AdminRole.AGENT },
                     { label: "Operator", value: AdminRole.OPERATOR },
                     { label: "Affiliate", value: "affiliate" },
                 ]}

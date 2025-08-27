@@ -3,14 +3,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Transaction, TransactionStatus, TransactionType } from "@/models/transaction";
-import { useConfirmWithdrawal, useUpdateTransactionById } from "@/react-query/transactions-queries";
+import { useGetCurrentOperator, useSettleTransaction } from "@/react-query/operator-queries";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { Edit2 } from "lucide-react"; // Import necessary icons
-import Link from "next/link"; // Adjust import path
+import { CheckCircle } from "lucide-react";
 import React from "react";
 
-const transactionColumns: ColumnDef<Transaction>[] = [
+const operatorTransactionColumns: ColumnDef<Transaction>[] = [
     {
         header: "ID",
         accessorKey: "id",
@@ -47,18 +46,6 @@ const transactionColumns: ColumnDef<Transaction>[] = [
             return <div className="text-nowrap">Rs. {row.original.amount.toFixed(2)}</div>
         }
     },
-    //depositer
-    {
-        header: "Depositer",
-        accessorKey: "user",
-        cell: ({ row }) => <div>{row.original.user?.username || 'N/A'}</div>,
-    },  
-    //withdrawer
-    {
-        header: "Withdrawer",
-        accessorKey: "user",
-        cell: ({ row }) => <div>{row.original.user?.username || 'N/A'}</div>,
-    },
     {
         header: "Image URL",
         accessorKey: "imageUrl",
@@ -73,19 +60,17 @@ const transactionColumns: ColumnDef<Transaction>[] = [
             </Badge>
         ),
     },
+   //depositer 
     {
-        header: "Agent",
-        accessorKey: "agent",
-        cell: ({ row }) => {
-            if (row.original.agent) {
-                return <Link href={`/dashboard/agents/${row.original.agent?.id}`}>
-                    <Badge variant="outline">
-                        {row.original.agent?.name ?? "N/A"}
-                    </Badge>
-                </Link>
-            }
-            return <div className="text-nowrap">N/A</div>
-        }
+        header: "Depositer",
+        accessorKey: "user",
+        cell: ({ row }) => <div>{row.original.depositorOperatorWallet?.operator?.name || 'N/A'}</div>,   
+    },
+    //withdrawer
+    {
+        header: "Creditor",
+        accessorKey: "user",
+        cell: ({ row }) => <div>{row.original.creditorOperatorWallet?.operator?.name || 'N/A'}</div>,
     },
     {
         header: "Bonus Percentage",
@@ -99,60 +84,30 @@ const transactionColumns: ColumnDef<Transaction>[] = [
             <span className="text-sm whitespace-nowrap">{dayjs(row.original.createdAt).format("DD-MM-YYYY")}</span>
         ),
     },
-
     {
-        header: "Accept/Reject",
-        accessorKey: "acceptReject",
-        cell: ({ row }) => <StatusChangeColumn transaction={row.original} />,
-    },
-    {
-        header: "Actions",
-        accessorKey: "actions",
-        cell: ({ row }) => (
-            <div className="flex justify-end">
-                <Link href={`/dashboard/transactions/${row.original.id}`}>
-                    <Button variant="ghost" aria-label="View Transaction">
-                        <Edit2 size={18} />
-                    </Button>
-                </Link>
-            </div>
-        ),
-    },
+        header: "Settle",
+        accessorKey: "settle",
+        cell: ({ row }) => <SettleColumn transaction={row.original} />,
+    }
 ];
 
-export default transactionColumns;
-
-const StatusChangeColumn = ({ transaction }: { transaction: Transaction }) => {
-    const { mutate: updateTransaction, isPending: updatePending } = useUpdateTransactionById();
-    const { mutate: confirmWithdrawal, isPending: withdrawalPending } = useConfirmWithdrawal();
+export default operatorTransactionColumns;
+const SettleColumn = ({ transaction }: { transaction: Transaction }) => {
+    const { data: userDetails } = useGetCurrentOperator();
+    const { mutate: settleTransaction, isPending } = useSettleTransaction();
     const [showAcceptDialog, setShowAcceptDialog] = React.useState(false);
     const [showRejectDialog, setShowRejectDialog] = React.useState(false);
 
-    const handleStatusChange = (status: TransactionStatus) => {
-        if (transaction.type === TransactionType.WITHDRAWAL) {
-            confirmWithdrawal({
-                id: transaction.id,
-                status: status
-            });
-        } else {
-            updateTransaction({
-                id: transaction.id,
-                status: status
-            });
-        }
-    };
-
-    // Only show Accept/Reject for DEPOSIT and WITHDRAWAL and only if status is PENDING
-    if (
-        !(
-            (transaction.type === TransactionType.WITHDRAWAL || transaction.type === TransactionType.DEPOSIT) &&
-            transaction.status === TransactionStatus.PENDING
-        )
-    ) {
+    // Only show for operator agents and if transaction is pending
+    if (!userDetails?.isAgent || transaction.status !== TransactionStatus.PENDING) {
         return <div className="text-sm text-gray-500 text-center">N/A</div>;
     }
 
-    const isPending = updatePending || withdrawalPending;
+    const handleSettle = (status: TransactionStatus) => {
+        settleTransaction({ transactionId: transaction.id, status });
+        setShowAcceptDialog(false);
+        setShowRejectDialog(false);
+    };
 
     return (
         <>
@@ -162,7 +117,9 @@ const StatusChangeColumn = ({ transaction }: { transaction: Transaction }) => {
                     size="sm"
                     disabled={isPending}
                     onClick={() => setShowAcceptDialog(true)}
+                    className="flex items-center gap-2"
                 >
+                    <CheckCircle size={16} />
                     {isPending ? "Processing..." : "Accept"}
                 </Button>
                 <Button
@@ -180,13 +137,13 @@ const StatusChangeColumn = ({ transaction }: { transaction: Transaction }) => {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Accept Transaction</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Are you sure you want to accept this transaction? This action cannot be undone.
+                            Are you sure you want to accept and settle this transaction? This action cannot be undone.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
-                            onClick={() => handleStatusChange(TransactionStatus.COMPLETED)}
+                            onClick={() => handleSettle(TransactionStatus.COMPLETED)}
                             disabled={isPending}
                         >
                             {isPending ? "Processing..." : "Accept"}
@@ -206,7 +163,7 @@ const StatusChangeColumn = ({ transaction }: { transaction: Transaction }) => {
                     <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
-                            onClick={() => handleStatusChange(TransactionStatus.FAILED)}
+                            onClick={() => handleSettle(TransactionStatus.FAILED)}
                             disabled={isPending}
                         >
                             {isPending ? "Processing..." : "Reject"}
@@ -228,10 +185,15 @@ const ImageColumn = ({ transaction }: { transaction: Transaction }) => {
         link.click();
         link.remove();
     };
+
+    if (!transaction.confirmationImageUrl) {
+        return <div className="text-sm text-gray-500">No Image</div>;
+    }
+
     return (
         <div className="flex items-center gap-2">
             <Dialog>
-                <DialogTrigger >
+                <DialogTrigger>
                     <img
                         src={transaction.confirmationImageUrl}
                         alt="Transaction Image"

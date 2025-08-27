@@ -1,5 +1,6 @@
 import Operator from "@/models/operator";
 import api from "./instance";
+import { TransactionStatus } from "@/models/transaction";
 
 export const operatorAPI = {
     createOperator: async (operatorData: any) => {
@@ -16,7 +17,7 @@ export const operatorAPI = {
             params: filter
         });
     },
-    getBelowOperators: async (filter?: {operatorId: number, page: number, limit: number}) => {
+    getBelowOperators: async (filter?: { operatorId: number, page: number, limit: number }) => {
         return api.get(`/operator/hierarchy/${filter?.operatorId}`, {
             params: filter
         });
@@ -42,15 +43,21 @@ export const operatorAPI = {
     updateTransferStatus: async (payload: any) => {
         return api.patch(`/operator/update-transfer-status/${payload.id}`, payload);
     },
-    getOperatorUsers: async (filter: { operatorId: number, page: number, limit: number }) => {
+    getOperatorUsers: async (filter: { operatorId: number, page: number, limit: number, search?: string }) => {
         return api.get(`/operator/users/${filter.operatorId}`, {
             params: filter
         });
     },
+    getOperatorTransactions: async (filter: { operatorId: number, page: number, limit: number }) => {
+        return api.get(`/operator/transactions/${filter.operatorId}`, {
+            params: filter
+        });
+    },
+
     getOpertorTransactions: async (operatorId: number) => {
         return api.get(`/operator/transactions/${operatorId}`);
     },
-    settleTransaction: async (transactionId: number) => {
-        return api.patch(`/operator/settle-transaction/${transactionId}`);
+    settleTransaction: async (payload: { transactionId: number, status: TransactionStatus }) => {
+        return api.patch(`/operator/settle-transaction/${payload.transactionId}`, payload);
     }
 };

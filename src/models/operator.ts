@@ -8,6 +8,12 @@ export enum OperatorRole {
     AGENT = "agent",
 }
 
+export enum OperatorStatus {
+    ACTIVE = "active",
+    INACTIVE = "inactive",
+}
+
+
 export const isOperatorRole = (role: string): role is OperatorRole => {
     return Object.values(OperatorRole).includes(role as OperatorRole);
 }
@@ -38,6 +44,9 @@ class Operator {
     children?: Operator[];
     company?: Company;
     operatorWallet?: OperatorWallet;
+    bettingStatus!: boolean;
+    transferStatus!: boolean;
+    status!: OperatorStatus;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
@@ -52,6 +61,9 @@ class Operator {
         this.dmMaxBalance = params.dmMaxBalance ?? 0;
         this.masterMaxBalance = params.masterMaxBalance ?? 0;
         this.agentMaxBalance = params.agentMaxBalance ?? 0;
+        this.bettingStatus = params.bettingStatus ?? true;
+        this.transferStatus = params.transferStatus ?? true;
+        this.status = params.status ?? OperatorStatus.ACTIVE;
 
         if (params.parentOperator) {
             this.parentOperator = new Operator(params.parentOperator);

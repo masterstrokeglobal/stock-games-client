@@ -3,14 +3,18 @@ import OperatorForm from "@/components/features/operator/operator-form";
 import { useParams, useRouter } from "next/navigation";
 import { OperatorFormValues } from "@/components/features/operator/operator-form";
 import { AdminRole } from "@/models/admin";
-import { useGetOperatorById, useUpdateOperator } from "@/react-query/operator-queries";
+import { useGetOperatorById, useUpdateOperator, useUpdateBettingStatus, useUpdateTransferStatus } from "@/react-query/operator-queries";
 import { useMemo } from "react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 const UpdateOperatorPage = () => {
     const router = useRouter();
     const { id } = useParams();
     const { mutate, isPending } = useUpdateOperator();
     const { data: operator } = useGetOperatorById(Number(id));
+    const { mutate: updateBettingStatus, isPending: isBettingStatusPending } = useUpdateBettingStatus();
+    const { mutate: updateTransferStatus, isPending: isTransferStatusPending } = useUpdateTransferStatus();
 
     const defaultValues = useMemo(() => {
         if (!operator) return null;
@@ -35,6 +39,20 @@ const UpdateOperatorPage = () => {
             },
         });
     };
+
+    const handleBettingStatusToggle = (checked: boolean) => {
+        updateBettingStatus({
+            id: Number(id),
+            status: checked
+        });
+    };
+
+    const handleTransferStatusToggle = (checked: boolean) => {
+        updateTransferStatus({
+            id: Number(id),
+            status: checked
+        });
+    };
     return (
         <>
             <section className="container-main min-h-[60vh] max-w-xl">
@@ -42,6 +60,37 @@ const UpdateOperatorPage = () => {
                     <h2 className="text-xl font-semibold">Update Operator</h2>
                 </header>
                 <main className="mt-4">
+                    {/* Status Controls */}
+                    {operator && (
+                        <div className="mb-6 p-4 border rounded-lg bg-card">
+                            <h3 className="text-lg font-medium mb-4">Status Controls</h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="flex items-center justify-between space-x-2">
+                                    <Label htmlFor="betting-status" className="text-sm font-medium">
+                                        Betting Status
+                                    </Label>
+                                    <Switch
+                                        id="betting-status"
+                                        checked={operator.bettingStatus}
+                                        onCheckedChange={handleBettingStatusToggle}
+                                        disabled={isBettingStatusPending}
+                                    />
+                                </div>
+                                <div className="flex items-center justify-between space-x-2">
+                                    <Label htmlFor="transfer-status" className="text-sm font-medium">
+                                        Transfer Status
+                                    </Label>
+                                    <Switch
+                                        id="transfer-status"
+                                        checked={operator.transferStatus}
+                                        onCheckedChange={handleTransferStatusToggle}
+                                        disabled={isTransferStatusPending}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
                     {defaultValues && <OperatorForm
                         onSubmit={onSubmit}
                         isEditing

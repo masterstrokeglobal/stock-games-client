@@ -5,7 +5,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Input } from "@/components/ui/input";
 import { OperatorRole } from "@/models/operator";
 import { useGetAllOperators, useGetBelowOperators } from "@/react-query/operator-queries";
-import { ChevronDown, ChevronRight, Pencil, Search, Wallet } from "lucide-react";
+import { ChevronDown, ChevronRight, Pencil, Search, Users, Wallet } from "lucide-react";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
 
@@ -27,7 +27,7 @@ type Operator = {
 
 const OperatorRow = ({ operator, level = 0, isLast = false }: { operator: Operator; level?: number; isLast?: boolean }) => {
     const [isOpen, setIsOpen] = useState(false);
-    
+
     // Only fetch when collapsible is open
     const { data: subOperators, isFetching: isLoadingSubOperators } = useGetBelowOperators(
         {
@@ -44,7 +44,7 @@ const OperatorRow = ({ operator, level = 0, isLast = false }: { operator: Operat
         master: "bg-green-100 text-green-800 border-green-200",
         agent: "bg-yellow-100 text-yellow-800 border-yellow-200",
     };
-    
+
     const roleLabels = {
         super_duper_master: "Super Duper Master",
         duper_master: "Duper Master",
@@ -59,7 +59,7 @@ const OperatorRow = ({ operator, level = 0, isLast = false }: { operator: Operat
     };
 
     const hasSubOperators = subOperators?.data && subOperators.data.length > 0;
-    
+
     // Enhanced visual hierarchy
     const paddingLeft = 12; // Reduced from 24px to 16px per level
     const treeLineClass = level > 0 ? "relative" : "";
@@ -75,24 +75,24 @@ const OperatorRow = ({ operator, level = 0, isLast = false }: { operator: Operat
                 {level > 0 && (
                     <>
                         {/* Horizontal line */}
-                        <div 
-                            className="absolute top-4 bg-gray-300" 
-                            style={{ 
-                                left: '-16px', 
-                                width: '12px', 
-                                height: '1px' 
-                            }} 
+                        <div
+                            className="absolute top-4 bg-gray-300"
+                            style={{
+                                left: '-16px',
+                                width: '12px',
+                                height: '1px'
+                            }}
                         />
                         {/* Vertical line */}
                         {!isLast && (
-                            <div 
-                                className="absolute bg-gray-300" 
-                                style={{ 
-                                    left: '-16px', 
-                                    top: '0px', 
-                                    width: '1px', 
-                                    height: '100%' 
-                                }} 
+                            <div
+                                className="absolute bg-gray-300"
+                                style={{
+                                    left: '-16px',
+                                    top: '0px',
+                                    width: '1px',
+                                    height: '100%'
+                                }}
                             />
                         )}
                     </>
@@ -104,13 +104,12 @@ const OperatorRow = ({ operator, level = 0, isLast = false }: { operator: Operat
                             <div className="col-span-1 flex items-center space-x-2">
                                 {/* Tree node indicator */}
                                 {level > 0 && (
-                                    <div className={`w-2 h-2 rounded-full ${
-                                        operator.role === 'super_duper_master' ? 'bg-purple-400' :
-                                        operator.role === 'duper_master' ? 'bg-blue-400' :
-                                        operator.role === 'master' ? 'bg-green-400' : 'bg-yellow-400'
-                                    }`} />
+                                    <div className={`w-2 h-2 rounded-full ${operator.role === 'super_duper_master' ? 'bg-purple-400' :
+                                            operator.role === 'duper_master' ? 'bg-blue-400' :
+                                                operator.role === 'master' ? 'bg-green-400' : 'bg-yellow-400'
+                                        }`} />
                                 )}
-                                
+
                                 {/* Expand/collapse icon */}
                                 {hasSubOperators || isLoadingSubOperators ? (
                                     isOpen ? <ChevronDown className={iconSizeClass} /> : <ChevronRight className={iconSizeClass} />
@@ -118,49 +117,54 @@ const OperatorRow = ({ operator, level = 0, isLast = false }: { operator: Operat
                                     <div className={iconSizeClass} />
                                 )}
                             </div>
-                            
+
                             <div className="col-span-2">
                                 <div className={`font-semibold truncate ${textSizeClass} ${level > 0 ? 'text-gray-700' : 'text-gray-900'}`}>
                                     {operator.name}
                                 </div>
                             </div>
-                            
+
                             <div className="col-span-2">
                                 <div className={`text-gray-600 truncate ${textSizeClass}`}>
                                     {operator.email}
                                 </div>
                             </div>
-                            
+
                             <div className="col-span-1">
                                 <Badge className={`whitespace-nowrap border ${textSizeClass} ${roleColors[operator.role]}`}>
                                     {roleLabels[operator.role]}
                                 </Badge>
                             </div>
-                            
+
                             <div className={`col-span-1 text-center font-medium ${textSizeClass}`}>
                                 {operator.percentage}%
                             </div>
-                            
+
                             <div className={`col-span-1 text-center font-medium ${textSizeClass}`}>
                                 ₹{operator.balance?.toLocaleString() || 0}
                             </div>
-                            
+
                             <div className={`col-span-1 text-center font-medium ${textSizeClass}`}>
                                 ₹{operator.maxBalance?.toLocaleString() || 0}
                             </div>
-                            
+
                             <div className="col-span-1">
                                 <Badge className={`border ${textSizeClass} ${statusColors[operator.status as keyof typeof statusColors] || "bg-gray-100 text-gray-800 border-gray-200"}`}>
                                     {operator.status}
                                 </Badge>
                             </div>
-                            
+
                             <div className="col-span-2 flex justify-end space-x-2">
                                 <Link href={`/dashboard/operator/${operator.id}`}>
                                     <Button size="sm" variant="ghost" aria-label="View Operator" className="h-9 w-9 p-0">
                                         <Pencil className="w-4 h-4" />
                                     </Button>
                                 </Link>
+                                {operator.role === OperatorRole.AGENT && <Link href={`/dashboard/operator/${operator.id}/users`}>
+                                    <Button size="sm" variant="ghost" aria-label="View Users" className="h-9 w-9 p-0">
+                                        <Users className="w-4 h-4" />
+                                    </Button>
+                                </Link>}
                                 <Link href={`/dashboard/operator/${operator.id}/deposit`}>
                                     <Button size="sm" variant="ghost" aria-label="View Wallet" className="h-9 w-9 p-0">
                                         <Wallet className="w-4 h-4" />
@@ -170,7 +174,7 @@ const OperatorRow = ({ operator, level = 0, isLast = false }: { operator: Operat
                         </div>
                     </div>
                 </CollapsibleTrigger>
-                
+
                 {isOpen && (
                     <CollapsibleContent>
                         <div className="border-t border-gray-200">
@@ -179,15 +183,22 @@ const OperatorRow = ({ operator, level = 0, isLast = false }: { operator: Operat
                             ) : hasSubOperators ? (
                                 <div className="py-2">
                                     {subOperators?.data?.map((subOperator: Operator, index: number) => (
-                                        <OperatorRow 
-                                            key={subOperator.id} 
-                                            operator={subOperator} 
+                                        <OperatorRow
+                                            key={subOperator.id}
+                                            operator={subOperator}
                                             level={level + 1}
                                             isLast={index === subOperators.data.length - 1}
                                         />
                                     ))}
                                 </div>
-                            ) : null}
+                            ) : (
+                                <div className="p-4 text-center text-gray-500 text-sm">
+                                    {operator.role === OperatorRole.AGENT 
+                                        ? "No sub-operators found for this agent" 
+                                        : "No sub-operators found"
+                                    }
+                                </div>
+                            )}
                         </div>
                     </CollapsibleContent>
                 )}
@@ -274,9 +285,9 @@ const OperatorTable = () => {
                 {/* Pagination */}
                 {totalPages > 1 && (
                     <div className="flex justify-center mt-4 space-x-2">
-                        <Button 
-                            variant="outline" 
-                            size="sm" 
+                        <Button
+                            variant="outline"
+                            size="sm"
                             onClick={() => changePage(page - 1)}
                             disabled={page <= 1}
                         >
@@ -285,9 +296,9 @@ const OperatorTable = () => {
                         <span className="flex items-center px-3 text-sm">
                             Page {page} of {totalPages}
                         </span>
-                        <Button 
-                            variant="outline" 
-                            size="sm" 
+                        <Button
+                            variant="outline"
+                            size="sm"
                             onClick={() => changePage(page + 1)}
                             disabled={page >= totalPages}
                         >
