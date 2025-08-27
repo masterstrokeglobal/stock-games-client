@@ -2,6 +2,7 @@ import MarketItem, { NSEMarketItem, SchedulerType } from '@/models/market-item';
 import { RoundRecord } from '@/models/round-record';
 import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
+import { parseCOMEXMessage } from './use-multi-socket-leaderboard';
 
 export interface RankedMarketItem extends MarketItem {
     change_percent: string;
@@ -61,6 +62,49 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
             })) as RankedMarketItem[];
 
         return rankedMarketItem;
+    };
+
+    const updateStockData = (bitcode: string, price: number) => {
+        const { initialPrice, changePercent } = processPrice(bitcode, price);
+
+        latestDataRef.current = latestDataRef.current.map(stock => {
+            if (stock.bitcode === bitcode) {
+                if (changePercent === undefined || changePercent === "NaN") {
+                    return stock;
+                }
+                return {
+                    ...stock,
+                    price,
+                    change_percent: changePercent,
+                    initialPrice,
+                    stream: stock.stream,
+                    bitcode: stock.bitcode,
+                    codeName: stock.codeName,
+                    currency: stock.currency,
+                    horse: stock.horse,
+                    type: stock.type,
+                    active: stock.active,
+                    name: stock.name,
+                    id: stock.id
+                };
+            }
+            return stock;
+        });
+
+        if (getRoundStatus() === 'tracking') {
+            latestDataRef.current = calculateRanks(latestDataRef.current);
+        }
+    };
+
+
+    const handleCOMEXData = (data: any) => {
+        const parsedPrices: { [key: string]: number } = parseCOMEXMessage(data);
+        Object.entries(parsedPrices).forEach(([commodity, price]) => {
+            console.log(latestDataRef.current.map(stock => stock.bitcode));
+            if (latestDataRef.current.some(stock => stock.bitcode === commodity)) {
+                updateStockData(commodity, price);
+            }
+        });
     };
 
     const processPrice = (bitcode: string, currentPrice: number) => {
@@ -323,13 +367,16 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
                         }
                     }
                 }
+                else if (roundRecord.type === SchedulerType.COMEX) {
+                    handleCOMEXData(data);
+                }
             });
         };
         // Set up interval to update stocks state
         const intervalId = setInterval(() => {
             setStocks(latestDataRef.current);
         }, 2000);
-        
+
         connectSocket();
         return () => {
             if (socketRef.current) {

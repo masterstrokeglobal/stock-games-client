@@ -1,4 +1,4 @@
-import { useLeaderboard } from "@/hooks/use-multi-socket-leaderboard";
+import { useLeaderboard } from "@/hooks/use-leadboard";
 import { cn } from "@/lib/utils";
 // import { HeadTailPlacementType } from "@/models/head-tail";
 import { RoundRecord } from "@/models/round-record";
@@ -71,6 +71,8 @@ const PriceDisplay = ({
 }) => {
   // const winningSide = roundRecordWithWinningSide?.winningSide ?? null;
   const { stocks } = useLeaderboard(roundRecord);
+
+  console.log(stocks[0].price, stocks[0].initialPrice , stocks[1].price, stocks[1].initialPrice);
 
   // Memoize stock calculations to prevent unnecessary re-renders
   const headStock = useMemo(
