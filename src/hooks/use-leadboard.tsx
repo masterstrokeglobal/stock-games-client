@@ -100,7 +100,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
     const handleCOMEXData = (data: any) => {
         const parsedPrices: { [key: string]: number } = parseCOMEXMessage(data);
         Object.entries(parsedPrices).forEach(([commodity, price]) => {
-            console.log(latestDataRef.current.map(stock => stock.bitcode)r);
+            console.log(latestDataRef.current.map(stock => stock.bitcode));
             if (latestDataRef.current.some(stock => stock.bitcode === commodity)) {
                 updateStockData(commodity, price);
             }
