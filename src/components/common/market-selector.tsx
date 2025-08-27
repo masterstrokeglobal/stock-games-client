@@ -12,6 +12,7 @@ import { SchedulerType } from "@/models/market-item";
 import { RoundRecordGameType } from "@/models/round-record";
 import User from "@/models/user";
 import Navbar from "../features/game/navbar";
+import z from "zod";
 
 type MarketSelectorProps = {
     title: string;
@@ -53,14 +54,16 @@ const MarketSelector = ({
     const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
     const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO) && !(roundRecordType == RoundRecordGameType.HEAD_TAIL || roundRecordType == RoundRecordGameType.STOCK_JACKPOT);
     const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
-    const isCOMEXAllowed = (!currentUser.isNotAllowedToPlaceOrder(SchedulerType.COMEX) && (roundRecordType === RoundRecordGameType.HEAD_TAIL || roundRecordType === RoundRecordGameType.STOCK_JACKPOT || roundRecordType === RoundRecordGameType.STOCK_SLOTS));
+    const isCOMEXAllowed =  !currentUser.isNotAllowedToPlaceOrder(SchedulerType.COMEX) && (roundRecordType === RoundRecordGameType.HEAD_TAIL || roundRecordType === RoundRecordGameType.STOCK_JACKPOT);
+  
 
     const handleMarketSelection = (market: SchedulerType) => {
         setGameType(market);
         setMarketSelected(true);
     }
 
-    const isMCXAllowed = (roundRecordType === RoundRecordGameType.HEAD_TAIL || roundRecordType === RoundRecordGameType.SEVEN_UP_DOWN || roundRecordType === RoundRecordGameType.STOCK_SLOTS) && isMCXAvailable;
+    const isMCXAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.MCX) && (roundRecordType === RoundRecordGameType.HEAD_TAIL || roundRecordType === RoundRecordGameType.STOCK_JACKPOT);
+  
 
     // Use the market schedule hook
     const marketStatuses = useMarketSchedule();
@@ -107,22 +110,19 @@ const MarketSelector = ({
             id: SchedulerType.MCX,
             title: "MCX",
             subtitle: "MCX Stock Market (Start: 7:30 PM IST, End: 11:30 PM IST)",
-            available: schedulerStatus[SchedulerType.MCX],
-            allowed: isMCXAllowed && schedulerStatus[SchedulerType.MCX],
+            available: isMCXAvailable && schedulerStatus[SchedulerType.MCX],
+            allowed: isMCXAllowed ,
         },
         {
             id: SchedulerType.COMEX,
             title: "International",
             subtitle: "International Stock Market (Start: 3:30 PM IST, End: 7:30 PM IST)",
-            available: schedulerStatus[SchedulerType.COMEX] && isCOMEXAvailable,
-            allowed: isCOMEXAllowed && schedulerStatus[SchedulerType.COMEX],
+            available: isCOMEXAvailable && schedulerStatus[SchedulerType.COMEX],
+            allowed: isCOMEXAllowed,
         }
     ];
-    
-
-    console.log( isCOMEXAllowed , schedulerStatus[SchedulerType.COMEX], "isCOMEXAllowed && schedulerStatus[SchedulerType.COMEX]")
-
     const availableMarkets = markets.filter(market => market.allowed);
+
 
     return (
         <section

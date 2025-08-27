@@ -25,7 +25,7 @@ const SOCKET_CONFIGS: SocketConfig[] = [
     { namespace: '/comex', schedulerType: SchedulerType.COMEX }
 ];
 
-const parseCOMEXMessage = (data: any): { [key: string]: number } => {
+export const parseCOMEXMessage = (data: any): { [key: string]: number } => {
     const parsedPrices: { [key: string]: number } = {};
 
     if (!Array.isArray(data) || data.length < 1) {
