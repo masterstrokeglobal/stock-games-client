@@ -159,7 +159,6 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
 
     const processPrice = (bitcode: string, currentPrice: number) => {
         if (!roundRecord) return { initialPrice: currentPrice, changePercent: '0' };
-
         const roundStatus = getRoundStatus();
         const key = roundRecord.type === SchedulerType.CRYPTO ? bitcode.toLowerCase() : bitcode.toUpperCase();
 

@@ -18,13 +18,15 @@ type Props = {
   filteredMarket?: MarketItem[];
   changeCameraView: () => void;
   currentCameraView: 'side' | 'top';
+  horseOffset: number;
 };
 
 
 const HorseRaceEnvironment = ({
   roundRecord,
   filteredMarket,
-  currentCameraView
+  currentCameraView,
+  horseOffset
 }: Props) => {
 
   const { camera } = useThree();
@@ -66,7 +68,7 @@ const HorseRaceEnvironment = ({
         <FenceRow x={-35} count={1000} spacing={16} />
         <MovingCloud position={[700, 30, 0]} />
         <FenceRow x={85} count={1000} spacing={16} />
-        <HorseAnimation roundRecord={roundRecord} filteredMarket={filteredMarket} />
+        <HorseAnimation roundRecord={roundRecord} filteredMarket={filteredMarket} horseOffset={horseOffset} />
         <Ground />
       </Physics>
     </>

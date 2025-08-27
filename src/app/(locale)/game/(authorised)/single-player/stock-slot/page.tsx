@@ -11,6 +11,9 @@ import useWinningId from "@/hooks/use-winning-id";
 import { RoundRecordGameType } from "@/models/round-record";
 import { useState, useEffect, useMemo } from "react";
 import StockSlot from "@/components/features/stock-slot.tsx/slot";
+// import { stockSlotImages } from "@/lib/gameImages";
+// import { useImagePreloader } from "@/hooks/image-preloader";
+
 
 const Page = () => {
   const { marketSelected } = useMarketSelector();
@@ -19,11 +22,10 @@ const Page = () => {
   );
 
   const [betAmount, setBetAmount] = useState<number>(100);
-  
+  // const { state: { isLoading: isImageLoading, percentageLoaded: imagePercentageLoaded }, getBackgroundStyle } = useImagePreloader(stockSlotImages);
+
   // Add component loading state
   const [isComponentLoaded, setIsComponentLoaded] = useState(false);
-  const [assetsLoaded, setAssetsLoaded] = useState(false);
-  const [percentageLoaded, setPercentageLoaded] = useState(20);
 
   const winningIdRoundRecord = useWinningId(roundRecord);
   const { gameTimeLeft, isPlaceOver } = useGameState(roundRecord);
@@ -65,53 +67,19 @@ const Page = () => {
     return { currentStocks, stockPrice };
   }, [roundRecord, stocks, winningIdRoundRecord]);
 
-  // Preload critical assets
-  useEffect(() => {
-    const imagesToPreload = [
-      '/images/slot-machine/stock-slot-bg.png',
-      '/images/slot-machine/menu-bg.png',
-      '/images/slot-machine/menu-btn.png',
-      '/images/slot-machine/btn-audio.png',
-      '/images/slot-machine/i-btn.png',
-      '/images/slot-machine/btn-pause.png',
-      '/images/slot-machine/menu-item-bg-1.png',
-      '/images/slot-machine/menu-item-bg-2.png',
-    ];
-
-    let loadedCount = 0;
-    const totalImages = imagesToPreload.length;
-
-    const imagePromises = imagesToPreload.map((src) => {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => {
-          loadedCount++;
-          setPercentageLoaded((loadedCount / totalImages) * 100);
-          resolve(src);
-        };
-        img.onerror = reject;
-        img.src = src;
-      });
-    });
-
-    Promise.allSettled(imagePromises).then(() => {
-      setAssetsLoaded(true);
-    });
-  }, []);
-
-  // Component initialization delay 
+  // Component initialization delay
   useEffect(() => {
     if (roundRecord && !isLoading) {
       const timer = setTimeout(() => {
         setIsComponentLoaded(true);
-      }, 200); 
+      }, 200);
 
       return () => clearTimeout(timer);
     }
   }, [roundRecord, isLoading]);
 
-
-  const isFullyLoaded = !isLoading && roundRecord && isComponentLoaded && assetsLoaded;
+  const isFullyLoaded =
+  !isLoading && roundRecord && isComponentLoaded 
 
   if (!marketSelected)
     return (
@@ -121,13 +89,13 @@ const Page = () => {
       />
     );
 
-
   if (!isFullyLoaded)
-    return <StockSlotLoading percentageLoaded={percentageLoaded} />;
+    return <StockSlotLoading percentageLoaded={40} />;
 
   return (
     <section
       style={{
+        // ...getBackgroundStyle("/images/slot-machine/stock-slot-bg.png"),
         backgroundImage: "url('/images/slot-machine/stock-slot-bg.png')",
         backgroundSize: "100% 100%",
         backgroundPosition: "center center",
@@ -136,7 +104,7 @@ const Page = () => {
       className="flex flex-col h-screen w-full pt-14"
     >
       <Navbar />
-      <StockSlot 
+      <StockSlot
         isGameActive={isGameActive}
         currentStocks={currentStocks}
         stockPrice={stockPrice}
@@ -145,6 +113,7 @@ const Page = () => {
         betAmount={betAmount}
         setBetAmount={setBetAmount}
         roundRecord={roundRecord}
+        // getBackgroundStyle={getBackgroundStyle}
       />
     </section>
   );

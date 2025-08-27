@@ -14,9 +14,16 @@ interface GameResultDialogProps {
   roundRecordId: number;
 }
 
+
 const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
   const { data: roundResult, isLoading } = useGetSevenUpDownRoundResult(roundRecordId, open);
+  const [isOpen, setIsOpen] = useState(open);
 
+  useEffect(()=>{
+    setTimeout(() => {
+      setIsOpen(open);
+    }, 1500);
+  },[open])
 
   const totalPlaced = roundResult?.reduce((total, bet) => {
     return total + bet.amountPlaced;
@@ -32,7 +39,7 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
   const round = roundResult?.[0]?.round ? new RoundRecord(roundResult[0].round) : null;
 
   return (
-    <Dialog defaultOpen={open}>
+    <Dialog defaultOpen={isOpen}>
       <DialogContent
         showButton={false}
         className={cn(
@@ -89,20 +96,20 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
                     </span>
                   </div>
                   <div className='md:mx-10 '>
-                    <div className="grid grid-cols-3 items-center md:text-base sm:text-sm text-xs font-bold font-montserrat uppercase xs:px-4 gap-2 border-b border-[#6FB0FF] text-[#8EC2FF] pb-2 mb-2">
-                      <div className="text-left whitespace-nowrap">Selected Side</div>
+                    <div className="grid grid-cols-4 items-center md:text-base sm:text-sm text-xs font-bold font-montserrat uppercase px-2 sm:px-4 gap-2 border-b border-[#6FB0FF] text-[#8EC2FF] pb-2 mb-2">
+                      <div className="text-left whitespace-nowrap">Bet</div>
                       <div className="text-center whitespace-nowrap">Bet INR</div>
-                      <div className="text-end whitespace-nowrap">Winner</div>
+                      <div className="text-end whitespace-nowrap col-span-2">Winner</div>
                     </div>
 
                     <ScrollArea className='h-[150px]' scrollThumbClassName="bg-[#517ED4]">
                       {
                         roundResult.map((result, index) => {
                           return (
-                            <div key={index} className="grid grid-cols-3 text-white font-poppins font-light uppercase xs:px-4 gap-2 sm:text-[15px] text-xs bg-[#355DAE] py-2 rounded-xl mb-2">
+                            <div key={index} className="grid grid-cols-4 text-white font-poppins font-light uppercase px-2 sm:px-4 gap-2 sm:text-[15px] text-xs bg-[#355DAE] py-2 rounded-xl mb-2">
                               <div className="text-left"><SevenUpDownChip className='justify-start' side={result.selectedSide} /></div>
                               <div className="text-center">{INR(result.amountPlaced)}</div>
-                              <div className="text-center justify-end flex gap-2">
+                              <div className="text-center justify-end flex gap-2 col-span-2">
                                 <SevenUpDownChip className='justify-center' side={getWinnerSide(result.winner)} />
                                 <span >({result.isWinner ? INR(result.amountWon) : "-"})</span>
                               </div>

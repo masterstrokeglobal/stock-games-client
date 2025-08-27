@@ -1,12 +1,10 @@
 import { useLeaderboard } from "@/hooks/use-leadboard";
 import { cn } from "@/lib/utils";
-// import { HeadTailPlacementType } from "@/models/head-tail";
 import { RoundRecord } from "@/models/round-record";
 import { useMemo, memo } from "react";
 
 interface StockPriceProps {
   rankedMarketItem: any;
-  // winning: boolean;
 }
 
 export const StockPrice: React.FC<StockPriceProps> = ({
@@ -19,9 +17,6 @@ export const StockPrice: React.FC<StockPriceProps> = ({
   // Winning = green, else red
   const containerClass =
     "rounded-[6px] border border-[rgb(108,220,251)] bg-[#001A5F] shadow-[0_0_6.5px_2px_rgba(122,179,255)_inset]";
-  // const containerClass = winning
-  //     ? "rounded-[6px] border border-[rgb(108,220,251)] bg-[rgba(122, 179, 255,0.86)] shadow-[0_0_6.5px_2px_rgba(122, 179, 255)_inset]"
-  //     : "rounded-[6px] border border-[#FF0026] bg-[rgba(66,0,10,0.86)] shadow-[0_0_6.5px_2px_rgba(255,0,38,0.73)_inset]";
 
   return (
     <div
@@ -95,33 +90,13 @@ const PriceDisplay = ({
     [stocks, roundRecord.coinTossPair?.tail?.id, roundRecordWithWinningSide?.finalPricesPresent, roundRecordWithWinningSide?.sortedMarketItems]
   );
 
-  // Memoize winning stock calculation to prevent unnecessary sorting
-  // const winningStock = useMemo(() => {
-  //   if (roundRecordWithWinningSide?.finalPricesPresent) {
-  //     return roundRecordWithWinningSide.sortedMarketItems?.[0];
-  //   }
-  //   return stocks.sort(
-  //     (a, b) => parseFloat(b.change_percent) - parseFloat(a.change_percent)
-  //   )[0];
-  // }, [roundRecordWithWinningSide?.finalPricesPresent, roundRecordWithWinningSide?.sortedMarketItems, stocks]);
-
   return (
     <div className="flex flex-row gap-4">
       <StockPrice
         rankedMarketItem={headStock}
-        // winning={
-        //   winningSide
-        //     ? winningSide === HeadTailPlacementType.HEAD
-        //     : winningStock?.id === headStock?.id
-        // }
       />
       <StockPrice
         rankedMarketItem={tailStock}
-        // winning={
-        //   winningSide
-        //     ? winningSide === HeadTailPlacementType.TAIL
-        //     : winningStock?.id === tailStock?.id
-        // }
       />
     </div>
   );

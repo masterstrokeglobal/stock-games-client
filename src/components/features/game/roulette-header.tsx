@@ -24,11 +24,11 @@ export const GameHeaderBackground: React.FC<GameHeaderProps> = ({ gameState, cla
     return (
         <header
             className={cn(
-                'text-center hidden lg:flex flex-col items-center justify-center  w-full relative',
+                'text-center hidden lg:flex flex-col items-center justify-center w-full relative',
                 className
             )}
         >
-            <div className="mb-2">
+            <div className="">
                 <span
                     className="inline-block px-3 py-1 text-white text-2xl font-semibold rounded bg-transparent  tracking-wide"
                     style={{ letterSpacing: "0.04em" }}
@@ -40,7 +40,7 @@ export const GameHeaderBackground: React.FC<GameHeaderProps> = ({ gameState, cla
                 style={{
                     textShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
                 }}
-                className='text-5xl font-bold text-white  mt-2 relative'>
+                className='text-5xl font-bold text-white relative'>
                 {getTime()}
             </p>
         </header>
@@ -76,7 +76,7 @@ export const MobileGameHeader = ({ roundRecord }: Props) => {
     const t = useTranslations('game');
     const gameState = useGameState(roundRecord);
     return (
-        <header className='text-center relative h-16  '>
+        <header className='text-center relative h-16'>
             <img className='w-full h-full absolute object-cover z-10' src='mobile-header.svg' alt='Roulette' />
             <div className='h-16 w-40 bg-[url("/mobile-header-center.svg")] text-white bg-cover z-40  relative mx-auto'>
                 <span className='text-sm'>

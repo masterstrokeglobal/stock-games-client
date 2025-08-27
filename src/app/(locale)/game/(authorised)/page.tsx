@@ -63,7 +63,7 @@ const GamePage = () => {
         {isMobile && roundRecord && <MobileGame roundRecord={roundRecord} />}
       </section>
     </>
-  );
+    );
 };
 
 export default GamePage;
@@ -90,7 +90,6 @@ const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
       {isPlaceOver && <RouletteGame roundRecord={roundRecord} />}
       {isPlaceOver && <CurrentBets className="mb-4" round={roundRecord} />}
       {isPlaceOver && <LastWinners className="h-96 rounded-none" />}
-
     </section>
   );
 };

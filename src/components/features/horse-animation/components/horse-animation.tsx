@@ -11,6 +11,7 @@ import MarketItem from "@/models/market-item";
 type Props = {
     roundRecord: RoundRecord;
     filteredMarket?: MarketItem[]; // Pass filtered horses
+    horseOffset: number;
 };
 
 const MAX_Z_POSITION = 60;
@@ -22,7 +23,7 @@ const controlZPosition = (z: number) => {
     return z;
 };
 
-const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
+const HorseAnimation = React.memo(({ roundRecord, filteredMarket, horseOffset }: Props) => {
     const numberOfHorses = (filteredMarket && filteredMarket.length > 0) ? filteredMarket.length : roundRecord.market.length;
     const animationProgressRef = useRef(0);
     const horsesRef = useRef<(THREE.Object3D | null)[]>([]);
@@ -130,19 +131,21 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket }: Props) => {
 
     return (
         <>
-            {horses.map((horse, index) => (
-                <HorseModel
-                    key={horse.horseNumber}
-                    ref={(el: THREE.Object3D | null) => {
-                        horsesRef.current[index] = el;
-                    }}
-                    number={horse.horseNumber == 17 ? 0 : horse.horseNumber!}
-                    color={ROULETTE_COLORS[index].color}
-                    position={horse.position as any}
-                    scale={horse.scale as any}
-                    speed={horse.speed}
-                />
-            ))}
+            <group position={[0, 0, -horseOffset]}>
+                {horses.map((horse, index) => (
+                    <HorseModel
+                        key={horse.horseNumber}
+                        ref={(el: THREE.Object3D | null) => {
+                            horsesRef.current[index] = el;
+                        }}
+                        number={horse.horseNumber == 17 ? 0 : horse.horseNumber!}
+                        color={ROULETTE_COLORS[index].color}
+                        position={horse.position as any}
+                        scale={horse.scale as any}
+                        speed={horse.speed}
+                    />
+                ))}
+            </group>
         </>
     );
 });

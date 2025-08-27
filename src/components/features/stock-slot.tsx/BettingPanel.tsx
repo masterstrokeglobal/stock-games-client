@@ -8,26 +8,27 @@ import {
 import { toast } from "sonner";
 import useMaxPlacement from "@/hooks/use-max-placement";
 import { useAuthStore } from "@/context/auth-context";
+// import { getCachedImage } from "@/hooks/image-preloader";
 
 interface BettingPanelProps {
   betAmount: number;
   roundRecord: RoundRecord;
   setBetAmount: (amount: number) => void;
+  // getBackgroundStyle: (src: string) => React.CSSProperties;
 }
 
 const BettingPanel: React.FC<BettingPanelProps> = ({
   betAmount,
   roundRecord,
   setBetAmount,
+  // getBackgroundStyle,
 }) => {
   const { data: myPlacementData } = useGetMySlotGamePlacement(roundRecord.id);
   const { mutate: createStockGamePlacement, isPending: isPlacingBet } =
     useCreateStockGamePlacement();
 
   const isPlaceOver = useIsPlaceOver(roundRecord);
-
   const { maxPlacement, minPlacement = 100 } = useMaxPlacement(
-
     roundRecord.gameType
   );
   const { userDetails } = useAuthStore();
@@ -90,6 +91,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
     <>
       <div
         style={{
+          // ...getBackgroundStyle("/images/slot-machine/betting-bg.png"),
           backgroundImage: "url('/images/slot-machine/betting-bg.png')",
           backgroundSize: "100% 100%",
           backgroundPosition: "center center",
@@ -103,17 +105,18 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
           <div className="col-span-5 pt-1 flex items-center justify-center h-full overflow-hidden">
             <div
               style={{
+                // ...getBackgroundStyle("/images/slot-machine/menu-bg.png"),
                 backgroundImage: "url('/images/slot-machine/menu-bg.png')",
                 backgroundSize: "100% 100%",
-                backgroundPosition: "center",
+                backgroundPosition: "center center",
                 backgroundRepeat: "no-repeat",
               }}
               className="py-[6px] lg:py-3 px-3 lg:px-5 flex flex-col items-center justify-center h-full w-full gap-2"
             >
               <div
                 style={{
-                  backgroundImage:
-                    "url('/images/slot-machine/menu-item-bg-1.png')",
+                  // ...getBackgroundStyle("/images/slot-machine/menu-item-bg-1.png"),
+                  backgroundImage: "url('/images/slot-machine/menu-item-bg-1.png')",
                   backgroundSize: "100% 100%",
                   backgroundPosition: "center center",
                   backgroundRepeat: "no-repeat",
@@ -127,8 +130,8 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
               </div>
               <div
                 style={{
-                  backgroundImage:
-                    "url('/images/slot-machine/menu-item-bg-2.png')",
+                  // ...getBackgroundStyle("/images/slot-machine/menu-item-bg-2.png"),
+                  backgroundImage: "url('/images/slot-machine/menu-item-bg-2.png')",
                   backgroundSize: "100% 100%",
                   backgroundPosition: "center center",
                   backgroundRepeat: "no-repeat",
@@ -154,6 +157,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
             <button
               className="w-full h-full"
               style={{
+                // backgroundImage: getBackgroundStyle("/images/slot-machine/add-btn.png").backgroundImage,
                 backgroundImage: "url('/images/slot-machine/add-btn.png')",
                 backgroundSize: "contain",
                 backgroundPosition: "center",
@@ -187,6 +191,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
             <button
               className="w-full h-full "
               style={{
+                // backgroundImage: getBackgroundStyle("/images/slot-machine/sub-btn.png").backgroundImage,
                 backgroundImage: "url('/images/slot-machine/sub-btn.png')",
                 backgroundSize: "contain",
                 backgroundPosition: "center",
@@ -203,9 +208,10 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
           {/* //? bet amount  */}
           <div
             style={{
+              // ...getBackgroundStyle("/images/slot-machine/green-btn.png"),
               backgroundImage: "url('/images/slot-machine/green-btn.png')",
               backgroundSize: "100% 100%",
-              backgroundPosition: "center",
+              backgroundPosition: "center center",
               backgroundRepeat: "no-repeat",
             }}
             className={`col-span-3 w-full h-full flex justify-center items-center text-center mt-1`}
@@ -227,7 +233,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
                 totalBetAmount + betAmount > maxPlacement ||
                 totalBetAmount >= maxPlacement
               }
-              className={`absolute rounded-full z-10 cursor-pointer h-full max-h-[100%] max-w-[100%]
+              className={`absolute rounded-full z-10 cursor-pointer h-full max-h-[100%]
               ${
                 isPlacingBet ||
                 isPlaceOver ||
@@ -239,19 +245,14 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
               }`}
             >
               <img
+                // src={getCachedImage("/images/slot-machine/refresh-btn.png")?.src}
                 src="/images/slot-machine/refresh-btn.png"
                 alt="refresh-btn"
                 className="lg:h-[90%] h-[100%]"
               />
             </button>
-            {/* <button className="absolute bottom-0 lg:bottom-3 lg:left-[100px] left-[50px] rounded-full z-20">
-              <img
-                src="/images/slot-machine/play-btn.png"
-                alt="play-btn"
-                className="lg:h-10 h-6"
-              />
-            </button> */}
           </div>
+
         </div>
       </div>
     </>

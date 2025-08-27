@@ -24,6 +24,7 @@ import GameResultDialog from "./result-dialog";
 import { BettingControls } from "./roulette-chips";
 import { RouletteBettingGrid } from "./roulette-grid";
 import { GameHeaderBackground } from "./roulette-header";
+import useWindowSize from "@/hooks/use-window-size";
 enum PlacementType {
   SINGLE = "single",
   SPLIT = "split",
@@ -124,7 +125,7 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
   const { userDetails } = useAuthStore();
   const currentUser = userDetails as User;
   const { mutate, isPending: isPlacingBet } = useCreateGameRecord();
-
+  const { isMobile } = useWindowSize();
   const boardRef = useRef<HTMLDivElement>(null);
 
   const { data, isSuccess } = useGetMyPlacements({ roundId: roundRecord.id });
@@ -399,9 +400,11 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
                   ? t("betting-closed")
                   : t("place-your-bets")}
               </h1>
-              <div className="px-4">
-                {!gameState.isPlaceOver && gameTimer(gameState)}
-              </div>
+              {isMobile && !gameState.isPlaceOver && (
+                <div className="px-4">
+                  {gameTimer(gameState)}
+                </div>
+              )}
 
               <div className="gradient-line absolute bottom-0 left-0 w-full" />
             </div>
@@ -606,7 +609,7 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
               </div>
             </div>
           </div>
-          <div className="lg:w-5/12  justify-between flex-col ">
+          <div className="lg:w-5/12 flex justify-between flex-col">
             <GameHeaderBackground gameState={gameState} className="flex-1" />
             <BettingControls
               isLoading={isPlacingBet}
