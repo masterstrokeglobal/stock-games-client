@@ -16,6 +16,18 @@ interface Props {
 const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
     const { data: roundResult, isLoading } = useGetStockJackpotRoundResult(roundRecordId, open);
 
+    const [isOpen, setIsOpen] = useState(open);
+
+    useEffect(()=>{
+      const timeout = setTimeout(() => {
+        setIsOpen(open);
+      }, 2000);
+
+      return () => {
+        clearTimeout(timeout);
+      }
+    },[open])
+
     // Defensive fallback if roundResult is not loaded yet
     const placements = roundResult?.placements ?? [];
     const round = roundResult?.round ?? null;
@@ -30,7 +42,7 @@ const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
     const roundStartTime = round?.createdAt ?? (placements[0]?.createdAt ?? null);
 
     return (
-        <Dialog  defaultOpen={open}>
+        <Dialog  defaultOpen={isOpen}>
             <DialogContent
                 showButton={false}
                 className={cn(

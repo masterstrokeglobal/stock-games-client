@@ -21,7 +21,7 @@ const StockCard = ({
 }) => {
 
   const initialPrice = stock ? roundRecord?.getInitialPrice(stock.bitcode as string) : undefined;
-  const roundRecordWithWinningId = useWinningId(roundRecord as RoundRecord, 0);
+  const roundRecordWithWinningId = useWinningId(roundRecord as RoundRecord, -2000);
 
   // Calculate price and change percentage based on final values when available
   const { price, changePercent } = useMemo(() => {

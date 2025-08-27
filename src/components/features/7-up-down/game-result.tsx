@@ -20,9 +20,13 @@ const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps)
   const [isOpen, setIsOpen] = useState(open);
 
   useEffect(()=>{
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       setIsOpen(open);
     }, 1500);
+
+    return () => {
+      clearTimeout(timeout);
+    }
   },[open])
 
   const totalPlaced = roundResult?.reduce((total, bet) => {
