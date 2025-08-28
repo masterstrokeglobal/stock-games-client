@@ -1,7 +1,7 @@
 "use client";
 
 import bonusCampaignsColumns from '@/columns/bonus-campaigns-columns';
-// import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import DataTable from '@/components/ui/data-table-server';
 import { Input } from '@/components/ui/input';
 import {

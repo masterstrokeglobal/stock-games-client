@@ -306,7 +306,7 @@ const CreateBonusCampaign: React.FC = () => {
                                     { id: 1, name: 'Stock Games' },
                                     { id: 2, name: 'QTech Games' },
                                     { id: 3, name: 'Gap' },
-                                   
+                                 
                                 ].map((provider) => (
                                     <div key={provider.id} className="flex items-center space-x-2">
                                         <Checkbox
