@@ -25,7 +25,7 @@ export default function Home() {
     const [tab, setTab] = useGameType();
     const { isDesktop } = useWindowSize()
     const isPlacementOver = usePlacementOver(roundRecord);
-    const roundRecordWithWinningId = useWinningId(roundRecord, 0);
+    const roundRecordWithWinningId = useWinningId(roundRecord, -2000);
     const { marketSelected } = useMarketSelector();
 
     const handleGlobalBetAmountChange = (amount: number) => {

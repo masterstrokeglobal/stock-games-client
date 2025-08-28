@@ -90,6 +90,15 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
     [remainingAllowed, maxPlacement, setBetAmount]
   );
 
+  const canPlaceBet = useMemo(() => {
+    return (
+      !isPlacingBet &&
+      !isPlaceOver &&
+      betAmount > 0 &&
+      totalBetAmount + betAmount <= maxPlacement
+    );
+  }, [isPlacingBet, isPlaceOver, betAmount, totalBetAmount, maxPlacement]);
+
   return (
     <>
       <div
@@ -228,32 +237,18 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
           </div>
 
           {/* //? bet button  */}
-          <div className="col-span-3 relative w-full h-full flex items-center">
+          <div className="col-span-3 sm:col-span-2 relative w-full h-full flex items-center">
             <button
               onClick={() => placeBetHandler()}
-              disabled={
-                isPlacingBet ||
-                isPlaceOver ||
-                betAmount <= 0 ||
-                totalBetAmount + betAmount > maxPlacement ||
-                totalBetAmount >= maxPlacement
-              }
+              disabled={!canPlaceBet}
               className={`rounded-full z-10 cursor-pointer h-full w-full flex items-center justify-start
-              ${
-                isPlacingBet ||
-                isPlaceOver ||
-                betAmount <= 0 ||
-                totalBetAmount + betAmount > maxPlacement ||
-                totalBetAmount >= maxPlacement
-                  ? "cursor-not-allowed opacity-50"
-                  : "cursor-pointer hover:brightness-110"
-              }`}
+              ${!canPlaceBet ? "opacity-50" : "hover:brightness-110"}`}
             >
               <Image
                 src="/images/slot-machine/refresh-btn.png"
                 alt="refresh-btn"
                 fill
-                className="object-contain w-fit"
+                className="w-full h-full object-contain"
               />
             </button>
           </div>

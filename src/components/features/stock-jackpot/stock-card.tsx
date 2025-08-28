@@ -1,6 +1,5 @@
 import { RankedMarketItem } from "@/hooks/use-leadboard";
 import { useLeaderboard } from "@/hooks/use-multi-socket-leaderboard";
-import useWinningId from "@/hooks/use-winning-id";
 import { cn } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
 import { StockJackpotPlacementType } from "@/models/stock-slot-jackpot";
@@ -13,15 +12,16 @@ const StockCard = ({
   className,
   amount,
   roundRecord,
+  roundRecordWithWinningId,
 }: {
   stock?: RankedMarketItem;
   className?: string;
   amount?: number;
   roundRecord?: RoundRecord;
+  roundRecordWithWinningId?: RoundRecord | null;
 }) => {
 
   const initialPrice = stock ? roundRecord?.getInitialPrice(stock.bitcode as string) : undefined;
-  const roundRecordWithWinningId = useWinningId(roundRecord as RoundRecord, -2000);
 
   // Calculate price and change percentage based on final values when available
   const { price, changePercent } = useMemo(() => {
@@ -171,6 +171,7 @@ const StockCardStack = ({
                   stock={item.stock}
                   amount={item.amount}
                   roundRecord={roundRecord}
+                  roundRecordWithWinningId={roundRecordWithWinningId}
                 />
               ))
             ) : (
