@@ -8,23 +8,25 @@ import GameBoard from "./GameBoard";
 import { StockListMobile } from "./StocksList";
 
 interface GameDisplayProps {
-  stockStates: number[];
   isGameActive: boolean;
   winningIdRoundRecord?: any;
   isPlaceOver?: boolean;
   betAmount: number;
   setBetAmount: (amount: number) => void;
   roundRecord: RoundRecord;
+  currentStocks: any[];
+  stockPrice: any;
 }
 
 const GameDisplay: React.FC<GameDisplayProps> = ({
-  stockStates,
   isGameActive,
   winningIdRoundRecord,
   isPlaceOver,
   betAmount,
   setBetAmount,
   roundRecord,
+  currentStocks,
+  stockPrice,
 }) => {
   const { gameTimeLeft, placeTimeLeft, isGameOver } = useGameState(roundRecord);
   const { data: myPlacementData } = useGetMySlotGamePlacement(roundRecord.id);
@@ -66,7 +68,6 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
       {/* //? game board  */}
       <div className="w-full lg:absolute lg:max-w-[80%] top-6 h-[calc(100%-130px)] z-[70]">
         <GameBoard
-          stockStates={stockStates}
           isGameActive={isGameActive}
           winningIdRoundRecord={winningIdRoundRecord}
           isPlaceOver={isPlaceOver}
@@ -75,18 +76,17 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
         />
       </div>
 
-      {/* //? stock list only for mobile  */}
-      <StockListMobile
-        roundRecord={roundRecord}
-        winningIdRoundRecord={winningIdRoundRecord}
-      />
-
       {/* //? betting panel  */}
       <BettingPanel
         betAmount={betAmount}
         setBetAmount={setBetAmount}
         roundRecord={roundRecord}
       />
+
+      {/* //? stock list only for mobile  */}
+      <StockListMobile currentStocks={currentStocks} stockPrice={stockPrice} />
+
+      {/* //? result dialog  */}
       {previousRoundId && (
         <ResultDialog
           key={String(showResults)}

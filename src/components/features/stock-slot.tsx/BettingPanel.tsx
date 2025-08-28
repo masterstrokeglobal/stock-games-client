@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useIsPlaceOver } from "@/hooks/use-current-game";
 import { RoundRecord } from "@/models/round-record";
 import {
@@ -7,6 +7,7 @@ import {
 } from "@/react-query/slot-game-queries";
 import { toast } from "sonner";
 import useMaxPlacement from "@/hooks/use-max-placement";
+import { useAuthStore } from "@/context/auth-context";
 
 interface BettingPanelProps {
   betAmount: number;
@@ -24,9 +25,13 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
     useCreateStockGamePlacement();
 
   const isPlaceOver = useIsPlaceOver(roundRecord);
-  const { maxPlacement = 1000, minPlacement = 100 } = useMaxPlacement(
+
+  const { maxPlacement, minPlacement = 100 } = useMaxPlacement(
+
     roundRecord.gameType
   );
+  const { userDetails } = useAuthStore();
+  const coinValues = userDetails?.company?.coinValues || [100, 200, 500, 1000];
 
   const totalBetAmount = useMemo(() => {
     return (
@@ -41,7 +46,6 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
 
   const placeBetHandler = useCallback(() => {
     if (isPlacingBet) return;
-    console.log('totalBetAmount', totalBetAmount)
     if (!roundRecord.id || betAmount <= 0) return;
 
     if (totalBetAmount + betAmount > maxPlacement) {
@@ -65,13 +69,10 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
     isPlacingBet,
   ]);
 
-  useEffect(() => {
-    console.log('isPlacingBet', isPlacingBet)
-  }, [isPlacingBet])
+
 
   const handleQuickBet = useCallback((amount: number) => {
     if (remainingAllowed <= 0) {
-      toast.error(`You have reached the total bet limit of ₹${maxPlacement}.`);
       toast.error(`You have reached the total bet limit of ₹${maxPlacement}.`);
       return;
     }
@@ -84,6 +85,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
     setBetAmount(clamped);
   }, [remainingAllowed, maxPlacement, setBetAmount]);
 
+
   return (
     <>
       <div
@@ -94,7 +96,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
           backgroundRepeat: "no-repeat",
           zIndex: 100,
         }}
-        className=" text-[15px] lg:text-[32px] p-3 pt-1 h-[95px] lg:h-[165px] flex justify-center items-center w-full lg:w-[120%] flex-shrink-0 z-20"
+        className=" -translate-y-1/4 lg:translate-y-0 text-[15px] lg:text-[32px] py-1 px-3 lg:p-3 lg:pt-1 h-[95px] lg:h-[165px] flex justify-center items-center w-full lg:w-[120%] flex-shrink-0 z-20"
       >
         <div className="grid grid-cols-12 h-[90%] w-full items-center justify-center py-1 lg:px-5">
           {/* //? bet amount  */}
@@ -134,7 +136,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
                 className="grid grid-cols-3 items-center justify-center gap-1 w-full px-3 lg:px-5 text-center h-full"
               >
                 {/* //? quick bet options  */}
-                {[100, 500, 1000].map((amount) => (
+                {coinValues.slice(0, 3).map((amount) => (
                   <button
                     key={amount}
                     className="leading-none hover:text-yellow-400 transition-colors"
@@ -210,18 +212,28 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
           >
             <div className="text-white leading-none -translate-x-[5%] -translate-y-[10%] text-xs lg:text-xl xl:text-2xl">
               <div className=" text-white font-bold">Total Bet</div>
-              <div className=" text-white">₹{totalBetAmount || 0}</div>
+              <div className=" text-white truncate">₹{totalBetAmount || 0}</div>
             </div>
           </div>
 
-          {/* //? play button  */}
-          <div className="col-span-3 relative w-full h-full">
+          {/* //? bet button  */}
+          <div className="col-span-3 relative w-full h-full flex items-center">
             <button
-              onClick={isPlaceOver ? undefined : placeBetHandler}
-              disabled={isPlacingBet || isPlaceOver || betAmount <= 0 || totalBetAmount + betAmount > maxPlacement || totalBetAmount >= maxPlacement}
-              className={`absolute top-0 lg:top-3 left-0 rounded-full z-10 cursor-pointer
+              onClick={() => placeBetHandler()}
+              disabled={
+                isPlacingBet ||
+                isPlaceOver ||
+                betAmount <= 0 ||
+                totalBetAmount + betAmount > maxPlacement ||
+                totalBetAmount >= maxPlacement
+              }
+              className={`absolute rounded-full z-10 cursor-pointer h-full max-h-[100%] max-w-[100%]
               ${
-                isPlacingBet || isPlaceOver || betAmount <= 0 || totalBetAmount + betAmount > maxPlacement || totalBetAmount >= maxPlacement
+                isPlacingBet ||
+                isPlaceOver ||
+                betAmount <= 0 ||
+                totalBetAmount + betAmount > maxPlacement ||
+                totalBetAmount >= maxPlacement
                   ? "cursor-not-allowed opacity-50"
                   : "cursor-pointer hover:brightness-110"
               }`}
@@ -229,16 +241,16 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
               <img
                 src="/images/slot-machine/refresh-btn.png"
                 alt="refresh-btn"
-                className="lg:h-[110px] h-[52px]"
+                className="lg:h-[90%] h-[100%]"
               />
             </button>
-            <button className="absolute bottom-0 lg:bottom-3 lg:left-[100px] left-[50px] rounded-full z-20">
+            {/* <button className="absolute bottom-0 lg:bottom-3 lg:left-[100px] left-[50px] rounded-full z-20">
               <img
                 src="/images/slot-machine/play-btn.png"
                 alt="play-btn"
                 className="lg:h-10 h-6"
               />
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

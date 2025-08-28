@@ -1,36 +1,36 @@
 "use client";
 
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import {  TrendingUp, Trophy, Wallet, Gift, Target } from 'lucide-react';
-import { useGetUserBonusSummary, useEnhancedUserBonusStatus } from '@/react-query/enhanced-bonus-queries';
 import { useAuthStore } from '@/context/auth-context';
-import { cn } from '@/lib/utils';
+import { cn, INR } from '@/lib/utils';
+import { useEnhancedUserBonusStatus, useGetUserBonusSummary } from '@/react-query/enhanced-bonus-queries';
+import { Gift, Target, TrendingUp, Trophy, Wallet } from 'lucide-react';
+import React from 'react';
 
 interface BonusSummaryProps {
     className?: string;
     showHeader?: boolean;
 }
 
-// interface BonusAssignmentData {
-//     id: number;
-//     initialBonusAmount: number;
-//     potBalance: number;
-//     requiredWager: number;
-//     completedWager: number;
-//     remainingWager: number;
-//     status: string;
-//     wagerProgress: string;
-//     wagerProgressNumeric: number;
-//     isExpired: boolean;
-//     daysUntilExpiry: number | null;
-//     statusDisplay: string;
-//     bonusName: string;
-//     triggerEvent: string;
-//     createdAt: string;
-// }
+export interface BonusAssignmentData {
+    id: number;
+    initialBonusAmount: number;
+    potBalance: number;
+    requiredWager: number;
+    completedWager: number;
+    remainingWager: number;
+    status: string;
+    wagerProgress: string;
+    wagerProgressNumeric: number;
+    isExpired: boolean;
+    daysUntilExpiry: number | null;
+    statusDisplay: string;
+    bonusName: string;
+    triggerEvent: string;
+    createdAt: string;
+}
 
 const BonusSummaryComponent: React.FC<BonusSummaryProps> = ({ 
     className, 
@@ -127,26 +127,26 @@ const BonusSummaryComponent: React.FC<BonusSummaryProps> = ({
                     <div className="grid grid-cols-2 gap-4">
                         <div className="text-center">
                             <p className="text-sm text-platform-text/70">Bonus Balance</p>
-                            <p className="text-2xl font-bold text-green-400">${summaryObj?.wallet?.bonusBalance ?? 0}</p>
+                            <p className="text-2xl font-bold text-green-400">{INR(summaryObj?.wallet?.bonusBalance)}</p>
                             <p className="text-xs text-platform-text/60">available now</p>
                         </div>
                         {activeBonuses.length > 0 ? (
                             <div className="text-center">
                                 <p className="text-sm text-platform-text/70">Total Potential Release</p>
-                                <p className="text-2xl font-bold text-purple-400">${totalPotBalance}</p>
+                                <p className="text-2xl font-bold text-purple-400">{INR(totalPotBalance)}</p>
                                 <p className="text-xs text-platform-text/60">unlock by wagering</p>
                             </div>
                         ) : (
                             <div className="text-center">
                                 <p className="text-sm text-platform-text/70">Total Released (All-Time)</p>
-                                <p className="text-2xl font-bold text-purple-400">${aggregates?.completed?.totalInitial ?? 0}</p>
+                                <p className="text-2xl font-bold text-purple-400">{INR(aggregates?.completed?.totalInitial)}</p>
                                 <p className="text-xs text-platform-text/60">from completed bonuses</p>
                             </div>
                         )}
                         {enhancedStatus?.directCreditBonusAmount > 0 && (
                             <div className="col-span-2 text-center">
                                 <p className="text-sm text-platform-text/70">Recent Direct Credits</p>
-                                <p className="text-xl font-semibold text-green-300">+${enhancedStatus.directCreditBonusAmount}</p>
+                                <p className="text-xl font-semibold text-green-300">+{INR(enhancedStatus.directCreditBonusAmount)}</p>
                             </div>
                         )}
                     </div>
@@ -173,7 +173,7 @@ const BonusSummaryComponent: React.FC<BonusSummaryProps> = ({
                                             <span className="text-platform-text/60">-</span>
                                             <span className="text-sm text-platform-text">{bonus.name}</span>
                                             <Badge variant="secondary" className="text-xs bg-[#EEC53C] text-black">
-                                                ${bonus.potBalance}
+                                                {INR(bonus.potBalance, true)}
                                             </Badge>
                                         </div>
                                         <div className="flex items-center gap-2 text-sm text-platform-text/70">
@@ -241,7 +241,7 @@ const BonusSummaryComponent: React.FC<BonusSummaryProps> = ({
                                         <p className="truncate font-medium">{bonus.name}</p>
                                         {releasedDate && <p className="text-[10px] text-platform-text/50">Released {releasedDate}</p>}
                                     </div>
-                                    <span className="text-green-400 font-semibold whitespace-nowrap">+${bonus.initialBonusAmount}</span>
+                                    <span className="text-green-400 font-semibold whitespace-nowrap">+{INR(bonus.initialBonusAmount)}</span>
                                 </div>
                             );
                         })}
@@ -261,15 +261,15 @@ const BonusSummaryComponent: React.FC<BonusSummaryProps> = ({
                     <CardContent className="space-y-4">
                         <div className="grid grid-cols-3 gap-4 text-center">
                             <div>
-                                <p className="text-2xl font-bold text-orange-400">${totalRequiredWager}</p>
+                                <p className="text-2xl font-bold text-orange-400">{INR(totalRequiredWager)}</p>
                                 <p className="text-sm text-platform-text/70">Total Required</p>
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-green-400">${totalCompletedWager}</p>
+                                <p className="text-2xl font-bold text-green-400">{INR(totalCompletedWager)}</p>
                                 <p className="text-sm text-platform-text/70">Completed ({overallProgress.toFixed(1)}%)</p>
                             </div>
                             <div>
-                                <p className="text-2xl font-bold text-red-400">${totalRemainingWager}</p>
+                                <p className="text-2xl font-bold text-red-400">{INR(totalRemainingWager)}</p>
                                 <p className="text-sm text-platform-text/70">Remaining</p>
                             </div>
                         </div>

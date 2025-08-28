@@ -4,7 +4,7 @@ import { RoundRecordGameType } from "@/models/round-record";
 import { useGetAllGameHistory } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
 import { useGameType } from "@/hooks/use-game-type";
-import { useMemo } from "react";
+import { useMemo, memo } from "react";
 
 // Table row background based on winner
 const HEAD_BG =
@@ -46,11 +46,11 @@ const LastRounds = ({
                 <h2 className="font-play tracking-wider font-bold lg:text-md text-center">Last Game Results</h2>
             </header>
             <div className="mt-2 flex-1">
-                <div className="flex w-full px-4 py-3 font-play text-[15px] sticky top-0 z-10 tracking-wider text-white text-sm gap-4">
-                    <div className="flex-1 text-left uppercase whitespace-nowrap">Round ID</div>
-                    <div className="flex-1 text-left uppercase whitespace-nowrap">Date</div>
-                    <div className="flex-1 text-left uppercase whitespace-nowrap">Time</div>
-                    <div className="flex-1 text-left uppercase whitespace-nowrap">Winner</div>
+                <div className="w-full grid grid-cols-4 py-3 font-play text-[15px] sticky top-0 z-10 tracking-wider text-white text-sm gap-1">
+                    <div className="text-left uppercase truncate px-2">Round ID</div>
+                    <div className="text-left uppercase truncate px-2">Date</div>
+                    <div className="text-left uppercase truncate px-2">Time</div>
+                    <div className="text-left uppercase truncate px-2">Winner</div>
                 </div>
                 <ScrollArea scrollThumbClassName="bg-[#4467CC]" type="auto" className="font-phudu h-[calc(100svh/2-230px)] font-light overflow-y-auto">
                     <div className="min-w-full text-sm text-left text-white relative">
@@ -70,22 +70,22 @@ const LastRounds = ({
                                         <div
                                             key={idx}
                                             className={cn(
-                                                "text-white flex items-center h-9 font-phudu font-light rounded-full mb-2 text-sm"
+                                                "text-white items-center h-9 font-phudu font-light rounded-full mb-2 text-sm grid grid-cols-4 gap-1"
                                             )}
                                             style={{
                                                 background: rowBg,
                                             }}
                                         >
-                                            <div className="px-4 py-1 flex-1 whitespace-nowrap text-left">
+                                            <div className=" px-2 py-1 flex-1 whitespace-nowrap text-left truncate">
                                                 {row.id}
                                             </div>
-                                            <div className="px-4 py-1 flex-1 whitespace-nowrap text-left">
+                                            <div className=" px-2 py-1 flex-1 whitespace-nowrap text-left truncate">
                                                 {dayjs(row.createdAt).format("DD/MM/YYYY")}
                                             </div>
-                                            <div className="px-4 py-1 flex-1 whitespace-nowrap text-left">
+                                            <div className=" px-2 py-1 flex-1 whitespace-nowrap text-left truncate">
                                                 {dayjs(row.createdAt).format("hh:mm A")}
                                             </div>
-                                            <div className="px-4 py-1 flex-1 whitespace-nowrap text-left">
+                                            <div className=" px-2 py-1 flex-1 whitespace-nowrap text-left truncate">
                                                     {row.winningSide}
                                             </div>
                                         </div>
@@ -100,4 +100,4 @@ const LastRounds = ({
     );
 };
 
-export default LastRounds;
+export default memo(LastRounds);

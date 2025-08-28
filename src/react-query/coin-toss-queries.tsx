@@ -21,7 +21,7 @@ export const useCreateCoinTossPair = () => {
 
 export const useGetCoinTossPairs = (filter: SearchFilters) => {
     return useQuery({
-        queryKey: ['coin-toss-pairs',filter],
+        queryKey: ['coin-toss-pairs', filter],
         queryFn: async () => {
             const response = await coinTossPairAPI.getCoinTossPairs(filter);
             return {
@@ -56,3 +56,16 @@ export const useUpdateCoinTossPair = (id: string) => {
     });
 };
 
+export const useDeleteCoinTossPair = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: coinTossPairAPI.deleteCoinTossPair,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['coin-toss-pairs'] });
+            toast.success("Coin toss pair deleted successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error deleting coin toss pair");
+        }
+    });
+};

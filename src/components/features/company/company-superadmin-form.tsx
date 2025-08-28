@@ -25,6 +25,7 @@ export const createCompanyInputSchema = z.object({
     gameRestrictions: z.array(z.nativeEnum(RoundRecordGameType)).optional(),
     userVerfication: z.boolean().default(false).optional(),
     otpIntegration: z.boolean().default(false).optional(),
+    askWithdrawlOption: z.boolean().default(false).optional(),
     theme: z.record(z.string(), z.string()).optional(),
     minPlacement: z.coerce.number().optional(),
     allowedCasino: z.boolean().optional(),
@@ -197,6 +198,13 @@ const CompanySuperAdminForm = ({ defaultValues, onSubmit, isLoading }: Props) =>
                 title="OTP Integration"
                 description=" Phone Number Verification is required for creating an account"
                 label="Phone Number Verification" />
+
+            <FormSwitch
+                control={control}
+                name="askWithdrawlOption"
+                title="Ask Withdrawl Option"
+                description=" Ask Withdrawl Option at  the time of deposit"
+                label="Ask Withdrawl Option" />
             <FormImage
                 control={control}
                 name="paymentImage"

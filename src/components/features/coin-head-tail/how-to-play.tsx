@@ -3,24 +3,20 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { useLocale } from "next-intl";
 import React, { useMemo, useState } from "react";
 
 interface HowToPlayDialogProps {
     children: React.ReactNode;
 }
 
-
-
 const HowToPlayDialog: React.FC<HowToPlayDialogProps> = ({
     children,
 }) => {
     const [open, setOpen] = useState(false);
-
-    const locale = useLocale();
+    const [language, setLanguage] = useState("en");
 
     const videoUrl = useMemo(() => {
-        switch (locale) {
+        switch (language) {
             case "en":
                 return "/images/how-to-play/videos/coin-toss-en.mp4";
             case "hi":
@@ -28,7 +24,7 @@ const HowToPlayDialog: React.FC<HowToPlayDialogProps> = ({
             default:
                 return "/images/how-to-play/videos/coin-toss-en.mp4";
         }
-    }, [locale]);
+    }, [language]);
 
     return (
         <Dialog open={open} onOpenChange={setOpen} modal={true}>
@@ -61,8 +57,30 @@ const HowToPlayDialog: React.FC<HowToPlayDialogProps> = ({
                     </div>
                     <div className="p-0">
                         <div className="p-6">
-                            <div className="bg-[#004DA9B0] rounded-lg p-4 text-white text-sm whitespace-pre-line min-h-[200px] leading-relaxed">
+                            <div className="bg-[#004DA9B0] rounded-lg p-4 text-white text-sm whitespace-pre-line min-h-[200px] leading-relaxed flex flex-col gap-4">
                                 <video src={videoUrl} controls className="h-auto w-full" />
+                                <div className="flex gap-2 justify-center pt-4">
+                                    <button
+                                        onClick={() => setLanguage("en")}
+                                        className={`px-4 py-1 flex-1 rounded-md text-sm font-semibold ${
+                                            language === "en"
+                                                ? "bg-[#0A023B] text-white"
+                                                : "bg-transparent text-[#8BB4FF] border border-[#12409D]"
+                                        }`}
+                                    >
+                                        English
+                                    </button>
+                                    <button
+                                        onClick={() => setLanguage("hi")}
+                                        className={`px-4 py-1 rounded-md flex-1 text-sm font-semibold ${
+                                            language === "hi"
+                                                ? "bg-[#0A023B] text-white"
+                                                : "bg-transparent text-[#8BB4FF] border border-[#12409D]"
+                                        }`}
+                                    >
+                                        Hindi
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

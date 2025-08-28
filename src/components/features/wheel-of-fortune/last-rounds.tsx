@@ -46,7 +46,7 @@ const LastRoundsTable: React.FC<{ className?: string; tableClassName?: string }>
           <div className="flex w-full text-white font-semibold text-xs md:text-base">
             <div className="flex-1 px-3 py-2 whitespace-nowrap">Round ID</div>
             <div className="flex-1 px-3 py-2 whitespace-nowrap">Date</div>
-            <div className="flex-1 px-3 py-2 whitespace-nowrap">Time</div>
+            <div className="flex-1 px-3 py-2 whitespace-nowrap md:block hidden">Time</div>
             <div className="flex-1 px-3 py-2 whitespace-nowrap">Winner</div>
           </div>
           {/* Table Body */}
@@ -79,7 +79,7 @@ const LastRoundsTable: React.FC<{ className?: string; tableClassName?: string }>
                     <div className="flex-1 px-3 py-2 text-white">
                       {dayjs(round.createdAt).format("DD/MM/YYYY")}
                     </div>
-                    <div className="flex-1 px-3 py-2 text-white">
+                    <div className="flex-1 px-3 py-2 text-white md:block hidden">
                       {dayjs(round.createdAt).format("hh:mm A")}
                     </div>
                     <div className="flex-1 px-3 py-2">

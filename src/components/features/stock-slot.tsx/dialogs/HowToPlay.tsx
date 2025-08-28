@@ -14,8 +14,7 @@ const HowToPlay = ({ children }: { children: React.ReactNode }) => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger className="w-full">{children}</DialogTrigger>
       <DialogContent
-        // showButton={false}
-        className="bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl md:max-h-[70vh]"
+        className="[&>button]:text-white [&>button]:focus:ring-0 bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl"
       >
         <div
           style={{
@@ -24,7 +23,7 @@ const HowToPlay = ({ children }: { children: React.ReactNode }) => {
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
           }}
-          className="w-full h-full relative flex flex-col items-center justify-center p-[10%] pt-[15%] font-wendy-one text-[#FFFFFFB2]"
+          className=" md:max-h-[70vh] w-full h-full relative flex flex-col items-center justify-center p-[10%] pt-[15%] font-wendy-one text-[#FFFFFFB2]"
         >
           <img
             src="/images/slot-machine/happy-bull.png"
@@ -40,101 +39,100 @@ const HowToPlay = ({ children }: { children: React.ReactNode }) => {
             <div className="flex flex-col gap-2 text-left text-white">
               <h3>1. Game Overview</h3>
               <div className="ps-2 lg:ps-5">
- <p>
-                The Stock Slot Game combines the excitement of stock market
-                numbers with slot-style gameplay.{" "}
-              </p>
-              <p>
-                You have <b>30 seconds to place your bets</b> and{" "}
-                <b>30 seconds to view the results</b> of the spin.
-              </p>
+                <p>
+                  The Stock Slot Game combines the excitement of stock market
+                  numbers with slot-style gameplay.{" "}
+                </p>
+                <p>
+                  You have <b>30 seconds to place your bets</b> and{" "}
+                  <b>30 seconds to view the results</b> of the spin.
+                </p>
               </div>
-             
             </div>
 
             <div className="flex flex-col gap-2 text-left">
               <h3>2. Betting Rules</h3>
               <div className="ps-2 lg:ps-5">
-              <p>
-                You can only place bets during the <b>Betting Open</b> state
-                (first 30 seconds).
-              </p>
-              <p>
-                Once the <b>Result Spin</b> begins, no bets are allowed until
-                the next round.
-              </p>
-              <p>
-                The minimum bet amount is <b>100</b>.
-              </p>
-              <p>
-                You can increase or decrease your bet in steps of <b>100</b>{" "}
-                during the betting period.
-              </p>
+                <p>
+                  You can only place bets during the <b>Betting Open</b> state
+                  (first 30 seconds).
+                </p>
+                <p>
+                  Once the <b>Result Spin</b> begins, no bets are allowed until
+                  the next round.
+                </p>
+                <p>
+                  The minimum bet amount is <b>100</b>.
+                </p>
+                <p>
+                  You can increase or decrease your bet in steps of <b>100</b>{" "}
+                  during the betting period.
+                </p>
               </div>
             </div>
 
             <div className="flex flex-col gap-2 text-left">
               <h3>3. Stock Selection & Price Logic</h3>
               <div className="ps-2 lg:ps-5">
-              <p>
-                The game uses <b>5 randomly selected stocks</b> from the chosen
-                market.
-              </p>
-              <p>
-                Stock values are derived from their{" "}
-                <b>.1 value (first decimal point)</b> to generate the slot
-                numbers.
-              </p>
-              <p>These 5 numbers form the base result for the slot reels.</p>
+                <p>
+                  The game uses <b>5 randomly selected stocks</b> from the
+                  chosen market.
+                </p>
+                <p>
+                  Stock values are derived from their{" "}
+                  <b>.1 value (first decimal point)</b> to generate the slot
+                  numbers.
+                </p>
+                <p>These 5 numbers form the base result for the slot reels.</p>
               </div>
             </div>
 
             <div className="flex flex-col gap-2 text-left">
               <h3>5. Winning Conditions</h3>
               <div className="ps-2 lg:ps-5">
-              <p>
-                The slot machine result is decided by{" "}
-                <b>matching numbers on the middle row</b>.
-              </p>
-              <p>
-                <b>Multipliers based on matches</b>:
-              </p>
-              <p>
-                <b>2 matches</b> → Small multiplier
-              </p>
-              <p>
-                <b>3 matches</b> → Medium multiplier
-              </p>
-              <p>
-                <b>4 matches</b> → High multiplier
-              </p>
-              <p>
-                <b>5 matches (Full Line)</b> → Maximum multiplier
-              </p>
-              <p>
-                <b>Bonus symbols</b>, if present, add <b>extra rewards</b> on
-                top of your multiplier.
-              </p>
+                <p>
+                  The slot machine result is decided by{" "}
+                  <b>matching numbers on the middle row</b>.
+                </p>
+                <p>
+                  <b>Multipliers based on matches</b>:
+                </p>
+                <p>
+                  <b>2 matches</b> → Small multiplier
+                </p>
+                <p>
+                  <b>3 matches</b> → Medium multiplier
+                </p>
+                <p>
+                  <b>4 matches</b> → High multiplier
+                </p>
+                <p>
+                  <b>5 matches (Full Line)</b> → Maximum multiplier
+                </p>
+                <p>
+                  <b>Bonus symbols</b>, if present, add <b>extra rewards</b> on
+                  top of your multiplier.
+                </p>
               </div>
             </div>
 
             <div className="flex flex-col gap-2 text-left">
               <h3>6. Result & Payout</h3>
               <div className="ps-2 lg:ps-5">
-              <p>After the 30-second spin, results are displayed showing:</p>
-              <p>
-                <b>Stock values</b>
-              </p>
-              <p>
-                <b>Middle row match count</b>
-              </p>
-              <p>
-                <b>Bonus symbols collected</b>
-              </p>
-              <p>
-                Winnings are automatically credited based on your bet and
-                multiplier.
-              </p>
+                <p>After the 30-second spin, results are displayed showing:</p>
+                <p>
+                  <b>Stock values</b>
+                </p>
+                <p>
+                  <b>Middle row match count</b>
+                </p>
+                <p>
+                  <b>Bonus symbols collected</b>
+                </p>
+                <p>
+                  Winnings are automatically credited based on your bet and
+                  multiplier.
+                </p>
               </div>
             </div>
           </DialogDescription>

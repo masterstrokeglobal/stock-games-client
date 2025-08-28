@@ -61,6 +61,12 @@ const MobileBettingHistory = ({ history }: { history: History[] }) => {
                             <span className="text-white font-semibold">₹ {row.amount}</span>
                         </div>
                         <div className="flex justify-between">
+                            <span className="text-[#A3A8D6]">Bet</span>
+                            <span className="text-white font-semibold">
+                                {` ${row.number} (${row.placementType})`}
+                            </span>
+                        </div>
+                        <div className="flex justify-between">
                             <span className="text-[#A3A8D6]">Dice Result</span>
                             <span className="text-white font-semibold">{row.DiceNumber}</span>
                         </div>
@@ -68,6 +74,7 @@ const MobileBettingHistory = ({ history }: { history: History[] }) => {
                             <span className="text-[#A3A8D6]">Status</span>
                             <StatusIndicator isWinner={row.isWinner} />
                         </div>
+
                         <div className="flex justify-between">
                             <span className="text-[#A3A8D6]">Profit/Loss</span>
                             <span className={`font-semibold ${row.netProfitLoss > 0 ? "text-[#00FF85]" : "text-[#FF4B4B]"}`}>
@@ -127,7 +134,7 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
     const [open, setOpen] = useState(false);
     const [page, setPage] = useState(1);
     const { isMobile } = useWindowSize();
-    const { data: userGameHistory, refetch,isFetching } = useGetUserGameHistory({ page, roundRecordGameType: RoundRecordGameType.DICE });
+    const { data: userGameHistory, refetch, isFetching } = useGetUserGameHistory({ page, roundRecordGameType: RoundRecordGameType.DICE });
 
     const { history, totalPages } = useMemo(() => {
         const history: History[] = userGameHistory?.data || [];

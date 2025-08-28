@@ -19,7 +19,6 @@ const Page = () => {
   );
 
   const [betAmount, setBetAmount] = useState<number>(100);
-  const [stockStates, setStockStates] = useState<number[]>([0, 0, 0, 0, 0]);
   
   // Add component loading state
   const [isComponentLoaded, setIsComponentLoaded] = useState(false);
@@ -28,33 +27,43 @@ const Page = () => {
 
   const winningIdRoundRecord = useWinningId(roundRecord);
   const { gameTimeLeft, isPlaceOver } = useGameState(roundRecord);
-  const { stocks } = useLeaderboard(roundRecord);
+  const { stocks } = useLeaderboard(roundRecord || null);
 
   // Determine if game is active (during betting or game phase)
   const isGameActive = useMemo(() => {
     return !isPlaceOver || gameTimeLeft.raw > 0;
   }, [isPlaceOver, gameTimeLeft]);
 
-  // Calculate stock states from stock prices (same logic as platform version)
-  useEffect(() => {
-    if (stocks.length > 0) {
-      const newStockStates: number[] = [...stockStates];
+  const { currentStocks, stockPrice } = useMemo(() => {
+    if (!roundRecord) return { currentStocks: [], stockPrice: {} };
 
-      let localStocks: any = winningIdRoundRecord?.sortedMarketItems ? winningIdRoundRecord.sortedMarketItems : stocks;
-      localStocks = localStocks.sort((a: any, b: any) => a.name.localeCompare(b.name));
+    const currentStocks = roundRecord.market.sort(
+      (a, b) => a.name?.localeCompare(b.name ?? "") ?? 0
+    );
+    let stockPrice: Record<string, number> = roundRecord.initialValues ?? {};
 
-      // Handle first 5 columns (stock prices)
-      localStocks.slice(0, 5).forEach((stock: any, index: any) => {
+    if (
+      roundRecord.initialValues &&
+      Object.keys(roundRecord.initialValues).length > 0
+    ) {
+      stockPrice = roundRecord.initialValues;
+    }
+
+    if (stocks.length > 0 && !winningIdRoundRecord?.finalPricesPresent) {
+      stocks.forEach((stock) => {
         if (stock.price) {
-          const price = parseFloat(stock.price).toFixed(1);
-          const [, decimalPart] = price.split('.');
-          const firstDecimalDigit = decimalPart ? parseInt(decimalPart[0]) : 0;
-          newStockStates[index] = firstDecimalDigit;
+          stockPrice[stock.code ?? ""] = stock.price;
         }
       });
-      setStockStates(newStockStates);
+    } else if (
+      winningIdRoundRecord?.finalPricesPresent &&
+      winningIdRoundRecord?.finalDifferences
+    ) {
+      stockPrice = winningIdRoundRecord.finalDifferences;
     }
-  }, [stocks, winningIdRoundRecord]);
+
+    return { currentStocks, stockPrice };
+  }, [roundRecord, stocks, winningIdRoundRecord]);
 
   // Preload critical assets
   useEffect(() => {
@@ -107,7 +116,7 @@ const Page = () => {
   if (!marketSelected)
     return (
       <MarketSelector
-        className="min-h-[calc(100svh-100px)] max-w-2xl mx-auto"
+        className="min-h-[calc(100svh)]mx-auto"
         title="Stock Slot Market"
       />
     );
@@ -128,8 +137,9 @@ const Page = () => {
     >
       <Navbar />
       <StockSlot 
-        stockStates={stockStates}
         isGameActive={isGameActive}
+        currentStocks={currentStocks}
+        stockPrice={stockPrice}
         winningIdRoundRecord={winningIdRoundRecord}
         isPlaceOver={isPlaceOver}
         betAmount={betAmount}

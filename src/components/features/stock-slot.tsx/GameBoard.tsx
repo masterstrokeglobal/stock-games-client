@@ -9,7 +9,6 @@ interface Wheel {
 }
 
 interface StockSlot2DWheelProps {
-  stockStates: number[];
   isGameActive?: boolean;
   winningIdRoundRecord?: any;
   isPlaceOver?: boolean;
@@ -20,7 +19,6 @@ interface StockSlot2DWheelProps {
 const defaultGlowState = [false, false, false, false, false];
 
 const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
-  stockStates = [0, 0, 0, 0, 0],
   isGameActive = false,
   winningIdRoundRecord,
   isGameOver,
@@ -93,10 +91,9 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
     if (
       !isGameActive &&
       winningIdRoundRecord &&
-      stockStates.some((state) => state !== 0)
+      winningIdRoundRecord.finalPricesPresent
     ) {
-      // Use finalDifferences if available, otherwise fallback to stockStates
-      let wheelValues = stockStates;
+      let wheelValues: number[] = [0, 0, 0, 0, 0];
 
       if (
         winningIdRoundRecord?.finalPricesPresent &&
@@ -113,25 +110,22 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
         sortedMarketItems.slice(0, 5).forEach((stock: any, index: number) => {
           const stockCode = stock.code || stock.bitcode;
           if (stockCode && winningIdRoundRecord.finalDifferences[stockCode]) {
-            // Use same precision as StocksList (.toFixed(1)) for consistency
+            // Use same precision as StocksList (.toFixed(2)) for consistency
             const price = parseFloat(
               winningIdRoundRecord.finalDifferences[stockCode]
-            ).toFixed(1);
-            const [, decimalPart] = price.split(".");
-            const firstDecimalDigit = decimalPart
-              ? parseInt(decimalPart[0])
-              : 0;
-            finalDifferencesArray[index] = firstDecimalDigit;
+            ).toFixed(2);
+            const lastDigit = Number(price.split(".")[1]?.[0]) || 0;
+            finalDifferencesArray[index] = lastDigit;
           } else {
-            finalDifferencesArray[index] = stockStates[index] || 0;
-            console.log(`Fallback for index ${index}: ${stockStates[index] || 0}`);
+            finalDifferencesArray[index] = 0;
+            console.log(`Fallback for index ${index}: ${0}`);
           }
         });
 
         wheelValues = finalDifferencesArray;
         console.log("Final wheel values:", wheelValues);
       } else {
-        console.log("Using fallback stockStates:", stockStates);
+        console.log("Using fallback stockStates:", wheelValues);
       }
 
       // Reset glow state first
@@ -179,7 +173,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
       );
 
       // Animate each wheel to its final position with staggered timin
-      stockStates.forEach((targetValue, index) => {
+      wheelValues.forEach((targetValue, index) => {
         const wheelRef = wheelRefs.current[index];
         if (wheelRef && targetValue !== undefined) {
           const finalValue = targetValue;
@@ -228,7 +222,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
         }
       });
     }
-  }, [isGameActive, winningIdRoundRecord, stockStates, numberHeight]);
+  }, [isGameActive, winningIdRoundRecord, numberHeight]);
 
   //? adjusting wheel height
   useEffect(() => {

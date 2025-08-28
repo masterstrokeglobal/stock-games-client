@@ -20,8 +20,54 @@ export enum TransactionType {
     AGENT_WITHDRAWAL = "agent_withdrawal",
     POINTS_EARNED = "points_earned",
     POINTS_REDEEMED = "points_redeemed",
-  }
-  
+}
+
+export enum PaymentMethod {
+    // Main Categories
+    CRYPTOCURRENCY = "CRYPTOCURRENCY",
+    CRYPTO = "CRYPTO",
+    BANK_TRANSFER = "BANK_TRANSFER",
+
+    // Specific Bank Transfer Methods
+    NEFT = "NEFT",
+    RTGS = "RTGS",
+    UPI = "UPI",
+
+    // Internal/Admin
+    AGENT_WALLET = "AGENT_WALLET",
+    ADMIN_CREDIT = "ADMIN_CREDIT",
+    COMPANY_WALLET = "COMPANY_WALLET",
+
+    // Other
+    OTHER = "OTHER",
+    UNKNOWN = "UNKNOWN"
+}
+
+
+export enum PaymentMethodCategory {
+    CRYPTOCURRENCY = "CRYPTOCURRENCY",
+    BANK_TRANSFER = "BANK_TRANSFER",
+    OTHER = "OTHER"
+}
+
+export const PAYMENT_METHOD_CATEGORIES: Record<PaymentMethod, PaymentMethodCategory> = {
+    [PaymentMethod.CRYPTOCURRENCY]: PaymentMethodCategory.CRYPTOCURRENCY,
+    [PaymentMethod.CRYPTO]: PaymentMethodCategory.CRYPTOCURRENCY, // CRYPTO maps to CRYPTOCURRENCY category
+    [PaymentMethod.BANK_TRANSFER]: PaymentMethodCategory.BANK_TRANSFER,
+
+    // Specific bank transfer methods map to BANK_TRANSFER category
+    [PaymentMethod.NEFT]: PaymentMethodCategory.BANK_TRANSFER,
+    [PaymentMethod.RTGS]: PaymentMethodCategory.BANK_TRANSFER,
+    [PaymentMethod.UPI]: PaymentMethodCategory.BANK_TRANSFER,
+
+    // Internal transactions map to OTHER category
+    [PaymentMethod.AGENT_WALLET]: PaymentMethodCategory.OTHER,
+    [PaymentMethod.ADMIN_CREDIT]: PaymentMethodCategory.OTHER,
+    [PaymentMethod.COMPANY_WALLET]: PaymentMethodCategory.OTHER,
+
+    [PaymentMethod.OTHER]: PaymentMethodCategory.OTHER,
+    [PaymentMethod.UNKNOWN]: PaymentMethodCategory.OTHER
+};
 
 export enum TransactionStatus {
     PENDING = "pending",
@@ -41,15 +87,15 @@ export class Transaction {
     companyId!: number; // Foreign key
     companyWalletId!: number; // Foreign key
     company?: Company;
-    agent?:Agent;
+    agent?: Agent;
     createdAt!: Date;
     updatedAt!: Date;
     deletedAt?: Date;
     wallet: any;
-    user?: User; 
+    user?: User;
 
 
-    constructor(data: Partial<Transaction|any>) {
+    constructor(data: Partial<Transaction | any>) {
         Object.assign(this, data);
         this.user = data?.wallet?.user ? new User(data?.wallet?.user) : undefined;
         this.agent = data?.agentWallet?.agent ? new Agent(data?.agentWallet?.agent) : undefined

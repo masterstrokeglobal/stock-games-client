@@ -84,7 +84,7 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger className="w-full">{children}</DialogTrigger>
       <DialogContent
-        className="bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl"
+        className="[&>button]:text-white [&>button]:focus:ring-0 bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl "
       >
         <div
           style={{

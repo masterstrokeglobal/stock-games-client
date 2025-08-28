@@ -6,25 +6,28 @@ import { StockListDesktop } from "./StocksList";
 import MenuDialog from "./dialogs/MenuDialog";
 import { useAudio } from "@/context/audio-context";
 import InfoDialog from "./dialogs/InfoDialog";
+import DemoVideo from "./dialogs/demo-video";
 
 interface GameScreenProps {
-  stockStates: number[];
   isGameActive: boolean;
   winningIdRoundRecord?: any;
   isPlaceOver?: boolean;
   betAmount: number;
   setBetAmount: (amount: number) => void;
   roundRecord: any;
+  currentStocks: any[];
+  stockPrice: any;
 }
 
 const StockSlot: React.FC<GameScreenProps> = ({
-  stockStates,
   isGameActive,
   winningIdRoundRecord,
   isPlaceOver,
   betAmount,
   setBetAmount,
   roundRecord,
+  currentStocks,
+  stockPrice,
 }) => {
   const { isMuted, toggleMute } = useAudio();
   return (
@@ -77,7 +80,7 @@ const StockSlot: React.FC<GameScreenProps> = ({
                 />
               </button>
             </InfoDialog>
-            <HowToPlay>
+            <DemoVideo>
               <button className="w-10 h-10">
                 <img
                   className="w-full h-full"
@@ -85,7 +88,7 @@ const StockSlot: React.FC<GameScreenProps> = ({
                   alt=""
                 />
               </button>
-            </HowToPlay>
+            </DemoVideo>
           </div>
         </div>
 
@@ -128,26 +131,41 @@ const StockSlot: React.FC<GameScreenProps> = ({
                 How to play
               </div>
             </HowToPlay>
+            <DemoVideo>
+              <div
+                style={{
+                  backgroundImage:
+                    "url('/images/slot-machine/menu-item-bg-2.png')",
+                  backgroundSize: "100% 100%",
+                  backgroundPosition: "center center",
+                  backgroundRepeat: "no-repeat",
+                }}
+                className="text-center px-3 py-2"
+              >
+                Demo Video
+              </div>
+            </DemoVideo>
           </div>
         </div>
 
         {/* //? game board and betting panel  */}
         <div className="lg:col-span-8 flex flex-col items-center justify-end lg:p-5 h-full relative z-20 flex-1">
           <GameDisplay
-            stockStates={stockStates}
             isGameActive={isGameActive}
             winningIdRoundRecord={winningIdRoundRecord}
             isPlaceOver={isPlaceOver}
             betAmount={betAmount}
             setBetAmount={setBetAmount}
             roundRecord={roundRecord}
+            currentStocks={currentStocks}
+            stockPrice={stockPrice}
           />
         </div>
 
         {/* //? stock list  */}
         <StockListDesktop
-          roundRecord={roundRecord}
-          winningIdRoundRecord={winningIdRoundRecord}
+          currentStocks={currentStocks}
+          stockPrice={stockPrice}
         />
       </div>
     </div>
