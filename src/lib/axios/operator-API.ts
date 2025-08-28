@@ -1,6 +1,7 @@
 import Operator from "@/models/operator";
 import api from "./instance";
 import { TransactionStatus } from "@/models/transaction";
+import { OperatorGroupedReportFilter } from "@/types/operator-report";
 
 export const operatorAPI = {
     createOperator: async (operatorData: any) => {
@@ -54,10 +55,22 @@ export const operatorAPI = {
         });
     },
 
+    getCombinedOperatorReport: async (filter: { operatorId: number, startDate: Date, endDate: Date }) => {
+        return api.get(`/operator/combined-report/${filter.operatorId}`, {
+            params: filter
+        });
+    },
+
     getOpertorTransactions: async (operatorId: number) => {
         return api.get(`/operator/transactions/${operatorId}`);
     },
     settleTransaction: async (payload: { transactionId: number, status: TransactionStatus }) => {
         return api.patch(`/operator/settle-transaction/${payload.transactionId}`, payload);
+    },
+
+    getOperatorGroupedReport: async (filter?: OperatorGroupedReportFilter) => {
+        return api.get("/admin/operator-grouped-report", {
+            params: filter
+        });
     }
 };

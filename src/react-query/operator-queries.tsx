@@ -2,6 +2,7 @@ import { operatorAPI } from "@/lib/axios/operator-API";
 import Operator from "@/models/operator";
 import { Transaction } from "@/models/transaction";
 import User from "@/models/user";
+import { OperatorGroupedReport, OperatorGroupedReportFilter } from "@/types/operator-report";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -224,5 +225,17 @@ export const useGetOperatorTransactions = (filter:any) => {
                 count: response.data.count
             }
         },
+    });
+};
+
+// Get operator grouped report
+export const useGetOperatorGroupedReport = (filter?: OperatorGroupedReportFilter) => {
+    return useQuery({
+        queryKey: ["operator-grouped-report", filter],
+        queryFn: async (): Promise<OperatorGroupedReport> => {
+            const response = await operatorAPI.getOperatorGroupedReport(filter);
+            return response.data;
+        },
+        enabled: true,
     });
 };
