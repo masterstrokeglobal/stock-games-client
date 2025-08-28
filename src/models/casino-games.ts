@@ -58,6 +58,9 @@ export enum GameCategory {
     instant = "instant",
 }
 
+
+
+
 export enum ProviderEnum {
     STOCK_GAMES = "Stock Games",
     PGSoft = "PGSoft",
@@ -168,7 +171,20 @@ export enum ProviderEnum {
     rakki_games = "rakki_games",
     snowborn_games = "snowborn_games",
     "1x2_gaming" = "1X2 Gaming",
+    gap = "GAP",
+    rich88 = "RICH88",
+    ezugi_gap = "EZUGI_GAP", // Different from existing ezugi
+    mac88 = "MAC88",
+    crash88 = "CRASH88",
+    kingmidas = "KINGMIDAS",
+    betcore = "BETCORE",
+    creed = "CREED",
+    dc = "DC",
+    jacktop = "JACKTOP",
+    popok = "POPOK",
+    slotify = "SLOTIFY",
 }
+
 
 
 export enum GameTypeEnum {
@@ -200,7 +216,10 @@ export enum GameStatus {
     IN_ACTIVE = "in_active",
 }
 
-
+export enum ProviderCompany {
+    GAP = "gap",
+    QTECH = "qtech",
+}
 class CasinoGames {
     id!: number;
     name!: string;
@@ -210,6 +229,7 @@ class CasinoGames {
     category!: GameCategory;
     status!: GameStatus;
     type!: GameTypeEnum;
+    providerCompany!: ProviderCompany;
     popular!: boolean;
     new!: boolean;
     providerOfWeek!: boolean;
@@ -230,6 +250,7 @@ class CasinoGames {
         this.status = params.status;
         this.code = params.code;
         this.type = params.type;
+        this.providerCompany = params.providerCompany;
         this.gameId = params.gameId;
         this.popular = params.popular;
         this.new = params.new;

@@ -16,6 +16,7 @@
             "live-games": "लाइव गेम्स",
             "table-games": "टेबल गेम्स",
             "game-show": "गेम शो",
+            "gap-games": "गैप गेम्स",
             "instant-win": "तुरंत जीत",
             "shooting": "शॉटिंग",
             "lottery": "लॉटरी",
@@ -47,7 +48,9 @@
             "support": "सपोर्ट",
             "casino-games": "कैसिनो गेम्स",
             "slot-games": "स्लॉट गेम्स",
-            "live-games": "लाइव गेम्स"
+            "live-games": "लाइव गेम्स",
+            "gap-games": "गैप गेम्स",
+            "poker":"पोकर"
         },
         "navbar": {
             "light-mode": "प्रकाश मोड",
