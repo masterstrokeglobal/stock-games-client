@@ -218,6 +218,7 @@ const ActionColumn = ({ transaction }: { transaction: Transaction }) => {
 
     const admin = userDetails as Admin;
 
+    console.log(admin);
     if (admin.isSuperAdmin)
         return (
             <div className="flex justify-end">
@@ -240,7 +241,7 @@ const ActionColumn = ({ transaction }: { transaction: Transaction }) => {
             </div>
         );
 
-    if (admin.isAgent && (transaction.type === TransactionType.WITHDRAWAL || transaction.type === TransactionType.DEPOSIT))
+    if (admin.isAgent && (admin as any).enableTransactions && (transaction.type === TransactionType.WITHDRAWAL || transaction.type === TransactionType.DEPOSIT))
         return (
             <div className="flex justify-end">
                 <Link href={`/dashboard/agents/wallet/transactions/${transaction.id}`}>

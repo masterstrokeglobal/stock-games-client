@@ -23,9 +23,12 @@ export const createCompanyInputSchema = z.object({
     paymentImage: z.string().url().optional(),
     dynamicQR: z.boolean().optional(),
     gameRestrictions: z.array(z.nativeEnum(RoundRecordGameType)).optional(),
+    userVerfication: z.boolean().default(false).optional(),
+    otpIntegration: z.boolean().default(false).optional(),
+    askWithdrawlOption: z.boolean().default(false).optional(),
     theme: z.record(z.string(), z.string()).optional(),
     minPlacement: z.coerce.number().optional(),
-    allowedCasino:z.boolean().optional(),
+    allowedCasino: z.boolean().optional(),
     coinValues: z.array(z.coerce.number()).min(4).max(4).default([]),
     maxSinglePlacementPerGameType: z.record(z.nativeEnum(RoundRecordGameType), z.coerce.number()).optional(),
     maxPlacement: z.coerce.number().optional(),
@@ -65,8 +68,8 @@ const CompanySuperAdminForm = ({ defaultValues, onSubmit, isLoading }: Props) =>
         append: appendGameRestriction,
         remove: removeGameRestriction
     } = useFieldArray({
-        control : control as any,
-        name: "gameRestrictions" as any     
+        control: control as any,
+        name: "gameRestrictions" as any
     });
 
     const gameTypeOptions = Object.values(RoundRecordGameType);
@@ -182,6 +185,26 @@ const CompanySuperAdminForm = ({ defaultValues, onSubmit, isLoading }: Props) =>
                 title="Dynamic QR for Payouts"
                 description=" Dynamic QR for Payouts"
                 label="Dynamic QR" />
+
+            <FormSwitch
+                control={control}
+                name="userVerfication"
+                title="User Verification"
+                description=" User Verification is required for creating an account"
+                label="User Verification" />
+            <FormSwitch
+                control={control}
+                name="otpIntegration"
+                title="OTP Integration"
+                description=" Phone Number Verification is required for creating an account"
+                label="Phone Number Verification" />
+
+            <FormSwitch
+                control={control}
+                name="askWithdrawlOption"
+                title="Ask Withdrawl Option"
+                description=" Ask Withdrawl Option at  the time of deposit"
+                label="Ask Withdrawl Option" />
             <FormImage
                 control={control}
                 name="paymentImage"

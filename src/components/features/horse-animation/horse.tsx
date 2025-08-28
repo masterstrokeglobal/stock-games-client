@@ -27,7 +27,7 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
 
   return isPlaceOver ? (
     <Suspense fallback={<GameLoadingScreen className="md:h-full h-[500px]" loadingImageClassName="w-10 h-auto" />}>
-      <div className="game-gradient-card-parent md:h-full h-64 overflow-hidden relative">
+      <div id="horse-race-canvas" className="game-gradient-card-parent md:h-full h-64 overflow-hidden relative">
         {/* Camera Change Button */}
         {/* <button
           onClick={handleCameraChange}

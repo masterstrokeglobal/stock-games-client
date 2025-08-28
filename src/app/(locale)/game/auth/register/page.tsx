@@ -4,6 +4,7 @@ import RegisterForm, { RegisterFormValues } from "@/components/features/gamer/re
 import { useAuthStore } from "@/context/auth-context";
 import { StepperProvider, useStepper } from "@/context/stepper-context";
 import User from "@/models/user";
+import { useGetMyCompany } from "@/react-query/company-queries";
 import { useGameUserRegister, useGameUserResendOTP, useGameUserVerify } from "@/react-query/game-user-queries";
 import { useVisitorData } from "@fingerprintjs/fingerprintjs-pro-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -15,7 +16,7 @@ const RegisterPage = () => {
     const referenceCode = params.get("refferal") ?? null;
     const [userId, setUserId] = useState<string | null>(null);
     const { userDetails } = useAuthStore();
-
+    const { data: myCompany } = useGetMyCompany();
     const { data: visitorData } = useVisitorData({ extendedResult: true }, { immediate: true })
 
     const router = useRouter();
@@ -28,7 +29,7 @@ const RegisterPage = () => {
     const registerUser = (data: RegisterFormValues) => {
         const firstname = data.name.split(" ")[0];
         const lastname = data.name.split(" ")[1];
-        const isEmail = data.email.includes("@");
+        const isEmail = data.email?.includes("@");
 
         const payload: any = {
             firstname,
@@ -39,22 +40,26 @@ const RegisterPage = () => {
             company: process.env.NEXT_PUBLIC_COMPANY_ID ?? 4,
         }
 
-        if (isEmail) {
-            payload.email = data.email;
-        } else {
-            payload.phone = data.email;
+        if (myCompany?.userVerfication) {
+            if (isEmail) {
+                payload.email = data.email;
+            } else {
+                payload.phone = data.email;
+            }
         }
 
         if (visitorData) {
             payload.visitorId = visitorData.visitorId;
         }
 
+        console.log(payload);
+
         mutate(payload, {
             onSuccess: (data) => {
                 const user = new User(data.data);
                 setUserId(user.id?.toString() ?? null);
-                if (!user.isVerified)
-                    nextStep();
+                if (!user.isVerified) nextStep()
+                else router.push("/game/auth/login");
             }
         });
     }

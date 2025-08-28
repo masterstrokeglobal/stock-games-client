@@ -146,15 +146,27 @@
 
 @keyframes slotWinPulse {
     0%, 100% { 
-        box-shadow: 0px 0px 20px 20px #D3AF37;
-        transform: scale(1);
+        box-shadow: 0px 0px var(--slot-win-blur-start, 20px) var(--slot-win-spread-start, 20px) var(--slot-win-color-start, #D3AF37);
+        transform: scale(var(--slot-win-scale-start, 1));
     }
     50% { 
-        box-shadow: 0px 0px 40px 40px #FFD700;
-        transform: scale(1.2);
+        box-shadow: 0px 0px var(--slot-win-blur-mid, 40px) var(--slot-win-spread-mid, 40px) var(--slot-win-color-mid, #FFD700);
+        transform: scale(var(--slot-win-scale-mid, 1.2));
     }
 }
 
+@media (max-width: 1024px) {
+    @keyframes slotWinPulse {
+        0%, 100% { 
+            box-shadow: 0px 0px var(--slot-win-blur-start, 10px) var(--slot-win-spread-start, 10px) var(--slot-win-color-start, #D3AF37);
+            transform: scale(var(--slot-win-scale-start, 1));
+        }
+        50% { 
+            box-shadow: 0px 0px var(--slot-win-blur-mid, 20px) var(--slot-win-spread-mid, 20px) var(--slot-win-color-mid, #FFD700);
+            transform: scale(var(--slot-win-scale-mid, 1.1));
+        }
+    }
+}
 
 
 /* .custom-toast ::before {

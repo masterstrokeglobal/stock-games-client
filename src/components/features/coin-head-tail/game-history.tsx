@@ -3,15 +3,15 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { RoundRecordGameType } from '@/models/round-record';
-import { useGetUserGameHistory } from '@/react-query/game-user-queries';
+import { useGetAllGameHistory } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
 import { ChevronLeft, ChevronRight, Loader2, X } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { COIN_SIDE_CONFIG } from './betting-history';
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 // Mobile card component for game history
 const MobileGameHistoryCard: React.FC<{
@@ -95,10 +95,10 @@ const GameHistoryDialog = ({ children }: GameHistoryDialogProps) => {
     const [open, setOpen] = useState(false);
     const [page, setPage] = useState(1);
     const { isMobile } = useWindowSize();
-    const { data: userGameHistory, isLoading } = useGetUserGameHistory({ page, roundRecordGameType: RoundRecordGameType.HEAD_TAIL });
+    const { data: userGameHistory, isLoading } = useGetAllGameHistory({ page, roundRecordGameType: RoundRecordGameType.HEAD_TAIL });
 
     const { history, totalPages } = useMemo(() => {
-        const history: History[] = (userGameHistory?.data || []).map((row: any) => ({
+        const history: History[] = (userGameHistory?.rounds || []).map((row: any) => ({
             createdAt: row.createdAt,
             winningSide: row.winningSide,
         }));

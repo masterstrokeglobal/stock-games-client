@@ -28,7 +28,7 @@ const GameHeaderMobile = ({
     const progress = timeLeft / totalTime;
 
     // Circle parameters
-    const size = 60; // Reduced size
+    const size = 50; // Reduced size
     const strokeWidth = 6; // Reduced stroke width
     const radius = (size - strokeWidth) / 2;
     const circumference = 2 * Math.PI * radius;
@@ -39,8 +39,7 @@ const GameHeaderMobile = ({
     }
     return (
         <div
-            className={`flex items-center justify-end w-full px-6  gap-4 py-2 bg-[#061B3A] ${className}`}
-            style={{ minHeight: 80 }}
+            className={`flex items-center justify-between w-full px-6 gap-4 py-2 bg-[#061B3A] ${className}`}
         >
             {/* Round Ends In Text */}
             <div>

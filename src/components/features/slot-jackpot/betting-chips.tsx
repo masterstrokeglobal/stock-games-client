@@ -18,8 +18,8 @@ const BettingChips = ({ globalBetAmount, handleGlobalBetAmountChange, className,
     const { maxPlacement, minPlacement } = useMaxPlacement(RoundRecordGameType.STOCK_JACKPOT);
 
     return (
-        <div id="betting-amount" className={cn("transition-all duration-200 p-4", className)}>
-            <div className="flex lg:justify-center justify-between items-center gap-2 w-full  flex-wrap mx-auto ">
+        <div id="betting-amount" className={cn("transition-all duration-200 px-4", className)}>
+            <div className="flex lg:justify-center justify-between items-center gap-2 w-full mx-auto ">
                 {/* Betting Chips */}
                 <div className="lg:flex gap-2 grid grid-cols-2">
                     {[100, 500, 1000, 2000].map((amount) => (
@@ -47,7 +47,7 @@ const BettingChips = ({ globalBetAmount, handleGlobalBetAmountChange, className,
                 {/* Plus/Minus Controls */}
                 <div className="flex gap-2 lg:flex-row flex-col">
                     <div
-                        className="flex items-center lg:ml-6 rounded-md  justify-between min-w-40 border-2 px-2 overflow-hidden transform -skew-x-[20deg] h-8"
+                        className="flex items-center lg:ml-6 sm:min-w-40 min-w-32  rounded-md  justify-between border-2 px-2 overflow-hidden transform -skew-x-[20deg] h-8"
                         style={{
                             backgroundColor: '#002C3E',
                             borderColor: '#39A0C7',
@@ -56,7 +56,7 @@ const BettingChips = ({ globalBetAmount, handleGlobalBetAmountChange, className,
                     >
                         <button
                             disabled={globalBetAmount >= maxPlacement}
-                            className="px-2 py-1 hover:opacity-80 transition-opacity transform rounded bg-[#008DC2] -skew-x-[12deg]"
+                            className="px-2 py-1 hover:opacity-80 transition-opacity transform rounded bg-[#008DC2] "
                             onClick={() => handleGlobalBetAmountChange(globalBetAmount + 100)}
                         >
                             <Plus className="w-3 h-3 text-white" />
@@ -70,13 +70,13 @@ const BettingChips = ({ globalBetAmount, handleGlobalBetAmountChange, className,
                                     handleGlobalBetAmountChange(value);
                                 }
                             }}
-                            className="px-3 py-1 text-white bg-transparent border-none ring-0 outline-none font-orbitron sm:text-sm text-xs font-bold sm:min-w-[60px] min-w-12 text-center transform skew-x-[14deg]"
+                            className="px-3 py-1 text-white bg-transparent border-none ring-0 outline-none font-orbitron sm:text-sm text-xs font-bold w-16  text-center transform skew-x-[14deg]"
                             value={globalBetAmount}
 
                         />
                         <button
                             disabled={globalBetAmount <= minPlacement}
-                            className="px-2 py-1 hover:opacity-80 transition-opacity transform rounded  bg-[#008DC2] -skew-x-[14deg]"
+                            className="px-2 py-1 hover:opacity-80 transition-opacity transform rounded  bg-[#008DC2] "
                             onClick={() => handleGlobalBetAmountChange(globalBetAmount - 100)}
                         >
                             <Minus className="w-3 h-3 text-white" />

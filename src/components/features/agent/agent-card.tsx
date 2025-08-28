@@ -6,6 +6,7 @@ import { useAuthStore } from '@/context/auth-context';
 import Admin from '@/models/admin';
 import AgentChangePasswordDialog from './agent-change-password-dialog';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 interface AgentDetailsCardProps {
     agent: Agent;
@@ -28,6 +29,7 @@ const AgentDetailsCard: React.FC<AgentDetailsCardProps> = ({ agent }) => {
                     <div>
                         <span className="font-medium">Email:</span> {agent.email}
                     </div>
+                        
                     {agent.company && (
                         <div>
                             <span className="font-medium">Company:</span> {agent.company.name}
@@ -41,9 +43,12 @@ const AgentDetailsCard: React.FC<AgentDetailsCardProps> = ({ agent }) => {
                     </div>
                 </div>
 
-                {(!admin.isAgent && agent.id) && <AgentChangePasswordDialog agentId={agent.id.toString()} >
+                {(!admin.isAgent && agent.id) && <> <AgentChangePasswordDialog agentId={agent.id.toString()} >
                     <Button variant="outline" className='my-4'>Change Password</Button>
-                </AgentChangePasswordDialog>}
+                </AgentChangePasswordDialog></>}
+                {(!admin.isAgent && agent.id) && <> <Link href={`/dashboard/agents/${agent.id}/edit`} >
+                    <Button variant="outline" className='my-4'>Edit</Button>
+                </Link></>}
 
             </CardContent>
         </Card>

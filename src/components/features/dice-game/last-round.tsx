@@ -78,7 +78,7 @@ const LastRoundWinner = ({ roundRecord, className }: Props) => {
                                         </td>
                                         <td className="p-2 text-center">
                                             <div className="text-white font-bold">
-                                                {round.winningNumber || 10}
+                                                {round.sum ?? "N/A"}
                                             </div>
                                         </td>
                                     </tr>

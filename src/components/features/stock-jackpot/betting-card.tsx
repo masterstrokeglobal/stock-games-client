@@ -15,6 +15,7 @@ interface BettingCardProps {
   roundRecord: RoundRecord,
   marketItem: MarketItem,
   className?: string
+  skew?: "left" | "right"
 }
 
 // Use the provided Chip style
@@ -29,7 +30,7 @@ function Chip({ amount, className }: { amount: number, className?: string }) {
   );
 }
 
-export function BettingCard({ marketItem, globalBetAmount, roundRecord, className }: BettingCardProps) {
+export function BettingCard({ marketItem, globalBetAmount, roundRecord, className, skew = "left" }: BettingCardProps) {
   const isPlaceOver = useIsPlaceOver(roundRecord);
   const { data: stockSlotPlacements } = useGetMyStockJackpotGameRecord(roundRecord.id);
   const { mutate: createStockSlotGameRecord, isPending: isPlacingBet } = useCreateStockJackpotGameRecord();
@@ -66,12 +67,12 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
             <SkewedButton
               variant="red"
               size={"sm"}
-              skew="left"
+              skew={skew}
               fullWidth
               disabled={isPlacingBet || isPlaceOver}
               onClick={() => onAddToBetSlip(StockJackpotPlacementType.LOW)}
               className={cn(
-                "!rounded-lg flex items-center justify-center font-bold text-[10px] md:text-sm transition-all",
+                "!rounded-lg flex items-center z-40 relative justify-center font-bold text-[10px] md:text-sm transition-all",
                 (isPlacingBet || isPlaceOver) ? "opacity-50 cursor-not-allowed" : ""
               )}
             >
@@ -85,12 +86,12 @@ export function BettingCard({ marketItem, globalBetAmount, roundRecord, classNam
             <SkewedButton
               variant="green"
               size="sm"
-              skew="left"
+              skew={skew}
               fullWidth
               disabled={isPlacingBet || isPlaceOver}
               onClick={() => onAddToBetSlip(StockJackpotPlacementType.HIGH)}
               className={cn(
-                "!rounded-lg flex items-center justify-center font-bold text-xs md:text-sm transition-all",
+                "!rounded-lg flex items-center z-40 relative justify-center font-bold text-xs md:text-sm transition-all",
                 (isPlacingBet || isPlaceOver) ? "opacity-50 cursor-not-allowed" : ""
               )}
             >

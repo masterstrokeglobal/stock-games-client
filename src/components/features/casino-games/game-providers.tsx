@@ -85,7 +85,7 @@ export function CasinoProvidersCarousel({ title }: CategoryCarouselProps) {
                   className="flex items-center justify-center h-10 w-full transition rounded"
                 >
                   <img
-                    className="object-contain h-14 w-auto"
+                    className="object-contain h-24 w-auto"
                     src={provider.src}
                     alt={provider.alt}
                   />

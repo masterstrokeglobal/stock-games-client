@@ -9,6 +9,7 @@ class Agent {
     password?: string;
     placementNotAllowed: SchedulerType[];
     depositBonusPercentage?: number;
+    enableTransactions?: boolean;
     referenceCode?: string;
     company?: Company;
     createdAt?: Date;
@@ -24,6 +25,7 @@ class Agent {
         this.password = params.password;
         this.referenceCode = params.referenceCode;
         this.placementNotAllowed = params.placementNotAllowed || [];
+        this.enableTransactions = params.enableTransactions || false;
 
         if (params.company) {
             this.company = new Company(params.company);

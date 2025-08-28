@@ -1,6 +1,7 @@
 import Navbar from "@/components/features/game/navbar";
 import JackpotBettingHistory from "@/components/features/stock-jackpot/betting-history";
 import GameRule from "@/components/features/stock-jackpot/game-rule";
+import HowToPlay from "@/components/features/stock-jackpot/how-to-play";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { SkewedButton } from "@/components/ui/skew-button";
 import Link from "next/link";
@@ -30,7 +31,7 @@ const SettingPage = () => {
                                     How to play?
                                 </AccordionTrigger>
                                 <AccordionContent >
-                                    <GameRule />
+                                    <HowToPlay />
                                 </AccordionContent>
                             </AccordionItem>
 

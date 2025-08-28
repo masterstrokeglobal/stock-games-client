@@ -124,7 +124,7 @@ const LeaderboardHeader = () => {
 
     return (
         <div className='flex justify-between sticky top-0  pr-3 py-2'>
-            <h2 className="text-xl font-semibold flex-1  pl-2 b text-white">
+            <h2 className="text-xl font-semibold flex-1 pl-2 text-white">
                 {t("leaderboard")}
             </h2>
             <div className="flex justify-between items-center">

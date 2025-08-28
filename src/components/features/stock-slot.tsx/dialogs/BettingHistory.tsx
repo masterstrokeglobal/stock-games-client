@@ -84,8 +84,7 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger className="w-full">{children}</DialogTrigger>
       <DialogContent
-        // showButton={false}
-        className="bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl"
+        className="[&>button]:text-white [&>button]:focus:ring-0 bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl "
       >
         <div
           style={{
@@ -94,14 +93,14 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
           }}
-          className="w-full h-full relative flex flex-col items-center justify-center p-[10%] font-wendy-one text-[#FFFFFFB2]"
+          className="w-full h-full md:max-h-[70vh] relative flex flex-col items-center justify-center p-[10%] pt-[15%] font-wendy-one text-[#FFFFFFB2]"
         >
           <img
             src="/images/slot-machine/happy-bull.png"
             alt=""
-            className="absolute w-[100px] lg:w-[130px] top-0 translate-y-[-50%]"
+            className="absolute w-[100px] lg:w-[150px] top-0 translate-y-[-50%]"
           />
-          <DialogHeader className="p-1 relative w-full flex justify-center items-center mt-[10%] lg:mt-0">
+          <DialogHeader className="p-1 relative w-full flex justify-center items-center">
             <DialogTitle className="text-[15px] lg:text-[30px] xl:text-[40px]">
               Betting History
             </DialogTitle>

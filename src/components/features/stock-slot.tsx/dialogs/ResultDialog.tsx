@@ -80,8 +80,8 @@ const ResultDialog: React.FC<ResultDialogProps> = ({ open, roundRecordId }) => {
   const { data: resultData } = useStockGameRoundResult(roundRecordId, open);
 
   const isWin = useMemo(() => {
-    if(!resultData) return null
-    return resultData?.netProfitLoss ?? 0 > 0;
+    if (!resultData) return null;
+    return (resultData?.netProfitLoss ?? 0) > 0;
   }, [resultData]);
 
   useEffect(() => {
@@ -116,8 +116,7 @@ const ResultDialog: React.FC<ResultDialogProps> = ({ open, roundRecordId }) => {
   return (
     <Dialog defaultOpen={open}>
       <DialogContent
-        showButton={false}
-        className="bg-transparent border-none w-full max-w-xl lg:max-w-3xl focus:outline-none"
+        className="[&>button]:text-white [&>button]:focus:ring-0 bg-transparent border-none w-full max-w-xl lg:max-w-3xl focus:outline-none"
       >
         <div
           style={{
@@ -126,54 +125,61 @@ const ResultDialog: React.FC<ResultDialogProps> = ({ open, roundRecordId }) => {
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
           }}
-          className="w-full h-full relative flex flex-col items-center justify-center p-[10%] font-wendy-one text-[#FFFFFFB2]"
+          className="md:max-h-[70vh] w-full h-full relative flex flex-col items-center justify-center p-[10%] font-wendy-one text-[#FFFFFFB2]"
         >
           <img
             src={"/images/slot-machine/happy-bull.png"}
             alt=""
-            className="absolute w-[100px] lg:w-[130px] top-0 translate-y-[-50%]"
+            className="absolute w-[100px] lg:w-[160px] top-0 translate-y-[-50%]"
           />
           <DialogHeader className="p-1">
             <DialogTitle className="text-xl lg:text-[30px] xl:text-[40px]">
               Game Over
             </DialogTitle>
           </DialogHeader>
-          <DialogDescription className="text-center flex flex-col justify-center items-center gap-4 p-5 pt-2 overflow-y-auto min-h-[200px] text-xs lg:text-base xl:text-2xl">
-            <div className="flex flex-col gap-2">
-              {isWin ? (
-                <>
-                  <p className="capitalize text-base lg:text-[40px]">
-                    You won {resultData?.amountWon}INR
-                  </p>
-                  <p className="text-base lg:text-[30px]">
-                    Place Bet {resultData?.totalPlaced}INR
-                  </p>
-                </>
-              ) : (
-                <>
-                  <p className="capitalize text-base lg:text-[40px]">
-                    You lost {Math.abs(resultData?.netProfitLoss || 0)}INR
-                  </p>
-                </>
-              )}
-            </div>
+          {isWin ? (
+            <DialogDescription className="text-center flex flex-col justify-center items-center gap-4 p-5 pt-2 overflow-y-auto min-h-[200px] text-xs lg:text-base xl:text-2xl">
+              <div className="flex flex-col gap-2">
+                <p className="capitalize text-base lg:text-[40px] ">
+                  You won{" "}
+                  <span className="text-green-500">
+                    {resultData?.amountWon?.toFixed(2)}{" "}INR
+                  </span>
+                </p>
+                <p className="text-base lg:text-[30px] mt-2">
+                  Place Bet {resultData?.totalPlaced}{" "}INR
+                </p>
+              </div>
+            </DialogDescription>
+          ) : (
+            <DialogDescription className="text-center flex flex-col justify-between items-center gap-4 p-5 pt-2 overflow-y-auto min-h-[200px] text-xs lg:text-base xl:text-2xl">
+              <div className="flex flex-col gap-2">
+                <p className="capitalize text-base lg:text-[40px]">
+                  You lost{" "}
+                  <span className="text-red-500">
+                    {Math.abs(resultData?.netProfitLoss || 0)}{" "}INR
+                  </span>
+                </p>
+              </div>
 
-            <DialogClose asChild>
-              <button
-                style={{
-                  backgroundImage: "url('/images/slot-machine/green-btn.png')",
-                  backgroundSize: "100% 100%",
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                }}
-                className="p-6 px-12 text-white font-bold hover:brightness-110 transition-all text-[15px] lg:text-[30px]"
-              >
-                <div className="-translate-x-[5%] -translate-y-[10%]">
-                  Try again
-                </div>
-              </button>
-            </DialogClose>
-          </DialogDescription>
+              <DialogClose asChild>
+                <button
+                  style={{
+                    backgroundImage:
+                      "url('/images/slot-machine/green-btn.png')",
+                    backgroundSize: "100% 100%",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                  className="p-6 px-12 text-white font-bold hover:brightness-110 transition-all text-[15px] lg:text-[30px]"
+                >
+                  <div className="-translate-x-[5%] -translate-y-[10%]">
+                    Try again
+                  </div>
+                </button>
+              </DialogClose>
+            </DialogDescription>
+          )}
         </div>
       </DialogContent>
     </Dialog>

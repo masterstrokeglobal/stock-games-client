@@ -18,7 +18,6 @@ import {
     GiftIcon,
     GridIcon,
     HeadphonesIcon,
-    HelpCircleIcon,
     HomeIcon,
     MaximizeIcon,
     StarIcon,
@@ -54,7 +53,6 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
         { icon: StarIcon, label: t("tiers"), href: "/game/platform/tier" },
         { icon: CreditCardIcon, label: "Wallet", href: "#", Parent: WalletDialog },
         { icon: GiftIcon, label: t("promotions"), href: "/game/platform/promotion" },
-        { icon: HelpCircleIcon, label: t("how-to-play"), href: "/game/platform/how-to-play" },
         { icon: HeadphonesIcon, label: t("support"), Parent: ContactDialog },
     ];
     

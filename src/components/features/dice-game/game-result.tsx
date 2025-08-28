@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { INR } from "@/lib/utils";
 import { useGetDiceGameRoundResult } from "@/react-query/dice-game-queries";
 import clsx from "clsx";
 import { XCircleIcon } from "lucide-react";
-import { useEffect, useMemo } from "react";
 
 interface GameResultDialogProps {
   open: boolean;
@@ -19,54 +20,30 @@ const DiceGameResultDialog = ({
     open
   );
 
-  const finalResult = useMemo(() => {
-    if (!data || !Array.isArray(data)) return [];
+  // Calculate totals similar to 7-up-down
+  const totalPlaced = data?.reduce((total: any, bet: any) => {
+    return total + bet.totalPlaced;
+  }, 0);
 
-    const grouped = data.reduce((acc, curr) => {
-      const type = curr.placementType;
+  const totalWon = data?.reduce((total: any, bet: any) => {
+    return total + bet.amountWon;
+  }, 0);
 
-      if (!acc[type]) {
-        acc[type] = {
-          placementType: type,
-          netProfitLoss: 0,
-          netWinning: 0,
-          platformFeeAmount: 0,
-          amountWon: 0,
-          grossWinning: 0,
-          totalPlaced: 0,
-        };
-      }
+  const totalNetResult = data?.reduce((total: any, bet: any) => {
+    return total + bet.netProfitLoss;
+  }, 0);
 
-      acc[type].netProfitLoss += curr.netProfitLoss;
-      acc[type].netWinning += curr.netWinning;
-      acc[type].platformFeeAmount += curr.platformFeeAmount;
-      acc[type].amountWon += curr.amountWon;
-      acc[type].grossWinning += curr.grossWinning;
-      acc[type].totalPlaced += curr.totalPlaced;
 
-      return acc;
-    }, {} as Record<string, any>);
+  const isWin = totalNetResult > 0;
 
-    return Object.values(grouped);
-  }, [data]);
-
-  useEffect(() => {
-    console.log("dice bet", finalResult);
-  }, [finalResult]);
-
-  // Check if data is loaded and determine win/loss
-  // const isWin = finalResult && Number(finalResult.netProfitLoss) > 0;
-  // const isLoss = finalResult && Number(finalResult.netProfitLoss) <= 0;
-
-  // If still loading/error or no result, don't show the dialog
   if (isLoading || isError) return null;
 
   return (
-    <Dialog defaultOpen={open}>
+    <Dialog  defaultOpen={open}>
       <DialogContent
         showButton={false}
         className={clsx(
-          "max-w-xs lg:max-w-lg w-full p-0 border-none rounded-xl overflow-show bg-transparent shadow-none",
+          "max-w-xs md:max-w-xl w-full p-0 border-none rounded-xl overflow-show bg-transparent shadow-none",
           "backdrop-blur-md"
         )}
         style={{ background: "none" }}
@@ -77,84 +54,89 @@ const DiceGameResultDialog = ({
             background:
               "linear-gradient(171.89deg, #8EB0FF 5.45%, #9895FF 49.61%, #0A3EB6 93.76%)",
             boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
-            minHeight: 220,
+            minHeight: 400,
             minWidth: 320,
             padding: 0,
           }}
         >
-          {/* Close Button */}
-          <DialogClose asChild>
-            <Button
-              variant="ghost"
-              className="absolute top-3 right-3 w-7 h-7 p-0 flex z-50 bg-transparent border-none items-center justify-center rounded-full"
-            >
-              <XCircleIcon className="text-[#013FCF] size-6" />
-            </Button>
-          </DialogClose>
-          {/* Text Content */}
-          <div className="relative z-10 flex flex-col justify-center items-center h-full pl-6 pr-6 pt-10 pb-4">
-            {/* <div className="flex-shrink-0">
-              <img
-                src={
-                  isWin
-                    ? "/images/dice-game/result-win.png"
-                    : "/images/dice-game/result-lost.png"
-                }
-                alt="lady"
-                className="h-64 absolute bottom-0 right-0"
-              />
-            </div> */}
-            <div
-              className="text-white font-bold text-2xl leading-tight drop-shadow text-center mb-4"
-              style={{
-                textShadow:
-                  "1px 1px 0px #003682, -1px -1px 0px #003682, 1px -1px 0px #003682, -1px 1px 0px #003682",
-              }}
-            >
-              {/* {isWin ? "Boom!" : "Oops!"} */}
-              Game Over!
-            </div>
-            {/* <div
-              className="text-white font-bold text-xl mt-1"
-              style={{
-                textShadow:
-                  "1px 1px 0px #003682, -1px -1px 0px #003682, 1px -1px 0px #003682, -1px 1px 0px #003682",
-              }}
-            >
-              {isWin
-                ? `You just won ₹${Number(
-                    finalResult.netProfitLoss
-                  ).toLocaleString()}!`
-                : `Better Luck Next Time!`}
-              <br />
-              Bet Amount : ${finalResult.totalPlaced}
-            </div> */}
-            <div className="flex flex-col gap-2 justify-center items-center text-sm lg:text-base text-white">
-              <div className="grid grid-cols-3 w-full font-bold">
-                <p className="text-left truncate">Type</p>
-                <p className="text-center truncate">Bet Amount</p>
-                <p className="text-center truncate">Net P/L</p>
+          <div className="flex gap-4 md:pl-40">
+            <img className="h-[120%] md:block hidden w-auto bottom-0 -left-1/2 translate-x-1/4 -scale-x-100 absolute" src={isWin ? "/images/dice-game/result-win.png" : "/images/dice-game/result-lost.png"} />
+            {/* Close Button */}
+            <DialogClose asChild>
+              <Button
+                variant="ghost"
+                className="absolute top-3 right-3 w-7 h-7 p-0 flex z-50 bg-transparent border-none items-center justify-center rounded-full"
+              >
+                <XCircleIcon className="text-[#013FCF] size-6" />
+              </Button>
+            </DialogClose>
+
+            {/* Text Content */}
+
+            <div className="relative z-10 flex flex-col justify-center items-center h-full pl-6 pr-6 pt-10 pb-4">
+              <div
+                className="text-white font-bold text-2xl leading-tight tracking-wide drop-shadow font-inter text-center mb-4"
+                style={{
+                  textShadow:
+                    "1px 1px 0px #4467CC, -1px -1px 0px #4467CC, 1px -1px 0px #4467CC, -1px 1px 0px #4467CC",
+                }}
+              >
+                Game Over
               </div>
-              <div className="flex flex-col gap-1 w-full">
-                {finalResult.map((bet: any, i: number) => (
-                  <div key={i} className="grid grid-cols-3 ">
-                    <p className="text-left truncate">{bet.placementType}</p>
-                    <p className="text-center truncate">{bet.totalPlaced}</p>
-                    <p
-                      className={`text-center truncate ${
-                        bet.netProfitLoss >= 0
-                          ? "text-green-600"
-                          : "text-red-500"
-                      }`}
-                    >
-                      {bet.netProfitLoss > 0 && "+"} {bet.netProfitLoss}
-                    </p>
+
+              {/* Updated content structure with better styling */}
+              <div className="flex flex-col gap-4 justify-center font-inter items-center text-sm lg:text-base text-white w-full">
+                {/* Table with borders */}
+                <div className="w-full border border-[#A3B1FF] rounded-[5px] overflow-hidden  ">
+                  {/* Header */}
+                  <div className="grid grid-cols-3 w-full font-bold  text-center bg-[#A3B1FF] border-b border-[#A3B1FF] py-2 px-3">
+                    <p className="text-left">Bet Type</p>
+                    <p className="text-center">Amount Placed</p>
+                    <p className="text-center">Cashout INR</p>
                   </div>
-                ))}
+
+                  {/* Bet Details */}
+                  <ScrollArea className="h-36 w-full">
+                    <div className="flex flex-col w-full">
+                      {data?.map((bet: any, i: number) => (
+                        <div key={i} className="grid grid-cols-3 text-center py-2 px-3 border-b border-white/20 last:border-b-0 hover:bg-white/5 transition-colors">
+                          <p className="text-left truncate capitalize">{`${bet.number} (${bet.placementType})`}</p>
+                          <p className="text-center truncate">{INR(Number(bet.totalPlaced))}</p>
+                          <p className="text-center truncate">{INR(Number(bet.amountWon))}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+
+                  {/* Totals */}
+                  <div className="grid grid-cols-3 w-full font-bold text-center bg-[#A3B1FF] border-t border-white/30 py-2 px-3">
+                    <p className="text-left">Total:</p>
+                    <p className="text-center">{INR(Number(totalPlaced))}</p>
+                    <p className="text-center">{INR(Number(totalWon))}</p>
+                  </div>
+                </div>
+
+                {/* Net Result in styled box */}
+                <div className="w-full h-px rounded-full" style={{ background: "linear-gradient(90deg, #5A6FDF 0%, #A3B1FF 50%, #1E4AC1 100%)" }} />
+                <div className="w-full">
+
+                  <div className="text-center">
+                    <div
+                      className="font-bold text-lg"
+                      style={{
+                        color: "#fff",
+                        textShadow: "1px 1px 0 #4467CC, -1px -1px 0 #4467CC, 1px -1px 0 #4467CC, -1px 1px 0 #4467CC",
+                      }}
+                    >
+                      Net Result: {INR(Number(totalNetResult))}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
       </DialogContent>
     </Dialog>
   );

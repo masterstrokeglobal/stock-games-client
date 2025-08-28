@@ -18,6 +18,7 @@ export class Company {
     depositBonusPercentageEnabled?: boolean;
     paymentImage?: string;
     domain?: string;
+    askWithdrawlOption?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
     externalPayIn!: boolean;
@@ -25,6 +26,7 @@ export class Company {
     placementNotAllowed?: SchedulerType[];
     gameRestrictions:RoundRecordGameType[];
     allowedCasino!: boolean;
+    userVerfication!: boolean;
     deletedAt?: Date;
     minPlacement: number;
     maxPlacement: number;
@@ -53,8 +55,10 @@ export class Company {
         this.externalPayIn = params.externalPayIn || false;
         this.externalPayOut = params.externalPayOut || false;
         this.createdAt = params.createdAt;
+        this.userVerfication = params.userVerfication || false;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;
+        this.askWithdrawlOption = params.askWithdrawlOption || false;
         this.paymentImage = params.paymentImage;
         this.depositBonusPercentage = params.depositBonusPercentage;
         this.otpIntegration = params.otpIntegration || false;

@@ -1,6 +1,4 @@
-import React, { useMemo } from "react";
-import { useLeaderboard } from "@/hooks/use-leadboard";
-import { RoundRecord } from "@/models/round-record";
+import React from "react";
 import InfoDialog from "./dialogs/InfoDialog";
 
 // Helper function to highlight the first decimal digit with yellow color
@@ -10,59 +8,24 @@ const formatPriceWithHighlightedDecimal = (price: string) => {
 
   const beforeDecimal = price.substring(0, decimalIndex + 1); // includes the decimal point
   const firstDecimalDigit = price.charAt(decimalIndex + 1);
-  const restOfDecimals = price.substring(decimalIndex + 2);
 
   return (
     <>
       {beforeDecimal}
       <span style={{ color: "yellow" }}>{firstDecimalDigit}</span>
-      {restOfDecimals}
     </>
   );
 };
 
 interface StockListProps {
-  roundRecord?: RoundRecord;
-  winningIdRoundRecord?: any;
+  currentStocks: any[];
+  stockPrice: any;
 }
 
 export const StockListMobile: React.FC<StockListProps> = ({
-  roundRecord,
-  winningIdRoundRecord,
+  currentStocks,
+  stockPrice,
 }) => {
-  const { stocks } = useLeaderboard(roundRecord || null);
-
-  const { currentStocks, stockPrice } = useMemo(() => {
-    if (!roundRecord) return { currentStocks: [], stockPrice: {} };
-
-    const currentStocks = roundRecord.market.sort(
-      (a, b) => a.name?.localeCompare(b.name ?? "") ?? 0
-    );
-    let stockPrice: Record<string, number> = roundRecord.initialValues ?? {};
-
-    if (
-      roundRecord.initialValues &&
-      Object.keys(roundRecord.initialValues).length > 0
-    ) {
-      stockPrice = roundRecord.initialValues;
-    }
-
-    if (stocks.length > 0 && !winningIdRoundRecord?.finalPricesPresent) {
-      stocks.forEach((stock) => {
-        if (stock.price) {
-          stockPrice[stock.code ?? ""] = stock.price;
-        }
-      });
-    } else if (
-      winningIdRoundRecord?.finalPricesPresent &&
-      winningIdRoundRecord?.finalDifferences
-    ) {
-      stockPrice = winningIdRoundRecord.finalDifferences;
-    }
-
-    return { currentStocks, stockPrice };
-  }, [roundRecord, stocks, winningIdRoundRecord]);
-
   return (
     <div className="lg:hidden flex justify-center items-start relative z-[80] mb-4 w-full text-xs">
       <div
@@ -103,42 +66,9 @@ export const StockListMobile: React.FC<StockListProps> = ({
 };
 
 export const StockListDesktop: React.FC<StockListProps> = ({
-  roundRecord,
-  winningIdRoundRecord,
+  currentStocks,
+  stockPrice,
 }) => {
-  const { stocks } = useLeaderboard(roundRecord || null);
-
-  const { currentStocks, stockPrice } = useMemo(() => {
-    if (!roundRecord) return { currentStocks: [], stockPrice: {} };
-
-    const currentStocks = roundRecord.market.sort(
-      (a, b) => a.name?.localeCompare(b.name ?? "") ?? 0
-    );
-    let stockPrice: Record<string, number> = roundRecord.initialValues ?? {};
-
-    if (
-      roundRecord.initialValues &&
-      Object.keys(roundRecord.initialValues).length > 0
-    ) {
-      stockPrice = roundRecord.initialValues;
-    }
-
-    if (stocks.length > 0 && !winningIdRoundRecord?.finalPricesPresent) {
-      stocks.forEach((stock) => {
-        if (stock.price) {
-          stockPrice[stock.code ?? ""] = stock.price;
-        }
-      });
-    } else if (
-      winningIdRoundRecord?.finalPricesPresent &&
-      winningIdRoundRecord?.finalDifferences
-    ) {
-      stockPrice = winningIdRoundRecord.finalDifferences;
-    }
-
-    return { currentStocks, stockPrice };
-  }, [roundRecord, stocks, winningIdRoundRecord]);
-
   return (
     <div className="hidden lg:flex lg:col-span-2 justify-center items-start relative text-xl">
       <div className="flex justify-center items-center absolute right-0">
@@ -154,10 +84,11 @@ export const StockListDesktop: React.FC<StockListProps> = ({
       </div>
 
       <div className="mt-[70px] flex flex-col items-center justify-center gap-3 w-full z-40">
-        {currentStocks.slice(0, 5).map((stock, index) => {
+        {currentStocks?.slice(0, 5).map((stock, index) => {
           const price = parseFloat(
             stockPrice[stock.code ?? ""]?.toString() || "0"
-          ).toFixed(1);
+          ).toFixed(2);
+
           const stockName = stock.name || `Stock ${index + 1}`;
 
           return (
@@ -177,7 +108,7 @@ export const StockListDesktop: React.FC<StockListProps> = ({
         })}
 
         {/* Fill remaining slots if less than 5 stocks */}
-        {[...Array(Math.max(0, 5 - currentStocks.length))].map((_, index) => (
+        {[...Array(Math.max(0, 5 - currentStocks?.length))].map((_, index) => (
           <div
             key={`placeholder-${index}`}
             style={{

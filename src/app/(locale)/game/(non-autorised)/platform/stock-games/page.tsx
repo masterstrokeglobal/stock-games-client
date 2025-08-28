@@ -1,13 +1,11 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
+import StockGameCard from "@/components/common/stock-game-card";
 import { Input } from "@/components/ui/input";
 import { stockGames } from "@/lib/utils";
 import { useGetMyCompany } from "@/react-query/company-queries";
 import { Search } from "lucide-react";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 
 export default function GamingAppInterface() {
@@ -48,17 +46,7 @@ export default function GamingAppInterface() {
                     ) : (
                         <div className="grid xs:grid-cols-2 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 md:gap-6 gap-2">
                             {filteredGames.map((game) => (
-                                <Link key={game.type} href={game.href} className="w-full">
-                                    <Card className="overflow-hidden rounded-none relative shadow-lg border border-platform-border " style={{ aspectRatio: '170/240' }}>
-                                        <Image
-                                            src={game.src}
-                                            alt={game.alt}
-                                            className="w-full h-full object-top"
-                                            width={500}
-                                            height={500}
-                                        />
-                                    </Card>
-                                </Link>
+                               <StockGameCard key={game.name} game={game} />
                             ))}
                         </div>
                     )}

@@ -799,3 +799,40 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover {
   width: 100%!important;
   aspect-ratio: 1/1!important;
 }
+
+/* Payment Category Badges */
+.category-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.category-badge.cryptocurrency {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #000;
+}
+
+.category-badge.bank_transfer {
+  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  color: white;
+}
+
+.category-badge.internal_transfer {
+  background: linear-gradient(135deg, #FF9800, #FFB74D);
+  color: white;
+}
+
+/* Direct Credit Indicator */
+.direct-credit-indicator {
+  margin-top: 8px;
+}
+
+.badge.success {
+  background: #4CAF50;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+}

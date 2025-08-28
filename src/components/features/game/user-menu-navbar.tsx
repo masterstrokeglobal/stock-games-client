@@ -46,7 +46,7 @@ const UserMenuNavbar = () => {
                     </button>
                 </ProfileDialog>
             )}
-  <ThemeSwitcher className="md:hidden flex !ml-0" />
+            <ThemeSwitcher className="md:hidden flex !ml-0" />
 
         </>
     )

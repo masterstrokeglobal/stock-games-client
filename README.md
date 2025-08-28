@@ -12,14 +12,25 @@ First, run a development server:
 
 ```bash  
 pnpm dev   
+   
+First, run a development server:          
+   
+```bash      
+pnpm dev         
 ```   
+First, run a development server: 
+               
+              
+```bash  
+pnpm dev    
+```    
   
     
 First, run a development server:       
              
-```bash 
+```bash  
 pnpm dev     
-```  
+```   
 
 Open [http://localhost:3000](http://localhost:3000).    v
   
