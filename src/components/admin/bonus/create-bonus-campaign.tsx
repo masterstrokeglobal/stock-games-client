@@ -193,7 +193,7 @@ const CreateBonusCampaign: React.FC = () => {
                             />
                         </div>
 
-                        <div className="space-y-2">
+                        {/* <div className="space-y-2">
                             <Label htmlFor="maxBonusAmount">Max Bonus Amount</Label>
                             <Input
                                 id="maxBonusAmount"
@@ -204,7 +204,7 @@ const CreateBonusCampaign: React.FC = () => {
                                 step="0.01"
                                 placeholder="0.00"
                             />
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* Wager Requirements */}
