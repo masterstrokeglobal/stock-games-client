@@ -12,7 +12,7 @@ import {
     SelectValue
 } from '@/components/ui/select';
 import { useGetAllBonusCampaigns } from '@/react-query/enhanced-bonus-queries';
-import { Plus, Search } from 'lucide-react';
+import {  Search } from 'lucide-react';
 import Link from 'next/link';
 import React, { useMemo, useState } from 'react';
 
@@ -73,13 +73,13 @@ const BonusCampaignsList: React.FC = () => {
                         />
                     </div>
                     <Link href="/dashboard/bonus/create">
-                        <Button>
+                        {/* <Button>
                             <Plus
                                 size={18}
                                 className="mr-2 bg-white text-primary p-px rounded-full"
                             />
                             Create Campaign
-                        </Button>
+                        </Button> */}
                     </Link>
                 </div>
             </header>
