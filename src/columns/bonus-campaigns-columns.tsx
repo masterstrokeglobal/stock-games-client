@@ -199,8 +199,7 @@ const ActionsColumn = ({ campaign }: { campaign: BonusCampaign }) => {
                             Delete Campaign
                         </DialogTitle>
                         <DialogDescription>
-                          {`Are you sure you want to delete the campaign "{campaign.bonusName || campaign.name}"? 
-                            This action cannot be undone and will permanently remove all associated data.`}
+                          {`Are you sure you want to delete the campaign "${campaign.bonusName || campaign.name}"? This action cannot be undone and will permanently remove all associated data.`}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex justify-end gap-3 mt-6">
