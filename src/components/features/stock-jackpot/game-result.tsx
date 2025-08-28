@@ -1,7 +1,9 @@
+import { getStockName } from '@/components/common/StockName';
 import { Dialog, DialogClose, DialogContent } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { SkewedButton } from '@/components/ui/skew-button';
 import { cn, INR } from '@/lib/utils';
+import MarketItem from '@/models/market-item';
 import { RoundRecord } from '@/models/round-record';
 import { useGetStockJackpotRoundResult } from '@/react-query/game-record-queries';
 import dayjs from 'dayjs';
@@ -18,15 +20,15 @@ const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
 
     const [isOpen, setIsOpen] = useState(open);
 
-    useEffect(()=>{
-      const timeout = setTimeout(() => {
-        setIsOpen(open);
-      }, 2000);
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setIsOpen(open);
+        }, 2000);
 
-      return () => {
-        clearTimeout(timeout);
-      }
-    },[open])
+        return () => {
+            clearTimeout(timeout);
+        }
+    }, [open])
 
     // Defensive fallback if roundResult is not loaded yet
     const placements = roundResult?.placements ?? [];
@@ -42,7 +44,7 @@ const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
     const roundStartTime = round?.createdAt ?? (placements[0]?.createdAt ?? null);
 
     return (
-        <Dialog  defaultOpen={isOpen}>
+        <Dialog defaultOpen={isOpen}>
             <DialogContent
                 showButton={false}
                 className={cn(
@@ -93,16 +95,18 @@ const JackpotResultDialog = ({ open, roundRecordId }: Props) => {
                                         ) : (
                                             <ScrollArea className="h-[180px]" scrollThumbClassName="bg-[#50D8F2]">
                                                 {placements.length > 0 ? (
-                                                    placements.map((result, idx) => (
-                                                        <div
+                                                    placements.map((result, idx) => {
+                                                        const marketItem = new MarketItem(result.marketItem)
+
+                                                        return (<div
                                                             key={idx}
                                                             className="grid grid-cols-3 px-4 font-space-grotesk items-center text-[#C2F2FF] font-medium sm:text-sm text-xs py-1 rounded-xl mb-2"
                                                         >
-                                                            <div className="text-left pl-2">{result.placement?.toUpperCase() ?? "--"}</div>
+                                                            <div className="text-left pl-2">{`${result.placement?.toUpperCase() ?? "--"} (${getStockName(marketItem.name ?? "", marketItem.codeName ?? "")})`}</div>
                                                             <div className="text-center">{INR(result.amount)}</div>
                                                             <div className="text-center">{INR(result.netProfitLoss > 0 ? result.netProfitLoss : 0)}</div>
-                                                        </div>
-                                                    ))
+                                                        </div>)
+                                                    })
                                                 ) : (
                                                     <div className="text-center text-[#88DCEE] py-8 font-audiowale">
                                                         No bets placed.

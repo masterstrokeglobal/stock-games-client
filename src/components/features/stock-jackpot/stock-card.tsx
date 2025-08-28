@@ -29,10 +29,7 @@ const StockCard = ({
       return { price: undefined, changePercent: 0 };
     }
     // If we have final values from roundRecordWithWinningId, use those
-    if (
-      roundRecordWithWinningId?.finalPricesPresent &&
-      roundRecordWithWinningId?.finalDifferences
-    ) {
+  if (roundRecordWithWinningId?.finalDifferences) {
       const finalPrice =
         roundRecordWithWinningId.finalDifferences[stock.bitcode as string] || 0;
       const initialPriceFromFinal = roundRecordWithWinningId.getInitialPrice(
