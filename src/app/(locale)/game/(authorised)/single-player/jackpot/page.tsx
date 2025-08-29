@@ -40,7 +40,7 @@ export default function Home() {
 
 
     return (
-        <div className="flex flex-col h-[100svh] min-h-[650px] pt-12 bg-[#00627A] overflow-hidden  relative bg-repeat bg-center text-white  mx-auto">
+        <div className="flex flex-col h-[100svh] min-h-[550px] pt-12 bg-[#00627A] overflow-hidden  relative bg-repeat bg-center text-white  mx-auto">
             <img src="/images/jackpot/bg.png" className="w-full hidden; md:h-full h-[350px] object-cover absolute z-0" />
             <Navbar />
             <Header className="z-10 relative mt-4 px-4">
