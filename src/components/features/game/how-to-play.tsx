@@ -19,11 +19,11 @@ const HowToPlayDialog: React.FC<HowToPlayDialogProps> = ({
     const videoUrl = useMemo(() => {
         switch (lang) {
             case 'en':
-                return '/images/how-to-play/videos/stock-roulette-en.mp4';
+                return 'https://res.cloudinary.com/dmdd1tg0i/video/upload/v1756466464/stock-roulette-en_zpzxxj.mp4';
             case 'hi':
-                return '/images/how-to-play/videos/stock-roulette-hi.mp4';
+                return 'https://res.cloudinary.com/dmdd1tg0i/video/upload/v1756466439/stock-roulette-hi_dgggts.mp4';
             default:
-                return '/images/how-to-play/videos/stock-roulette-en.mp4';
+                return 'https://res.cloudinary.com/dmdd1tg0i/video/upload/v1756466464/stock-roulette-en_zpzxxj.mp4';
         }
     }, [lang]);
 
