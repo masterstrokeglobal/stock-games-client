@@ -55,7 +55,9 @@ const WheelOfFortuneResultDialog = ({ open, roundRecordId }: GameResultDialogPro
                 <DialogHeader>
                     <DialogTitle className="text-center text-white text-xl font-bold tracking-widest font-russo-one flex flex-col items-center">
                         <div className="mb-2"> RESULT</div>
-                        <div className="uppercase">Winner : {data?.winningColor ? WHEEL_COLOR_CONFIG[data?.winningColor as WheelColor].name : ''}</div>
+                        <div style={{
+                            background: WHEEL_COLOR_CONFIG[data?.winningColor as WheelColor]?.actualColor,
+                        }} className="uppercase px-2 py-1 rounded-full text-white">Winner : {data?.winningColor ? WHEEL_COLOR_CONFIG[data?.winningColor as WheelColor].name : ''}</div>
                     </DialogTitle>
                     <DialogClose asChild>
                         <Button variant="ghost" className="absolute bg-transparent border-none top-2 right-2">

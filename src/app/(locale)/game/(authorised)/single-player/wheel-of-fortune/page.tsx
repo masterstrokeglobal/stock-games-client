@@ -71,7 +71,7 @@ const WheelOfFortune = () => {
             marginBottom: isPlaceOver ? "-30px" : `-${wheelHeight}px`,
           }}
           className={cn(
-            "transition-transform duration-300 px-4 w-full space-y-4  bg-gradient-to-t relative z-10 from-[#000000] via-[#000000] via-[80%] to-transparent"
+            "transition-transform duration-300 px-4 w-full space-y-4 relative z-10"
           )}
         >
           {!isPlaceOver ? (

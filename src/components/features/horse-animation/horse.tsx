@@ -37,6 +37,8 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
         if(width < OPTIMAL_WIDTH) {
           const scale = Math.abs(OPTIMAL_WIDTH - width) / HORSE_OFFSET_SCALE;
           setHorseOffset(scale);
+        }else{
+          setHorseOffset(0);
         }
       }
     };
@@ -82,7 +84,6 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
             filteredMarket={filteredMarket}
             changeCameraView={handleCameraChange}
             currentCameraView={cameraView}
-            // canvasRef={canvasRef}
             horseOffset={horseOffset}
           />
         </Canvas>
