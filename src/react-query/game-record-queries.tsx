@@ -1,4 +1,5 @@
 import { gameRecordAPI } from "@/lib/axios/game-record-API"; // Adjust the path as needed
+import MarketItem from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { StockJackpotPlacementType } from "@/models/stock-slot-jackpot";
 import { StockJackpotPlacement } from "@/models/stock-slot-placement";
@@ -343,6 +344,7 @@ type JackpotPlacementResult = {
     winningId: any[];
     placement: StockJackpotPlacementType
     result: StockJackpotPlacementType | null;
+    marketItem:MarketItem,
     isWinner: boolean;
     createdAt: string;
     netProfitLoss: number;

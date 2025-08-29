@@ -8,26 +8,28 @@ import {
 import { toast } from "sonner";
 import useMaxPlacement from "@/hooks/use-max-placement";
 import { useAuthStore } from "@/context/auth-context";
+// import { getCachedImage } from "@/hooks/image-preloader";
+import Image from "next/image";
 
 interface BettingPanelProps {
   betAmount: number;
   roundRecord: RoundRecord;
   setBetAmount: (amount: number) => void;
+  // getBackgroundStyle: (src: string) => React.CSSProperties;
 }
 
 const BettingPanel: React.FC<BettingPanelProps> = ({
   betAmount,
   roundRecord,
   setBetAmount,
+  // getBackgroundStyle,
 }) => {
   const { data: myPlacementData } = useGetMySlotGamePlacement(roundRecord.id);
   const { mutate: createStockGamePlacement, isPending: isPlacingBet } =
     useCreateStockGamePlacement();
 
   const isPlaceOver = useIsPlaceOver(roundRecord);
-
   const { maxPlacement, minPlacement = 100 } = useMaxPlacement(
-
     roundRecord.gameType
   );
   const { userDetails } = useAuthStore();
@@ -69,27 +71,39 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
     isPlacingBet,
   ]);
 
+  const handleQuickBet = useCallback(
+    (amount: number) => {
+      if (remainingAllowed <= 0) {
+        toast.error(
+          `You have reached the total bet limit of ₹${maxPlacement}.`
+        );
+        return;
+      }
+      const clamped = Math.min(amount, remainingAllowed);
+      if (clamped < amount) {
+        toast.error(
+          `Only ₹${remainingAllowed} remaining before reaching the ₹${maxPlacement} limit.`
+        );
+      }
+      setBetAmount(clamped);
+    },
+    [remainingAllowed, maxPlacement, setBetAmount]
+  );
 
-
-  const handleQuickBet = useCallback((amount: number) => {
-    if (remainingAllowed <= 0) {
-      toast.error(`You have reached the total bet limit of ₹${maxPlacement}.`);
-      return;
-    }
-    const clamped = Math.min(amount, remainingAllowed);
-    if (clamped < amount) {
-      toast.error(
-        `Only ₹${remainingAllowed} remaining before reaching the ₹${maxPlacement} limit.`
-      );
-    }
-    setBetAmount(clamped);
-  }, [remainingAllowed, maxPlacement, setBetAmount]);
-
+  const canPlaceBet = useMemo(() => {
+    return (
+      !isPlacingBet &&
+      !isPlaceOver &&
+      betAmount > 0 &&
+      totalBetAmount + betAmount <= maxPlacement
+    );
+  }, [isPlacingBet, isPlaceOver, betAmount, totalBetAmount, maxPlacement]);
 
   return (
     <>
       <div
         style={{
+          // ...getBackgroundStyle("/images/slot-machine/betting-bg.png"),
           backgroundImage: "url('/images/slot-machine/betting-bg.png')",
           backgroundSize: "100% 100%",
           backgroundPosition: "center center",
@@ -103,15 +117,17 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
           <div className="col-span-5 pt-1 flex items-center justify-center h-full overflow-hidden">
             <div
               style={{
+                // ...getBackgroundStyle("/images/slot-machine/menu-bg.png"),
                 backgroundImage: "url('/images/slot-machine/menu-bg.png')",
                 backgroundSize: "100% 100%",
-                backgroundPosition: "center",
+                backgroundPosition: "center center",
                 backgroundRepeat: "no-repeat",
               }}
               className="py-[6px] lg:py-3 px-3 lg:px-5 flex flex-col items-center justify-center h-full w-full gap-2"
             >
               <div
                 style={{
+                  // ...getBackgroundStyle("/images/slot-machine/menu-item-bg-1.png"),
                   backgroundImage:
                     "url('/images/slot-machine/menu-item-bg-1.png')",
                   backgroundSize: "100% 100%",
@@ -127,6 +143,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
               </div>
               <div
                 style={{
+                  // ...getBackgroundStyle("/images/slot-machine/menu-item-bg-2.png"),
                   backgroundImage:
                     "url('/images/slot-machine/menu-item-bg-2.png')",
                   backgroundSize: "100% 100%",
@@ -154,6 +171,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
             <button
               className="w-full h-full"
               style={{
+                // backgroundImage: getBackgroundStyle("/images/slot-machine/add-btn.png").backgroundImage,
                 backgroundImage: "url('/images/slot-machine/add-btn.png')",
                 backgroundSize: "contain",
                 backgroundPosition: "center",
@@ -187,6 +205,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
             <button
               className="w-full h-full "
               style={{
+                // backgroundImage: getBackgroundStyle("/images/slot-machine/sub-btn.png").backgroundImage,
                 backgroundImage: "url('/images/slot-machine/sub-btn.png')",
                 backgroundSize: "contain",
                 backgroundPosition: "center",
@@ -203,9 +222,10 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
           {/* //? bet amount  */}
           <div
             style={{
+              // ...getBackgroundStyle("/images/slot-machine/green-btn.png"),
               backgroundImage: "url('/images/slot-machine/green-btn.png')",
               backgroundSize: "100% 100%",
-              backgroundPosition: "center",
+              backgroundPosition: "center center",
               backgroundRepeat: "no-repeat",
             }}
             className={`col-span-3 w-full h-full flex justify-center items-center text-center mt-1`}
@@ -217,40 +237,20 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
           </div>
 
           {/* //? bet button  */}
-          <div className="col-span-3 relative w-full h-full flex items-center">
+          <div className="col-span-3 sm:col-span-2 relative w-full h-full flex items-center">
             <button
               onClick={() => placeBetHandler()}
-              disabled={
-                isPlacingBet ||
-                isPlaceOver ||
-                betAmount <= 0 ||
-                totalBetAmount + betAmount > maxPlacement ||
-                totalBetAmount >= maxPlacement
-              }
-              className={`absolute rounded-full z-10 cursor-pointer h-full max-h-[100%] max-w-[100%]
-              ${
-                isPlacingBet ||
-                isPlaceOver ||
-                betAmount <= 0 ||
-                totalBetAmount + betAmount > maxPlacement ||
-                totalBetAmount >= maxPlacement
-                  ? "cursor-not-allowed opacity-50"
-                  : "cursor-pointer hover:brightness-110"
-              }`}
+              disabled={!canPlaceBet}
+              className={`rounded-full z-10 cursor-pointer h-full w-full flex items-center justify-start
+              ${!canPlaceBet ? "opacity-50" : "hover:brightness-110"}`}
             >
-              <img
+              <Image
                 src="/images/slot-machine/refresh-btn.png"
                 alt="refresh-btn"
-                className="lg:h-[90%] h-[100%]"
+                fill
+                className="w-full h-full object-contain"
               />
             </button>
-            {/* <button className="absolute bottom-0 lg:bottom-3 lg:left-[100px] left-[50px] rounded-full z-20">
-              <img
-                src="/images/slot-machine/play-btn.png"
-                alt="play-btn"
-                className="lg:h-10 h-6"
-              />
-            </button> */}
           </div>
         </div>
       </div>

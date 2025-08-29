@@ -7,6 +7,7 @@ import MenuDialog from "./dialogs/MenuDialog";
 import { useAudio } from "@/context/audio-context";
 import InfoDialog from "./dialogs/InfoDialog";
 import DemoVideo from "./dialogs/demo-video";
+// import { getCachedImage } from "@/hooks/image-preloader";
 
 interface GameScreenProps {
   isGameActive: boolean;
@@ -17,6 +18,7 @@ interface GameScreenProps {
   roundRecord: any;
   currentStocks: any[];
   stockPrice: any;
+  // getBackgroundStyle: (src: string) => React.CSSProperties;
 }
 
 const StockSlot: React.FC<GameScreenProps> = ({
@@ -28,6 +30,7 @@ const StockSlot: React.FC<GameScreenProps> = ({
   roundRecord,
   currentStocks,
   stockPrice,
+  // getBackgroundStyle,
 }) => {
   const { isMuted, toggleMute } = useAudio();
   return (
@@ -39,6 +42,7 @@ const StockSlot: React.FC<GameScreenProps> = ({
             <MenuDialog>
               <img
                 className="w-10 h-10 rounded-full"
+                // src={getCachedImage("/images/slot-machine/menu-btn.png")?.src}
                 src="/images/slot-machine/menu-btn.png"
                 alt=""
               />
@@ -52,6 +56,7 @@ const StockSlot: React.FC<GameScreenProps> = ({
               )}
               <img
                 className="w-full h-full block z-10"
+                // src={getCachedImage("/images/slot-machine/btn-audio.png")?.src}
                 src="/images/slot-machine/btn-audio.png"
                 alt=""
               />
@@ -75,6 +80,7 @@ const StockSlot: React.FC<GameScreenProps> = ({
               <button className="w-10 h-10">
                 <img
                   className="w-full h-full"
+                  // src={getCachedImage("/images/slot-machine/i-btn.png")?.src}
                   src="/images/slot-machine/i-btn.png"
                   alt=""
                 />
@@ -84,6 +90,7 @@ const StockSlot: React.FC<GameScreenProps> = ({
               <button className="w-10 h-10">
                 <img
                   className="w-full h-full"
+                  // src={getCachedImage("/images/slot-machine/btn-pause.png")?.src}
                   src="/images/slot-machine/btn-pause.png"
                   alt=""
                 />
@@ -96,6 +103,7 @@ const StockSlot: React.FC<GameScreenProps> = ({
         <div className="lg:col-span-2 lg:flex hidden flex-col justify-start items-start relative font-wendy-one text-xl">
           <div
             style={{
+              // ...getBackgroundStyle("/images/slot-machine/menu-bg.png"),
               backgroundImage: "url('/images/slot-machine/menu-bg.png')",
               backgroundSize: "100% 100%",
               backgroundPosition: "center center",
@@ -106,8 +114,8 @@ const StockSlot: React.FC<GameScreenProps> = ({
             <BettingHistory>
               <div
                 style={{
-                  backgroundImage:
-                    "url('/images/slot-machine/menu-item-bg-1.png')",
+                  // ...getBackgroundStyle("/images/slot-machine/menu-item-bg-1.png"),
+                  backgroundImage: "url('/images/slot-machine/menu-item-bg-1.png')",
                   backgroundSize: "100% 100%",
                   backgroundPosition: "center center",
                   backgroundRepeat: "no-repeat",
@@ -120,8 +128,8 @@ const StockSlot: React.FC<GameScreenProps> = ({
             <HowToPlay>
               <div
                 style={{
-                  backgroundImage:
-                    "url('/images/slot-machine/menu-item-bg-2.png')",
+                  // ...getBackgroundStyle("/images/slot-machine/menu-item-bg-2.png"),
+                  backgroundImage: "url('/images/slot-machine/menu-item-bg-2.png')",
                   backgroundSize: "100% 100%",
                   backgroundPosition: "center center",
                   backgroundRepeat: "no-repeat",
@@ -134,8 +142,8 @@ const StockSlot: React.FC<GameScreenProps> = ({
             <DemoVideo>
               <div
                 style={{
-                  backgroundImage:
-                    "url('/images/slot-machine/menu-item-bg-2.png')",
+                  // ...getBackgroundStyle("/images/slot-machine/menu-item-bg-2.png"),
+                  backgroundImage: "url('/images/slot-machine/menu-item-bg-2.png')",
                   backgroundSize: "100% 100%",
                   backgroundPosition: "center center",
                   backgroundRepeat: "no-repeat",
@@ -159,6 +167,7 @@ const StockSlot: React.FC<GameScreenProps> = ({
             roundRecord={roundRecord}
             currentStocks={currentStocks}
             stockPrice={stockPrice}
+            // getBackgroundStyle={getBackgroundStyle}
           />
         </div>
 

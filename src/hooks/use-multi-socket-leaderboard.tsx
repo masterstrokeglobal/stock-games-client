@@ -25,7 +25,7 @@ const SOCKET_CONFIGS: SocketConfig[] = [
     { namespace: '/comex', schedulerType: SchedulerType.COMEX }
 ];
 
-const parseCOMEXMessage = (data: any): { [key: string]: number } => {
+export const parseCOMEXMessage = (data: any): { [key: string]: number } => {
     const parsedPrices: { [key: string]: number } = {};
 
     if (!Array.isArray(data) || data.length < 1) {
@@ -159,7 +159,6 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
 
     const processPrice = (bitcode: string, currentPrice: number) => {
         if (!roundRecord) return { initialPrice: currentPrice, changePercent: '0' };
-
         const roundStatus = getRoundStatus();
         const key = roundRecord.type === SchedulerType.CRYPTO ? bitcode.toLowerCase() : bitcode.toUpperCase();
 

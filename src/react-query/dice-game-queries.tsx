@@ -20,7 +20,7 @@ export const useCreateDiceGamePlacement = () => {
             toast.custom((t) => (
                 <BetSuccessToast onClose={() => toast.dismiss(t)} betAmount={amount} betNumber={number} />
             ), {
-                position: 'bottom-right'
+                position: 'top-right'
             });
         },
         onError: (error: AxiosError<{ message: string }>) => {
@@ -28,7 +28,7 @@ export const useCreateDiceGamePlacement = () => {
             toast.custom((t) => (
                 <BetErrorToast message={errorMessage} onClose={() => toast.dismiss(t)} />
             ), {
-                position: 'bottom-right'
+                position: 'top-right'
             });
         },
     });

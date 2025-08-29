@@ -19,7 +19,7 @@ import {
 } from "react";
 import { BettingArea } from "./betting-chip";
 import CoinToss from "./coin-toss";
-import { useLeaderboard } from "@/hooks/use-multi-socket-leaderboard";
+import { useLeaderboard } from "@/hooks/use-leadboard";
 
 type GameBoardProps = PropsWithClassName<{
   roundRecord: RoundRecord;

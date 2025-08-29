@@ -5,7 +5,7 @@ import { RoundRecordGameType } from "@/models/round-record";
 import { Minus, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import * as React from "react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useCreateAutoBet, useDeleteAutoBet, useAutoBets } from "@/react-query/game-record-queries";
 
 
@@ -26,12 +26,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
 }) => {
     const t = useTranslations("game");
     const { userDetails } = useAuthStore();
-
-
-
     const coinValues = userDetails?.company?.coinValues || [100, 200,500, 1000, 2000, 5000];
-    // const coinValues = [100, 200,500, 1000, 2000, 5000];
-
     const { data: autoBets, isLoading } = useAutoBets(roundId);
     const { mutate: createAutoBet, isPending: isCreating } = useCreateAutoBet();
     const { mutate: deleteAutoBet, isPending: isDeleting } = useDeleteAutoBet();
@@ -39,25 +34,19 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
     const minPlacement = userDetails?.company?.minPlacement ?? 0;
     const maxPlacement = userDetails?.company?.maxSinglePlacementPerGameType?.[RoundRecordGameType.DERBY] ?? 1000000;
 
-
-    const handleDecrement = () => {
+    const handleDecrement =  useCallback(() => {
         setBetAmount(Math.max(minPlacement, betAmount - 100));
-    };
+    }, [betAmount, minPlacement, setBetAmount]);
 
-    const handleIncrement = () => {
+    const handleIncrement = useCallback(() => {
         setBetAmount(Math.min(maxPlacement, betAmount + 100));
-    };
-
-    // const handleDouble = () => {
-    //     setBetAmount(Math.min(maxPlacement, betAmount * 2));
-    // };
-
+    }, [betAmount, maxPlacement, setBetAmount]);
 
     return (
         <div className="w-full xl:max-w-xs xl:mx-auto bg-transparent text-game-text px-4 rounded-2xl">
             {/* Top Tabs using shadcn */}
             <Tabs defaultValue="bet" className="w-full">
-                <div className="flex justify-center mb-6">
+                <div className="flex justify-center mb-4">
                     <TabsList className="h-10 bg-transparent border border-[#0B4A8F] rounded-full  flex w-3/4">
                         <TabsTrigger
                             value="bet"
@@ -79,7 +68,7 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                 {/* Bet Amount Controls and Bet Button */}
                 <TabsContent value="bet">
                     <div className="flex gap-4 mb-4 h-full">
-                        <div className="flex flex-col gap-6 flex-1 justify-center items-center">
+                        <div className="flex flex-col gap-4 flex-1 justify-center items-center">
 
                             {/* Bet Amount plus minus button */}
                             <div className="flex items-center w-3/4 justify-between border py-1 border-[#0B5AB6] rounded-full gap-2 px-1">
@@ -122,6 +111,8 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                                     </Button>
                                 ))}
                             </div>
+
+                            {/* Quick Amount Buttons */}
                             <div className="grid grid-cols-2  border border-[#0B4A8F] rounded w-full">
                                 {coinValues.slice(2, 4).map((amount, index) => (
                                     <Button
@@ -137,11 +128,10 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                                     </Button>
                                 ))}
                             </div>
-
                         </div>
-
                     </div>
                 </TabsContent>
+                
                 <TabsContent value="auto">
                     {autoBets && autoBets > 0 ? (
                         <div className="flex flex-col items-center justify-center gap-4 py-2 w-full">

@@ -17,6 +17,9 @@ import { RoundRecord } from "@/models/round-record";
 import MarketSelector from "@/components/common/market-selector";
 import { useMarketSelector } from "@/hooks/use-market-selector";
 import { RoundRecordGameType } from "@/models/round-record";
+import GameMaintenanceMarquee from "@/components/common/game-maintainaince-screen";
+import useSchedularInactive from "@/hooks/use-schedular-inactive";
+import { useGameType } from "@/hooks/use-game-type";
 
 declare global {
   interface Window {
@@ -29,6 +32,9 @@ const Page = () => {
   const { roundRecord, isLoading } = useCurrentGame(
     RoundRecordGameType.DERBY
   );
+  const [gameType] = useGameType();
+  const { isActive, isFetching } = useSchedularInactive(gameType);
+
   const { isMobile } = useWindowSize();
   useHorseRaceSound(roundRecord);
   const isPlaceOver = useIsPlaceOver(roundRecord);
@@ -47,8 +53,9 @@ const Page = () => {
     <>
       <section className={cn("bg-background-game pt-14 md:min-h-screen")}>
         <Navbar />
-        {isPlaceOver && <RouletteGameHeader title="Stock Roulette" />}
-        {/* {!isActive && !isFetching && <GameMaintenanceMarquee />} */}
+        { isMobile && isPlaceOver && <RouletteGameHeader title="Stock Roulette" />}
+        { !isMobile && <RouletteGameHeader title="Stock Roulette" />}
+        {!isActive && !isFetching && <GameMaintenanceMarquee />}
         {!isMobile && (
           <main className="grid grid-cols-12 grid-rows-12 mt-4  md:gap-4 gap-2 md:max-h-[1100px] px-4 pb-4">
             <div className="lg:col-span-7 col-span-8 row-span-4 rounded-sm  overflow-hidden">

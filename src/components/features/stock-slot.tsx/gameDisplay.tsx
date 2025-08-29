@@ -16,6 +16,7 @@ interface GameDisplayProps {
   roundRecord: RoundRecord;
   currentStocks: any[];
   stockPrice: any;
+  // getBackgroundStyle: (src: string) => React.CSSProperties;
 }
 
 const GameDisplay: React.FC<GameDisplayProps> = ({
@@ -27,6 +28,7 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
   roundRecord,
   currentStocks,
   stockPrice,
+  // getBackgroundStyle,
 }) => {
   const { gameTimeLeft, placeTimeLeft, isGameOver } = useGameState(roundRecord);
   const { data: myPlacementData } = useGetMySlotGamePlacement(roundRecord.id);
@@ -52,6 +54,7 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
 
         <div
           style={{
+            // ...getBackgroundStyle("/images/slot-machine/clock.png"),
             backgroundImage: "url('/images/slot-machine/clock.png')",
             backgroundSize: "100% 100%",
             backgroundPosition: "center center",
@@ -73,6 +76,7 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
           isPlaceOver={isPlaceOver}
           isGameOver={isGameOver}
           roundRecord={roundRecord}
+          // getBackgroundStyle={getBackgroundStyle}
         />
       </div>
 
@@ -81,6 +85,7 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
         betAmount={betAmount}
         setBetAmount={setBetAmount}
         roundRecord={roundRecord}
+        // getBackgroundStyle={getBackgroundStyle}
       />
 
       {/* //? stock list only for mobile  */}

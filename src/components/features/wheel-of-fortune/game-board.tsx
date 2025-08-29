@@ -1,3 +1,4 @@
+import { getStockName } from "@/components/common/StockName";
 import { RankedMarketItem, useLeaderboard } from "@/hooks/use-leadboard";
 import { cn, INR } from "@/lib/utils";
 import { RoundRecord, WHEEL_COLOR_CONFIG } from "@/models/round-record";
@@ -7,8 +8,8 @@ import {
   useGetMyCurrentRoundWheelOfFortunePlacement,
 } from "@/react-query/wheel-of-fortune-queries";
 import { useMemo } from "react";
-import TriangleDownGlow from "../common/triangle-down-glow";
-import TriangleUpGlow from "../common/triangle-up-glow";
+// import TriangleDownGlow from "../common/triangle-down-glow";
+// import TriangleUpGlow from "../common/triangle-up-glow";
 
 // Color configuration mapping
 
@@ -256,7 +257,7 @@ const ColorCard = ({
           )}
         >
           <span className="text-sm lg:text-lg ">{config.name}</span>
-          <div className="text-sm lg:text-lg">1:{config.multiplier}</div>
+          <div className="text-sm lg:text-lg">{config.multiplier}X</div>
         </div>
         <div
           style={{ background: currentColorConfig?.borderColor }}
@@ -284,7 +285,8 @@ const ColorCard = ({
                   )}
                 >
                   <span className="text-xs whitespace-nowrap truncate line-clamp-1 block flex-1">
-                    {index + 1}. {market.name?.slice(0, 17)}
+                    {index + 1}.{" "}
+                    {getStockName(market.name || "", market.codeName || "")}
                   </span>
                   <span
                     className={cn(
@@ -292,11 +294,11 @@ const ColorCard = ({
                       isPositive ? "text-green-600" : "text-red-600"
                     )}
                   >
-                    {isPositive ? (
+                    {/* {isPositive ? (
                       <TriangleUpGlow className="size-5" />
                     ) : (
                       <TriangleDownGlow className="size-5 font-montserrat" />
-                    )}{" "}
+                    )}{" "} */}
                     {changePercent.toFixed(5)}%
                   </span>
                 </li>

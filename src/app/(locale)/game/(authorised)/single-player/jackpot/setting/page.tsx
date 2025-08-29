@@ -8,7 +8,7 @@ import Link from "next/link";
 
 const SettingPage = () => {
     return (
-        <section className="relative w-full lg:h-screen min-h-screen lg:overflow-hidden flex flex-col ">
+        <section className="relative w-full lg:h-screen min-h-[100svh] lg:overflow-hidden flex flex-col ">
             <Navbar />
             <img src="/images/jackpot/bg.png" className="w-full h-full absolute z-0" />
             <div className="bg-black bg-opacity-10 absolute backdrop-blur-md h-full w-full z-0" />

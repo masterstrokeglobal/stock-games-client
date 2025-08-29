@@ -107,7 +107,7 @@ const CoinTossPairForm = ({ onSubmit, isLoading, defaultValues }: Props) => {
                     Reset
                 </Button>
                 <Button type="submit" disabled={isLoading}>
-                    {isLoading ? "Saving..." : "Create Pair"}
+                    {isLoading ? "Saving..." : "Save Pair"}
                 </Button>
             </footer>
         </FormProvider>

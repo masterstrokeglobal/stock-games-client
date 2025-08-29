@@ -43,7 +43,6 @@ const HeadTail = () => {
     } = useCurrentGame(RoundRecordGameType.HEAD_TAIL);
 
     const roundRecordWithWinningId = useWinningId(roundRecord);
-    
 
     // Memoize the bet amount setter to prevent child re-renders
     const handleSetBetAmount = useCallback((amount: number) => {

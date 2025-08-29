@@ -36,10 +36,10 @@ const InfoDialog = ({ children }: { children: React.ReactNode }) => {
             </DialogTitle>
           </DialogHeader>
           <DialogDescription className="text-center text-white mb-5 p-2 flex flex-col gap-2 w-full overflow-y-auto max-h-[40vh] min-h-[200px] text-xs lg:text-base xl:text-2xl">
-            <div>2 same - 1.8x</div>
-            <div>3 same - 13x</div>
-            <div>4 same - 200x</div>
-            <div>5 same - 9000x</div>
+            <div>2 same - 1.5x</div>
+            <div>3 same - 3x</div>
+            <div>4 same - 10x</div>
+            <div>5 same - 1000x</div>
           </DialogDescription>
         </div>
       </DialogContent>
