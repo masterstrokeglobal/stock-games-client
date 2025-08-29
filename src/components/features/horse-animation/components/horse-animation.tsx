@@ -90,7 +90,7 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket, horseOffset }:
         if (isTransitioning && animationProgressRef.current < 1) {
             // Use a larger fixed timestep for mobile
             const timestep = 0.016;
-            const speed = 0.8; // Increased animation speed
+            const speed = 1.29;
 
             animationProgressRef.current = Math.min(
                 animationProgressRef.current + timestep * speed,

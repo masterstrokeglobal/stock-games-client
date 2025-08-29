@@ -375,7 +375,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
         // Set up interval to update stocks state
         const intervalId = setInterval(() => {
             setStocks(latestDataRef.current);
-        }, 2000);
+        }, 700);
 
         connectSocket();
         return () => {

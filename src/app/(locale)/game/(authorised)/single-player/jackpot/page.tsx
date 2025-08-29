@@ -36,12 +36,7 @@ export default function Home() {
 
 
     if (!marketSelected)
-        return (
-            <MarketSelector
-                title="HI - LO Market"
-                roundRecordType={RoundRecordGameType.STOCK_JACKPOT}
-            />
-        );
+        return <MarketSelector title="HI - LO Market" roundRecordType={RoundRecordGameType.STOCK_JACKPOT} />;
 
 
     return (
