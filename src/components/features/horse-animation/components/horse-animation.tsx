@@ -129,7 +129,7 @@ const HorseAnimation = React.memo(({ roundRecord, filteredMarket, horseOffset }:
         updateHorsePositions(newProgress);
         
         // Check for completion
-        if (newProgress >= 0.9) {
+        if (newProgress >= 1) {
             // Final position update
             animationProgressRef.current = 1;
             updateHorsePositions(1);
