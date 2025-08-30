@@ -144,7 +144,7 @@ const JackpotBettingHistory = () => {
                     </div>
 
                     {/* Table Rows */}
-                    <ScrollArea className="h-[35vh] text-white" scrollThumbClassName="bg-[#C7F4FF80]">
+                    <ScrollArea className="h-[35vh] min-h-[400px] text-white" scrollThumbClassName="bg-[#C7F4FF80]">
                         <div className="space-y-2 font-space-grotesk">
                             {isFetching ? (
                                 <div className="text-center py-8 text-white/60">Loading...</div>
@@ -203,7 +203,7 @@ const JackpotBettingHistory = () => {
 
             {/* Mobile Card View */}
             <div className="block sm:hidden">
-                <ScrollArea className="h-[60vh] text-white" scrollThumbClassName="bg-[#C7F4FF80]">
+                <ScrollArea className="min-h-[400px] h-[60vh] text-white" scrollThumbClassName="bg-[#C7F4FF80]">
                     {isFetching ? (
                         <div className="text-center py-8 text-white/60">Loading...</div>
                     ) : history.length === 0 ? (

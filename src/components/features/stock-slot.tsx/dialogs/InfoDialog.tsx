@@ -23,7 +23,7 @@ const InfoDialog = ({ children }: { children: React.ReactNode }) => {
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
           }}
-          className="md:max-h-[70vh] w-full h-full relative flex flex-col items-center justify-center p-[10%] pt-[15%] font-wendy-one text-[#FFFFFFB2]"
+          className="md:max-h-[70vh] w-full h-full relative flex flex-col items-center justify-center md:justify-between p-[10%] pt-[15%] font-wendy-one text-[#FFFFFFB2]"
         >
           <img
             src="/images/slot-machine/happy-bull.png"
@@ -31,15 +31,15 @@ const InfoDialog = ({ children }: { children: React.ReactNode }) => {
             className="absolute w-[100px] lg:w-[160px] top-0 translate-y-[-50%]"
           />
           <DialogHeader className="p-1">
-            <DialogTitle className="text-[15px] lg:text-[30px] xl:text-[40px]">
+            <DialogTitle className="text-lg lg:text-2xl xl:text-4xl font-semibold">
               Multipliers
             </DialogTitle>
           </DialogHeader>
-          <DialogDescription className="text-center text-white mb-5 p-2 flex flex-col gap-2 w-full overflow-y-auto max-h-[40vh] min-h-[200px] text-xs lg:text-base xl:text-2xl">
-            <div>2 same - 1.5x</div>
-            <div>3 same - 3x</div>
-            <div>4 same - 10x</div>
-            <div>5 same - 1000x</div>
+          <DialogDescription className="text-center text-white mb-5 p-2 flex flex-col gap-1 md:gap-2 w-full overflow-y-auto max-h-[40vh]">
+            <p className="text-base lg:text-xl xl:text-3xl">2 matches - 1.5x</p>
+            <p className="text-base lg:text-xl xl:text-3xl">3 matches - 3x</p>
+            <p className="text-base lg:text-xl xl:text-3xl">4 matches - 10x</p>
+            <p className="text-base lg:text-xl xl:text-3xl">5 matches - 100x</p>
           </DialogDescription>
         </div>
       </DialogContent>

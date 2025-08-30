@@ -21,7 +21,7 @@ const HowToPlayDialog: React.FC<HowToPlayDialogProps> = ({
             case "en":
                 return "/images/how-to-play/videos/wheel-of-fortune-en.mp4";
             case "hi":
-                return "/images/how-to-play/videos/wheel-of-fortune-hi.mp4";
+                return "https://res.cloudinary.com/dmdd1tg0i/video/upload/v1756466448/wheel-of-fortune-hi_rmjh9e.mp4";
             default:
                 return "/images/how-to-play/videos/wheel-of-fortune-en.mp4";
         }
