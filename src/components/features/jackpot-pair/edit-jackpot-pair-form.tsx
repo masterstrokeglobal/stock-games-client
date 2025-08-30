@@ -5,12 +5,14 @@ import MarketItem, { SchedulerType } from "@/models/market-item";
 import { useGetJackpotPairById, useUpdateJackpotPair } from "@/react-query/jackpot-pair-queries";
 import { useMemo } from "react";
 import JackpotPairForm, { JackpotPairFormValues } from "./jackpot-pair-form";
+import { useRouter } from "next/navigation";
 
 type Props = {
     id: string;
 }
 
 const EditJackpotPairForm = ({ id }: Props) => {
+    const router  = useRouter();
     const { data: jackpotPair, isLoading: isLoadingPair } = useGetJackpotPairById(id);
     const { mutate: updateJackpotPair, isPending: isUpdating } = useUpdateJackpotPair();
 
@@ -18,6 +20,10 @@ const EditJackpotPairForm = ({ id }: Props) => {
         updateJackpotPair({
             id: jackpotPair?.id?.toString() || "",
             ...data
+        },{
+            onSuccess: () => {
+                router.push("/dashboard/jackpot-pair");
+            }
         });
     };
 

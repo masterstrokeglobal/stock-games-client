@@ -1,8 +1,13 @@
 "use client";
-import CreateBonus from "@/components/features/bonus/components/create-bonus";
 
-const CreateBonusPage = () => {
-    return <CreateBonus />;
+import CreateBonusCampaignForm from "@/components/admin/bonus/create-bonus-campaign-form";
+
+const CreateCampaignPage = () => {
+    return (
+        <div>
+            <CreateBonusCampaignForm />
+        </div>
+    );
 };
 
-export default CreateBonusPage; 
+export default CreateCampaignPage;

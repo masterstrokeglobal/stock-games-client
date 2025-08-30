@@ -28,6 +28,8 @@
         "race-begin": "السباق على وشك البدء",
         "no-bets": "لم تقم بوضع أي رهانات بعد",
         "no-bets-description": "ضع رهاناتك لرؤيتها هنا",
+        "gap-games": "ألعاب الفجوة",
+        "poker": "بوكر",
         "betting-closed": "تم إغلاق الرهان",
         "place-your-bets": "ضع رهاناتك",
         "round-ends-in": "تنتهي الجولة في",
@@ -472,7 +474,9 @@
         "platform-fees": "رسوم المنصة",
         "net-winning": "صافي المكاسب",
         "profit-loss": "الربح/الخسارة",
-        "winning-bet": "الرهان الرابح"
+        "winning-bet": "الرهان الفائز",
+        "gap-games": "ألعاب الفجوة",
+        "poker": "بوكر"
     },
     "last-round-winner": {
         "title": "الفائز في الجولة الأخيرة",

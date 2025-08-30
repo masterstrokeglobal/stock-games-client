@@ -9,7 +9,7 @@ import {
 import useCasinoAllowed from "@/hooks/use-is-casino-allowed"
 import useWindowSize from "@/hooks/use-window-size"
 import { cn } from "@/lib/utils"
-import { SidebarCloseIcon, SidebarOpenIcon } from "lucide-react"
+import {  SidebarCloseIcon, SidebarOpenIcon } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { usePathname, useRouter } from "next/navigation"
 import {
@@ -25,6 +25,7 @@ import {
 } from '../../common/sidebar-icons'
 import ContactDialog from "./contact-dialog"
 import WalletDialog from "./wallet-dialog"
+import { IconCricket } from "@tabler/icons-react"
 
 // Helper for sidebar icon component
 const SidebarIconComponent = ({ Icon, className }: { Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>; className?: string }) => (
@@ -58,6 +59,7 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
     
     const casinoItems = [
         { icon: MaximizeIcon, label: t("casino-games"), href: "/game/platform/casino" },
+        { icon: IconCricket as any, label: t("gap-games"), href: "/game/platform/gap" },
         { icon: GridIcon, label: t("slot-games"), href: `/game/platform/casino/slot-games` },
         { icon: VideoIcon, label: t("live-games"), href: `/game/platform/casino/live-games` },
     ];

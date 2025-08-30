@@ -6,7 +6,7 @@ import { Search } from "lucide-react";
 import React, { useState } from "react";
 import casinoGamesColumns from "@/columns/casino-games";
 import { useGetCasinoGames } from "@/react-query/casino-games-queries";
-import { GameCategory, GameTypeEnum, ProviderEnum } from "@/models/casino-games";
+import { GameCategory, GameTypeEnum, ProviderCompany, ProviderEnum } from "@/models/casino-games";
 import { ComboboxSelect } from "@/components/ui/combobox";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -132,6 +132,20 @@ const CasinoGames = () => {
                                 <SelectItem value="10">10</SelectItem>
                                 <SelectItem value="50">50</SelectItem>
                                 <SelectItem value="100">100</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+
+                    <Select>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select Provider" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectLabel>Provider</SelectLabel>
+                                <SelectItem value="all">All</SelectItem>
+                                <SelectItem value={ProviderCompany.GAP}>Gap</SelectItem>
+                                <SelectItem value={ProviderCompany.QTECH}>Qtech</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>

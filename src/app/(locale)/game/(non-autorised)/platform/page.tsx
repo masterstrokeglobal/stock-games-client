@@ -1,6 +1,7 @@
 "use client";
 import CategoryCarousel from "@/components/features/casino-games/category-carousel";
 import { CasinoProvidersCarousel } from "@/components/features/casino-games/game-providers";
+import GapGameCarousel from "@/components/features/casino-games/gap-game-carousel";
 import FavoriteGameCarousel from "@/components/features/favorite-games/favorite-game-carousel";
 import AdMarquee from "@/components/features/platform/ad-marquee";
 import CtaSection from "@/components/features/platform/cta-section";
@@ -49,6 +50,7 @@ const PlatformPage = () => {
             {isLoggedIn && <FavoriteGameCarousel />}
             {isCasinoAllowed && (
                 <>
+                <GapGameCarousel title="Gap Games" />
                     <CasinoProvidersCarousel title={tPlatform("game-providers")} />
                     <CategoryCarousel title={tPlatform("new-released")} new={true} direction="backward" />
                     <CategoryCarousel title={tPlatform("hot-games")} popular={true} direction="forward" />
