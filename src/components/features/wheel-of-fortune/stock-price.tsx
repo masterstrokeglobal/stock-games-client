@@ -69,7 +69,7 @@ export const StockPriceDisplay: React.FC<{
       </div>
       <div
         className={cn(
-          "relative z-20 transition-transform duration-300",
+          "relative z-20 transition-transform duration-300 pointer-events-none",
           !isPlaceOver && isMobile ? "translate-x-[100%]" : "translate-x-0"
         )}
       >
