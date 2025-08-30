@@ -14,9 +14,11 @@ interface StockSlot2DWheelProps {
   isPlaceOver?: boolean;
   isGameOver: boolean;
   roundRecord: any;
+  // getBackgroundStyle: (src: string) => React.CSSProperties;
 }
 
 const defaultGlowState = [false, false, false, false, false];
+const EXCLUDED_NUMBERS = [0];
 
 const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
   isGameActive = false,
@@ -24,6 +26,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
   isGameOver,
   isPlaceOver = false,
   roundRecord,
+  // getBackgroundStyle,
 }) => {
   const wheelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [wheels, setWheels] = useState<Wheel[]>([
@@ -133,10 +136,10 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
 
       // Only proceed if we have valid wheel values
       if (wheelValues && wheelValues.length === 5) {
-        // Step 1: Count occurrences of each number
+        // Step 1: Count occurrences of each number (excluding some numbers)
         const countMap = new Map<number, number>();
         wheelValues.forEach((num) => {
-          if (typeof num === 'number' && !isNaN(num)) {
+          if (typeof num === 'number' && !isNaN(num) && !EXCLUDED_NUMBERS.includes(num)) {
             countMap.set(num, (countMap.get(num) || 0) + 1);
           }
         });
@@ -214,9 +217,6 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
             ease: "elastic.out(1, 0.5)",
             onComplete: () => {
               gsap.set(wheelRef, { y: finalPosition });
-              // console.log(
-              //   `Wheel ${index} stopped at value ${finalValue} (middle sequence)`
-              // );
             },
           });
         }
@@ -300,6 +300,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
   return (
     <div
       style={{
+        // ...getBackgroundStyle("/images/slot-machine/game-board.png"),
         backgroundImage: "url('/images/slot-machine/game-board.png')",
         backgroundSize: "100% 100%",
         backgroundPosition: "center center",
@@ -332,7 +333,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
                   >
                     <img
                       style={{ height: numberHeight }}
-                      src={`/images/slot-machine/${"number"}-${number}.png`}
+                      src={EXCLUDED_NUMBERS.includes(number) ? `/images/slot-machine/loss.png` : `/images/slot-machine/${"number"}-${number}.png`}
                       alt={`${number}`}
                       className="w-auto object-contain"
                       draggable={false}
@@ -346,6 +347,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
           <div
             style={{
               height: isGameOver ? numberHeight : 0,
+              // ...getBackgroundStyle("/images/slot-machine/menu-bg.png"),
               backgroundImage: "url('/images/slot-machine/menu-bg.png')",
               backgroundSize: "100% 100%",
               backgroundPosition: "center center",

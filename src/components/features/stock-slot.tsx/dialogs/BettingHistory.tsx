@@ -83,9 +83,7 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger className="w-full">{children}</DialogTrigger>
-      <DialogContent
-        className="[&>button]:text-white [&>button]:focus:ring-0 bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl "
-      >
+      <DialogContent className="[&>button]:text-white [&>button]:focus:ring-0 bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl ">
         <div
           style={{
             backgroundImage: "url('/images/slot-machine/dialog-bg.png')",
@@ -114,10 +112,10 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
           </DialogHeader>
           <DialogDescription className="text-center flex flex-col gap-1 p-5 pt-0 overflow-y-auto max-h-[40vh] min-h-[200px] text-xs lg:text-2xl w-full">
             <div className="grid grid-cols-5 gap-1 py-2">
-              <p>Round</p>
+              <p className="hidden md:block">Round</p>
               <p>Amount</p>
               <p>Date</p>
-              <p>Status</p>
+              <p className="hidden md:block">Status</p>
               <p>P&L</p>
             </div>
             <div className="flex flex-col gap-1">
@@ -126,13 +124,13 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
               ) : (
                 history.map((row, idx) => (
                   <div key={idx} className="grid grid-cols-5 gap-1 py-2">
-                    <p>#{row.roundId}</p>
+                    <p className="hidden md:block">#{row.roundId}</p>
                     <p>₹{row.amount}</p>
                     <p>{dayjs(row.createdAt).format("DD/MM")}</p>
                     <p
-                      className={
+                      className={`${
                         row.isWinner ? "text-green-400" : "text-red-400"
-                      }
+                      } hidden md:block`}
                     >
                       {row.isWinner ? "Win" : "Loss"}
                     </p>

@@ -6,7 +6,7 @@ import { Canvas } from "@react-three/fiber";
 import { useTranslations } from "next-intl";
 import HorseRaceEnvironment from "./components/race-enviroment";
 import { cn } from "@/lib/utils";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import GameLoadingScreen from "@/components/common/game-loading-screen";
 import useWindowSize from "@/hooks/use-window-size";
 import { useThree } from "@react-three/fiber";
@@ -17,17 +17,54 @@ type Props = {
   filteredMarket?: MarketItem[];
 };
 
+const OPTIMAL_WIDTH = 465;
+const HORSE_OFFSET_SCALE = 8;
+
 export default function HorseRace({ roundRecord, filteredMarket }: Props) {
-  const [cameraView, setCameraView] = useState<'side' | 'top'>('side');
+  const [cameraView, setCameraView] = useState<"side" | "top">("side");
   const isPlaceOver = useIsPlaceOver(roundRecord);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [horseOffset, setHorseOffset] = useState(0);
 
   const handleCameraChange = () => {
-    setCameraView(prev => prev === 'side' ? 'top' : 'side');
+    setCameraView((prev) => (prev === "side" ? "top" : "side"));
   };
 
+  useEffect(() => {
+    const handleHorseOffset = () => {
+      if (canvasRef.current) {
+        const width = canvasRef.current.getBoundingClientRect().width;
+        if(width < OPTIMAL_WIDTH) {
+          const scale = Math.abs(OPTIMAL_WIDTH - width) / HORSE_OFFSET_SCALE;
+          setHorseOffset(scale);
+        }else{
+          setHorseOffset(0);
+        }
+      }
+    };
+
+    handleHorseOffset();
+
+    window.addEventListener("resize", handleHorseOffset);
+
+    return () => {
+      window.removeEventListener("resize", handleHorseOffset);
+    };
+  }, [isPlaceOver]);
+
   return isPlaceOver ? (
-    <Suspense fallback={<GameLoadingScreen className="md:h-full h-[500px]" loadingImageClassName="w-10 h-auto" />}>
-      <div id="horse-race-canvas" className="game-gradient-card-parent md:h-full h-64 overflow-hidden relative">
+    <Suspense
+      fallback={
+        <GameLoadingScreen
+          className="md:h-full h-[500px]"
+          loadingImageClassName="w-10 h-auto"
+        />
+      }
+    >
+      <div
+        id="horse-race-canvas"
+        className="game-gradient-card-parent md:h-full h-64 overflow-hidden relative"
+      >
         {/* Camera Change Button */}
         {/* <button
           onClick={handleCameraChange}
@@ -36,14 +73,18 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
           {cameraView === 'side' ? 'Top View' : 'Side View'}
         </button> */}
 
-          <LiveBadge className="absolute top-4 right-4 z-10" />
-        <Canvas className="bg-gradient-to-b from-sky-300 to-blue-400/85 md:rounded-sm ">
+        <LiveBadge className="absolute top-4 right-4 z-10" />
+        <Canvas
+          ref={canvasRef}
+          className="bg-gradient-to-b from-sky-300 to-blue-400/85 md:rounded-sm "
+        >
           <PixelRatioManager />
           <HorseRaceEnvironment
             roundRecord={roundRecord}
             filteredMarket={filteredMarket}
             changeCameraView={handleCameraChange}
             currentCameraView={cameraView}
+            horseOffset={horseOffset}
           />
         </Canvas>
       </div>
@@ -53,17 +94,33 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
   );
 }
 
-
-function RacePreparation({ className, roundRecord }: { className?: string, roundRecord: RoundRecord }) {
+function RacePreparation({
+  className,
+  roundRecord,
+}: {
+  className?: string;
+  roundRecord: RoundRecord;
+}) {
   const t = useTranslations("game");
   const gameState = useGameState(roundRecord);
 
   return (
-    <div className={cn("w-full  game-gradient-card-parent overflow-hidden relative text-game-text md:h-full h-64 text-center shadow-2xl", className)}>
-      <img src="/images/roulette/game-prep.png" className="w-full h-full rounded-sm object-cover " />
+    <div
+      className={cn(
+        "w-full  game-gradient-card-parent overflow-hidden relative text-game-text md:h-full h-64 text-center shadow-2xl",
+        className
+      )}
+    >
+      <img
+        src="/images/roulette/game-prep.png"
+        className="w-full h-full rounded-sm object-cover "
+      />
       <div className="rounded-xl p-4 absolute md:top-16  w-fit  md:left-0 md:w-1/2 md:translate-x-0 md:translate-y-0  top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <p className="text-white text-xl mb-2">{t('race-begin')}</p>
-        <div className="flex flex-col gap-2 text-white text-xl game-time-text"> {gameState.placeTimeLeft.formatted}</div>
+        <p className="text-white text-xl mb-2">{t("race-begin")}</p>
+        <div className="flex flex-col gap-2 text-white text-xl game-time-text">
+          {" "}
+          {gameState.placeTimeLeft.formatted}
+        </div>
       </div>
     </div>
   );
