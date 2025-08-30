@@ -95,7 +95,7 @@ const UpdateOperatorPage = () => {
                         onSubmit={onSubmit}
                         isEditing
                         isLoading={isPending}
-                        currentUserRole={AdminRole.SUPER_ADMIN}
+                        currentUserRole={AdminRole.COMPANY_ADMIN}
                         defaultValues={defaultValues}
                     />}
                 </main>

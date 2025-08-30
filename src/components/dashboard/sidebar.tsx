@@ -171,7 +171,8 @@ const companyMenuItems: MenuItem[] = [
         icon: UserCog2,
         subItems: [
             { name: 'View Operators', link: '/dashboard/operator' },
-            { name: 'Create Operator', link: '/dashboard/operator/create' },
+            { name:"Report", link:"/dashboard/operator/report"},
+            { name: 'Create Operator', link: '/dashboard/operator/create'}
         ],
     },
     {

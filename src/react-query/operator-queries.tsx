@@ -1,4 +1,4 @@
-import { operatorAPI } from "@/lib/axios/operator-API";
+import { operatorAPI, OperatorIndividualReportFilter } from "@/lib/axios/operator-API";
 import Operator from "@/models/operator";
 import { Transaction } from "@/models/transaction";
 import User from "@/models/user";
@@ -237,5 +237,17 @@ export const useGetOperatorGroupedReport = (filter?: OperatorGroupedReportFilter
             return response.data;
         },
         enabled: true,
+    });
+};
+
+// Get operator individual report
+export const useGetOperatorIndividualReport = (filter?: OperatorIndividualReportFilter) => {
+    return useQuery({
+        queryKey: ["operator-individual-report", filter],
+        queryFn: async (): Promise<any> => {
+            const response = await operatorAPI.getOperatorIndividualReport(filter);
+            return response.data;
+        },
+        enabled: !!filter?.childId,
     });
 };

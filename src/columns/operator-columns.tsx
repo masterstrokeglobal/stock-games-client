@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { OperatorRole } from "@/models/operator";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
-import { Eye, Wallet } from 'lucide-react';
+import { Eye, LogsIcon, Wallet } from 'lucide-react';
 import Link from "next/link";
 
 type Operator = {
@@ -126,6 +126,11 @@ const ActionColumn = ({ operator }: { operator: Operator }) => {
             <Link href={`/operator-dashboard/operator/${operator.id}`}>
                 <Button size="icon" variant="ghost" aria-label="View Operator">
                     <Eye className="w-5 h-5" />
+                </Button>
+            </Link>
+            <Link href={`/operator-dashboard/operator/${operator.id}/report`}>
+                <Button size="icon" variant="ghost" aria-label="View Operator">
+                    <LogsIcon className="w-5 h-5" />
                 </Button>
             </Link>
             <Link href={`/operator-dashboard/operator/${operator.id}/deposit`}>

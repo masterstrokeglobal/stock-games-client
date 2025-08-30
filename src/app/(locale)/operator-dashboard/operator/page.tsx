@@ -18,7 +18,6 @@ const OperatorTable = () => {
         search,
     });
 
-    console.log(data);
     const totalPages = useMemo(() => {
         return Math.ceil(data?.count / 10) || 1;
     }, [data]);

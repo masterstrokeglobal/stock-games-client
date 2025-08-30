@@ -31,7 +31,7 @@ const UpdateOperatorPage = () => {
             ...data,
         }, {
             onSuccess: () => {
-                router.push("/dashboard/operator");
+                router.push("/operator-dashboard/operator");
             },
         });
     };
@@ -46,7 +46,7 @@ const UpdateOperatorPage = () => {
                         onSubmit={onSubmit}
                         isEditing
                         isLoading={isPending}
-                        currentUserRole={AdminRole.SUPER_ADMIN}
+                        currentUserRole={AdminRole.COMPANY_ADMIN}
                         defaultValues={defaultValues}
                     />}
                 </main>

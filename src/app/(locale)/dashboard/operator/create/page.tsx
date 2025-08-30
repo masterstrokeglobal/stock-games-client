@@ -1,9 +1,22 @@
 "use client";
 import OperatorForm, { OperatorFormValues } from "@/components/features/operator/operator-form";
 import { AdminRole } from "@/models/admin";
+import { OperatorRole } from "@/models/operator";
 import { useCreateOperator } from "@/react-query/operator-queries";
 import { useRouter } from "next/navigation";
 
+const defaultValues: OperatorFormValues = {
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: OperatorRole.SUPER_DUPER_MASTER,
+    maxBalance: 0,
+    percentageShare: 0,
+    dmMaxBalance: 0,
+    masterMaxBalance: 0,
+    agentMaxBalance: 0,
+};
 const CreateOperatorPage = () => {
     const router = useRouter();
     const { mutate, isPending } = useCreateOperator();
@@ -11,7 +24,7 @@ const CreateOperatorPage = () => {
     const onSubmit = (data: OperatorFormValues) => {
         mutate(data, {
             onSuccess: () => {
-                router.push("/dashboard/operators");
+                router.push("/dashboard/operator");
             },
         });
     };
@@ -25,8 +38,9 @@ const CreateOperatorPage = () => {
                 <main className="mt-4">
                     <OperatorForm
                         onSubmit={onSubmit}
+                        defaultValues={defaultValues}
                         isLoading={isPending}
-                        currentUserRole={AdminRole.SUPER_ADMIN}
+                        currentUserRole={AdminRole.COMPANY_ADMIN}
                     />
                 </main>
             </section>

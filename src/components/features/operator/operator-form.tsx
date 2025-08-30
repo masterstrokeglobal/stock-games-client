@@ -53,7 +53,7 @@ type Props = {
     defaultValues?: Partial<OperatorFormValues>;
     isLoading?: boolean;
     isEditing?: boolean;
-    currentUserRole: OperatorRole | AdminRole.SUPER_ADMIN;
+    currentUserRole: OperatorRole | AdminRole.COMPANY_ADMIN;
 };
 
 const OperatorForm = ({
@@ -83,7 +83,7 @@ const OperatorForm = ({
     const passwordValue = watch("password");
 
     // Check if current user is super duper master (can set balance limits)
-    const canSetBalanceLimits = currentUserRole === AdminRole.SUPER_ADMIN;
+    const canSetBalanceLimits = currentUserRole === AdminRole.COMPANY_ADMIN;
 
     // Role options based on current user's role
     const getRoleOptions = () => {
@@ -95,7 +95,7 @@ const OperatorForm = ({
         ];
 
         // Super Duper Master can create any role
-        if (currentUserRole === AdminRole.SUPER_ADMIN) {
+        if (currentUserRole === AdminRole.COMPANY_ADMIN) {
             return allRoles;
         }
         if (currentUserRole === OperatorRole.SUPER_DUPER_MASTER) {

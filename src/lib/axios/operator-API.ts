@@ -3,6 +3,12 @@ import api from "./instance";
 import { TransactionStatus } from "@/models/transaction";
 import { OperatorGroupedReportFilter } from "@/types/operator-report";
 
+export type OperatorIndividualReportFilter = {
+    childId: number;
+    startDate: Date;
+    endDate: Date;
+}
+
 export const operatorAPI = {
     createOperator: async (operatorData: any) => {
         return api.post("/operator", operatorData);
@@ -72,5 +78,10 @@ export const operatorAPI = {
         return api.get("/admin/operator-grouped-report", {
             params: filter
         });
-    }
+    },
+    getOperatorIndividualReport: async (filter?: OperatorIndividualReportFilter) => {
+        return api.get("/operator/individual-report", {
+            params: filter
+        });
+    },
 };
