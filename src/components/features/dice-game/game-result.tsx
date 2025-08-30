@@ -30,7 +30,7 @@ const DiceGameResultDialog = ({
   }, 0);
 
   const totalNetResult = data?.reduce((total: any, bet: any) => {
-    return total + bet.netProfitLoss;
+    return bet.netProfitLoss > 0 ? total + bet.amountWon - bet.totalPlaced : total + bet.netProfitLoss;
   }, 0);
 
 
