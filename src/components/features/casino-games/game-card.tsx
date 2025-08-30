@@ -5,11 +5,14 @@ import { useGetAllFavoriteGames, useAddFavoriteGame, useRemoveFavoriteGame } fro
 import { useMemo } from "react"
 import { Heart } from "lucide-react"
 import { useAuthStore } from "@/context/auth-context"
+import { cn } from "@/lib/utils"
 interface GameCardProps {
-  game: CasinoGames
+  game: CasinoGames,
+  className?: string,
+  imageClassName?: string
 }
 
-export default function GameCard({ game }: GameCardProps) {
+export default function GameCard({ game, className, imageClassName }: GameCardProps) {
   const { data: favorites = [] } = useGetAllFavoriteGames();
   const addFavorite = useAddFavoriteGame();
   const { isLoggedIn } = useAuthStore();
@@ -35,12 +38,12 @@ export default function GameCard({ game }: GameCardProps) {
   return (
     // tab active add border and shadow 
     <Link href={`/game/casino/${game.id}`} >
-      <Card className="relative overflow-hidden aspect-square border border-[#4467CC] rounded-none group pb-1 cursor-pointer transition-transform duration-300 hover:scale-105">
+      <Card className={cn("relative overflow-hidden aspect-square border border-[#4467CC] rounded-none group pb-1 cursor-pointer transition-transform duration-300 hover:scale-105", className)}>
 
         <img
           src={game.imageUrl || "/placeholder.svg?height=400&width=300"}
           alt={game.name}
-          className="w-full h-full object-cover  absolute z-0"
+          className={cn("w-full h-full object-cover  absolute z-0", imageClassName)}
         />
         {game.new && (
           <div className="absolute top-0 right-0  text-white  px-2 py-1 m-1 tracking-wide  gold-button md:text-sm text-[10px]">
