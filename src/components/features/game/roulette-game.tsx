@@ -162,7 +162,7 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
     return aggregatedChips;
   }, [data]);
 
-  const { previousRoundId, showResults } = useShowResults(
+  const { currentRoundId: previousRoundId, showResults } = useShowResults(
     roundRecord,
     bettedChips
   );
