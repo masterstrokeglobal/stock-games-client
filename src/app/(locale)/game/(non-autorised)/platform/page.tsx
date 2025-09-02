@@ -26,7 +26,7 @@ const PlatformPage = () => {
     const { isCasinoAllowed } = useCasinoAllowed();
 
     return (
-        <section className="space-y-2 md:space-y-8 font-inter">
+        <section className="space-y-2 md:space-y-4 font-inter">
             <AdMarquee />
             {isLoggedIn && !user.isDemoUser && (
                 <div className="flex gap-2">
