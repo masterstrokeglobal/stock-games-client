@@ -1,9 +1,15 @@
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useAuthStore } from "@/context/auth-context";
 import cryptoWalletAPI from "@/lib/axios/crypto-wallet-API";
 import User from "@/models/user";
-import { useGetMyCompany } from '@/react-query/company-queries';
+import { useGetMyCompany } from "@/react-query/company-queries";
 import { Copy, Loader2 } from "lucide-react";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
@@ -12,61 +18,94 @@ import enhancedBonusAPI from "@/lib/axios/enhanced-bonus-API";
 
 // Deposit Methods Component
 interface DepositMethodsProps {
-    selectedMethod: string;
-    onMethodChange: (method: string) => void;
+  selectedMethod: string;
+  onMethodChange: (method: string) => void;
 }
 
-const DepositMethods = ({ selectedMethod, onMethodChange }: DepositMethodsProps) => {
-    const methods = [
-        { id: 'upi', label: 'UPI', icon: <img src="/images/platform/wallet/upi.png" className="w-auto h-10" alt="upi" /> },
-    ];
-    const { data: company } = useGetMyCompany();
-    const isCryptoPayIn = company?.cryptoPayIn;
-    if (isCryptoPayIn) {
-        methods.push({ id: 'crypto', label: 'Crypto', icon: <img src="/images/platform/wallet/crypto.png" className="w-auto h-10" alt="crypto" /> });
-    }
-    return (
-        <div className="space-y-4">
-            <div>
-                <h3 className="text-platform-text text-base font-medium mb-2">Select Deposit Method</h3>
-                <p className="text-platform-text text-sm mb-4">Each Option May Have Different Processing Times And Limits.</p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-                {methods.map((method) => (
-                    <PaymentMethod
-                        key={method.id}
-                        icon={method.icon}
-                        label={method.label ?? ""}
-                        isSelected={selectedMethod === method.id}
-                        onClick={() => onMethodChange(method.id)}
-                    />
-                ))}
-            </div>
-        </div>
-    );
+const DepositMethods = ({
+  selectedMethod,
+  onMethodChange,
+}: DepositMethodsProps) => {
+  const methods = [
+    {
+      id: "upi",
+      label: "UPI",
+      icon: (
+        <img
+          src="/images/platform/wallet/upi.png"
+          className="w-auto h-10"
+          alt="upi"
+        />
+      ),
+    },
+  ];
+  const { data: company } = useGetMyCompany();
+  const isCryptoPayIn = company?.cryptoPayIn;
+  if (isCryptoPayIn) {
+    methods.push({
+      id: "crypto",
+      label: "Crypto",
+      icon: (
+        <img
+          src="/images/platform/wallet/crypto.png"
+          className="w-auto h-10"
+          alt="crypto"
+        />
+      ),
+    });
+  }
+  return (
+    <div className="space-y-4">
+      <div>
+        <h3 className="text-platform-text text-base font-medium mb-2">
+          Select Deposit Method
+        </h3>
+        <p className="text-platform-text text-sm mb-4">
+          Each Option May Have Different Processing Times And Limits.
+        </p>
+      </div>
+      <div className="flex flex-wrap gap-3">
+        {methods.map((method) => (
+          <PaymentMethod
+            key={method.id}
+            icon={method.icon}
+            label={method.label ?? ""}
+            isSelected={selectedMethod === method.id}
+            onClick={() => onMethodChange(method.id)}
+          />
+        ))}
+      </div>
+    </div>
+  );
 };
 
 // Payment Method Component
 interface PaymentMethodProps {
-    icon: ReactNode;
-    label?: string;
-    isSelected: boolean;
-    onClick: () => void;
+  icon: ReactNode;
+  label?: string;
+  isSelected: boolean;
+  onClick: () => void;
 }
 
-const PaymentMethod = ({ icon, isSelected, onClick, label }: PaymentMethodProps) => {
-    return (
-        <button
-            onClick={onClick}
-            className={`flex items-center flex-1 justify-center gap-2 rounded-sm px-4 py-3 border-2 transition-all ${isSelected
-                ? 'dark:border-[#3B4BFF] border-primary-game bg-[#3B4BFF]/20 text-white'
-                : 'dark:border-platform-border border-primary-game bg-transparent text-white/80 hover:border-[#3B4BFF]/50'
-                }`}
-        >
-            {icon}
-            <span className="text-platform-text text-sm">{label}</span>
-        </button>
-    );
+const PaymentMethod = ({
+  icon,
+  isSelected,
+  onClick,
+  label,
+}: PaymentMethodProps) => {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center flex-1 justify-center gap-2 rounded-sm px-4 py-3 border-2 transition-all ${
+        isSelected
+          ? "dark:border-[#3B4BFF] border-primary-game bg-[#3B4BFF]/20 text-white"
+          : "dark:border-platform-border border-primary-game bg-transparent text-white/80 hover:border-[#3B4BFF]/50"
+      }`}
+    >
+      {icon}
+      <span className="text-platform-text text-sm">{label}</span>
+    </button>
+  );
 };
 
 import FormImage from "@/components/ui/form/form-image-compact";
@@ -78,350 +117,452 @@ import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const upiDepositSchema = (t: any) => z.object({
+const upiDepositSchema = (t: any) =>
+  z.object({
     pgId: z
-        .string()
-        .min(0, t('validation.transaction-id-required'))
-        .max(50, t('validation.transaction-id-max')).optional(),
+      .string()
+      .min(0, t("validation.transaction-id-required"))
+      .max(50, t("validation.transaction-id-max"))
+      .optional(),
     confirmationImageUrl: z
-        .string()
-        .url(t('validation.confirmation-image-url-invalid')).optional(),
-    amount: z
-        .coerce.number({
-            message: t('validation.amount-invalid')
-        })
-        .min(100, t('validation.amount-required'))
-});
+      .string()
+      .url(t("validation.confirmation-image-url-invalid"))
+      .optional(),
+    amount: z.coerce
+      .number({
+        message: t("validation.amount-invalid"),
+      })
+      .min(100, t("validation.amount-required")),
+  });
 
 type UpiDepositFormValues = z.infer<ReturnType<typeof upiDepositSchema>>;
 // Crypto Deposit Form Schema
 const cryptoDepositSchema = z.object({
-    crypto: z.string().min(1, "Select a cryptocurrency"),
-    amount: z
-        .string()
-        .min(1, "Amount is required")
-        .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-            message: "Enter a valid amount",
-        }),
+  crypto: z.string().min(1, "Select a cryptocurrency"),
+  amount: z
+    .string()
+    .min(1, "Amount is required")
+    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+      message: "Enter a valid amount",
+    }),
 });
 
 const UPIDepositForm = () => {
-    const t = useTranslations('deposit');
-    const { mutate, isPending } = useCreateDepositRequest();
-    const { userDetails } = useAuthStore();
-    const paymentImage = userDetails?.company?.paymentImage;
+  const t = useTranslations("deposit");
+  const { mutate, isPending } = useCreateDepositRequest();
+  const { userDetails } = useAuthStore();
+  const paymentImage = userDetails?.company?.paymentImage;
 
-    const [eligible, setEligible] = useState<any | null>(null);
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>("");
+  const [eligible, setEligible] = useState<any | null>(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] =
+    useState<string>("");
+  const [selectedBankTransferMethod, setSelectedBankTransferMethod] =
+    useState<string>("");
 
-    const onSubmit = async (data: UpiDepositFormValues) => {
-        // Validate payment method is selected
-        if (!selectedPaymentMethod) {
-            toast.error("Please select a payment method");
-            return;
-        }
-
-        data.amount = parseInt(data.amount.toString());
-        // Add payment method to the deposit data
-        const depositData = {
-            ...data,
-            paymentMethod: selectedPaymentMethod
-        };
-                
-        mutate(depositData, {
-            onSuccess: () => {            
-                form.reset({ amount: 0, pgId: "", confirmationImageUrl: "" });
-                setSelectedPaymentMethod("");
-                toast.success("Deposit request submitted successfully!");
-            },
-            onError: (error) => {
-                console.log('Error creating deposit request:', error);
-                toast.error("Failed to submit deposit request");
-            }
-        });
+  const onSubmit = async (data: UpiDepositFormValues) => {
+    // Validate payment method is selected
+    if (!selectedPaymentMethod) {
+      toast.error("Please select a payment method");
+      return;
     }
+
+    // Validate bank transfer method is selected when bank-transfer is chosen
+    if (selectedPaymentMethod === "bank-transfer" && !selectedBankTransferMethod) {
+      toast.error("Please select NEFT or RTGS for bank transfer");
+      return;
+    }
+
+    data.amount = parseInt(data.amount.toString());
     
-    const form = useForm<UpiDepositFormValues>({
-        resolver: zodResolver(upiDepositSchema(t)),
-        defaultValues: { amount: 10, pgId: "", confirmationImageUrl: "" },
+    // Determine the final payment method
+    const finalPaymentMethod = selectedPaymentMethod === "bank-transfer" 
+      ? selectedBankTransferMethod 
+      : selectedPaymentMethod;
+
+    // Add payment method to the deposit data
+    const depositData = {
+      ...data,
+      paymentMethod: finalPaymentMethod,
+    };
+
+    mutate(depositData, {
+      onSuccess: () => {
+        form.reset({ amount: 0, pgId: "", confirmationImageUrl: "" });
+        setSelectedPaymentMethod("");
+        setSelectedBankTransferMethod("");
+        toast.success("Deposit request submitted successfully!");
+      },
+      onError: (error) => {
+        console.log("Error creating deposit request:", error);
+        toast.error("Failed to submit deposit request");
+      },
     });
+  };
 
-    // Update useEffect to use selected payment method for bonus eligibility
-    useEffect(() => {
-        const amount = form.watch("amount");
-        if (amount && amount > 0 && selectedPaymentMethod) {
-            // Determine payment category based on selected method
-            let paymentCategory = 'BANK_TRANSFER'; // Default for RTGS, NEFT, UPI
-            if (selectedPaymentMethod === 'CRYPTO') {
-                paymentCategory = 'CRYPTOCURRENCY';
-            }
-            
-            enhancedBonusAPI.getBonusEligibility(Number(amount), paymentCategory)
-                .then((res) => setEligible(res))
-                .catch(() => setEligible(null));
-        } else {
-            setEligible(null);
+  const form = useForm<UpiDepositFormValues>({
+    resolver: zodResolver(upiDepositSchema(t)),
+    defaultValues: { amount: 10, pgId: "", confirmationImageUrl: "" },
+  });
+
+  // Update useEffect to use selected payment method for bonus eligibility
+  useEffect(() => {
+    const amount = form.watch("amount");
+    if (amount && amount > 0 && selectedPaymentMethod) {
+      // Determine payment category based on selected method
+      let paymentCategory = "BANK_TRANSFER"; // Default for RTGS, NEFT, UPI
+      if (selectedPaymentMethod === "CRYPTO") {
+        paymentCategory = "CRYPTOCURRENCY";
+      }
+
+      enhancedBonusAPI
+        .getBonusEligibility(Number(amount), paymentCategory)
+        .then((res) => setEligible(res))
+        .catch(() => setEligible(null));
+    } else {
+      setEligible(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.watch("amount"), selectedPaymentMethod]);
+
+  // Payment method options
+  const paymentMethods = [
+    {
+      value: "UPI",
+      label: "UPI",
+      icon: "💳",
+      description: "Instant UPI transfers",
+    },
+    {
+      value: "bank-transfer",
+      label: "Bank Transfer",
+      icon: "🏦",
+      description: "National Electronic Fund Transfer",
+    },
+    {
+      value: "CRYPTO",
+      label: "Crypto",
+      icon: "🪙",
+      description: "Cryptocurrency payments",
+    },
+  ];
+
+  const bankTransferMethods = [
+    {
+      value: "NEFT",
+      label: "NEFT",
+      icon: "🏦",
+      description: "National Electronic Fund Transfer",
+    },
+    {
+      value: "RTGS",
+      label: "RTGS",
+      icon: "⚡",
+      description: "Real Time Gross Settlement",
+    },
+  ];
+
+  return (
+    <FormProvider
+      methods={form}
+      className="space-y-4"
+      onSubmit={form.handleSubmit(onSubmit, (err) => {
+        console.log(err);
+      })}
+    >
+      {paymentImage && selectedPaymentMethod && (
+        <div className="bg-white overflow-hidden rounded-lg w-fit mx-auto">
+          <img src={paymentImage} alt="QR Code" />
+        </div>
+      )}
+
+      <AmountInput
+        number
+        value={form.watch("amount")?.toString() ?? ""}
+        onChange={(val) =>
+          form.setValue("amount", (val as unknown as number) ?? 0)
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [form.watch("amount"), selectedPaymentMethod]);
+        placeholder="Enter the amount to deposit"
+        error={form.formState.errors.amount?.message}
+      />
 
-    // Payment method options
-    const paymentMethods = [
-        { value: "UPI", label: "UPI", icon: "💳", description: "Instant UPI transfers" },
-        { value: "NEFT", label: "NEFT", icon: "🏦", description: "National Electronic Fund Transfer" },
-        { value: "RTGS", label: "RTGS", icon: "⚡", description: "Real Time Gross Settlement" },
-        { value: "CRYPTO", label: "Crypto", icon: "🪙", description: "Cryptocurrency payments" }
-    ];
+      <AmountInput
+        label="Transaction ID"
+        value={form.watch("pgId") ?? ""}
+        onChange={(val) => form.setValue("pgId", val)}
+        placeholder="Enter the transaction id"
+        error={form.formState.errors.pgId?.message}
+        required={false}
+      />
 
-    return (
-        <FormProvider methods={form} className="space-y-4" onSubmit={form.handleSubmit(onSubmit, (err) => {
-            console.log(err);
-        })}>
-            {/* Payment Method Selection */}
-            <div className="space-y-3">
-                <label className="text-sm font-medium text-platform-text">
-                    Select Payment Method *
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                    {paymentMethods.map((method) => (
-                        <button
-                            key={method.value}
-                            type="button"
-                            onClick={() => setSelectedPaymentMethod(method.value)}
-                            className={`p-3 border-2 rounded-lg transition-all text-left ${
-                                selectedPaymentMethod === method.value
-                                    ? 'border-[#3B4BFF] bg-[#3B4BFF]/10'
-                                    : 'border-gray-300 hover:border-[#3B4BFF]/50'
-                            }`}
-                        >
-                            <div className="flex items-center gap-2 mb-1">
-                                <span className="text-xl">{method.icon}</span>
-                                <span className="font-medium">{method.label}</span>
-                            </div>
-                            <p className="text-xs text-gray-600">{method.description}</p>
-                        </button>
-                    ))}
-                </div>
-                {!selectedPaymentMethod && (
-                    <p className="text-sm text-red-500">Please select a payment method</p>
-                )}
-            </div>
+      <FormImage
+        control={form.control}
+        name="confirmationImageUrl"
+        label="Upload Confirmation Image"
+      />
 
-            {paymentImage && selectedPaymentMethod && (
-                <div className="bg-white overflow-hidden rounded-lg w-fit mx-auto">
-                    <img src={paymentImage} alt="QR Code" />
-                </div>
-            )}
-            
-            <AmountInput
-                number
-                value={form.watch("amount")?.toString() ?? ""}
-                onChange={(val) => form.setValue("amount", val as unknown as number ?? 0)}
-                placeholder="Enter the amount to deposit"
-                error={form.formState.errors.amount?.message}
-            />
-
-            <AmountInput
-                label="Transaction ID"
-                value={form.watch("pgId") ?? ""}
-                onChange={(val) => form.setValue("pgId", val)}
-                placeholder="Enter the transaction id"
-                error={form.formState.errors.pgId?.message}
-                required={false}
-            />
-            
-            <FormImage
-                control={form.control}
-                name="confirmationImageUrl"
-                label="Upload Confirmation Image"
-            />
-            
-            {eligible?.eligibleBonuses?.length > 0 && (
-                <div className="bg-green-50 text-green-800 border border-green-200 p-3 rounded-md text-sm">
-                    <div className="font-medium mb-1">🎁 Available Bonuses</div>
-                    {eligible.eligibleBonuses.map((b: any) => (
-                        <div key={b.bonusId} className="flex justify-between items-center mb-1">
-                            <span>{b.bonusName}</span>
-                            <span className="font-semibold">+${b.estimatedBonusAmount}</span>
-                        </div>
-                    ))}
-                    {eligible.eligibleBonuses.some((b: any) => b.directCredit) && (
-                        <div className="text-xs text-green-700 mt-2">
-                            💰 Some bonuses go directly to main balance (no wagering required)
-                        </div>
-                    )}
-                </div>
-            )}
-            
-            <Button
-                variant="platform-gradient-secondary"
-                size="lg"
-                type="submit"
-                disabled={form.formState.isSubmitting || isPending || !selectedPaymentMethod}
+      {/* Payment Method Selection */}
+      <div className="space-y-3">
+        <label className="text-sm font-medium text-platform-text">
+          Select Payment Method *
+        </label>
+        <div className="grid grid-cols-3 gap-3">
+          {paymentMethods.map((method) => (
+            <button
+              key={method.value}
+              type="button"
+              onClick={() => {
+                setSelectedPaymentMethod(method.value);
+                // Reset bank transfer method when switching payment methods
+                if (method.value !== "bank-transfer") {
+                  setSelectedBankTransferMethod("");
+                }
+              }}
+              className={`p-1 border rounded-lg transition-all text-left flex justify-center items-center border-[#4467CC] ${
+                selectedPaymentMethod === method.value
+                  ? " bg-[#3B4BFF]/10"
+                  : " hover:border-[#3B4BFF]/50"
+              }`}
             >
-                {isPending ? "Submitting..." : "Deposit Now"}
-            </Button>
-        </FormProvider>
-    );
+              <img
+                src={`/images/payment-methods/${method.value}.png`}
+                alt="upi"
+                className="h-8"
+              />
+            </button>
+          ))}
+        </div>
+        {!selectedPaymentMethod && (
+          <p className="text-sm text-red-500">Please select a payment method</p>
+        )}
+        {selectedPaymentMethod === "bank-transfer" && (
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-platform-text">
+              Select Bank Transfer Method *
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              {bankTransferMethods.map((method) => (
+                <button 
+                  key={method.value} 
+                  type="button" 
+                  onClick={() => setSelectedBankTransferMethod(method.value)}
+                  className={`p-3 border rounded-lg transition-all text-center border-[#4467CC] ${
+                    selectedBankTransferMethod === method.value
+                      ? "bg-[#3B4BFF]/10 border-[#3B4BFF]"
+                      : "hover:border-[#3B4BFF]/50"
+                  }`}
+                >
+                  <div className="flex flex-col items-center gap-1">
+                    <p className="text-platform-text font-medium">{method.label}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+            {!selectedBankTransferMethod && (
+              <p className="text-sm text-red-500">Please select NEFT or RTGS</p>
+            )}
+          </div>
+        )}
+      </div>
+
+      {eligible?.eligibleBonuses?.length > 0 && (
+        <div className="bg-green-50 text-green-800 border border-green-200 p-3 rounded-md text-sm">
+          <div className="font-medium mb-1">🎁 Available Bonuses</div>
+          {eligible.eligibleBonuses.map((b: any) => (
+            <div
+              key={b.bonusId}
+              className="flex justify-between items-center mb-1"
+            >
+              <span>{b.bonusName}</span>
+              <span className="font-semibold">+${b.estimatedBonusAmount}</span>
+            </div>
+          ))}
+          {eligible.eligibleBonuses.some((b: any) => b.directCredit) && (
+            <div className="text-xs text-green-700 mt-2">
+              💰 Some bonuses go directly to main balance (no wagering required)
+            </div>
+          )}
+        </div>
+      )}
+
+      <Button
+        variant="platform-gradient-secondary"
+        size="lg"
+        type="submit"
+        disabled={
+          form.formState.isSubmitting || 
+          isPending || 
+          !selectedPaymentMethod ||
+          (selectedPaymentMethod === "bank-transfer" && !selectedBankTransferMethod)
+        }
+      >
+        {isPending ? "Submitting..." : "Deposit Now"}
+      </Button>
+    </FormProvider>
+  );
 };
 
 export const CryptoDepositForm = () => {
+  const { userDetails } = useAuthStore();
+  const user: User = userDetails as User;
+  const [rate, setRate] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
 
-    const { userDetails } = useAuthStore();
-    const user: User = userDetails as User;
-    const [rate, setRate] = useState<number | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
+  const form = useForm<z.infer<typeof cryptoDepositSchema>>({
+    resolver: zodResolver(cryptoDepositSchema),
+    defaultValues: { crypto: "", amount: "" },
+  });
 
-    const form = useForm<z.infer<typeof cryptoDepositSchema>>({
-        resolver: zodResolver(cryptoDepositSchema),
-        defaultValues: { crypto: "", amount: "" },
-    });
+  const selectedCrypto = form.watch("crypto");
 
-    const selectedCrypto = form.watch("crypto");
+  useEffect(() => {
+    const fetchRate = async () => {
+      if (!selectedCrypto) return;
+      setIsLoading(true);
 
+      try {
+        const response = await cryptoWalletAPI.getConversionRate(
+          selectedCrypto
+        );
+        setRate(Number(response.data));
 
-
-    useEffect(() => {
-        const fetchRate = async () => {
-            if (!selectedCrypto) return;
-            setIsLoading(true);
-
-            try {
-                const response = await cryptoWalletAPI.getConversionRate(selectedCrypto);
-                setRate(Number(response.data));
-
-                const selectedAddress = user?.cryptoAddress?.find(
-                    address => address.cryptoId.toString() === selectedCrypto
-                );
-                setSelectedWallet(selectedAddress?.paymentAddress || null);
-            } catch (error) {
-                console.error('Error fetching conversion rate:', error);
-                toast.error("Failed to fetch conversion rate");
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        fetchRate();
-    }, [selectedCrypto, user?.cryptoAddress]);
-
-    const walletAddress = useMemo(() => {
-        const wallet = user?.cryptoAddress?.find(
-            address => address.cryptoId.toString() === selectedCrypto
-        )?.paymentAddress;
-        return wallet;
-    }, [selectedCrypto, user?.cryptoAddress]);
-
-    const onSubmit = (data: z.infer<typeof cryptoDepositSchema>) => {
-        // Handle Crypto deposit submission
-        // e.g., call API
-        toast.success(`Depositing ${data.amount} via ${data.crypto}`);
+        const selectedAddress = user?.cryptoAddress?.find(
+          (address) => address.cryptoId.toString() === selectedCrypto
+        );
+        setSelectedWallet(selectedAddress?.paymentAddress || null);
+      } catch (error) {
+        console.error("Error fetching conversion rate:", error);
+        toast.error("Failed to fetch conversion rate");
+      } finally {
+        setIsLoading(false);
+      }
     };
+    fetchRate();
+  }, [selectedCrypto, user?.cryptoAddress]);
 
-    return (
-        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="space-y-2">
-                <label className="text-sm font-medium text-platform-text">
-                    Select Cryptocurrency
-                </label>
-                <Select
-                    onValueChange={(value) => {
-                        form.setValue("crypto", value);
-                        setSelectedWallet(
-                            user?.cryptoAddress?.find(
-                                address => address.cryptoId.toString() === value
-                            )?.paymentAddress || null
-                        );
-                    }}
-                    value={form.watch("crypto")}
-                >
-                    <SelectTrigger className="w-full bg-primary-game border-platform-border focus:bg-primary-game/80  border focus:border-game-secondary text-white placeholder:text-gray-200 dark:placeholder:text-gray-400 h-12 rounded-none">
-                        <SelectValue placeholder="Select Crypto" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-primary-game rounded-none z-[60] border-platform-border">
-                        {/* <SelectItem value="all" className="text-white">All</SelectItem> */}
-                        {user?.cryptoAddress?.map((address) => (
-                            <SelectItem key={address.cryptoId} className="text-platform-text" value={address.cryptoId.toString()}>
-                                {address.crypto} ({address.symbol})
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-                {form.formState.errors.crypto && (
-                    <p className="text-red-500 text-xs">{form.formState.errors.crypto.message}</p>
-                )}
+  const walletAddress = useMemo(() => {
+    const wallet = user?.cryptoAddress?.find(
+      (address) => address.cryptoId.toString() === selectedCrypto
+    )?.paymentAddress;
+    return wallet;
+  }, [selectedCrypto, user?.cryptoAddress]);
+
+  const onSubmit = (data: z.infer<typeof cryptoDepositSchema>) => {
+    // Handle Crypto deposit submission
+    // e.g., call API
+    toast.success(`Depositing ${data.amount} via ${data.crypto}`);
+  };
+
+  return (
+    <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-platform-text">
+          Select Cryptocurrency
+        </label>
+        <Select
+          onValueChange={(value) => {
+            form.setValue("crypto", value);
+            setSelectedWallet(
+              user?.cryptoAddress?.find(
+                (address) => address.cryptoId.toString() === value
+              )?.paymentAddress || null
+            );
+          }}
+          value={form.watch("crypto")}
+        >
+          <SelectTrigger className="w-full bg-primary-game border-platform-border focus:bg-primary-game/80  border focus:border-game-secondary text-white placeholder:text-gray-200 dark:placeholder:text-gray-400 h-12 rounded-none">
+            <SelectValue placeholder="Select Crypto" />
+          </SelectTrigger>
+          <SelectContent className="bg-primary-game rounded-none z-[60] border-platform-border">
+            {/* <SelectItem value="all" className="text-white">All</SelectItem> */}
+            {user?.cryptoAddress?.map((address) => (
+              <SelectItem
+                key={address.cryptoId}
+                className="text-platform-text"
+                value={address.cryptoId.toString()}
+              >
+                {address.crypto} ({address.symbol})
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {form.formState.errors.crypto && (
+          <p className="text-red-500 text-xs">
+            {form.formState.errors.crypto.message}
+          </p>
+        )}
+      </div>
+
+      {isLoading ? (
+        <div className="bg-white/10 p-8 rounded-lg flex items-center justify-center">
+          <Loader2 className="h-8 w-8 text-platform-text animate-spin" />
+        </div>
+      ) : (
+        rate && (
+          <div className=" py-6 rounded-lg space-y-4">
+            <div className="bg-primary-game/10 p-4 rounded-lg">
+              <p className="text-platform-text text-center text-lg font-medium">
+                1 Crypto = ₹{rate?.toFixed(2)}
+              </p>
             </div>
-
-            {isLoading ? (
-                <div className="bg-white/10 p-8 rounded-lg flex items-center justify-center">
-                    <Loader2 className="h-8 w-8 text-platform-text animate-spin" />
+            {selectedWallet && (
+              <div className="space-y-2">
+                <p className="text-platform-text text-sm">Wallet Address</p>
+                <div className="bg-primary-game/5 p-3 rounded-lg flex items-center justify-between gap-2">
+                  <p className="text-platform-text text-sm break-all">
+                    {walletAddress}
+                  </p>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="shrink-0"
+                    type="button"
+                    onClick={() => copyToClipboard(walletAddress || "")}
+                  >
+                    <Copy className="h-4 w-4 text-platform-text" />
+                  </Button>
                 </div>
-            ) : rate && (
-                <div className=" py-6 rounded-lg space-y-4">
-                    <div className="bg-primary-game/10 p-4 rounded-lg">
-                        <p className="text-platform-text text-center text-lg font-medium">
-                            1 Crypto = ₹{rate?.toFixed(2)}
-                        </p>
-                    </div>
-                    {selectedWallet && (
-                        <div className="space-y-2">
-                            <p className="text-platform-text text-sm">
-                                Wallet Address
-                            </p>
-                            <div className="bg-primary-game/5 p-3 rounded-lg flex items-center justify-between gap-2">
-                                <p className="text-platform-text text-sm break-all">
-                                    {walletAddress}
-                                </p>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="shrink-0"
-                                    type="button"
-                                    onClick={() => copyToClipboard(walletAddress || "")}
-                                >
-                                    <Copy className="h-4 w-4 text-platform-text" />
-                                </Button>
-                            </div>
-                        </div>
-                    )}
-                </div>
+              </div>
             )}
-            <Button
-                variant="platform-gradient-secondary"
-                size="lg"
-                type="submit"
-                disabled={form.formState.isSubmitting}
-            >
-                Deposit Now
-            </Button>
-        </form>
-    );
+          </div>
+        )
+      )}
+      <Button
+        variant="platform-gradient-secondary"
+        size="lg"
+        type="submit"
+        disabled={form.formState.isSubmitting}
+      >
+        Deposit Now
+      </Button>
+    </form>
+  );
 };
 
 // Tab Content Components
 const DepositTab = () => {
-    const [selectedMethod, setSelectedMethod] = useState("upi");
+  const [selectedMethod, setSelectedMethod] = useState("upi");
 
-    return (
-        <div className="md:space-y-6 space-y-4">
-            <div className="rounded-md bg-yellow-100 dark:bg-yellow-900/40 border border-yellow-300 dark:border-yellow-700 px-4 py-2 text-yellow-800 dark:text-yellow-200 font-medium mb-2">
-                <span className="block md:font-semibold font-medium !text-xs md:text-sm">Deposit Processing Time</span>
-                <span className="block md:text-xs text-[10px] mt-1">
-                    Deposits are typically processed within <span className="font-semibold">5 to 15 minutes</span>. Please wait for confirmation before contacting support.
-                </span>
-            </div>
-            {selectedMethod === "upi" && (
-                <UPIDepositForm />
-            )}
-            {selectedMethod === "crypto" && (
-                <CryptoDepositForm />
-            )}
-            <DepositMethods
-                selectedMethod={selectedMethod}
-                onMethodChange={setSelectedMethod}
-            />
-        </div>
-    );
+  return (
+    <div className="md:space-y-6 space-y-4">
+      <div className="rounded-md bg-yellow-100 dark:bg-yellow-900/40 border border-yellow-300 dark:border-yellow-700 px-4 py-2 text-yellow-800 dark:text-yellow-200 font-medium mb-2">
+        <span className="block md:font-semibold font-medium !text-xs md:text-sm">
+          Deposit Processing Time
+        </span>
+        <span className="block md:text-xs text-[10px] mt-1">
+          Deposits are typically processed within{" "}
+          <span className="font-semibold">5 to 15 minutes</span>. Please wait
+          for confirmation before contacting support.
+        </span>
+      </div>
+      {selectedMethod === "upi" && <UPIDepositForm />}
+      {selectedMethod === "crypto" && <CryptoDepositForm />}
+      <DepositMethods
+        selectedMethod={selectedMethod}
+        onMethodChange={setSelectedMethod}
+      />
+    </div>
+  );
 };
 
 export default DepositTab;
