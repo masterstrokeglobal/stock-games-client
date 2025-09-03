@@ -94,25 +94,37 @@ const ActiveTierCard = ({ className }: PropsWithClassName) => {
         page: 1,
         limit: 100,
         search: "",
-        orderBy: "createdAt",
-        orderByField: "DESC"
+        orderBy: "minPoints",
+        orderByField: "ASC"
     });
 
     useEffect(() => {
+       
+        
         if (tiersData?.tiers && tiersData.tiers.length > 0) {
+            // Sort tiers by minPoints ascending on frontend to ensure correct order
+            const sortedTiers = [...tiersData.tiers].sort((a, b) => a.minPoints - b.minPoints);
+           
+            
             if (userTier) {
-                const currentTierIndex = tiersData.tiers.findIndex(
+                // Use sorted tiers for proper ordering
+                const currentTierIndex = sortedTiers.findIndex(
                     (tier) => tier.id.toString() == userTier.tierId.toString()
                 );
+               
+                
                 if (currentTierIndex !== -1) {
-                    setActiveTier(tiersData.tiers[currentTierIndex]);
-                    if (currentTierIndex < tiersData.tiers.length - 1) {
-                        setNextTier(tiersData.tiers[currentTierIndex + 1]);
+                    setActiveTier(sortedTiers[currentTierIndex]);
+                    if (currentTierIndex < sortedTiers.length - 1) {
+                        const nextTierCandidate = sortedTiers[currentTierIndex + 1];
+                        setNextTier(nextTierCandidate);
+                    } else {
+                        setNextTier(null);
                     }
-                } else if (tiersData.tiers.length > 0) {
-                    setActiveTier(tiersData.tiers[0]);
-                    if (tiersData.tiers.length > 1) {
-                        setNextTier(tiersData.tiers[1]);
+                } else if (sortedTiers.length > 0) {
+                    setActiveTier(sortedTiers[0]);
+                    if (sortedTiers.length > 1) {
+                        setNextTier(sortedTiers[1]);
                     }
                 }
             }
