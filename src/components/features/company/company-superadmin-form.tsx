@@ -34,6 +34,8 @@ export const createCompanyInputSchema = z.object({
     maxPlacement: z.coerce.number().optional(),
     minCasinoPlacement: z.coerce.number().optional(),
     maxCasinoPlacement: z.coerce.number().optional(),
+    cryptoPayIn: z.boolean().default(false).optional(),
+    cryptoPayOut: z.boolean().default(false).optional(),
 }).superRefine((data, ctx) => {
     if (!data.id && !data.logo) {
         ctx.addIssue({

@@ -29,15 +29,24 @@ interface DepositMethodsProps {
 
 const DepositMethods = ({ selectedMethod, onMethodChange }: DepositMethodsProps) => {
     const methods = [
-        { id: PaymentMethod.UPI, label: 'UPI', icon: <Smartphone className="w-6 h-6" /> },
-        { id: PaymentMethod.RTGS, label: 'RTGS', icon: <BankIcon className="w-6 h-6" /> },
-        { id: PaymentMethod.NEFT, label: 'NEFT', icon: <Building2 className="w-6 h-6" /> },
+        { id: PaymentMethod.UPI, label: 'UPI', icon: <Smartphone className="w-6 h-6" />, img:'/images/payment-methods/upi.png' },
+        { id: "BANK_TRANSFER", label: 'Bank Transfer', icon: <BankIcon className="w-6 h-6" />, img:'/images/payment-methods/bank-transfer.png' },
     ];
+
+    const bankMethods = []
+
     const { data: company } = useGetMyCompany();
     const isCryptoPayIn = company?.cryptoPayIn;
 
     if (isCryptoPayIn) {
-        methods.push({ id: PaymentMethod.CRYPTO, label: 'Crypto', icon: <img src="/images/platform/wallet/crypto.png" className="w-auto h-10" alt="crypto" /> });
+        methods.push({ id: PaymentMethod.CRYPTO, label: 'Crypto', icon: <img src="/images/platform/wallet/crypto.png" className="w-auto h-10" alt="crypto" />, img:'/images/payment-methods/crypto.png' });
+    }
+
+    if(company?.dynamicQR) {
+        bankMethods.push(
+            { id: PaymentMethod.RTGS, label: 'RTGS', icon: <BankIcon className="w-6 h-6" />, img:'/images/payment-methods/bank-transfer.png' },
+            { id: PaymentMethod.NEFT, label: 'NEFT', icon: <Building2 className="w-6 h-6" />, img:'/images/payment-methods/bank-transfer.png' }
+        );
     }
     return (
         <div className="space-y-4">
@@ -45,11 +54,23 @@ const DepositMethods = ({ selectedMethod, onMethodChange }: DepositMethodsProps)
                 <h3 className="text-platform-text text-base font-medium mb-2">Select Deposit Method</h3>
                 <p className="text-platform-text text-sm mb-4">Each Option May Have Different Processing Times And Limits.</p>
             </div>
-            <div className=" gap-3 grid grid-cols-2">
+            <div className=" gap-3 grid grid-cols-3">
                 {methods.map((method) => (
                     <PaymentMethodButton
                         key={method.id}
-                        icon={method.icon}
+                        img={method.img}
+                        label={method.label ?? ""}
+                        isSelected={selectedMethod === method.id}
+                        onClick={() => onMethodChange(method.id)}
+                    />
+                ))}
+            </div>
+
+            <div>
+                {bankMethods.map((method) => (
+                    <PaymentMethodButton
+                        key={method.id}
+                        img={method.img}
                         label={method.label ?? ""}
                         isSelected={selectedMethod === method.id}
                         onClick={() => onMethodChange(method.id)}
@@ -62,20 +83,19 @@ const DepositMethods = ({ selectedMethod, onMethodChange }: DepositMethodsProps)
 
 // Payment Method Component
 interface PaymentMethodButtonProps {
-    icon: ReactNode;
     label?: string;
     isSelected: boolean;
     onClick: () => void;
+    img: string;
 }
 
-const PaymentMethodButton = ({ icon, isSelected, onClick, label }: PaymentMethodButtonProps) => {
+const PaymentMethodButton = ({ isSelected, onClick, label, img }: PaymentMethodButtonProps) => {
     return (
         <button
             onClick={onClick}
             className={`flex items-center flex-1 justify-center gap-2 h-12 rounded-sm px-4 py-3 border-2 transition-all ${isSelected ? 'dark:border-[#3B4BFF] border-primary-game bg-[#3B4BFF]/20 text-white' : 'dark:border-platform-border border-primary-game bg-transparent text-white/80 hover:border-[#3B4BFF]/50'}`}
         >
-            {icon}
-            <span className="text-platform-text text-sm">{label}</span>
+            <img src={img} alt={label} className="h-8" />
         </button>
     );
 };
