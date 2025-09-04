@@ -57,22 +57,51 @@ export const useDepositOperatorWallet = () => {
     });
 };
 
-// Create user (by operator agent)
+// Create user (by operator agent) - Direct signup API call using fetch
 export const useCreateUser = () => {
     const queryClient = useQueryClient();
 
+    // Get current operator for company info
+    const { data: currentOperator } = useGetCurrentOperator();
+
+    const createUser = async (formData: any) => {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json' 
+            },
+            credentials: 'include', // Include cookies for authentication
+            body: JSON.stringify({
+                firstname: formData.firstname,
+                lastname: formData.lastname,
+                username: formData.username,
+                password: formData.password,
+                company: currentOperator?.company?.id
+            })
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Error creating user');
+        }
+        
+        return response.json();
+    };
+
     return useMutation({
-        mutationFn: operatorAPI.createUser,
-        onSuccess: () => {
+        mutationFn: createUser,
+        onSuccess: (newUser) => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
                     return query.queryKey[0] === "users";
                 },
             });
             toast.success("User created successfully");
+            console.log('User created successfully:', newUser);
         },
         onError: (error: any) => {
-            toast.error(error.response?.data?.message ?? "Error creating user");
+            toast.error(error.message ?? "Error creating user");
+            console.error('Error creating user:', error);
         },
     });
 };
