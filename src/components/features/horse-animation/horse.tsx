@@ -63,7 +63,7 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
     >
       <div
         id="horse-race-canvas"
-        className="game-gradient-card-parent md:h-full h-64 overflow-hidden relative"
+        className="game-gradient-card-parent md:h-full md:min-h-80 overflow-hidden relative"
       >
         {/* Camera Change Button */}
         {/* <button
