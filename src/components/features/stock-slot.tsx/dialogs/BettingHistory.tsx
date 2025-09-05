@@ -111,7 +111,7 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
             </button>
           </DialogHeader>
           <DialogDescription className="text-center flex flex-col gap-1 p-5 pt-0 overflow-y-auto max-h-[40vh] min-h-[200px] text-xs lg:text-2xl w-full">
-            <div className="grid grid-cols-5 gap-1 py-2">
+            <div className="grid md:grid-cols-5 grid-cols-3 gap-1 py-2">
               <p className="hidden md:block">Round</p>
               <p>Amount</p>
               <p>Date</p>
@@ -123,7 +123,7 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
                 <div className="py-4 text-center">No betting history found</div>
               ) : (
                 history.map((row, idx) => (
-                  <div key={idx} className="grid grid-cols-5 gap-1 py-2">
+                  <div key={idx} className="grid md:grid-cols-5 grid-cols-3 gap-1 py-2">
                     <p className="hidden md:block">#{row.roundId}</p>
                     <p>₹{row.amount}</p>
                     <p>{dayjs(row.createdAt).format("DD/MM")}</p>

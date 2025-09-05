@@ -143,12 +143,12 @@ const WithdrawTab: React.FC = () => {
         <FormProvider
             methods={form}
             onSubmit={handleSubmit(onSubmitWithdrawal)}
-            className="space-y-8"
+            className="md:space-y-8 space-y-5"
         >
 
             <div className="rounded-md bg-yellow-100 dark:bg-yellow-900/40 border border-yellow-300 dark:border-yellow-700 px-4 py-2 text-yellow-800 dark:text-yellow-200 font-medium mb-2">
-                <span className="block font-semibold">Withdrawal Processing Time</span>
-                <span className="block text-sm mt-1">
+                <span className="block font-normal md:font-medium text-[15px] text-center">Withdrawal Processing Time</span>
+                <span className="block text-[10px] mt-1 text-center">
                     Withdrawal time: <span className="font-semibold">15 minutes to 1 hour</span>.<br />
                     <span className="block mt-1">NEFT &amp; RTGS might take longer depending on your bank.</span>
                 </span>
@@ -181,7 +181,7 @@ const WithdrawTab: React.FC = () => {
                 <div className="relative w-full">
                     <label
                         htmlFor="withdraw-amount"
-                        className="absolute -top-2 left-4 dark:bg-[#0A0C2A] bg-[#C3E3FF] px-1 text-platform-text font-semibold text-sm z-10"
+                        className="absolute top-0 text-xs md:text-sm left-4 dark:bg-[#0A0C2A] bg-[#C3E3FF] px-1 text-platform-text font-semibold z-10"
                         style={{
                             transform: "translateY(-50%)",
                             pointerEvents: "none"
@@ -199,7 +199,7 @@ const WithdrawTab: React.FC = () => {
                                 type="number"
                                 placeholder={t('withdrawal-amount-placeholder')}
                                 required
-                                className="w-full border-2 dark:border-platform-border border-primary-game rounded-md bg-transparent text-platform-text text-base px-4 py-3 outline-none focus:border-[#6A84C3] transition-colors placeholder:text-[#6A84C3]"
+                                className="w-full border-2 dark:border-platform-border border-primary-game rounded-md bg-transparent text-platform-text text-base px-4 py-1.5 md:py-3 outline-none focus:border-[#6A84C3] transition-colors placeholder:text-[#6A84C3]"
                             />
                         )}
                     />
@@ -217,11 +217,11 @@ const WithdrawTab: React.FC = () => {
 
             {/* Withdrawal Methods */}
             <div className="space-y-2">
-                <div>
-                    <span className="text-platform-text text-base font-medium">
+                <div className="w-full flex flex-col items-center justify-center">
+                    <span className="text-platform-text text-[15px] font-normal">
                         {t('select-method-label')}
                     </span>
-                    <p className="text-platform-text text-sm mt-1">
+                    <p className="text-platform-text text-[10px] md:text-sm mt-1 ">
                         Each Option May Have Different Processing Times And Limits.
                     </p>
                 </div>

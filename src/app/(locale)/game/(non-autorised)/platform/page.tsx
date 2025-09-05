@@ -26,18 +26,18 @@ const PlatformPage = () => {
     const { isCasinoAllowed } = useCasinoAllowed();
 
     return (
-        <section className="space-y-4 md:space-y-8 font-inter">
+        <section className="space-y-2 md:space-y-4 font-inter">
             <AdMarquee />
             {isLoggedIn && !user.isDemoUser && (
                 <div className="flex gap-2">
                     <WalletDialog activeTab="deposit">
-                        <Button className="w-full  dark:bg-[linear-gradient(to_right,#AA5798_0%,#5065C6_100%)] bg-primary-game dark:text-white   dark:rounded-none gap-x-2 md:h-12">
+                        <Button className="w-full  dark:bg-[linear-gradient(to_right,#AA5798_0%,#5065C6_100%)] bg-primary-game dark:text-white border border-[#4467CC]  dark:rounded-none gap-x-2 md:h-12">
                             {t('menu.deposit')}
                         </Button>
                     </WalletDialog>
 
                     <WalletDialog activeTab="withdraw">
-                        <Button className="w-full gap-x-2 md:h-12 dark:bg-[linear-gradient(90deg,#02A2A0_32.81%,#4A66C9_100%)] bg-primary-game  dark:rounded-none dark:text-white">
+                        <Button className="w-full gap-x-2 md:h-12 dark:bg-[linear-gradient(90deg,#02A2A0_32.81%,#4A66C9_100%)] bg-primary-game border border-[#4467CC]  dark:rounded-none dark:text-white">
                             {t('menu.withdraw')}
                         </Button>
                     </WalletDialog>

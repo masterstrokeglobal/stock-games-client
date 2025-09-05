@@ -16,7 +16,7 @@ import {
   useGetMyPlacements,
 } from "@/react-query/game-record-queries";
 import { useTranslations } from "next-intl";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import BettingChips from "./betting-chip";
 import { Bet, Chip } from "./contants";
@@ -118,6 +118,14 @@ const gameTimer = (gameState: any) => {
   );
 };
 
+interface AutoBetState {
+  isAutoBetMode: boolean;
+  selectedChips: Chip[];
+  rounds: number | null;
+  isActive: boolean;
+  currentRound: number;
+}
+
 const RouletteGame = ({ roundRecord, className }: Props) => {
   const t = useTranslations("game");
   const [betAmount, setBetAmount] = useState<number>(100);
@@ -127,8 +135,107 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
   const { mutate, isPending: isPlacingBet } = useCreateGameRecord();
   const { isMobile } = useWindowSize();
   const boardRef = useRef<HTMLDivElement>(null);
+  
+  // Track manual bets in current round
+  const [hasManualBetsInRound, setHasManualBetsInRound] = useState(false);
+  
+  // Auto-bet state
+  const [autoBetState, setAutoBetState] = useState<AutoBetState>({
+    isAutoBetMode: false,
+    selectedChips: [],
+    rounds: null,
+    isActive: false,
+    currentRound: 0,
+  });
 
   const { data, isSuccess } = useGetMyPlacements({ roundId: roundRecord.id });
+
+  // Reset manual bet tracking when round changes
+  useEffect(() => {
+    setHasManualBetsInRound(false);
+  }, [roundRecord.id]);
+
+  // Auto-bet execution logic
+  useEffect(() => {
+    if (!autoBetState.isActive || !gameState.isPlaceStarted || gameState.isPlaceOver) {
+      return;
+    }
+
+    // Only place bets if we haven't reached the round limit yet
+    if (autoBetState.currentRound < (autoBetState.rounds || 0)) {
+      // Place auto-bets when placement starts
+      if (autoBetState.selectedChips.length > 0) {
+        autoBetState.selectedChips.forEach((chip) => {
+          const markets = chip.numbers
+            .map((number) => roundRecord.market[number - 1]?.id)
+            .filter((id) => id !== undefined);
+
+          mutate({
+            amount: chip.amount,
+            round: roundRecord.id,
+            placementType: chip.type,
+            market: markets,
+            horseNumbers: chip.numbers,
+            placedValues: getPlacementString(
+              {
+                market: markets as number[],
+                placementType: chip.type,
+              },
+              roundRecord
+            ),
+          });
+        });
+
+        // Update current round count
+        setAutoBetState(prev => ({
+          ...prev,
+          currentRound: prev.currentRound + 1,
+        }));
+      }
+    }
+  }, [gameState.isPlaceStarted, gameState.isPlaceOver, autoBetState.isActive, roundRecord.id]);
+
+  // Stop auto-bet when rounds are completed AND placement is over
+  useEffect(() => {
+    if (autoBetState.isActive && 
+        autoBetState.rounds && 
+        autoBetState.currentRound >= autoBetState.rounds && 
+        gameState.isPlaceOver) {
+      setAutoBetState(prev => ({
+        ...prev,
+        isActive: false,
+        selectedChips: [],
+        rounds: null,
+        currentRound: 0,
+      }));
+      toast.success("Auto-bet completed");
+    }
+  }, [autoBetState.currentRound, autoBetState.rounds, autoBetState.isActive, gameState.isPlaceOver]);
+
+  // Helper function to aggregate auto-bet chips (same logic as manual betting)
+  const aggregateAutoBetChips = useCallback((chips: Chip[], newChip: Chip): Chip[] => {
+    const updatedChips = [...chips];
+    
+    const existingChipIndex = updatedChips.findIndex(
+      (chip) =>
+        chip.type === newChip.type &&
+        chip.numbers.length === newChip.numbers.length &&
+        chip.numbers.every((num) => newChip.numbers.includes(num))
+    );
+    
+    if (existingChipIndex !== -1) {
+      // Add to existing chip amount
+      updatedChips[existingChipIndex] = {
+        ...updatedChips[existingChipIndex],
+        amount: updatedChips[existingChipIndex].amount + newChip.amount
+      };
+    } else {
+      // Add new chip
+      updatedChips.push(newChip);
+    }
+    
+    return updatedChips;
+  }, []);
 
   const bettedChips = useMemo(() => {
     if (!isSuccess) return [];
@@ -192,10 +299,21 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
     (amount: number) => {
       const minAmount = currentUser.company?.minPlacement;
       const maxAmount = currentUser.company?.maxPlacement;
-      const totalBetAmount = bettedChips.reduce(
+      
+      // Calculate total from placed bets (bettedChips)
+      const placedBetAmount = bettedChips.reduce(
         (acc, chip) => acc + chip.amount,
         0
       );
+      
+      // Calculate total from selected auto-bet chips
+      const selectedAutoBetAmount = autoBetState.selectedChips.reduce(
+        (acc, chip) => acc + chip.amount,
+        0
+      );
+      
+      const totalBetAmount = placedBetAmount + selectedAutoBetAmount;
+      
       if (minAmount && totalBetAmount + amount < minAmount) {
         toast.error("Minimum bet amount is " + minAmount);
         return false;
@@ -206,7 +324,7 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
       }
       return true;
     },
-    [currentUser, bettedChips]
+    [currentUser, bettedChips, autoBetState.selectedChips]
   );
 
   const ButtonChip = ({
@@ -231,6 +349,36 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
     if (gameState.isPlaceOver || isPlacingBet) return;
     if (!verifyBetAmount(betAmount)) return;
 
+    if (autoBetState.isAutoBetMode) {
+      // Don't allow bet selection if auto-bet is already active
+      if (autoBetState.isActive) {
+        toast.error("Cannot select bets while auto-bet is running");
+        return;
+      }
+      
+      // In auto-bet mode, just add to selected chips
+      const newChip = {
+        type: PlacementType.DOUBLE_STREET,
+        amount: betAmount,
+        numbers: numbers,
+        position: { x: 0, y: 0 }, // Position will be handled by getBetPosition if needed
+      };
+      
+      setAutoBetState(prev => ({
+        ...prev,
+        selectedChips: aggregateAutoBetChips(prev.selectedChips, newChip),
+      }));
+      
+      toast.success("Bet selected");
+      return;
+    }
+
+    // Check if auto-bet is active or chips are selected for manual mode
+    if (autoBetState.isActive || autoBetState.selectedChips.length > 0) {
+      toast.error("Please wait for auto-bet to complete or cancel auto-bet selection");
+      return;
+    }
+
     const markets = numbers
       .map((number) => roundRecord.market[number - 1]?.id)
       .filter((id) => id !== undefined);
@@ -249,11 +397,43 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
         roundRecord
       ),
     });
+    
+    setHasManualBetsInRound(true);
   };
 
   const handleColorBet = (numbers: number[]) => {
     if (gameState.isPlaceOver || isPlacingBet) return;
     if (!verifyBetAmount(betAmount)) return;
+
+    if (autoBetState.isAutoBetMode) {
+      // Don't allow bet selection if auto-bet is already active
+      if (autoBetState.isActive) {
+        toast.error("Cannot select bets while auto-bet is running");
+        return;
+      }
+      
+      // In auto-bet mode, just add to selected chips
+      const newChip = {
+        type: PlacementType.COLOR,
+        amount: betAmount,
+        numbers: numbers,
+        position: { x: 0, y: 0 },
+      };
+      
+      setAutoBetState(prev => ({
+        ...prev,
+        selectedChips: aggregateAutoBetChips(prev.selectedChips, newChip),
+      }));
+      
+      toast.success("Bet selected");
+      return;
+    }
+
+    // Check if auto-bet is active or chips are selected for manual mode
+    if (autoBetState.isActive || autoBetState.selectedChips.length > 0) {
+      toast.error("Please wait for auto-bet to complete or cancel auto-bet selection");
+      return;
+    }
 
     const markets = numbers
       .map((number) => roundRecord.market[number - 1]?.id)
@@ -273,11 +453,43 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
         roundRecord
       ),
     });
+    
+    setHasManualBetsInRound(true);
   };
 
   const handleSpecialBet = (betType: PlacementType, numbers: number[]) => {
     if (gameState.isPlaceOver || isPlacingBet) return;
     if (!verifyBetAmount(betAmount)) return;
+
+    if (autoBetState.isAutoBetMode) {
+      // Don't allow bet selection if auto-bet is already active
+      if (autoBetState.isActive) {
+        toast.error("Cannot select bets while auto-bet is running");
+        return;
+      }
+      
+      // In auto-bet mode, just add to selected chips
+      const newChip = {
+        type: betType,
+        amount: betAmount,
+        numbers: numbers,
+        position: { x: 0, y: 0 },
+      };
+      
+      setAutoBetState(prev => ({
+        ...prev,
+        selectedChips: aggregateAutoBetChips(prev.selectedChips, newChip),
+      }));
+      
+      toast.success("Bet selected");
+      return;
+    }
+
+    // Check if auto-bet is active or chips are selected for manual mode
+    if (autoBetState.isActive || autoBetState.selectedChips.length > 0) {
+      toast.error("Please wait for auto-bet to complete or cancel auto-bet selection");
+      return;
+    }
 
     const markets = numbers
       .map((number) => roundRecord.market[number - 1]?.id)
@@ -301,6 +513,7 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
       {
         onSuccess: () => {
           setChips([]);
+          setHasManualBetsInRound(true);
         },
       }
     );
@@ -308,6 +521,36 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
   const handleZeroBet = () => {
     if (gameState.isPlaceOver || isPlacingBet) return;
     if (!verifyBetAmount(betAmount)) return;
+
+    if (autoBetState.isAutoBetMode) {
+      // Don't allow bet selection if auto-bet is already active
+      if (autoBetState.isActive) {
+        toast.error("Cannot select bets while auto-bet is running");
+        return;
+      }
+      
+      // In auto-bet mode, just add to selected chips
+      const newChip = {
+        type: PlacementType.SINGLE,
+        amount: betAmount,
+        numbers: [17],
+        position: { x: 0, y: 0 },
+      };
+      
+      setAutoBetState(prev => ({
+        ...prev,
+        selectedChips: aggregateAutoBetChips(prev.selectedChips, newChip),
+      }));
+      
+      toast.success("Bet selected");
+      return;
+    }
+
+    // Check if auto-bet is active or chips are selected for manual mode
+    if (autoBetState.isActive || autoBetState.selectedChips.length > 0) {
+      toast.error("Please wait for auto-bet to complete or cancel auto-bet selection");
+      return;
+    }
 
     const marketId = roundRecord.market[roundRecord.market.length - 1]?.id;
     if (!marketId) return;
@@ -322,6 +565,8 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
         roundRecord
       ),
     });
+    
+    setHasManualBetsInRound(true);
   };
 
   // Get all numbers for specific sections and other bets
@@ -337,6 +582,36 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
     const bet = getBetTypeFromClick(e, boardRef);
     if (!bet) return;
 
+    if (autoBetState.isAutoBetMode) {
+      // Don't allow bet selection if auto-bet is already active
+      if (autoBetState.isActive) {
+        toast.error("Cannot select bets while auto-bet is running");
+        return;
+      }
+      
+      // In auto-bet mode, just add to selected chips without placing bet
+      const newChip = {
+        ...bet,
+        amount: betAmount,
+        position: getBetPosition(bet),
+      };
+      
+      setAutoBetState(prev => ({
+        ...prev,
+        selectedChips: aggregateAutoBetChips(prev.selectedChips, newChip),
+      }));
+      
+      toast.success("Bet selected");
+      return;
+    }
+
+    // Check if auto-bet is active or chips are selected for manual mode
+    if (autoBetState.isActive || autoBetState.selectedChips.length > 0) {
+      toast.error("Please wait for auto-bet to complete or cancel auto-bet selection");
+      return;
+    }
+
+    // Manual bet mode - place bet immediately
     const position = getBetPosition(bet);
     setChips([
       {
@@ -368,6 +643,7 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
       {
         onSuccess: () => {
           setChips([]);
+          setHasManualBetsInRound(true);
         },
       }
     );
@@ -375,7 +651,7 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
 
   const boardChips = gameState.isPlaceOver
     ? bettedChips
-    : [...bettedChips, ...chips];
+    : [...bettedChips, ...chips, ...autoBetState.selectedChips];
 
   const isNotAllowedToPlaceBet = currentUser.isNotAllowedToPlaceOrder(
     roundRecord.type
@@ -617,6 +893,9 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
               roundId={roundRecord.id}
               setBetAmount={setBetAmount}
               isPlaceOver={gameState.isPlaceOver || isNotAllowedToPlaceBet}
+              hasManualBetsInRound={hasManualBetsInRound}
+              autoBetState={autoBetState}
+              setAutoBetState={setAutoBetState}
             />
           </div>
         </div>
