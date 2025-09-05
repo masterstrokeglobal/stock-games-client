@@ -147,8 +147,8 @@ const WithdrawTab: React.FC = () => {
         >
 
             <div className="rounded-md bg-yellow-100 dark:bg-yellow-900/40 border border-yellow-300 dark:border-yellow-700 px-4 py-2 text-yellow-800 dark:text-yellow-200 font-medium mb-2">
-                <span className="block md:font-semibold font-medium !text-xs md:text-sm">Withdrawal Processing Time</span>
-                <span className="block md:text-xs text-[10px] mt-1">
+                <span className="block font-normal md:font-medium text-[15px] text-center">Withdrawal Processing Time</span>
+                <span className="block text-[10px] mt-1 text-center">
                     Withdrawal time: <span className="font-semibold">15 minutes to 1 hour</span>.<br />
                     <span className="block mt-1">NEFT &amp; RTGS might take longer depending on your bank.</span>
                 </span>
@@ -217,11 +217,11 @@ const WithdrawTab: React.FC = () => {
 
             {/* Withdrawal Methods */}
             <div className="space-y-2">
-                <div>
-                    <span className="text-platform-text text-base font-medium">
+                <div className="w-full flex flex-col items-center justify-center">
+                    <span className="text-platform-text text-[15px] font-normal">
                         {t('select-method-label')}
                     </span>
-                    <p className="text-platform-text text-sm mt-1">
+                    <p className="text-platform-text text-[10px] md:text-sm mt-1 ">
                         Each Option May Have Different Processing Times And Limits.
                     </p>
                 </div>

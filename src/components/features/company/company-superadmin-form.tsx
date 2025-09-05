@@ -11,6 +11,9 @@ import { z } from "zod";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FormField } from "@/components/ui/form";
 import FormSwitch from "@/components/ui/form/form-switch";
+// import { useGetCompanyQRs } from "@/react-query/company-qr-queries";
+// import { Switch } from "@/components/ui/switch";
+// import { toast } from "sonner";
 
 export const createCompanyInputSchema = z.object({
     id: z.string().optional(),
@@ -63,6 +66,7 @@ const CompanySuperAdminForm = ({ defaultValues, onSubmit, isLoading }: Props) =>
     });
 
     const { control, handleSubmit } = form;
+    // const {data:companyData} = useGetCompanyQRs()
 
     // Custom field array for gameRestrictions
     const {
@@ -181,12 +185,43 @@ const CompanySuperAdminForm = ({ defaultValues, onSubmit, isLoading }: Props) =>
                 name="coinValues"
                 label="Coins"
             />
+
+            {/* <Controller
+              control={control}
+              name="dynamicQR"
+              render={({ field }) => (
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={(val) => {
+                        if(val && companyData?.data?.length > 0 && !companyData?.data?.some((item:any) => item.type === "bank")) {
+                            console.log(companyData?.data);
+                            toast.error("Please add a bank dynamic QR first");
+                            return;
+                        }
+                        field.onChange(val);
+                    }}
+                  />
+                  <div>
+                    <p className="font-medium">Dynamic QR</p>
+                  </div>
+                </div>
+              )}
+            /> */}
+
             <FormSwitch
                 control={control}
                 name="dynamicQR"
                 title="Dynamic QR for Payouts"
                 description=" Dynamic QR for Payouts"
                 label="Dynamic QR" />
+
+            <FormSwitch
+                control={control}
+                name="cryptoPayIn"
+                title="Crypto Pay In"
+                description=" Crypto Pay In"
+                label="Crypto Pay In" />
 
             <FormSwitch
                 control={control}

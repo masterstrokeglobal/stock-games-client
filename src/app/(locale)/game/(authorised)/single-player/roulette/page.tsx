@@ -10,7 +10,7 @@ import RouletteGameHeader from "@/components/features/game/roulette-game-header"
 import GameHeaderMobile from "@/components/features/game/roulette-mobile-header";
 import HorseRace from "@/components/features/horse-animation/horse";
 import { useHorseRaceSound } from "@/context/audio-context";
-import { useCurrentGame, useIsPlaceOver } from "@/hooks/use-current-game";
+import { useCurrentGame, useGameState, useIsPlaceOver } from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
@@ -37,7 +37,7 @@ const Page = () => {
 
   const { isMobile } = useWindowSize();
   useHorseRaceSound(roundRecord);
-  const isPlaceOver = useIsPlaceOver(roundRecord);
+  const {isPlaceOver} = useGameState(roundRecord);
 
   if (!marketSelected)
     return (

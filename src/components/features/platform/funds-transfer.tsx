@@ -1,10 +1,10 @@
 "use client";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import DepositTab from "./deposit-form";
+// import DepositTab from "./deposit-form";
 import DynamicDepositTab from "./dynamic-desposit-form";
 import WithdrawTab from "./withdrawl-form";
-import { useGetMyCompany } from '@/react-query/company-queries';
+// import { useGetMyCompany } from '@/react-query/company-queries';
 
 // Amount Input Component
 interface AmountInputProps {
@@ -25,7 +25,7 @@ export const AmountInput = ({ value, onChange, placeholder, minAmount, error, la
                 <legend className="px-2 text-platform-text md:text-sm text-xs font-medium">{label}</legend>
                 <Input
                     type={number ? "number" : "text"}
-                    className="w-full bg-transparent border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
                     placeholder={placeholder}
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
@@ -56,8 +56,8 @@ interface FundsTransfersDialogProps {
 }
 
 const FundsTransfers = ({ defaultTab = "deposit" }: FundsTransfersDialogProps) => {
-    const { data: company } = useGetMyCompany();
-    const isDynamicDeposit = company?.dynamicQR;
+    // const { data: company } = useGetMyCompany();
+
     return (
         <div className="dark:bg-[#050128] bg-[#C3E3FF] border-t-2 border-platform-border rounded-t-3xl md:px-6 px-4 py-8">
             <Tabs defaultValue={defaultTab} className="w-full">
@@ -77,7 +77,7 @@ const FundsTransfers = ({ defaultTab = "deposit" }: FundsTransfersDialogProps) =
                 </TabsList>
                 <div className="md:mt-6 mt-4">
                     <TabsContent value="deposit" className="mt-0">
-                        {isDynamicDeposit ? <DynamicDepositTab /> : <DepositTab />}
+                        <DynamicDepositTab />
                     </TabsContent>
                     <TabsContent value="withdraw" className="mt-0">
                         <WithdrawTab />

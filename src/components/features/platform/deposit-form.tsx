@@ -118,22 +118,33 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const upiDepositSchema = (t: any) =>
-  z.object({
-    pgId: z
-      .string()
-      .min(0, t("validation.transaction-id-required"))
-      .max(50, t("validation.transaction-id-max"))
-      .optional(),
-    confirmationImageUrl: z
-      .string()
-      .url(t("validation.confirmation-image-url-invalid"))
-      .optional(),
-    amount: z.coerce
-      .number({
-        message: t("validation.amount-invalid"),
-      })
-      .min(100, t("validation.amount-required")),
-  });
+  z
+    .object({
+      pgId: z
+        .string()
+        .max(50, t("validation.transaction-id-max"))
+        .or(z.literal(""))
+        .or(z.undefined()),
+      confirmationImageUrl: z
+        .string()
+        .url(t("validation.confirmation-image-url-invalid"))
+        .or(z.literal(""))
+        .or(z.undefined()),
+      amount: z.coerce
+        .number({
+          message: t("validation.amount-invalid"),
+        })
+        .min(100, t("validation.amount-required")),
+    })
+    .superRefine((data, ctx) => {
+      const hasPgId = !!data.pgId && data.pgId.toString().trim() !== "";
+      const hasImage = !!data.confirmationImageUrl && data.confirmationImageUrl.toString().trim() !== "";
+      if (hasPgId === hasImage) {
+        const message = "Provide exactly one: Transaction ID or Confirmation Image.";
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message, path: ["pgId"] });
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message, path: ["confirmationImageUrl"] });
+      }
+    });
 
 type UpiDepositFormValues = z.infer<ReturnType<typeof upiDepositSchema>>;
 // Crypto Deposit Form Schema
@@ -532,6 +543,7 @@ export const CryptoDepositForm = () => {
         size="lg"
         type="submit"
         disabled={form.formState.isSubmitting}
+        className="py-1 h-9 md:h-12 text-sm md:text-base font-medium"
       >
         Deposit Now
       </Button>

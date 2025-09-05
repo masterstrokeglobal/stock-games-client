@@ -11,6 +11,7 @@ import { useTranslations } from "next-intl";
 import { ReactNode, useState } from "react";
 import FundsTransfers from "./funds-transfer";
 import BalanceCard from "./balance-card";
+import PaymentMethodDialog from "./payment-method-dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CircleX } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,13 +19,13 @@ import { Button } from "@/components/ui/button";
 interface WalletDialogProps {
     children?: ReactNode;
     open?: boolean;
-    activeTab?: "balance" | "deposit" | "withdraw";
+    activeTab?: "balance" | "deposit" | "withdraw" | "paymentMethod";
     onClose?: () => void;
 }
 
 const WalletDialog = ({ children, activeTab = "balance", open = false, onClose }: WalletDialogProps) => {
     const t = useTranslations("wallet");
-    const [defaultTab, setDefaultTab] = useState<"balance" | "deposit" | "withdraw">(activeTab);
+    const [defaultTab, setDefaultTab] = useState<"balance" | "deposit" | "withdraw" | "paymentMethod">(activeTab);
 
     const handleClose = (open: boolean) => {
         if (!open) {
@@ -49,9 +50,10 @@ const WalletDialog = ({ children, activeTab = "balance", open = false, onClose }
                     </DialogClose>
                 </DialogHeader>
                 <ScrollArea className="md:h-[calc(100vh-300px)] max-h-[calc(100vh-150px)] dark:bg-primary-game bg-[#C3E3FF] rounded-t-3xl" scrollThumbClassName="bg-platform-border">
-                    {defaultTab === "balance" && <BalanceCard onDeposit={() => setDefaultTab("deposit")} onWithdraw={() => setDefaultTab("withdraw")} />}
+                    {defaultTab === "balance" && <BalanceCard onDeposit={() => setDefaultTab("deposit")} onWithdraw={() => setDefaultTab("withdraw")} onPaymentMethod={() => setDefaultTab("paymentMethod")} />}
                     {defaultTab === "deposit" && <FundsTransfers defaultTab="deposit" />}
                     {defaultTab === "withdraw" && <FundsTransfers defaultTab="withdraw" />}
+                    {defaultTab === "paymentMethod" && <PaymentMethodDialog onBack={() => setDefaultTab("balance")} />}
                 </ScrollArea>
             </DialogContent>
         </Dialog>
