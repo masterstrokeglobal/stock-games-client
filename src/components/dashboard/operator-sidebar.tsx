@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { DollarSign, LucideIcon, UserCog2, Users } from 'lucide-react';
+import { DollarSign, LucideIcon, UserCog2, Users, Wallet } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -35,7 +35,15 @@ const baseOperatorMenuItems: MenuItem[] = [
         link: '/operator-dashboard/',
     },
     {
-        name: 'Transactions',
+        name: 'Wallet',
+        icon: Wallet,
+        subItems: [
+            { name: 'Wallet Dashboard', link: '/operator-dashboard/wallet' },
+            { name: 'Transaction History', link: '/operator-dashboard/wallet/transactions' },
+        ],
+    },
+    {
+        name: 'User Transactions',
         icon: DollarSign,
         link: '/operator-dashboard/transactions',
     },

@@ -257,6 +257,21 @@ export const useGetOperatorTransactions = (filter:any) => {
     });
 };
 
+// Get hierarchical user transactions (Master sees Agent's user transactions)
+export const useGetHierarchicalTransactions = (filter: { operatorId: number, page: number, limit: number, search?: string, type?: string, status?: string }) => {
+    return useQuery({
+        queryKey: ["hierarchical-transactions", filter],
+        queryFn: async () => {
+            const response = await operatorAPI.getHierarchicalTransactions(filter);
+            return {
+                data: response.data.data ? response.data.data.map((item: any) => new Transaction(item)) : [],
+                count: response.data.count || 0
+            }
+        },
+        enabled: !!filter.operatorId,
+    });
+};
+
 // Get operator grouped report
 export const useGetOperatorGroupedReport = (filter?: OperatorGroupedReportFilter) => {
     return useQuery({
@@ -278,5 +293,32 @@ export const useGetOperatorIndividualReport = (filter?: OperatorIndividualReport
             return response.data;
         },
         enabled: !!filter?.childId,
+    });
+};
+
+// Get operator wallet transactions
+export const useGetOperatorWalletTransactions = (filter: { operatorId: number, page?: number, limit?: number }) => {
+    return useQuery({
+        queryKey: ["operator-wallet-transactions", filter],
+        queryFn: async () => {
+            const response = await operatorAPI.getOperatorWalletTransactions(filter);
+            return {
+                data: response.data.data || response.data, // Handle different response structures
+                count: response.data.count || 0
+            }
+        },
+        enabled: !!filter.operatorId,
+    });
+};
+
+// Get operator wallet balance
+export const useGetOperatorWalletBalance = (operatorId: number) => {
+    return useQuery({
+        queryKey: ["operator-wallet-balance", operatorId],
+        queryFn: async () => {
+            const response = await operatorAPI.getOperatorWalletBalance(operatorId);
+            return response.data;
+        },
+        enabled: !!operatorId,
     });
 };

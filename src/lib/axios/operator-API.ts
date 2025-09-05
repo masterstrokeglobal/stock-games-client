@@ -61,6 +61,13 @@ export const operatorAPI = {
         });
     },
 
+    // Get hierarchical user transactions from operators below (for Master to see Agent's user transactions)
+    getHierarchicalTransactions: async (filter: { operatorId: number, page: number, limit: number, search?: string, type?: string, status?: string }) => {
+        return api.get(`/operator/hierarchical-transactions/${filter.operatorId}`, {
+            params: filter
+        });
+    },
+
     getCombinedOperatorReport: async (filter: { operatorId: number, startDate: Date, endDate: Date }) => {
         return api.get(`/operator/combined-report/${filter.operatorId}`, {
             params: filter
@@ -83,5 +90,16 @@ export const operatorAPI = {
         return api.get("/operator/individual-report", {
             params: filter
         });
+    },
+
+    // New Operator Wallet APIs
+    getOperatorWalletTransactions: async (filter: { operatorId: number, page?: number, limit?: number }) => {
+        return api.get(`/operator/wallet-transactions/${filter.operatorId}`, {
+            params: filter
+        });
+    },
+
+    getOperatorWalletBalance: async (operatorId: number) => {
+        return api.get(`/operator/wallet-balance/${operatorId}`);
     },
 };

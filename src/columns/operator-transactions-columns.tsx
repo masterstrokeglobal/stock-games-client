@@ -98,8 +98,8 @@ const SettleColumn = ({ transaction }: { transaction: Transaction }) => {
     const [showAcceptDialog, setShowAcceptDialog] = React.useState(false);
     const [showRejectDialog, setShowRejectDialog] = React.useState(false);
 
-    // Only show for operator agents and if transaction is pending
-    if (!userDetails?.isAgent || transaction.status !== TransactionStatus.PENDING) {
+    // Only show approve/reject buttons for Masters and above (not for Agents) and if transaction is pending
+    if (userDetails?.isAgent || transaction.status !== TransactionStatus.PENDING) {
         return <div className="text-sm text-gray-500 text-center">N/A</div>;
     }
 
