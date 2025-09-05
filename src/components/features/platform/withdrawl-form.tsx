@@ -254,7 +254,7 @@ const WithdrawTab: React.FC = () => {
             <Button
                 type="submit"
                 size="lg"
-                className="w-full bg-gradient-to-r dark:from-[#3B4BFF] dark:to-[#262BB5] from-primary-game to-primary-game rounded-md text-white font-semibold text-lg py-3 border-2 dark:border-platform-border border-primary-game dark:hover:from-[#4B5BFF] dark:hover:to-[#3B3BC5] hover:from-[#64B6FD] hover:to-[#466CCF] transition-all"
+                className="w-full bg-gradient-to-r dark:from-[#3B4BFF] dark:to-[#262BB5] from-primary-game to-primary-game rounded-md text-white font-semibold text-lg py-2 border-2 dark:border-platform-border border-primary-game dark:hover:from-[#4B5BFF] dark:hover:to-[#3B3BC5] hover:from-[#64B6FD] hover:to-[#466CCF] transition-all"
                 disabled={isPending || activeWithdrawDetails.length === 0}
             >
                 {isPending ? (

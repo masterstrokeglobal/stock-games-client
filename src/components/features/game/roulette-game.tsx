@@ -212,6 +212,20 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
     }
   }, [autoBetState.currentRound, autoBetState.rounds, autoBetState.isActive, gameState.isPlaceOver]);
 
+  // Clear selected auto-bet chips when round starts if auto-bet wasn't started
+  useEffect(() => {
+    if (gameState.isPlaceOver && 
+        !autoBetState.isActive && 
+        autoBetState.selectedChips.length > 0) {
+      setAutoBetState(prev => ({
+        ...prev,
+        selectedChips: [],
+        rounds: null,
+      }));
+      toast.info("Selected auto-bet chips cleared - round started");
+    }
+  }, [gameState.isPlaceOver, autoBetState.isActive, autoBetState.selectedChips.length]);
+
   // Helper function to aggregate auto-bet chips (same logic as manual betting)
   const aggregateAutoBetChips = useCallback((chips: Chip[], newChip: Chip): Chip[] => {
     const updatedChips = [...chips];
@@ -285,7 +299,7 @@ const RouletteGame = ({ roundRecord, className }: Props) => {
 
   // Function to check if there's a bet on a specific type and numbers
   const getBetForPosition = (type: PlacementType, numbers: number[]) => {
-    const allChips = [...bettedChips];
+    const allChips = [...bettedChips, ...autoBetState.selectedChips];
     const chip = allChips.find(
       (chip) =>
         chip.type === type &&

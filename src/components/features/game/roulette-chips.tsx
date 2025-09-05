@@ -100,7 +100,6 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                             value="bet"
                             className="flex-1 h-full  rounded-full  text-white bg-transparent font-semibold text-base data-[state=active]:bg-[#00214E] data-[state=active]:text-white data-[state=inactive]:text-blue-300"
                             tabIndex={-1}
-                            disabled={autoBetState.isActive}
                         >
                             BET
                         </TabsTrigger>
@@ -108,7 +107,6 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                             value="auto"
                             className="flex-1 h-full rounded-full text-blue-300 bg-transparent font-semibold text-base data-[state=active]:bg-[#00214E] data-[state=active]:text-white data-[state=inactive]:text-blue-300"
                             tabIndex={-1}
-                            disabled={hasManualBetsInRound && !autoBetState.isActive}
                         >
                             AUTO
                         </TabsTrigger>
