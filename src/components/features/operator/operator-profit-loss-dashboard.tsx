@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useGetOperatorProfitLossStats } from "@/react-query/operator-queries";
-import { TrendingUp, TrendingDown, Minus, Wallet, Users, ArrowRight, RefreshCw, Calendar } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, Wallet, Users, ArrowRight, RefreshCw } from "lucide-react";
 import { cn, INR } from "@/lib/utils";
 import LoadingScreen from "@/components/common/loading-screen";
 import { OperatorPLStats, PerformanceStatus } from "@/types/profit-loss";
@@ -88,9 +88,8 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
                 </div>
                 <div className="flex items-center gap-3">
                     <DatePickerWithRange
-                        date={dateRange}
+                        initialDateRange={dateRange}
                         onDateChange={setDateRange}
-                        placeholder="Select date range"
                         className="w-auto"
                     />
                     <Button 
