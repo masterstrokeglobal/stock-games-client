@@ -466,7 +466,7 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
         // Update stocks periodically
         const intervalId = setInterval(() => {
             setStocks([...latestDataRef.current]);
-        }, 2000);
+        }, 1000);
 
         // Set up round end check
         let roundEndCheckRef: NodeJS.Timeout;

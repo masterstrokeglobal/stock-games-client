@@ -37,6 +37,8 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
         if(width < OPTIMAL_WIDTH) {
           const scale = Math.abs(OPTIMAL_WIDTH - width) / HORSE_OFFSET_SCALE;
           setHorseOffset(scale);
+        }else{
+          setHorseOffset(0);
         }
       }
     };
@@ -61,7 +63,7 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
     >
       <div
         id="horse-race-canvas"
-        className="game-gradient-card-parent md:h-full h-64 overflow-hidden relative"
+        className="game-gradient-card-parent md:h-full md:min-h-80 overflow-hidden relative"
       >
         {/* Camera Change Button */}
         {/* <button
@@ -82,7 +84,6 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
             filteredMarket={filteredMarket}
             changeCameraView={handleCameraChange}
             currentCameraView={cameraView}
-            // canvasRef={canvasRef}
             horseOffset={horseOffset}
           />
         </Canvas>

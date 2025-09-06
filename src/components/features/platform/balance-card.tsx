@@ -6,15 +6,14 @@ import { INR } from "@/lib/utils";
 import User from "@/models/user";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import Link from "next/link";
 
 type BalanceCardProps = {
     onDeposit: () => void;
     onWithdraw: () => void;
-    onClose?: () => void;
+    onPaymentMethod: () => void;
 }
 
-const BalanceCard = ({ onDeposit, onWithdraw, onClose }: BalanceCardProps) => {
+const BalanceCard = ({ onDeposit, onWithdraw, onPaymentMethod}: BalanceCardProps) => {
     const t = useTranslations("wallet");
     const wallet = useWallet();
     const { userDetails } = useAuthStore();
@@ -48,6 +47,15 @@ const BalanceCard = ({ onDeposit, onWithdraw, onClose }: BalanceCardProps) => {
                 </div>
             </div>
 
+            {/* Bonus Progress */}
+            {/* <div className="w-full max-w-sm">
+                <BonusProgressComponent 
+                    compact={true}
+                    showHeader={false}
+                    className="w-full"
+                />
+            </div> */}
+
             {
                 !user.isDemoUser ? (
 
@@ -70,19 +78,15 @@ const BalanceCard = ({ onDeposit, onWithdraw, onClose }: BalanceCardProps) => {
                             <img src="/images/platform/wallet/withdraw.png" alt="coin" className="md:size-7 size-6 block" />
                             {t("menu.withdraw", { defaultValue: "Withdraw Funds" })}
                         </Button>
-                        <Link href={"/game/wallet/menu/withdrawl-details"}
-                            passHref
+                        <Button
+                            size="lg"
+                            onClick={onPaymentMethod}
+                            className="w-full gap-x-2"
+                            variant="platform-outline"
                         >
-                            <Button
-                                size="lg"
-                                onClick={onClose}
-                                className="w-full gap-x-2"
-                                variant="platform-outline"
-                            >
-                                <img src="/images/platform/wallet/deposit.png" alt="coin" className="md:size-7 size-6 block" />
-                                {t("menu.paymentMethod", { defaultValue: "Payment Methods" })}
-                            </Button>
-                        </Link>
+                            <img src="/images/platform/wallet/deposit.png" alt="coin" className="md:size-7 size-6 block" />
+                            {t("menu.paymentMethod", { defaultValue: "Payment Methods" })}
+                        </Button>
                     </div>
                 ) : (
                     <></>

@@ -58,7 +58,7 @@ const ActionCell = ({ row }: { row: Row<SlotPair> }) => {
         <AlertDialog>
 
             <div className="flex justify-end">
-                <Link href={`/dashboard/coin-toss-pair/${row.original.id}`}>
+                <Link href={`/dashboard/slot-pair/${row.original.id}`}>
                     <Button variant="ghost" aria-label="View Holiday">
                         <Edit2 size={18} />
                     </Button>

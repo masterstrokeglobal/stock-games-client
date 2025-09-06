@@ -1,12 +1,10 @@
 
 "use client"
 import { SkewedButton } from "@/components/ui/skew-button";
-import { useLocale } from "next-intl";
 import { useMemo, useState } from "react";
 
 const HowToPlay = () => {
     const [language, setLanguage] = useState("en");
-    const locale = useLocale();
 
     const videoUrl = useMemo(() => {
         switch (language) {
@@ -17,10 +15,10 @@ const HowToPlay = () => {
             default:
                 return "/images/how-to-play/videos/hi-lo-en.mp4";
         }
-    }, [locale]);
+    }, [language]);
 
     return <div className="max-w-3xl mx-auto w-full rounded-2xl" style={{ backgroundColor: '#003B4952' }}>
-        <div className="h-[46vh] pr-2 p-2 flex-col justify-center items-center">
+        <div className="h-[46vh] min-h-[400px] pr-2 p-2 flex-col justify-center items-center">
             <video src={videoUrl} controls className="w-auto flex-1 rounded-sm" />
             <div className="flex gap-4 pt-4 ">
                 <SkewedButton

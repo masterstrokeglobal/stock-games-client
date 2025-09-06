@@ -25,6 +25,7 @@ import Link from "next/link";
 import { ReactNode, useMemo, useRef, useState } from "react";
 import WalletDialog from './wallet-dialog';
 import ContactDialog from './contact-dialog';
+import BonusDialog from './bonus-dialog';
 
 interface ProfileDialogProps {
     children: ReactNode;
@@ -92,6 +93,23 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
             icon: "/images/platform/user-menu/wallet.png",
             label: t('your-wallet'),
             demouser: true
+        },
+        // My Bonuses (user bonus summary)
+        {
+            href: "/game/bonus", // will open dialog instead
+            icon: "/images/platform/user-menu/wallet.png", // TODO: replace with dedicated bonus icon
+            label: t('my-bonuses'),
+            demouser: true,
+            Parent: (item: { icon: string, label: string }) => (
+                <BonusDialog>
+                    <Button variant="ghost" className="w-full rounded-none h-16 border-2 dark:border-platform-border border-primary-game justify-start text-platform-text flex gap-4">
+                        <div className="w-10 h-10 backdrop-blur-sm p-0.5 border-2 dark:border-platform-border border-primary-game rounded-full flex items-center justify-center">
+                            <img src={item.icon} alt={item.label} className="w-full h-auto block" />
+                        </div>
+                        <span className="font-semibold">{item.label}</span>
+                    </Button>
+                </BonusDialog>
+            )
         },
         {
             href: "/game/platform/terms-and-condition",

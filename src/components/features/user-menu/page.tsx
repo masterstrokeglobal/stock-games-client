@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 import WalletDialog from '../platform/wallet-dialog';
 import ContactDialog from '../platform/contact-dialog';
+import BonusDialog from '../platform/bonus-dialog';
 
 
 const UserMenu = () => {
@@ -55,6 +56,12 @@ const UserMenu = () => {
             icon: "/images/platform/user-menu/wallet.png",
             parent:WalletDialog,
             label: t('your-wallet')
+        },
+        {
+            href: "/game/bonus",
+            icon: "/images/platform/user-menu/wallet.png", // TODO: Add bonus-specific icon
+            parent: BonusDialog,
+            label: "My Bonuses" // Hardcoded for testing - should show t('my-bonuses')
         },
         {
             href: "/game/terms-and-condition",

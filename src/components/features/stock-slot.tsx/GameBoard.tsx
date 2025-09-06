@@ -18,7 +18,7 @@ interface StockSlot2DWheelProps {
 }
 
 const defaultGlowState = [false, false, false, false, false];
-const EXCLUDED_NUMBERS = [0, 2];
+const EXCLUDED_NUMBERS = [0];
 
 const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
   isGameActive = false,
@@ -136,7 +136,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
 
       // Only proceed if we have valid wheel values
       if (wheelValues && wheelValues.length === 5) {
-        // Step 1: Count occurrences of each number (excluding 0 and 2)
+        // Step 1: Count occurrences of each number (excluding some numbers)
         const countMap = new Map<number, number>();
         wheelValues.forEach((num) => {
           if (typeof num === 'number' && !isNaN(num) && !EXCLUDED_NUMBERS.includes(num)) {

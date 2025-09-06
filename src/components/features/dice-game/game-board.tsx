@@ -45,23 +45,23 @@ const betConfigs = {
     },
     [DicePlacementType.FIRST]: {
         firstRow: [
-            { number: 1, multiplier: '6x' },
-            { number: 2, multiplier: '6x' },
-            { number: 3, multiplier: '6x' },
-            { number: 4, multiplier: '6x' },
-            { number: 5, multiplier: '6x' },
-            { number: 6, multiplier: '6x' }
+            { number: 1, multiplier: '5x' },
+            { number: 2, multiplier: '5x' },
+            { number: 3, multiplier: '5x' },
+            { number: 4, multiplier: '5x' },
+            { number: 5, multiplier: '5x' },
+            { number: 6, multiplier: '5x' }
         ],
         secondRow: []
     },
     [DicePlacementType.SECOND]: {
         firstRow: [
-            { number: 1, multiplier: '6x' },
-            { number: 2, multiplier: '6x' },
-            { number: 3, multiplier: '6x' },
-            { number: 4, multiplier: '6x' },
-            { number: 5, multiplier: '6x' },
-            { number: 6, multiplier: '6x' }
+            { number: 1, multiplier: '5x' },
+            { number: 2, multiplier: '5x' },
+            { number: 3, multiplier: '5x' },
+            { number: 4, multiplier: '5x' },
+            { number: 5, multiplier: '5x' },
+            { number: 6, multiplier: '5x' }
         ],
         secondRow: []
     }

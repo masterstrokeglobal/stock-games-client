@@ -90,11 +90,23 @@ const adminMenuItems: MenuItem[] = [
         name: "Seven Up Down Pair",
         icon: ChevronsRightLeftIcon,
         link: '/dashboard/seven-up-down-pair'
+    },
+    {
+        name: "Bonus Management",
+        icon: GiftIcon,
+        subItems: [
+            // { name: 'Overview', link: '/dashboard/bonus' },
+            { name: 'Create Campaign', link: '/dashboard/bonus/create-campaign' },
+            { name: 'Manage Campaigns', link: '/dashboard/bonus/campaigns' },
+            // { name: 'Analytics Dashboard', link: '/dashboard/bonus/analytics' },
+            // { name: 'User Progress', link: '/dashboard/bonus/user-progress' },
+            // { name: 'Legacy Create', link: '/dashboard/bonus/create' },
+        ],
     }
 ];
 
 const companyMenuItems: MenuItem[] = [
-
+    
     {
         name: "Company",
         icon: Building,
@@ -177,9 +189,12 @@ const companyMenuItems: MenuItem[] = [
         ],
     },
     {
-        name: "Bonus",
+        name: "Bonus Management",
         icon: GiftIcon,
-        link: '/dashboard/bonus'
+        subItems: [
+            { name: 'Create Campaign', link: '/dashboard/bonus/create' },
+            { name: 'Manage Campaigns', link: '/dashboard/bonus/campaigns' },
+        ],
     },
     {
         name: "Casino Games",
@@ -261,7 +276,7 @@ const Sidebar = ({ className }: PropsWithClassName) => {
         }
     }
 
-    if (userDetails.role === AdminRole.COMPANY_ADMIN && userDetails.company?.dynamicQR) {
+    if (userDetails.role === AdminRole.COMPANY_ADMIN ) {
         menus = [
             ...menus,
             {

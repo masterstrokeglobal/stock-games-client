@@ -10,7 +10,11 @@ import RouletteGameHeader from "@/components/features/game/roulette-game-header"
 import GameHeaderMobile from "@/components/features/game/roulette-mobile-header";
 import HorseRace from "@/components/features/horse-animation/horse";
 import { useHorseRaceSound } from "@/context/audio-context";
-import { useCurrentGame, useIsPlaceOver } from "@/hooks/use-current-game";
+import {
+  useCurrentGame,
+  useGameState,
+  useIsPlaceOver,
+} from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
 import { cn } from "@/lib/utils";
 import { RoundRecord } from "@/models/round-record";
@@ -29,15 +33,13 @@ declare global {
 
 const Page = () => {
   const { marketSelected } = useMarketSelector();
-  const { roundRecord, isLoading } = useCurrentGame(
-    RoundRecordGameType.DERBY
-  );
+  const { roundRecord, isLoading } = useCurrentGame(RoundRecordGameType.DERBY);
   const [gameType] = useGameType();
   const { isActive, isFetching } = useSchedularInactive(gameType);
 
   const { isMobile } = useWindowSize();
   useHorseRaceSound(roundRecord);
-  const isPlaceOver = useIsPlaceOver(roundRecord);
+  const { isPlaceOver } = useGameState(roundRecord);
 
   if (!marketSelected)
     return (
@@ -53,25 +55,31 @@ const Page = () => {
     <>
       <section className={cn("bg-background-game pt-14 md:min-h-screen")}>
         <Navbar />
-        { isMobile && isPlaceOver && <RouletteGameHeader title="Stock Roulette" />}
-        { !isMobile && <RouletteGameHeader title="Stock Roulette" />}
+        {isMobile && isPlaceOver && (
+          <RouletteGameHeader title="Stock Roulette" />
+        )}
+        {!isMobile && <RouletteGameHeader title="Stock Roulette" />}
         {!isActive && !isFetching && <GameMaintenanceMarquee />}
-        {!isMobile && (
-          <main className="grid grid-cols-12 grid-rows-12 mt-4  md:gap-4 gap-2 md:max-h-[1100px] px-4 pb-4">
-            <div className="lg:col-span-7 col-span-8 row-span-4 rounded-sm  overflow-hidden">
-              {roundRecord && <HorseRace roundRecord={roundRecord} />}
+        {!isMobile && roundRecord && (
+          <main className="grid grid-cols-12 mt-4 md:gap-4 gap-2 md:max-h-[1100px] px-4 pb-4">
+            <div className="grid grid-cols-1 col-span-8 lg:col-span-7 gap-4">
+              <div className="w-full">
+                <HorseRace roundRecord={roundRecord} />
+              </div>
+              <div className=" bg-las relative h-fit rounded-sm overflow-y-auto game-gradient-card-parent w-full">
+                <RouletteGame roundRecord={roundRecord} />
+              </div>
+              <div className=" bg-las relative h-fit w-full">
+                <CurrentBets round={roundRecord} />
+              </div>
             </div>
-            <div className="lg:col-span-5 col-span-4 row-span-6 rounded-sm ">
-              {roundRecord && <LeaderBoard roundRecord={roundRecord} />}
-            </div>
-            <div className="lg:col-span-7 col-span-8 bg-las relative row-span-5 h-fit rounded-sm overflow-y-auto game-gradient-card-parent">
-              {roundRecord && <RouletteGame roundRecord={roundRecord} />}
-            </div>
-            <div className="lg:col-span-5 col-span-4 overflow-hidden row-span-6 rounded-sm ">
-              {roundRecord && <LastWinners className="h-full" />}
-            </div>
-            <div className="lg:col-span-7 col-span-8 bg-las relative h-full  row-span-3">
-              {roundRecord && <CurrentBets round={roundRecord} />}
+            <div className="grid grid-cols-1 col-span-4 lg:col-span-5 gap-4">
+              <div className="w-full">
+                <LeaderBoard roundRecord={roundRecord} />
+              </div>
+              <div className="w-full">
+                <LastWinners className="h-full" />
+              </div>
             </div>
           </main>
         )}
@@ -88,24 +96,32 @@ const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
   const isPlaceOver = useIsPlaceOver(roundRecord);
 
   return (
-    <section className="text-game-text">
-      {isPlaceOver && <GameHeaderMobile roundRecord={roundRecord} />}
-      {isPlaceOver && <HorseRace roundRecord={roundRecord} />}
-      {!isPlaceOver && (
+    <section className="text-game-text space-y-4">
+      {isPlaceOver && (
+        <div className="space-y-4">
+          <GameHeaderMobile roundRecord={roundRecord} />
+          <HorseRace roundRecord={roundRecord} />
+        </div>
+      )}
+      {!isPlaceOver && roundRecord && (
         <main className="bg-[#0A1634]">
-          <div className="md:px-2">
-            {roundRecord && (
-              <RouletteGame className="mb-4" roundRecord={roundRecord} />
-            )}
-            {roundRecord && <LastWinners className="h-96 mb-4 rounded-none" />}
-            {roundRecord && <CurrentBets round={roundRecord} />}
+          <div className="space-y-4 md:px-4">
+            <RouletteGame roundRecord={roundRecord} />
+            <LastWinners className="h-96 rounded-none" />
+            <CurrentBets round={roundRecord} />
           </div>
         </main>
       )}
-      <LeaderBoard roundRecord={roundRecord} />
-      {isPlaceOver && <RouletteGame roundRecord={roundRecord} />}
-      {isPlaceOver && <CurrentBets className="mb-4" round={roundRecord} />}
-      {isPlaceOver && <LastWinners className="h-96 rounded-none" />}
+      <div className="w-full md:px-4">
+        <LeaderBoard roundRecord={roundRecord} />
+      </div>
+      {isPlaceOver && roundRecord && (
+        <div className="space-y-4 md:px-4">
+          <RouletteGame roundRecord={roundRecord} />
+          <CurrentBets round={roundRecord} />
+          <LastWinners className="h-96 rounded-none " />
+        </div>
+      )}
     </section>
   );
 };

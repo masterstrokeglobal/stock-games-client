@@ -129,7 +129,7 @@ const CurrentBets = ({ className, round }: Props) => {
                 <div className="max-h-96 w-full flex-1 md:rounded-sm overflow-hidden game-gradient-card-parent">
                     <BetTable title={t("current-bets")} data={currentBetsData} showTotal={true} />
                 </div>
-                <div className="max-h-96 w-full flex-1 md:rounded-sm overflow-hidden game-gradient-card-parent">
+                <div className="max-h-96 w-full flex-1 md:rounded-sm overflow-hidden game-gradient-card-parent h-80 ">
                     <BetTable title={t("top-bets")} data={topBets} />
                 </div>
             </div>

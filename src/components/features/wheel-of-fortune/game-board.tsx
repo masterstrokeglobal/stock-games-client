@@ -129,7 +129,7 @@ export default function WheelOfFortuneGameBoard({
   return (
     <div
       className={cn(
-        "flex items-center justify-between w-full h-full  bg-center relative",
+        "flex justify-between w-full h-full  bg-center relative",
         className
       )}
     >
