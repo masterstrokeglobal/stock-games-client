@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { DollarSign, LucideIcon, UserCog2, Users, Wallet } from 'lucide-react';
+import { DollarSign, LucideIcon, UserCog2, Users, Wallet, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -46,6 +46,11 @@ const baseOperatorMenuItems: MenuItem[] = [
         name: 'User Transactions',
         icon: DollarSign,
         link: '/operator-dashboard/transactions',
+    },
+    {
+        name: 'Profit & Loss',
+        icon: TrendingUp,
+        link: '/operator-dashboard/profit-loss',
     },
    
 ];

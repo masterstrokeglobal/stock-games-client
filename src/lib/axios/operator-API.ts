@@ -38,7 +38,7 @@ export const operatorAPI = {
         return api.post("/operator/create-user", userData);
     },
     getCurrentOperator: async () => {
-        return api.get("/admin/profile");
+        return api.get("/operator/profile");
     },
 
     agentDepositToUser: async (payload: any) => {
@@ -101,5 +101,30 @@ export const operatorAPI = {
 
     getOperatorWalletBalance: async (operatorId: number) => {
         return api.get(`/operator/wallet-balance/${operatorId}`);
+    },
+
+    // Profit & Loss Sharing APIs
+    getOperatorProfitLossStats: async (filter: { operatorId: number, startDate?: Date, endDate?: Date }) => {
+        return api.get(`/operator/profit-loss-stats/${filter.operatorId}`, {
+            params: {
+                startDate: filter.startDate?.toISOString(),
+                endDate: filter.endDate?.toISOString()
+            }
+        });
+    },
+
+    getCompanyProfitDistribution: async (filter: { startDate?: Date, endDate?: Date }) => {
+        return api.get("/operator/company-profit-distribution", {
+            params: {
+                startDate: filter.startDate?.toISOString(),
+                endDate: filter.endDate?.toISOString()
+            }
+        });
+    },
+
+    validateOperatorPercentage: async (payload: { operatorId: number, newPercentage: number }) => {
+        return api.post(`/operator/validate-percentage/${payload.operatorId}`, {
+            newPercentage: payload.newPercentage
+        });
     },
 };

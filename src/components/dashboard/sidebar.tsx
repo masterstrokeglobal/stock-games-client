@@ -172,7 +172,8 @@ const companyMenuItems: MenuItem[] = [
         subItems: [
             { name: 'View Operators', link: '/dashboard/operator' },
             { name:"Report", link:"/dashboard/operator/report"},
-            { name: 'Create Operator', link: '/dashboard/operator/create'}
+            { name: 'Create Operator', link: '/dashboard/operator/create'},
+            { name: 'Profit Distribution', link: '/dashboard/profit-distribution'}
         ],
     },
     {

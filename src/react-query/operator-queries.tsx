@@ -322,3 +322,37 @@ export const useGetOperatorWalletBalance = (operatorId: number) => {
         enabled: !!operatorId,
     });
 };
+
+// Get operator profit & loss stats
+export const useGetOperatorProfitLossStats = (filter: { operatorId: number, startDate?: Date, endDate?: Date }) => {
+    return useQuery({
+        queryKey: ["operator-profit-loss-stats", filter],
+        queryFn: async () => {
+            const response = await operatorAPI.getOperatorProfitLossStats(filter);
+            return response.data;
+        },
+        enabled: !!filter.operatorId,
+    });
+};
+
+// Get company profit distribution (Admin only)
+export const useGetCompanyProfitDistribution = (filter: { startDate?: Date, endDate?: Date }, options?: { enabled?: boolean }) => {
+    return useQuery({
+        queryKey: ["company-profit-distribution", filter],
+        queryFn: async () => {
+            const response = await operatorAPI.getCompanyProfitDistribution(filter);
+            return response.data;
+        },
+        enabled: options?.enabled ?? true,
+    });
+};
+
+// Validate operator percentage allocation
+export const useValidateOperatorPercentage = () => {
+    return useMutation({
+        mutationFn: operatorAPI.validateOperatorPercentage,
+        onError: (error: any) => {
+            console.error("Percentage validation error:", error.response?.data?.message);
+        },
+    });
+};
