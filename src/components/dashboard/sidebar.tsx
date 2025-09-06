@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { ArrowUpDown, Building, ChevronsRightLeftIcon, Clock, CoinsIcon, Contact2, DollarSign, GamepadIcon, GiftIcon, Home, ImageUpIcon, LucideIcon, MedalIcon, PieChart, Repeat1, ShipWheelIcon, Users } from 'lucide-react';
+import { ArrowUpDown, Building, ChevronsRightLeftIcon, Clock, CoinsIcon, Contact2, DollarSign, GamepadIcon, GiftIcon, Home, ImageUpIcon, LucideIcon, MedalIcon, PieChart, Repeat1, ShipWheelIcon, UserCog2, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -177,6 +177,16 @@ const companyMenuItems: MenuItem[] = [
         name: "Affiliate",
         icon: Users,
         link: '/dashboard/affiliate'
+    },
+    {
+        name: "Operators",
+        icon: UserCog2,
+        subItems: [
+            { name: 'View Operators', link: '/dashboard/operator' },
+            { name:"Report", link:"/dashboard/operator/report"},
+            { name: 'Create Operator', link: '/dashboard/operator/create'},
+            { name: 'Profit Distribution', link: '/dashboard/profit-distribution'}
+        ],
     },
     {
         name: "Bonus Management",

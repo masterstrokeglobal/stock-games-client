@@ -31,12 +31,12 @@ export default function Home() {
     const handleGlobalBetAmountChange = (amount: number) => {
         setGlobalBetAmount(amount)
     }
+    
+    if (!marketSelected) return <MarketSelector title="HI - LO Market" roundRecordType={RoundRecordGameType.STOCK_JACKPOT} />;
 
     if (isLoading || !roundRecord) return <GameLoadingScreen className="min-h-[calc(100svh)]" />;
 
 
-    if (!marketSelected)
-        return <MarketSelector title="HI - LO Market" roundRecordType={RoundRecordGameType.STOCK_JACKPOT} />;
 
 
     return (
