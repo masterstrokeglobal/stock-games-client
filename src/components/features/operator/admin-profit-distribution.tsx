@@ -217,7 +217,7 @@ const AdminProfitDistribution = ({ className }: Props) => {
                         <Users className="h-5 w-5" />
                         Who Bears How Much
                     </CardTitle>
-                    <CardDescription>Each operator's share from their parent</CardDescription>
+                    <CardDescription>Each operator &apos;s share from their parent</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-3">
@@ -244,7 +244,6 @@ const AdminProfitDistribution = ({ className }: Props) => {
                                     role: operator.role
                                 };
                             });
-
                             // Add Admin line
                             const adminLine = {
                                 name: "Admin",
