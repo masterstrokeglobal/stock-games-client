@@ -25,12 +25,12 @@ const operatorColumns: ColumnDef<Operator>[] = [
     {
         header: "NAME",
         accessorKey: "name",
-        cell: ({ row }) => <div className="w-48 truncate">{row.original.name}</div>,
+        cell: ({ row }) => <div className="w-32 sm:w-48 truncate font-medium">{row.original.name}</div>,
     },
     {
         header: "EMAIL",
         accessorKey: "email",
-        cell: ({ row }) => <div className="text-[#6B7280] w-48 truncate">{row.original.email}</div>,
+        cell: ({ row }) => <div className="text-[#6B7280] w-32 sm:w-48 truncate text-sm">{row.original.email}</div>,
     },
     {
         header: "ROLE",
@@ -43,32 +43,32 @@ const operatorColumns: ColumnDef<Operator>[] = [
                 agent: "bg-yellow-100 text-yellow-800",
             };
             const roleLabels = {
-                super_duper_master: "Super Duper Master",
-                duper_master: "Duper Master",
+                super_duper_master: "SDM",
+                duper_master: "DM",
                 master: "Master",
                 agent: "Agent",
             };
             return (
-                <Badge className={`whitespace-nowrap ${roleColors[row.original.role]}`}>
-                    {roleLabels[row.original.role]}
-                </Badge>
+                <div className="flex flex-col items-center gap-1 min-w-[80px]">
+                    <Badge className={`text-xs px-2 py-1 ${roleColors[row.original.role]}`}>
+                        {roleLabels[row.original.role]}
+                    </Badge>
+                    <div className="text-xs text-gray-600 font-medium">
+                        {row.original.percentage}%
+                    </div>
+                </div>
             );
         }
     },
     {
-        header: "PERCENTAGE",
-        accessorKey: "percentage",
-        cell: ({ row }) => <div className="text-left">{row.original.percentage}%</div>,
-    },
-    {
         header: "BALANCE",
         accessorKey: "balance",
-        cell: ({ row }) => <div className="text-left">{row.original.balance}</div>,
+        cell: ({ row }) => <div className="text-left font-medium">₹{row.original.balance.toLocaleString()}</div>,
     },
     {
         header: "MAX BALANCE",
         accessorKey: "maxBalance",
-        cell: ({ row }) => <div className="text-left">{row.original.maxBalance}</div>,
+        cell: ({ row }) => <div className="text-left text-sm text-gray-600">₹{row.original.maxBalance.toLocaleString()}</div>,
     },
     {
         header: "STATUS",
@@ -122,20 +122,20 @@ const operatorColumns: ColumnDef<Operator>[] = [
 
 const ActionColumn = ({ operator }: { operator: Operator }) => {
     return (
-        <div className="flex space-x-4 w-36 justify-end">
+        <div className="flex space-x-1 sm:space-x-2 w-24 sm:w-36 justify-end">
             <Link href={`/operator-dashboard/operator/${operator.id}`}>
-                <Button size="icon" variant="ghost" aria-label="View Operator">
-                    <Eye className="w-5 h-5" />
+                <Button size="icon" variant="ghost" aria-label="View Operator" className="h-8 w-8">
+                    <Eye className="w-4 h-4" />
                 </Button>
             </Link>
             <Link href={`/operator-dashboard/operator/${operator.id}/report`}>
-                <Button size="icon" variant="ghost" aria-label="View Operator">
-                    <LogsIcon className="w-5 h-5" />
+                <Button size="icon" variant="ghost" aria-label="View Report" className="h-8 w-8">
+                    <LogsIcon className="w-4 h-4" />
                 </Button>
             </Link>
             <Link href={`/operator-dashboard/operator/${operator.id}/deposit`}>
-                <Button size="icon" variant="ghost" aria-label="View Wallet">
-                    <Wallet className="w-5 h-5" />
+                <Button size="icon" variant="ghost" aria-label="View Wallet" className="h-8 w-8">
+                    <Wallet className="w-4 h-4" />
                 </Button>
             </Link>
         </div>

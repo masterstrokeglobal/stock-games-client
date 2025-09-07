@@ -100,8 +100,8 @@ const OperatorRow = ({ operator, level = 0, isLast = false }: { operator: Operat
 
                 <CollapsibleTrigger asChild>
                     <div className={`w-full p-2 hover:bg-gray-100 cursor-pointer transition-colors ${backgroundClass} rounded-lg`}>
-                        <div className="grid grid-cols-12 gap-4 items-center">
-                            <div className="col-span-1 flex items-center space-x-2">
+                        <div className="grid grid-cols-12 gap-2 sm:gap-4 items-center">
+                            <div className="col-span-1 flex items-center space-x-1 sm:space-x-2">
                                 {/* Tree node indicator */}
                                 {level > 0 && (
                                     <div className={`w-2 h-2 rounded-full ${operator.role === 'super_duper_master' ? 'bg-purple-400' :
@@ -124,27 +124,28 @@ const OperatorRow = ({ operator, level = 0, isLast = false }: { operator: Operat
                                 </div>
                             </div>
 
-                            <div className="col-span-2">
+                            <div className="col-span-2 hidden sm:block">
                                 <div className={`text-gray-600 truncate ${textSizeClass}`}>
                                     {operator.email}
                                 </div>
                             </div>
 
-                            <div className="col-span-1">
-                                <Badge className={`whitespace-nowrap border ${textSizeClass} ${roleColors[operator.role]}`}>
-                                    {roleLabels[operator.role]}
+                            <div className="col-span-2 flex flex-col items-center gap-1">
+                                <Badge className={`text-xs px-2 py-1 border ${roleColors[operator.role]}`}>
+                                    {operator.role === 'super_duper_master' ? 'SDM' : 
+                                     operator.role === 'duper_master' ? 'DM' : 
+                                     roleLabels[operator.role]}
                                 </Badge>
+                                <div className={`text-xs text-gray-600 font-medium ${textSizeClass}`}>
+                                    {operator.percentage}%
+                                </div>
                             </div>
 
-                            <div className={`col-span-1 text-center font-medium ${textSizeClass}`}>
-                                {operator.percentage}%
-                            </div>
-
-                            <div className={`col-span-1 text-center font-medium ${textSizeClass}`}>
+                            <div className={`col-span-1 text-center font-medium ${textSizeClass} hidden md:block`}>
                                 ₹{operator.balance?.toLocaleString() || 0}
                             </div>
 
-                            <div className={`col-span-1 text-center font-medium ${textSizeClass}`}>
+                            <div className={`col-span-1 text-center font-medium ${textSizeClass} hidden lg:block`}>
                                 ₹{operator.maxBalance?.toLocaleString() || 0}
                             </div>
 
@@ -250,14 +251,13 @@ const OperatorTable = () => {
             <main className="mt-4">
                 {/* Table Header */}
                 <div className="bg-gray-100 rounded-t-lg p-4 border">
-                    <div className="grid grid-cols-12 gap-4 items-center font-semibold text-sm text-gray-700">
+                    <div className="grid grid-cols-12 gap-2 sm:gap-4 items-center font-semibold text-sm text-gray-700">
                         <div className="col-span-1"></div>
                         <div className="col-span-2">NAME</div>
-                        <div className="col-span-2">EMAIL</div>
-                        <div className="col-span-1">ROLE</div>
-                        <div className="col-span-1 text-center">PERCENTAGE</div>
-                        <div className="col-span-1 text-center">BALANCE</div>
-                        <div className="col-span-1 text-center">MAX BALANCE</div>
+                        <div className="col-span-2 hidden sm:block">EMAIL</div>
+                        <div className="col-span-2 text-center">ROLE & %</div>
+                        <div className="col-span-1 text-center hidden md:block">BALANCE</div>
+                        <div className="col-span-1 text-center hidden lg:block">MAX BALANCE</div>
                         <div className="col-span-1">STATUS</div>
                         <div className="col-span-2 text-center">ACTIONS</div>
                     </div>

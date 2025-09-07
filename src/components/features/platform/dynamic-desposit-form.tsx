@@ -8,18 +8,18 @@ import { useGetAllWithdrawDetails } from "@/react-query/withdrawl-details-querie
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Building2, Copy, Loader2, RefreshCcw, Smartphone } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState, useMemo } from "react";
+import { ReactNode, useState, useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { AmountInput } from "./funds-transfer";
 import FormImage from "@/components/ui/form/form-image-compact";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { useGetMyCompany } from "@/react-query/company-queries";
 import { CryptoDepositForm } from "./deposit-form";
 import { BankIcon } from "../user-menu/icons";
 import { PaymentMethod } from "@/models/transaction";
-import PaymentMethodDialog from "./payment-method-dialog";
 
 // Deposit Methods Component
 interface DepositMethodsProps {
@@ -29,79 +29,53 @@ interface DepositMethodsProps {
 
 const DepositMethods = ({ selectedMethod, onMethodChange }: DepositMethodsProps) => {
     const methods = [
-        { id: PaymentMethod.UPI, label: 'UPI', icon: <Smartphone className="w-6 h-6" />, img:'/images/payment-methods/upi.png' },
+        { id: PaymentMethod.UPI, label: 'UPI', icon: <Smartphone className="w-6 h-6" /> },
+        { id: PaymentMethod.RTGS, label: 'RTGS', icon: <BankIcon className="w-6 h-6" /> },
+        { id: PaymentMethod.NEFT, label: 'NEFT', icon: <Building2 className="w-6 h-6" /> },
     ];
-
-    const bankMethods = [
-        { id: PaymentMethod.RTGS, label: 'RTGS', icon: <BankIcon className="w-6 h-6" />, img:'/images/payment-methods/bank-transfer.png' },
-        { id: PaymentMethod.NEFT, label: 'NEFT', icon: <Building2 className="w-6 h-6" />, img:'/images/payment-methods/bank-transfer.png' }
-    ]
-
     const { data: company } = useGetMyCompany();
     const isCryptoPayIn = company?.cryptoPayIn;
 
-    if(company?.dynamicQR) {
-        methods.push({ id: PaymentMethod.BANK_TRANSFER, label: 'Bank Transfer', icon: <BankIcon className="w-6 h-6" />, img:'/images/payment-methods/bank-transfer.png' });
-    }
-
     if (isCryptoPayIn) {
-        methods.push({ id: PaymentMethod.CRYPTO, label: 'Crypto', icon: <img src="/images/platform/wallet/crypto.png" className="w-auto h-10" alt="crypto" />, img:'/images/payment-methods/crypto.png' });
+        methods.push({ id: PaymentMethod.CRYPTO, label: 'Crypto', icon: <img src="/images/platform/wallet/crypto.png" className="w-auto h-10" alt="crypto" /> });
     }
-
-    
     return (
         <div className="space-y-4">
             <div>
-                <h3 className="text-platform-text md:text-base text-[15px] text-center font-medium mb-2">Select Payment Method</h3>
-                <p className="text-platform-text text-[10px] md:text-xs text-center mb-4">Each Option May Have Different Processing Times And Limits.</p>
+                <h3 className="text-platform-text text-base font-medium mb-2">Select Deposit Method</h3>
+                <p className="text-platform-text text-sm mb-4">Each Option May Have Different Processing Times And Limits.</p>
             </div>
-            <div className={`gap-3 grid ${methods.length > 2 ? 'grid-cols-3' : 'grid-cols-2'}`}>
+            <div className=" gap-3 grid grid-cols-2">
                 {methods.map((method) => (
                     <PaymentMethodButton
                         key={method.id}
-                        img={method.img}
+                        icon={method.icon}
                         label={method.label ?? ""}
                         isSelected={selectedMethod === method.id}
                         onClick={() => onMethodChange(method.id)}
-                        bankTransfer={false}
                     />
                 ))}
             </div>
-
-            {[PaymentMethod.BANK_TRANSFER, PaymentMethod.NEFT, PaymentMethod.RTGS].includes(selectedMethod) && (
-                <div className="grid grid-cols-2 gap-3">
-                    {bankMethods.map((method) => (
-                        <PaymentMethodButton
-                            key={method.id}
-                            img={method.img}
-                            label={method.label ?? ""}
-                            isSelected={selectedMethod === method.id}
-                            onClick={() => onMethodChange(method.id)}
-                            bankTransfer={true}
-                        />
-                    ))}
-                </div>
-            )}
         </div>
     );
 };
 
 // Payment Method Component
 interface PaymentMethodButtonProps {
+    icon: ReactNode;
     label?: string;
     isSelected: boolean;
     onClick: () => void;
-    img: string;
-    bankTransfer?: boolean;
 }
 
-const PaymentMethodButton = ({ isSelected, onClick, label, img, bankTransfer }: PaymentMethodButtonProps) => {
+const PaymentMethodButton = ({ icon, isSelected, onClick, label }: PaymentMethodButtonProps) => {
     return (
         <button
             onClick={onClick}
-            className={`flex items-center flex-1 justify-center gap-2 rounded-sm px-4 py-1 border-2 transition-all ${isSelected ? 'dark:border-[#3B4BFF] border-primary-game bg-[#3B4BFF]/20 text-white' : 'dark:border-platform-border border-primary-game bg-transparent text-white/80 hover:border-[#3B4BFF]/50'}`}
+            className={`flex items-center flex-1 justify-center gap-2 h-12 rounded-sm px-4 py-3 border-2 transition-all ${isSelected ? 'dark:border-[#3B4BFF] border-primary-game bg-[#3B4BFF]/20 text-white' : 'dark:border-platform-border border-primary-game bg-transparent text-white/80 hover:border-[#3B4BFF]/50'}`}
         >
-           {bankTransfer ? label : <img src={img} alt={label} className="h-7 md:h-9" />}
+            {icon}
+            <span className="text-platform-text text-sm">{label}</span>
         </button>
     );
 };
@@ -168,15 +142,13 @@ const depositSchema = (t: any, askWithdrawlOption?: boolean) => z.object({
     withdrawlDetailsId: askWithdrawlOption
         ? z.string().min(1, 'deposit method is required')
         : z.string().optional(),
-}).superRefine((data, ctx) => {
-    const hasPgId = !!data.pgId && data.pgId.toString().trim() !== "";
-    const hasImage = !!data.confirmationImageUrl && data.confirmationImageUrl.toString().trim() !== "";
-    if (hasPgId === hasImage) {
-        const message = "Provide exactly one: Transaction ID or Confirmation Image.";
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message, path: ["pgId"] });
-        ctx.addIssue({ code: z.ZodIssueCode.custom, message, path: ["confirmationImageUrl"] });
+}).refine(
+    (data) => !!data.pgId || !!data.confirmationImageUrl,
+    {
+        message: "Either Transaction ID or Confirmation Image is required",
+        path: ["pgId"],
     }
-});
+);
 
 type DepositFormValues = z.infer<ReturnType<typeof depositSchema>>;
 
@@ -186,9 +158,8 @@ const UPIDepositForm = () => {
     const tWithdraw = useTranslations('withdraw');
     const { mutate, isPending } = useCreateDepositRequest();
     const { data: companyQR, isFetching: isLoading, refetch } = useGetActiveCompanyQR({ type: CompanyQRType.UPI });
-    const { data: withdrawDetailsData, isLoading: isLoadingWithdrawDetails, refetch: refetchWithdrawDetails } = useGetAllWithdrawDetails({});
+    const { data: withdrawDetailsData, isLoading: isLoadingWithdrawDetails } = useGetAllWithdrawDetails({});
     const { data: company } = useGetMyCompany();
-    const [showPaymentMethodDialog, setShowPaymentMethodDialog] = useState(false);
 
     const withdrawDetails = useMemo(() => {
         if (withdrawDetailsData?.data) {
@@ -323,15 +294,16 @@ const UPIDepositForm = () => {
                                             <p className="text-platform-text text-sm py-4 text-center">
                                                 {tWithdraw('no-methods-found')}
                                             </p>
-                                            <Button
-                                                variant="platform-outline"
-                                                size="lg"
-                                                className="w-full"
-                                                type="button"
-                                                onClick={() => setShowPaymentMethodDialog(true)}
-                                            >
-                                                Add New Method
-                                            </Button>
+                                            <Link href={"/game/wallet/menu/withdrawl-details"} className="text-platform-text text-sm py-4 text-center">
+                                                <Button
+                                                    variant="platform-outline"
+                                                    size="lg"
+                                                    className="w-full"
+                                                    type="button"
+                                                >
+                                                    Add New Method
+                                                </Button>
+                                            </Link>
                                         </>
                                     ) : (
                                         activeWithdrawDetails.map((detail: WithdrawDetailsRecord) => (
@@ -364,7 +336,6 @@ const UPIDepositForm = () => {
                     variant="platform-gradient-secondary"
                     size="lg"
                     type="submit"
-                    className="py-1 h-9 text-sm md:text-base font-medium"
                     disabled={form.formState.isSubmitting || isPending}
                 >
                     {isPending ? (
@@ -390,20 +361,6 @@ const UPIDepositForm = () => {
                     </>
                 )}
             </Button>
-
-            {/* Payment Method Dialog */}
-            {showPaymentMethodDialog && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 h-full w-full">
-                    <div className="bg-white dark:bg-primary-game w-full max-h-[90vh] overflow-hidden h-full">
-                        <PaymentMethodDialog 
-                            onBack={() => {
-                                setShowPaymentMethodDialog(false);
-                                refetchWithdrawDetails();
-                            }} 
-                        />
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
@@ -414,9 +371,8 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
     const tWithdraw = useTranslations('withdraw');
     const { mutate, isPending } = useCreateDepositRequest();
     const { data: companyQR, isFetching: isLoading, refetch } = useGetActiveCompanyQR({ type: CompanyQRType.BANK });
-    const { data: withdrawDetailsData, isLoading: isLoadingWithdrawDetails, refetch: refetchWithdrawDetails } = useGetAllWithdrawDetails({});
+    const { data: withdrawDetailsData, isLoading: isLoadingWithdrawDetails } = useGetAllWithdrawDetails({});
     const { data: company } = useGetMyCompany();
-    const [showPaymentMethodDialog, setShowPaymentMethodDialog] = useState(false);
 
     const withdrawDetails = useMemo(() => {
         if (withdrawDetailsData?.data) {
@@ -600,17 +556,18 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
                                 {activeWithdrawDetails.length === 0 ? (
                                     <>
                                         <p className="text-platform-text text-sm py-4 text-center">
-                                            {tWithdraw('no-methods-found')}
+                                            {tWithdraw('no-methods-found')}sdfsdf
                                         </p>
-                                        <Button
-                                            variant="platform-outline"
-                                            size="lg"
-                                            className="w-full"
-                                            type="button"
-                                            onClick={() => setShowPaymentMethodDialog(true)}
-                                        >
-                                            Add New Method
-                                        </Button>
+                                        <Link href={"/game/wallet/menu/withdrawl-details"} className="text-platform-text text-sm py-4 text-center">
+                                            <Button
+                                                variant="platform-outline"
+                                                size="lg"
+                                                className="w-full"
+                                                type="button"
+                                            >
+                                                Add New Method
+                                            </Button>
+                                        </Link>
                                     </>
                                 ) : (
                                     activeWithdrawDetails.map((detail: WithdrawDetailsRecord) => (
@@ -644,7 +601,6 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
                     size="lg"
                     type="submit"
                     disabled={form.formState.isSubmitting || isPending}
-                    className="py-1 h-9 text-sm md:text-base font-medium"
                 >
                     {isPending ? (
                         <>
@@ -669,20 +625,6 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
                     </>
                 )}
             </Button>
-
-            {/* Payment Method Dialog */}
-            {showPaymentMethodDialog && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white dark:bg-primary-game rounded-2xl w-full max-w-lg max-h-[90vh] overflow-hidden">
-                        <PaymentMethodDialog 
-                            onBack={() => {
-                                setShowPaymentMethodDialog(false);
-                                refetchWithdrawDetails();
-                            }} 
-                        />
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
@@ -691,10 +633,10 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
 const DepositTab = () => {
     const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>(PaymentMethod.UPI);
     return (
-        <div className="md:space-y-6 space-y-4">
+        <div className="space-y-6">
             <div className="rounded-md bg-yellow-100 dark:bg-yellow-900/40 border border-yellow-300 dark:border-yellow-700 px-4 py-2 text-yellow-800 dark:text-yellow-200 font-medium mb-2">
-                <span className="block font-normal md:font-medium text-center !text-xs md:text-sm">Deposit Processing Time</span>
-                <span className="block md:text-xs text-[10px] mt-1 text-center">
+                <span className="block font-semibold">Deposit Processing Time</span>
+                <span className="block text-sm mt-1">
                     Deposits are typically processed within <span className="font-semibold">5 to 15 minutes</span>. Please wait for confirmation before contacting support.
                 </span>
             </div>
