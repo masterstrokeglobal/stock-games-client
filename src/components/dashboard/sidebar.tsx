@@ -192,7 +192,7 @@ const companyMenuItems: MenuItem[] = [
         name: "Bonus Management",
         icon: GiftIcon,
         subItems: [
-            { name: 'Create Campaign', link: '/dashboard/bonus/create' },
+            { name: 'Create Campaign', link: '/dashboard/bonus/create-campaign' },
             { name: 'Manage Campaigns', link: '/dashboard/bonus/campaigns' },
         ],
     },
