@@ -95,9 +95,9 @@ const OperatorForm = ({
             { value: OperatorRole.AGENT, label: "Agent" },
         ];
 
-        // Super Duper Master can create any role
+        // COMPANY_ADMIN can only create SUPER_DUPER_MASTER
         if (currentUserRole === AdminRole.COMPANY_ADMIN) {
-            return allRoles;
+            return allRoles.filter(role => role.value === OperatorRole.SUPER_DUPER_MASTER);
         }
         if (currentUserRole === OperatorRole.SUPER_DUPER_MASTER) {
             return allRoles.filter(role => role.value !== OperatorRole.SUPER_DUPER_MASTER);
