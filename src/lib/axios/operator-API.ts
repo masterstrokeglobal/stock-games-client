@@ -86,6 +86,16 @@ export const operatorAPI = {
             params: filter
         });
     },
+    // Operator Dashboard (core)
+    getOperatorDashboard: async (filter?: { operatorId?: number, startDate?: Date, endDate?: Date }) => {
+        return api.get("/operator/dashboard", {
+            params: {
+                operatorId: filter?.operatorId,
+                startDate: filter?.startDate ? filter.startDate.toISOString() : undefined,
+                endDate: filter?.endDate ? filter.endDate.toISOString() : undefined,
+            }
+        });
+    },
     getOperatorIndividualReport: async (filter?: OperatorIndividualReportFilter) => {
         return api.get("/operator/individual-report", {
             params: filter

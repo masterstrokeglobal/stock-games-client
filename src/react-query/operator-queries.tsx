@@ -7,13 +7,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 // Get all operators with filters
-export const useGetAllOperators = (filter: any) => {
+export const useGetAllOperators = (filter: any, options?: { enabled?: boolean }) => {
     return useQuery({
         queryKey: ["operators", filter],
         queryFn: async () => {
             const response = await operatorAPI.getAllOperators(filter);
             return response.data;
         },
+        enabled: options?.enabled ?? true,
     });
 };
 
@@ -293,6 +294,18 @@ export const useGetOperatorIndividualReport = (filter?: OperatorIndividualReport
             return response.data;
         },
         enabled: !!filter?.childId,
+    });
+};
+
+// Operator Dashboard (core)
+export const useGetOperatorDashboard = (filter?: { operatorId?: number, startDate?: Date, endDate?: Date }, options?: { enabled?: boolean }) => {
+    return useQuery({
+        queryKey: ["operator-dashboard", filter],
+        queryFn: async () => {
+            const response = await operatorAPI.getOperatorDashboard(filter);
+            return response.data;
+        },
+        enabled: options?.enabled ?? true,
     });
 };
 

@@ -22,8 +22,13 @@ const CreateOperatorPage = () => {
 
     const onSubmit = (data: OperatorFormValues) => {
         mutate(data, {
-            onSuccess: () => {
-                router.push("/operator-dashboard/operator");
+            onSuccess: (res: any) => {
+                const newId = res?.data?.id;
+                if (newId) {
+                    router.push(`/operator-dashboard?operatorId=${newId}`);
+                } else {
+                    router.push("/operator-dashboard");
+                }
             },
         });
     };

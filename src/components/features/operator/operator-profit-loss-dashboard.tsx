@@ -12,6 +12,7 @@ import { useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { DateRange } from "react-day-picker";
+import { useGetOperatorProfitLossStats as usePL } from "@/react-query/operator-queries";
 
 type Props = {
     operatorId: number;
@@ -199,7 +200,7 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
                 <CardContent>
                     <div className="space-y-4">
                         {/* Direct Business */}
-                        <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border">
+                        {/* <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border">
                             <div>
                                 <div className="font-medium">Direct Business</div>
                                 <div className="text-sm text-gray-600">From your users</div>
@@ -207,7 +208,7 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
                             <div className="text-lg font-bold text-blue-600">
                                 {INR(stats.profitLossStats.directNetProfitLoss)}
                             </div>
-                        </div>
+                        </div> */}
 
                         {/* From Parent */}
                         {stats.profitLossStats.operatorReceivesFromParent > 0 && (
@@ -225,7 +226,7 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
                         )}
 
                         {/* Total Available */}
-                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-dashed">
+                        {/* <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-dashed">
                             <div>
                                 <div className="font-medium">Total Available</div>
                                 <div className="text-sm text-gray-600">For distribution</div>
@@ -233,7 +234,7 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
                             <div className="text-lg font-bold">
                                 {INR(stats.profitLossStats.totalOperatorAmount)}
                             </div>
-                        </div>
+                        </div> */}
 
                         {/* Final Amount */}
                         <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
@@ -249,7 +250,7 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
                 </CardContent>
             </Card>
 
-            {/* Child Allocations */}
+            {/* Child Allocations (recursive expandable hierarchy) */}
             {stats.childShares && stats.childShares.length > 0 && (
                 <Card>
                     <CardHeader>
@@ -269,24 +270,7 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
                     <CardContent>
                         <div className="space-y-3">
                             {stats.childShares.map((child) => (
-                                <div key={child.operatorId} className="flex items-center justify-between p-3 border rounded-lg">
-                                    <div className="flex items-center space-x-3">
-                                        <div>
-                                            <div className="font-medium">{child.operatorName}</div>
-                                            <div className="text-sm text-gray-500 capitalize">
-                                                {child.role.replace('_', ' ')}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="text-right">
-                                        <div className="font-medium">
-                                            {INR(child.shareAmount)}
-                                        </div>
-                                        <Badge variant="outline" className="text-xs">
-                                            {child.allocatedPercentage}%
-                                        </Badge>
-                                    </div>
-                                </div>
+                                <OperatorHierarchyNode key={child.operatorId} node={child} dateRange={dateRange} />
                             ))}
                         </div>
                     </CardContent>
@@ -294,7 +278,7 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
             )}
 
             {/* Allocation Summary */}
-            <Card>
+            {/* <Card>
                 <CardHeader>
                     <CardTitle>Allocation Summary</CardTitle>
                     <CardDescription>
@@ -323,9 +307,40 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
                         </div>
                     </div>
                 </CardContent>
-            </Card>
+            </Card> */}
         </div>
     );
 };
 
 export default OperatorProfitLossDashboard;
+
+// Recursive node for operator hierarchy (operator view)
+const OperatorHierarchyNode = ({ node, dateRange }: { node: any; dateRange?: DateRange }) => {
+    const [open, setOpen] = useState(false);
+    const { data, isLoading } = usePL({ operatorId: node.operatorId, startDate: dateRange?.from, endDate: dateRange?.to });
+
+    return (
+        <div className="border rounded-lg">
+            <button className="w-full text-left p-3 flex items-center justify-between" onClick={() => setOpen((v) => !v)}>
+                <div>
+                    <div className="font-medium">{node.operatorName} <span className="text-xs text-gray-500 capitalize">{node.role.replace('_',' ')}</span></div>
+                    <div className="text-xs text-muted-foreground">Allocated: {node.allocatedPercentage}% • Share: {INR(node.shareAmount)}</div>
+                </div>
+                <Badge variant="outline" className="text-xs">{open ? 'Hide' : 'Show'} children</Badge>
+            </button>
+            {open && (
+                <div className="p-3 pt-0 space-y-2">
+                    {isLoading ? (
+                        <div className="py-4"><LoadingScreen className="h-16" /></div>
+                    ) : (data?.childShares?.length ?? 0) > 0 ? (
+                        data!.childShares!.map((c: any) => (
+                            <OperatorHierarchyNode key={c.operatorId} node={c} dateRange={dateRange} />
+                        ))
+                    ) : (
+                        <div className="text-sm text-muted-foreground">No children</div>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+};

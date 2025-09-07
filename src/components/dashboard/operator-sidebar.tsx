@@ -30,9 +30,9 @@ interface MenuItem {
 // Base operator menu items (available to all operator roles)
 const baseOperatorMenuItems: MenuItem[] = [
     {
-        name: 'Profile',
+        name: 'Dashboard',
         icon: UserCog2,
-        link: '/operator-dashboard/',
+        link: '/operator-dashboard',
     },
     {
         name: 'Wallet',

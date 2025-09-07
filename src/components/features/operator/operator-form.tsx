@@ -81,9 +81,10 @@ const OperatorForm = ({
 
     const { control, handleSubmit, watch } = form;
     const passwordValue = watch("password");
+    const selectedRole = watch("role");
 
-    // Check if current user is super duper master (can set balance limits)
-    const canSetBalanceLimits = currentUserRole === AdminRole.COMPANY_ADMIN;
+    // Balance limits only when creator is COMPANY_ADMIN and creating SDM
+    const canSetBalanceLimits = currentUserRole === AdminRole.COMPANY_ADMIN && selectedRole === OperatorRole.SUPER_DUPER_MASTER;
 
     // Role options based on current user's role
     const getRoleOptions = () => {
@@ -116,6 +117,7 @@ const OperatorForm = ({
     };
 
     const roleOptions = getRoleOptions();
+    const roleAllowed = roleOptions.some((r) => r.value === selectedRole);
 
     return (
         <FormProvider
@@ -142,7 +144,6 @@ const OperatorForm = ({
                 control={control}
                 name="role"
                 label="Role*"
-                disabled
                 placeholder="Select role"
                 options={roleOptions}
             />
@@ -223,7 +224,7 @@ const OperatorForm = ({
                 </Button>
                 <Button
                     type="submit"
-                    disabled={isLoading}
+                    disabled={isLoading || !roleAllowed}
                     className="w-full md:w-auto"
                 >
                     {isLoading ? "Saving..." : isEditing ? "Update Operator" : "Create Operator"}

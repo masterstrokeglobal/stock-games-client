@@ -8,7 +8,13 @@ import { useAuthStore } from "@/context/auth-context";
 export const useAdminLogin = () => {
     return useMutation({
         mutationFn: adminAuthAPI.adminLogin,
-        onSuccess: () => {
+        onSuccess: (response) => {
+            try {
+                const token = (response as any)?.data?.token;
+                if (token) {
+                    localStorage.setItem("token", token);
+                }
+            } catch {}
             toast.success("Logged in successfully");
         },
         onError: (error: any) => {
