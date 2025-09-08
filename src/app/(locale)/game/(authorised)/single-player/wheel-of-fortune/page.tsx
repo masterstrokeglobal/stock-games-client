@@ -71,7 +71,7 @@ const WheelOfFortune = () => {
             marginBottom: isPlaceOver ? "-30px" : `-${wheelHeight}px`,
           }}
           className={cn(
-            "transition-transform duration-300 px-4 w-full space-y-4 relative z-10"
+            "transition-transform duration-300 px-4 w-full space-y-4 relative z-10 bg-gradient-to-b from-black/50 to-black"
           )}
         >
           {!isPlaceOver ? (
@@ -153,8 +153,8 @@ const WheelOfFortune = () => {
               <LastRoundsTable className="flex-1" />
             </div>
           </div>
-          <div className="col-span-3 flex md:flex-row relative flex-col gap-4 py-6">
-            <div className="absolute bottom-0 left-0 h-full w-full bg-gradient-to-t from-[#000000] via-[#000000] via-[80%] to-transparent" />
+          <div className="col-span-3 flex md:flex-row relative flex-col gap-4 pt-0 pb-3 bg-gradient-to-b from-black/70 to-black">
+            {/* <div className="absolute bottom-0 left-0 h-full w-full bg-gradient-to-t from-[#000000] via-[#000000] via-[80%] to-transparent" />// */}
             <WheelOfFortuneGameBoard
               className="flex-1"
               roundRecord={roundRecord}

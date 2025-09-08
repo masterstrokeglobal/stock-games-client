@@ -298,7 +298,7 @@
         }
     },
     "wallet": {
-        "title": "Your Wallet",
+        "title": "Funds & Transfers",
         "balance": {
             "title": "Wallet Balance",
             "total": "Total Balance",

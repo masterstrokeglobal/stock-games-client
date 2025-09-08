@@ -266,7 +266,7 @@ const Sidebar = ({ className }: PropsWithClassName) => {
         }
     }
 
-    if (userDetails.role === AdminRole.COMPANY_ADMIN && userDetails.company?.dynamicQR) {
+    if (userDetails.role === AdminRole.COMPANY_ADMIN ) {
         menus = [
             ...menus,
             {

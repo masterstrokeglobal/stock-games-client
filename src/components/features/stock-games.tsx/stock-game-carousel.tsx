@@ -14,14 +14,14 @@ export default function StockGameCarousel() {
     const { data: company } = useGetMyCompany();
     return (
         <Carousel opts={{ loop: false, startIndex: 0 }} className="w-full">
-            <div className="space-y-4">
+            <div className="space-y-2 md:space-y-4">
                 <div className="flex items-center justify-between">
                     <h2 className="md:text-2xl text-base text-platform-text font-bold">{t("title")}</h2>
                     <div className="flex gap-2">
-                        <CarouselPrevious className="static translate-y-0 bg-background/20 hover:bg-background/40" />
-                        <CarouselNext className="static translate-y-0 bg-background/20 hover:bg-background/40" />
-                        <Link href="/game/platform/stock-games">
-                            <Button size="sm" variant="platform-primary" className="rounded-full">
+                        <CarouselPrevious className="static translate-y-0 bg-background/20 hover:bg-background/40 h-5 md:h-8" />
+                        <CarouselNext className="static translate-y-0 bg-background/20 hover:bg-background/40 h-5 md:h-8" />
+                        <Link href="/game/platform/stock-games" className="flex" >
+                            <Button size="sm" variant="platform-primary" className="rounded-full h-5 md:h-8">
                                 {t("view-all")}    
                             </Button>
                         </Link>

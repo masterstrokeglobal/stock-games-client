@@ -53,7 +53,7 @@ export default function GapGameCarousel({ title }: CategoryCarouselProps) {
                         </Link>
                     </div>
                 </div>
-                <CarouselContent className="py-4 overflow-visible">
+                <CarouselContent className="md:py-4 py-2 overflow-visible">
                     {data.games.map((game) => (
                         <CarouselItem key={game.id} className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                             <GameCard className="aspect-[5/3]" game={game} />

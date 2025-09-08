@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import Container from '@/components/common/container';
@@ -11,10 +11,13 @@ import WalletBalanceCard from '@/components/features/gamer/wallet/wallet-balance
 import { useTranslations } from 'next-intl';
 import { useGetMyCompany } from '@/react-query/company-queries';
 import { BitcoinIcon } from 'lucide-react';
+import WalletDialog from '@/components/features/platform/wallet-dialog';
 
 const WalletMenu = () => {
     const wallet = useWallet();
     const t = useTranslations('wallet');
+    const [showWalletDialog, setShowWalletDialog] = useState(false);
+    const [walletDialogTab, setWalletDialogTab] = useState<"balance" | "deposit" | "withdraw" | "paymentMethod">("balance");
 
     const { data: company } = useGetMyCompany();
     
@@ -41,12 +44,17 @@ const WalletMenu = () => {
                     </Button>
                 </Link>
 
-                <Link href="/game/wallet/menu/withdrawl-details" passHref>
-                    <Button variant="game-secondary" className="w-full gap-x-2 h-14">
-                        <CardIcons />
-                        {t('menu.paymentMethod')}
-                    </Button>
-                </Link>
+                <Button 
+                    variant="game-secondary" 
+                    className="w-full gap-x-2 h-14"
+                    onClick={() => {
+                        setWalletDialogTab("paymentMethod");
+                        setShowWalletDialog(true);
+                    }}
+                >
+                    <CardIcons />
+                    {t('menu.paymentMethod')}
+                </Button>
 
                 {company?.cryptoPayIn && (
                     <Link href="/game/wallet/deposit/crypto" passHref>
@@ -57,6 +65,13 @@ const WalletMenu = () => {
                     </Link>
                 )}
             </nav>
+
+            {/* Wallet Dialog */}
+            <WalletDialog 
+                open={showWalletDialog}
+                activeTab={walletDialogTab}
+                onClose={() => setShowWalletDialog(false)}
+            />
         </Container>
     );
 };
