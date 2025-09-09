@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import Image from "next/image";
-import useWindowSize from "@/hooks/use-window-size";
 
 interface Wheel {
   id: number;
@@ -42,7 +40,6 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
   const wheelContainerRef = useRef<HTMLDivElement>(null);
   const hasInitializedRef = useRef(false);
   const [glowSate, setGlowState] = useState<boolean[]>(defaultGlowState);
-  const { isMobile } = useWindowSize();
 
   // Regular: 3 sequences of 0-9 (indices 0-9, 10-19, 20-29) - target middle at 10-19
   const regularNumbers = [
@@ -77,7 +74,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
               gsap.set(wheelRef, { y: -numberHeight * 20 }); // Start from higher position
               gsap.to(wheelRef, {
                 y: numberHeight, // Move downward through cycles
-                duration: 1.5,
+                duration: 1.2,
                 ease: "none",
                 repeat: -1,
               });
