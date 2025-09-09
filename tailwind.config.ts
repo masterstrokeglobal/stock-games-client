@@ -36,6 +36,7 @@ const config: Config = {
 				
 				'quantico': ['var(--font-quantico)', 'sans-serif'],
 				'wendy-one': ['var(--font-wendy-one)', 'sans-serif'],
+				'blood-melt': ['"blood-melt"', 'sans-serif'],
 			},
 			animation: {
 				marquee: 'marquee 6s linear infinite',

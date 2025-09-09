@@ -1,13 +1,10 @@
 import React from "react";
 import GameDisplay from "./gameDisplay";
-import HowToPlay from "./dialogs/HowToPlay";
-import BettingHistory from "./dialogs/BettingHistory";
 import { StockListDesktop } from "./StocksList";
+import Image from "next/image";
+import { useGameState } from "@/hooks/use-current-game";
 import MenuDialog from "./dialogs/MenuDialog";
-import { useAudio } from "@/context/audio-context";
-import InfoDialog from "./dialogs/InfoDialog";
-import DemoVideo from "./dialogs/demo-video";
-// import { getCachedImage } from "@/hooks/image-preloader";
+import useWindowSize from "@/hooks/use-window-size";
 
 interface GameScreenProps {
   isGameActive: boolean;
@@ -32,132 +29,80 @@ const StockSlot: React.FC<GameScreenProps> = ({
   stockPrice,
   // getBackgroundStyle,
 }) => {
-  const { isMuted, toggleMute } = useAudio();
+  const { gameTimeLeft, placeTimeLeft } = useGameState(roundRecord);
+  const { isMobile } = useWindowSize();
+
+  // Calculate the display time and status
+  const displayTime = !isPlaceOver
+    ? placeTimeLeft.formatted
+    : gameTimeLeft.formatted;
+
+  const statusText = isPlaceOver ? "Betting Closed" : "Betting Open";
   return (
-    <div className="flex flex-col items-center justify-center h-full p-2 lg:p-5 pb-0 lg:pb-0 font-wendy-one text-white">
-      <div className="flex flex-col lg:grid lg:grid-cols-12 w-full max-w-2xl lg:max-w-none h-full">
-        {/* //? menu mobile  */}
-        <div className="lg:hidden flex justify-between relative h-fit flex-shrink-0">
-          <div className="flex flex-col justify-center items-center gap-2">
-            <MenuDialog>
-              <img
-                className="w-10 h-10 rounded-full"
-                // src={getCachedImage("/images/slot-machine/menu-btn.png")?.src}
-                src="/images/slot-machine/menu-btn.png"
-                alt=""
-              />
-            </MenuDialog>
-            <button
-              onClick={toggleMute}
-              className="w-10 h-10 relative flex justify-center items-center"
-            >
-              {isMuted && (
-                <div className="w-[1px] h-3/4 bg-black absolute rotate-45 z-20 "></div>
-              )}
-              <img
-                className="w-full h-full block z-10"
-                // src={getCachedImage("/images/slot-machine/btn-audio.png")?.src}
-                src="/images/slot-machine/btn-audio.png"
-                alt=""
-              />
-            </button>
-          </div>
-          <div
-            style={{
-              background:
-                "linear-gradient(to right, #995914, #CC9B1A, #995914)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              color: "transparent",
-              WebkitTextStroke: "1px #4A1900",
-            }}
-            className="text-4xl uppercase"
-          >
-            STOCKSLOT
-          </div>
-          <div className="flex flex-col justify-center items-center gap-2">
-            <InfoDialog>
-              <button className="w-10 h-10">
-                <img
-                  className="w-full h-full"
-                  // src={getCachedImage("/images/slot-machine/i-btn.png")?.src}
-                  src="/images/slot-machine/i-btn.png"
-                  alt=""
-                />
-              </button>
-            </InfoDialog>
-            <DemoVideo>
-              <button className="w-10 h-10">
-                <img
-                  className="w-full h-full"
-                  // src={getCachedImage("/images/slot-machine/btn-pause.png")?.src}
-                  src="/images/slot-machine/btn-pause.png"
-                  alt=""
-                />
-              </button>
-            </DemoVideo>
+    <div className="flex flex-col items-center justify-between h-full p-2 lg:p-5 pb-0 lg:pb-0 font-blood-melt text-white relative">
+      
+      <div className="flex justify-center items-center absolute top-2 right-2 lg:right-5 lg:top-5 z-30">
+        <MenuDialog>
+          <Image
+            className="w-10 h-10 rounded-full"
+            // src={getCachedImage("/images/slot-machine/menu-btn.png")?.src}
+            src="/images/slot-machine/menu-btn.png"
+            alt="menu"
+            width={isMobile ? 40 : 60}
+            height={isMobile ? 40 : 60}
+          />
+        </MenuDialog>
+      </div>
+
+      {/* //? title */}
+      <div className="flex justify-center items-center">
+        <Image
+          src="/images/slot-machine/heading.png"
+          alt="title"
+          width={isMobile ? 233 : 388}
+          height={isMobile ? 50 : 85}
+        />
+      </div>
+
+      {/* //? status text and timer */}
+      <div className=" w-full flex items-center justify-center lg:grid lg:grid-cols-12">
+        <div className=" lg:col-span-8 lg:col-start-2 flex items-center justify-center gap-2">
+          <Image
+            src="/images/slot-machine/clock.png"
+            alt="clock"
+            width={isMobile ? 40 : 60}
+            height={isMobile ? 60 : 90}
+          />
+          <div className="flex flex-col items-center justify-center lg:gap-2">
+            <div className={`text-base lg:text-3xl font-normal relative`}>
+              <p
+                style={{
+                  textShadow: "0 0 4px black",
+                }}
+                className="absolute top-0 left-0 z-10 text-white"
+              >
+                {statusText}
+              </p>
+              <p className="slot-gradient-shadow z-20 relative">{statusText}</p>
+            </div>
+            <div className="text-3xl lg:text-[40px] font-normal relative">
+              <p
+                style={{
+                  textShadow: "0 0 4px black",
+                }}
+                className="absolute top-0 left-0 z-10 text-white"
+              >
+                {displayTime}
+              </p>
+              <p className="slot-gradient-shadow z-20 relative">{displayTime}</p>
+            </div>
           </div>
         </div>
+      </div>
 
-        {/* //? menu desktop  */}
-        <div className="lg:col-span-2 lg:flex hidden flex-col justify-start items-start relative font-wendy-one text-xl">
-          <div
-            style={{
-              // ...getBackgroundStyle("/images/slot-machine/menu-bg.png"),
-              backgroundImage: "url('/images/slot-machine/menu-bg.png')",
-              backgroundSize: "100% 100%",
-              backgroundPosition: "center center",
-              backgroundRepeat: "no-repeat",
-            }}
-            className="flex flex-col gap-2 w-full justify-center items-center px-5 py-3"
-          >
-            <BettingHistory>
-              <div
-                style={{
-                  // ...getBackgroundStyle("/images/slot-machine/menu-item-bg-1.png"),
-                  backgroundImage: "url('/images/slot-machine/menu-item-bg-1.png')",
-                  backgroundSize: "100% 100%",
-                  backgroundPosition: "center center",
-                  backgroundRepeat: "no-repeat",
-                }}
-                className="text-center w-full px-3 py-2"
-              >
-                Betting History
-              </div>
-            </BettingHistory>
-            <HowToPlay>
-              <div
-                style={{
-                  // ...getBackgroundStyle("/images/slot-machine/menu-item-bg-2.png"),
-                  backgroundImage: "url('/images/slot-machine/menu-item-bg-2.png')",
-                  backgroundSize: "100% 100%",
-                  backgroundPosition: "center center",
-                  backgroundRepeat: "no-repeat",
-                }}
-                className="text-center px-3 py-2"
-              >
-                How to play
-              </div>
-            </HowToPlay>
-            <DemoVideo>
-              <div
-                style={{
-                  // ...getBackgroundStyle("/images/slot-machine/menu-item-bg-2.png"),
-                  backgroundImage: "url('/images/slot-machine/menu-item-bg-2.png')",
-                  backgroundSize: "100% 100%",
-                  backgroundPosition: "center center",
-                  backgroundRepeat: "no-repeat",
-                }}
-                className="text-center px-3 py-2"
-              >
-                Demo Video
-              </div>
-            </DemoVideo>
-          </div>
-        </div>
-
+      <div className="flex flex-col lg:grid lg:grid-cols-12 w-full max-w-2xl lg:max-w-none h-full relative">
         {/* //? game board and betting panel  */}
-        <div className="lg:col-span-8 flex flex-col items-center justify-end lg:p-5 h-full relative z-20 flex-1">
+        <div className="col-span-8 col-start-2 flex flex-col items-center justify-around h-full relative z-20 flex-1">
           <GameDisplay
             isGameActive={isGameActive}
             winningIdRoundRecord={winningIdRoundRecord}

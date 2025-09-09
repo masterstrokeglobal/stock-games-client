@@ -9,8 +9,8 @@ import {
 import { RoundRecordGameType } from "@/models/round-record";
 import { useGetUserGameHistory } from "@/react-query/game-user-queries";
 import dayjs from "dayjs";
-import { ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
+import Image from "next/image";
 
 // Pagination component
 const Pagination = ({
@@ -23,23 +23,26 @@ const Pagination = ({
   onPageChange: (page: number) => void;
 }) => {
   return (
-    <div className="flex items-center justify-center gap-2 mt-4">
+    <div className="flex items-center justify-center">
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
-        className="p-2 rounded-lg bg-orange-500 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-orange-600 transition-colors font-wendy-one"
+        className="disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <ChevronLeft size={16} />
+        <Image src="/images/slot-machine/prev-btn.png" width={70} height={70} alt="prev" />
       </button>
-      <span className="text-[#FFFFFFB2] px-4 py-2 font-wendy-one text-xs lg:text-base">
-        {currentPage} of {totalPages}
+      <span
+        style={{ textShadow: "0 0 7px #028DFF" }}
+        className="text-[#00224E] px-4 py-2 font-wendy-one text-xs lg:text-base"
+      >
+        {currentPage}
       </span>
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= totalPages}
-        className="p-2 rounded-lg bg-orange-500 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-orange-600 transition-colors font-wendy-one"
+        className="disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <ChevronRight size={16} />
+        <Image src="/images/slot-machine/next-btn.png" width={70} height={70} alt="next" />
       </button>
     </div>
   );
@@ -57,7 +60,7 @@ type History = {
 const BettingHistory = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [page, setPage] = useState(1);
-  const { data: userGameHistory, refetch } = useGetUserGameHistory({
+  const { data: userGameHistory} = useGetUserGameHistory({
     page,
     roundRecordGameType: RoundRecordGameType.STOCK_SLOTS,
   });
@@ -68,22 +71,18 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
     return { history, totalPages };
   }, [userGameHistory]);
 
-  useEffect(() => {
-    console.log("loki history", history);
-  }, [history]);
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
   };
 
-  const handleRefresh = () => {
-    refetch();
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger className="w-full">{children}</DialogTrigger>
-      <DialogContent className="[&>button]:text-white [&>button]:focus:ring-0 bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl ">
+      <DialogContent
+        showButton={false}
+        className="[&>button]:text-white [&>button]:focus:ring-0 bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl "
+      >
         <div
           style={{
             backgroundImage: "url('/images/slot-machine/dialog-bg.png')",
@@ -91,45 +90,47 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
           }}
-          className="w-full h-full md:max-h-[70vh] relative flex flex-col items-center justify-center p-[10%] pt-[15%] font-wendy-one text-[#FFFFFFB2]"
+          className="w-full h-full min-h-[400px] md:min-h-[500px] max-h-[60vh] relative flex flex-col px-[10%] py-8 font-wendy-one text-[#FFFFFFB2]"
         >
-          <img
-            src="/images/slot-machine/happy-bull.png"
-            alt=""
-            className="absolute w-[100px] lg:w-[150px] top-0 translate-y-[-50%]"
-          />
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute -top-3 right-0"
+          >
+            <Image
+              src="/images/slot-machine/cancel-btn.png"
+              alt="cancel"
+              width={40}
+              height={40}
+            />
+          </button>
           <DialogHeader className="p-1 relative w-full flex justify-center items-center">
-            <DialogTitle className="text-[15px] lg:text-[30px] xl:text-[40px]">
-              Betting History
+            <DialogTitle className="text-xl xl:text-3xl text-center uppercase slot-gradient-text font-blood-melt">
+              Game History
             </DialogTitle>
-            <button
-              onClick={handleRefresh}
-              className="absolute right-0 p-2 text-white transition-colors font-wendy-one"
-              title="Refresh History"
-            >
-              <RefreshCw size={16} className="lg:w-5 lg:h-5" />
-            </button>
           </DialogHeader>
-          <DialogDescription className="text-center flex flex-col gap-1 p-5 pt-0 overflow-y-auto max-h-[40vh] min-h-[200px] text-xs lg:text-2xl w-full">
+          <DialogDescription className="text-center flex flex-col gap-1 px-5 overflow-y-auto text-xs lg:text-2xl w-full font-blood-melt">
             <div className="grid md:grid-cols-5 grid-cols-3 gap-1 py-2">
-              <p className="hidden md:block">Round</p>
-              <p>Amount</p>
-              <p>Date</p>
-              <p className="hidden md:block">Status</p>
-              <p>P&L</p>
+              <p className="hidden md:block slot-gradient-text">Round</p>
+              <p className="slot-gradient-text">Amount</p>
+              <p className="slot-gradient-text">Date</p>
+              <p className="hidden md:block slot-gradient-text">Status</p>
+              <p className="slot-gradient-text">P&L</p>
             </div>
             <div className="flex flex-col gap-1">
               {history.length === 0 ? (
                 <div className="py-4 text-center">No betting history found</div>
               ) : (
                 history.map((row, idx) => (
-                  <div key={idx} className="grid md:grid-cols-5 grid-cols-3 gap-1 py-2">
-                    <p className="hidden md:block">#{row.roundId}</p>
-                    <p>₹{row.amount}</p>
-                    <p>{dayjs(row.createdAt).format("DD/MM")}</p>
+                  <div
+                    key={idx}
+                    className="grid md:grid-cols-5 grid-cols-3 gap-1 py-2"
+                  >
+                    <p className="hidden md:block slot-gradient-text">#{row.roundId}</p>
+                    <p className="slot-gradient-text">₹{row.amount}</p>
+                    <p className="slot-gradient-text">{dayjs(row.createdAt).format("DD/MM")}</p>
                     <p
                       className={`${
-                        row.isWinner ? "text-green-400" : "text-red-400"
+                        row.isWinner ? "slot-gradient-text" : "text-red-400"
                       } hidden md:block`}
                     >
                       {row.isWinner ? "Win" : "Loss"}

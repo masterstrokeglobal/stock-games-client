@@ -127,7 +127,7 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         }
 
         if(roundRecord.roundRecordGameType === RoundRecordGameType.STOCK_JACKPOT){
-            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 8000;
+            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 5000;
         }
 
         const gameEnd = setTimeout(() => {

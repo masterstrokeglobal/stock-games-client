@@ -7,6 +7,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import React, { useMemo, useState } from "react";
+import Image from "next/image";
 
 const DemoVideo = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,6 +27,7 @@ const DemoVideo = ({ children }: { children: React.ReactNode }) => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger className="w-full">{children}</DialogTrigger>
       <DialogContent
+        showButton={false}
         className="[&>button]:text-white [&>button]:focus:ring-0 bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl"
       >
         <div
@@ -35,26 +37,31 @@ const DemoVideo = ({ children }: { children: React.ReactNode }) => {
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
           }}
-          className="md:max-h-[70vh] w-full h-full relative flex flex-col items-center justify-center p-[10%] pt-[15%] font-wendy-one text-[#FFFFFFB2]"
+          className="max-h-[60vh] min-h-[400px] md:min-h-[500px] w-full h-full relative flex flex-col px-[10%] py-8 font-blood-melt text-[#FFFFFFB2]"
         >
-          <img
-            src="/images/slot-machine/happy-bull.png"
-            alt=""
-            className="absolute w-[100px] md:w-[120px] lg:w-[160px] top-0 translate-y-[-50%]"
-          />
-          <DialogHeader className="p-1">
-            <DialogTitle className="text-[15px] lg:text-[30px] xl:text-[40px]">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute -top-3 right-0"
+          >
+            <Image
+              src="/images/slot-machine/cancel-btn.png"
+              alt="cancel"
+              width={40}
+              height={40}
+            />
+          </button>
+          <DialogHeader className="p-1 relative w-full flex justify-center items-center">
+            <DialogTitle className="text-[15px] lg:text-[30px] xl:text-[40px] text-center uppercase">
               Demo Video
             </DialogTitle>
           </DialogHeader>
           <DialogDescription className="text-center items-center text-white mb-5 p-2 flex flex-col gap-2 w-full overflow-y-auto text-xs lg:text-base xl:text-2xl">
-            
-              <video
-                src={videoUrl}
-                controls
-                className="h-full w-fit rounded-xl"
-              />
-            
+            <video
+              src={videoUrl}
+              controls
+              className="h-full w-fit rounded-xl"
+            />
+
             <div className="flex justify-center w-full py-4 flex-shrink-0">
               <button
                 className={`px-4 py-1 rounded-l-lg text-sm  flex-1 transition-colors ${

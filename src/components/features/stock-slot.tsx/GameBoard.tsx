@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import Image from "next/image";
+import useWindowSize from "@/hooks/use-window-size";
 
 interface Wheel {
   id: number;
@@ -40,6 +42,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
   const wheelContainerRef = useRef<HTMLDivElement>(null);
   const hasInitializedRef = useRef(false);
   const [glowSate, setGlowState] = useState<boolean[]>(defaultGlowState);
+  const { isMobile } = useWindowSize();
 
   // Regular: 3 sequences of 0-9 (indices 0-9, 10-19, 20-29) - target middle at 10-19
   const regularNumbers = [
@@ -139,19 +142,26 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
         // Step 1: Count occurrences of each number (excluding some numbers)
         const countMap = new Map<number, number>();
         wheelValues.forEach((num) => {
-          if (typeof num === 'number' && !isNaN(num) && !EXCLUDED_NUMBERS.includes(num)) {
+          if (
+            typeof num === "number" &&
+            !isNaN(num) &&
+            !EXCLUDED_NUMBERS.includes(num)
+          ) {
             countMap.set(num, (countMap.get(num) || 0) + 1);
           }
         });
 
         // Step 2: Find numbers that appear 2 or more times
-        const repeatedNumbers = Array.from(countMap.entries())
-          .filter(([, count]) => count >= 2);
+        const repeatedNumbers = Array.from(countMap.entries()).filter(
+          ([, count]) => count >= 2
+        );
 
         if (repeatedNumbers.length > 0) {
           // Step 3: Find the highest count among repeated numbers
-          const maxCount = Math.max(...repeatedNumbers.map(([, count]) => count));
-          
+          const maxCount = Math.max(
+            ...repeatedNumbers.map(([, count]) => count)
+          );
+
           // Step 4: Get all numbers with the highest count
           const mostRepeatedNumbers = repeatedNumbers
             .filter(([, count]) => count === maxCount)
@@ -310,9 +320,9 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
     >
       <div
         ref={wheelContainerRef}
-        className="w-[60%] max-w-4xl mx-auto h-[50%] relative"
+        className="w-[87%] max-w-4xl mx-auto h-2/3 relative "
       >
-        <div className="grid grid-cols-5 px-4 h-full relative justify-center items-center">
+        <div className="grid grid-cols-5 h-full relative justify-center items-center ">
           {wheels.map((wheel, wheelIndex) => (
             <div
               key={wheel.id}
@@ -333,7 +343,11 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
                   >
                     <img
                       style={{ height: numberHeight }}
-                      src={EXCLUDED_NUMBERS.includes(number) ? `/images/slot-machine/loss.png` : `/images/slot-machine/${"number"}-${number}.png`}
+                      src={
+                        EXCLUDED_NUMBERS.includes(number)
+                          ? `/images/slot-machine/loss.png`
+                          : `/images/slot-machine/${"number"}-${number}.png`
+                      }
                       alt={`${number}`}
                       className="w-auto object-contain"
                       draggable={false}
@@ -343,40 +357,21 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
               </div>
             </div>
           ))}
-          {/* //? border for center lane */}
-          <div
-            style={{
-              height: isGameOver ? numberHeight : 0,
-              // ...getBackgroundStyle("/images/slot-machine/menu-bg.png"),
-              backgroundImage: "url('/images/slot-machine/menu-bg.png')",
-              backgroundSize: "100% 100%",
-              backgroundPosition: "center center",
-              backgroundRepeat: "no-repeat",
-            }}
-            className={`absolute ${
-              isGameOver ? "opacity-1" : "opacity-0"
-            } z-10 pointer-events-none w-full rounded-lg transition-all duration-300`}
-          ></div>
           {/* //? glow effect for winning numbers */}
           <div
             style={{ height: numberHeight }}
-            className="grid grid-cols-5 justify-center items-center w-full z-20 absolute px-4"
+            className="grid grid-cols-5 justify-center items-center w-full z-20 absolute"
           >
             {glowSate.slice(0, 5).map((glow, i) => (
               <div
                 key={i}
-                style={{ height: numberHeight }}
+                style={{
+                  height: numberHeight,
+                  opacity: glow ? 1 : 0,
+                  animation: "slotWinPulse 0.8s ease-in-out infinite",
+                }}
                 className="w-full flex justify-center items-center"
-              >
-                <div
-                  key={i}
-                  style={{
-                    animation: "slotWinPulse 0.8s ease-in-out infinite",
-                    opacity: glow ? 1 : 0,
-                  }}
-                  className="pointer-events-none w-[1px] h-[1px] rounded-full z-10 transition-all duration-300"
-                ></div>
-              </div>
+              ></div>
             ))}
           </div>
         </div>
