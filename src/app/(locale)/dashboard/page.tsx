@@ -3,6 +3,7 @@
 import LoadingScreen from "@/components/common/loading-screen";
 import { useAuthStore } from "@/context/auth-context";
 import { AdminRole } from "@/models/admin";
+import { isOperatorRole } from "@/models/operator";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -10,6 +11,7 @@ import { useEffect } from "react";
 function HomePage() {
     const { userDetails, loading } = useAuthStore();
     const router = useRouter();
+    console.log(userDetails);
 
     useEffect(() => {
 
@@ -33,6 +35,9 @@ function HomePage() {
 
             if (currentUser.role === AdminRole.SUB_AFFILIATE) {
                 router.push('/dashboard/affiliate/profile');
+            }
+            if (isOperatorRole(currentUser.role)) {
+                router.push('/operator-dashboard');
             }
         }
     }, [userDetails, router,loading]);
