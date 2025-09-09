@@ -77,7 +77,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
               gsap.set(wheelRef, { y: -numberHeight * 20 }); // Start from higher position
               gsap.to(wheelRef, {
                 y: numberHeight, // Move downward through cycles
-                duration: 1.5,
+                duration: 1.2,
                 ease: "none",
                 repeat: -1,
               });
