@@ -21,15 +21,15 @@ const StockSlotLoading = ({
       >
         <div className="flex flex-col items-center justify-center w-full">
           <Image
-            src="/images/slot-machine/loading-screen.png"
+            src="/images/slot-machine/heading.png"
             alt="stock-slot-bg"
-            width={ isMobile ? 100 : 150}
-            height={ isMobile ? 100 : 150}
+            width={ isMobile ? 233 : 388}
+            height={ isMobile ? 50 : 85}
           />
-          <div className="md:w-1/2 max-w-sm">
-            <div className="w-full h-3 bg-[#934B0180] rounded-full overflow-hidden border border-[#592800]">
+          <div className="md:w-1/2 max-w-sm mt-4">
+            <div className="w-full h-3 bg-transparent rounded-full overflow-hidden border-2 border-blue-400">
               <div
-                className="h-full bg-gradient-to-r from-[#883C06] rounded-full to-[#381904] transition-all duration-300"
+                className="h-full bg-gradient-to-r from-white rounded-full to-blue-300 transition-all duration-300"
                 style={{ width: `${percentageLoaded}%` }}
               ></div>
             </div>
