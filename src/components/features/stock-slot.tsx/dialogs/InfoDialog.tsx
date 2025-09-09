@@ -7,6 +7,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import React, { useState } from "react";
+import Image from "next/image";
 
 const InfoDialog = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,6 +15,7 @@ const InfoDialog = ({ children }: { children: React.ReactNode }) => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger className="w-full">{children}</DialogTrigger>
       <DialogContent
+        showButton={false}
         className="[&>button]:text-white [&>button]:focus:ring-0 bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl"
       >
         <div
@@ -23,14 +25,12 @@ const InfoDialog = ({ children }: { children: React.ReactNode }) => {
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
           }}
-          className="md:max-h-[70vh] w-full h-full relative flex flex-col items-center justify-center md:justify-between p-[10%] pt-[15%] font-wendy-one text-[#FFFFFFB2]"
+          className="md:max-h-[70vh] min-h-[400px] md:min-h-[500px] w-full h-full relative flex flex-col items-center justify-center md:justify-between p-[10%] pt-[15%] font-wendy-one text-[#FFFFFFB2]"
         >
-          <img
-            src="/images/slot-machine/happy-bull.png"
-            alt=""
-            className="absolute w-[100px] lg:w-[160px] top-0 translate-y-[-50%]"
-          />
-          <DialogHeader className="p-1">
+          <button onClick={() => setIsOpen(false)} className="absolute -top-3 right-0">
+            <Image src="/images/slot-machine/cancel-btn.png" alt="cancel" width={40} height={40} />
+          </button>
+          <DialogHeader className="p-1 relative w-full flex justify-center items-center">
             <DialogTitle className="text-lg lg:text-2xl xl:text-4xl font-semibold">
               Multipliers
             </DialogTitle>

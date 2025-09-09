@@ -13,6 +13,7 @@ import { useState, useEffect, useMemo } from "react";
 import StockSlot from "@/components/features/stock-slot.tsx/slot";
 // import { stockSlotImages } from "@/lib/gameImages";
 // import { useImagePreloader } from "@/hooks/image-preloader";
+import useWindowSize from "@/hooks/use-window-size";
 
 
 const Page = () => {
@@ -20,6 +21,7 @@ const Page = () => {
   const { roundRecord, isLoading } = useCurrentGame(
     RoundRecordGameType.STOCK_JACKPOT
   );
+  const {isMobile} = useWindowSize();
 
   const [betAmount, setBetAmount] = useState<number>(100);
   // const { state: { isLoading: isImageLoading, percentageLoaded: imagePercentageLoaded }, getBackgroundStyle } = useImagePreloader(stockSlotImages);
@@ -96,7 +98,7 @@ const Page = () => {
     <section
       style={{
         // ...getBackgroundStyle("/images/slot-machine/stock-slot-bg.png"),
-        backgroundImage: "url('/images/slot-machine/stock-slot-bg.png')",
+        backgroundImage: isMobile ? "url('/images/slot-machine/slot-bg-mb.png')" : "url('/images/slot-machine/stock-slot-bg.png')",
         backgroundSize: "100% 100%",
         backgroundPosition: "center center",
         backgroundRepeat: "no-repeat",
