@@ -15,9 +15,7 @@ export const companyQrSchema = z
     qr: z.string().optional().refine((val) => !val || val === '' || z.string().url().safeParse(val).success, {
       message: 'Please provide a valid URL or leave empty',
     }),
-    upiId: z.string().optional().refine((val) => !val || val === '' || z.string().safeParse(val).success, {
-      message: 'Please provide a valid UPI ID or leave empty',
-    }),
+    upiId: z.string().optional().nullable(),
     
     maxLimit: z.coerce
       .number({
@@ -65,6 +63,15 @@ export const companyQrSchema = z
           path: ['qr'],
         });
       }
+      
+      // For UPI, validate upiId is required and valid
+      if (!data.upiId || data.upiId.trim() === '') {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'UPI ID is required for UPI type',
+          path: ['upiId'],
+        });
+      }
     }
     
     if (data.type === CompanyQRType.BANK) {
@@ -110,6 +117,10 @@ export const CompanyQRForm = ({
   });
 
   const type = form.watch("type");
+
+  console.log(form.formState.errors);
+  console.log(form.formState.isValid);
+  console.log(form.getValues());
 
 
   return (
