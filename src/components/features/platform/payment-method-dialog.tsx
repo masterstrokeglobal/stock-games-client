@@ -9,7 +9,11 @@ import { Plus, ArrowLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React, { useMemo, useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import FormProvider from '@/components/ui/form/form-provider';
+import FormInput from '@/components/ui/form/form-input';
 
 interface PaymentMethodDialogProps {
     onBack?: () => void;
@@ -127,57 +131,84 @@ interface AddPaymentMethodFormProps {
     onBack: () => void;
 }
 
+// Bank account form validation schema
+const createBankAccountSchema = () => z.object({
+    accountName: z.string()
+        .min(3, 'Account name must be at least 3 characters')
+        .max(100, 'Account name must be less than 100 characters'),
+    accountNumber: z.string()
+        .min(9, 'Account number must be at least 9 digits')
+        .max(18, 'Account number must be at most 18 digits')
+        .regex(/^\d+$/, 'Account number must contain only digits'),
+    ifscCode: z.string()
+        .min(11, 'IFSC code must be 11 characters')
+        .max(11, 'IFSC code must be 11 characters')
+        .regex(/^[A-Z0-9]+$/, 'IFSC code must contain only letters and numbers'),
+    bankName: z.string()
+        .min(3, 'Bank name must be at least 3 characters')
+        .max(100, 'Bank name must be less than 100 characters'),
+});
+
+// UPI form validation schema
+const createUpiSchema = () => z.object({
+    upiId: z.string()
+        .min(5, 'UPI ID must be at least 5 characters')
+        .max(50, 'UPI ID must be less than 50 characters')
+        .regex(/^[\w\.\-]+@[\w\-]+$/, 'Invalid UPI ID format (e.g. username@bank)'),
+});
+
+// Define types for the form values
+type BankAccountFormValues = z.infer<ReturnType<typeof createBankAccountSchema>>;
+type UpiFormValues = z.infer<ReturnType<typeof createUpiSchema>>;
+
 const AddPaymentMethodForm = ({ onBack }: AddPaymentMethodFormProps) => {
     const t = useTranslations('payment-methods');
     const [activeTab, setActiveTab] = useState<"bank" | "upi">("bank");
     const { mutate: createWithdrawDetail, isPending } = useCreateWithdrawDetail();
 
-    // Bank form state
-    const [bankForm, setBankForm] = useState({
-        accountName: '',
-        accountNumber: '',
-        ifscCode: '',
-        bankName: ''
+    // Bank form with React Hook Form
+    const bankForm = useForm<BankAccountFormValues>({
+        resolver: zodResolver(createBankAccountSchema()),
+        defaultValues: {
+            accountName: '',
+            accountNumber: '',
+            ifscCode: '',
+            bankName: ''
+        }
     });
 
-    // UPI form state  
-    const [upiForm, setUpiForm] = useState({
-        upiId: ''
+    // UPI form with React Hook Form
+    const upiForm = useForm<UpiFormValues>({
+        resolver: zodResolver(createUpiSchema()),
+        defaultValues: {
+            upiId: ''
+        }
     });
 
-    const handleBankSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
+    const handleBankSubmit = (data: BankAccountFormValues) => {
         createWithdrawDetail({
-            accountName: bankForm.accountName,
-            accountNumber: bankForm.accountNumber,
-            ifscCode: bankForm.ifscCode,
-            bankName: bankForm.bankName,
+            accountName: data.accountName,
+            accountNumber: data.accountNumber,
+            ifscCode: data.ifscCode,
+            bankName: data.bankName,
             isUpi: false
         }, {
             onSuccess: () => {
                 // Reset form
-                setBankForm({
-                    accountName: '',
-                    accountNumber: '',
-                    ifscCode: '',
-                    bankName: ''
-                });
+                bankForm.reset();
                 onBack();
             }
         });
     };
 
-    const handleUpiSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
+    const handleUpiSubmit = (data: UpiFormValues) => {
         createWithdrawDetail({
-            upiId: upiForm.upiId,
+            upiId: data.upiId,
             isUpi: true
         }, {
             onSuccess: () => {
                 // Reset form
-                setUpiForm({ upiId: '' });
+                upiForm.reset();
                 onBack();
             }
         });
@@ -212,89 +243,87 @@ const AddPaymentMethodForm = ({ onBack }: AddPaymentMethodFormProps) => {
 
                 <div className="mt-6">
                     <TabsContent value="bank" className="mt-0">
-                        <form onSubmit={handleBankSubmit} className="space-y-4">
-                            <fieldset className="relative border-2 dark:border-platform-border border-primary-game rounded-sm px-4 py-1.5">
-                                <legend className="px-2 text-platform-text md:text-sm text-xs font-medium">Account Holder Name</legend>
-                                <Input
-                                    type="text"
-                                    className="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
-                                    placeholder="Enter account holder name"
-                                    value={bankForm.accountName}
-                                    onChange={(e) => setBankForm(prev => ({ ...prev, accountName: e.target.value }))}
-                                    required
-                                />
-                            </fieldset>
+                        <FormProvider 
+                            methods={bankForm} 
+                            className="space-y-4" 
+                            onSubmit={bankForm.handleSubmit(handleBankSubmit)}
+                        >
+                            <FormInput
+                                control={bankForm.control}
+                                name="accountName"
+                                label="Account Holder Name"
+                                placeholder="Enter account holder name"
+                                game
+                                className="relative"
+                                inputClassName="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
+                            />
 
-                            <fieldset className="relative border-2 dark:border-platform-border border-primary-game rounded-sm px-4 py-1.5">
-                                <legend className="px-2 text-platform-text md:text-sm text-xs font-medium">Account Number</legend>
-                                <Input
-                                    type="text"
-                                    className="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
-                                    placeholder="Enter account number"
-                                    value={bankForm.accountNumber}
-                                    onChange={(e) => setBankForm(prev => ({ ...prev, accountNumber: e.target.value }))}
-                                    required
-                                />
-                            </fieldset>
+                            <FormInput
+                                control={bankForm.control}
+                                name="accountNumber"
+                                label="Account Number"
+                                placeholder="Enter account number (9-18 digits)"
+                                game
+                                className="relative"
+                                inputClassName="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
+                            />
 
-                            <fieldset className="relative border-2 dark:border-platform-border border-primary-game rounded-sm px-4 py-1.5">
-                                <legend className="px-2 text-platform-text md:text-sm text-xs font-medium">IFSC Code</legend>
-                                <Input
-                                    type="text"
-                                    className="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
-                                    placeholder="Enter IFSC code"
-                                    value={bankForm.ifscCode}
-                                    onChange={(e) => setBankForm(prev => ({ ...prev, ifscCode: e.target.value }))}
-                                    required
-                                />
-                            </fieldset>
+                            <FormInput
+                                control={bankForm.control}
+                                name="ifscCode"
+                                label="IFSC Code"
+                                placeholder="Enter IFSC code (11 characters)"
+                                game
+                                className="relative"
+                                inputClassName="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
+                            />
 
-                            <fieldset className="relative border-2 dark:border-platform-border border-primary-game rounded-sm px-4 py-1.5">
-                                <legend className="px-2 text-platform-text md:text-sm text-xs font-medium">Bank Name</legend>
-                                <Input
-                                    type="text"
-                                    className="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
-                                    placeholder="Enter bank name"
-                                    value={bankForm.bankName}
-                                    onChange={(e) => setBankForm(prev => ({ ...prev, bankName: e.target.value }))}
-                                    required
-                                />
-                            </fieldset>
+                            <FormInput
+                                control={bankForm.control}
+                                name="bankName"
+                                label="Bank Name"
+                                placeholder="Enter bank name"
+                                game
+                                className="relative"
+                                inputClassName="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
+                            />
 
                             <Button
                                 type="submit"
                                 variant="game"
                                 className="w-full mt-6 h-12 rounded-none"
-                                disabled={isPending}
+                                disabled={isPending || bankForm.formState.isSubmitting}
                             >
                                 {isPending ? "Adding..." : "Add Bank Account"}
                             </Button>
-                        </form>
+                        </FormProvider>
                     </TabsContent>
 
                     <TabsContent value="upi" className="mt-0">
-                        <form onSubmit={handleUpiSubmit} className="space-y-4">
-                            <fieldset className="relative border-2 dark:border-platform-border border-primary-game rounded-sm px-4 py-1.5">
-                                <legend className="px-2 text-platform-text md:text-sm text-xs font-medium">UPI ID</legend>
-                                <Input
-                                    type="text"
-                                    className="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
-                                    placeholder="Enter UPI ID (e.g., user@paytm)"
-                                    value={upiForm.upiId}
-                                    onChange={(e) => setUpiForm(prev => ({ ...prev, upiId: e.target.value }))}
-                                    required
-                                />
-                            </fieldset>
+                        <FormProvider 
+                            methods={upiForm} 
+                            className="space-y-4" 
+                            onSubmit={upiForm.handleSubmit(handleUpiSubmit)}
+                        >
+                            <FormInput
+                                control={upiForm.control}
+                                name="upiId"
+                                label="UPI ID"
+                                placeholder="Enter UPI ID (e.g., user@paytm)"
+                                game
+                                className="relative"
+                                inputClassName="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
+                            />
 
                             <Button
                                 type="submit"
                                 variant="game"
                                 className="w-full mt-6 h-12 rounded-none"
-                                disabled={isPending}
+                                disabled={isPending || upiForm.formState.isSubmitting}
                             >
                                 {isPending ? "Adding..." : "Add UPI ID"}
                             </Button>
-                        </form>
+                        </FormProvider>
                     </TabsContent>
                 </div>
             </Tabs>

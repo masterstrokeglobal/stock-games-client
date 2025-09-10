@@ -48,7 +48,6 @@ const DepositMethods = ({ selectedMethod, onMethodChange }: DepositMethodsProps)
         methods.push({ id: PaymentMethod.CRYPTO, label: 'Crypto', icon: <img src="/images/platform/wallet/crypto.png" className="w-auto h-10" alt="crypto" />, img:'/images/payment-methods/crypto.png' });
     }
 
-    
     return (
         <div className="space-y-4">
             <div>
@@ -151,7 +150,7 @@ const WithdrawMethodOption: React.FC<WithdrawMethodOptionProps> = ({
 };
 
 // Form Schema
-const depositSchema = (t: any, askWithdrawlOption?: boolean) => z.object({
+const depositSchema = (t: any, askWithdrawlOption?: boolean, hasActiveWithdrawDetails?: boolean) => z.object({
     pgId: z
         .string()
         .optional(),
@@ -159,13 +158,14 @@ const depositSchema = (t: any, askWithdrawlOption?: boolean) => z.object({
         .string()
         .url(t('validation.confirmation-image-url-invalid'))
         .or(z.literal(""))
+        .or(z.null())
         .or(z.undefined()),
     amount: z
         .coerce.number({
             message: t('validation.amount-invalid')
         })
         .min(100, t('validation.amount-required-100')),
-    withdrawlDetailsId: askWithdrawlOption
+    withdrawlDetailsId: (askWithdrawlOption && !hasActiveWithdrawDetails)
         ? z.string().min(1, 'deposit method is required')
         : z.string().optional(),
 }).superRefine((data, ctx) => {
@@ -189,6 +189,8 @@ const UPIDepositForm = () => {
     const { data: withdrawDetailsData, isLoading: isLoadingWithdrawDetails, refetch: refetchWithdrawDetails } = useGetAllWithdrawDetails({});
     const { data: company } = useGetMyCompany();
     const [showPaymentMethodDialog, setShowPaymentMethodDialog] = useState(false);
+    // Store form values before opening payment method dialog
+    const [formValuesBeforeDialog, setFormValuesBeforeDialog] = useState<DepositFormValues | null>(null);
 
     const withdrawDetails = useMemo(() => {
         if (withdrawDetailsData?.data) {
@@ -207,11 +209,16 @@ const UPIDepositForm = () => {
             amount: data.amount,
             pgId: data.pgId,
             companyQrId: companyQR?.id,
-            confirmationImageUrl: data.confirmationImageUrl,
             paymentMethod: PaymentMethod.UPI,
-            withdrawlDetailsId: data.withdrawlDetailsId,
         }
-        if (company?.askWithdrawlOption && data.withdrawlDetailsId) {
+        
+        // Only include confirmationImageUrl if it exists and is not empty
+        if (data.confirmationImageUrl) {
+            payload.confirmationImageUrl = data.confirmationImageUrl;
+        }
+        
+        // Only include withdrawlDetailsId if it exists and is not empty
+        if (data.withdrawlDetailsId) {
             payload.withdrawlDetailsId = data.withdrawlDetailsId;
         }
         mutate(payload, {
@@ -229,7 +236,7 @@ const UPIDepositForm = () => {
     }
 
     const form = useForm<DepositFormValues>({
-        resolver: zodResolver(depositSchema(t, company?.askWithdrawlOption)),
+        resolver: zodResolver(depositSchema(t, company?.askWithdrawlOption, activeWithdrawDetails.length > 0)),
         defaultValues: { amount: 100, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" },
     });
 
@@ -328,7 +335,11 @@ const UPIDepositForm = () => {
                                                 size="lg"
                                                 className="w-full"
                                                 type="button"
-                                                onClick={() => setShowPaymentMethodDialog(true)}
+                                                onClick={() => {
+                                                    // Save current form values before opening dialog
+                                                    setFormValuesBeforeDialog(form.getValues());
+                                                    setShowPaymentMethodDialog(true);
+                                                }}
                                             >
                                                 Add New Method
                                             </Button>
@@ -399,6 +410,11 @@ const UPIDepositForm = () => {
                             onBack={() => {
                                 setShowPaymentMethodDialog(false);
                                 refetchWithdrawDetails();
+                                // Restore form values when returning from payment method dialog
+                                if (formValuesBeforeDialog) {
+                                    form.reset(formValuesBeforeDialog);
+                                    setFormValuesBeforeDialog(null);
+                                }
                             }} 
                         />
                     </div>
@@ -417,6 +433,8 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
     const { data: withdrawDetailsData, isLoading: isLoadingWithdrawDetails, refetch: refetchWithdrawDetails } = useGetAllWithdrawDetails({});
     const { data: company } = useGetMyCompany();
     const [showPaymentMethodDialog, setShowPaymentMethodDialog] = useState(false);
+    // Store form values before opening payment method dialog
+    const [formValuesBeforeDialog, setFormValuesBeforeDialog] = useState<DepositFormValues | null>(null);
 
     const withdrawDetails = useMemo(() => {
         if (withdrawDetailsData?.data) {
@@ -435,11 +453,16 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
             companyQrId: companyQR?.id,
             pgId: data.pgId,
             amount: data.amount ?? 0,
-            confirmationImageUrl: data.confirmationImageUrl,
-            withdrawlDetailsId: data.withdrawlDetailsId,
             paymentMethod,
         }
-        if (company?.askWithdrawlOption && data.withdrawlDetailsId) {
+        
+        // Only include confirmationImageUrl if it exists and is not empty
+        if (data.confirmationImageUrl) {
+            payload.confirmationImageUrl = data.confirmationImageUrl;
+        }
+        
+        // Only include withdrawlDetailsId if it exists and is not empty
+        if (data.withdrawlDetailsId) {
             payload.withdrawlDetailsId = data.withdrawlDetailsId;
         }
         mutate(payload, {
@@ -457,8 +480,8 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
     }
 
     const form = useForm<DepositFormValues>({
-        resolver: zodResolver(depositSchema(t, true)),
-        defaultValues: { amount: 100, pgId: "", withdrawlDetailsId: "" },
+        resolver: zodResolver(depositSchema(t, company?.askWithdrawlOption, activeWithdrawDetails.length > 0)),
+        defaultValues: { amount: 100, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" },
     });
 
     const copyToClipboard = async (text: string) => {
@@ -607,7 +630,11 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
                                             size="lg"
                                             className="w-full"
                                             type="button"
-                                            onClick={() => setShowPaymentMethodDialog(true)}
+                                            onClick={() => {
+                                                // Save current form values before opening dialog
+                                                setFormValuesBeforeDialog(form.getValues());
+                                                setShowPaymentMethodDialog(true);
+                                            }}
                                         >
                                             Add New Method
                                         </Button>
@@ -678,6 +705,11 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
                             onBack={() => {
                                 setShowPaymentMethodDialog(false);
                                 refetchWithdrawDetails();
+                                // Restore form values when returning from payment method dialog
+                                if (formValuesBeforeDialog) {
+                                    form.reset(formValuesBeforeDialog);
+                                    setFormValuesBeforeDialog(null);
+                                }
                             }} 
                         />
                     </div>
