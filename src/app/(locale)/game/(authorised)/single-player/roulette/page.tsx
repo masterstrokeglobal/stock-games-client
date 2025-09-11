@@ -7,7 +7,7 @@ import LeaderBoard from "@/components/features/game/leaderboard";
 import Navbar from "@/components/features/game/navbar";
 import RouletteGame from "@/components/features/game/roulette-game";
 import RouletteGameHeader from "@/components/features/game/roulette-game-header";
-import GameHeaderMobile from "@/components/features/game/roulette-mobile-header";
+// import GameHeaderMobile from "@/components/features/game/roulette-mobile-header";
 import HorseRace from "@/components/features/horse-animation/horse";
 import { useHorseRaceSound } from "@/context/audio-context";
 import {

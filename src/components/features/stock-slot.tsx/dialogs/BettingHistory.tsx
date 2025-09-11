@@ -11,6 +11,7 @@ import { useGetUserGameHistory } from "@/react-query/game-user-queries";
 import dayjs from "dayjs";
 import React, { useMemo, useState } from "react";
 import Image from "next/image";
+import useWindowSize from "@/hooks/use-window-size";
 
 // Pagination component
 const Pagination = ({
@@ -29,7 +30,12 @@ const Pagination = ({
         disabled={currentPage <= 1}
         className="disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <Image src="/images/slot-machine/prev-btn.png" width={70} height={70} alt="prev" />
+        <Image
+          src="/images/slot-machine/prev-btn.png"
+          width={70}
+          height={70}
+          alt="prev"
+        />
       </button>
       <span
         style={{ textShadow: "0 0 7px #028DFF" }}
@@ -42,7 +48,12 @@ const Pagination = ({
         disabled={currentPage >= totalPages}
         className="disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <Image src="/images/slot-machine/next-btn.png" width={70} height={70} alt="next" />
+        <Image
+          src="/images/slot-machine/next-btn.png"
+          width={70}
+          height={70}
+          alt="next"
+        />
       </button>
     </div>
   );
@@ -58,12 +69,13 @@ type History = {
 };
 
 const BettingHistory = ({ children }: { children: React.ReactNode }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [childDialogOpen, setChildDialogOpen] = useState(false);
   const [page, setPage] = useState(1);
-  const { data: userGameHistory} = useGetUserGameHistory({
+  const { data: userGameHistory } = useGetUserGameHistory({
     page,
     roundRecordGameType: RoundRecordGameType.STOCK_SLOTS,
   });
+  const { isMobile } = useWindowSize();
 
   const { history, totalPages } = useMemo(() => {
     const history: History[] = userGameHistory?.data || [];
@@ -71,30 +83,31 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
     return { history, totalPages };
   }, [userGameHistory]);
 
-
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={childDialogOpen} onOpenChange={setChildDialogOpen}>
       <DialogTrigger className="w-full">{children}</DialogTrigger>
       <DialogContent
         showButton={false}
-        className="[&>button]:text-white [&>button]:focus:ring-0 bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl "
+        className="bg-transparent border-none flex flex-col items-center justify-center"
       >
         <div
           style={{
-            backgroundImage: "url('/images/slot-machine/dialog-bg.png')",
+            backgroundImage: `url('/images/slot-machine/${
+              isMobile ? "dialog-mb.png" : "dialog-history.png"
+            }')`,
             backgroundSize: "100% 100%",
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
           }}
-          className="w-full h-full min-h-[400px] md:min-h-[500px] max-h-[60vh] relative flex flex-col px-[10%] py-8 font-wendy-one text-[#FFFFFFB2]"
+          className="z-20 relative flex flex-col px-[10%] py-10 sm:py-12 text-[#FFFFFFB2] h-[584px] w-[402px] lg:h-[623px] lg:w-[692px] slot-dialog"
         >
           <button
-            onClick={() => setIsOpen(false)}
-            className="absolute -top-3 right-0"
+            onClick={() => setChildDialogOpen(false)}
+            className="absolute -top-5 right-2"
           >
             <Image
               src="/images/slot-machine/cancel-btn.png"
@@ -125,9 +138,13 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
                     key={idx}
                     className="grid md:grid-cols-5 grid-cols-3 gap-1 py-2"
                   >
-                    <p className="hidden md:block slot-gradient-text">#{row.roundId}</p>
+                    <p className="hidden md:block slot-gradient-text">
+                      #{row.roundId}
+                    </p>
                     <p className="slot-gradient-text">₹{row.amount}</p>
-                    <p className="slot-gradient-text">{dayjs(row.createdAt).format("DD/MM")}</p>
+                    <p className="slot-gradient-text">
+                      {dayjs(row.createdAt).format("DD/MM")}
+                    </p>
                     <p
                       className={`${
                         row.isWinner ? "slot-gradient-text" : "text-red-400"

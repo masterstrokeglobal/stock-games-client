@@ -8,10 +8,12 @@ import {
 } from "@/components/ui/dialog";
 import React, { useMemo, useState } from "react";
 import Image from "next/image";
+import useWindowSize from "@/hooks/use-window-size";
 
 const DemoVideo = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [lang, setLang] = useState("en");
+  const {isMobile} = useWindowSize()
 
   const videoUrl = useMemo(() => {
     switch (lang) {
@@ -28,16 +30,16 @@ const DemoVideo = ({ children }: { children: React.ReactNode }) => {
       <DialogTrigger className="w-full">{children}</DialogTrigger>
       <DialogContent
         showButton={false}
-        className="[&>button]:text-white [&>button]:focus:ring-0 bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl"
+        className=" bg-transparent border-none flex flex-col items-center justify-center"
       >
         <div
           style={{
-            backgroundImage: "url('/images/slot-machine/dialog-bg.png')",
+            backgroundImage: isMobile ? "url('/images/slot-machine/dialog-mb.png')" : "url('/images/slot-machine/dialog-bg.png')",
             backgroundSize: "100% 100%",
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
           }}
-          className="max-h-[60vh] min-h-[400px] md:min-h-[500px] w-full h-full relative flex flex-col px-[10%] py-8 font-blood-melt text-[#FFFFFFB2]"
+          className="relative flex flex-col px-[10%] py-10 sm:py-12 font-blood-melt text-[#FFFFFFB2] h-[584px] w-[402px] lg:h-[623px] lg:w-[592px] slot-dialog"
         >
           <button
             onClick={() => setIsOpen(false)}
@@ -55,7 +57,7 @@ const DemoVideo = ({ children }: { children: React.ReactNode }) => {
               Demo Video
             </DialogTitle>
           </DialogHeader>
-          <DialogDescription className="text-center items-center text-white mb-5 p-2 flex flex-col gap-2 w-full overflow-y-auto text-xs lg:text-base xl:text-2xl">
+          <DialogDescription className="text-center items-center text-white mb-5 p-5 flex flex-col gap-2 w-full overflow-y-auto text-xs lg:text-base xl:text-2xl">
             <video
               src={videoUrl}
               controls

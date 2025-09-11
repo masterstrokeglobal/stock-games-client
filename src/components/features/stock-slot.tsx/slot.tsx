@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import GameDisplay from "./gameDisplay";
 import { StockListDesktop } from "./StocksList";
 import Image from "next/image";
@@ -31,6 +31,7 @@ const StockSlot: React.FC<GameScreenProps> = ({
 }) => {
   const { gameTimeLeft, placeTimeLeft } = useGameState(roundRecord);
   const { isMobile } = useWindowSize();
+  const imgRef = useRef<HTMLImageElement>(null);
 
   // Calculate the display time and status
   const displayTime = !isPlaceOver
@@ -38,13 +39,14 @@ const StockSlot: React.FC<GameScreenProps> = ({
     : gameTimeLeft.formatted;
 
   const statusText = isPlaceOver ? "Betting Closed" : "Betting Open";
+
   return (
-    <div className="flex flex-col items-center justify-between h-full p-2 lg:p-5 pb-0 lg:pb-0 font-blood-melt text-white relative">
-      
+    <div className="flex flex-col items-center justify-between h-screen p-2 lg:p-5 pb-0 lg:pb-0 font-blood-melt text-white relative">
+      {/* //? menu button */}
       <div className="flex justify-center items-center absolute top-2 right-2 lg:right-5 lg:top-5 z-30">
         <MenuDialog>
           <Image
-            className="w-10 h-10 rounded-full"
+            className="rounded-full"
             // src={getCachedImage("/images/slot-machine/menu-btn.png")?.src}
             src="/images/slot-machine/menu-btn.png"
             alt="menu"
@@ -54,73 +56,67 @@ const StockSlot: React.FC<GameScreenProps> = ({
         </MenuDialog>
       </div>
 
-      {/* //? title */}
-      <div className="flex justify-center items-center">
-        <Image
-          src="/images/slot-machine/heading.png"
-          alt="title"
-          width={isMobile ? 233 : 388}
-          height={isMobile ? 50 : 85}
-        />
-      </div>
-
-      {/* //? status text and timer */}
-      <div className=" w-full flex items-center justify-center lg:grid lg:grid-cols-12">
-        <div className=" lg:col-span-8 lg:col-start-2 flex items-center justify-center gap-2">
+      <div className="w-full h-full justify-center items-center flex flex-1 flex-col">
+        {/* //? title */}
+        <div className="flex justify-center items-center">
           <Image
-            src="/images/slot-machine/clock.png"
-            alt="clock"
-            width={isMobile ? 40 : 60}
-            height={isMobile ? 60 : 90}
+            src="/images/slot-machine/heading.png"
+            alt="title"
+            width={isMobile ? 233 : 388}
+            height={isMobile ? 50 : 85}
           />
-          <div className="flex flex-col items-center justify-center lg:gap-2">
-            <div className={`text-base lg:text-3xl font-normal relative`}>
-              <p
-                style={{
-                  textShadow: "0 0 4px black",
-                }}
-                className="absolute top-0 left-0 z-10 text-white"
-              >
-                {statusText}
-              </p>
-              <p className="slot-gradient-shadow z-20 relative">{statusText}</p>
-            </div>
-            <div className="text-3xl lg:text-[40px] font-normal relative">
-              <p
-                style={{
-                  textShadow: "0 0 4px black",
-                }}
-                className="absolute top-0 left-0 z-10 text-white"
-              >
-                {displayTime}
-              </p>
-              <p className="slot-gradient-shadow z-20 relative">{displayTime}</p>
-            </div>
-          </div>
         </div>
-      </div>
 
-      <div className="flex flex-col lg:grid lg:grid-cols-12 w-full max-w-2xl lg:max-w-none h-full relative">
-        {/* //? game board and betting panel  */}
-        <div className="col-span-8 col-start-2 flex flex-col items-center justify-around h-full relative z-20 flex-1">
-          <GameDisplay
-            isGameActive={isGameActive}
-            winningIdRoundRecord={winningIdRoundRecord}
-            isPlaceOver={isPlaceOver}
-            betAmount={betAmount}
-            setBetAmount={setBetAmount}
-            roundRecord={roundRecord}
+        <div className="w-full h-full justify-center items-center flex flex-1 gap-5">
+          <div className="justify-center items-center flex flex-col">
+            {/* //? status text and timer */}
+            <div className=" w-full flex items-center justify-center flex-shrink-0">
+              <div className="flex items-center justify-center gap-2">
+                <Image
+                  src="/images/slot-machine/clock.png"
+                  alt="clock"
+                  width={isMobile ? 40 : 60}
+                  height={isMobile ? 60 : 90}
+                />
+                <div className="flex flex-col items-center justify-center lg:gap-2">
+                  <p
+                    style={{ WebkitTextStroke: "1px #0285F5" }}
+                    className="text-white text-base lg:text-3xl"
+                  >
+                    {statusText}
+                  </p>
+
+                  <p
+                    style={{ WebkitTextStroke: "1px #0285F5" }}
+                    className=" z-20 relative text-base lg:text-3xl"
+                  >
+                    {displayTime}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* //? game board and betting panel  */}
+            <GameDisplay
+              isGameActive={isGameActive}
+              winningIdRoundRecord={winningIdRoundRecord}
+              isPlaceOver={isPlaceOver}
+              betAmount={betAmount}
+              setBetAmount={setBetAmount}
+              roundRecord={roundRecord}
+              currentStocks={currentStocks}
+              stockPrice={stockPrice}
+              imgRef={imgRef}
+              // getBackgroundStyle={getBackgroundStyle}
+            />
+          </div>
+
+          {/* //? stock list  */}
+          <StockListDesktop
             currentStocks={currentStocks}
             stockPrice={stockPrice}
-            // getBackgroundStyle={getBackgroundStyle}
           />
         </div>
-
-        {/* //? stock list  */}
-        <StockListDesktop
-          currentStocks={currentStocks}
-          stockPrice={stockPrice}
-        />
       </div>
     </div>
   );

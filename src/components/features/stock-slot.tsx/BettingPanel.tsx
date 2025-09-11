@@ -101,7 +101,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
 
   return (
     <>
-      <div className=" text-xs min-h-24 md:text-base h-[105px] lg:h-[145px] flex justify-center w-full flex-shrink-0 z-20 max-w-2xl">
+      <div className=" text-xs min-h-24 md:text-base flex justify-center w-full flex-shrink-0 z-20 max-w-xl">
         <div className="grid grid-cols-12 h-full w-full gap-1 sm:gap-2 lg:w-10/12">
           {/* //? bet amount  */}
           <div className="col-span-5 flex items-center justify-center h-full overflow-hidden relative">
@@ -253,7 +253,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
               }}
               className={`lg:col-span-4 col-span-3 w-full h-full flex justify-center items-center text-center`}
             >
-              <div className=" leading-none bg-gradient-to-b from-white to-[#0285F5] bg-clip-text text-transparent -translate-x-[5%] -translate-y-[10%] text-base xl:text-3xl">
+              <div className=" slot-gradient-text text-transparent text-base lg:text-2xl">
                 <div className="">Bet</div>
                 <div className="truncate ">₹{totalBetAmount || 0}</div>
               </div>
