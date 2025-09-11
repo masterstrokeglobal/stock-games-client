@@ -120,7 +120,12 @@ const MarketSelector = ({
             allowed: isCOMEXAllowed,
         }
     ];
-    const availableMarkets = markets.filter(market => market.allowed);
+    const availableMarkets = markets
+        .filter(market => market.allowed)
+        .sort((a, b) => {
+            if (a.available === b.available) return 0;
+            return a.available ? -1 : 1;
+        });
 
 
     return (
@@ -130,15 +135,15 @@ const MarketSelector = ({
             {showNavbar && <Navbar />}
             <div className="dark:bg-[#04002968] bg-[#e6f6ff8b] backdrop-blur-[2px] w-full h-full absolute top-0 left-0" />
             <div className="mx-auto max-w-3xl w-full">
-                <header className="text-center mb-8 relative z-10 mt-10">
-                    <h1 className="md:text-4xl sm:text-3xl text-2xl font-bold text-platform-text mb-2 ">
+                <header className="text-center sm:mb-8 xs:mb-4 relative z-10 mt-10">
+                    <h1 className="md:text-4xl sm:text-3xl text-2xl font-bold text-platform-text md:mb-2 ">
                         {title}
                     </h1>
                     <p className="text-platform-text">Choose your trading market to continue</p>
                 </header>
 
                 {/* Market Cards Grid */}
-                <main className="grid grid-cols-1  gap-6  w-full">
+                <main className="grid grid-cols-1  md:gap-6 gap-1  w-full">
                     {availableMarkets.map((market) => {
                         const timeToOpen = getTimeToOpen(market.id);
                         return (
@@ -151,7 +156,7 @@ const MarketSelector = ({
                                 onClick={() => market.available && handleMarketSelection(market.id)}
                             >
                                 {/* Card Content */}
-                                <div className="p-6 min-h-40 flex flex-col justify-between relative">
+                                <div className="md:p-6 sm:p-4 p-2 min-h-40 flex flex-col justify-between relative">
                                     {/* Top Section */}
                                     <div className="flex justify-between items-start">
                                         <div>

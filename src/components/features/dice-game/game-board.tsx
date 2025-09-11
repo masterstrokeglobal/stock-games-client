@@ -170,7 +170,9 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
                                 : "text-gray-300 hover:text-white hover:bg-gray-700"
                         )}
                     >
-                        {betType.charAt(0).toUpperCase() + betType.slice(1)}
+                       {betType==DicePlacementType.BOTH && "Dice (1 + 2)"}
+                       {betType==DicePlacementType.FIRST && "Dice 1"}
+                       {betType==DicePlacementType.SECOND && "Dice 2"}
                     </button>
                 ))}
             </div>

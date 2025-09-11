@@ -43,10 +43,10 @@ const SevenUpDownSettings = () => {
                 backdropFilter: "blur(3.15px)",
             }}
         >
-            <Navbar />
+            <Navbar className='mb-0' />
             <img src="/images/seven-up-down/setting-bg.png" alt="7Up & 7Down" className='absolute scale-125 top-0 left-0 w-full h-full opacity-70 object-cover' />
             <Tabs defaultValue="my-bet-history" className="md:pt-20 pt-12 pb-2  max-w-[2080px] relative z-10 flex flex-col w-full mx-auto flex-1 text-white">
-                <div className="flex flex-col lg:flex-row gap-6 mt-6">
+                <div className="flex flex-col lg:flex-row md:gap-6 gap-2 md:mt-6 mt-2">
                     <aside className="lg:w-64 lg:block hidden  w-full">
                         <TabsList className="flex flex-col w-full bg-transparent gap-2">
                             {
@@ -77,7 +77,7 @@ const SevenUpDownSettings = () => {
                                         <CarouselNext />
                                     </div>
                                 </div>
-                                <CarouselContent className="py-4 overflow-visible">
+                                <CarouselContent className="md:py-4 overflow-visible">
                                     {TABS.map((tab) => (
                                         <CarouselItem key={tab.value} className="pl-4 basis-1/2">
                                             <TabsList className="flex flex-col w-full bg-transparent gap-2">
