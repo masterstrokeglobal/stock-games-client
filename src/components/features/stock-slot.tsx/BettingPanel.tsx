@@ -129,7 +129,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
               >
                 {/* //? bet amount and wallet  */}
                 <div className="grid items-center justify-center w-full text-center h-full">
-                  <div className="leading-none col-span-1 flex gap-1 bg-gradient-to-b from-white to-[#0285F5] bg-clip-text text-transparent">
+                  <div className="leading-none col-span-1 flex gap-1 slot-gradient-text">
                     ₹{betAmount}
                   </div>
                 </div>
@@ -150,7 +150,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
                   {coinValues.slice(0, 2).map((amount) => (
                     <button
                       key={amount}
-                      className="leading-none bg-gradient-to-b from-white to-[#0285F5] bg-clip-text text-transparent"
+                      className="leading-none slot-gradient-text"
                       onClick={() => handleQuickBet(amount)}
                     >
                       {amount}
@@ -174,7 +174,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
                   {coinValues.slice(2, 4).map((amount) => (
                     <button
                       key={amount}
-                      className="leading-none bg-gradient-to-b from-white to-[#0285F5] bg-clip-text text-transparent"
+                      className="leading-none slot-gradient-text"
                       onClick={() => handleQuickBet(amount)}
                     >
                       {amount}
@@ -251,7 +251,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
                 backgroundPosition: "center center",
                 backgroundRepeat: "no-repeat",
               }}
-              className={`lg:col-span-4 col-span-3 w-full h-full flex justify-center items-center text-center`}
+              className={`col-span-3 w-full h-full flex justify-center items-center text-center`}
             >
               <div className=" slot-gradient-text text-transparent text-base lg:text-2xl">
                 <div className="">Bet</div>
@@ -260,7 +260,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
             </div>
 
             {/* //? bet button  */}
-            <div className="sm:col-span-2 col-span-3 relative w-full h-full flex items-center">
+            <div className="col-span-3 relative w-full h-full flex items-center">
               <button
                 onClick={() => placeBetHandler()}
                 disabled={!canPlaceBet}

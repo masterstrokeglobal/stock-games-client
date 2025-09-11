@@ -39,7 +39,7 @@ const DemoVideo = ({ children }: { children: React.ReactNode }) => {
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
           }}
-          className="relative flex flex-col px-[10%] py-10 sm:py-12 font-blood-melt text-[#FFFFFFB2] h-[584px] w-[402px] lg:h-[623px] lg:w-[592px] slot-dialog"
+          className="relative flex flex-col px-[10%] lg:px-[12%] py-10 sm:py-12 font-blood-melt text-[#FFFFFFB2] h-[584px] w-[402px] lg:h-[623px] lg:w-[592px] slot-dialog"
         >
           <button
             onClick={() => setIsOpen(false)}
@@ -53,7 +53,7 @@ const DemoVideo = ({ children }: { children: React.ReactNode }) => {
             />
           </button>
           <DialogHeader className="p-1 relative w-full flex justify-center items-center">
-            <DialogTitle className="text-[15px] lg:text-[30px] xl:text-[40px] text-center uppercase">
+            <DialogTitle className="text-[15px] lg:text-[30px] xl:text-[40px] text-center uppercase lg:pt-2">
               Demo Video
             </DialogTitle>
           </DialogHeader>

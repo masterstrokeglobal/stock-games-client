@@ -50,10 +50,10 @@ export const StockListMobile: React.FC<StockListProps> = ({
               className="text-center w-full h-full p-[20%] flex justify-center items-center"
             >
               <div className="flex flex-col justify-center items-center w-full h-fit -translate-y-[10%]">
-                <div className="truncate w-full text-xs bg-gradient-to-b from-white to-[#0285F5] bg-clip-text text-transparent">
+                <div className="truncate w-full text-xs slot-gradient-text">
                   {stockName}
                 </div>
-                <div className="text-[8px] bg-gradient-to-b from-white to-[#0285F5] bg-clip-text text-transparent">
+                <div className="text-[8px] slot-gradient-text">
                   {formatPriceWithHighlightedDecimal(price)}
                 </div>
               </div>

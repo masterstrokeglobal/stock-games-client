@@ -103,7 +103,7 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
           }}
-          className="z-20 relative flex flex-col px-[10%] py-10 sm:py-12 text-[#FFFFFFB2] h-[584px] w-[402px] lg:h-[623px] lg:w-[692px] slot-dialog"
+          className="z-20 relative flex flex-col lg:px-[12%] px-[10%] py-10 sm:py-12 text-[#FFFFFFB2] h-[584px] w-[402px] lg:h-[623px] lg:w-[692px] slot-dialog"
         >
           <button
             onClick={() => setChildDialogOpen(false)}
@@ -117,7 +117,7 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
             />
           </button>
           <DialogHeader className="p-1 relative w-full flex justify-center items-center">
-            <DialogTitle className="text-xl xl:text-3xl text-center uppercase slot-gradient-text font-blood-melt">
+            <DialogTitle className="text-xl xl:text-3xl text-center uppercase slot-gradient-text font-blood-melt lg:pt-2">
               Game History
             </DialogTitle>
           </DialogHeader>
