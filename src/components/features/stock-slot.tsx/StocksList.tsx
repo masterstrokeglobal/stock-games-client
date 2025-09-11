@@ -27,7 +27,7 @@ export const StockListMobile: React.FC<StockListProps> = ({
   stockPrice,
 }) => {
   return (
-    <div className="lg:hidden flex justify-center items-start relative z-[80] w-full text-xs">
+    <div className="lg:hidden flex justify-center items-start relative w-full text-xs">
       <div className=" grid grid-cols-5 items-center justify-center w-full z-40">
         {currentStocks?.slice(0, 5).map((stock, index) => {
           const price = parseFloat(
@@ -43,17 +43,17 @@ export const StockListMobile: React.FC<StockListProps> = ({
               key={stock.code || index}
               style={{
                 backgroundImage: "url('/images/slot-machine/stock-list.png')",
-                backgroundSize: "100% 100%",
+                backgroundSize: "contain",
                 backgroundPosition: "center center",
                 backgroundRepeat: "no-repeat",
               }}
-              className="text-center w-full h-full p-5 flex justify-center items-center"
+              className="text-center w-full h-full p-[20%] flex justify-center items-center"
             >
               <div className="flex flex-col justify-center items-center w-full h-fit -translate-y-[10%]">
-                <div className="truncate w-full text-xs bg-gradient-to-b from-white to-[#0285F5] bg-clip-text text-transparent">
+                <div className="truncate w-full text-xs slot-gradient-text">
                   {stockName}
                 </div>
-                <div className="text-[8px] bg-gradient-to-b from-white to-[#0285F5] bg-clip-text text-transparent">
+                <div className="text-[8px] slot-gradient-text">
                   {formatPriceWithHighlightedDecimal(price)}
                 </div>
               </div>
@@ -70,7 +70,7 @@ export const StockListDesktop: React.FC<StockListProps> = ({
   stockPrice,
 }) => {
   return (
-    <div className="hidden lg:grid lg:grid-rows-5 w-full lg:col-span-2 lg:col-start-10 lg:row-span-5 items-center text-xl absolute h-screen bottom-0 pt-14">
+    <div className="hidden lg:flex flex-col items-center text-xl h-full w-fit">
       {currentStocks?.slice(0, 5).map((stock, index) => {
         const price = parseFloat(
           stockPrice[stock.code ?? ""]?.toString() || "0"
@@ -81,7 +81,7 @@ export const StockListDesktop: React.FC<StockListProps> = ({
             key={stock.code || index}
             style={{
               backgroundImage: "url('/images/slot-machine/stock-list.png')",
-              backgroundSize: "100% 100%",
+              backgroundSize: "contain",
               backgroundPosition: "center center",
               backgroundRepeat: "no-repeat",
             }}

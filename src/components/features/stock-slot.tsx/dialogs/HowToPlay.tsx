@@ -8,21 +8,23 @@ import {
 } from "@/components/ui/dialog";
 import React, { useState } from "react";
 import Image from "next/image";
+import useWindowSize from "@/hooks/use-window-size";
 
 const HowToPlay = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { isMobile } = useWindowSize();
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger className="w-full">{children}</DialogTrigger>
-      <DialogContent showButton={false} className="[&>button]:text-white [&>button]:focus:ring-0 bg-transparent border-none w-full max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl font-blood-melt">
+      <DialogContent showButton={false} className=" bg-transparent border-none flex flex-col items-center justify-center font-blood-melt">
         <div
           style={{
-            backgroundImage: "url('/images/slot-machine/dialog-bg.png')",
+            backgroundImage: `url('/images/slot-machine/${isMobile ? "dialog-mb.png" : "dialog-bg.png"}')`,
             backgroundSize: "100% 100%",
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
           }}
-          className="max-h-[70vh] min-h-[400px] md:min-h-[500px] w-full h-full relative flex flex-col px-[10%] py-8 text-[#FFFFFFB2]"
+          className=" relative flex flex-col px-[10%] lg:px-[12%] py-10 sm:py-12 text-[#FFFFFFB2] h-[584px] w-[402px] lg:h-[623px] lg:w-[592px] slot-dialog"
         >
           <button onClick={() => setIsOpen(false)} className="absolute -top-3 right-0">
             <Image
@@ -33,7 +35,7 @@ const HowToPlay = ({ children }: { children: React.ReactNode }) => {
             />
           </button>
           <DialogHeader className="p-1 relative w-full flex justify-center items-center">
-            <DialogTitle className="text-[15px] lg:text-[30px] xl:text-[40px] text-center uppercase">
+            <DialogTitle className="text-[15px] lg:text-[30px] xl:text-[40px] text-center uppercase lg:pt-2">
               How to play
             </DialogTitle>
           </DialogHeader>

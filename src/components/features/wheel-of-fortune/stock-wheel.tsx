@@ -3,12 +3,14 @@ import { cn } from "@/lib/utils";
 import { RoundRecord, WHEEL_COLOR_CONFIG } from "@/models/round-record";
 import React, { useEffect, useMemo, useState } from "react";
 import { WheelCanvas } from "./wheel-canvas";
+// import { Wheel } from "./Wheel";
 
 interface WheelOfFortuneProps {
   className?: string;
   roundRecord?: RoundRecord;
   winningMarketId: number[] | null;
   isSpinning: boolean;
+  isPlaceOver?: boolean;
   onSpinComplete?: () => void;
   setWheelHeight: (height: number) => void;
   wheelRef: React.RefObject<HTMLDivElement>;
@@ -17,6 +19,7 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
   roundRecord,
   winningMarketId,
   isSpinning,
+  // isPlaceOver = false,
   className,
   onSpinComplete,
   setWheelHeight,
@@ -87,6 +90,13 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
           winningMarketId={winningMarketId}
           onSpinComplete={onSpinComplete}
         />
+        {/* <Wheel
+          isSpinning={isSpinning}
+          isPlaceOver={isPlaceOver}
+          roundRecord={roundRecord}
+          winningMarketId={winningMarketId}
+          onSpinComplete={onSpinComplete}
+        /> */}
       </div>
 
       {showResult &&

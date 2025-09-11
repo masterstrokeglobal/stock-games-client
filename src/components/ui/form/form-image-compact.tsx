@@ -133,7 +133,7 @@ const FormImage = <TFieldValues extends FieldValues>({
 
     const handleRemove = useCallback(() => {
         setPreviewUrl(null)
-        setValue(name as any, null)
+        setValue(name as any, "")
         toast.info("Image removed")
     }, [name, setValue])
 

@@ -59,7 +59,8 @@ export const useDefaultTheme = (theme: Theme) => {
 
 
 const ThemeProvider: React.FC<PropsWithChildren> = ({ children }) => {
-    const [theme, setTheme] = useState<Theme>(useDefaultTheme(themes.system));
+    // const [theme, setTheme] = useState<Theme>(useDefaultTheme(themes.system));
+    const [theme, setTheme] = useState<Theme>(useDefaultTheme(themes.dark));
 
     const toggleTheme = (): void => {
         const newTheme = theme == themes.dark ? themes.light : themes.dark;
@@ -74,12 +75,15 @@ const ThemeProvider: React.FC<PropsWithChildren> = ({ children }) => {
     };
 
     useEffect(() => {
+        // const system: Theme =
+        //     (localStorage.getItem("theme") as Theme) ??
+        //     (window.matchMedia &&
+        //         window.matchMedia("(prefers-color-scheme: dark)").matches
+        //         ? themes.dark
+        //         : themes.light);
+
         const system: Theme =
-            (localStorage.getItem("theme") as Theme) ??
-            (window.matchMedia &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? themes.dark
-                : themes.light);
+            (localStorage.getItem("theme") as Theme) ?? themes.dark;
         document.documentElement.setAttribute("data-theme", system);
         localStorage.setItem("theme", system);
         setTheme(system);

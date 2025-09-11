@@ -101,7 +101,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
 
   return (
     <>
-      <div className=" text-xs min-h-24 md:text-base h-[105px] lg:h-[145px] flex justify-center w-full flex-shrink-0 z-20 max-w-2xl">
+      <div className=" text-xs min-h-24 md:text-base flex justify-center w-full flex-shrink-0 z-20 max-w-xl">
         <div className="grid grid-cols-12 h-full w-full gap-1 sm:gap-2 lg:w-10/12">
           {/* //? bet amount  */}
           <div className="col-span-5 flex items-center justify-center h-full overflow-hidden relative">
@@ -129,7 +129,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
               >
                 {/* //? bet amount and wallet  */}
                 <div className="grid items-center justify-center w-full text-center h-full">
-                  <div className="leading-none col-span-1 flex gap-1 bg-gradient-to-b from-white to-[#0285F5] bg-clip-text text-transparent">
+                  <div className="leading-none col-span-1 flex gap-1 slot-gradient-text">
                     ₹{betAmount}
                   </div>
                 </div>
@@ -150,7 +150,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
                   {coinValues.slice(0, 2).map((amount) => (
                     <button
                       key={amount}
-                      className="leading-none bg-gradient-to-b from-white to-[#0285F5] bg-clip-text text-transparent"
+                      className="leading-none slot-gradient-text"
                       onClick={() => handleQuickBet(amount)}
                     >
                       {amount}
@@ -174,7 +174,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
                   {coinValues.slice(2, 4).map((amount) => (
                     <button
                       key={amount}
-                      className="leading-none bg-gradient-to-b from-white to-[#0285F5] bg-clip-text text-transparent"
+                      className="leading-none slot-gradient-text"
                       onClick={() => handleQuickBet(amount)}
                     >
                       {amount}
@@ -251,16 +251,16 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
                 backgroundPosition: "center center",
                 backgroundRepeat: "no-repeat",
               }}
-              className={`lg:col-span-4 col-span-3 w-full h-full flex justify-center items-center text-center`}
+              className={`col-span-3 w-full h-full flex justify-center items-center text-center`}
             >
-              <div className=" leading-none bg-gradient-to-b from-white to-[#0285F5] bg-clip-text text-transparent -translate-x-[5%] -translate-y-[10%] text-base xl:text-3xl">
+              <div className=" slot-gradient-text text-transparent text-base lg:text-2xl">
                 <div className="">Bet</div>
                 <div className="truncate ">₹{totalBetAmount || 0}</div>
               </div>
             </div>
 
             {/* //? bet button  */}
-            <div className="sm:col-span-2 col-span-3 relative w-full h-full flex items-center">
+            <div className="col-span-3 relative w-full h-full flex items-center">
               <button
                 onClick={() => placeBetHandler()}
                 disabled={!canPlaceBet}

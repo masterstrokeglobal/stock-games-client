@@ -41,11 +41,11 @@ const ResultDialog: React.FC<ResultDialogProps> = ({
             backgroundImage: `url('/images/slot-machine/${
               isMobile ? "result-bg-mb" : "result-bg"
             }.png')`,
-            backgroundSize: "100% 100%",
+            backgroundSize: "contain",
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
           }}
-          className=" min-h-[400px] w-full h-full flex flex-col items-center justify-center pt-[5%] pb-[8%] lg:p-[5%] font-blood-melt text-[#FFFFFFB2] relative"
+          className=" min-h-[400px] min-w-[325px] lg:min-w-[500px] w-full h-full flex flex-col items-center justify-center pt-[5%] pb-[8%] lg:p-[5%] font-blood-melt text-[#FFFFFFB2] relative"
         >
           <DialogHeader className="p-4">
             <DialogTitle className="text-3xl lg:text-[40px] slot-gradient-text leading-normal">

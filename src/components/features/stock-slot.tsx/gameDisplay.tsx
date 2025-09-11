@@ -6,8 +6,6 @@ import BettingPanel from "./BettingPanel";
 import ResultDialog from "./dialogs/ResultDialog";
 import GameBoard from "./GameBoard";
 import { StockListMobile } from "./StocksList";
-import Image from "next/image";
-import useWindowSize from "@/hooks/use-window-size";
 
 interface GameDisplayProps {
   isGameActive: boolean;
@@ -18,6 +16,7 @@ interface GameDisplayProps {
   roundRecord: RoundRecord;
   currentStocks: any[];
   stockPrice: any;
+  imgRef: React.RefObject<HTMLImageElement>;
   // getBackgroundStyle: (src: string) => React.CSSProperties;
 }
 
@@ -30,6 +29,7 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
   roundRecord,
   currentStocks,
   stockPrice,
+  imgRef,
   // getBackgroundStyle,
 }) => {
   const { isGameOver, placeTimeLeft } = useGameState(roundRecord);
@@ -38,20 +38,12 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
     roundRecord,
     myPlacementData?.data ?? []
   );
-  const { isMobile } = useWindowSize();
 
   return (
     <>
       {/* //? game board  */}
-      <div className="w-full flex-1 h-full max-w-2xl relative pointer-events-none max-h-[45vh]">
-        <Image
-          className="absolute top-0 left-0 -translate-y-[70%]"
-          src="/images/slot-machine/lady.png"
-          alt="game board"
-          width={isMobile ? 90 : 150}
-          height={isMobile ? 95 : 150}
-        />
-
+      <div className="w-full h-full flex flex-1 justify-center relative pointer-events-none ">
+        
         <GameBoard
           isGameActive={isGameActive}
           winningIdRoundRecord={winningIdRoundRecord}
@@ -59,6 +51,7 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
           isGameOver={isGameOver}
           roundRecord={roundRecord}
           // getBackgroundStyle={getBackgroundStyle}
+          imgRef={imgRef}
         />
       </div>
 

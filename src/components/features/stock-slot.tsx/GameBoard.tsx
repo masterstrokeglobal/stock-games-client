@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import useWindowSize from "@/hooks/use-window-size";
 
 interface Wheel {
   id: number;
@@ -14,6 +15,7 @@ interface StockSlot2DWheelProps {
   isPlaceOver?: boolean;
   isGameOver: boolean;
   roundRecord: any;
+  imgRef: React.RefObject<HTMLImageElement>;
   // getBackgroundStyle: (src: string) => React.CSSProperties;
 }
 
@@ -26,6 +28,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
   isGameOver,
   isPlaceOver = false,
   roundRecord,
+  imgRef,
   // getBackgroundStyle,
 }) => {
   const wheelRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -40,6 +43,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
   const wheelContainerRef = useRef<HTMLDivElement>(null);
   const hasInitializedRef = useRef(false);
   const [glowSate, setGlowState] = useState<boolean[]>(defaultGlowState);
+  const { isMobile } = useWindowSize();
 
   // Regular: 3 sequences of 0-9 (indices 0-9, 10-19, 20-29) - target middle at 10-19
   const regularNumbers = [
@@ -231,21 +235,8 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
     }
   }, [isGameActive, winningIdRoundRecord, numberHeight]);
 
-  //? adjusting wheel height
-  useEffect(() => {
-    function handleResize() {
-      if (wheelContainerRef.current) {
-        const wheelContainerHeight = wheelContainerRef.current.clientHeight;
-        setNumberHeight(wheelContainerHeight / 3);
-      }
-    }
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  //? This effect is no longer needed as we're handling all sizing in the image effect
+  // The image dimensions are the source of truth for the slot machine sizing
 
   //? reseeting wheel position during responsivenss
   useEffect(() => {
@@ -304,76 +295,141 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
     }
   }, [isGameOver]);
 
+  // Update number height when image loads or changes
+  useEffect(() => {
+    // Function to update height based on image dimensions
+    function updateNumberHeight() {
+      if (imgRef.current && imgRef.current.complete) {
+        // Get the actual visible height of the slot area (2/3 of the image height)
+        const slotAreaHeight = imgRef.current.clientHeight * (2/3);
+        // We want to show 3 numbers in the visible area
+        const calculatedHeight = slotAreaHeight / 3;
+        
+        if (calculatedHeight > 0) {
+          setNumberHeight(calculatedHeight);
+          console.log("Updated numberHeight:", calculatedHeight);
+        }
+      }
+    }
+
+    // Run immediately if image is already loaded
+    updateNumberHeight();
+    
+    // Also listen for image load event
+    const imageElement = imgRef.current;
+    if (imageElement) {
+      imageElement.addEventListener('load', updateNumberHeight);
+    }
+    
+    // Create ResizeObserver to detect size changes
+    const resizeObserver = new ResizeObserver(() => {
+      updateNumberHeight();
+    });
+    
+    if (imageElement) {
+      resizeObserver.observe(imageElement);
+    }
+    
+    return () => {
+      if (imageElement) {
+        imageElement.removeEventListener('load', updateNumberHeight);
+        resizeObserver.unobserve(imageElement);
+      }
+      resizeObserver.disconnect();
+    };
+  }, []);
+
   return (
-    <div
-      style={{
-        // ...getBackgroundStyle("/images/slot-machine/game-board.png"),
-        backgroundImage: "url('/images/slot-machine/game-board.png')",
-        backgroundSize: "100% 100%",
-        backgroundPosition: "center center",
-        backgroundRepeat: "no-repeat",
-      }}
-      className="w-full h-full flex justify-center items-center relative"
-    >
+    <>
+      
+        {/* Explicit height container */}
+        <img
+          ref={imgRef}
+          src="/images/slot-machine/game-board.png"
+          alt="game board"
+          className="h-full w-auto max-h-[50vh] object-contain z-20" // h-full forces it to container height
+        />
       <div
-        ref={wheelContainerRef}
-        className="w-[87%] max-w-4xl mx-auto h-2/3 relative "
+        style={{
+          width: imgRef.current?.clientWidth,
+          height: imgRef.current?.clientHeight,
+        }}
+        className=" h-full flex justify-center items-center absolute z-10"
       >
-        <div className="grid grid-cols-5 h-full relative justify-center items-center ">
-          {wheels.map((wheel, wheelIndex) => (
-            <div
-              key={wheel.id}
-              className="relative h-full overflow-hidden z-30"
-            >
-              {/* Wheel content */}
+        <img
+          className="absolute top-0 left-0 -translate-y-[80%] h-auto"
+          src="/images/slot-machine/lady.png"
+          alt="game board"
+          width={isMobile ? 95 : (imgRef.current?.clientWidth || 150) / 4}
+        />
+      </div>
+      <div
+        style={{
+          width: imgRef.current?.clientWidth,
+          height: imgRef.current?.clientHeight,
+        }}
+        className="flex justify-center items-center absolute z-30"
+      >
+        <div
+          ref={wheelContainerRef}
+          className="w-[87%] max-w-4xl mx-auto h-2/3 relative z-20"
+        >
+          <div className="grid grid-cols-5 h-full relative justify-center items-center ">
+            {wheels.map((wheel, wheelIndex) => (
               <div
-                ref={(el) => {
-                  wheelRefs.current[wheelIndex] = el;
-                }}
-                className="absolute inset-x-0 flex flex-col"
-                style={{ top: -numberHeight }} // Start with first row hidden to center the view
+                key={wheel.id}
+                className="relative h-full overflow-hidden z-30"
               >
-                {regularNumbers.map((number, numberIndex) => (
-                  <div
-                    key={`${wheelIndex}-${numberIndex}`}
-                    className="flex items-center justify-center relative"
-                  >
-                    <img
-                      style={{ height: numberHeight }}
-                      src={
-                        EXCLUDED_NUMBERS.includes(number)
-                          ? `/images/slot-machine/loss.png`
-                          : `/images/slot-machine/${"number"}-${number}.png`
-                      }
-                      alt={`${number}`}
-                      className="w-auto object-contain"
-                      draggable={false}
-                    />
-                  </div>
-                ))}
+                {/* Wheel content */}
+                <div
+                  ref={(el) => {
+                    wheelRefs.current[wheelIndex] = el;
+                  }}
+                  className="absolute inset-x-0 flex flex-col"
+                  style={{ top: -numberHeight }} // Start with first row hidden to center the view
+                >
+                  {regularNumbers.map((number, numberIndex) => (
+                    <div
+                      key={`${wheelIndex}-${numberIndex}`}
+                      className="flex items-center justify-center relative"
+                    >
+                      <img
+                        style={{ height: numberHeight }}
+                        src={
+                          EXCLUDED_NUMBERS.includes(number)
+                            ? `/images/slot-machine/loss.png`
+                            : `/images/slot-machine/${"number"}-${number}.png`
+                        }
+                        alt={`${number}`}
+                        className="w-auto object-contain"
+                        draggable={false}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
-          {/* //? glow effect for winning numbers */}
-          <div
-            style={{ height: numberHeight }}
-            className="grid grid-cols-5 justify-center items-center w-full z-20 absolute"
-          >
-            {glowSate.slice(0, 5).map((glow, i) => (
-              <div
-                key={i}
-                style={{
-                  height: numberHeight,
-                  opacity: glow ? 1 : 0,
-                  animation: "slotWinPulse 0.8s ease-in-out infinite",
-                }}
-                className="w-full flex justify-center items-center"
-              ></div>
             ))}
+            {/* //? glow effect for winning numbers */}
+            <div
+              style={{ height: numberHeight }}
+              className="grid grid-cols-5 justify-center items-center w-full z-20 absolute"
+            >
+              {glowSate.slice(0, 5).map((glow, i) => (
+                <div
+                  key={i}
+                  style={{
+                    height: numberHeight,
+                    opacity: glow ? 1 : 0,
+                    animation: "slotWinPulse 0.3s ease-in-out infinite",
+                  }}
+                  className="w-full flex justify-center items-center"
+                ></div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

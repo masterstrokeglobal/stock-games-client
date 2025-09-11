@@ -7,7 +7,7 @@ import LeaderBoard from "@/components/features/game/leaderboard";
 import Navbar from "@/components/features/game/navbar";
 import RouletteGame from "@/components/features/game/roulette-game";
 import RouletteGameHeader from "@/components/features/game/roulette-game-header";
-import GameHeaderMobile from "@/components/features/game/roulette-mobile-header";
+// import GameHeaderMobile from "@/components/features/game/roulette-mobile-header";
 import HorseRace from "@/components/features/horse-animation/horse";
 import { useHorseRaceSound } from "@/context/audio-context";
 import {
@@ -55,8 +55,8 @@ const Page = () => {
     <>
       <section className={cn("bg-background-game pt-14 md:min-h-screen")}>
         <Navbar />
-        {isMobile && isPlaceOver && (
-          <RouletteGameHeader title="Stock Roulette" />
+        {isMobile && isPlaceOver &&  roundRecord && (
+          <RouletteGameHeader title="Stock Roulette" roundRecord={roundRecord} isMobile/>
         )}
         {!isMobile && <RouletteGameHeader title="Stock Roulette" />}
         {!isActive && !isFetching && <GameMaintenanceMarquee />}
@@ -96,10 +96,10 @@ const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
   const isPlaceOver = useIsPlaceOver(roundRecord);
 
   return (
-    <section className="text-game-text space-y-4">
+    <section className="text-game-text">
       {isPlaceOver && (
         <div className="space-y-4">
-          <GameHeaderMobile roundRecord={roundRecord} />
+          {/* <GameHeaderMobile roundRecord={roundRecord} /> */}
           <HorseRace roundRecord={roundRecord} />
         </div>
       )}
@@ -113,7 +113,7 @@ const MobileGame = ({ roundRecord }: { roundRecord: RoundRecord }) => {
         </main>
       )}
       <div className="w-full md:px-4">
-        <LeaderBoard roundRecord={roundRecord} />
+        <LeaderBoard className="mt-0" roundRecord={roundRecord} />
       </div>
       {isPlaceOver && roundRecord && (
         <div className="space-y-4 md:px-4">
