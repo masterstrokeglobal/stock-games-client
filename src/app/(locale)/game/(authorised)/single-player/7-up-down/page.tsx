@@ -57,7 +57,7 @@ const SevenUpDown = () => {
                 </div>
                 <div className='md:grid md:grid-cols-12 flex-1 gap-4'>
                     <div className='md:col-span-8 justify-around flex flex-col'>
-                        <div className="justify-between items-center  flex-wrap flex flex-row w-full gap-4 my-4  relative z-10">
+                        <div className="justify-between items-center  flex-wrap flex flex-row w-full gap-4 sm:my-4 my-1 relative z-10">
                             <LiveBadge />
                             <GameTimer roundRecord={roundRecord} />
                         </div>

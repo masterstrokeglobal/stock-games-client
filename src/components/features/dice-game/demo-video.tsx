@@ -4,7 +4,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { X } from "lucide-react";
 import Image from "next/image";
 
@@ -14,6 +14,20 @@ interface DemoVideoDialogProps {
 const DemoVideoDialog: React.FC<DemoVideoDialogProps> = ({
     children }) => {
     const [open, setOpen] = useState(false);
+    const [lang, setLang] = useState('en');
+
+
+    const videoUrl = useMemo(() => {
+        switch (lang) {
+            case 'en':
+                return '/images/how-to-play/videos/dice-en.mp4';
+            case 'hi':
+                return '/images/how-to-play/videos/dice-hi.mp4';
+            default:
+                return '/images/how-to-play/videos/dice-en.mp4';
+        }
+    }, [lang]);
+
 
     return (
         <Dialog open={open} onOpenChange={setOpen} modal={true}>
@@ -45,16 +59,27 @@ const DemoVideoDialog: React.FC<DemoVideoDialogProps> = ({
                         <div className="relative z-10 text-white  flex flex-col items-center">
                             {/* Video Section */}
                             <div className="w-full  rounded-lg overflow-hidden">
-                                <video
-                                    className="w-full h-auto rounded-lg"
-                                    controls
-                                    autoPlay
-                                    muted
-                                    loop
-                                >
-                                    <source src="/videos/dice-game-demo.mp4" type="video/mp4" />
-                                    Your browser does not support the video tag.
-                                </video>
+                                <video src={videoUrl} controls className="w-full h-96" />
+                                <div className="flex justify-center w-full py-4">
+                                    <button
+                                        className={`px-4 py-1 rounded-l-lg text-sm font-semibold flex-1 transition-colors ${lang === "en"
+                                                ? "bg-white/20   text-white"
+                                                : "bg-[#23245A40] text-white/60"
+                                            }`}
+                                        onClick={() => setLang("en")}
+                                    >
+                                        English
+                                    </button>
+                                    <button
+                                        className={`px-4 py-1 rounded-r-lg text-sm font-semibold flex-1 transition-colors ${lang === "hi"
+                                                ? "bg-white/20 text-white"
+                                                : "bg-[rgba(35,36,90,0.25)] text-white/60"
+                                            }`}
+                                        onClick={() => setLang("hi")}
+                                    >
+                                        Hindi
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

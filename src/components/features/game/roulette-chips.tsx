@@ -1,9 +1,21 @@
 import { Button } from "@/components/ui/button";
-import {  Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuthStore } from "@/context/auth-context";
+import { RoundRecordGameType } from "@/models/round-record";
 import { Minus, Plus } from "lucide-react";
-import { useTranslations } from "next-intl";
+// import { useTranslations } from "next-intl";
 import * as React from "react";
+import { useCallback} from "react";
+import { toast } from "sonner";
+
+
+interface AutoBetState {
+    isAutoBetMode: boolean;
+    selectedChips: any[];
+    rounds: number | null;
+    isActive: boolean;
+    currentRound: number;
+}
 
 interface BettingControlsProps {
     betAmount: number;
@@ -12,40 +24,78 @@ interface BettingControlsProps {
     isLoading: boolean;
     isPlaceOver: boolean;
     showFooterButtons?: boolean;
+    hasManualBetsInRound: boolean;
+    autoBetState: AutoBetState;
+    setAutoBetState: (state: AutoBetState | ((prev: AutoBetState) => AutoBetState)) => void;
 }
 
 export const BettingControls: React.FC<BettingControlsProps> = ({
     betAmount,
     setBetAmount,
     isPlaceOver,
+    hasManualBetsInRound,
+    autoBetState,
+    setAutoBetState,
 }) => {
-    const t = useTranslations("game");
+    // const t = useTranslations("game");
     const { userDetails } = useAuthStore();
+    const coinValues = userDetails?.company?.coinValues || [100, 200,500, 1000, 2000, 5000];
+    const minPlacement = userDetails?.company?.minPlacement ?? 0;
+    const maxPlacement = userDetails?.company?.maxSinglePlacementPerGameType?.[RoundRecordGameType.DERBY] ?? 1000000;
 
-    const coinValues = userDetails?.company?.coinValues || [100, 200, 1000, 2000];
-    const minPlacement = userDetails?.company?.minPlacement ?? 1;
-    const maxPlacement = userDetails?.company?.maxPlacement ?? 1000000;
-
-
-    const handleDecrement = () => {
+    const handleDecrement =  useCallback(() => {
         setBetAmount(Math.max(minPlacement, betAmount - 100));
-    };
+    }, [betAmount, minPlacement, setBetAmount]);
 
-    const handleIncrement = () => {
+    const handleIncrement = useCallback(() => {
         setBetAmount(Math.min(maxPlacement, betAmount + 100));
-    };
+    }, [betAmount, maxPlacement, setBetAmount]);
 
-    const handleDouble = () => {
-        setBetAmount(Math.min(maxPlacement, betAmount * 2));
-    };
+    const handleTabChange = (value: string) => {
+        if (value === "bet") {
+            // Switching to manual bet mode
+            if (autoBetState.isActive) {
+                toast.error("Cannot switch to manual betting while auto-bet is active");
+                return;
+            }
+            setAutoBetState(prev => ({ 
+                ...prev, 
+                isAutoBetMode: false, 
+                selectedChips: [], 
+                rounds: null, 
+                isActive: false 
+            }));
+        } else if (value === "auto") {
+            // Switching to auto-bet mode
+            if (hasManualBetsInRound && !autoBetState.isActive) {
+                toast.error("Cannot access auto-bet after placing manual bets in this round");
+                return;
+            }
+            setAutoBetState(prev => ({ ...prev, isAutoBetMode: true }));
+        }
+    }
 
+    const handleCancelAutoBet = () => {
+        setAutoBetState(prev => ({
+            ...prev,
+            isActive: false,
+            selectedChips: [],
+            rounds: null,
+            currentRound: 0,
+        }));
+        toast.success("Auto-bet cancelled");
+    }
 
     return (
-        <div className="w-full xl:max-w-xs xl:mx-auto bg-transparent text-game-text md:p-0 px-4 rounded-2xl">
+        <div className="w-full xl:max-w-xs xl:mx-auto bg-transparent text-game-text px-4 rounded-2xl">
             {/* Top Tabs using shadcn */}
-            <Tabs defaultValue="bet" className="w-full">
-                <div className="flex justify-center mb-6">
-                    <TabsList className="h-10 bg-transparent border border-[#0B4A8F] rounded-full  flex w-full">
+            <Tabs 
+                value={autoBetState.isAutoBetMode ? "auto" : "bet"} 
+                onValueChange={handleTabChange}
+                className="w-full"
+            >
+                <div className="flex justify-center mb-4">
+                    <TabsList className="h-10 bg-transparent border border-[#0B4A8F] rounded-full  flex w-3/4">
                         <TabsTrigger
                             value="bet"
                             className="flex-1 h-full  rounded-full  text-white bg-transparent font-semibold text-base data-[state=active]:bg-[#00214E] data-[state=active]:text-white data-[state=inactive]:text-blue-300"
@@ -65,9 +115,11 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
 
                 {/* Bet Amount Controls and Bet Button */}
                 <TabsContent value="bet">
-                    <div className="flex gap-4 mb-4">
-                        <div className="flex flex-col gap-2 flex-1">
-                            <div className="flex items-center border py-1 border-[#0B5AB6] rounded-full justify-center gap-2">
+                    <div className="flex gap-4 mb-4 h-full">
+                        <div className="flex flex-col gap-4 flex-1 justify-center items-center">
+
+                            {/* Bet Amount plus minus button */}
+                            <div className="flex items-center w-3/4 justify-between border py-1 border-[#0B5AB6] rounded-full gap-2 px-1">
                                 <Button
                                     className="rounded-full w-8 h-8 flex items-center justify-center bg-[#A3EBEB] text-primary-game border-2 border-[#011039] p-0"
                                     variant="ghost"
@@ -92,26 +144,11 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                             </div>
 
                             {/* Quick Amount Buttons */}
-                            <div className="grid grid-cols-2 border border-[#0B4A8F] rounded">
+                            <div className="grid grid-cols-2 border border-[#0B4A8F] rounded w-full">
                                 {coinValues.slice(0, 2).map((amount, index) => (
                                     <Button
                                         key={amount}
-                                        className={`w-full h-10 bg-transparent  ${index === 0 ? 'border-r-[#0B4A8F]  border-r' : ''} text-white text-lg font-semibold rounded-none`}
-                                        variant="ghost"
-                                        onClick={() => setBetAmount(amount)}
-                                        disabled={isPlaceOver}
-                                        tabIndex={-1}
-                                        type="button"
-                                    >
-                                        ₹ {amount}
-                                    </Button>
-                                ))}
-                            </div>
-                            <div className="grid grid-cols-2  border border-[#0B4A8F] rounded">
-                                {coinValues.slice(2, 4).map((amount, index) => (
-                                    <Button
-                                        key={amount}
-                                        className={`w-full h-10 bg-transparent border border-[#0B4A8F] text-white text-lg font-semibold rounded-none ${index === 0 ? 'border-r-[#0B4A8F]  border-r' : ''}`}
+                                        className={`w-full h-10 bg-transparent  ${index !== 1 ? 'border-r-[#0B4A8F]  border-r' : ''} text-white text-lg font-semibold rounded-none`}
                                         variant="ghost"
                                         onClick={() => setBetAmount(amount)}
                                         disabled={isPlaceOver}
@@ -123,71 +160,113 @@ export const BettingControls: React.FC<BettingControlsProps> = ({
                                 ))}
                             </div>
 
-                        </div>
-                        <div className="flex-1 flex flex-col gap-2">
-                            <Button
-                                className="w-full h-20 bg-[#2ECC40]  text-white text-lg font-bold rounded-lg shadow-lg flex flex-col items-center justify-center"
-                                style={{ backgroundColor: "#2ECC40" }}
-                                disabled={isPlaceOver}
-                                tabIndex={-1}
-                                type="button"
-                            >
-                                {t("bet").toUpperCase()}
-                                <span className="text-white text-xl font-bold">{betAmount.toFixed(2)} INR</span>
-                            </Button>
-                            <div className="flex justify-center mb-2">
-                                <Button
-                                    className="w-full max-w-[200px] h-12 bg-transparent border border-[#0B4A8F] text-white text-lg font-semibold rounded-lg"
-                                    variant="ghost"
-                                    onClick={handleDouble}
-                                    disabled={isPlaceOver || betAmount * 2 > maxPlacement}
-                                    tabIndex={-1}
-                                    type="button"
-                                >
-                                    2X BET
-                                </Button>
+                            {/* Quick Amount Buttons */}
+                            <div className="grid grid-cols-2  border border-[#0B4A8F] rounded w-full">
+                                {coinValues.slice(2, 4).map((amount, index) => (
+                                    <Button
+                                        key={amount}
+                                        className={`w-full h-10 bg-transparent border border-[#0B4A8F] text-white text-lg font-semibold rounded-none ${index !== 1 ? 'border-r-[#0B4A8F]  border-r' : ''}`}
+                                        variant="ghost"
+                                        onClick={() => setBetAmount(amount)}
+                                        disabled={isPlaceOver}
+                                        tabIndex={-1}
+                                        type="button"
+                                    >
+                                        ₹ {amount}
+                                    </Button>
+                                ))}
                             </div>
                         </div>
                     </div>
                 </TabsContent>
+                
                 <TabsContent value="auto">
-                <div className="flex flex-col gap-4 py-2 w-full">
-                    <div className="grid grid-cols-2 gap-2">
-                        {[1, 2, 5, 10].map((amount) => (
+                    {autoBetState.isActive ? (
+                        <div className="flex flex-col items-center justify-center gap-4 py-2 w-full">
+                            <div className="text-white text-lg text-center border w-full overflow-hidden border-[#0B4A8F] font-semibold rounded-lg">
+                                <h1 className="block border-b border-[#0B4A8F] bg-[#00214E] py-2">Auto Bet Active</h1>
+                                <main className="text-2xl flex justify-center py-4 items-center font-bold">
+                                    Round {autoBetState.currentRound} / {autoBetState.rounds}
+                                </main>
+                                <div className="px-4 pb-4">
+                                    <p className="text-sm text-blue-300">Selected bets: {autoBetState.selectedChips.length}</p>
+                                </div>
+                            </div>
                             <Button
-                                key={amount}
-                                className="w-full h-10 bg-transparent border border-[#0B4A8F] text-white text-lg font-semibold rounded-lg"
-                                variant="ghost"
-                                onClick={() => setBetAmount(amount)}
-                                disabled={isPlaceOver}
+                                className="w-full h-9 md:h-10 md:text-lg text-base"
+                                variant="destructive"
+                                onClick={() => handleCancelAutoBet()}
                                 tabIndex={-1}
                                 type="button"
                             >
-                            {amount}
+                                Cancel Auto-Bet
                             </Button>
-                        ))}
-                    </div>
-                    <div className="flex gap-2">
-                        <Button
-                            className="flex-1 h-12 bg-[#2ECC40] text-white text-lg font-bold rounded-lg"
-                            disabled={isPlaceOver}
-                            tabIndex={-1}
-                            type="button"
-                        >
-                            {t("bet").toUpperCase()}
-                        </Button>
-                        <Button
-                            className="flex-1 h-12 bg-destructive border border-[#0B4A8F] text-white text-lg font-semibold rounded-lg"
-                            variant="ghost"
-                            onClick={() => setBetAmount(0)}
-                            disabled={isPlaceOver}
-                            tabIndex={-1}
-                            type="button"
-                        >
-                            Cancel
-                        </Button>
-                    </div>
-                </div>
+                        </div>
+                    ) : (
+                        <div className="flex flex-col gap-4 py-2 pt-0 w-full">
+                             
+                            <div className="grid grid-cols-2 gap-2">
+                                {[1, 2, 5, 10].map((amount) => (
+                                    <Button
+                                        key={amount}
+                                        className={`w-full h-10 bg-transparent border ${autoBetState.rounds === amount ? "bg-[#0B4A8F]" : ""} border-[#0B4A8F] text-white text-lg font-semibold rounded-lg hover:bg-[#0B4A8F]/50`}
+                                        variant="ghost"
+                                        onClick={() => setAutoBetState(prev => ({ ...prev, rounds: amount }))}
+                                        disabled={isPlaceOver}
+                                        tabIndex={-1}
+                                        type="button"
+                                    >
+                                        {amount}
+                                    </Button>
+                                ))}
+                            </div>
+
+                            <div className="flex gap-2">
+                                <Button
+                                    className="flex-1 h-9 text-base md:h-10 bg-[#2ECC40] text-white md:text-lg md:font-bold rounded-lg"
+                                    disabled={isPlaceOver || autoBetState.rounds === null || autoBetState.selectedChips.length === 0}
+                                    tabIndex={-1}
+                                    type="button"
+                                    onClick={() => {
+                                        if (autoBetState.rounds === null) {
+                                            toast.error("Please select number of rounds");
+                                            return;
+                                        }
+                                        if (autoBetState.selectedChips.length === 0) {
+                                            toast.error("Please select bets on the board first");
+                                            return;
+                                        }
+                                        setAutoBetState(prev => ({
+                                            ...prev,
+                                            isActive: true,
+                                            currentRound: 0,
+                                        }));
+                                        toast.success("Auto-bet started");
+                                    }}
+                                >
+                                    START
+                                </Button>
+
+                                <Button
+                                    className="flex-1 h-9 md:h-10 bg-destructive border border-[#0B4A8F] text-white text-base md:text-lg font-semibold rounded-lg"
+                                    variant="ghost"
+                                    onClick={() => {
+                                        setAutoBetState(prev => ({
+                                            ...prev,
+                                            selectedChips: [],
+                                            rounds: null,
+                                        }));
+                                        toast.success("Auto-bet selection cleared");
+                                    }}
+                                    disabled={isPlaceOver}
+                                    tabIndex={-1}
+                                    type="button"
+                                >
+                                    Cancel
+                                </Button>
+                            </div>
+                        </div>
+                    )}
                 </TabsContent>
             </Tabs>
         </div>

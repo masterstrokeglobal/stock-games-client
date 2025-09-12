@@ -34,6 +34,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
     const isPlaceOver = usePlacementOver(roundRecord);
 
+
     const totalBetAmount = useMemo(() => {
         return myPlacementData?.data?.reduce((acc, curr) => acc + curr.amount, 0);
     }, [myPlacementData])
@@ -74,11 +75,13 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
         return { currentStocks, stockPrice }
     }, [roundRecord, stocks, winningIdRoundRecord])
 
+
+
     return (
         <>
             <div className="w-full bg-[url('/images/slot-game/wodden-bg.jpg')] bg-repeat bg-contain bg-center text-[#E3B872] p-4">
 
-                <div className="flex items-center flex-wrap item-center justify-between gap-4 mb-4">
+                <div className="hidden md:flex items-center flex-wrap item-center justify-between gap-4 mb-4">
 
                     {currentStocks.length > 0 && (
                         currentStocks.map((stock) => (

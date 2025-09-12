@@ -34,16 +34,17 @@ const useCOMEXAvailable = () => {
         const now = getISTDate();
         const msToNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
 
+        // Use refs to store timeout and interval IDs for cleanup
+        let intervalId: ReturnType<typeof setInterval>;
         const timeoutId = setTimeout(() => {
             updateStatus();
-            const intervalId = setInterval(updateStatus, 60000);
-            (timeoutId as any).intervalId = intervalId;
+            intervalId = setInterval(updateStatus, 60000);
         }, msToNextMinute);
 
         return () => {
             clearTimeout(timeoutId);
-            if ((timeoutId as any).intervalId) {
-                clearInterval((timeoutId as any).intervalId);
+            if (intervalId) {
+                clearInterval(intervalId);
             }
         };
     }, []);

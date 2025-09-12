@@ -23,7 +23,7 @@ export const useCreateDiceGamePlacement = () => {
             toast.custom((t) => (
                 <BetSuccessToast onClose={() => toast.dismiss(t)} betAmount={amount} betNumber={number} />
             ), {
-                position: 'bottom-right'
+                position: 'top-right'
             });
         },
         onError: (error: AxiosError<{ message: string }>) => {
@@ -31,7 +31,7 @@ export const useCreateDiceGamePlacement = () => {
             toast.custom((t) => (
                 <BetErrorToast message={errorMessage} onClose={() => toast.dismiss(t)} />
             ), {
-                position: 'bottom-right'
+                position: 'top-right'
             });
         },
     });
@@ -45,13 +45,9 @@ export const BetSuccessToast = ({ className, onClose, betAmount, betNumber }: Pr
 }>) => {
     return (
         <div className={cn("flex items-center p-4 bg-gradient-to-t from-blue-500 via-cyan-400 to-green-400 text-white rounded-lg shadow-lg min-w-[320px] relative", className)} >
-
-
             {/* Content */}
             <div className="flex items-center gap-4 ">
                 {/* Character illustration */}
-
-
 
                 {/* Text content */}
                 <div className="flex-1">

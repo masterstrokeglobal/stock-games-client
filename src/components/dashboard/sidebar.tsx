@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { ArrowUpDown, Building, ChevronsRightLeftIcon, Clock, CoinsIcon, Contact2, DollarSign, GamepadIcon, GiftIcon, Home, ImageUpIcon, LucideIcon, MedalIcon, PieChart, Repeat1, ShipWheelIcon, Users } from 'lucide-react';
+import { ArrowUpDown, Building, ChevronsRightLeftIcon, Clock, CoinsIcon, Contact2, DollarSign, GamepadIcon, GiftIcon, Home, ImageUpIcon, LucideIcon, MedalIcon, PieChart, Repeat1, ShipWheelIcon, UserCog2, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -90,11 +90,23 @@ const adminMenuItems: MenuItem[] = [
         name: "Seven Up Down Pair",
         icon: ChevronsRightLeftIcon,
         link: '/dashboard/seven-up-down-pair'
+    },
+    {
+        name: "Bonus Management",
+        icon: GiftIcon,
+        subItems: [
+            // { name: 'Overview', link: '/dashboard/bonus' },
+            { name: 'Create Campaign', link: '/dashboard/bonus/create-campaign' },
+            { name: 'Manage Campaigns', link: '/dashboard/bonus/campaigns' },
+            // { name: 'Analytics Dashboard', link: '/dashboard/bonus/analytics' },
+            // { name: 'User Progress', link: '/dashboard/bonus/user-progress' },
+            // { name: 'Legacy Create', link: '/dashboard/bonus/create' },
+        ],
     }
 ];
 
 const companyMenuItems: MenuItem[] = [
-
+    
     {
         name: "Company",
         icon: Building,
@@ -167,9 +179,22 @@ const companyMenuItems: MenuItem[] = [
         link: '/dashboard/affiliate'
     },
     {
-        name: "Bonus",
+        name: "Operators",
+        icon: UserCog2,
+        subItems: [
+            { name: 'View Operators', link: '/dashboard/operator' },
+            // { name:"Report", link:"/dashboard/operator/report"},
+            { name: 'Create Operator', link: '/dashboard/operator/create'},
+            { name: 'Profit Distribution', link: '/dashboard/profit-distribution'}
+        ],
+    },
+    {
+        name: "Bonus Management",
         icon: GiftIcon,
-        link: '/dashboard/bonus'
+        subItems: [
+            { name: 'Create Campaign', link: '/dashboard/bonus/create-campaign' },
+            { name: 'Manage Campaigns', link: '/dashboard/bonus/campaigns' },
+        ],
     },
     {
         name: "Casino Games",
@@ -243,12 +268,23 @@ const Sidebar = ({ className }: PropsWithClassName) => {
                 icon: GiftIcon,
                 link: '/dashboard/affiliate'
             }];
-        } else if (userDetails.role === AdminRole.AFFILIATE ) {
+        } else if (userDetails.role === AdminRole.AFFILIATE) {
             menus = affiliateMenuItems;
         }
         if (userDetails.role === AdminRole.SUB_AFFILIATE) {
             menus = affiliateMenuItems;
         }
+    }
+
+    if (userDetails.role === AdminRole.COMPANY_ADMIN ) {
+        menus = [
+            ...menus,
+            {
+                name: "Dynamic QR",
+                icon: GiftIcon,
+                link: '/dashboard/company-qr'
+            }
+        ]
     }
 
     const renderMenuItem = (item: MenuItem) => {
@@ -307,16 +343,16 @@ const Sidebar = ({ className }: PropsWithClassName) => {
 
     return (
         <div className={cn("flex  flex-col ", className)}>
-                <ScrollArea className="h-full">
+            <ScrollArea className="h-full">
                 <div className="flex h-16 items-center  px-4">
                     <Logo dark={false} />
-            </div>
-            <nav className="flex-1 overflow-y-auto px-4 pt-8">
-                <Accordion type="multiple" className="w-full space-y-2">
-                    {menus.map(renderMenuItem)}
-                </Accordion>
-            </nav>
-        </ScrollArea>
+                </div>
+                <nav className="flex-1 overflow-y-auto pb-14 px-4 pt-8">
+                    <Accordion type="multiple" className="w-full space-y-2">
+                        {menus.map(renderMenuItem)}
+                    </Accordion>
+                </nav>
+            </ScrollArea>
         </div>
     );
 };

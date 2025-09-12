@@ -63,6 +63,7 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
 
   const firstCube = marketItems.slice(0, 6);
   const secondCube = marketItems.slice(6, 12);
+// const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   const marketItemsStocks = useMemo(() => {
     return marketItems.map((item) => {
@@ -177,7 +178,7 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
         <div className="flex justify-between  relative  h-full items-center">
           <div className='flex flex-col  border rounded overflow-hidden border-[#4467CC80] h-full md:w-28 w-[80px]'>
             {/* <TriangleIcon className='size-3 text-white absolute top-4 right-0 translate-x-full  rotate-90' /> */}
-            <h2 className='sm:text-sm xsm:text-xs text-[10px] whitespace-nowrap text-white  bg-[#4467CC80] mb-1 text-center py-1'>First Dice</h2>
+            <h2 className='sm:text-sm xsm:text-xs text-[10px] whitespace-nowrap text-white  bg-[#4467CC80] mb-1 text-center py-1'>Dice 1</h2>
             {firstCubeStocks?.map((stock, index) => (
               <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1 w-full last:border-none' roundRecord={roundRecordWithWinningId} isLast={index === 5} />
             ))}
@@ -233,7 +234,7 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
           </div>
           <div className='flex flex-col h-full  md:w-28 w-[80px]  overflow-hidden self-end border border-[#4467CC80] rounded-lg'>
             {/* <TriangleIcon className='size-3 text-white absolute bottom-4 left-0 -translate-x-full  -rotate-90' /> */}
-            <h2 className='sm:text-sm xsm:text-xs text-[10px] whitespace-nowrap text-white  bg-[#4467CC80] mb-1 text-center py-1'>Second Dice</h2>
+            <h2 className='sm:text-sm xsm:text-xs text-[10px] whitespace-nowrap text-white  bg-[#4467CC80] mb-1 text-center py-1'> Dice 2</h2>
 
             {secondCubeStocks?.map((stock, index) => (
               <StockDisplay winner={index === 0} key={stock?.id} stock={stock} className='flex-1  w-full' isSecondCube roundRecord={roundRecordWithWinningId} isLast={index === 5} />

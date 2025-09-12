@@ -18,7 +18,7 @@ export const RouletteBettingGrid = ({ hoveredCell, chips, roundRecord, result }:
     const { refetch, data, isSuccess } = useGetRoundRecordById(roundRecord.id);
 
     useEffect(() => {
-        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 3000;
+        const resultFetchTime = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 1000;
 
         const timer = setTimeout(() => {
             refetch();

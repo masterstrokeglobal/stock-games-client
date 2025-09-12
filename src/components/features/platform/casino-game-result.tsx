@@ -28,8 +28,8 @@ export default function CasinoGameResult({ filter, className }: { filter: Filter
         new: filter.new
     });
 
-    const isCasinoAllowed = useCasinoAllowed();
-    if (!isCasinoAllowed) notFound();
+    const { isLoading, isCasinoAllowed } = useCasinoAllowed();
+    if (!isCasinoAllowed && !isLoading) notFound();
 
     // Calculate shown and total
     const shown = searchResults?.pages.reduce((acc, page) => acc + (page.games?.length || 0), 0) || 0;

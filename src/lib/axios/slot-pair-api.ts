@@ -17,6 +17,9 @@ const slotPairAPI = {
 
     updateSlotPair: async (slotPairData: any & { id: string }) => {
         return api.put(`/stock-slot-placement/slot-pair/${slotPairData.id}`, slotPairData);
+    },
+    deleteSlotPair: async (id: string) => {
+        return api.delete(`/stock-slot-placement/slot-pair/${id}`);
     }
 }
 

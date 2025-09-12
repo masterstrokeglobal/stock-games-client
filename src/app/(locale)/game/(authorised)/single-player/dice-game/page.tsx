@@ -65,9 +65,9 @@ const DiceGame = () => {
 
     if (isLoading || !roundRecord) return <GameLoadingScreen className='min-h-[100svh]' />
 
-    if (isTablet) return <section className=" space-y-4 pt-14 bg-[#140538] font-">
-        <Navbar />
-        <Dice3D stocks={stocks} className='sm:min-h-80 xs:min-h-72 min-h-60  w-full' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
+    if (isTablet) return <section className=" md:space-y-4 space-y-1 pt-14 bg-[#140538]">
+        <Navbar className='sm:mb-4 mb-1' />
+        <Dice3D stocks={stocks} className='sm:min-h-80 xs:min-h-72  min-h-60  w-full' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
         <BettingGrid roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={roundRecordWithWinningId?.winningId || null} winningSum={winningSum} >
             <DiceGameTimeDisplay className="w-full" roundRecord={roundRecord} />
         </BettingGrid>

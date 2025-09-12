@@ -65,7 +65,7 @@ const CompanyTable = () => {
                     </Link>
                 </div>
             </header>
-            <main className="mt-4">
+            <main className="mt-4 max-w-[calc(100vw-280px)]">
                 <DataTable
                     page={page}
                     loading={isFetching}

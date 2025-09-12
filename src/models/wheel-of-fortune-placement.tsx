@@ -8,7 +8,6 @@ export enum WheelColor {
     COLOR3 = "color3",
     COLOR4 = "color4",
     COLOR5 = "color5",
-    COLOR6 = "color6",
 }
 
 

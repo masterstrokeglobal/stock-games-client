@@ -9,6 +9,7 @@ import { Transaction, TransactionType } from "@/models/transaction";
 import WithdrawalDetails from "@/components/features/transaction/withdrawl-details";
 import WithdrawDetailsRecord from "@/models/withdrawl-details";
 import UserCard from "@/components/features/user/user-card";
+import DepositDetails from "@/components/features/transaction/deposit-details";
 
 const EditTransactionPage = () => {
     const params = useParams();
@@ -48,9 +49,9 @@ const EditTransactionPage = () => {
     };
 
     const withdrawldetails = useMemo(() => {
-        if (transaction.type != TransactionType.WITHDRAWAL) return null;
+        if (!data?.data?.transaction.withdrawDetails) return null;
         return new WithdrawDetailsRecord(data?.data?.transaction.withdrawDetails);
-    }, [data, transaction]);
+    }, [data]);
 
     if (isLoading) return <LoadingScreen>Loading transaction...</LoadingScreen>;
 
@@ -60,11 +61,12 @@ const EditTransactionPage = () => {
 
             {transaction.user && <UserCard user={transaction.user} />}
             {withdrawldetails && <WithdrawalDetails withdrawDetails={withdrawldetails} />}
+            {transaction.type == TransactionType.DEPOSIT && <DepositDetails companyQr={transaction.companyQR} imageUrl={transaction.confirmationImageUrl} />}
             {isSuccess && data && (
                 <TransactionEditForm
                     transaction={data.data.transaction}
                     onSubmit={onSubmit}
-                    showEdit={transaction.type == TransactionType.DEPOSIT||transaction.type==TransactionType.WITHDRAWAL}
+                    showEdit={transaction.type == TransactionType.DEPOSIT || transaction.type == TransactionType.WITHDRAWAL}
                     isLoading={isPending || confirmPending}
                 />)}
         </>

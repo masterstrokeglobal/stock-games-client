@@ -9,7 +9,7 @@ interface GameResultDialogProps {
 const SlotGameResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
   const { data, isLoading, isError } = useStockGameRoundResult(roundRecordId,open);
   return (
-        <GameResult data={data?.data}
+        <GameResult data={data}
           showDialog={open}
           isLoading={isLoading}
           isError={isError}

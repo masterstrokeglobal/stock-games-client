@@ -1,5 +1,6 @@
 import { gameRecordAPI } from "@/lib/axios/game-record-API"; // Adjust the path as needed
 import { useIsExternalUser } from "@/context/auth-context";
+import MarketItem from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { StockJackpotPlacementType } from "@/models/stock-slot-jackpot";
 import { StockJackpotPlacement } from "@/models/stock-slot-placement";
@@ -47,6 +48,53 @@ export const useCreatePlacementBet = () => {
         },
         onError: (error: any) => {
             toast.error(error.response?.data.message ?? "Error creating game record");
+        },
+    });
+};
+
+
+export const useAutoBets = (roundId?: number) => {
+    return useQuery<number>({
+        queryKey: ["auto-bets", roundId],
+        queryFn: async () => {
+            const { data } = await gameRecordAPI.getAutoBet();
+            return data?.autoBets ?? 0;
+        },
+    });
+};
+
+export const useCreateAutoBet = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: gameRecordAPI.createAutoBet,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) =>
+                    query.queryKey[0] === "winningGameRecord" ||
+                    query.queryKey[0] === "topPlacements" ||
+                    query.queryKey[0] === "myPlacements" ||
+                    query.queryKey[0] === "user" && query.queryKey[1] == 'wallet'||
+                    query.queryKey[0] === "auto-bets",
+            });
+
+            toast.success("Auto bet created successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error creating auto bet");
+        },
+    });
+};
+
+export const useDeleteAutoBet = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: gameRecordAPI.deleteAutoBet,
+        onSuccess: () => {
+            toast.success("Auto bet deleted successfully");
+            queryClient.invalidateQueries({ queryKey: ["auto-bets"] });
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data.message ?? "Error deleting auto bet");
         },
     });
 };
@@ -99,11 +147,11 @@ export const useGetWinningGameRecord = () => {
 
 // Get Top Placements Hook
 export const useGetTopPlacements = (roundId: string) => {
-    const THREE_SECOND = 3000;
+    const THREE_SECOND = 30000;
     return useQuery({
         queryKey: ["topPlacements", roundId],
         queryFn: () => gameRecordAPI.getTopPlacements(roundId),
-        staleTime: THREE_SECOND,
+        refetchInterval: THREE_SECOND,
     });
 };
 
@@ -299,6 +347,7 @@ type JackpotPlacementResult = {
     winningId: any[];
     placement: StockJackpotPlacementType
     result: StockJackpotPlacementType | null;
+    marketItem:MarketItem,
     isWinner: boolean;
     createdAt: string;
     netProfitLoss: number;

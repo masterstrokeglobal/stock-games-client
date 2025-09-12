@@ -90,7 +90,7 @@ export const IndexwithColorBands = [
             shadow: "0px 0px 30px 0px rgba(244, 67, 54, 1)",
             actualColor: '#F44336', 
             chipColor: '#910024',// Vibrant red (most frequent - 7 items)
-            multiplier: 3
+            multiplier: 2.5
         },
         [WheelColor.COLOR2]: {
             name: 'GREEN',
@@ -102,7 +102,7 @@ export const IndexwithColorBands = [
             shadow: "0px 0px 30px 0px rgba(76, 175, 80, 1)",
             actualColor: '#4CAF50',
             chipColor: '#0E6D24', // Vibrant green (7 items)
-            multiplier: 3
+            multiplier: 2.5
         },
         [WheelColor.COLOR3]: {
             name: 'BLUE',
@@ -114,7 +114,7 @@ export const IndexwithColorBands = [
             chipColor: '#0A57B4',
             shadowColor: 'shadow-blue-500/50',
             actualColor: '#2196F3', // Bright blue (3 items)
-            multiplier: 7
+            multiplier: 6
         },
         [WheelColor.COLOR4]: {
             name: 'PURPLE',
@@ -126,7 +126,7 @@ export const IndexwithColorBands = [
             shadow: "0px 0px 30px 0px #6C2784",
             chipColor: '#4B1760',
             actualColor: '#6C2784', // Main purple
-            multiplier: 7
+            multiplier: 6
         },
         [WheelColor.COLOR5]: {
             name: 'GOLDEN',
@@ -138,20 +138,20 @@ export const IndexwithColorBands = [
             shadow: "0px 0px 30px 0px rgba(255, 215, 0, 1)",
             chipColor: '#8F571B',
             actualColor: '#FFD700', // Golden yellow (1 item - rarest)
-            multiplier: 21
+            multiplier: 18
         },
-        [WheelColor.COLOR6]: {
-            name: 'WHITE',
-            backgroundGradient: 'linear-gradient(90.33deg, rgba(175, 2, 45, 0.85) 1.64%, rgba(84, 0, 6, 0.85) 115.74%)',
-            bgColor: 'bg-white',
-            textColor: 'text-black',
-            borderColor: 'border-white',
-            chipColor: '#FFFFFF',
-            shadowColor: 'shadow-yellow-400/50',
-            shadow: "0px 0px 30px 0px rgba(255, 255, 255, 1)",
-            actualColor: '#FFD700', // Golden yellow (1 item - rarest)
-            multiplier: 2
-        }
+        // [WheelColor.COLOR6]: {
+        //     name: 'WHITE',
+        //     backgroundGradient: 'linear-gradient(90.33deg, rgba(175, 2, 45, 0.85) 1.64%, rgba(84, 0, 6, 0.85) 115.74%)',
+        //     bgColor: 'bg-white',
+        //     textColor: 'text-black',
+        //     borderColor: 'border-white',
+        //     chipColor: '#FFFFFF',
+        //     shadowColor: 'shadow-yellow-400/50',
+        //     shadow: "0px 0px 30px 0px rgba(255, 255, 255, 1)",
+        //     actualColor: '#FFD700', // Golden yellow (1 item - rarest)
+        //     multiplier: 2
+        // }
     };
 
 export class RoundRecord {
@@ -176,6 +176,9 @@ export class RoundRecord {
     deletedAt?: Date;
     initialValues: Record<string, number> | null;
     finalDifferences: Record<string, number> | null;
+    bonusSymbol?: string;
+bonusMultiplier?: number;
+
     winningSide?: HeadTailPlacementType;
     marketColors: {
         color: WheelColor;
@@ -202,6 +205,8 @@ export class RoundRecord {
         this.deletedAt = data.deletedAt ? new Date(data.deletedAt) : undefined;
         this.initialValues = data.initialValues || null;
         this.finalDifferences = data.finalDifferences || null;
+        this.bonusSymbol = data.bonusSymbol;
+        this.bonusMultiplier = data.bonusMultiplier;
         this.coinTossPair = data.coinTossPair ? new CoinTossPair(data.coinTossPair) : undefined;
         this.winningSide = data.winningSide || undefined;
         this.marketColors = data.marketColors || [];

@@ -9,7 +9,7 @@ import {
 import useCasinoAllowed from "@/hooks/use-is-casino-allowed"
 import useWindowSize from "@/hooks/use-window-size"
 import { cn } from "@/lib/utils"
-import { SidebarCloseIcon, SidebarOpenIcon } from "lucide-react"
+import {  SidebarCloseIcon, SidebarOpenIcon } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { usePathname, useRouter } from "next/navigation"
 import {
@@ -18,7 +18,6 @@ import {
     GiftIcon,
     GridIcon,
     HeadphonesIcon,
-    HelpCircleIcon,
     HomeIcon,
     MaximizeIcon,
     StarIcon,
@@ -26,6 +25,7 @@ import {
 } from '../../common/sidebar-icons'
 import ContactDialog from "./contact-dialog"
 import WalletDialog from "./wallet-dialog"
+import { IconCricket } from "@tabler/icons-react"
 
 // Helper for sidebar icon component
 const SidebarIconComponent = ({ Icon, className }: { Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>; className?: string }) => (
@@ -54,12 +54,12 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
         { icon: StarIcon, label: t("tiers"), href: "/game/platform/tier" },
         { icon: CreditCardIcon, label: "Wallet", href: "#", Parent: WalletDialog },
         { icon: GiftIcon, label: t("promotions"), href: "/game/platform/promotion" },
-        { icon: HelpCircleIcon, label: t("how-to-play"), href: "/game/platform/how-to-play" },
         { icon: HeadphonesIcon, label: t("support"), Parent: ContactDialog },
     ];
     
     const casinoItems = [
         { icon: MaximizeIcon, label: t("casino-games"), href: "/game/platform/casino" },
+        { icon: IconCricket as any, label: t("gap-games"), href: "/game/platform/gap" },
         { icon: GridIcon, label: t("slot-games"), href: `/game/platform/casino/slot-games` },
         { icon: VideoIcon, label: t("live-games"), href: `/game/platform/casino/live-games` },
     ];
@@ -71,7 +71,7 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
     const { isMobile } = useWindowSize();
     const router = useRouter();
 
-    const isCasinoAllowed = useCasinoAllowed();
+    const {isCasinoAllowed} = useCasinoAllowed();
 
     const onClick = (item: SidebarItemType) => {
         if (isMobile) {

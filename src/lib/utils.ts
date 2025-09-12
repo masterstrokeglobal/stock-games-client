@@ -1,7 +1,8 @@
 import { PlacementType } from "@/models/game-record";
 import { SchedulerType } from "@/models/market-item";
-import { RoundRecord } from "@/models/round-record";
+import { RoundRecord, RoundRecordGameType } from "@/models/round-record";
 import { clsx, type ClassValue } from "clsx";
+import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -75,6 +76,8 @@ export const getPlacementString = (bet: { market: number[], placementType: Place
 
   }
 }
+
+
 
 
 export const HIGHLIGHT_APP_KEY = process.env.NEXT_PUBLIC_HIGHLIGHT_APP_KEY
@@ -370,15 +373,119 @@ export const COIN_HEAD_TAIL_MULTIPLIER = 2
 
 
 // Dice multipliers
-export const DICE_WINNING_MULTIPLIER_2 = 36;
-export const DICE_WINNING_MULTIPLIER_3 = 18;
-export const DICE_WINNING_MULTIPLIER_4 = 12;
-export const DICE_WINNING_MULTIPLIER_5 = 9;
-export const DICE_WINNING_MULTIPLIER_6 = 7.2;
-export const DICE_WINNING_MULTIPLIER_7 = 6;
-export const DICE_WINNING_MULTIPLIER_8 = 7.2;
-export const DICE_WINNING_MULTIPLIER_9 = 9;
-export const DICE_WINNING_MULTIPLIER_10 = 12;
-export const DICE_WINNING_MULTIPLIER_11 = 18;
-export const DICE_WINNING_MULTIPLIER_12 = 36;
+export const DICE_WINNING_MULTIPLIER_2 = 24;
+export const DICE_WINNING_MULTIPLIER_3 = 16;
+export const DICE_WINNING_MULTIPLIER_4 = 10;
+export const DICE_WINNING_MULTIPLIER_5 = 8;
+export const DICE_WINNING_MULTIPLIER_6 = 6;
+export const DICE_WINNING_MULTIPLIER_7 = 5;
+export const DICE_WINNING_MULTIPLIER_8 = 6;
+export const DICE_WINNING_MULTIPLIER_9 = 8;
+export const DICE_WINNING_MULTIPLIER_10 = 10;
+export const DICE_WINNING_MULTIPLIER_11 = 16;
+export const DICE_WINNING_MULTIPLIER_12 = 24;
 
+
+
+export const stockGames = [
+    {
+        href: `/game/single-player/roulette`,
+        src: "/images/banner/roulette.png",
+        alt: "stock-roulette",
+        name: "Stock Roulette",
+        type : RoundRecordGameType.DERBY
+    },
+    {
+        href: "/game/single-player/jackpot",
+        src: "/images/banner/hi-lo.png",
+        name: "Hi Low",
+        alt: "coming-soon",
+        type : RoundRecordGameType.STOCK_JACKPOT
+    },
+    {
+
+        href: "/game/single-player/stock-slot",
+        src: "/images/banner/stock-slot.png",
+        name: "Stock Slot",
+        alt: "coming-soon",
+        type : RoundRecordGameType.STOCK_SLOTS
+    },
+    {
+        href: "/game/single-player/7-up-down",
+        src: "/images/banner/7-up-down.png",
+        name: "7 Up Down",
+        alt: "coming-soon",
+        type : RoundRecordGameType.SEVEN_UP_DOWN
+    },
+    {
+        href: "/game/single-player/head-tail",
+        src: "/images/banner/coin-toss.png",
+        name: "Head Tail",
+        alt: "coming-soon",
+        type : RoundRecordGameType.HEAD_TAIL
+    },
+    {
+        href: "/game/single-player/wheel-of-fortune",
+        src: "/images/banner/wheel-of-fortune.png",
+        name: "Wheel Of Fortune",
+        alt: "coming-soon",
+        type : RoundRecordGameType.WHEEL_OF_FORTUNE
+      },
+    {
+        href: "/game/single-player/dice-game",
+        src: "/images/banner/dice-game.png",
+        name: "Dice Game",
+        alt: "coming-soon",
+        type : RoundRecordGameType.DICE
+    },
+    // {
+    //     href: "/game/single-player/aviator",
+    //     // href: "/game/platform/stock-game/aviator",
+    //     src: "/images/banner/aviator.png",
+    //     name: "Aviator",
+    //     alt: "coming-soon",
+    //     type : RoundRecordGameType.AVIATOR
+    // }
+]
+
+export type StockGame = {
+    href: string;
+    src: string;
+    name: string;
+    alt: string;
+    type: RoundRecordGameType;
+}
+export const TAWK_PROPERTY_ID = process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID??""
+export const TAWK_WIDGET_ID = process.env.NEXT_PUBLIC_TAWK_WIDGET_ID??""
+
+export const isTawkEnabled = !!TAWK_PROPERTY_ID && !!TAWK_WIDGET_ID;
+
+
+export const copyToClipboard = async (text: string) => {
+  try {
+      await navigator.clipboard.writeText(text);
+      toast.success("Wallet address copied to clipboard");
+  } catch (err) {
+      console.error(err);
+      toast.error("Failed to copy wallet address");
+  }
+};
+
+export const getRandomPlacementString = () => {
+  const randomIndex = randomNumber(0,5,1);
+    switch(randomIndex){
+      case 0:
+        return `Single ${randomNumber(1,16,1)}`
+      case 1:
+        return "Red"
+      case 2:
+        return "Black"
+      case 3:
+        return "Even"
+      case 4:
+        return "Odd"
+
+      default:
+        return `Single ${randomNumber(1,16,1)}`
+    }
+}

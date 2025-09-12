@@ -54,3 +54,19 @@ export const useUpdateSevenUpDownPair = () => {
         }
     });
 };
+
+export const useDeleteSevenUpDownPair = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: sevenUpDownPairAPI.deleteSevenUpDownPair,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "sevenUpDownPairs"
+            });
+            toast.success("Seven up down pair deleted successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error deleting seven up down pair");
+        }
+    });
+};

@@ -24,7 +24,7 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
 
   const totalWon = roundResult?.placements.reduce((total, bet) => {
     return total + (bet.isWinner ? bet.amountWon : 0);
-  }, 0) ?? 0;   
+  }, 0) ?? 0;
 
   const totalNetResult = totalWon - totalPlaced;
 
@@ -89,7 +89,7 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
                       <div className="text-center uppercase sm:text-base text-sm whitespace-nowrap">Bet INR</div>
                       <div className="text-center uppercase sm:text-base text-sm whitespace-nowrap">Cashout INR</div>
                     </div>
-                    <div className="space-y-2 mb-4 max-h-[150px] overflow-y-auto font-phudu">
+                    <div className="space-y-2 mb-4 max-h-[120px] overflow-y-auto font-phudu">
                       {roundResult?.placements.map((bet, idx) => {
                         const config = COIN_SIDE_CONFIG[bet.winningSide as keyof typeof COIN_SIDE_CONFIG];
                         return (
@@ -116,7 +116,7 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
                             </div>
                             {/* Cashout INR */}
                             <div className={cn(
-                              "text-center font-bold flex items-end justify-center flex-nowrap gap-1 text-xs sm:text-sm",
+                              "text-center font-bold flex items-end justify-end flex-nowrap gap-1 text-xs sm:text-sm",
                               bet.isWinner ? "text-green-400" : "text-red-500"
                             )}>
                               {bet.isWinner ? (
@@ -132,7 +132,7 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
                                   <span className="font-bold">LOSS</span>
                                   <TriangleDownGlow />
                                   <span className="font-normal">
-                                    ({INR(bet.amountWon, true)})
+                                   0
                                   </span>
                                 </>
                               )}
@@ -141,8 +141,19 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
                         );
                       })}
                     </div>
+                    <div className='grid grid-cols-3 text-white sm:text-base text-sm  border-t py-2 px-4 border-[#8EC2FF]'>
+                      <span className='font-phudu'>
+                        Total:
+                      </span>
+                      <span className=' font-phudu  text-center font-semibold'>
+                        {INR(totalPlaced)}
+                      </span>
+                      <span className=' font-phudu  text-end font-semibold'>
+                        {INR(totalWon)}
+                      </span>
+                    </div>
                   </div>
-                  <div className='flex justify-center mb-2 mt-16'>
+                  <div className='flex justify-center mb-2 mt-8'>
                     <div
                       className='text-center text-lg font-phudu xl:text-4xl md:text-3xl font-bold sm:text-2xl xs:text-xl text-white'
                       style={{

@@ -7,23 +7,25 @@ import useNSEAvailable from "./use-nse-available";
 import { useAuthStore } from "@/context/auth-context";
 import User from "@/models/user";
 import { RoundRecordGameType } from "@/models/round-record";
+import useUSAMarketAvailable from "./use-usa-available";
 
 export function useGameType() {
     const { userDetails } = useAuthStore();
     const searchParams = useSearchParams();
     const router = useRouter();
     const isNseAvailable = useNSEAvailable();
+    const isUsaAvailable = useUSAMarketAvailable();
 
     const user = userDetails as User;
 
     const getCurrentGameType = useCallback((): SchedulerType => {
         const gameTypeFromParams = searchParams.get("gameType") as SchedulerType | null;
-        let type = gameTypeFromParams ?? (isNseAvailable ? SchedulerType.NSE : SchedulerType.CRYPTO);
+        let type = gameTypeFromParams ?? (isNseAvailable ? SchedulerType.NSE : isUsaAvailable ? SchedulerType.USA_MARKET : SchedulerType.CRYPTO);
         if (user?.isNotAllowedToPlaceOrder(type)) {
             type = SchedulerType.NSE;
         }
         return type;
-    }, [searchParams, isNseAvailable, user]);
+    }, [searchParams, isNseAvailable, isUsaAvailable, user]);
 
     const [gameType, setGameType] = useState<SchedulerType>(getCurrentGameType);
 

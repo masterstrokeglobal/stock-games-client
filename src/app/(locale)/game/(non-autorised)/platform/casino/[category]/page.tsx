@@ -18,9 +18,9 @@ export default function GamingAppInterface() {
         category: category || undefined,
     })
 
-    const isCasinoAllowed = useCasinoAllowed();
+    const { isLoading, isCasinoAllowed } = useCasinoAllowed();
 
-    if (!isCasinoAllowed || !category) notFound();
+    if (!isCasinoAllowed && !isLoading || !category) notFound();
     
     return (
         <div className="flex flex-col min-h-screen bg-primary-game text-white">            

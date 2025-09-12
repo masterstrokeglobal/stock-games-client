@@ -73,31 +73,6 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         const rearrangeMarketsForWheel = (markets: any[]) => {
             if (markets.length !== 21) return markets; // Safety check
 
-            // Mapping: wheelIndex -> marketIndex
-            // const wheelToMarketMapping = [
-            //     20, // wheel index 0 -> market index 20 (gold)
-            //     2,  // wheel index 1 -> market index 2 (blue)
-            //     0,  // wheel index 2 -> market index 0 (red)
-            //     1,  // wheel index 3 -> market index 1 (green)
-            //     5,  // wheel index 4 -> market index 5 (purple)
-            //     3,  // wheel index 5 -> market index 3 (red)
-            //     4,  // wheel index 6 -> market index 4 (green)
-            //     8,  // wheel index 7 -> market index 8 (blue)
-            //     6,  // wheel index 8 -> market index 6 (red)
-            //     7,  // wheel index 9 -> market index 7 (green)
-            //     11, // wheel index 10 -> market index 11 (purple)
-            //     9,  // wheel index 11 -> market index 9 (red)
-            //     10, // wheel index 12 -> market index 10 (green)
-            //     14, // wheel index 13 -> market index 14 (blue)
-            //     12, // wheel index 14 -> market index 12 (red)
-            //     13, // wheel index 15 -> market index 13 (green)
-            //     17, // wheel index 16 -> market index 17 (purple)
-            //     15, // wheel index 17 -> market index 15 (red)
-            //     19, // wheel index 18 -> market index 19 (blue)
-            //     16, // wheel index 19 -> market index 16 (green)
-            //     18  // wheel index 20 -> market index 18 (red)
-            // ];
-
             const wheelToMarketMapping = [
                 20, // wheel index 0 -> market index 20 (gold)
                 2,  // wheel index 1 -> market index 2 (green)
@@ -137,7 +112,6 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
     }, [data?.data?.roundRecords?.[0], isSuccess]);
 
 
-
     useEffect(() => {
 
         if (!roundRecord) return;
@@ -149,13 +123,17 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         let timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 5000;
 
         if (roundRecord.roundRecordGameType !== RoundRecordGameType.DERBY) {
-            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 10000;
+            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 5000;
+        }
+
+        if(roundRecord.roundRecordGameType === RoundRecordGameType.STOCK_JACKPOT){
+            timeToGameEnd = new Date(roundRecord.endTime).getTime() - new Date().getTime() + 5000;
         }
 
         const gameEnd = setTimeout(() => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
+                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet' || query.queryKey[0] === 'userGameHistory';
                 },
             });
         }, timeToGameEnd);
@@ -163,7 +141,7 @@ export const useCurrentGame = (gameType: RoundRecordGameType = RoundRecordGameTy
         const placeEnd = setTimeout(() => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet';
+                    return query.queryKey[0] === 'current-round-record' || query.queryKey[0] === 'myPlacements' || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet' ;
                 },
             });
         }, timeToPlace);

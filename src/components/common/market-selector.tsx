@@ -1,18 +1,19 @@
-import { useAuthStore, useIsExternalUser } from "@/context/auth-context";
+import { useAuthStore } from "@/context/auth-context";
+import { useTheme } from "@/context/theme-context";
+import useCOMEXAvailable from "@/hooks/use-comex-available";
 import { useGameType, useMarketSelector } from "@/hooks/use-market-selector";
+import useMCXAvailable from "@/hooks/use-mcx-available";
 import useNSEAvailable from "@/hooks/use-nse-available";
+import useSchedularCheck from "@/hooks/use-schedular-check";
+import useMarketSchedule from "@/hooks/use-schedular-timings";
 import useUSAMarketAvailable from "@/hooks/use-usa-available";
 import { cn } from "@/lib/utils";
 import { SchedulerType } from "@/models/market-item";
-import User from "@/models/user";
 import { RoundRecordGameType } from "@/models/round-record";
-import useSchedularCheck from "@/hooks/use-schedular-check";
-import { useTheme } from "@/context/theme-context";
+import User from "@/models/user";
 import Navbar from "../features/game/navbar";
-import useMCXAvailable from "@/hooks/use-mcx-available";
-import useCOMEXAvailable from "@/hooks/use-comex-available";
-import useMarketSchedule from "@/hooks/use-schedular-timings";
-import ExternalUserNavbar from "../features/game/external-user-navbar";
+import ExternalUserNavbar from "../features/game/external-user-Navbar";
+import { useIsExternalUser } from "@/context/auth-context";
 
 type MarketSelectorProps = {
     title: string;
@@ -53,16 +54,18 @@ const MarketSelector = ({
 
     const currentUser = userDetails as User;
     const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
-    const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO) && (roundRecordType !== RoundRecordGameType.HEAD_TAIL && roundRecordType !== RoundRecordGameType.STOCK_JACKPOT);
+    const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO) && !(roundRecordType == RoundRecordGameType.HEAD_TAIL || roundRecordType == RoundRecordGameType.STOCK_JACKPOT);
     const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
-    const isCOMEXAllowed = (!currentUser.isNotAllowedToPlaceOrder(SchedulerType.COMEX) && roundRecordType === RoundRecordGameType.HEAD_TAIL) || roundRecordType === RoundRecordGameType.STOCK_JACKPOT;
+    const isCOMEXAllowed =  !currentUser.isNotAllowedToPlaceOrder(SchedulerType.COMEX) && (roundRecordType === RoundRecordGameType.HEAD_TAIL || roundRecordType === RoundRecordGameType.STOCK_JACKPOT);
+  
 
     const handleMarketSelection = (market: SchedulerType) => {
         setGameType(market);
         setMarketSelected(true);
     }
 
-    const isMCXAllowed = (roundRecordType === RoundRecordGameType.HEAD_TAIL || roundRecordType === RoundRecordGameType.SEVEN_UP_DOWN) && isMCXAvailable;
+    const isMCXAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.MCX) && (roundRecordType === RoundRecordGameType.HEAD_TAIL || roundRecordType === RoundRecordGameType.STOCK_JACKPOT);
+  
 
     // Use the market schedule hook
     const marketStatuses = useMarketSchedule();
@@ -109,19 +112,24 @@ const MarketSelector = ({
             id: SchedulerType.MCX,
             title: "MCX",
             subtitle: "MCX Stock Market (Start: 7:30 PM IST, End: 11:30 PM IST)",
-            available: schedulerStatus[SchedulerType.MCX],
-            allowed: isMCXAllowed && schedulerStatus[SchedulerType.MCX],
+            available: isMCXAvailable && schedulerStatus[SchedulerType.MCX],
+            allowed: isMCXAllowed ,
         },
         {
             id: SchedulerType.COMEX,
             title: "International",
             subtitle: "International Stock Market (Start: 3:30 PM IST, End: 7:30 PM IST)",
-            available: schedulerStatus[SchedulerType.COMEX] && isCOMEXAvailable,
-            allowed: isCOMEXAllowed && schedulerStatus[SchedulerType.COMEX] && isCOMEXAvailable,
+            available: isCOMEXAvailable && schedulerStatus[SchedulerType.COMEX],
+            allowed: isCOMEXAllowed,
         }
     ];
+    const availableMarkets = markets
+        .filter(market => market.allowed)
+        .sort((a, b) => {
+            if (a.available === b.available) return 0;
+            return a.available ? -1 : 1;
+        });
 
-    const availableMarkets = markets.filter(market => market.allowed);
 
     return (
         <section
@@ -130,15 +138,15 @@ const MarketSelector = ({
             { showNavbar ? isExternalUser ? <ExternalUserNavbar /> : <Navbar /> : null}
             <div className="dark:bg-[#04002968] bg-[#e6f6ff8b] backdrop-blur-[2px] w-full h-full absolute top-0 left-0" />
             <div className="mx-auto max-w-3xl w-full">
-                <header className="text-center mb-8 relative z-10 mt-10">
-                    <h1 className="md:text-4xl sm:text-3xl text-2xl font-bold text-platform-text mb-2 ">
+                <header className="text-center sm:mb-8 xs:mb-4 relative z-10 mt-10">
+                    <h1 className="md:text-4xl sm:text-3xl text-2xl font-bold text-platform-text md:mb-2 ">
                         {title}
                     </h1>
                     <p className="text-platform-text">Choose your trading market to continue</p>
                 </header>
 
                 {/* Market Cards Grid */}
-                <main className="grid grid-cols-1  gap-6  w-full">
+                <main className="grid grid-cols-1  md:gap-6 gap-1  w-full">
                     {availableMarkets.map((market) => {
                         const timeToOpen = getTimeToOpen(market.id);
                         return (
@@ -151,7 +159,7 @@ const MarketSelector = ({
                                 onClick={() => market.available && handleMarketSelection(market.id)}
                             >
                                 {/* Card Content */}
-                                <div className="p-6 h-40 flex flex-col justify-between relative">
+                                <div className="md:p-6 sm:p-4 p-2 min-h-40 flex flex-col justify-between relative">
                                     {/* Top Section */}
                                     <div className="flex justify-between items-start">
                                         <div>
@@ -187,7 +195,7 @@ const MarketSelector = ({
                                     </div>
 
                                     {/* Bottom Section */}
-                                    <div className="flex justify-between items-end">
+                                    <div className="flex justify-between flex-wrap items-end">
                                         <div className="">
                                             <h3 className="md:text-2xl sm:text-xl text-lg font-bold text-platform-text mb-2">
                                                 {market.title}

@@ -51,6 +51,27 @@
     line-height: normal;
 }
 
+.slot-gradient-shadow {
+    background: #ffffff;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 40%, #0285F5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.slot-gradient-text {
+    background: #ffffff;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 40%, #0285F5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+  
+@font-face {
+    font-family: "blood-melt";
+    src: url("/fonts/BloodMelt-Serif.otf");
+}
+
 @media (max-width: 768px) {
     .game-gradient-border {
         border-radius: 0;
@@ -60,6 +81,30 @@
         border-radius: 0;
     }
 
+}
+
+@media (max-width: 410px) {
+    .slot-dialog {
+        width: 300px !important;
+        height: 435px !important;
+    }
+
+    .slot-dialog-back {
+        width: 300px !important;
+        height: 369px !important;
+    }
+
+    .quit-text-1 {
+        font-size: 16px !important;
+    }
+
+    .quit-text-2 {
+        font-size: 20px !important;
+    }
+
+    .quit-text-3 {
+        font-size: 16px !important;
+    }
 }
 
 .dice-header {
@@ -144,3 +189,53 @@
     }
 }
 
+@keyframes slotWinPulse {
+    0%, 100% { 
+        box-shadow: inset 0px 0px 10px 10px #ffffff85;
+    }
+    50% { 
+        box-shadow: inset 0px 0px 20px 20px #ffffff85;
+    }
+}
+
+@media (max-width: 1024px) {
+    @keyframes slotWinPulse {
+        0%, 100% { 
+            box-shadow: inset 0px 0px 5px 5px #ffffff85;
+        }
+        50% { 
+            box-shadow: inset 0px 0px 10px 10px #ffffff85;
+        }
+    }
+}
+
+
+/* .custom-toast ::before {
+    content: "";
+    position: absolute;
+    background-image: url('/images/aviator/dialogs/image.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 100%;
+    width: 100%;
+    top: -10%;
+    left: -10%;
+    scale: 5;
+    z-index: 1;
+} */
+
+/* .custom-toast > * {
+    position: relative;
+    z-index: 2; 
+} */
+
+.custom-toast {
+    background: linear-gradient(90deg, #201C67 0%, #A493E4 100%) !important;
+    border: 1px solid #A590DF !important;
+    color: #fff !important;
+    box-shadow: 0px 0px 5px 4px rgba(79, 66, 116, 1) inset !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    padding: 10px !important;
+    border-radius: 12px !important;
+}

@@ -100,18 +100,6 @@ const AddPaymentMethod = ({ }: Props) => {
             <Link
                 href={{
                     pathname: "/game/wallet/menu/withdrawl-details/create",
-                    query: { type: 'upi' }
-                }}
-                passHref
-            >
-                <Button variant="game-secondary" className="w-full gap-x-3 mb-4 h-14 rounded-none">
-                    <UPIIcon />
-                    {t('add-upi')}
-                </Button>
-            </Link>
-            <Link
-                href={{
-                    pathname: "/game/wallet/menu/withdrawl-details/create",
                     query: { type: 'bank' }
                 }}
                 passHref

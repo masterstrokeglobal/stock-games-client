@@ -1,4 +1,5 @@
 import { useGameState } from '@/hooks/use-current-game';
+import { cn } from '@/lib/utils';
 import { RoundRecord } from '@/models/round-record';
 
 const GameHeaderMobile = ({
@@ -28,8 +29,8 @@ const GameHeaderMobile = ({
     const progress = timeLeft / totalTime;
 
     // Circle parameters
-    const size = 60; // Reduced size
-    const strokeWidth = 6; // Reduced stroke width
+    const size = 40; // Reduced size
+    const strokeWidth = 4; // Reduced stroke width
     const radius = (size - strokeWidth) / 2;
     const circumference = 2 * Math.PI * radius;
     const strokeDashoffset = circumference * (1 - progress);
@@ -38,19 +39,7 @@ const GameHeaderMobile = ({
         return null;
     }
     return (
-        <div
-            className={`flex items-center justify-end w-full px-6  gap-4 py-2 bg-[#061B3A] ${className}`}
-            style={{ minHeight: 80 }}
-        >
-            {/* Round Ends In Text */}
-            <div>
-                <span className="text-lg font-bold text-[#D1D5DB] drop-shadow-sm" style={{ fontFamily: 'inherit' }}>
-                    Round Ends In
-                </span>
-            </div>
-
-            {/* Circular Timer */}
-            <div className="relative flex-shrink-0" style={{ width: size, height: size }}>
+            <div className={cn('relative flex-shrink-0', className)} style={{ width: size, height: size }}>
                 <svg
                     width={size}
                     height={size}
@@ -92,7 +81,6 @@ const GameHeaderMobile = ({
                     </div>
                 )}
             </div>
-        </div>
     );
 };
 

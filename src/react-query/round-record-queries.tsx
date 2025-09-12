@@ -41,7 +41,7 @@ export const useGetCurrentRoundRecord = (
 export const useGetRoundRecordById = (roundRecordId?: number) => {
     return useQuery({
         queryKey: ["round-record", roundRecordId],
-        queryFn: roundRecordId ? () => roundRecordsAPI.getRoundRecordById(roundRecordId) : undefined,
+        queryFn: () => roundRecordId ? roundRecordsAPI.getRoundRecordById(roundRecordId) : Promise.reject("No roundRecordId provided"),
         enabled: !!roundRecordId, // Prevents the query from running if the ID is falsy
     });
 };

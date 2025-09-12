@@ -1,13 +1,14 @@
 import Navbar from "@/components/features/game/navbar";
 import JackpotBettingHistory from "@/components/features/stock-jackpot/betting-history";
 import GameRule from "@/components/features/stock-jackpot/game-rule";
+import HowToPlay from "@/components/features/stock-jackpot/how-to-play";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { SkewedButton } from "@/components/ui/skew-button";
 import Link from "next/link";
 
 const SettingPage = () => {
     return (
-        <section className="relative w-full lg:h-screen min-h-screen lg:overflow-hidden flex flex-col ">
+        <section className="relative w-full lg:h-screen min-h-[100svh] lg:overflow-hidden flex flex-col ">
             <Navbar />
             <img src="/images/jackpot/bg.png" className="w-full h-full absolute z-0" />
             <div className="bg-black bg-opacity-10 absolute backdrop-blur-md h-full w-full z-0" />
@@ -30,7 +31,7 @@ const SettingPage = () => {
                                     How to play?
                                 </AccordionTrigger>
                                 <AccordionContent >
-                                    <GameRule />
+                                    <HowToPlay />
                                 </AccordionContent>
                             </AccordionItem>
 

@@ -40,7 +40,6 @@ export default function CoinFlipGame({ roundRecord, amount, className, roundReco
 
   const hasHeadBet = myHeadAmount > 0;
   const hasTailBet = myTailAmount > 0;
-
   
   const headStock=  useMemo(() => roundRecordWithWinningSide?.finalPricesPresent ? roundRecordWithWinningSide.sortedMarketItems?.find((item) => item.id === roundRecord.coinTossPair?.head?.id) : stocks.find((item) => item.id === roundRecord.coinTossPair?.head?.id), [stocks, roundRecord.coinTossPair?.head?.id, roundRecordWithWinningSide]);
   const tailStock=  useMemo(() => roundRecordWithWinningSide?.finalPricesPresent ? roundRecordWithWinningSide.sortedMarketItems?.find((item) => item.id === roundRecord.coinTossPair?.tail?.id) : stocks.find((item) => item.id === roundRecord.coinTossPair?.tail?.id), [stocks, roundRecord.coinTossPair?.tail?.id, roundRecordWithWinningSide]);

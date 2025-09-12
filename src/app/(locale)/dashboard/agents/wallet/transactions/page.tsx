@@ -25,7 +25,6 @@ const TransactionTable = () => {
     const [type, setType] = useState<TransactionType | "all">("all");
     const [status, setStatus] = useState<string | "">("");
 
-
     const requestType = type === "all" ? [TransactionType.AGENT_DEPOSIT, TransactionType.AGENT_WITHDRAWAL, TransactionType.WITHDRAWAL, TransactionType.DEPOSIT].join(",") : type;
     // Fetch all transactions with pagination, search query, and filters
 

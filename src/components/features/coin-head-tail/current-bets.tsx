@@ -5,6 +5,7 @@ import { RoundRecord } from "@/models/round-record";
 import { useGetMyCurrentRoundHeadTailPlacement } from "@/react-query/head-tail-queries";
 import dayjs from "dayjs";
 import Image from "next/image";
+import { memo } from "react";
 
 const HEAD_BG =
     "linear-gradient(90deg, rgba(182, 143, 0, 0.3) 0%, rgba(147, 115, 0, 0.3) 100%)";
@@ -102,4 +103,4 @@ const BetsList = ({
     );
 };
 
-export default CurrentBets;
+export default memo(CurrentBets);

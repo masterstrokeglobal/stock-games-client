@@ -12,9 +12,12 @@ const coinTossPairAPI = {
 
     getCoinTossPairById: async (id: string) => {
         return api.get(`/coin-toss-pair/${id}`);
-    },      
+    },
     updateCoinTossPair: async (coinTossPair: Partial<CoinTossPairFormValues> & { id: string }) => {
         return api.patch(`/coin-toss-pair/${coinTossPair.id}`, coinTossPair);
+    },
+    deleteCoinTossPair: async (id: string) => {
+        return api.delete(`/coin-toss-pair/${id}`);
     }
 };
 

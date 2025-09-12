@@ -48,7 +48,7 @@ const TransactionTable = ({ userId, className }: Props) => {
 
     
     const user = userDetails as Admin;
-    const { data, isSuccess, isFetching } = useGetAllTransactions({
+    const { data, isSuccess, isLoading } = useGetAllTransactions({
         page: page,
         search: search,
         limit: limit,
@@ -192,7 +192,7 @@ const TransactionTable = ({ userId, className }: Props) => {
             <main className="mt-4">
                 <DataTable
                     page={page}
-                    loading={isFetching}
+                    loading={isLoading}
                     columns={transactionColumns}
                     data={transactions}
                     totalPage={totalPages}

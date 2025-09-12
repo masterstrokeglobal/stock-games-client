@@ -81,69 +81,6 @@ export const LOBBY_GAMES: Game[] = [
 ] as const;
 
 
-export const StockDerbyGames: Game[] = [
-    {
-        title: "Indian Stock Market",
-        link: "/game",
-        image: "/images/banner/roulette.png",
-        description: "Rouletter game on live NSE stocks",
-    },
-    {
-        title: "Stock Jackpot",
-        link: "/game/single-player/jackpot",
-        image: "/images/banner/hi-lo.png",
-        description: "Guess Price Movement"
-    },
-    {
-
-        title: "Stock Slot",
-        link: "/game/platform/stock-game/stock-slot",
-        image: "/images/banner/stock-slot.png",
-        description: "Guess Last Price Digit and win"
-    },
-
-    // 7 up down
-    {
-        title: "7 Up Down",
-        link: "/game/single-player/7-up-down",
-        image: "/images/banner/7-up-down.png",
-        description: "14 stocks choosing will more than 7 go up or down"
-    }
-    ,
-    // coin head tail
-    {
-        title: "Coin Head Tail",
-        link: "/game/single-player/head-tail",
-        image: "/images/banner/coin-toss.png",
-        description: "Guess the side of the coin"
-    }
-    ,
-    {
-        title: "Wheel of Fortune",
-        link: "/game/single-player/wheel-of-fortune",
-        image: "/images/banner/wheel-of-fortune.png",
-        description: "Guess the side of the coin"
-    }
-    ,
-    {
-        title: "Dice Game",
-        link: "/game/single-player/dice-game",
-        image: "/images/banner/dice-game.png",
-        description: "Guess the side of the coin"
-    },
-    //     title: "Red Black",
-    //     link: "/game/redblack",
-    //     image: "/images/redvsblack.png",
-    //     description: "Guess Red or Black"
-    // },
-    {
-        title: "Aviator",
-        link: "/game/platform/stock-game/aviator",
-        image: "/images/banner/aviator.png",
-        description: "Guess the side of the coin"
-    }
-
-]
 
 export const SinglePlayerGames: Game[] = [
     {

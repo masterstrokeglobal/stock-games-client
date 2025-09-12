@@ -7,6 +7,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { Edit2 } from "lucide-react"; // Import necessary icons
 import Link from "next/link"; // Adjust import path
+import React from "react";
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
+import { useUpdateAgentChipsDeposit, useUpdateAgentChipsWithdrawal } from "@/react-query/agent-queries";
 
 const agentWalletTransactionColumns: ColumnDef<Transaction>[] = [
     {
@@ -98,6 +101,11 @@ const agentWalletTransactionColumns: ColumnDef<Transaction>[] = [
         ),
     },
     {
+        header: "Accept/Reject",
+        accessorKey: "acceptReject",
+        cell: ({ row }) => <StatusChangeColumn transaction={row.original} />,
+    },
+    {
         header: "Actions",
         accessorKey: "actions",
         cell: ({ row }) => (
@@ -108,12 +116,109 @@ const agentWalletTransactionColumns: ColumnDef<Transaction>[] = [
 
 export default agentWalletTransactionColumns;
 
+const StatusChangeColumn = ({ transaction }: { transaction: Transaction }) => {
+    const { mutate: deposit, isPending: depositPending } = useUpdateAgentChipsDeposit();
+    const { mutate: withdrawal, isPending: withdrawalPending } = useUpdateAgentChipsWithdrawal();
+    const [showAcceptDialog, setShowAcceptDialog] = React.useState(false);
+    const [showRejectDialog, setShowRejectDialog] = React.useState(false);
+
+    const handleStatusChange = (status: TransactionStatus) => {
+        if (transaction.type === TransactionType.AGENT_DEPOSIT) {
+            deposit({
+                transactionId: transaction.id.toString(),
+                status: status
+            });
+        } else if (transaction.type === TransactionType.AGENT_WITHDRAWAL) {
+            withdrawal({
+                transactionId: transaction.id.toString(),
+                status: status
+            });
+        }
+    };
+
+    // Only show Accept/Reject for AGENT_DEPOSIT and AGENT_WITHDRAWAL and only if status is PENDING
+    if (
+        !(
+            (transaction.type === TransactionType.AGENT_DEPOSIT || transaction.type === TransactionType.AGENT_WITHDRAWAL) &&
+            transaction.status === TransactionStatus.PENDING
+        )
+    ) {
+        return <div className="text-sm text-gray-500 text-center">N/A</div>;
+    }
+
+    const isPending = depositPending || withdrawalPending;
+
+    return (
+        <>
+            <div className="flex gap-2">
+                <Button
+                    variant="success"
+                    size="sm"
+                    disabled={isPending}
+                    onClick={() => setShowAcceptDialog(true)}
+                >
+                    {isPending ? "Processing..." : "Accept"}
+                </Button>
+                <Button
+                    variant="destructive"
+                    size="sm"
+                    disabled={isPending}
+                    onClick={() => setShowRejectDialog(true)}
+                >
+                    {isPending ? "Processing..." : "Reject"}
+                </Button>
+            </div>
+
+            <AlertDialog open={showAcceptDialog} onOpenChange={setShowAcceptDialog}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Accept Transaction</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Are you sure you want to accept this transaction? This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={() => handleStatusChange(TransactionStatus.COMPLETED)}
+                            disabled={isPending}
+                        >
+                            {isPending ? "Processing..." : "Accept"}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
+            <AlertDialog open={showRejectDialog} onOpenChange={setShowRejectDialog}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Reject Transaction</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Are you sure you want to reject this transaction? This action cannot be undone.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={() => handleStatusChange(TransactionStatus.FAILED)}
+                            disabled={isPending}
+                        >
+                            {isPending ? "Processing..." : "Reject"}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </>
+    );
+};
+
 const ActionColumn = ({ transaction }: { transaction: Transaction }) => {
 
     const { userDetails } = useAuthStore();
 
     const admin = userDetails as Admin;
 
+    console.log(admin);
     if (admin.isSuperAdmin)
         return (
             <div className="flex justify-end">
@@ -136,7 +241,7 @@ const ActionColumn = ({ transaction }: { transaction: Transaction }) => {
             </div>
         );
 
-    if (admin.isAgent && (transaction.type === TransactionType.WITHDRAWAL || transaction.type === TransactionType.DEPOSIT))
+    if (admin.isAgent && (admin as any).enableTransactions && (transaction.type === TransactionType.WITHDRAWAL || transaction.type === TransactionType.DEPOSIT))
         return (
             <div className="flex justify-end">
                 <Link href={`/dashboard/agents/wallet/transactions/${transaction.id}`}>

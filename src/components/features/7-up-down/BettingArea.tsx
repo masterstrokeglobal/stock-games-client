@@ -3,11 +3,12 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from '@/context/auth-context';
 import { useShowResults } from '@/hooks/use-current-game';
 import { cn } from '@/lib/utils';
-import { RoundRecord } from '@/models/round-record';
+import { RoundRecord, RoundRecordGameType } from '@/models/round-record';
 import { useGetMyCurrentRoundSevenUpDownPlacement } from '@/react-query/7-up-down';
 import { Minus, Plus } from "lucide-react";
 import React from 'react';
 import SevenUpDownResultDialog from './game-result';
+import useMaxPlacement from "@/hooks/use-max-placement";
 
 interface BettingAreaProps {
   betAmount: number;
@@ -25,17 +26,17 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
   const coinValues = userDetails?.company?.coinValues;
 
   const showResult = useShowResults(roundRecord, placements ?? []);
+  const { maxPlacement, minPlacement } = useMaxPlacement(RoundRecordGameType.SEVEN_UP_DOWN);
 
   // Calculate the total amount placed in all placements
   const totalPlacements = placements?.reduce((sum, placement) => sum + (placement.amount ?? 0), 0) ?? 0;
 
   // Handlers for + and - buttons
   const handleIncrement = () => {
-    if (!userDetails?.company?.maxPlacement) return;
     const next = betAmount + 100;
     setBetAmount(
-      next > userDetails.company.maxPlacement
-        ? userDetails.company.maxPlacement
+      next > maxPlacement
+        ? maxPlacement
         : next
     );
   };
@@ -85,8 +86,8 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
           >
             <input
               type="number"
-              min={userDetails?.company?.minPlacement ?? 0}
-              max={userDetails?.company?.maxPlacement}
+              min={minPlacement}
+              max={maxPlacement}
               value={betAmount}
               onChange={(e) => setBetAmount(Number(e.target.value))}
               className="bg-transparent outline-none border-none text-white font-montserrat text-lg w-full text-center "
@@ -96,6 +97,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
             {/* + Button inside input */}
             <button
               onClick={handleIncrement}
+              disabled={betAmount >= maxPlacement}
               className="absolute left-2 top-1/2 transform -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center text-white text-sm font-bold border"
               style={{
                 background: "#3174DE",
@@ -108,7 +110,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
             {/* - Button inside input */}
             <button
-            disabled={betAmount <= (userDetails?.company?.minPlacement ?? 0)}
+              disabled={betAmount <= minPlacement}
               onClick={handleDecrement}
               className="absolute right-2 disabled:opacity-80 top-1/2 transform -translate-y-1/2 w-6 h-6 rounded-full flex items-center justify-center text-white text-sm font-bold border"
               style={{

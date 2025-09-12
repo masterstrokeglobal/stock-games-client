@@ -11,6 +11,7 @@ import PreviousBets from "./previous-bets";
 import { useGetMyCurrentRoundHeadTailPlacement } from "@/react-query/head-tail-queries";
 import { useShowResults } from "@/hooks/use-current-game";
 import CoinHeadTailResultDialog from "./game-result";
+import { memo } from "react";
 const AllBets = ({
     roundRecord,
     className,
@@ -78,4 +79,4 @@ const AllBets = ({
     );
 };
 
-export default AllBets;
+export default memo(AllBets);

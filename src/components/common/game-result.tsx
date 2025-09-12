@@ -4,6 +4,7 @@ import { Alert, AlertDescription } from "../ui/alert";
 import Image from "next/image";
 import { cn, INR } from "@/lib/utils";
 import { Separator } from "@radix-ui/react-separator";
+import { useEffect } from "react";
 
 type GameResultProps = {
     showDialog: boolean;
@@ -14,6 +15,10 @@ type GameResultProps = {
 
 const GameResult = ({ showDialog, isLoading, isError, data }: GameResultProps) => {
     const isWin = data && Number(data.netProfitLoss) > 0;
+
+    useEffect(()=>{
+        console.log("sarthak result data", data)
+    }, [data])
 
     return <Dialog defaultOpen={showDialog}>
         <DialogContent className="sm:max-w-md bg-primary-game text-white [&>.close-button]:hidden" data-hide-children="true">

@@ -5,12 +5,14 @@ import { SchedulerType } from "@/models/market-item";
 import { useGetCoinTossPairById, useUpdateCoinTossPair } from "@/react-query/coin-toss-queries";
 import { useMemo } from "react";
 import CoinTossPairForm, { CoinTossPairFormValues } from "./coin-toss-pair-form";
+import { useRouter } from "next/navigation";
 
 type Props = {
     id: string;
 }
 
 const EditTossPairForm = ({ id }: Props) => {
+    const router = useRouter();
     const { data: coinTossPair, isLoading: isLoadingPair } = useGetCoinTossPairById(id);
     const { mutate: updateCoinTossPair, isPending: isUpdating } = useUpdateCoinTossPair(id);
 
@@ -18,6 +20,10 @@ const EditTossPairForm = ({ id }: Props) => {
         updateCoinTossPair({
             id: coinTossPair?.id?.toString() || "",
             ...data
+        },{
+            onSuccess: () => {
+                router.push(`/dashboard/coin-toss-pair`);
+            },
         });
     };
 

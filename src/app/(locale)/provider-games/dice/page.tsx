@@ -10,14 +10,15 @@ import BettingGrid from '@/components/features/dice-game/game-board';
 import HelpButton from '@/components/features/dice-game/help-button';
 import LastRoundWinner from '@/components/features/dice-game/last-round';
 import RoundTimings from '@/components/features/dice-game/round-timings';
+import ExternalUserNavbar from '@/components/features/game/external-user-Navbar';
 import { useCurrentGame } from '@/hooks/use-current-game';
 import { useLeaderboard } from '@/hooks/use-leadboard';
 import { useMarketSelector } from '@/hooks/use-market-selector';
 import { BREAKPOINTS, useWindowSize } from '@/hooks/use-window-size';
 import useWinningId from '@/hooks/use-winning-id';
 import { RoundRecordGameType } from '@/models/round-record';
+import { DicePlacementType } from '@/models/dice-placement';
 import { useMemo, useState } from 'react';
-import ExternalUserNavbar from '@/components/features/game/external-user-navbar';
 
 const DiceGame = () => {
     const { width } = useWindowSize();
@@ -29,42 +30,46 @@ const DiceGame = () => {
     const roundRecordWithWinningId = useWinningId(roundRecord);
 
     const isTablet = width < BREAKPOINTS.lg;
-    const marketItems = roundRecord?.market || [];
+    const marketItems = useMemo(() => {
+        return roundRecord?.market || [];
+    }, [roundRecord])
 
     const marketItemsStocks = useMemo(() => {
         return marketItems.map((item) => {
-            const stock = roundRecordWithWinningId?.finalPricesPresent ? roundRecordWithWinningId.sortedMarketItems?.find((stock) => stock.id === item.id) : stocks.find((stock) => stock.id === item.id);
-            return stock;
+          const stock = roundRecordWithWinningId?.finalPricesPresent ? roundRecordWithWinningId.sortedMarketItems?.find((stock) => stock.id === item.id) : stocks.find((stock) => stock.id === item.id);
+          return stock;
         });
-    }, [marketItems, stocks, roundRecordWithWinningId]);
-
-    const firstCubeStocks = useMemo(() => {
+      }, [marketItems, stocks, roundRecordWithWinningId]);
+    
+      const firstCubeStocks = useMemo(() => {
         return marketItemsStocks.slice(0, 6).sort((a, b) => (b?.change_percent == undefined ? -100 : parseFloat(b?.change_percent)) - (a?.change_percent == undefined ? -100 : parseFloat(a?.change_percent)));
-    }, [marketItemsStocks]);
-
-    const secondCubeStocks = useMemo(() => {
+      }, [marketItemsStocks]);
+    
+      const secondCubeStocks = useMemo(() => {
         return marketItemsStocks.slice(6, 12).sort((a, b) => (b?.change_percent == undefined ? -100 : parseFloat(b?.change_percent)) - (a?.change_percent == undefined ? -100 : parseFloat(a?.change_percent)));
-    }, [marketItemsStocks]);
+      }, [marketItemsStocks]);
+      
 
+    const winningSum: Record<DicePlacementType, number> = {
+        [DicePlacementType.BOTH]: (firstCubeStocks[0]?.horse || 0) + (secondCubeStocks[0]?.horse || 0) -6,
+        [DicePlacementType.FIRST]: firstCubeStocks[0]?.horse || 0,
+        [DicePlacementType.SECOND]: ((secondCubeStocks[0]?.horse || 0)-6)
+    }
 
-        const winningSum = {
-            first: firstCubeStocks[0]?.horse || 0,
-            second:(secondCubeStocks[0]?.horse || 0) - 6,
-            both: (firstCubeStocks[0]?.horse || 0) + (secondCubeStocks[0]?.horse || 0) - 6
-        };
     if (!marketSelected) return (
         <section className=" space-y-4 pt-14 min-h-screen ">
-            <MarketSelector title="Dice Game Market" roundRecordType={RoundRecordGameType.DICE} />
+            <ExternalUserNavbar />
+            <MarketSelector title="Dice Game Market" />
         </section>
     )
 
     if (isLoading || !roundRecord) return <GameLoadingScreen className='min-h-[100svh]' />
 
-    if (isTablet) return <section className=" space-y-4 pt-14 bg-[#140538] font-">
-        <ExternalUserNavbar />
-        <Dice3D stocks={stocks} className='sm:min-h-80 xs:min-h-72 min-h-60  w-full' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
+    if (isTablet) return <section className=" md:space-y-4 space-y-1 pt-14 bg-[#140538]">
+        <ExternalUserNavbar className='sm:mb-4 mb-1' />
+        <Dice3D stocks={stocks} className='sm:min-h-80 xs:min-h-72  min-h-60  w-full' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
         <BettingGrid roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={roundRecordWithWinningId?.winningId || null} winningSum={winningSum} >
-            <DiceGameTimeDisplay className="w-full max-w-sm  " roundRecord={roundRecord} />
+            <DiceGameTimeDisplay className="w-full" roundRecord={roundRecord} />
         </BettingGrid>
         <div className='flex flex-col gap-4 px-4'>
             <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
@@ -85,7 +90,7 @@ const DiceGame = () => {
                 <Dice3D key={roundRecord.id} stocks={stocks} className='min-h-[300px] xxl:min-h-[400px]' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
                 <div className="flex flex-col justify-around flex-1">
                     <BettingGrid roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={roundRecordWithWinningId?.winningId || null} winningSum={winningSum}>
-                        <DiceGameTimeDisplay className="w-full max-w-sm" roundRecord={roundRecord} />
+                        <DiceGameTimeDisplay className="w-full max-w-lg" roundRecord={roundRecord} />
                     </BettingGrid>
                     <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
                 </div>
@@ -93,7 +98,7 @@ const DiceGame = () => {
             <div className="col-span-3 border-l py-3 px-2 overflow-y-auto border-[#4467CC80] space-y-5 flex justify-between flex-col  h-full">
                 <RoundTimings roundRecord={roundRecord} />
                 <CurrentBets className='min-h-64' roundRecord={roundRecord} />
-                <HelpButton externalUser />
+                <HelpButton />
             </div>
         </section>
     );

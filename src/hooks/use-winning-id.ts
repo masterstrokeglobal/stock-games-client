@@ -26,10 +26,13 @@ const useWinningId = (roundRecord: RoundRecord | null,timeToFetch:number=500) =>
     }, [roundRecord, refetch]);
 
     const roundRecordWithWinningId: RoundRecord | null = useMemo(() => {
-        if (!isSuccess) return null;
-        if (roundRecord?.id == data?.data?.id) return new RoundRecord(data.data as RoundRecord) || null;
+        if (!isSuccess || !data?.data) return null;
+        if (roundRecord?.id === data?.data?.id) {
+            // Only create new RoundRecord if the data has actually changed
+            return new RoundRecord(data.data as RoundRecord) || null;
+        }
         return null;
-    }, [data, isSuccess, roundRecord]);
+    }, [data?.data, isSuccess, roundRecord?.id]);
 
     return roundRecordWithWinningId;
 };
