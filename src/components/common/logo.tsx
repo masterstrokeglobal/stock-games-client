@@ -18,7 +18,7 @@ const Logo = ({ className, dark = true, textClassName }: LogoProps) => {
             {data?.logo ? <img src={data?.logo} alt="logo" className="h-full w-auto max-h-12" /> : <Avatar className="bg-transparent">
                 <AvatarFallback className="bg-transparent text-white text-lg">
                     {initials}
-                </AvatarFallback>   
+                </AvatarFallback>
             </Avatar>}
             <span className={cn("hidden md:inline-block capitalize font-semibold", dark ? "text-white" : "text-black", textClassName)}>
                 {data?.name || "--"}

@@ -16,8 +16,12 @@ interface GameResultDialogProps {
 
 
 const SevenUpDownResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
-  const { data: roundResult, isLoading } = useGetSevenUpDownRoundResult(roundRecordId, open);
   const [isOpen, setIsOpen] = useState(open);
+  const { data: roundResult, isLoading } = useGetSevenUpDownRoundResult(roundRecordId, open);
+
+  useEffect(() => {
+    setIsOpen(open);
+  }, [open]);
 
   useEffect(()=>{
     const timeout = setTimeout(() => {

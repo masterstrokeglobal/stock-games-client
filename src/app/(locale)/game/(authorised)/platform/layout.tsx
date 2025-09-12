@@ -19,7 +19,6 @@ export default function GamingAppInterface({ children }: PropsWithChildren) {
     const toggleSidebar = () => {
         setSidebarOpen(!sidebarOpen)
     }
-    console.log(sidebarOpen,"sidebarOpen")
     return (
         <div className="flex flex-col min-h-screen relative bg-background-game dark:bg-primary-game text-white   mx-auto">
             <Navbar />

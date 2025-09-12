@@ -7,7 +7,7 @@ import { GameBoard } from '@/components/features/7-up-down/game-board-new';
 import { GameTimer } from '@/components/features/7-up-down/game-timer';
 import LastRounds from '@/components/features/7-up-down/last-rounds';
 import { LiveBadge } from '@/components/features/dice-game/price-display';
-import Navbar from '@/components/features/game/navbar';
+import ExternalUserNavbar from '@/components/features/game/external-user-Navbar';
 import { Viewers } from '@/components/features/wheel-of-fortune/stock-price';
 import { Button } from '@/components/ui/button';
 import { useCurrentGame } from '@/hooks/use-current-game';
@@ -41,7 +41,7 @@ const SevenUpDown = () => {
 
     return (
         <section className={`flex flex-col relative bg-[radial-gradient(133.68%_74.71%_at_55.58%_46.9%,#01144C_0%,#000313_100%)] backdrop-blur-sm  items-center justify-start overflow-hidden min-h-screen w-full`}>
-            <Navbar />
+            <ExternalUserNavbar />
             <img src="/images/seven-up-down/bg.png" alt="7Up & 7Down" className='absolute top-0 left-0 w-full h-full opacity-50 object-cover' />
             <div className=" pt-16 pb-2  sm:px-4 px-2 max-w-[1560px] flex flex-col w-full mx-auto flex-1  text-white ">
                 <div className='w-full bg-[#2857ADBF] relative z-10 rounded-2xl flex items-center justify-between px-4 sm:py-2 py-1'>

@@ -12,6 +12,8 @@ import { SchedulerType } from "@/models/market-item";
 import { RoundRecordGameType } from "@/models/round-record";
 import User from "@/models/user";
 import Navbar from "../features/game/navbar";
+import ExternalUserNavbar from "../features/game/external-user-Navbar";
+import { useIsExternalUser } from "@/context/auth-context";
 
 type MarketSelectorProps = {
     title: string;
@@ -37,6 +39,7 @@ const MarketSelector = ({
     showNavbar = true
 }: MarketSelectorProps) => {
     const isNSEAvailable = useNSEAvailable();
+    const isExternalUser = useIsExternalUser();
     const isUSAMarketAvailable = useUSAMarketAvailable();
     const isCOMEXAvailable = useCOMEXAvailable();
     const isMCXAvailable = useMCXAvailable();
@@ -132,7 +135,7 @@ const MarketSelector = ({
         <section
             className={cn("min-h-screen pt-20 dark:bg-[url('/images/platform/market-selector-bg.png')] bg-[url('/images/platform/market-selector-bg-light.png')] w-full bg-cover bg-center flex flex-col items-center justify-center p-4", className)}>
             {/* Header */}
-            {showNavbar && <Navbar />}
+            { showNavbar ? isExternalUser ? <ExternalUserNavbar /> : <Navbar /> : null}
             <div className="dark:bg-[#04002968] bg-[#e6f6ff8b] backdrop-blur-[2px] w-full h-full absolute top-0 left-0" />
             <div className="mx-auto max-w-3xl w-full">
                 <header className="text-center sm:mb-8 xs:mb-4 relative z-10 mt-10">

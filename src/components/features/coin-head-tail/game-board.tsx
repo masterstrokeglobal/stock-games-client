@@ -1,5 +1,5 @@
 import { cn, COIN_HEAD_TAIL_MULTIPLIER, INR } from '@/lib/utils';
-import { HeadTailPlacementType } from '@/models/head-tail';
+import { HeadTailPlacement, HeadTailPlacementType } from '@/models/head-tail';
 import { RoundRecord } from '@/models/round-record';
 import { useCreateHeadTailPlacement, useGetMyCurrentRoundHeadTailPlacement } from '@/react-query/head-tail-queries';
 import { StockPrice } from './stock-price';
@@ -29,7 +29,7 @@ export default function CoinFlipGame({ roundRecord, amount, className, roundReco
     createHeadTailPlacement({ roundId: roundRecord.id, placement: side, amount })
   };
 
-  const { myHeadAmount, myTailAmount } = placements?.reduce((acc, placement) => {
+  const { myHeadAmount, myTailAmount } = placements?.reduce((acc: { myHeadAmount: number; myTailAmount: number }, placement: HeadTailPlacement) => {
     if (placement.placement === HeadTailPlacementType.HEAD) {
       acc.myHeadAmount += placement.amount;
     } else {

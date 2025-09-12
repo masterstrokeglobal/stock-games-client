@@ -25,7 +25,6 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
   const coinValues = userDetails?.company?.coinValues;
 
   const showResult = useShowResults(roundRecord, placements ?? []);
-
   return (
     <>
       <div

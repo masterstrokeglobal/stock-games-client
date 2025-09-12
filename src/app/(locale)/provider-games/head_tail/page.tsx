@@ -1,0 +1,121 @@
+"use client"
+import GameLoadingScreen from '@/components/common/game-loading-screen';
+import MarketSelector from '@/components/common/market-selector';
+import AllBets from '@/components/features/coin-head-tail/all-bets';
+import GameBoard, { GameTimer } from '@/components/features/coin-head-tail/game-board-new';
+import GameSettingsPopover from '@/components/features/coin-head-tail/game-menu';
+import LastRounds from '@/components/features/coin-head-tail/last-rounds';
+import PriceDisplay, { LiveBadge } from '@/components/features/dice-game/price-display';
+import ExternalUserNavbar from '@/components/features/game/external-user-Navbar';
+import { Viewers } from '@/components/features/wheel-of-fortune/stock-price';
+import { Button } from '@/components/ui/button';
+import { useCurrentGame } from '@/hooks/use-current-game';
+import { useMarketSelector } from '@/hooks/use-market-selector';
+import useWinningId from '@/hooks/use-winning-id';
+import { RoundRecordGameType } from '@/models/round-record';
+import { MenuIcon } from 'lucide-react';
+import { Prosto_One } from 'next/font/google';
+import { useState, useMemo, useCallback, memo } from 'react';
+
+
+const ProstoOne = Prosto_One({
+    subsets: ['latin'],
+    weight: ['400'],
+    variable: '--font-prosto-one',
+})
+
+// Memoized components to prevent unnecessary re-renders
+const MemoizedNavbar = memo(ExternalUserNavbar);
+const MemoizedGameTimer = memo(GameTimer);
+const MemoizedLiveBadge = memo(LiveBadge);
+const MemoizedPriceDisplay = memo(PriceDisplay);
+const MemoizedGameBoard = memo(GameBoard);
+const MemoizedAllBets = memo(AllBets);
+const MemoizedLastRounds = memo(LastRounds);
+const MemoizedViewers = memo(Viewers);
+
+const HeadTail = () => {
+    const { marketSelected } = useMarketSelector();
+    const [betAmount, setBetAmount] = useState<number>(100);
+    const {
+        roundRecord,
+        isLoading
+    } = useCurrentGame(RoundRecordGameType.HEAD_TAIL);
+
+    const roundRecordWithWinningId = useWinningId(roundRecord);
+
+    // Memoize the bet amount setter to prevent child re-renders
+    const handleSetBetAmount = useCallback((amount: number) => {
+        setBetAmount(amount);
+    }, []);
+
+    // Memoize the game board key to prevent unnecessary re-mounting
+    const gameBoardKey = useMemo(() => {
+        return roundRecord?.id || 'loading';
+    }, [roundRecord?.id]);
+
+    // Early returns memoized to prevent unnecessary re-renders
+    const shouldShowMarketSelector = useMemo(() => {
+        return !marketSelected;
+    }, [marketSelected]);
+
+    const shouldShowLoading = useMemo(() => {
+        return isLoading || !roundRecord;
+    }, [isLoading, roundRecord]);
+
+    if (shouldShowMarketSelector) {
+        return <MarketSelector roundRecordType={RoundRecordGameType.HEAD_TAIL} title="Coin Toss Market (Head & Tail)" />;
+    }
+
+    if (shouldShowLoading) {
+        return <GameLoadingScreen className='min-h-[calc(100svh)]' />;
+    }
+
+    // At this point, roundRecord is guaranteed to be non-null
+    const safeRoundRecord = roundRecord!;
+
+    return (
+        <section className={`flex flex-col relative bg-[#00033D]  items-center justify-start overflow-hidden min-h-screen w-full ${ProstoOne.variable}`}>
+            <MemoizedNavbar />
+            <div className=" sm:pt-20 pt-16 pb-2  sm:px-4 px-2 max-w-[1560px] flex flex-col w-full mx-auto flex-1  text-white ">
+                <div className='w-full bg-[#004DA9] relative z-10 rounded-2xl flex items-center justify-between px-4 sm:py-2 py-1'>
+                    <h2 className='font-playfair-display-sc sm:text-lg xs:text-base text-xs md:text-2xl font-bold uppercase tracking-wide'>Coin - Head & tail</h2>
+                    <div className='flex items-center gap-2'>
+                        <MemoizedViewers className='tracking-widest text-xs md:text-base text-white' />
+                        <GameSettingsPopover>
+                            <Button style={{
+                            }} className='bg-transparent shadow-none px-2 text-[#00033D]'>
+                                <MenuIcon />
+                            </Button>
+                        </GameSettingsPopover>
+                    </div>
+                </div>
+                <div className='lg:grid lg:grid-cols-12 grid-rows-1 flex-1 gap-4'>
+                    <div className='lg:col-span-8 flex flex-col'>
+                        <div className="justify-between  items-center  flex-wrap flex flex-row w-full gap-4 mt-4 md:mb-12 relative z-10">
+                            <MemoizedGameTimer className='md:flex hidden' roundRecord={safeRoundRecord} />
+                            <MemoizedLiveBadge
+                                className='md:hidden flex'
+                            />
+                            <MemoizedPriceDisplay roundRecord={safeRoundRecord} roundRecordWithWinningSide={roundRecordWithWinningId} />
+                        </div>
+                        <MemoizedGameBoard 
+                            key={gameBoardKey} 
+                            className='flex-1' 
+                            roundRecord={safeRoundRecord} 
+                            betAmount={betAmount} 
+                            setBetAmount={handleSetBetAmount} 
+                            roundRecordWithWinningSide={roundRecordWithWinningId} 
+                        />
+                    </div>
+                    <div className='lg:col-span-4 pt-4 lg:h-[calc(100svh-150px)] relative z-10 lg:grid lg:grid-rows-2 flex flex-col gap-4'>
+                        <MemoizedAllBets roundRecord={safeRoundRecord} />
+                        <MemoizedLastRounds />
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export default memo(HeadTail);

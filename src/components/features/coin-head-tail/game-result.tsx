@@ -14,12 +14,9 @@ interface GameResultDialogProps {
 }
 
 const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps) => {
-  const [showDialog, setShowDialog] = useState(open);
-  const { data: roundResult, isLoading, isError } = useGetHeadTailRoundResult(roundRecordId, true);
+  const { data: roundResult, isLoading, isError } = useGetHeadTailRoundResult(roundRecordId, open);
 
-  useEffect(() => {
-    setShowDialog(open);
-  }, [open]);
+
 
   const totalPlaced = roundResult?.placements.reduce((total, bet) => {
     return total + bet.amountPlaced;
@@ -33,7 +30,7 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
 
 
   return (
-    <Dialog defaultOpen={showDialog}>
+    <Dialog defaultOpen={open}>
       <DialogContent
         showButton={false}
         className={cn(
@@ -173,16 +170,17 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
             </main>
 
             <div className='flex justify-center w-full'>
-              <button
-                className="w-full mt-4 text-white  sm:max-w-sm max-w-xs mx-auto py-3 rounded-xl text-xl tracking-wider font-play transition border border-[#6FB0FF]"
-                style={{
-                  background: "linear-gradient(0deg, #002067 0%, #00339D 90.29%)",
-                  textShadow: "0px 0px 5px rgba(255, 255, 255, 1)",
-                }}
-                onClick={() => setShowDialog(false)}
-              >
-                Play Again
-              </button>
+              <DialogClose>
+                <button
+                  className="w-full mt-4 text-white  sm:max-w-sm max-w-xs mx-auto py-3 rounded-xl text-xl tracking-wider font-play transition border border-[#6FB0FF]"
+                  style={{
+                    background: "linear-gradient(0deg, #002067 0%, #00339D 90.29%)",
+                    textShadow: "0px 0px 5px rgba(255, 255, 255, 1)",
+                  }}
+                >
+                  Play Again
+                </button>
+              </DialogClose>
             </div>
           </div>
         )}

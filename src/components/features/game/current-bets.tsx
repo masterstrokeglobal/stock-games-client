@@ -1,6 +1,6 @@
 "use client";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { cn, getPlacementString, getRandomPlacementString, randomNumber, randomUsername } from "@/lib/utils";
+import { cn, getPlacementString, getRandomPlacementString, randomNumber} from "@/lib/utils";
 import GameRecord from "@/models/game-record";
 import { RoundRecord } from "@/models/round-record";
 import { useGetMyPlacements, useGetTopPlacements } from "@/react-query/game-record-queries";
@@ -75,7 +75,7 @@ const CurrentBets = ({ className, round }: Props) => {
                                             {getPlacementString(bet, round) == "-" ? getRandomPlacementString() : getPlacementString(bet, round)}
                                         </td>
                                         <td className="p-2 text-sm text-game-secondary flex-1">
-                                            {bet.user?.username || randomUsername()}
+                                            {bet.user?.username ?? bet.externalUser?.name}
                                         </td>
                                         <td className="p-2 text-sm text-right text-game-secondary rounded-r-lg flex-1">
                                             {bet.amount || randomNumber(100, 1000, 100)}

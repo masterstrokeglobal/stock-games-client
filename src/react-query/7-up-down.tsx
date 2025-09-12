@@ -1,17 +1,22 @@
+import { useIsExternalUser } from "@/context/auth-context";
+import { sevenUpDownAPI, SevenUpDownRoundResult } from "@/lib/axios/7-up-down-API";
+import { cn } from "@/lib/utils";
+import SevenUpDownPlacement from "@/models/seven-up-down";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { sevenUpDownAPI } from "@/lib/axios/7-up-down-API";
-import SevenUpDownPlacement from "@/models/seven-up-down";
-import { SevenUpDownRoundResult } from "@/lib/axios/7-up-down-API";
+
 export const useCreateSevenUpDownPlacement = () => {
     const queryClient = useQueryClient();
+    const isExternalUser = useIsExternalUser();
 
     return useMutation({
-        mutationFn: sevenUpDownAPI.createSevenUpDownPlacement,
+        mutationFn: isExternalUser ? sevenUpDownAPI.createExternalBet : sevenUpDownAPI.createSevenUpDownPlacement,
         onSuccess: (data) => {
             queryClient.invalidateQueries({
                 predicate: (query) => {
-                    return query.queryKey[0] === "sevenUpDown" || query.queryKey[0] === "myPlacements" || query.queryKey[0] === "user" && query.queryKey[1] == 'wallet' || query.queryKey[0] === "sevenUpDown" && query.queryKey[1] === "myPlacements";
+                    const queryKey = query.queryKey;
+                    const invalidateQueries = queryKey[0] === "sevenUpDown" || queryKey[0] === "myPlacements" || queryKey[0] === "user" && queryKey[1] == 'wallet' || queryKey[0] === "sevenUpDown" && queryKey[1] === "myPlacements";
+                    return invalidateQueries;
                 },
             });
             const placement = new SevenUpDownPlacement(data.stockSlotPlacement)
@@ -30,8 +35,6 @@ export const useCreateSevenUpDownPlacement = () => {
     });
 };
 
-
-import { cn } from "@/lib/utils";
 
 export const BetSuccessToast = ({
     className,
@@ -97,10 +100,11 @@ export const BetSuccessToast = ({
 
 
 export const useGetMyCurrentRoundSevenUpDownPlacement = (roundId: number) => {
+    const isExternalUser = useIsExternalUser();
     return useQuery<SevenUpDownPlacement[]>({
         queryKey: ["sevenUpDown", "myPlacements", roundId],
         queryFn: async () => {
-            const response = await sevenUpDownAPI.getMyCurrentRoundSevenUpDownPlacement(roundId);
+            const response = isExternalUser ? await sevenUpDownAPI.getExternalUsersCurrentRoundSevenUpDownPlacement(roundId) : await sevenUpDownAPI.getMyCurrentRoundSevenUpDownPlacement(roundId);
             return response.data.map((placement: any) => new SevenUpDownPlacement(placement));
         },
     });
@@ -114,9 +118,10 @@ export const useGetCurrentRoundSevenUpDownPlacement = (roundId: number) => {
 };
 
 export const useGetSevenUpDownRoundResult = (roundId: number, enable: boolean) => {
+    const isExternalUser = useIsExternalUser();
     return useQuery<SevenUpDownRoundResult[]>({
         queryKey: ["sevenUpDown", "roundResult", roundId],
-        queryFn: () => sevenUpDownAPI.getSevenUpDownRoundResult(roundId),
+        queryFn: () => isExternalUser ? sevenUpDownAPI.getExternalUsersSevenUpDownRoundResult(roundId) : sevenUpDownAPI.getSevenUpDownRoundResult(roundId),
         enabled: enable,
     });
 };

@@ -1,7 +1,7 @@
 import { useGameState, useIsPlaceOver } from "@/hooks/use-current-game";
 import useWindowSize from "@/hooks/use-window-size";
 import { cn, INR } from "@/lib/utils";
-import { HeadTailPlacementType } from "@/models/head-tail";
+import { HeadTailPlacement, HeadTailPlacementType } from "@/models/head-tail";
 import { RoundRecord } from "@/models/round-record";
 import {
   useCreateHeadTailPlacement,
@@ -98,7 +98,7 @@ const GameBoard = ({
   const { myHeadAmount, myTailAmount } = useMemo(() => {
     return (
       placements?.reduce(
-        (acc, placement) => {
+        (acc: { myHeadAmount: number; myTailAmount: number }, placement: HeadTailPlacement) => {
           if (placement.placement === HeadTailPlacementType.HEAD) {
             acc.myHeadAmount += placement.amount;
           } else {

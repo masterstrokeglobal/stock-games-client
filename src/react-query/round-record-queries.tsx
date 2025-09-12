@@ -2,6 +2,8 @@ import { roundRecordsAPI } from "@/lib/axios/round-record-API";
 import { SchedulerType } from "@/models/market-item";
 import { RoundRecordGameType } from "@/models/round-record";
 import { useQuery } from "@tanstack/react-query";
+import { useIsExternalUser } from "@/context/auth-context";
+import { externalUserAPI } from "@/lib/axios/external-user-API";
 
 /**
  * Hook to get all round records with optional filters.
@@ -49,9 +51,10 @@ export const useGetRoundRecordById = (roundRecordId?: number) => {
  * @param roundRecordId - ID of the round record to fetch
  */
 export const useGetMyRoundResult = (roundRecordId: number, show: boolean) => {
+    const isExternalUser = useIsExternalUser();
     return useQuery({
         queryKey: ["my-round-result", roundRecordId],
-        queryFn: () => roundRecordsAPI.getMyResult(roundRecordId),
+        queryFn: () => isExternalUser ? externalUserAPI.getExternalUserResult(roundRecordId) : roundRecordsAPI.getMyResult(roundRecordId),
         enabled: show,
         retry: (failureCount) => {
             // Retry 5 times with an interval of 1 second
