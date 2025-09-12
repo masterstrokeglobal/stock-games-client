@@ -167,72 +167,72 @@ export const Wheel: React.FC<WheelProps> = ({
   }, [DECELERATION_TIME, onSpinComplete]);
 
   // Handle spin state changes
-  useEffect(() => {
-    // Additional safety checks before allowing spin
-    if (roundRecord) {
-      const currentTime = new Date().getTime();
-      const placementEndTime = new Date(roundRecord.placementEndTime).getTime();
-      const gameEndTime = new Date(roundRecord.endTime).getTime();
+  // useEffect(() => {
+  //   // Additional safety checks before allowing spin
+  //   if (roundRecord) {
+  //     const currentTime = new Date().getTime();
+  //     const placementEndTime = new Date(roundRecord.placementEndTime).getTime();
+  //     const gameEndTime = new Date(roundRecord.endTime).getTime();
 
-      // Ensure we're in the correct time window for spinning
-      const isBettingClosed = currentTime >= placementEndTime;
-      const isGameStillActive = currentTime < gameEndTime;
+  //     // Ensure we're in the correct time window for spinning
+  //     const isBettingClosed = currentTime >= placementEndTime;
+  //     const isGameStillActive = currentTime < gameEndTime;
 
-      // Only start spinning if all conditions are met
-      if (
-        isSpinning &&
-        isBettingClosed &&
-        isGameStillActive &&
-        !winningMarketId
-      ) {
-        startSpinning();
-        // Clear any existing target when starting new spin
-        targetRotationRef.current = null;
-      } else if (isSpinning && (!isBettingClosed || !isGameStillActive)) {
-        // Don't spin if betting is still open or game is over
-        return;
-      }
-    } else if (isSpinning) {
-      // Fallback to original logic if no roundRecord
-      startSpinning();
-      targetRotationRef.current = null;
-    }
+  //     // Only start spinning if all conditions are met
+  //     if (
+  //       isSpinning &&
+  //       isBettingClosed &&
+  //       isGameStillActive &&
+  //       !winningMarketId
+  //     ) {
+  //       startSpinning();
+  //       // Clear any existing target when starting new spin
+  //       targetRotationRef.current = null;
+  //     } else if (isSpinning && (!isBettingClosed || !isGameStillActive)) {
+  //       // Don't spin if betting is still open or game is over
+  //       return;
+  //     }
+  //   } else if (isSpinning) {
+  //     // Fallback to original logic if no roundRecord
+  //     startSpinning();
+  //     targetRotationRef.current = null;
+  //   }
 
-    // Handle stopping logic
-    if (!isSpinning && winningMarketId) {
-      // Find the actual index in the markets array
-      if (winningMarketId && winningMarketId.length > 0) {
-        const marketIndex = roundRecord?.market?.findIndex(
-          (market) => market.id === winningMarketId[0]
-        );
+  //   // Handle stopping logic
+  //   if (!isSpinning && winningMarketId) {
+  //     // Find the actual index in the markets array
+  //     if (winningMarketId && winningMarketId.length > 0) {
+  //       const marketIndex = roundRecord?.market?.findIndex(
+  //         (market) => market.id === winningMarketId[0]
+  //       );
 
-        // Calculate the target rotation where winning market should be at top (0 degrees)
-        if (
-          marketIndex !== undefined &&
-          marketIndex >= 0 &&
-          roundRecord?.market
-        ) {
-          const totalMarkets = roundRecord.market.length;
-          const segmentAngle = 360 / totalMarkets; // degrees per segment
-          const offset = segmentAngle / 2;
-          const winningMarketAngle =
-            (marketIndex / totalMarkets) * 360 + offset - 5;
-          const targetRotation = (360 - winningMarketAngle) % 360;
+  //       // Calculate the target rotation where winning market should be at top (0 degrees)
+  //       if (
+  //         marketIndex !== undefined &&
+  //         marketIndex >= 0 &&
+  //         roundRecord?.market
+  //       ) {
+  //         const totalMarkets = roundRecord.market.length;
+  //         const segmentAngle = 360 / totalMarkets; // degrees per segment
+  //         const offset = segmentAngle / 2;
+  //         const winningMarketAngle =
+  //           (marketIndex / totalMarkets) * 360 + offset - 5;
+  //         const targetRotation = (360 - winningMarketAngle) % 360;
 
-          // Set the target rotation - the animation loop will handle stopping
-          targetRotationRef.current = targetRotation;
-        } else {
-          // Fallback to normal stop if we can't calculate target
-          stopSpinning();
-        }
-      } else {
-        stopSpinning();
-      }
-    } else if (!isSpinning && !winningMarketId) {
-      // Stop spinning if isSpinning is false and no winner yet
-      stopSpinning();
-    }
-  }, [isSpinning, startSpinning, stopSpinning, winningMarketId, roundRecord]);
+  //         // Set the target rotation - the animation loop will handle stopping
+  //         targetRotationRef.current = targetRotation;
+  //       } else {
+  //         // Fallback to normal stop if we can't calculate target
+  //         stopSpinning();
+  //       }
+  //     } else {
+  //       stopSpinning();
+  //     }
+  //   } else if (!isSpinning && !winningMarketId) {
+  //     // Stop spinning if isSpinning is false and no winner yet
+  //     stopSpinning();
+  //   }
+  // }, [isSpinning, startSpinning, stopSpinning, winningMarketId, roundRecord]);
 
   // Cleanup function
   const cleanup = useCallback(() => {
@@ -307,7 +307,7 @@ export const Wheel: React.FC<WheelProps> = ({
         {/* Render wheel segments */}
         <div
           ref={wheelRef}
-          className="absolute h-[85%] w-[85%] rounded-full flex items-center justify-center"
+          className="absolute h-[80%] w-[80%] rounded-full flex items-center justify-center"
           style={{ transform: `rotate(${wheelRotationDegrees}deg)` }}
         >
           {stocks.map((stock, index) => {
@@ -334,7 +334,7 @@ export const Wheel: React.FC<WheelProps> = ({
                   key={stock.id}
                   style={{
                     height: "50%",
-                    width: `${segmentAngle * 0.95}%`,
+                    width: `${segmentAngle * 0.9}%`,
                     transform: `rotateZ(${segmentAngle * index}deg)`,
                     background: colorConfig.backgroundGradient,
                     clipPath: "polygon(0 0, 50% 100%, 100% 0)",
@@ -342,20 +342,22 @@ export const Wheel: React.FC<WheelProps> = ({
                   }}
                   className="absolute top-0 flex justify-center items-center overflow-hidden"
                 >
-                  <p className="stock-name absolute text-white text-xs font-medium tracking-wider -rotate-90 top-[10%] z-10 outline-none">
+                  <p className="stock-name absolute text-white text-xs font-medium tracking-wider -rotate-90 top-[30%] z-10 outline-none">
                     {truncatedName}
                   </p>
                 </div>
                  <div
                    style={{
                      height: "50%",
-                     width: `${segmentAngle * 0.95}%`,
+                     width: `${segmentAngle * 0.9}%`,
                      transform: `rotateZ(${segmentAngle * index}deg)`,
                      transformOrigin: "center bottom",
                    }}
                    className="absolute top-0 z-20 flex justify-center items-center"
                  >
-                  <div className="top-0 bg-black translate-x-1/2 h-full w-[2px]">
+                  <div style={{
+                    transformOrigin: "center bottom",
+                  }} className="top-0 bg-black rotate-[43deg] h-full w-[2px]">
 
                   </div>
                  </div>
@@ -365,7 +367,7 @@ export const Wheel: React.FC<WheelProps> = ({
         </div>
 
         {/* Wheel Border with decorative dots */}
-        <div className="absolute h-[87%] w-[87%] opacity-0 rounded-full flex items-center justify-center border-[10px] border-yellow-500">
+        <div className="absolute h-[85%] w-[85%] rounded-full flex items-center justify-center border-[10px] border-yellow-500">
           {Array.from({ length: 8 }, (_, index) => {
             const angle = (index * 360) / 8;
             const radian = (angle * Math.PI) / 180;

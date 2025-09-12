@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { RoundRecord, WHEEL_COLOR_CONFIG } from "@/models/round-record";
 import React, { useEffect, useMemo, useState } from "react";
 import { WheelCanvas } from "./wheel-canvas";
-// import { Wheel } from "./Wheel";
+import { Wheel } from "./Wheel";
 
 interface WheelOfFortuneProps {
   className?: string;
@@ -84,18 +84,18 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
         ref={wheelRef}
         className="md:min-h-[450px] xs:min-h-[360px] min-h-[200px] w-full"
       >
-        <WheelCanvas
-          isSpinning={isSpinning}
-          roundRecord={roundRecord}
-          winningMarketId={winningMarketId}
-          onSpinComplete={onSpinComplete}
-        />
-        {/* <Wheel
+        {/* <WheelCanvas
           isSpinning={isSpinning}
           roundRecord={roundRecord}
           winningMarketId={winningMarketId}
           onSpinComplete={onSpinComplete}
         /> */}
+        <Wheel
+          isSpinning={isSpinning}
+          roundRecord={roundRecord}
+          winningMarketId={winningMarketId}
+          onSpinComplete={onSpinComplete}
+        />
       </div>
 
       {showResult &&
