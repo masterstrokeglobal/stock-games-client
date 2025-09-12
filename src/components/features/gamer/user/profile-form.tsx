@@ -99,6 +99,7 @@ const ProfileUpdateForm = ({ showReferenceCode }: Props) => {
                     phone: data.phone,
                     username: data.username,
                     profileImage: data.profileImage,
+                    email: data.email, 
                 },
             }
         );
@@ -154,7 +155,7 @@ const ProfileUpdateForm = ({ showReferenceCode }: Props) => {
                 <FormInput
                     control={control}
                     game
-                    disabled
+                    disabled={isDemoUser}
                     name="phone"
                     label={t('labels.phone')}
                 />
@@ -162,7 +163,7 @@ const ProfileUpdateForm = ({ showReferenceCode }: Props) => {
                 <FormInput
                     control={control}
                     game
-                    disabled
+                    disabled={isDemoUser}
                     name="email"
                     label={t('labels.email')}
                     type="email"

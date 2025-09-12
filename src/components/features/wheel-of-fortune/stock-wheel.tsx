@@ -92,7 +92,6 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
         />
         {/* <Wheel
           isSpinning={isSpinning}
-          isPlaceOver={isPlaceOver}
           roundRecord={roundRecord}
           winningMarketId={winningMarketId}
           onSpinComplete={onSpinComplete}
