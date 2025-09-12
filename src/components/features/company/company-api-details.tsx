@@ -50,7 +50,7 @@ const CompanyApiDetailsManager = ({ companyId }: Props) => {
             
             setShowForm(false);
             setIsEditMode(false);
-        } catch (error) {
+        } catch {
             // Error handled by mutation onError
         }
     };
@@ -62,7 +62,7 @@ const CompanyApiDetailsManager = ({ companyId }: Props) => {
         try {
              deleteMutation.mutate(apiDetails.id??0);
             toast.success("Company API details deleted successfully");
-        } catch (error) {
+        } catch {
             toast.error("Error deleting company API details");
         }
     };
@@ -99,7 +99,7 @@ const CompanyApiDetailsManager = ({ companyId }: Props) => {
             setCopiedApiKey(true);
             toast.success("API key copied to clipboard");
             setTimeout(() => setCopiedApiKey(false), 2000);
-        } catch (error) {
+        } catch {
             toast.error("Failed to copy API key");
         }
     };
@@ -294,7 +294,7 @@ const CompanyApiDetailsManager = ({ companyId }: Props) => {
                                 </div>
                                 <h3 className="text-lg font-semibold mb-2">No API Configuration Found</h3>
                                 <p className="text-muted-foreground mb-6 max-w-sm">
-                                    This company doesn't have API access configured yet. Create a new configuration to enable API access.
+                                    This company doesn&apos;t have API access configured yet. Create a new configuration to enable API access.
                                 </p>
                                 <Button
                                     onClick={handleCreateNew}
