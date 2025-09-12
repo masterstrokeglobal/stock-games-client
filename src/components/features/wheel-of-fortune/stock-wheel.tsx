@@ -10,6 +10,7 @@ interface WheelOfFortuneProps {
   roundRecord?: RoundRecord;
   winningMarketId: number[] | null;
   isSpinning: boolean;
+  isPlaceOver?: boolean;
   onSpinComplete?: () => void;
   setWheelHeight: (height: number) => void;
   wheelRef: React.RefObject<HTMLDivElement>;
@@ -18,6 +19,7 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
   roundRecord,
   winningMarketId,
   isSpinning,
+  // isPlaceOver = false,
   className,
   onSpinComplete,
   setWheelHeight,
