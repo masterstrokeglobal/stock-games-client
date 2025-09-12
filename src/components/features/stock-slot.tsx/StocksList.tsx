@@ -50,12 +50,32 @@ export const StockListMobile: React.FC<StockListProps> = ({
               className="text-center w-full h-full p-[20%] flex justify-center items-center"
             >
               <div className="flex flex-col justify-center items-center w-full h-fit -translate-y-[10%]">
-                <div className="truncate w-full text-xs slot-gradient-text">
+              <div className="relative">
+                <p
+                  style={{
+                    textShadow: "0 0 7px black",
+                  }}
+                  className="absolute top-0 left-0 z-10 text-white text-xs"
+                >
                   {stockName}
-                </div>
-                <div className="text-[8px] slot-gradient-text">
+                </p>{" "}
+                <p className="slot-gradient-text z-20 relative text-xs">
+                  {stockName}
+                </p>{" "}
+              </div>
+              <div className="relative">
+                <p
+                  style={{
+                    textShadow: "0 0 7px black",
+                  }}
+                  className="absolute top-0 left-0 z-10 text-white text-[8px]"
+                >
                   {formatPriceWithHighlightedDecimal(price)}
-                </div>
+                </p>
+                <p className="slot-gradient-text z-20 relative text-[8px]">
+                  {formatPriceWithHighlightedDecimal(price)}
+                </p>
+              </div>
               </div>
             </div>
           );
@@ -93,11 +113,11 @@ export const StockListDesktop: React.FC<StockListProps> = ({
                   style={{
                     textShadow: "0 0 7px black",
                   }}
-                  className="absolute top-0 left-0 z-10 text-white"
+                  className="absolute top-0 left-0 z-10 text-white truncate"
                 >
                   {getStockName(stock.name ?? "", stock.codeName ?? "")}
                 </p>{" "}
-                <p className="slot-gradient-text z-20 relative">
+                <p className="slot-gradient-text z-20 relative truncate">
                   {getStockName(stock.name ?? "", stock.codeName ?? "")}
                 </p>{" "}
               </div>

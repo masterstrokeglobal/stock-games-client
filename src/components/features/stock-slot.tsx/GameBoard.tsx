@@ -420,7 +420,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
                   style={{
                     height: numberHeight,
                     opacity: glow ? 1 : 0,
-                    animation: "slotWinPulse 0.3s ease-in-out infinite",
+                    animation: "slotWinPulse 0.05s ease-in-out infinite",
                   }}
                   className="w-full flex justify-center items-center"
                 ></div>
