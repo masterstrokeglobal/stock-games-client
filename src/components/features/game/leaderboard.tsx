@@ -117,7 +117,7 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                                     <td className="px-1  ">
                                         {winnerMarketItem.horse}
                                     </td>
-                                    <td className="px-1">
+                                    <td className={cn("px-1")}>
                                         {winnerMarketItem.name}
                                     </td>
                                     <td className="px-1  text-right font-bold ">
@@ -162,8 +162,10 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                                     <td className="px-1 text-center">
                                         {marketItem.horse == 17 ? 0 : marketItem.horse}
                                     </td>
-                                    <td className="px-1 truncate">
-                                        {getStockName(marketItem.name ?? "", marketItem.codeName ?? "")}
+                                    <td className={cn("px-1 truncate", getChangeColor(marketItem.change_percent))}>
+                                        {getStockName(marketItem.name ?? "", marketItem.codeName ?? "",
+                                    
+                                        )}
                                     </td>
                                     <td className="px-1 text-right font-semibold whitespace-nowrap">
                                         {/* {roundRecord.type === SchedulerType.CRYPTO ? "USDC " : roundRecord.type === SchedulerType.USA_MARKET ? "$" : "Rs."} */}

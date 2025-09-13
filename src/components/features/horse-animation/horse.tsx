@@ -76,7 +76,7 @@ export default function HorseRace({ roundRecord, filteredMarket }: Props) {
         <LiveBadge className="absolute top-4 right-4 z-10" />
         <Canvas
           ref={canvasRef}
-          className="bg-gradient-to-b from-sky-300 to-blue-400/85 md:rounded-sm "
+          className="bg-gradient-to-b from-sky-300 to-blue-400/85 md:rounded-sm h-full"
         >
           <PixelRatioManager />
           <HorseRaceEnvironment

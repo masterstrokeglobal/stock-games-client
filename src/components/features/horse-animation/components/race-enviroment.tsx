@@ -12,6 +12,7 @@ import FenceRow from "./fence-row";
 import { Ground } from "./Ground";
 import HorseAnimation from "./horse-animation";
 import MovingPeople from "./people-model";
+import useWindowSize from "@/hooks/use-window-size";
 
 type Props = {
   roundRecord: RoundRecord;
@@ -30,6 +31,7 @@ const HorseRaceEnvironment = ({
 }: Props) => {
 
   const { camera } = useThree();
+  const {isMobile} = useWindowSize();
 
   // Update camera position based on currentCameraView prop
   useEffect(() => {
@@ -44,7 +46,7 @@ const HorseRaceEnvironment = ({
 
   return (
     <>
-      <PerspectiveCamera makeDefault fov={80} zoom={9} position={[-380, 70, 0]} />
+      <PerspectiveCamera makeDefault fov={isMobile ? 55 : 80} zoom={9} position={[-380, 70, 0]} />
       <ambientLight intensity={1} />
       {/*  */}
       <OrbitControls

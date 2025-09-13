@@ -50,7 +50,7 @@ const PlatformPage = () => {
             {isLoggedIn && <FavoriteGameCarousel />}
             {isCasinoAllowed && (
                 <>
-                <GapGameCarousel title="Gap Games" />
+                <GapGameCarousel title="Mac88 Games" />
                     <CasinoProvidersCarousel title={tPlatform("game-providers")} />
                     <CategoryCarousel title={tPlatform("new-released")} new={true} direction="backward" />
                     <CategoryCarousel title={tPlatform("hot-games")} popular={true} direction="forward" />

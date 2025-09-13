@@ -23,42 +23,43 @@ export enum RoundRecordGameType {
 }
 
 export const WHEEL_COLOR_SEQUENCE = [
-    WheelColor.COLOR5, // GOLDEN - Segment 0 (top)
-    WheelColor.COLOR1, // RED - Segment 1
-    WheelColor.COLOR2, // GREEN - Segment 2
-    WheelColor.COLOR2, // GREEN - Segment 3
-    WheelColor.COLOR1, // RED - Segment 4
-    WheelColor.COLOR2, // GREEN - Segment 5
-    WheelColor.COLOR4, // PURPLE - Segment 6
-    WheelColor.COLOR1, // RED - Segment 7
-    WheelColor.COLOR2, // GREEN - Segment 8
-    WheelColor.COLOR3, // BLUE - Segment 9
-    WheelColor.COLOR1, // RED - Segment 10
-    WheelColor.COLOR2, // GREEN - Segment 11
-    WheelColor.COLOR4, // PURPLE - Segment 12
-    WheelColor.COLOR1, // RED - Segment 13
-    WheelColor.COLOR2, // GREEN - Segment 14
-    WheelColor.COLOR3, // BLUE - Segment 15
-    WheelColor.COLOR1, // RED - Segment 16
-    WheelColor.COLOR2, // GREEN - Segment 17
-    WheelColor.COLOR4, // PURPLE - Segment 18
-    WheelColor.COLOR1, // RED - Segment 19
-    WheelColor.COLOR3  // BLUE - Segment 20
+    WheelColor.COLOR2, // Segment 0 (top)
+    WheelColor.COLOR1, // Segment 1
+    WheelColor.COLOR2, // Segment 2
+    WheelColor.COLOR1, // Segment 3
+    WheelColor.COLOR2, // Segment 4
+    WheelColor.COLOR4, // Segment 5
+    WheelColor.COLOR1, // Segment 6
+    WheelColor.COLOR2, // Segment 7
+    WheelColor.COLOR3, // Segment 8
+    WheelColor.COLOR1, // Segment 9
+    WheelColor.COLOR2, // Segment 10
+    WheelColor.COLOR4, // Segment 11
+    WheelColor.COLOR1, // Segment 12
+    WheelColor.COLOR2, // Segment 13
+    WheelColor.COLOR3, // Segment 14
+    WheelColor.COLOR1, // Segment 15
+    WheelColor.COLOR5, // Segment 16
+    WheelColor.COLOR3, // Segment 17
+    WheelColor.COLOR1, // Segment 18
+    WheelColor.COLOR3, // Segment 19
+    WheelColor.COLOR1, // Segment 20
 ];
+
 
 
 export const WHEEL_COLOR_BANDS = [
-    { color: WheelColor.COLOR1, indices: [0, 3, 6, 9, 12, 15, 18] }, // 7 items
-    { color: WheelColor.COLOR2, indices: [1,2, 4, 7, 10, 13, 16] }, // 7 items
-    { color: WheelColor.COLOR3, indices: [8, 14, 19] }, // 3 items
-    { color: WheelColor.COLOR4, indices: [5, 11, 17] }, // 3 items
-    { color: WheelColor.COLOR5, indices: [20] }, // 1 item
+    { color: WheelColor.COLOR1, indices: [1, 3, 6, 9, 12, 15, 18, 20] }, // 8 items
+    { color: WheelColor.COLOR2, indices: [0,2, 4, 7, 10, 13] }, // 6 items
+    { color: WheelColor.COLOR3, indices: [8, 14, 19,17] }, // 4 items
+    { color: WheelColor.COLOR4, indices: [5, 11] }, // 2 items
+    { color: WheelColor.COLOR5, indices: [16] }, // 1 item
 ];
 
 export const IndexwithColorBands = [
-    { color: WheelColor.COLOR5, index: 20 },
-    { color: WheelColor.COLOR1, index: 0 },
-    { color: WheelColor.COLOR2, index: 1 },
+    { color: WheelColor.COLOR1, index: 20 },
+    { color: WheelColor.COLOR2, index: 0 },
+    { color: WheelColor.COLOR1, index: 1 },
     { color: WheelColor.COLOR2, index: 2 },
     { color: WheelColor.COLOR1, index: 3 },
     { color: WheelColor.COLOR2, index: 4 },
@@ -73,9 +74,10 @@ export const IndexwithColorBands = [
     { color: WheelColor.COLOR2, index: 13 },
     { color: WheelColor.COLOR3, index: 14 },
     { color: WheelColor.COLOR1, index: 15 },
-    { color: WheelColor.COLOR2, index: 16 },
-    { color: WheelColor.COLOR4, index: 17 },
+    { color: WheelColor.COLOR5, index: 16 },
+    { color: WheelColor.COLOR3, index: 17 },
     { color: WheelColor.COLOR1, index: 18 },
+    { color: WheelColor.COLOR3, index: 19 },
 ];
 
 

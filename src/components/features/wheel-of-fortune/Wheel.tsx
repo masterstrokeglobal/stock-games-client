@@ -5,8 +5,10 @@ import {
   WHEEL_COLOR_SEQUENCE,
 } from "@/models/round-record";
 import { MarketItem } from "@/models/market-item";
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useRef, useState, useCallback, useEffect, useMemo } from "react";
 import { gsap } from "gsap";
+import { WheelColor } from "@/models/wheel-of-fortune-placement";
+import { getStockName } from "@/components/common/StockName";
 
 interface WheelProps {
   isSpinning: boolean;
@@ -24,6 +26,8 @@ export const Wheel: React.FC<WheelProps> = ({
   const wheelRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<number | null>(null);
 
+  console.log("roundRecord", roundRecord);
+
   // GSAP animation state
   const currentSpeedRef = useRef<number>(0);
   const spinTweenRef = useRef<gsap.core.Tween | null>(null);
@@ -31,7 +35,6 @@ export const Wheel: React.FC<WheelProps> = ({
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [marketNames, setMarketNames] = useState<string[]>([]);
 
   // State to track wheel rotation in degrees (0-359)
   const [wheelRotationDegrees, setWheelRotationDegrees] = useState<number>(
@@ -47,7 +50,31 @@ export const Wheel: React.FC<WheelProps> = ({
   // State to track target rotation for stopping
   const targetRotationRef = useRef<number | null>(null);
 
-  const stocks: MarketItem[] = roundRecord?.market || [];
+  const stocks: MarketItem[] = useMemo(() => {
+    const originalMarkets = roundRecord?.market || [];
+    const marketColors = roundRecord?.marketColors || [];
+    if (originalMarkets.length === 0 || marketColors.length === 0) return [];
+
+    // Reorder according to WHEEL_COLOR_SEQUENCE
+    // Each index in marketColors corresponds to a segment position in the wheel
+    const reorderedStocks = WHEEL_COLOR_SEQUENCE.map(
+      (_, segmentIndex) => {
+        // Get the market for this specific segment index
+        const marketColorEntry = marketColors[segmentIndex];
+
+        if (!marketColorEntry) return null;
+
+        // Find the corresponding market item
+        const marketItem = originalMarkets.find(
+          (market: MarketItem) => market.id === marketColorEntry.marketId
+        );
+
+        return marketItem || null;
+      }
+    ).filter((stock) => stock !== null);
+
+    return reorderedStocks;
+  }, [roundRecord]);
 
   // GSAP Animation constants
   const MAX_SPIN_SPEED = 8; // Maximum rotation speed (degrees per frame)
@@ -202,7 +229,7 @@ export const Wheel: React.FC<WheelProps> = ({
     if (!isSpinning && winningMarketId) {
       // Find the actual index in the markets array
       if (winningMarketId && winningMarketId.length > 0) {
-        const marketIndex = roundRecord?.market?.findIndex(
+        const marketIndex = stocks?.findIndex(
           (market) => market.id === winningMarketId[0]
         );
 
@@ -212,12 +239,19 @@ export const Wheel: React.FC<WheelProps> = ({
           marketIndex >= 0 &&
           roundRecord?.market
         ) {
-          const totalMarkets = roundRecord.market.length;
+          const totalMarkets = stocks.length;
           const segmentAngle = 360 / totalMarkets; // degrees per segment
-          const offset = segmentAngle / 2;
-          const winningMarketAngle =
-            (marketIndex / totalMarkets) * 360 + offset - 5;
-          const targetRotation = (360 - winningMarketAngle) % 360;
+
+          // Current position of the winning segment (same as placement calculation)
+          const winningSegmentCurrentAngle = segmentAngle * marketIndex;
+
+          // To center the segment under the pin (at 0°), we need to add half segment angle
+          const centeringOffset = segmentAngle / 2;
+
+          // Calculate how much to rotate to bring winning segment to pin position (0°)
+          // We want to bring (winningSegmentCurrentAngle + centeringOffset) to 0°
+          const targetRotation =
+            (360 - (winningSegmentCurrentAngle + centeringOffset)) % 360;
 
           // Set the target rotation - the animation loop will handle stopping
           targetRotationRef.current = targetRotation;
@@ -265,17 +299,6 @@ export const Wheel: React.FC<WheelProps> = ({
     };
   }, [animate, isLoading, error]);
 
-  // Update market names when stocks change
-  useEffect(() => {
-    const names = stocks.map(
-      (market) =>
-        market.codeName || market.code || market.name || `Market ${market.id}`
-    );
-    // Shift the array to right - zero number becomes 5th and 20th becomes 0th
-    const shiftedNames = [...names.slice(-5), ...names.slice(0, -5)];
-    setMarketNames(shiftedNames);
-  }, [stocks]);
-
   // Cleanup effect
   useEffect(() => {
     return () => {
@@ -307,26 +330,19 @@ export const Wheel: React.FC<WheelProps> = ({
         {/* Render wheel segments */}
         <div
           ref={wheelRef}
-          className="absolute h-[85%] w-[85%] rounded-full flex items-center justify-center"
+          className="absolute h-[80%] w-[80%] rounded-full flex items-center justify-center"
           style={{ transform: `rotate(${wheelRotationDegrees}deg)` }}
         >
           {stocks.map((stock, index) => {
-            const colorIndex = index % WHEEL_COLOR_SEQUENCE.length;
-            const color = WHEEL_COLOR_SEQUENCE[colorIndex];
-            const colorConfig = WHEEL_COLOR_CONFIG[color];
+            const assignedColor =
+              stock.id &&
+              roundRecord?.marketColors.find(
+                (item: any) => item.marketId === stock.id
+              )?.color;
+            const colorConfig =
+              WHEEL_COLOR_CONFIG[assignedColor || WheelColor.COLOR1];
             const segmentAngle = 360 / stocks.length;
 
-            // Use the shifted market names
-            const displayName =
-              marketNames[index] ||
-              stock.codeName ||
-              stock.code ||
-              stock.name ||
-              "";
-            const truncatedName =
-              displayName.length > 6
-                ? displayName.substring(0, 5) + "."
-                : displayName;
 
             return (
               <>
@@ -334,38 +350,45 @@ export const Wheel: React.FC<WheelProps> = ({
                   key={stock.id}
                   style={{
                     height: "50%",
-                    width: `${segmentAngle * 0.95}%`,
+                    width: `${segmentAngle * 0.9}%`,
                     transform: `rotateZ(${segmentAngle * index}deg)`,
-                    background: colorConfig.backgroundGradient,
+                    backgroundColor: colorConfig.actualColor,
+                    boxShadow: `
+                    inset 0 0px -20px -20px ${colorConfig.shadow},   /* top inner shadow */
+                    inset 0 -0px -20px -20px ${colorConfig.shadow}  /* bottom inner shadow */
+                  `,
                     clipPath: "polygon(0 0, 50% 100%, 100% 0)",
                     transformOrigin: "center bottom",
                   }}
                   className="absolute top-0 flex justify-center items-center overflow-hidden"
                 >
-                  <p className="stock-name absolute text-white text-xs font-medium tracking-wider -rotate-90 top-[10%] z-10 outline-none">
-                    {truncatedName}
+                  <p className="stock-name absolute text-white text-xs font-medium tracking-wider -rotate-90 top-[30%] z-10 outline-none whitespace-nowrap">
+                    {getStockName(stock.name ?? "", stock.codeName ?? "")}
                   </p>
                 </div>
-                 <div
-                   style={{
-                     height: "50%",
-                     width: `${segmentAngle * 0.95}%`,
-                     transform: `rotateZ(${segmentAngle * index}deg)`,
-                     transformOrigin: "center bottom",
-                   }}
-                   className="absolute top-0 z-20 flex justify-center items-center"
-                 >
-                  <div className="top-0 bg-black translate-x-1/2 h-full w-[2px]">
-
-                  </div>
-                 </div>
+                <div
+                  style={{
+                    height: "50%",
+                    width: `${segmentAngle * 0.9}%`,
+                    transform: `rotateZ(${segmentAngle * index}deg)`,
+                    transformOrigin: "center bottom",
+                  }}
+                  className="absolute top-0 z-20 flex justify-center items-center"
+                >
+                  <div
+                    style={{
+                      transformOrigin: "center bottom",
+                    }}
+                    className="top-0 bg-black rotate-[43deg] h-full w-[2px]"
+                  ></div>
+                </div>
               </>
             );
           })}
         </div>
 
         {/* Wheel Border with decorative dots */}
-        <div className="absolute h-[87%] w-[87%] opacity-0 rounded-full flex items-center justify-center border-[10px] border-yellow-500">
+        <div className="absolute h-[85%] w-[85%] rounded-full flex items-center justify-center border-[10px] border-yellow-500">
           {Array.from({ length: 8 }, (_, index) => {
             const angle = (index * 360) / 8;
             const radian = (angle * Math.PI) / 180;
@@ -376,7 +399,7 @@ export const Wheel: React.FC<WheelProps> = ({
             return (
               <div
                 key={index}
-                className="absolute w-5 h-5 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"
+                className="absolute w-4 h-4 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"
                 style={{
                   left: `calc(50% + ${x}%)`,
                   top: `calc(50% + ${y}%)`,
