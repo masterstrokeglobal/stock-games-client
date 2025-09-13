@@ -10,7 +10,7 @@ pnpm dev
 First, run a development server: 
                
  
-```bash  
+```bash   
 pnpm dev    
    
 First, run a development server:          
