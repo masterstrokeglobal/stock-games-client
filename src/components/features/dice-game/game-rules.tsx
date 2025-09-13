@@ -62,7 +62,7 @@ const GameRules: React.FC<HowToPlayDialogProps> = ({
                     <div className="py-4 flex-1 relative px-4 overflow-hidden border-x-[1.5rem] border-b-[1.5rem] border-[#140538] flex flex-col">
                         <Image src="/images/dice-game/table-bg.png" alt="dice-1" fill />
                         <div className="absolute top-0 left-0 w-full h-full backdrop-blur-sm bg-[#520B8E] bg-opacity-30" />
-                        <div className="relative z-10 text-white p-4">
+                        <div className="relative z-10 text-white p-4 overflow-y-auto">
                             <div className="text-white text-base font-semibold mb-4">
                                 Instructions:
                             </div>

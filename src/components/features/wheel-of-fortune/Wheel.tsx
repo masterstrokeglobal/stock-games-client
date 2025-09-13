@@ -24,6 +24,8 @@ export const Wheel: React.FC<WheelProps> = ({
   const wheelRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<number | null>(null);
 
+  console.log("roundRecord", roundRecord);
+
   // GSAP animation state
   const currentSpeedRef = useRef<number>(0);
   const spinTweenRef = useRef<gsap.core.Tween | null>(null);
@@ -311,18 +313,14 @@ export const Wheel: React.FC<WheelProps> = ({
           style={{ transform: `rotate(${wheelRotationDegrees}deg)` }}
         >
           {stocks.map((stock, index) => {
-            const colorIndex = index % WHEEL_COLOR_SEQUENCE.length;
-            const color = WHEEL_COLOR_SEQUENCE[colorIndex];
-            const colorConfig = WHEEL_COLOR_CONFIG[color];
+            // Use the actual assigned color for this market ID, fallback to position-based
+            // console.log("stock", stock);
+            const assignedColor = stock.id && roundRecord?.marketColors.find((item:any )=> item.marketId === stock.id)?.color;
+            const colorConfig = WHEEL_COLOR_CONFIG[assignedColor];
             const segmentAngle = 360 / stocks.length;
 
-            // Use the shifted market names
-            const displayName =
-              marketNames[index] ||
-              stock.codeName ||
-              stock.code ||
-              stock.name ||
-              "";
+            // Use the shifted market names (matching 3D wheel behavior)
+            const displayName = marketNames[index] || `Market ${index + 1}`;
             const truncatedName =
               displayName.length > 6
                 ? displayName.substring(0, 5) + "."
@@ -336,7 +334,7 @@ export const Wheel: React.FC<WheelProps> = ({
                     height: "50%",
                     width: `${segmentAngle * 0.9}%`,
                     transform: `rotateZ(${segmentAngle * index}deg)`,
-                    background: colorConfig.backgroundGradient,
+                    backgroundColor: colorConfig.bgColor,
                     clipPath: "polygon(0 0, 50% 100%, 100% 0)",
                     transformOrigin: "center bottom",
                   }}

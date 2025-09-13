@@ -31,10 +31,10 @@ const ResultDialog: React.FC<ResultDialogProps> = ({
   }, [resultData]);
 
   return (
-    <Dialog defaultOpen={open}>
+    <Dialog defaultOpen={open}> 
       <DialogContent
         showButton={false}
-        className=" bg-transparent border-none w-full max-w-xl focus:outline-none p-0"
+        className=" bg-transparent border-none w-full max-h-none max-w-2xl focus:outline-none p-0"
       >
         <div
           style={{
@@ -45,7 +45,7 @@ const ResultDialog: React.FC<ResultDialogProps> = ({
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
           }}
-          className=" min-h-[400px] min-w-[325px] lg:min-w-[500px] w-full h-full flex flex-col items-center justify-center pt-[5%] pb-[8%] lg:p-[5%] font-blood-melt text-[#FFFFFFB2] relative"
+          className=" min-h-[400px] min-w-[325px] lg:min-w-[524px] lg:min-h-[581px] w-full h-full lg:p-[5%] flex flex-col items-center justify-center lg:justify-around font-blood-melt text-[#FFFFFFB2] relative"
         >
           <DialogHeader className="p-4">
             <DialogTitle className="text-3xl lg:text-[40px] slot-gradient-text leading-normal">
@@ -67,15 +67,15 @@ const ResultDialog: React.FC<ResultDialogProps> = ({
             <Image
               src={`/images/slot-machine/${isMobile ? "lady" : "loss-img"}.png`}
               alt="Win"
-              width={100}
-              height={100}
+              width={isMobile ? 100 : 150}
+              height={isMobile ? 100 : 150}
             />
             <div
               className={`uppercase text-xl lg:text-3xl bg-gradient-to-b ${
-                isWin ? "from-white to-[#0CC915]" : "from-white to-[#FF0000]"
+                isWin ? "from-white to-[#0CC915]" : "from-white to-[#FF3E3E]"
               } bg-clip-text text-transparent slot-text-shadow mt-1`}
             >
-              {isWin ? <p>You won {resultData?.amountWon?.toFixed(2)}{" "} INR</p> : <p>You lost {resultData?.totalPlaced?.toFixed(2)}{" "}</p>}
+              {isWin ? <p>You won {resultData?.amountWon?.toFixed(2)}{" "} INR</p> : <p>You lost {resultData?.totalPlaced?.toFixed(2)}{" "}INR</p>}
             </div>
             <p className="text-lg uppercase lg:text-2xl slot-gradient-text my-4">
               next round in{placeTimeLeft.formatted} <br />
