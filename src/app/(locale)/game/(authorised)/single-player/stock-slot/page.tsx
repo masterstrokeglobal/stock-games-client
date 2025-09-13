@@ -103,7 +103,7 @@ const Page = () => {
         backgroundPosition: "center center",
         backgroundRepeat: "no-repeat",
       }}
-      className="flex flex-col h-screen w-full pt-14"
+      className="flex flex-col h-[calc(100dvh)] w-full pt-14"
     >
       <Navbar />
       <StockSlot

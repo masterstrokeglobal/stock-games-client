@@ -1,36 +1,32 @@
 import { Card } from "@/components/ui/card"
-import Link from "next/link"
 import { StockGame } from "@/lib/utils"
 import Image from "next/image"
-import { Heart } from "lucide-react"
-import { useGetAllFavoriteGames, useAddFavoriteGame, useRemoveFavoriteGame } from "@/react-query/favorite-game"
-import { useMemo } from "react"
-import { useAuthStore } from "@/context/auth-context"
+import Link from "next/link"
 
 const StockGameCard = ({ game }: { game: StockGame }) => {
-    const { isLoggedIn } = useAuthStore();
+    // const { isLoggedIn } = useAuthStore();
 
-    const { data: favorites = [] } = useGetAllFavoriteGames();
-    const addFavorite = useAddFavoriteGame();
-    const removeFavorite = useRemoveFavoriteGame();
+    // const { data: favorites = [] } = useGetAllFavoriteGames();
+    // const addFavorite = useAddFavoriteGame();
+    // const removeFavorite = useRemoveFavoriteGame();
 
-    // Check if current game is in favorites based on gameType (enum)
-    const isFavorite = useMemo(() => {
-        return favorites.some(favorite => favorite.gameType === game.type);
-    }, [favorites, game.type]);
+    // // Check if current game is in favorites based on gameType (enum)
+    // const isFavorite = useMemo(() => {
+    //     return favorites.some(favorite => favorite.gameType === game.type);
+    // }, [favorites, game.type]);
 
-    const handleFavoriteToggle = (e: React.MouseEvent) => {
-        e.preventDefault(); // Prevent navigation when clicking heart
-        e.stopPropagation();
+    // const handleFavoriteToggle = (e: React.MouseEvent) => {
+    //     e.preventDefault(); // Prevent navigation when clicking heart
+    //     e.stopPropagation();
 
-        if (isFavorite) {
-            // Remove from favorites using gameType
-            removeFavorite.mutate({ gameType: game.type });
-        } else {
-            // Add to favorites using gameType
-            addFavorite.mutate({ gameType: game.type });
-        }
-    };
+    //     if (isFavorite) {
+    //         // Remove from favorites using gameType
+    //         removeFavorite.mutate({ gameType: game.type });
+    //     } else {
+    //         // Add to favorites using gameType
+    //         addFavorite.mutate({ gameType: game.type });
+    //     }
+    // };
 
     return (
         <div className="w-full relative">
@@ -46,7 +42,7 @@ const StockGameCard = ({ game }: { game: StockGame }) => {
                 </Card>
             </Link>
 
-          {isLoggedIn && (
+          {/* {isLoggedIn && (
             <button
                 onClick={handleFavoriteToggle}
                 disabled={addFavorite.isPending || removeFavorite.isPending}
@@ -58,7 +54,7 @@ const StockGameCard = ({ game }: { game: StockGame }) => {
                             : 'text-white hover:text-red-300'
                         }`}
                 />
-            </button>)}
+            </button>)} */}
         </div>
     )
 }

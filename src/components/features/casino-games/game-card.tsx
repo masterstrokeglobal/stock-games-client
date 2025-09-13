@@ -56,10 +56,10 @@ export default function GameCard({ game, className, imageClassName }: GameCardPr
           <button
             onClick={handleFavoriteToggle}
             disabled={addFavorite.isPending || removeFavorite.isPending}
-            className="absolute top-2 right-2 z-10 p-2 rounded-full bg-black/50 hover:bg-black/70 transition-all duration-200 disabled:opacity-50"
+            className="absolute top-2 right-2 z-10 sm:p-2 p-1 rounded-full bg-black/50 hover:bg-black/70 transition-all duration-200 disabled:opacity-50"
           >
             <Heart
-              className={`w-5 h-5 transition-all duration-200 ${isFavorite
+              className={`sm:size-5 size-3 transition-all duration-200 ${isFavorite
                 ? 'text-red-500 fill-red-500'
                 : 'text-white hover:text-red-300'
                 }`}

@@ -3,6 +3,7 @@
 import GameCard from "@/components/features/casino-games/game-card"
 import { Button } from "@/components/ui/button"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import useWindowSize from "@/hooks/use-window-size"
 import type { GameCategory } from "@/models/casino-games"
 import { GameTypeEnum } from "@/models/casino-games"
 import { useGetCasinoGames } from "@/react-query/casino-games-queries"
@@ -25,6 +26,7 @@ interface CategoryCarouselProps {
 
 export default function CategoryCarousel({ categoryId, title, popular,providerOfWeek,stockGameChoice, new: isNew, slot, liveGame, type }: CategoryCarouselProps) {
     const t = useTranslations("platform.casino-games");
+    const { isMobile } = useWindowSize();
     const { data, isLoading } = useGetCasinoGames({
         limit: 100,
         popular,
@@ -81,8 +83,8 @@ export default function CategoryCarousel({ categoryId, title, popular,providerOf
 
 
     return (
-        <Carousel opts={{ loop: false, startIndex: 0 ,slidesToScroll: 2}} className="w-full">
-            <div className="md:space-y-4 space-y-2">
+        <Carousel opts={{ loop: false, startIndex: 0 ,slidesToScroll: isMobile ? 2 : 5}} className="w-full pt-0.5">
+            <div className="md:space-y-4 space-y-1">
                 <div className="flex items-end justify-between">
                     <h2 className="md:text-2xl sm:text-base text-sm font-semibold text-platform-text">{title}</h2>
                     <div className="flex gap-2 items-end">
@@ -93,7 +95,7 @@ export default function CategoryCarousel({ categoryId, title, popular,providerOf
                         </Link>
                     </div>
                 </div>
-                <CarouselContent className="py-4 overflow-visible">
+                <CarouselContent className="py-0 overflow-visible">
                     {data.games.map((game) => (
                         <CarouselItem key={game.id} className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                             <GameCard game={game} />
