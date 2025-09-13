@@ -5,8 +5,10 @@ import {
   WHEEL_COLOR_SEQUENCE,
 } from "@/models/round-record";
 import { MarketItem } from "@/models/market-item";
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useRef, useState, useCallback, useEffect, useMemo } from "react";
 import { gsap } from "gsap";
+import { WheelColor } from "@/models/wheel-of-fortune-placement";
+import { getStockName } from "@/components/common/StockName";
 
 interface WheelProps {
   isSpinning: boolean;
@@ -33,7 +35,6 @@ export const Wheel: React.FC<WheelProps> = ({
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [marketNames, setMarketNames] = useState<string[]>([]);
 
   // State to track wheel rotation in degrees (0-359)
   const [wheelRotationDegrees, setWheelRotationDegrees] = useState<number>(
@@ -49,7 +50,31 @@ export const Wheel: React.FC<WheelProps> = ({
   // State to track target rotation for stopping
   const targetRotationRef = useRef<number | null>(null);
 
-  const stocks: MarketItem[] = roundRecord?.market || [];
+  const stocks: MarketItem[] = useMemo(() => {
+    const originalMarkets = roundRecord?.market || [];
+    const marketColors = roundRecord?.marketColors || [];
+    if (originalMarkets.length === 0 || marketColors.length === 0) return [];
+
+    // Reorder according to WHEEL_COLOR_SEQUENCE
+    // Each index in marketColors corresponds to a segment position in the wheel
+    const reorderedStocks = WHEEL_COLOR_SEQUENCE.map(
+      (_, segmentIndex) => {
+        // Get the market for this specific segment index
+        const marketColorEntry = marketColors[segmentIndex];
+
+        if (!marketColorEntry) return null;
+
+        // Find the corresponding market item
+        const marketItem = originalMarkets.find(
+          (market: MarketItem) => market.id === marketColorEntry.marketId
+        );
+
+        return marketItem || null;
+      }
+    ).filter((stock) => stock !== null);
+
+    return reorderedStocks;
+  }, [roundRecord]);
 
   // GSAP Animation constants
   const MAX_SPIN_SPEED = 8; // Maximum rotation speed (degrees per frame)
@@ -169,72 +194,79 @@ export const Wheel: React.FC<WheelProps> = ({
   }, [DECELERATION_TIME, onSpinComplete]);
 
   // Handle spin state changes
-  // useEffect(() => {
-  //   // Additional safety checks before allowing spin
-  //   if (roundRecord) {
-  //     const currentTime = new Date().getTime();
-  //     const placementEndTime = new Date(roundRecord.placementEndTime).getTime();
-  //     const gameEndTime = new Date(roundRecord.endTime).getTime();
+  useEffect(() => {
+    // Additional safety checks before allowing spin
+    if (roundRecord) {
+      const currentTime = new Date().getTime();
+      const placementEndTime = new Date(roundRecord.placementEndTime).getTime();
+      const gameEndTime = new Date(roundRecord.endTime).getTime();
 
-  //     // Ensure we're in the correct time window for spinning
-  //     const isBettingClosed = currentTime >= placementEndTime;
-  //     const isGameStillActive = currentTime < gameEndTime;
+      // Ensure we're in the correct time window for spinning
+      const isBettingClosed = currentTime >= placementEndTime;
+      const isGameStillActive = currentTime < gameEndTime;
 
-  //     // Only start spinning if all conditions are met
-  //     if (
-  //       isSpinning &&
-  //       isBettingClosed &&
-  //       isGameStillActive &&
-  //       !winningMarketId
-  //     ) {
-  //       startSpinning();
-  //       // Clear any existing target when starting new spin
-  //       targetRotationRef.current = null;
-  //     } else if (isSpinning && (!isBettingClosed || !isGameStillActive)) {
-  //       // Don't spin if betting is still open or game is over
-  //       return;
-  //     }
-  //   } else if (isSpinning) {
-  //     // Fallback to original logic if no roundRecord
-  //     startSpinning();
-  //     targetRotationRef.current = null;
-  //   }
+      // Only start spinning if all conditions are met
+      if (
+        isSpinning &&
+        isBettingClosed &&
+        isGameStillActive &&
+        !winningMarketId
+      ) {
+        startSpinning();
+        // Clear any existing target when starting new spin
+        targetRotationRef.current = null;
+      } else if (isSpinning && (!isBettingClosed || !isGameStillActive)) {
+        // Don't spin if betting is still open or game is over
+        return;
+      }
+    } else if (isSpinning) {
+      // Fallback to original logic if no roundRecord
+      startSpinning();
+      targetRotationRef.current = null;
+    }
 
-  //   // Handle stopping logic
-  //   if (!isSpinning && winningMarketId) {
-  //     // Find the actual index in the markets array
-  //     if (winningMarketId && winningMarketId.length > 0) {
-  //       const marketIndex = roundRecord?.market?.findIndex(
-  //         (market) => market.id === winningMarketId[0]
-  //       );
+    // Handle stopping logic
+    if (!isSpinning && winningMarketId) {
+      // Find the actual index in the markets array
+      if (winningMarketId && winningMarketId.length > 0) {
+        const marketIndex = stocks?.findIndex(
+          (market) => market.id === winningMarketId[0]
+        );
 
-  //       // Calculate the target rotation where winning market should be at top (0 degrees)
-  //       if (
-  //         marketIndex !== undefined &&
-  //         marketIndex >= 0 &&
-  //         roundRecord?.market
-  //       ) {
-  //         const totalMarkets = roundRecord.market.length;
-  //         const segmentAngle = 360 / totalMarkets; // degrees per segment
-  //         const offset = segmentAngle / 2;
-  //         const winningMarketAngle =
-  //           (marketIndex / totalMarkets) * 360 + offset - 5;
-  //         const targetRotation = (360 - winningMarketAngle) % 360;
+        // Calculate the target rotation where winning market should be at top (0 degrees)
+        if (
+          marketIndex !== undefined &&
+          marketIndex >= 0 &&
+          roundRecord?.market
+        ) {
+          const totalMarkets = stocks.length;
+          const segmentAngle = 360 / totalMarkets; // degrees per segment
 
-  //         // Set the target rotation - the animation loop will handle stopping
-  //         targetRotationRef.current = targetRotation;
-  //       } else {
-  //         // Fallback to normal stop if we can't calculate target
-  //         stopSpinning();
-  //       }
-  //     } else {
-  //       stopSpinning();
-  //     }
-  //   } else if (!isSpinning && !winningMarketId) {
-  //     // Stop spinning if isSpinning is false and no winner yet
-  //     stopSpinning();
-  //   }
-  // }, [isSpinning, startSpinning, stopSpinning, winningMarketId, roundRecord]);
+          // Current position of the winning segment (same as placement calculation)
+          const winningSegmentCurrentAngle = segmentAngle * marketIndex;
+
+          // To center the segment under the pin (at 0°), we need to add half segment angle
+          const centeringOffset = segmentAngle / 2;
+
+          // Calculate how much to rotate to bring winning segment to pin position (0°)
+          // We want to bring (winningSegmentCurrentAngle + centeringOffset) to 0°
+          const targetRotation =
+            (360 - (winningSegmentCurrentAngle + centeringOffset)) % 360;
+
+          // Set the target rotation - the animation loop will handle stopping
+          targetRotationRef.current = targetRotation;
+        } else {
+          // Fallback to normal stop if we can't calculate target
+          stopSpinning();
+        }
+      } else {
+        stopSpinning();
+      }
+    } else if (!isSpinning && !winningMarketId) {
+      // Stop spinning if isSpinning is false and no winner yet
+      stopSpinning();
+    }
+  }, [isSpinning, startSpinning, stopSpinning, winningMarketId, roundRecord]);
 
   // Cleanup function
   const cleanup = useCallback(() => {
@@ -266,17 +298,6 @@ export const Wheel: React.FC<WheelProps> = ({
       }
     };
   }, [animate, isLoading, error]);
-
-  // Update market names when stocks change
-  useEffect(() => {
-    const names = stocks.map(
-      (market) =>
-        market.codeName || market.code || market.name || `Market ${market.id}`
-    );
-    // Shift the array to right - zero number becomes 5th and 20th becomes 0th
-    const shiftedNames = [...names.slice(-5), ...names.slice(0, -5)];
-    setMarketNames(shiftedNames);
-  }, [stocks]);
 
   // Cleanup effect
   useEffect(() => {
@@ -313,18 +334,14 @@ export const Wheel: React.FC<WheelProps> = ({
           style={{ transform: `rotate(${wheelRotationDegrees}deg)` }}
         >
           {stocks.map((stock, index) => {
-            // Use the actual assigned color for this market ID, fallback to position-based
-            // console.log("stock", stock);
-            const assignedColor = stock.id && roundRecord?.marketColors.find((item:any )=> item.marketId === stock.id)?.color;
-            const colorConfig = WHEEL_COLOR_CONFIG[assignedColor];
+            const assignedColor =
+              stock.id &&
+              roundRecord?.marketColors.find(
+                (item: any) => item.marketId === stock.id
+              )?.color;
+            const colorConfig =
+              WHEEL_COLOR_CONFIG[assignedColor || WheelColor.COLOR1];
             const segmentAngle = 360 / stocks.length;
-
-            // Use the shifted market names (matching 3D wheel behavior)
-            const displayName = marketNames[index] || `Market ${index + 1}`;
-            const truncatedName =
-              displayName.length > 6
-                ? displayName.substring(0, 5) + "."
-                : displayName;
 
             return (
               <>
@@ -334,31 +351,36 @@ export const Wheel: React.FC<WheelProps> = ({
                     height: "50%",
                     width: `${segmentAngle * 0.9}%`,
                     transform: `rotateZ(${segmentAngle * index}deg)`,
-                    backgroundColor: colorConfig.bgColor,
+                    backgroundColor: colorConfig.actualColor,
+                    boxShadow: `
+                    inset 0 0px -20px -20px ${colorConfig.shadow},   /* top inner shadow */
+                    inset 0 -0px -20px -20px ${colorConfig.shadow}  /* bottom inner shadow */
+                  `,
                     clipPath: "polygon(0 0, 50% 100%, 100% 0)",
                     transformOrigin: "center bottom",
                   }}
                   className="absolute top-0 flex justify-center items-center overflow-hidden"
                 >
-                  <p className="stock-name absolute text-white text-xs font-medium tracking-wider -rotate-90 top-[30%] z-10 outline-none">
-                    {truncatedName}
+                  <p className="stock-name absolute text-white text-xs font-medium tracking-wider -rotate-90 top-[30%] z-10 outline-none whitespace-nowrap">
+                    {getStockName(stock.name ?? "", stock.codeName ?? "")}
                   </p>
                 </div>
-                 <div
-                   style={{
-                     height: "50%",
-                     width: `${segmentAngle * 0.9}%`,
-                     transform: `rotateZ(${segmentAngle * index}deg)`,
-                     transformOrigin: "center bottom",
-                   }}
-                   className="absolute top-0 z-20 flex justify-center items-center"
-                 >
-                  <div style={{
+                <div
+                  style={{
+                    height: "50%",
+                    width: `${segmentAngle * 0.9}%`,
+                    transform: `rotateZ(${segmentAngle * index}deg)`,
                     transformOrigin: "center bottom",
-                  }} className="top-0 bg-black rotate-[43deg] h-full w-[2px]">
-
-                  </div>
-                 </div>
+                  }}
+                  className="absolute top-0 z-20 flex justify-center items-center"
+                >
+                  <div
+                    style={{
+                      transformOrigin: "center bottom",
+                    }}
+                    className="top-0 bg-black rotate-[43deg] h-full w-[2px]"
+                  ></div>
+                </div>
               </>
             );
           })}
@@ -376,7 +398,7 @@ export const Wheel: React.FC<WheelProps> = ({
             return (
               <div
                 key={index}
-                className="absolute w-5 h-5 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"
+                className="absolute w-4 h-4 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"
                 style={{
                   left: `calc(50% + ${x}%)`,
                   top: `calc(50% + ${y}%)`,

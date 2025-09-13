@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils";
 import { RoundRecord, WHEEL_COLOR_CONFIG } from "@/models/round-record";
 import React, { useEffect, useMemo, useState } from "react";
-import { WheelCanvas } from "./wheel-canvas";
+// import { WheelCanvas } from "./wheel-canvas";
 import { Wheel } from "./Wheel";
 
 interface WheelOfFortuneProps {
