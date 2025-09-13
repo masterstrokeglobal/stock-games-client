@@ -45,8 +45,8 @@ const HowToPlay = () => {
                     </button>
                 </div>
             </header>
-            <main className="rounded-[30px] border-[3px] max-w-2xl mx-auto overflow-hidden w-full min-h-[300px] border-[#12409D] bg-[rgba(1,15,60,0.58)] shadow-[0px_0px_7.1px_11px_rgba(1,59,177,0.25)_inset]">
-                <video src={videoUrl} controls className="h-full w-auto" />
+            <main className="rounded-[30px] border-[3px] max-w-2xl mx-auto flex justify-center items-center overflow-hidden w-full h-[calc(100svh-29rem)]  border-[#12409D] bg-[rgba(1,15,60,0.58)] shadow-[0px_0px_7.1px_11px_rgba(1,59,177,0.25)_inset]">
+                <video src={videoUrl} controls className="h-fit w-auto" />
             </main>
         </section>
     );

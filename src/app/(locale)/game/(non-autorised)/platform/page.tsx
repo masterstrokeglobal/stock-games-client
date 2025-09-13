@@ -46,7 +46,8 @@ const PlatformPage = () => {
             )}
 
             <div className="sm:space-y-4">
-                {isLoggedIn && <ActiveTierCard className="my-12" />}
+                {isLoggedIn && <ActiveTierCard className="md:my-12 my-1" />}
+
                 <StockGameCarousel />
                 {isLoggedIn && <FavoriteGameCarousel title="Favorite MAC88" providerCompany={ProviderCompany.GAP} />}
                 {isLoggedIn && <FavoriteGameCarousel title="Favorite Qtech" providerCompany={ProviderCompany.QTECH} />}

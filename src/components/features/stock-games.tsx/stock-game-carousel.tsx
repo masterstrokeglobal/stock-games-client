@@ -3,6 +3,7 @@
 import StockGameCard from "@/components/common/stock-game-card"
 import { Button } from "@/components/ui/button"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import useWindowSize from "@/hooks/use-window-size"
 import { stockGames } from "@/lib/utils"
 import { useGetMyCompany } from "@/react-query/company-queries"
 import { useTranslations } from "next-intl"
@@ -10,13 +11,15 @@ import Link from "next/link"
 
 
 export default function StockGameCarousel() {
+    const {isMobile} = useWindowSize();
     const t = useTranslations("platform.stock-game-carousel");
     const { data: company } = useGetMyCompany();
     return (
-        <Carousel opts={{ loop: false, startIndex: 0, slidesToScroll: 2 }} className="w-full">
+        <Carousel opts={{ loop: false, startIndex: 0, slidesToScroll: isMobile ? 1 : 2 }} className="w-full">
+
             <div className="space-y-1">
                 <div className="flex items-center justify-between">
-                    <h2 className="md:text-2xl text-base text-platform-text font-bold">{t("title")}</h2>
+                <h2 className="md:text-2xl sm:text-base text-sm font-semibold text-platform-text">{t("title")}</h2>
                     <div className="flex gap-2">
                         <CarouselPrevious className="static translate-y-0 bg-background/20 hover:bg-background/40 md:w-8 md:h-8 w-6 h-6" />
                         <CarouselNext className="static translate-y-0 bg-background/20 hover:bg-background/40 md:w-8 md:h-8 w-6 h-6" />

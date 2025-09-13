@@ -95,7 +95,7 @@ const SevenUpDownSettings = () => {
                             </div>
                         </Carousel>
                     </div>
-                    <SettingLayout parentClassName="max-w-7xl" className="flex-1">
+                    <SettingLayout parentClassName="max-w-7xl flex-1" className="flex-1">
                     {
                         TABS.map((tab) => (
                             <TabsContent key={tab.value} value={tab.value} className="h-full">

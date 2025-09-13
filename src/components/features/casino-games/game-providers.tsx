@@ -63,11 +63,11 @@ export function CasinoProvidersCarousel({ title }: CategoryCarouselProps) {
     <Carousel
       opts={{ loop: true, startIndex: 0 }}
       plugins={[AutoScroll({ active: true })]}
-      className="w-auto"
+      className="w-auto pt-0.5"
     >
-      <div className="space-y-4">
+      <div className=" md:space-y-2">
         <div className="flex items-center justify-between">
-          <h2 className="md:text-2xl text-base font-semibold text-platform-text">{title}</h2>
+        <h2 className="md:text-2xl sm:text-base text-sm font-semibold text-platform-text">{title}</h2>
         </div>
         <CarouselContent className="-ml-2 md:-ml-4">
           {providers.map((provider) => (
