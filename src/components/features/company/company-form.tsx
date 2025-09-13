@@ -20,7 +20,7 @@ export const createCompanyInputSchema = z.object({
     paymentImage: z.string().url().optional(),
     theme: z.record(z.string(), z.string()).optional(),
     minPlacement: z.coerce.number().optional(),
-    allowedCasino:z.boolean().optional(),
+    allowedCasino: z.boolean().optional(),
     coinValues: z.array(z.coerce.number()).min(4).max(4).default([]),
     maxSinglePlacementPerGameType: z.record(z.nativeEnum(RoundRecordGameType), z.coerce.number()).optional(),
     maxPlacement: z.coerce.number().optional(),

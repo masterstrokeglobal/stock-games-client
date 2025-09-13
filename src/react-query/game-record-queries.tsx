@@ -1,17 +1,19 @@
 import { gameRecordAPI } from "@/lib/axios/game-record-API"; // Adjust the path as needed
+import { useIsExternalUser } from "@/context/auth-context";
 import MarketItem from "@/models/market-item";
 import { RoundRecord } from "@/models/round-record";
 import { StockJackpotPlacementType } from "@/models/stock-slot-jackpot";
 import { StockJackpotPlacement } from "@/models/stock-slot-placement";
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient, UseQueryResult } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { externalUserAPI } from "@/lib/axios/external-user-API";
 
 // Create Game Record Hook with Predicate-based Invalidation
 export const useCreateGameRecord = () => {
     const queryClient = useQueryClient();
-
+    const isExternalUser = useIsExternalUser();
     return useMutation({
-        mutationFn: gameRecordAPI.createGameRecord,
+        mutationFn: isExternalUser ? externalUserAPI.createExternalBet : gameRecordAPI.createGameRecord,
         onSuccess: () => {
             queryClient.invalidateQueries({
                 predicate: (query) =>
@@ -155,9 +157,10 @@ export const useGetTopPlacements = (roundId: string) => {
 
 // Get My Placements Hook
 export const useGetMyPlacements = (filter: any) => {
+    const isExternalUser = useIsExternalUser();
     return useQuery({
         queryKey: ["myPlacements", filter],
-        queryFn: () => gameRecordAPI.getMyPlacements(filter),
+        queryFn: () => isExternalUser ? gameRecordAPI.getExternalUsersPlacements(filter.roundId) : gameRecordAPI.getMyPlacements(filter),
     });
 };
 

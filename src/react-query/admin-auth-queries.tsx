@@ -23,7 +23,6 @@ export const useAdminLogout = () => {
     const { setUser } = useAuthStore();
     return useMutation({
         mutationFn: async () => {
-
             await adminAuthAPI.logout();
             setUser(null);
             queryClient.clear();

@@ -206,7 +206,6 @@ const ActiveTierCard = ({
     const currentTierIndex = tierList.findIndex((t) => t?.id === tier?.id);
     const nextTier = tierList[currentTierIndex + 1];
 
-    console.log(tier, myTier)
     if (!tier) {
         return <LoadingScreen className="min-h-[200px]" />;
     }

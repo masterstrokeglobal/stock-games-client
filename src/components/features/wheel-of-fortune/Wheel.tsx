@@ -343,6 +343,7 @@ export const Wheel: React.FC<WheelProps> = ({
               WHEEL_COLOR_CONFIG[assignedColor || WheelColor.COLOR1];
             const segmentAngle = 360 / stocks.length;
 
+
             return (
               <>
                 <div

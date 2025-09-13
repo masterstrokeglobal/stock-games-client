@@ -25,6 +25,11 @@ export const useAuthStore = () => {
   return context;
 };
 
+export const useIsExternalUser = () => {
+  const { userDetails } = useAuthStore();
+  return userDetails instanceof User && userDetails.externalUser;
+};
+
 export const UserProvider = ({ children }: PropsWithChildren) => {
   const [userDetails, setUser] = useState<Admin | User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);

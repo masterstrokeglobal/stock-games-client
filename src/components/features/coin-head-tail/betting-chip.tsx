@@ -21,7 +21,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
     const { data: placements } = useGetMyCurrentRoundHeadTailPlacement(roundRecordId);
 
-    const totalBet = placements?.reduce((acc, placement) => acc + placement.amount, 0) ?? 0;
+    const totalBet = placements?.reduce((acc : any, placement: any) => acc + placement.amount, 0) ?? 0;
 
     const chipImages = [
         "/images/head-tail/chip-4.png",
