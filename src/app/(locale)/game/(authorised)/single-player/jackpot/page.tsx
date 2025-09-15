@@ -51,7 +51,7 @@ export default function Home() {
                     globalBetAmount={globalBetAmount}
                 />
                 <div className="w-full z-10 ">
-                    <div className="grid relative grid-cols-1 lg:gap-6  xxl:py-4 lg:mt-0 xsm:mt-24 mt-20 rounded-lg">
+                    <div className="flex flex-col pb-2 lg:pb-0 lg:grid relative grid-cols-1 lg:gap-6  xxl:py-4 lg:mt-0 xsm:mt-24 mt-20 rounded-lg">
                         <div className="relative h-full  w-full lg:min-h-[200px]  bg-contain bg-no-repeat bg-center">
                             <div className="lg:absolute lg bottom-4 w-full h-fit">
                                 <div className='absolute left-1/2 -translate-x-1/2 lg:bottom-[calc(100%-2vw)] sm:bottom-[calc(100%-2vw-20px)] bottom-[calc(100%-2vw-10px)] md:h-[60%] h-3/4 z-10 flex max-w-sm items-end justify-center'>
@@ -71,7 +71,7 @@ export default function Home() {
                         {roundRecord && <BettingChips
                             roundRecord={roundRecord}
                             showBetting={!isPlacementOver}
-                            className="lg:absolute lg:bottom-0 lg:left-1/2 px-2 py-2 lg:-translate-x-1/2 z-30 w-full "
+                            className="lg:absolute lg:bottom-0 lg:left-1/2 px-2 py-2 lg:-translate-x-1/2 z-30 w-full flex-shrink-0"
                             globalBetAmount={globalBetAmount}
                             handleGlobalBetAmountChange={handleGlobalBetAmountChange}
                         />}
