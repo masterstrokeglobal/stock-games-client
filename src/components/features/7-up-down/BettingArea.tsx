@@ -49,9 +49,9 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
 
   return (
     <>
-      <div className="w-full md:px-2 py-4 md:flex flex-col grid sm:grid-cols-3 grid-cols-1 relative z-10 items-center md:gap-4 gap-2">
+      <div className="w-full md:px-2 py-1 md:py-4 md:flex flex-col grid sm:grid-cols-3 grid-cols-1 relative z-10 items-center md:gap-4 gap-2">
         {/* Chips */}
-        <div className="grid md:grid-cols-4 grid-cols-2 col-span-2  gap-2 w-full max-w-2xl mb-2">
+        <div className="grid md:grid-cols-4 grid-cols-2 col-span-2  gap-2 w-full max-w-2xl md:mb-2">
           {coinValues?.map((amount) => (
             <Button
               key={amount}

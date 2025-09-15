@@ -15,7 +15,13 @@ export const StockPriceDisplay: React.FC<{
   winningMarketId: number[] | null;
   setWheelHeight: (height: number) => void;
   wheelRef: React.RefObject<HTMLDivElement>;
-}> = ({ roundRecord, winningMarketId, className, setWheelHeight, wheelRef }) => {
+}> = ({
+  roundRecord,
+  winningMarketId,
+  className,
+  setWheelHeight,
+  wheelRef,
+}) => {
   const isPlaceOver = usePlacementOver(roundRecord);
   const { isMobile } = useWindowSize();
 
@@ -34,11 +40,11 @@ export const StockPriceDisplay: React.FC<{
   return (
     <div
       className={cn(
-        "flex flex-col justify-between items-center relative z-0 overflow-hidden",
+        "flex flex-col justify-start items-center z-0 relative overflow-hidden",
         className
       )}
     >
-      <div className="md:hidden flex gap-2 w-full mb-2 lg:mb-4 px-4  justify-between items-center text-white">
+      <div className="md:hidden flex gap-2 w-full px-4  justify-between items-center text-white">
         <Badge className="bg-red-600 flex items-center  h-6 sm:h-8 text-sm sm:text-base tracking-wider md:hidden uppercase text-white">
           <div className="size-1.5 sm:size-2 bg-white rounded-full mr-1.5 sm:mr-2" />
           Live

@@ -49,7 +49,7 @@ const WalletDialog = ({ children, activeTab = "balance", open = false, onClose }
                         </Button>
                     </DialogClose>
                 </DialogHeader>
-                <ScrollArea className="md:h-[calc(100vh-300px)] max-h-[calc(100vh-150px)] dark:bg-primary-game bg-[#C3E3FF] rounded-t-3xl" scrollThumbClassName="bg-platform-border">
+                <ScrollArea className="md:h-[calc(100vh-300px)] max-h-[calc(100vh-150px)] dark:bg-primary-game bg-[#C3E3FF] rounded-t-3xl overflow-y-auto" scrollThumbClassName="bg-platform-border">
                     {defaultTab === "balance" && <BalanceCard onDeposit={() => setDefaultTab("deposit")} onWithdraw={() => setDefaultTab("withdraw")} onPaymentMethod={() => setDefaultTab("paymentMethod")} />}
                     {defaultTab === "deposit" && <FundsTransfers defaultTab="deposit" />}
                     {defaultTab === "withdraw" && <FundsTransfers defaultTab="withdraw" />}

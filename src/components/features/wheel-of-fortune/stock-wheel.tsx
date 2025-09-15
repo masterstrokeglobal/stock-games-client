@@ -82,7 +82,7 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
     >
       <div
         ref={wheelRef}
-        className="md:min-h-[450px] xs:min-h-[360px] min-h-[200px] w-full"
+        className="md:min-h-[450px] xs:min-h-[300px] min-h-[80px] w-full"
       >
         {/* <WheelCanvas
           isSpinning={isSpinning}

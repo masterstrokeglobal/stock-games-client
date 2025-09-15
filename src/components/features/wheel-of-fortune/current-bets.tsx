@@ -7,7 +7,7 @@ import { colorConfig } from "./game-board";
 
 const CurrentBets = ({ roundRecord, className, tableClassName }: { roundRecord: RoundRecord, className?: string, tableClassName?: string }) => {
     const { data: placements } = useGetMyCurrentRoundWheelOfFortunePlacement(roundRecord.id);
-    console.log("placements in current bets", placements?.length);
+    // console.log("placements in current bets", placements?.length);
 
     const aggregatedPlacements: Record<WheelColor, number> = {
         [WheelColor.COLOR1]: 0,

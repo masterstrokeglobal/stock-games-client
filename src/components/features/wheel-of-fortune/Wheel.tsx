@@ -26,8 +26,6 @@ export const Wheel: React.FC<WheelProps> = ({
   const wheelRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<number | null>(null);
 
-  console.log("roundRecord", roundRecord);
-
   // GSAP animation state
   const currentSpeedRef = useRef<number>(0);
   const spinTweenRef = useRef<gsap.core.Tween | null>(null);
@@ -47,6 +45,13 @@ export const Wheel: React.FC<WheelProps> = ({
     }
   );
 
+  // Keep track of raw rotation (not normalized) for accurate target calculation
+  const rawRotationRef = useRef<number>(
+    typeof window !== "undefined" 
+      ? (localStorage.getItem("wheelRotationDegrees") ? parseFloat(localStorage.getItem("wheelRotationDegrees")!) : 0)
+      : 0
+  );
+
   // State to track target rotation for stopping
   const targetRotationRef = useRef<number | null>(null);
 
@@ -57,21 +62,19 @@ export const Wheel: React.FC<WheelProps> = ({
 
     // Reorder according to WHEEL_COLOR_SEQUENCE
     // Each index in marketColors corresponds to a segment position in the wheel
-    const reorderedStocks = WHEEL_COLOR_SEQUENCE.map(
-      (_, segmentIndex) => {
-        // Get the market for this specific segment index
-        const marketColorEntry = marketColors[segmentIndex];
+    const reorderedStocks = WHEEL_COLOR_SEQUENCE.map((_, segmentIndex) => {
+      // Get the market for this specific segment index
+      const marketColorEntry = marketColors[segmentIndex];
 
-        if (!marketColorEntry) return null;
+      if (!marketColorEntry) return null;
 
-        // Find the corresponding market item
-        const marketItem = originalMarkets.find(
-          (market: MarketItem) => market.id === marketColorEntry.marketId
-        );
+      // Find the corresponding market item
+      const marketItem = originalMarkets.find(
+        (market: MarketItem) => market.id === marketColorEntry.marketId
+      );
 
-        return marketItem || null;
-      }
-    ).filter((stock) => stock !== null);
+      return marketItem || null;
+    }).filter((stock) => stock !== null);
 
     return reorderedStocks;
   }, [roundRecord]);
@@ -94,6 +97,9 @@ export const Wheel: React.FC<WheelProps> = ({
         const rawDegrees = prevDegrees + rotationIncrement;
         const newDegrees = Math.abs(rawDegrees % 360);
 
+        // Update raw rotation reference for accurate target calculation
+        rawRotationRef.current = rawDegrees;
+
         if (typeof window !== "undefined") {
           localStorage.setItem("wheelRotationDegrees", newDegrees.toString());
         }
@@ -103,31 +109,42 @@ export const Wheel: React.FC<WheelProps> = ({
           wheelRef.current.style.transform = `rotate(${rawDegrees}deg)`;
         }
 
-        // Check if we've reached the target rotation (within tolerance) - using same logic as 3D version
+        // Check if we've reached the target rotation (within tolerance)
         if (targetRotationRef.current !== null) {
-          const tolerance = 10; // increased tolerance to make it easier to stop
-          const angleDifference = Math.abs(
-            360 - newDegrees - targetRotationRef.current
-          );
-          const altAngleDifference = Math.abs(
-            newDegrees - targetRotationRef.current
-          );
-          const minAngleDifference = Math.min(
-            angleDifference,
-            altAngleDifference
-          );
+          const tolerance = 2; // tight tolerance for accurate stopping
 
-          if (minAngleDifference <= tolerance) {
+          const currentRawRotation = rawRotationRef.current;
+          const targetRawRotation = targetRotationRef.current;
+          
+          // Check if we've reached or passed the target rotation
+          const hasReachedTarget = currentRawRotation >= targetRawRotation;
+          
+          // Calculate how close we are to the target
+          const distanceToTarget = Math.abs(targetRawRotation - currentRawRotation);
+
+          console.log("loki Stopping check:", {
+            currentRawRotation: currentRawRotation.toFixed(2),
+            targetRawRotation: targetRawRotation.toFixed(2),
+            distanceToTarget: distanceToTarget.toFixed(2),
+          });
+
+          // Stop if we've reached the target or are very close
+          if (hasReachedTarget || distanceToTarget <= tolerance) {
+            const finalPosition = currentRawRotation % 360;
+            console.log("loki Target reached! Stopping wheel at position:", currentRawRotation.toFixed(2), "Final normalized position:", finalPosition.toFixed(2));
+            
             // Clear the target and stop spinning immediately
             targetRotationRef.current = null;
             // Stop immediately by setting speed to 0
             currentSpeedRef.current = 0;
             isAnimatingRef.current = false;
+            
             // Kill any active tween
             if (spinTweenRef.current) {
               spinTweenRef.current.kill();
               spinTweenRef.current = null;
             }
+            
             // Call completion callback
             if (onSpinComplete) {
               onSpinComplete();
@@ -135,7 +152,6 @@ export const Wheel: React.FC<WheelProps> = ({
           }
         }
 
-        // Fallback: if no target but should stop (when isSpinning becomes false)
         if (!isSpinning && currentSpeedRef.current !== 0) {
           currentSpeedRef.current = 0;
           isAnimatingRef.current = false;
@@ -228,33 +244,46 @@ export const Wheel: React.FC<WheelProps> = ({
     // Handle stopping logic
     if (!isSpinning && winningMarketId) {
       // Find the actual index in the markets array
-      if (winningMarketId && winningMarketId.length > 0) {
-        const marketIndex = stocks?.findIndex(
-          (market) => market.id === winningMarketId[0]
-        );
+      if (winningMarketId && winningMarketId) {
+        const marketIndex =
+          stocks?.findIndex((market) => market.id === winningMarketId[0]) || 0;
+
+        console.log("loki stopindex", marketIndex);
 
         // Calculate the target rotation where winning market should be at top (0 degrees)
         if (
           marketIndex !== undefined &&
-          marketIndex >= 0 &&
-          roundRecord?.market
+          marketIndex >= 0
         ) {
           const totalMarkets = stocks.length;
           const segmentAngle = 360 / totalMarkets; // degrees per segment
+          console.log("loki calculating stop rotation",);
 
-          // Current position of the winning segment (same as placement calculation)
-          const winningSegmentCurrentAngle = segmentAngle * marketIndex;
-
-          // To center the segment under the pin (at 0°), we need to add half segment angle
+          // Calculate the current wheel's rotation offset (where wheel currently is)
+          const currentRotationOffset = rawRotationRef.current % 360;
+          const winningSegmentBasePosition = segmentAngle * marketIndex;
           const centeringOffset = segmentAngle / 2;
-
-          // Calculate how much to rotate to bring winning segment to pin position (0°)
-          // We want to bring (winningSegmentCurrentAngle + centeringOffset) to 0°
-          const targetRotation =
-            (360 - (winningSegmentCurrentAngle + centeringOffset)) % 360;
+          const winningSegmentCenterPosition = (winningSegmentBasePosition + centeringOffset) % 360;
+          
+          // Pin is at 0 degrees (top of wheel). Calculate how much we need to rotate 
+          // to bring the winning segment to the pin position
+          const pinPosition = 0;
+          let targetOffset = (pinPosition - winningSegmentCenterPosition + 360) % 360;
+          
+          // Calculate how much rotation is needed from current position to target position
+          let rotationNeeded = (targetOffset - currentRotationOffset + 360) % 360;
+          
+          // If rotation needed is very small, add a full rotation for dramatic effect
+          if (rotationNeeded < 90) {
+            rotationNeeded += 360;
+          }
+          
+          // Calculate final target rotation (raw rotation + additional rotation needed)
+          const targetRotation = rawRotationRef.current + rotationNeeded;
 
           // Set the target rotation - the animation loop will handle stopping
           targetRotationRef.current = targetRotation;
+          console.log("loki targetRotation", targetRotation);
         } else {
           // Fallback to normal stop if we can't calculate target
           stopSpinning();
@@ -306,16 +335,8 @@ export const Wheel: React.FC<WheelProps> = ({
     };
   }, [cleanup]);
 
-  if (!roundRecord || stocks.length === 0) {
-    return (
-      <div className="flex h-full w-full items-center justify-center">
-        <div className="text-gray-500">No market data available</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="relative flex items-center justify-center md:min-h-[450px] xs:min-h-[360px] min-h-[300px] md:min-w-[450px] xs:min-w-[360px] min-w-[300px]">
+    <div className="relative flex items-center justify-center md:min-h-[450px] xs:min-h-[300px] min-h-[280px] md:min-w-[450px] xs:min-w-[300px] min-w-[280px]">
       {/* Wheel Shadow */}
       {!isLoading && (
         <img
@@ -343,7 +364,6 @@ export const Wheel: React.FC<WheelProps> = ({
               WHEEL_COLOR_CONFIG[assignedColor || WheelColor.COLOR1];
             const segmentAngle = 360 / stocks.length;
 
-
             return (
               <>
                 <div
@@ -363,7 +383,8 @@ export const Wheel: React.FC<WheelProps> = ({
                   className="absolute top-0 flex justify-center items-center overflow-hidden"
                 >
                   <p className="stock-name absolute text-white text-xs font-medium tracking-wider -rotate-90 top-[30%] z-10 outline-none whitespace-nowrap">
-                    {getStockName(stock.name ?? "", stock.codeName ?? "")}
+                    {/* {getStockName(stock.name ?? "", stock.codeName ?? "")} */}
+                    {index}
                   </p>
                 </div>
                 <div

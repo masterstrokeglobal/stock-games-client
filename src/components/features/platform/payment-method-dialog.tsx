@@ -50,7 +50,7 @@ const PaymentMethodDialog = ({ onBack }: PaymentMethodDialogProps) => {
     };
 
     return (
-        <div className="dark:bg-[#050128] bg-[#C3E3FF] border-t-2 dark:border-platform-border border-primary-game rounded-sm md:px-6 px-4 py-8 h-full w-full overflow-y-auto">
+        <div className="dark:bg-[#050128] md:h-[calc(100vh-300px)] max-h-[calc(100vh-150px)]  bg-[#C3E3FF] border-t-2 dark:border-platform-border border-primary-game rounded-sm md:px-6 px-4 py-8 w-full flex-1 flex flex-col">
             {/* Header */}
             <div className="flex items-center mb-6">
                 {onBack && (
@@ -215,7 +215,7 @@ const AddPaymentMethodForm = ({ onBack }: AddPaymentMethodFormProps) => {
     };
 
     return (
-        <div className="space-y-6 w-full ">
+        <div className="space-y-6 w-full h-full overflow-y-auto">
             {/* Back Button */}
             {/* <Button variant="ghost" onClick={onBack} className="mb-4 text-platform-text hover:text-white">
                 <ArrowLeft className="mr-2 size-4" />

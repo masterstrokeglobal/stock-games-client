@@ -41,7 +41,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
             value={betAmount.toString() || "0"}
             onChange={(e) => setBetAmount(Number(e.target.value))}
             className={cn(
-              "p-2  remove-spin border-2 text-lg h-12 pl-12 text-white rounded-md dice-input border-none bg-[#4467CC] focus:border-[#d1daf7] focus:ring-2 focus:ring-[#d1daf7] transition-all")}
+              "p-2  remove-spin border-2 text-lg h-10 pl-12 text-white rounded-md dice-input border-none bg-[#4467CC] focus:border-[#d1daf7] focus:ring-2 focus:ring-[#d1daf7] transition-all")}
           />
           <div className="absolute right-2 top-1/2 -translate-y-1/2 h-full w-fit p-0 flex flex-col justify-center text-white">
             <Button
