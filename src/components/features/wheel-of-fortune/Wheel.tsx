@@ -268,7 +268,7 @@ export const Wheel: React.FC<WheelProps> = ({
           // Pin is at 0 degrees (top of wheel). Calculate how much we need to rotate 
           // to bring the winning segment to the pin position
           const pinPosition = 0;
-          let targetOffset = (pinPosition - winningSegmentCenterPosition + 360) % 360;
+          const targetOffset = (pinPosition - winningSegmentCenterPosition + 360) % 360;
           
           // Calculate how much rotation is needed from current position to target position
           let rotationNeeded = (targetOffset - currentRotationOffset + 360) % 360;
@@ -278,8 +278,9 @@ export const Wheel: React.FC<WheelProps> = ({
             rotationNeeded += 360;
           }
           
+          
           // Calculate final target rotation (raw rotation + additional rotation needed)
-          const targetRotation = rawRotationRef.current + rotationNeeded;
+          const targetRotation = 0;
 
           // Set the target rotation - the animation loop will handle stopping
           targetRotationRef.current = targetRotation;
@@ -383,8 +384,8 @@ export const Wheel: React.FC<WheelProps> = ({
                   className="absolute top-0 flex justify-center items-center overflow-hidden"
                 >
                   <p className="stock-name absolute text-white text-xs font-medium tracking-wider -rotate-90 top-[30%] z-10 outline-none whitespace-nowrap">
-                    {/* {getStockName(stock.name ?? "", stock.codeName ?? "")} */}
-                    {index}
+                    {getStockName(stock.name ?? "", stock.codeName ?? "")}
+                    {/* {index} */}
                   </p>
                 </div>
                 <div
