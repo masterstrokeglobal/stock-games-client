@@ -8,13 +8,21 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useParams, useRouter } from "next/navigation";
 import { useGetUserById } from "@/react-query/user-queries";
+import User from "@/models/user";
+import { useMemo } from "react";
 
 const OperatorViewUserPage = () => {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const userId = params.id?.toString();
 
-  const { data: userDetails, isLoading } = useGetUserById(userId);
+  const { data, isLoading } = useGetUserById(userId);
+
+  const userDetails = useMemo(() => {
+    if (!data) return null;
+    // API returns AxiosResponse; normalize to User model expected by UserCard
+    return new User((data as any)?.data ?? data);
+  }, [data]);
 
   if (isLoading) return <LoadingScreen className="h-[60vh]">Loading user...</LoadingScreen>;
 

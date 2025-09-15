@@ -1,5 +1,6 @@
 "use client";
 import Navbar from "@/components/features/game/navbar";
+import BonusNotifier from "@/components/features/bonus/bonus-notifier";
 import BottomNavbar from "@/components/features/platform/bottom-navbar";
 import Footer from "@/components/features/platform/footer";
 import Sidebar from "@/components/features/platform/sidebar";
@@ -27,6 +28,7 @@ export default function GamingAppInterface({ children }: PropsWithChildren) {
             <BottomNavbar toggleSidebar={toggleSidebar} activeMenu={sidebarOpen} />
             <div className={cn("flex-1 mt-14  pt-5 transition-all duration-300 ease-in-out", sidebarOpen ? "md:pl-64" : "md:pl-20")}>
                 <main className="w-full md:px-12 sm:px-4 px-2">
+                    <BonusNotifier />
                     {children}
                     <Footer />
                 </main>

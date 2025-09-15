@@ -105,6 +105,9 @@ const BonusCampaignsList: React.FC = () => {
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="all">All Triggers</SelectItem>
+                        <SelectItem value="SIGNUP">Signup</SelectItem>
+                        <SelectItem value="FIRST_LOGIN">First Login</SelectItem>
+                        <SelectItem value="REFERRAL_BONUS">Referral Bonus</SelectItem>
                         <SelectItem value="FIRST_DEPOSIT">First Deposit</SelectItem>
                         <SelectItem value="EVERY_DEPOSIT">Every Deposit</SelectItem>
                         {/* <SelectItem value="LOSS_BASED">Loss Based</SelectItem>
