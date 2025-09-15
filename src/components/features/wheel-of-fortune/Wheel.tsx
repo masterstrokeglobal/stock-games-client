@@ -6,7 +6,7 @@ import {
 } from "@/models/round-record";
 import { MarketItem } from "@/models/market-item";
 import { useRef, useState, useCallback, useEffect, useMemo } from "react";
-import { gsap } from "gsap";
+// import { gsap } from "gsap";
 import { WheelColor } from "@/models/wheel-of-fortune-placement";
 import { getStockName } from "@/components/common/StockName";
 
@@ -24,35 +24,14 @@ export const Wheel: React.FC<WheelProps> = ({
   onSpinComplete,
 }) => {
   const wheelRef = useRef<HTMLDivElement>(null);
-  const frameRef = useRef<number | null>(null);
-
-  // GSAP animation state
-  const currentSpeedRef = useRef<number>(0);
-  const spinTweenRef = useRef<gsap.core.Tween | null>(null);
-  const isAnimatingRef = useRef<boolean>(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // State to track wheel rotation in degrees (0-359)
-  const [wheelRotationDegrees, setWheelRotationDegrees] = useState<number>(
-    () => {
-      if (typeof window !== "undefined") {
-        const saved = localStorage.getItem("wheelRotationDegrees");
-        return saved ? parseFloat(saved) : 0;
-      }
-      return 0;
-    }
-  );
-
-  // Keep track of raw rotation (not normalized) for accurate target calculation
-  const rawRotationRef = useRef<number>(
-    typeof window !== "undefined" 
-      ? (localStorage.getItem("wheelRotationDegrees") ? parseFloat(localStorage.getItem("wheelRotationDegrees")!) : 0)
-      : 0
-  );
-
-  // State to track target rotation for stopping
+  // Simple rotation state
+  const [currentRotation, setCurrentRotation] = useState(0);
+  const animationRef = useRef<number | null>(null);
+  const isStoppingRef = useRef(false);
   const targetRotationRef = useRef<number | null>(null);
 
   const stocks: MarketItem[] = useMemo(() => {
@@ -79,135 +58,78 @@ export const Wheel: React.FC<WheelProps> = ({
     return reorderedStocks;
   }, [roundRecord]);
 
-  // GSAP Animation constants
-  const MAX_SPIN_SPEED = 8; // Maximum rotation speed (degrees per frame)
-  const ACCELERATION_TIME = 3.0; // Time to reach max speed (seconds)
-  const DECELERATION_TIME = 1.0; // Time to stop from max speed (seconds)
-
-  // Animation loop with frame rate limiting
+  // Simple animation - 360 degrees in 0.5 seconds, repeating
   const animate = useCallback(() => {
     if (!wheelRef.current) return;
 
-    // Apply rotation to wheel using current speed
-    if (Math.abs(currentSpeedRef.current) > 0) {
-      const rotationIncrement = currentSpeedRef.current;
+    const startTime = Date.now();
+    const duration = 500; // 0.5 seconds for 360 degrees
 
-      // Update rotation state
-      setWheelRotationDegrees((prevDegrees) => {
-        const rawDegrees = prevDegrees + rotationIncrement;
-        const newDegrees = Math.abs(rawDegrees % 360);
+    const animateFrame = () => {
+      if (!wheelRef.current) return;
 
-        // Update raw rotation reference for accurate target calculation
-        rawRotationRef.current = rawDegrees;
+      const elapsed = Date.now() - startTime;
+      const progress = (elapsed % duration) / duration; // 0 to 1, repeating
+      const rotation = progress * 360; // 0 to 360 degrees
 
-        if (typeof window !== "undefined") {
-          localStorage.setItem("wheelRotationDegrees", newDegrees.toString());
-        }
+      setCurrentRotation(() => {
+        const totalRotation = Math.floor(elapsed / duration) * 360 + rotation;
+        
+        // Apply rotation to wheel
+        wheelRef.current!.style.transform = `rotate(${totalRotation}deg)`;
 
-        // Apply the rotation to the wheel element
-        if (wheelRef.current) {
-          wheelRef.current.style.transform = `rotate(${rawDegrees}deg)`;
-        }
-
-        // Check if we've reached the target rotation (within tolerance)
-        if (targetRotationRef.current !== null) {
-          const tolerance = 2; // tight tolerance for accurate stopping
-
-          const currentRawRotation = rawRotationRef.current;
-          const targetRawRotation = targetRotationRef.current;
-          
-          // Check if we've reached or passed the target rotation
-          const hasReachedTarget = currentRawRotation >= targetRawRotation;
-          
-          // Calculate how close we are to the target
-          const distanceToTarget = Math.abs(targetRawRotation - currentRawRotation);
-
-          console.log("loki Stopping check:", {
-            currentRawRotation: currentRawRotation.toFixed(2),
-            targetRawRotation: targetRawRotation.toFixed(2),
-            distanceToTarget: distanceToTarget.toFixed(2),
-          });
-
-          // Stop if we've reached the target or are very close
-          if (hasReachedTarget || distanceToTarget <= tolerance) {
-            const finalPosition = currentRawRotation % 360;
-            console.log("loki Target reached! Stopping wheel at position:", currentRawRotation.toFixed(2), "Final normalized position:", finalPosition.toFixed(2));
+        // Check if we should stop
+        if (isStoppingRef.current && targetRotationRef.current !== null) {
+          // Wait for current rotation to complete (when progress is near 0)
+          if (progress < 0.1) {
+            console.log("loki Completing rotation cycle, now setting target");
+            const targetRotation = targetRotationRef.current;
+            wheelRef.current!.style.transform = `rotate(${targetRotation}deg)`;
             
-            // Clear the target and stop spinning immediately
-            targetRotationRef.current = null;
-            // Stop immediately by setting speed to 0
-            currentSpeedRef.current = 0;
-            isAnimatingRef.current = false;
-            
-            // Kill any active tween
-            if (spinTweenRef.current) {
-              spinTweenRef.current.kill();
-              spinTweenRef.current = null;
+            // Stop animation
+            if (animationRef.current) {
+              cancelAnimationFrame(animationRef.current);
+              animationRef.current = null;
             }
             
-            // Call completion callback
+            isStoppingRef.current = false;
+            targetRotationRef.current = null;
+            
             if (onSpinComplete) {
               onSpinComplete();
             }
+            return targetRotation;
           }
         }
 
-        if (!isSpinning && currentSpeedRef.current !== 0) {
-          currentSpeedRef.current = 0;
-          isAnimatingRef.current = false;
-          if (spinTweenRef.current) {
-            spinTweenRef.current.kill();
-            spinTweenRef.current = null;
-          }
-          if (onSpinComplete) {
-            onSpinComplete();
-          }
-        }
-
-        return newDegrees;
+        return totalRotation;
       });
-    }
 
-    frameRef.current = requestAnimationFrame(animate);
-  }, [onSpinComplete, isSpinning]);
+      if (!isStoppingRef.current && isSpinning) {
+        animationRef.current = requestAnimationFrame(animateFrame);
+      }
+    };
 
-  // GSAP-powered spin control
+    animationRef.current = requestAnimationFrame(animateFrame);
+  }, [isSpinning, onSpinComplete]);
+
+  // Simple spin control
   const startSpinning = useCallback(() => {
-    // Kill any existing tween
-    if (spinTweenRef.current) {
-      spinTweenRef.current.kill();
-    }
-
-    // Animate to full speed
-    spinTweenRef.current = gsap.to(currentSpeedRef, {
-      current: MAX_SPIN_SPEED,
-      duration: ACCELERATION_TIME,
-      ease: "power2.out",
-      onComplete: () => {
-        isAnimatingRef.current = true;
-      },
-    });
-  }, [MAX_SPIN_SPEED, ACCELERATION_TIME]);
+    isStoppingRef.current = false;
+    targetRotationRef.current = null;
+    animate();
+  }, [animate]);
 
   const stopSpinning = useCallback(() => {
-    // Kill any existing tween
-    if (spinTweenRef.current) {
-      spinTweenRef.current.kill();
+    isStoppingRef.current = true;
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
     }
-
-    // Animate to stop
-    spinTweenRef.current = gsap.to(currentSpeedRef, {
-      current: 0,
-      duration: DECELERATION_TIME,
-      ease: "power2.in",
-      onComplete: () => {
-        isAnimatingRef.current = false;
-        if (onSpinComplete) {
-          onSpinComplete();
-        }
-      },
-    });
-  }, [DECELERATION_TIME, onSpinComplete]);
+    if (onSpinComplete) {
+      onSpinComplete();
+    }
+  }, [onSpinComplete]);
 
   // Handle spin state changes
   useEffect(() => {
@@ -237,61 +159,39 @@ export const Wheel: React.FC<WheelProps> = ({
       }
     } else if (isSpinning) {
       // Fallback to original logic if no roundRecord
+      console.log("loki startSpinning", currentRotation);
       startSpinning();
       targetRotationRef.current = null;
     }
 
     // Handle stopping logic
     if (!isSpinning && winningMarketId) {
-      // Find the actual index in the markets array
-      if (winningMarketId && winningMarketId) {
-        const marketIndex =
-          stocks?.findIndex((market) => market.id === winningMarketId[0]) || 0;
+        // Find the actual index in the markets array
+        if (winningMarketId && winningMarketId) {
+          const marketIndex =
+            stocks?.findIndex((market) => market.id === winningMarketId[0]) || 0;
 
-        console.log("loki stopindex", marketIndex);
+          console.log("loki stopindex", marketIndex);
 
-        // Calculate the target rotation where winning market should be at top (0 degrees)
-        if (
-          marketIndex !== undefined &&
-          marketIndex >= 0
-        ) {
-          const totalMarkets = stocks.length;
-          const segmentAngle = 360 / totalMarkets; // degrees per segment
-          console.log("loki calculating stop rotation",);
-
-          // Calculate the current wheel's rotation offset (where wheel currently is)
-          const currentRotationOffset = rawRotationRef.current % 360;
-          const winningSegmentBasePosition = segmentAngle * marketIndex;
-          const centeringOffset = segmentAngle / 2;
-          const winningSegmentCenterPosition = (winningSegmentBasePosition + centeringOffset) % 360;
-          
-          // Pin is at 0 degrees (top of wheel). Calculate how much we need to rotate 
-          // to bring the winning segment to the pin position
-          const pinPosition = 0;
-          const targetOffset = (pinPosition - winningSegmentCenterPosition + 360) % 360;
-          
-          // Calculate how much rotation is needed from current position to target position
-          let rotationNeeded = (targetOffset - currentRotationOffset + 360) % 360;
-          
-          // If rotation needed is very small, add a full rotation for dramatic effect
-          if (rotationNeeded < 90) {
-            rotationNeeded += 360;
+          // Calculate simple target rotation
+          if (marketIndex !== undefined && marketIndex >= 0) {
+            const totalMarkets = stocks.length;
+            const segmentAngle = 360 / totalMarkets;
+            
+            // Simple target: segmentAngle * marketIndex - segmentAngle/2
+            const targetRotation = segmentAngle * marketIndex - segmentAngle / 2;
+            
+            console.log("loki Setting target rotation:", targetRotation);
+            
+            // Set stopping flag and target
+            isStoppingRef.current = true;
+            targetRotationRef.current = targetRotation;
+          } else {
+            stopSpinning();
           }
-          
-          
-          // Calculate final target rotation (raw rotation + additional rotation needed)
-          const targetRotation = 0;
-
-          // Set the target rotation - the animation loop will handle stopping
-          targetRotationRef.current = targetRotation;
-          console.log("loki targetRotation", targetRotation);
         } else {
-          // Fallback to normal stop if we can't calculate target
           stopSpinning();
         }
-      } else {
-        stopSpinning();
-      }
     } else if (!isSpinning && !winningMarketId) {
       // Stop spinning if isSpinning is false and no winner yet
       stopSpinning();
@@ -300,34 +200,27 @@ export const Wheel: React.FC<WheelProps> = ({
 
   // Cleanup function
   const cleanup = useCallback(() => {
-    // Kill any active GSAP tweens
-    if (spinTweenRef.current) {
-      spinTweenRef.current.kill();
-      spinTweenRef.current = null;
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
     }
-
-    if (frameRef.current) {
-      cancelAnimationFrame(frameRef.current);
-      frameRef.current = null;
-    }
-
-    // Reset animation state
-    currentSpeedRef.current = 0;
-    isAnimatingRef.current = false;
+    isStoppingRef.current = false;
+    targetRotationRef.current = null;
   }, []);
 
   // Animation effect
   useEffect(() => {
-    if (!isLoading && !error) {
+    if (!isLoading && !error && isSpinning) {
       animate();
     }
 
     return () => {
-      if (frameRef.current) {
-        cancelAnimationFrame(frameRef.current);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = null;
       }
     };
-  }, [animate, isLoading, error]);
+  }, [animate, isLoading, error, isSpinning]);
 
   // Cleanup effect
   useEffect(() => {
@@ -353,7 +246,6 @@ export const Wheel: React.FC<WheelProps> = ({
         <div
           ref={wheelRef}
           className="absolute h-[80%] w-[80%] rounded-full flex items-center justify-center"
-          style={{ transform: `rotate(${wheelRotationDegrees}deg)` }}
         >
           {stocks.map((stock, index) => {
             const assignedColor =
@@ -372,7 +264,9 @@ export const Wheel: React.FC<WheelProps> = ({
                   style={{
                     height: "50%",
                     width: `${segmentAngle * 0.9}%`,
-                    transform: `rotateZ(${segmentAngle * index}deg)`,
+                    transform: `rotateZ(${
+                      segmentAngle * index - segmentAngle / 2
+                    }deg)`,
                     backgroundColor: colorConfig.actualColor,
                     boxShadow: `
                     inset 0 0px -20px -20px ${colorConfig.shadow},   /* top inner shadow */
@@ -392,7 +286,9 @@ export const Wheel: React.FC<WheelProps> = ({
                   style={{
                     height: "50%",
                     width: `${segmentAngle * 0.9}%`,
-                    transform: `rotateZ(${segmentAngle * index}deg)`,
+                    transform: `rotateZ(${
+                      segmentAngle * index - segmentAngle / 2
+                    }deg)`,
                     transformOrigin: "center bottom",
                   }}
                   className="absolute top-0 z-20 flex justify-center items-center"
