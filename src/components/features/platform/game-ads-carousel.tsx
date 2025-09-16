@@ -105,7 +105,8 @@ export function GameAdsCarousel({ autoPlayInterval = 5000, className }: HeroCaro
       opts={{
         loop: true,
         align: "start",
-        containScroll: "trimSnaps"
+        containScroll: "trimSnaps",
+        dragFree:false,
       }}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}

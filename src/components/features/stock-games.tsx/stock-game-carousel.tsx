@@ -11,11 +11,13 @@ import Link from "next/link"
 
 
 export default function StockGameCarousel() {
-    const {isMobile} = useWindowSize();
+    const {width} = useWindowSize();
     const t = useTranslations("platform.stock-game-carousel");
     const { data: company } = useGetMyCompany();
+
+    const isLargeDesktop = width >= 1280;
     return (
-        <Carousel opts={{ loop: false, startIndex: 0, slidesToScroll: isMobile ? 1 : 2 }} className="w-full">
+        <Carousel opts={{ loop: false, startIndex: 0, slidesToScroll:  isLargeDesktop ? 2 : 1 }} className="w-full">
 
             <div className="space-y-1">
                 <div className="flex items-center justify-between">
