@@ -8,9 +8,6 @@ type OperatorData = {
     email?: string;
     role?: string;
     percentageShare?: number;
-    dmMaxBalance?: number;
-    masterMaxBalance?: number;
-    agentMaxBalance?: number;
     company?: {
         id?: number;
         name?: string;
@@ -120,26 +117,6 @@ const OperatorInfoCard = ({ operator }: Props) => {
                         </div>
                     </div>
 
-                    <div className="space-y-3">
-                        <div className="text-sm font-medium">Balance Limits</div>
-                        
-                        <div className="grid grid-cols-1 gap-2 text-sm">
-                            <div className="flex justify-between">
-                                <span className="text-muted-foreground">DM Max Balance</span>
-                                <span className="font-medium">{formatCurrency(operator.dmMaxBalance)}</span>
-                            </div>
-                            
-                            <div className="flex justify-between">
-                                <span className="text-muted-foreground">Master Max Balance</span>
-                                <span className="font-medium">{formatCurrency(operator.masterMaxBalance)}</span>
-                            </div>
-                            
-                            <div className="flex justify-between">
-                                <span className="text-muted-foreground">Agent Max Balance</span>
-                                <span className="font-medium">{formatCurrency(operator.agentMaxBalance)}</span>
-                            </div>
-                        </div>
-                    </div>
 
                     <div className="pt-3 border-t text-xs text-muted-foreground">
                         <div className="flex justify-between">

@@ -14,7 +14,6 @@ type Operator = {
     percentage: number;
     companyId: number;
     balance: number;
-    maxBalance: number;
     bettingStatus: boolean;
     transferStatus: boolean;
     status: string;
@@ -64,11 +63,6 @@ const operatorColumns: ColumnDef<Operator>[] = [
         header: "BALANCE",
         accessorKey: "balance",
         cell: ({ row }) => <div className="text-left font-medium">₹{row.original.balance.toLocaleString()}</div>,
-    },
-    {
-        header: "MAX BALANCE",
-        accessorKey: "maxBalance",
-        cell: ({ row }) => <div className="text-left text-sm text-gray-600">₹{row.original.maxBalance.toLocaleString()}</div>,
     },
     {
         header: "STATUS",

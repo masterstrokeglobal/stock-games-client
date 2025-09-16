@@ -215,9 +215,9 @@ const AdminProfitDistribution = ({ className }: Props) => {
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <Users className="h-5 w-5" />
-                        Who Bears How Much
+                        Who Keeps How Much
                     </CardTitle>
-                    <CardDescription>Each operator &apos;s share from their parent</CardDescription>
+                    <CardDescription>Operator keeps amount (post distribution)</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-3">
@@ -235,30 +235,20 @@ const AdminProfitDistribution = ({ className }: Props) => {
                                 .sort((a, b) => roleOrder[a.role as keyof typeof roleOrder] - roleOrder[b.role as keyof typeof roleOrder]);
 
                             const operatorLines = sortedShares.map((operator) => {
-                                // Use receivesFromParent for all operators (SDM/DM/Master/Agent)
-                                const bears = operator.receivesFromParent;
-                                
+                                const keeps = operator.operatorKeeps;
                                 return {
                                     name: operator.operatorName,
-                                    amount: bears,
+                                    amount: keeps,
                                     role: operator.role
                                 };
                             });
-                            // Add Admin line
-                            const adminLine = {
-                                name: "Admin",
-                                amount: data.adminDistribution.adminKeeps,
-                                role: "admin"
-                            };
-
-                            const allLines = [...operatorLines, adminLine];
 
                             return (
                                 <div className="space-y-2">
-                                    {allLines.map((item, index) => {
+                                    {operatorLines.map((item, index) => {
                                         const isLoss = item.amount < 0;
                                         const isProfit = item.amount > 0;
-                                        
+
                                         return (
                                             <div key={index} className="flex items-center justify-between p-3 rounded border">
                                                 <span className="font-medium">{item.name}</span>

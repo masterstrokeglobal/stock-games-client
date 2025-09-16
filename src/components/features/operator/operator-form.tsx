@@ -20,11 +20,7 @@ const createOperatorInputSchema = (isEditing: boolean = false) => {
             ? z.string().optional()
             : z.string().min(6, "Confirm password is required"),
         role: z.nativeEnum(OperatorRole, { required_error: "Role is required" }),
-        maxBalance: z.coerce.number().min(0, "Max balance must be non-negative").default(0),
         percentageShare: z.coerce.number().min(0, "Percentage share must be non-negative").max(100, "Percentage share cannot exceed 100").default(0),
-        dmMaxBalance: z.coerce.number().min(0, "DM max balance must be non-negative").default(0).optional(),
-        masterMaxBalance: z.coerce.number().min(0, "Master max balance must be non-negative").default(0).optional(),
-        agentMaxBalance: z.coerce.number().min(0, "Agent max balance must be non-negative").default(0).optional(),
     });
 
     if (isEditing) {
@@ -64,11 +60,7 @@ const OperatorForm = ({
         password: '',
         confirmPassword: '',
         role: OperatorRole.AGENT,
-        maxBalance: 0,
         percentageShare: 0,
-        dmMaxBalance: 0,
-        masterMaxBalance: 0,
-        agentMaxBalance: 0,
     },
     isLoading,
     isEditing = false,
@@ -82,8 +74,6 @@ const OperatorForm = ({
     const { control, handleSubmit, watch } = form;
     const passwordValue = watch("password");
 
-    // Check if current user is super duper master (can set balance limits)
-    const canSetBalanceLimits = currentUserRole === AdminRole.COMPANY_ADMIN;
 
     // Role options based on current user's role
     const getRoleOptions = () => {
@@ -150,13 +140,6 @@ const OperatorForm = ({
             <div className="grid md:grid-cols-2 gap-4">
                 <FormInput
                     control={control}
-                    name="maxBalance"
-                    label="Max Balance*"
-                    type="number"
-                    placeholder="Enter max balance"
-                />
-                <FormInput
-                    control={control}
                     name="percentageShare"
                     label="Percentage Share*"
                     type="number"
@@ -166,34 +149,6 @@ const OperatorForm = ({
                 />
             </div>
 
-            {canSetBalanceLimits && (
-                <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Balance Limits (Super Duper Master Only)</h3>
-                    <div className="grid md:grid-cols-3 gap-4">
-                        <FormInput
-                            control={control}
-                            name="dmMaxBalance"
-                            label="Duper Master Max Balance"
-                            type="number"
-                            placeholder="Enter DM max balance"
-                        />
-                        <FormInput
-                            control={control}
-                            name="masterMaxBalance"
-                            label="Master Max Balance"
-                            type="number"
-                            placeholder="Enter Master max balance"
-                        />
-                        <FormInput
-                            control={control}
-                            name="agentMaxBalance"
-                            label="Agent Max Balance"
-                            type="number"
-                            placeholder="Enter Agent max balance"
-                        />
-                    </div>
-                </div>
-            )}
 
             <FormPassword
                 control={control}

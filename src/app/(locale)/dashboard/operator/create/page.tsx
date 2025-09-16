@@ -11,11 +11,7 @@ const defaultValues: OperatorFormValues = {
     password: "",
     confirmPassword: "",
     role: OperatorRole.SUPER_DUPER_MASTER,
-    maxBalance: 0,
     percentageShare: 0,
-    dmMaxBalance: 0,
-    masterMaxBalance: 0,
-    agentMaxBalance: 0,
 };
 const CreateOperatorPage = () => {
     const router = useRouter();
