@@ -47,7 +47,7 @@ const OperatorViewUserPage = () => {
       </header>
       <Separator className="mt-4" />
       <main className="mt-4">
-        <UserCard user={userDetails.data} />
+        <UserCard user={userDetails} />
       </main>
 
       <main className="mt-8">
