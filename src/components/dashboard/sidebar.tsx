@@ -36,6 +36,11 @@ const adminMenuItems: MenuItem[] = [
         ],
     },
     {
+        name: "External Games",
+        icon: GamepadIcon,
+        link: "/dashboard/external-games"
+    },
+    {
         name: 'Company',
         icon: Building,
         subItems: [
