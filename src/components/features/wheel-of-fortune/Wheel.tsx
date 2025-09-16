@@ -6,9 +6,9 @@ import {
 } from "@/models/round-record";
 import { MarketItem } from "@/models/market-item";
 import { useRef, useState, useCallback, useEffect, useMemo } from "react";
-// import { gsap } from "gsap";
 import { WheelColor } from "@/models/wheel-of-fortune-placement";
 import { getStockName } from "@/components/common/StockName";
+import { gsap } from "gsap";
 
 interface WheelProps {
   isSpinning: boolean;
@@ -24,108 +24,86 @@ export const Wheel: React.FC<WheelProps> = ({
   onSpinComplete,
 }) => {
   const wheelRef = useRef<HTMLDivElement>(null);
-
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // Simple rotation state
-  const [currentRotation, setCurrentRotation] = useState(0);
-  const animationRef = useRef<number | null>(null);
-  const isStoppingRef = useRef(false);
-  const targetRotationRef = useRef<number | null>(null);
+  const [wheelState, setWheelState] = useState<'idle' | 'spinning' | 'stopped'>('idle');
+  const spinTweenRef = useRef<any>(null);
 
   const stocks: MarketItem[] = useMemo(() => {
     const originalMarkets = roundRecord?.market || [];
     const marketColors = roundRecord?.marketColors || [];
     if (originalMarkets.length === 0 || marketColors.length === 0) return [];
 
-    // Reorder according to WHEEL_COLOR_SEQUENCE
-    // Each index in marketColors corresponds to a segment position in the wheel
     const reorderedStocks = WHEEL_COLOR_SEQUENCE.map((_, segmentIndex) => {
-      // Get the market for this specific segment index
       const marketColorEntry = marketColors[segmentIndex];
-
       if (!marketColorEntry) return null;
 
-      // Find the corresponding market item
       const marketItem = originalMarkets.find(
         (market: MarketItem) => market.id === marketColorEntry.marketId
       );
-
       return marketItem || null;
     }).filter((stock) => stock !== null);
 
     return reorderedStocks;
   }, [roundRecord]);
 
-  // Simple animation - 360 degrees in 0.5 seconds, repeating
-  const animate = useCallback(() => {
-    if (!wheelRef.current) return;
+  const calculateTargetRotation = useCallback((winningId: number): number => {
+    const marketIndex = stocks.findIndex((market) => market.id === winningId);
+    if (marketIndex === -1) return 0;
 
-    const startTime = Date.now();
-    const duration = 500; // 0.5 seconds for 360 degrees
+    const totalMarkets = stocks.length;
+    const segmentAngle = 360 / totalMarkets;
+    
+    // Calculate the angle where the winning segment should be positioned
+    const segmentCenter = segmentAngle * marketIndex - (segmentAngle / 2);
+    
+    // Calculate target angle to position winning segment at top
+    const targetAngle = 360 - segmentCenter;
+    
+    
+    return targetAngle;
+  }, [stocks]);
 
-    const animateFrame = () => {
-      if (!wheelRef.current) return;
-
-      const elapsed = Date.now() - startTime;
-      const progress = (elapsed % duration) / duration; // 0 to 1, repeating
-      const rotation = progress * 360; // 0 to 360 degrees
-
-      setCurrentRotation(() => {
-        const totalRotation = Math.floor(elapsed / duration) * 360 + rotation;
-        
-        // Apply rotation to wheel
-        wheelRef.current!.style.transform = `rotate(${totalRotation}deg)`;
-
-        // Check if we should stop
-        if (isStoppingRef.current && targetRotationRef.current !== null) {
-          // Wait for current rotation to complete (when progress is near 0)
-          if (progress < 0.1) {
-            console.log("loki Completing rotation cycle, now setting target");
-            const targetRotation = targetRotationRef.current;
-            wheelRef.current!.style.transform = `rotate(${targetRotation}deg)`;
-            
-            // Stop animation
-            if (animationRef.current) {
-              cancelAnimationFrame(animationRef.current);
-              animationRef.current = null;
-            }
-            
-            isStoppingRef.current = false;
-            targetRotationRef.current = null;
-            
-            if (onSpinComplete) {
-              onSpinComplete();
-            }
-            return targetRotation;
-          }
-        }
-
-        return totalRotation;
-      });
-
-      if (!isStoppingRef.current && isSpinning) {
-        animationRef.current = requestAnimationFrame(animateFrame);
-      }
-    };
-
-    animationRef.current = requestAnimationFrame(animateFrame);
-  }, [isSpinning, onSpinComplete]);
-
-  // Simple spin control
   const startSpinning = useCallback(() => {
-    isStoppingRef.current = false;
-    targetRotationRef.current = null;
-    animate();
-  }, [animate]);
-
-  const stopSpinning = useCallback(() => {
-    isStoppingRef.current = true;
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
-      animationRef.current = null;
+    if (!wheelRef.current) return;
+    
+    console.log("Starting GSAP spin");
+    setWheelState('spinning');
+    
+    // Kill any existing animation
+    if (spinTweenRef.current) {
+      spinTweenRef.current.kill();
     }
+    
+    // Start infinite spinning
+    spinTweenRef.current = gsap.to(wheelRef.current, {
+      rotation: "+=360",
+      duration: 1,
+      ease: "none",
+      repeat: -1,
+    });
+  }, []);
+
+  const stopWheel = useCallback((targetRotation: number) => {
+    if (!wheelRef.current) return;
+    
+    console.log("Stopping wheel at rotation:", targetRotation);
+    setWheelState('stopped');
+    
+    // Kill the spinning animation
+    if (spinTweenRef.current) {
+      spinTweenRef.current.kill();
+      spinTweenRef.current = null;
+    }
+    
+    // Set the target rotation immediately
+    gsap.set(wheelRef.current, {
+      rotation: targetRotation
+    });
+    
+    console.log("Applied GSAP rotation:", targetRotation);
+    
+    // Call completion callback
     if (onSpinComplete) {
       onSpinComplete();
     }
@@ -138,96 +116,43 @@ export const Wheel: React.FC<WheelProps> = ({
       const currentTime = new Date().getTime();
       const placementEndTime = new Date(roundRecord.placementEndTime).getTime();
       const gameEndTime = new Date(roundRecord.endTime).getTime();
-
-      // Ensure we're in the correct time window for spinning
       const isBettingClosed = currentTime >= placementEndTime;
       const isGameStillActive = currentTime < gameEndTime;
 
-      // Only start spinning if all conditions are met
-      if (
-        isSpinning &&
-        isBettingClosed &&
-        isGameStillActive &&
-        !winningMarketId
-      ) {
+      if (isSpinning && isBettingClosed && isGameStillActive && !winningMarketId && wheelState === 'idle') {
         startSpinning();
-        // Clear any existing target when starting new spin
-        targetRotationRef.current = null;
-      } else if (isSpinning && (!isBettingClosed || !isGameStillActive)) {
-        // Don't spin if betting is still open or game is over
-        return;
       }
-    } else if (isSpinning) {
-      // Fallback to original logic if no roundRecord
-      console.log("loki startSpinning", currentRotation);
+    } else if (isSpinning && !winningMarketId && wheelState === 'idle') {
       startSpinning();
-      targetRotationRef.current = null;
     }
 
-    // Handle stopping logic
-    if (!isSpinning && winningMarketId) {
-        // Find the actual index in the markets array
-        if (winningMarketId && winningMarketId) {
-          const marketIndex =
-            stocks?.findIndex((market) => market.id === winningMarketId[0]) || 0;
-
-          console.log("loki stopindex", marketIndex);
-
-          // Calculate simple target rotation
-          if (marketIndex !== undefined && marketIndex >= 0) {
-            const totalMarkets = stocks.length;
-            const segmentAngle = 360 / totalMarkets;
-            
-            // Simple target: segmentAngle * marketIndex - segmentAngle/2
-            const targetRotation = segmentAngle * marketIndex - segmentAngle / 2;
-            
-            console.log("loki Setting target rotation:", targetRotation);
-            
-            // Set stopping flag and target
-            isStoppingRef.current = true;
-            targetRotationRef.current = targetRotation;
-          } else {
-            stopSpinning();
-          }
-        } else {
-          stopSpinning();
-        }
-    } else if (!isSpinning && !winningMarketId) {
-      // Stop spinning if isSpinning is false and no winner yet
-      stopSpinning();
+    // Handle stopping when winning ID is available
+    if (winningMarketId && winningMarketId.length > 0 && wheelState === 'spinning') {
+      const targetRotation = calculateTargetRotation(winningMarketId[0]);
+      stopWheel(targetRotation);
     }
-  }, [isSpinning, startSpinning, stopSpinning, winningMarketId, roundRecord]);
 
-  // Cleanup function
-  const cleanup = useCallback(() => {
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
-      animationRef.current = null;
+    // Handle case where spinning stops without winner
+    if (!isSpinning && wheelState === 'spinning') {
+      if (spinTweenRef.current) {
+        spinTweenRef.current.kill();
+        spinTweenRef.current = null;
+      }
+      setWheelState('idle');
+      if (onSpinComplete) {
+        onSpinComplete();
+      }
     }
-    isStoppingRef.current = false;
-    targetRotationRef.current = null;
-  }, []);
+  }, [isSpinning, winningMarketId, wheelState, roundRecord, calculateTargetRotation, stopWheel, startSpinning, onSpinComplete]);
 
-  // Animation effect
+  // Cleanup on unmount
   useEffect(() => {
-    if (!isLoading && !error && isSpinning) {
-      animate();
-    }
-
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-        animationRef.current = null;
+      if (spinTweenRef.current) {
+        spinTweenRef.current.kill();
       }
     };
-  }, [animate, isLoading, error, isSpinning]);
-
-  // Cleanup effect
-  useEffect(() => {
-    return () => {
-      cleanup();
-    };
-  }, [cleanup]);
+  }, []);
 
   return (
     <div className="relative flex items-center justify-center md:min-h-[450px] xs:min-h-[300px] min-h-[280px] md:min-w-[450px] xs:min-w-[300px] min-w-[280px]">
@@ -269,17 +194,16 @@ export const Wheel: React.FC<WheelProps> = ({
                     }deg)`,
                     backgroundColor: colorConfig.actualColor,
                     boxShadow: `
-                    inset 0 0px -20px -20px ${colorConfig.shadow},   /* top inner shadow */
-                    inset 0 -0px -20px -20px ${colorConfig.shadow}  /* bottom inner shadow */
-                  `,
+                      inset 0 0px -20px -20px ${colorConfig.shadow},   /* top inner shadow */
+                      inset 0 -0px -20px -20px ${colorConfig.shadow}  /* bottom inner shadow */
+                    `,
                     clipPath: "polygon(0 0, 50% 100%, 100% 0)",
                     transformOrigin: "center bottom",
                   }}
                   className="absolute top-0 flex justify-center items-center overflow-hidden"
                 >
                   <p className="stock-name absolute text-white text-xs font-medium tracking-wider -rotate-90 top-[30%] z-10 outline-none whitespace-nowrap">
-                    {getStockName(stock.name ?? "", stock.codeName ?? "")}
-                    {/* {index} */}
+                  {getStockName(stock.name ?? "", stock.codeName ?? "")}
                   </p>
                 </div>
                 <div
@@ -310,7 +234,7 @@ export const Wheel: React.FC<WheelProps> = ({
           {Array.from({ length: 8 }, (_, index) => {
             const angle = (index * 360) / 8;
             const radian = (angle * Math.PI) / 180;
-            const radius = 50; // 50% of the container (since it's positioned from center)
+            const radius = 50;
             const x = Math.cos(radian) * radius;
             const y = Math.sin(radian) * radius;
 
@@ -364,7 +288,6 @@ export const Wheel: React.FC<WheelProps> = ({
               onClick={() => {
                 setError(null);
                 setIsLoading(true);
-                // Force re-initialization by updating a dependency
                 window.location.reload();
               }}
               className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"

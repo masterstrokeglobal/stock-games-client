@@ -34,8 +34,7 @@ export const StockPriceDisplay: React.FC<{
   const isGameStillActive = currentTime < gameEndTime;
   const hasNoWinner = winningMarketId == null;
 
-  const isSpinning =
-    isBettingClosed && isGameStillActive && hasNoWinner && isPlaceOver;
+  const isSpinning = isBettingClosed && isGameStillActive && hasNoWinner && isPlaceOver;
 
   return (
     <div

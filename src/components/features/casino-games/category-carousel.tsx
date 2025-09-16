@@ -83,7 +83,7 @@ export default function CategoryCarousel({ categoryId, title, popular,providerOf
 
 
     return (
-        <Carousel opts={{ loop: false, startIndex: 0 ,slidesToScroll: isMobile ? 2 : 5}} className="w-full pt-0.5">
+        <Carousel opts={{ loop: false, startIndex: 0 ,slidesToScroll: isMobile ? 2 : 6}} className="w-full pt-0.5">
             <div className="md:space-y-4 space-y-1">
                 <div className="flex items-end justify-between">
                     <h2 className="md:text-2xl sm:text-base text-sm font-semibold text-platform-text">{title}</h2>

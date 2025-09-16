@@ -37,8 +37,6 @@ export default function Home() {
     if (isLoading || !roundRecord) return <GameLoadingScreen className="min-h-[calc(100svh)]" />;
 
 
-
-
     return (
         <div className="flex flex-col h-[100dvh] min-h-[550px] pt-12 bg-[#00627A] overflow-hidden  relative bg-repeat bg-center text-white  mx-auto">
             <img src="/images/jackpot/bg.png" className="w-full hidden; md:h-full h-[350px] object-cover absolute z-0" />
@@ -51,8 +49,8 @@ export default function Home() {
                     globalBetAmount={globalBetAmount}
                 />
                 <div className="w-full z-10 ">
-                    <div className="flex flex-col pb-2 lg:pb-0 lg:grid relative grid-cols-1 lg:gap-6  xxl:py-4 lg:mt-0 xsm:mt-24 mt-20 rounded-lg">
-                        <div className="relative h-full  w-full lg:min-h-[200px]  bg-contain bg-no-repeat bg-center">
+                    <div className="flex flex-col  lg:pb-0 lg:grid relative grid-cols-1 lg:gap-6  xxl:py-4 lg:mt-0 xsm:mt-24 mt-20 rounded-lg">
+                        <div className="relative h-full  w-full lg:min-h-[200px] md:max-h-none max-h-[calc(15dvh)] bg-contain bg-no-repeat bg-center">
                             <div className="lg:absolute lg bottom-4 w-full h-fit">
                                 <div className='absolute left-1/2 -translate-x-1/2 lg:bottom-[calc(100%-2vw)] sm:bottom-[calc(100%-2vw-20px)] bottom-[calc(100%-2vw-10px)] md:h-[60%] h-3/4 z-10 flex max-w-sm items-end justify-center'>
                                     <img src={!isPlacementOver ? "/images/jackpot/girl-card.gif" : "/images/jackpot/girl-bet.gif"} alt="dice-bg" className='sm:w-auto w-full sm:max-w-none xs:max-w-[150px] max-w-[120px] sm:h-full h-auto relative z-[20] translate-y-[16%] sm:mt-20' />
@@ -65,7 +63,7 @@ export default function Home() {
                         </div>
                         {!isDesktop &&
                             <div ref={stocksRef} className="md:px-4 px-2 h-full flex w-full justify-center">
-                                <MarketSectionMobile className="flex-1 h-[calc(100svh-410px)]" globalBetAmount={globalBetAmount} />
+                                <MarketSectionMobile className="flex-1 h-[calc(100dvh-410px)]" globalBetAmount={globalBetAmount} />
                             </div>
                         }
                         {roundRecord && <BettingChips
