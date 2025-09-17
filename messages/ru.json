@@ -360,6 +360,8 @@
         "description-email-phone": "Номер телефона должен содержать код страны",
         "label-reference-code": "Реферальный код",
         "label-password": "Пароль",
+        "label-terms-agreement": "Я согласен с условиями обслуживания",
+        "label-age-confirmation": "Я подтверждаю, что мне больше 18 лет",
         "terms-message": "Продолжая, вы соглашаетесь с нашими условиями обслуживания",
         "button-register": "Зарегистрироваться",
         "button-registering": "Регистрируем...",

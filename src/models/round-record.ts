@@ -90,6 +90,7 @@ export const IndexwithColorBands = [
             borderColor: '#FF0909',
             shadowColor: 'shadow-red-500/50',
             shadow: "0px 0px 30px 0px rgba(244, 67, 54, 1)",
+            shadowColor2: 'rgba(244, 67, 54, 1)',
             actualColor: '#F44336', 
             chipColor: '#910024',// Vibrant red (most frequent - 7 items)
             multiplier: 2.5
@@ -102,6 +103,7 @@ export const IndexwithColorBands = [
             borderColor: '#0ED700',
             shadowColor: 'shadow-green-500/50',
             shadow: "0px 0px 30px 0px rgba(76, 175, 80, 1)",
+            shadowColor2: 'rgba(76, 175, 80, 1)',
             actualColor: '#4CAF50',
             chipColor: '#0E6D24', // Vibrant green (7 items)
             multiplier: 3.3
@@ -111,6 +113,7 @@ export const IndexwithColorBands = [
             bgColor: 'bg-blue-500',
             textColor: 'text-white',
             shadow: "0px 0px 30px 0px rgba(33, 150, 243, 1)",
+            shadowColor2: 'rgba(33, 150, 243, 1)',
             backgroundGradient: 'linear-gradient(93.91deg, #0B58B9 -1.06%, #052753 139.66%)',
             borderColor: '#0076FF',
             chipColor: '#0A57B4',
@@ -127,6 +130,7 @@ export const IndexwithColorBands = [
             shadowColor: 'shadow-[#6C2784]/50',
             shadow: "0px 0px 30px 0px #6C2784",
             chipColor: '#4B1760',
+            shadowColor2: 'rgba(108, 39, 132, 1)',
             actualColor: '#6C2784', // Main purple
             multiplier: 10
         },
@@ -139,6 +143,7 @@ export const IndexwithColorBands = [
             shadowColor: 'shadow-yellow-400/50',
             shadow: "0px 0px 30px 0px rgba(255, 215, 0, 1)",
             chipColor: '#8F571B',
+            shadowColor2: 'rgba(255, 215, 0, 1)',
             actualColor: '#FFD700', // Golden yellow (1 item - rarest)
             multiplier: 20
         },

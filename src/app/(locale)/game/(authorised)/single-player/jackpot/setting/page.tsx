@@ -1,3 +1,5 @@
+"use client";
+
 import Navbar from "@/components/features/game/navbar";
 import JackpotBettingHistory from "@/components/features/stock-jackpot/betting-history";
 import GameRule from "@/components/features/stock-jackpot/game-rule";
@@ -5,8 +7,10 @@ import HowToPlay from "@/components/features/stock-jackpot/how-to-play";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { SkewedButton } from "@/components/ui/skew-button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const SettingPage = () => {
+    const router = useRouter();
     return (
         <section className="relative w-full lg:h-screen min-h-[100svh] lg:overflow-hidden flex flex-col ">
             <Navbar />
@@ -54,11 +58,14 @@ const SettingPage = () => {
                             </SkewedButton>
                         </Link>
                         {/* Play Button */}
-                        <Link href="/game/single-player/jackpot">
-                            <SkewedButton size="md" variant="green" skew="left">
-                                Play
-                            </SkewedButton>
-                        </Link>
+                        <SkewedButton 
+                            size="md" 
+                            variant="green" 
+                            skew="left"
+                            onClick={() => router.back()}
+                        >
+                            Play
+                        </SkewedButton>
                     </div>
                 </div>
             </main>
