@@ -20,7 +20,7 @@ const CurrentBets = ({ roundRecord, className, tableClassName }: { roundRecord: 
 const NoBets = () => {
     return (
         <div className="text-white space-y-2 text-center flex flex-col items-center py-4 justify-center h-52">
-            <Image src="/images/dice-game/no-bets.png" alt="No Bets" className="w-auto h-full aspect-square " width={100} height={100} />
+            <Image src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758191715/no-bets_iz6wxc.png" alt="No Bets" className="w-auto h-full aspect-square " width={100} height={100} />
             <p className="text-lg font-semibold max-w-sm px-12">{`You haven't placed
                 any bets yet`}</p>
         </div>

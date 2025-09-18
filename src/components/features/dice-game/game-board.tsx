@@ -239,13 +239,13 @@ const BetButton = ({ number, multiplier, handleBetSelect, isWinner, isWinning, b
                 <span className="text-white md:text-[10px] text-[8px] z-10 relative  font-poppins">
                     {INR(betAmount, true, false)}
                 </span>
-                <img src="/images/head-tail/betting-chip.png" alt="" className="w-full h-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                <img src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758192335/betting-chip_ehrlbp.png" alt="" className="w-full h-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
             </div>}
             {/* Crown emoji for winner */}
             {
                 isWinner && (
                     <div className="absolute -top-10 -right-9 rotate-12 ">
-                        <Image src="/images/dice-game/crown.png" alt="crown" width={64} height={64} />
+                        <Image src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758191300/crown_f8k03l.png" alt="crown" width={64} height={64} />
                     </div>
                 )
             }
