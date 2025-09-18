@@ -142,7 +142,7 @@ const ActiveTierCard = ({ className }: PropsWithClassName) => {
     return (
         <Card
             className={cn(
-                "mb-8 md:h-64 flex flex-col overflow-hidden dark:rounded-none px-0 py-0",
+                "md:h-64 flex flex-col overflow-hidden dark:rounded-none px-0 py-0",
                 "bg-white border border-platform-border",
                 "dark:bg-transparent dark:border dark:border-platform-border",
                 className
