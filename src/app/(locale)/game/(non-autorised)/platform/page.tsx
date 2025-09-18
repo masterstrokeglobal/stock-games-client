@@ -26,7 +26,7 @@ const PlatformPage = () => {
     const { isCasinoAllowed } = useCasinoAllowed();
 
     return (
-        <section className="space-y-2 md:space-y-4 font-inter">
+        <section className="space-y-2 font-inter">
             <AdMarquee />
             {isLoggedIn && !user.isDemoUser && (
                 <div className="flex gap-2">
@@ -46,7 +46,7 @@ const PlatformPage = () => {
             )}
 
             <div className="sm:space-y-4">
-                {isLoggedIn && <ActiveTierCard className="md:my-12 my-1" />}
+                {isLoggedIn && <ActiveTierCard className="my-1 md:my-2" />}
 
                 <StockGameCarousel />
                 {isLoggedIn && <FavoriteGameCarousel title="Favorite MAC88" providerCompany={ProviderCompany.GAP} />}
