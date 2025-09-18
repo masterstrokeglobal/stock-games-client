@@ -13,7 +13,7 @@ import { useAuthStore } from "@/context/auth-context";
 export default function ExternalGamesPage() {
     const { userDetails } = useAuthStore();
     const companyId = String((userDetails as any)?.companyId ?? COMPANYID ?? process.env.NEXT_PUBLIC_COMPANY_ID ?? "");
-    const { data: gamesResp, isLoading } = useGetExternalGames(companyId);
+    const { data: gamesResp } = useGetExternalGames(companyId);
     const updateGame = useUpdateExternalGame(companyId);
     const presignUpload = useS3PresignedUpload();
     const fileInputsRef = useRef<Record<string, HTMLInputElement | null>>({});
@@ -21,8 +21,8 @@ export default function ExternalGamesPage() {
 
     const games = useMemo(() => gamesResp ?? [], [gamesResp]);
 
-    const toggleActive = (id: string, active: boolean) => {
-        updateGame.mutate({ identifier: id, payload: { active: !active } });
+    const toggleActive = (id: string) => {
+        updateGame.mutate({ identifier: id, thumbnail : "" });
     };
 
     const onClickUpload = (id: string) => {
@@ -81,7 +81,7 @@ export default function ExternalGamesPage() {
                                 )}
                             </div>
                             <div className="flex items-center justify-between mt-3">
-                                <Button variant={game.active ? "secondary" : "outline"} onClick={() => toggleActive(game.identifier, game.active)}>
+                                <Button variant={game.active ? "secondary" : "outline"} onClick={() => toggleActive(game.identifier)}>
                                     {game.active ? "Active" : "Inactive"}
                                 </Button>
                                 <div className="flex gap-2">
@@ -89,7 +89,7 @@ export default function ExternalGamesPage() {
                                         {uploadingKey === game.identifier ? "Uploading..." : "Upload"}
                                     </Button>
                                     <input
-                                        ref={(el) => (fileInputsRef.current[game.identifier] = el)}
+                                        ref={(el) => { fileInputsRef.current[game.identifier] = el; }}
                                         type="file"
                                         accept="image/png,image/jpeg"
                                         className="hidden"

@@ -4,8 +4,9 @@ const withNextIntl = createNextIntlPlugin();
 const nextConfig = {
   /* config options here */
   images: {
-    domains: [
-      'kraftbase-stock-derby.s3.ap-south-1.amazonaws.com'
+    remotePatterns: [
+      { protocol: 'https', hostname: 'kraftbase-stock-derby.s3.ap-south-1.amazonaws.com' },
+      { protocol: 'https', hostname: 'stock-derby-stage.s3.ap-south-1.amazonaws.com' },
     ],
   },
   redirects: async () => {

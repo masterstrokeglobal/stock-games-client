@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import Image from "next/image";
 import { useGetCompanyApiDetails, useUpdateAllowedGames, useUpdateGameThumbnails } from "@/react-query/company-api-details";
@@ -169,14 +168,16 @@ export default function ExternalGamesSettings({ companyId, className }: Props) {
                                     )}
                                 </div>
                                 <div className="flex gap-2 mt-3">
-                                    <Button variant="outline" size="sm" onClick={() => onClickUpload(id)} disabled={uploadingKey === id || presignUpload.isPending}>
+                                    <Button variant="outline" size="sm" onClick={() => onClickUpload(id)} disabled={uploadingKey === id }>
                                         {uploadingKey === id ? "Uploading..." : "Upload"}
                                     </Button>
                                     {gameThumbnails[id] && (
                                         <Button variant="ghost" size="sm" onClick={() => setGameThumbnails((p) => ({ ...p, [id]: "" }))}>Remove</Button>
                                     )}
                                     <input
-                                        ref={(el) => (fileInputsRef.current[id] = el)}
+                                        ref={(el) => {
+                                            fileInputsRef.current[id] = el;
+                                        }}
                                         type="file"
                                         accept="image/png,image/jpeg"
                                         className="hidden"
