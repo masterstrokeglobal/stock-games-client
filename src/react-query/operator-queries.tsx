@@ -347,6 +347,29 @@ export const useGetCompanyProfitDistribution = (filter: { startDate?: Date, endD
     });
 };
 
+// Pool P/L hooks
+export const useGetUserPoolPL = (filter: { userId: number, startDate?: Date, endDate?: Date }) => {
+    return useQuery({
+        queryKey: ["user-pool-pl", filter],
+        queryFn: async () => {
+            const response = await operatorAPI.getUserPoolPL(filter);
+            return response.data;
+        },
+        enabled: !!filter.userId,
+    });
+};
+
+export const useGetOperatorHierarchyPoolPL = (filter: { companyId: number, startDate?: Date, endDate?: Date, operatorId?: number, includeBreakdown?: boolean }, options?: { enabled?: boolean }) => {
+    return useQuery({
+        queryKey: ["operator-hierarchy-pool-pl", filter],
+        queryFn: async () => {
+            const response = await operatorAPI.getOperatorHierarchyPoolPL(filter);
+            return response.data;
+        },
+        enabled: options?.enabled ?? true,
+    });
+};
+
 // Validate operator percentage allocation
 export const useValidateOperatorPercentage = () => {
     return useMutation({

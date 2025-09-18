@@ -27,11 +27,11 @@ const CompanyEarningsCard = ({ companyId }: Props) => {
         totalWinnings,
         totalWithdrawals,
         grossProfit,
-        netProfitOrLoss,
         totalStockBets,
         totalStockWinnings,
         totalCasinoBets,
         totalCasinoWinnings,
+        netPoolPL,
     } = useMemo(() => {
         const result = data?.data?.result?.totalProfitAndLoss || {};
         return {
@@ -47,6 +47,7 @@ const CompanyEarningsCard = ({ companyId }: Props) => {
             totalStockWinnings: result.totalStockWinnings || 0,
             totalCasinoBets: result.totalCasinoBets || 0,
             totalCasinoWinnings: result.totalCasinoWinnings || 0,
+            netPoolPL: (result.totalDeposits || 0) - (result.totalWithdrawals || 0),
         };
     }, [data]);
 
@@ -59,16 +60,14 @@ const CompanyEarningsCard = ({ companyId }: Props) => {
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {/* Total Deposits */}
 
-                    {/* Net Profit or Loss */}
-                    <div className={cn("flex items-center space-x-3 p-4 col-span-2 rounded-md shadow-sm", netProfitOrLoss > 0 ? "border-green-600 border-2 bg-gradient-to-b from-green-50 to-green-300" : "border-red-600 border-2 bg-gradient-to-b from-red-50 to-red-300")}>
-                        <ArrowUpCircle className={`w-8 h-8 ${netProfitOrLoss >= 0 ? "text-green-600" : "text-red-600 rotate-180"}`} />
+                    {/* Net Pool P/L (Deposits - Withdrawals) */}
+                    <div className={cn("flex items-center space-x-3 p-4 col-span-2 rounded-md shadow-sm", netPoolPL > 0 ? "border-green-600 border-2 bg-gradient-to-b from-green-50 to-green-300" : "border-red-600 border-2 bg-gradient-to-b from-red-50 to-red-300")}>
+                        <ArrowUpCircle className={`w-8 h-8 ${netPoolPL >= 0 ? "text-green-600" : "text-red-600 rotate-180"}`} />
                         <div>
-                            <p className="text-lg font-semibold text-gray-700">Net Profit/Loss</p>
-                            <p className="text-sm text-gray-500">
-                                (Gross Profit - Total Bonus)
-                            </p>
-                            <p className={`text-2xl font-bold ${netProfitOrLoss >= 0 ? "text-green-800" : "text-red-800"}`}>
-                                ₹{netProfitOrLoss.toLocaleString()}
+                            <p className="text-lg font-semibold text-gray-700">Net Pool P/L</p>
+                            <p className="text-sm text-gray-500">(Deposits − Withdrawals)</p>
+                            <p className={`text-2xl font-bold ${netPoolPL >= 0 ? "text-green-800" : "text-red-800"}`}>
+                                ₹{netPoolPL.toLocaleString()}
                             </p>
                         </div>
                     </div>

@@ -9,8 +9,8 @@ export interface OperatorPLStats {
     parentOperatorId: number | null;
   };
   profitLossStats: {
-    directTotalPlaced: number;
-    directTotalGrossPayout: number;
+    directTotalCreditRequests: number;
+    directTotalDebitRequests: number;
     directNetProfitLoss: number;
     operatorReceivesFromParent: number;
     totalOperatorAmount: number;

@@ -41,7 +41,7 @@ const AgentProfitLossCard = ({ data }: Props) => {
         WithdrawalableAmount,
         totalWinnings,
         totalWithdrawals,
-        netProfitOrLoss,
+        netPoolPL,
         totalBonusBalance,
         totalMainBalance,
     } = useMemo(() => {
@@ -58,6 +58,7 @@ const AgentProfitLossCard = ({ data }: Props) => {
             totalBalance: totalAmount,
             WithdrawalableAmount: WithdrawalableAmount,
             netProfitOrLoss: result.netProfitOrLoss ?? 0,
+            netPoolPL: (result.totalDeposits ?? 0) - (result.totalWithdrawals ?? 0),
             totalMainBalance: result.totalMainBalance ?? 0,
             totalBonusBalance: result.totalBonusBalance ?? 0,
 
@@ -111,17 +112,14 @@ const AgentProfitLossCard = ({ data }: Props) => {
                         color="red"
                     />
 
-                    {/* Net Profit or Loss */}
+                    {/* Net Pool P/L */}
                     <StatCard
                         icon={
-                            <ArrowUpCircle
-                                className={`w-8 h-8 ${netProfitOrLoss >= 0 ? "text-green-600" : "text-red-600"
-                                    }`}
-                            />
+                            <ArrowUpCircle className={`w-8 h-8 ${netPoolPL >= 0 ? "text-green-600" : "text-red-600"}`} />
                         }
-                        label="Net Profit/Loss"
-                        value={netProfitOrLoss}
-                        color={netProfitOrLoss >= 0 ? "green" : "red"}
+                        label="Net Pool P/L"
+                        value={netPoolPL}
+                        color={netPoolPL >= 0 ? "green" : "red"}
                     />
 
                     {/* Total Main Balance */}

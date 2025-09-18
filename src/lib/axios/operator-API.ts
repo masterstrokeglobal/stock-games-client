@@ -127,4 +127,26 @@ export const operatorAPI = {
             newPercentage: payload.newPercentage
         });
     },
+
+    // Pool P/L APIs
+    getUserPoolPL: async (filter: { userId: number, startDate?: Date, endDate?: Date }) => {
+        return api.get(`/users/${filter.userId}/pool-pl`, {
+            params: {
+                startDate: filter.startDate?.toISOString(),
+                endDate: filter.endDate?.toISOString(),
+            }
+        });
+    },
+
+    getOperatorHierarchyPoolPL: async (filter: { companyId: number, startDate?: Date, endDate?: Date, operatorId?: number, includeBreakdown?: boolean }) => {
+        return api.get(`/operator/reports/pool-pl`, {
+            params: {
+                companyId: filter.companyId,
+                operatorId: filter.operatorId,
+                includeBreakdown: filter.includeBreakdown ?? false,
+                startDate: filter.startDate?.toISOString(),
+                endDate: filter.endDate?.toISOString(),
+            }
+        });
+    },
 };
