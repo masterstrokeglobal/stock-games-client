@@ -13,16 +13,16 @@ import useWindowSize from "@/hooks/use-window-size";
 const DemoVideo = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [lang, setLang] = useState("en");
-  const {isMobile} = useWindowSize()
+  const { isMobile } = useWindowSize();
 
   const videoUrl = useMemo(() => {
     switch (lang) {
       case "en":
-        return "/images/how-to-play/videos/slot-en.mp4";
+        return "https://res.cloudinary.com/dt8iv1hds/video/upload/v1758185321/WhatsApp_Video_2025-09-18_at_11.39.46_AM_uiiu7b.mp4";
       case "hi":
         return "/images/how-to-play/videos/slot-hi.mp4";
       default:
-        return "/images/how-to-play/videos/slot-en.mp4";
+        return "https://res.cloudinary.com/dt8iv1hds/video/upload/v1758185321/WhatsApp_Video_2025-09-18_at_11.39.46_AM_uiiu7b.mp4";
     }
   }, [lang]);
   return (
@@ -34,7 +34,9 @@ const DemoVideo = ({ children }: { children: React.ReactNode }) => {
       >
         <div
           style={{
-            backgroundImage: isMobile ? "url('/images/slot-machine/dialog-mb.png')" : "url('/images/slot-machine/dialog-bg.png')",
+            backgroundImage: isMobile
+              ? "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179644/dialog-mb_gdbbq4.png')"
+              : "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179644/dialog-bg_bylyqs.png')",
             backgroundSize: "100% 100%",
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
@@ -46,7 +48,7 @@ const DemoVideo = ({ children }: { children: React.ReactNode }) => {
             className="absolute -top-3 right-0"
           >
             <Image
-              src="/images/slot-machine/cancel-btn.png"
+              src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179642/cancel-btn_ebj094.png"
               alt="cancel"
               width={40}
               height={40}

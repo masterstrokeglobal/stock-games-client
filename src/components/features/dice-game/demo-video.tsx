@@ -20,11 +20,11 @@ const DemoVideoDialog: React.FC<DemoVideoDialogProps> = ({
     const videoUrl = useMemo(() => {
         switch (lang) {
             case 'en':
-                return '/images/how-to-play/videos/dice-en.mp4';
+                return 'https://res.cloudinary.com/dt8iv1hds/video/upload/v1758179622/dice-en_urzdcv.mp4';
             case 'hi':
-                return '/images/how-to-play/videos/dice-hi.mp4';
+                return 'https://res.cloudinary.com/dt8iv1hds/video/upload/v1758179626/dice-hi_mqhdrt.mp4';
             default:
-                return '/images/how-to-play/videos/dice-en.mp4';
+                return 'https://res.cloudinary.com/dt8iv1hds/video/upload/v1758179622/dice-en_urzdcv.mp4';
         }
     }, [lang]);
 

@@ -2,10 +2,13 @@ import { useState } from "react";
 
 const content = {
     en: {
-        videoUrl: "/images/how-to-play/videos/7up-down-en.mp4",
+        videoUrl: "https://res.cloudinary.com/dt8iv1hds/video/upload/v1758179605/7up-down-en_nnqo2k.mp4",
     },
     hi: {
-        videoUrl: "/images/how-to-play/videos/7up-down-hi.mp4",
+        videoUrl: "https://res.cloudinary.com/dt8iv1hds/video/upload/v1758179626/7up-down-hi_wmf2la.mp4",
+    },
+    default: {
+        videoUrl: "https://res.cloudinary.com/dt8iv1hds/video/upload/v1758179626/7up-down-en_wmf2la.mp4",
     },
 };
 

@@ -98,7 +98,7 @@ const Page = () => {
     <section
       style={{
         // ...getBackgroundStyle("/images/slot-machine/stock-slot-bg.png"),
-        backgroundImage: isMobile ? "url('/images/slot-machine/slot-bg-mb.png')" : "url('/images/slot-machine/stock-slot-bg.png')",
+        backgroundImage: isMobile ? "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179649/slot-bg-mb_yvhboh.png')" : "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179650/stock-slot-bg_onyypz.png')",
         backgroundSize: "100% 100%",
         backgroundPosition: "center center",
         backgroundRepeat: "no-repeat",

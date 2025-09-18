@@ -9,11 +9,11 @@ const HowToPlay = () => {
     const videoUrl = useMemo(() => {
         switch (language) {
             case "en":
-                return "/images/how-to-play/videos/hi-lo-en.mp4";
+                return "https://res.cloudinary.com/dt8iv1hds/video/upload/v1758179623/hi-lo-en_b758lg.mp4";
             case "hi":
-                return "/images/how-to-play/videos/hi-lo-hi.mp4";
+                return "https://res.cloudinary.com/dt8iv1hds/video/upload/v1758179637/hi-lo-hi_oubti1.mp4";
             default:
-                return "/images/how-to-play/videos/hi-lo-en.mp4";
+                return "https://res.cloudinary.com/dt8iv1hds/video/upload/v1758179623/hi-lo-en_b758lg.mp4";
         }
     }, [language]);
 

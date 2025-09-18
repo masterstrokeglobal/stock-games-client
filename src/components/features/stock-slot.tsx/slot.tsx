@@ -48,7 +48,7 @@ const StockSlot: React.FC<GameScreenProps> = ({
           <Image
             className="rounded-full"
             // src={getCachedImage("/images/slot-machine/menu-btn.png")?.src}
-            src="/images/slot-machine/menu-btn.png"
+            src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179645/menu-btn_ymde5q.png"
             alt="menu"
             width={isMobile ? 40 : 60}
             height={isMobile ? 40 : 60}
@@ -60,7 +60,7 @@ const StockSlot: React.FC<GameScreenProps> = ({
         {/* //? title */}
         <div className="flex justify-center items-center">
           <Image
-            src="/images/slot-machine/heading.png"
+            src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179643/heading_bet8pj.png"
             alt="title"
             width={isMobile ? 233 : 388}
             height={isMobile ? 50 : 85}
@@ -73,7 +73,7 @@ const StockSlot: React.FC<GameScreenProps> = ({
             <div className=" w-full flex items-center justify-center flex-shrink-0">
               <div className="flex items-center justify-center gap-2">
                 <Image
-                  src="/images/slot-machine/clock.png"
+                  src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179643/clock_k8dux3.png"
                   alt="clock"
                   width={isMobile ? 40 : 60}
                   height={isMobile ? 60 : 90}

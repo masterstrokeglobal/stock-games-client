@@ -25,8 +25,8 @@ const MenuDialog = ({ children }: { children: React.ReactNode }) => {
               ref={imgRef}
               src={
                 isMobile
-                  ? "/images/slot-machine/dialog-mb.png"
-                  : "/images/slot-machine/dialog-bg.png"
+                  ? "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179644/dialog-mb_gdbbq4.png"
+                  : "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179644/dialog-bg_bylyqs.png"
               }
               alt="dialog bg"
               className="w-full h-full object-contain absolute z-10"
@@ -36,7 +36,7 @@ const MenuDialog = ({ children }: { children: React.ReactNode }) => {
               className="absolute -top-3 right-2 z-30"
             >
               <Image
-                src="/images/slot-machine/cancel-btn.png"
+                src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179642/cancel-btn_ebj094.png"
                 alt="cancel"
                 width={50}
                 height={50}
@@ -47,7 +47,7 @@ const MenuDialog = ({ children }: { children: React.ReactNode }) => {
                 <div  
                   style={{
                     backgroundImage:
-                      "url('/images/slot-machine/menu-item-bg-1.png')",
+                      "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179645/menu-item-bg-1_q3b5zd.png')",
                     backgroundSize: "contain",
                     backgroundPosition: "center center",
                     backgroundRepeat: "no-repeat",
@@ -56,7 +56,7 @@ const MenuDialog = ({ children }: { children: React.ReactNode }) => {
                 >
                   <div className="relative flex justify-center items-center ps-2 lg:ps-5">
                     <Image
-                      src="/images/slot-machine/history-btn.png"
+                      src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179643/history-btn_yyokbt.png"
                       alt="Betting History"
                       width={50}
                       height={50}
@@ -87,7 +87,7 @@ const MenuDialog = ({ children }: { children: React.ReactNode }) => {
                 <div
                   style={{
                     backgroundImage:
-                      "url('/images/slot-machine/menu-item-bg-2.png')",
+                      "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179646/menu-item-bg-2_g0npcp.png')",
                     backgroundSize: "contain",
                     backgroundPosition: "center center",
                     backgroundRepeat: "no-repeat",
@@ -96,8 +96,8 @@ const MenuDialog = ({ children }: { children: React.ReactNode }) => {
                 >
                   <div className="relative flex justify-center items-center ps-2 lg:ps-5">
                     <Image
-                      src="/images/slot-machine/how-btn.png"
-                      alt="Betting History"
+                      src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179644/how-btn_nzn9h6.png"
+                      alt="how to play"
                       width={50}
                       height={50}
                       className="z-20"
@@ -127,7 +127,7 @@ const MenuDialog = ({ children }: { children: React.ReactNode }) => {
                 <div
                   style={{
                     backgroundImage:
-                      "url('/images/slot-machine/menu-item-bg-1.png')",
+                      "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179645/menu-item-bg-1_q3b5zd.png')",
                     backgroundSize: "contain",
                     backgroundPosition: "center center",
                     backgroundRepeat: "no-repeat",
@@ -136,7 +136,7 @@ const MenuDialog = ({ children }: { children: React.ReactNode }) => {
                 >
                   <div className="relative flex justify-center items-center ps-2 lg:ps-5">
                     <Image
-                      src="/images/slot-machine/support-btn.png"
+                      src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179651/support-btn_fzgpnr.png"
                       alt="Support"
                       width={50}
                       height={50}
@@ -166,7 +166,7 @@ const MenuDialog = ({ children }: { children: React.ReactNode }) => {
                 <div
                   style={{
                     backgroundImage:
-                      "url('/images/slot-machine/menu-item-bg-2.png')",
+                      "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179646/menu-item-bg-2_g0npcp.png')",
                     backgroundSize: "contain",
                     backgroundPosition: "center center",
                     backgroundRepeat: "no-repeat",
@@ -175,7 +175,7 @@ const MenuDialog = ({ children }: { children: React.ReactNode }) => {
                 >
                   <div className="relative flex justify-center items-center ps-2 lg:ps-5">
                     <Image
-                      src="/images/slot-machine/home-btn.png"
+                      src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179644/home-btn_eh6ytm.png"
                       alt="Home"
                       width={50}
                       height={50}

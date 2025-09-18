@@ -16,19 +16,29 @@ const HowToPlay = ({ children }: { children: React.ReactNode }) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger className="w-full">{children}</DialogTrigger>
-      <DialogContent showButton={false} className=" bg-transparent border-none flex flex-col items-center justify-center font-blood-melt">
+      <DialogContent
+        showButton={false}
+        className=" bg-transparent border-none flex flex-col items-center justify-center font-blood-melt"
+      >
         <div
           style={{
-            backgroundImage: `url('/images/slot-machine/${isMobile ? "dialog-mb.png" : "dialog-bg.png"}')`,
+            backgroundImage: `url('${
+              isMobile
+                ? "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179644/dialog-mb_gdbbq4.png"
+                : "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179644/dialog-bg_bylyqs.png"
+            }')`,
             backgroundSize: "100% 100%",
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
           }}
           className=" relative flex flex-col px-[10%] lg:px-[12%] py-10 sm:py-12 text-[#FFFFFFB2] h-[584px] w-[402px] lg:h-[623px] lg:w-[592px] slot-dialog"
         >
-          <button onClick={() => setIsOpen(false)} className="absolute -top-3 right-0">
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute -top-3 right-0"
+          >
             <Image
-              src="/images/slot-machine/cancel-btn.png"
+              src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179642/cancel-btn_ebj094.png"
               alt="cancel"
               width={40}
               height={40}
