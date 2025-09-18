@@ -170,9 +170,9 @@ const CoinHeadTailResultDialog = ({ open, roundRecordId }: GameResultDialogProps
             </main>
 
             <div className='flex justify-center w-full'>
-              <DialogClose>
+              <DialogClose className='w-full px-5'>
                 <button
-                  className="w-full mt-4 text-white  sm:max-w-sm max-w-xs mx-auto py-3 rounded-xl text-xl tracking-wider font-play transition border border-[#6FB0FF]"
+                  className="w-full mt-4 text-white max-w-sm sm:max-w-md lg:max-w-lg mx-auto py-3 rounded-xl text-xl tracking-wider font-play transition border border-[#6FB0FF]"
                   style={{
                     background: "linear-gradient(0deg, #002067 0%, #00339D 90.29%)",
                     textShadow: "0px 0px 5px rgba(255, 255, 255, 1)",
