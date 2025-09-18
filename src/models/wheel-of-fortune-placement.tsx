@@ -22,6 +22,7 @@ export interface ColorConfig {
     shadow: string;
     actualColor: string;        
     multiplier: number;
+    shadowColor2?: string;
 }
 
 export class WheelOfFortunePlacement {

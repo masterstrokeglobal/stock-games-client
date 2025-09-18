@@ -28,7 +28,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
   return (
     <>
       <div
-        className="w-full md:p-6 bg-cover bg-center ">
+        className="w-full bg-cover bg-center ">
         <div className="flex justify-center relative mb-4">
           <span className="absolute left-2 top-1/2 -translate-y-1/2 text-white">
             Rs.

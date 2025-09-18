@@ -4,6 +4,7 @@ import FormInput from "@/components/ui/form/form-input";
 import FormPassword from "@/components/ui/form/form-password";
 import FormPhoneNumber from "@/components/ui/form/form-phone-input";
 import FormProvider from "@/components/ui/form/form-provider";
+import FormCheckbox from "@/components/ui/form/form-checkbox";
 import { Separator } from "@/components/ui/separator";
 import { COMPANYID } from "@/lib/utils";
 import Company from "@/models/company";
@@ -15,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthTabs from "./auth-tabs";
 import GoogleLoginButton from "./google-login-button";
+import Link from "next/link";
 
 // Zod schema for validating the registration form fields
 export const createRegisterSchema = (t: any, isPhoneAllowed: boolean = false, userVerfication: boolean = false) => z.object({
@@ -58,6 +60,16 @@ export const createRegisterSchema = (t: any, isPhoneAllowed: boolean = false, us
         .min(6, { message: t('validation.password-min') })
         .max(20, { message: t('validation.password-max') })
         .nonempty({ message: t('validation.password-required') }),
+
+    // Terms and conditions agreement (required)
+    agreeToTerms: z.boolean().refine((value) => value === true, {
+        message: t('validation.terms-required'),
+    }),
+
+    // Age confirmation (required)
+    confirmAge: z.boolean().refine((value) => value === true, {
+        message: t('validation.age-required'),
+    }),
 });
 
 export type RegisterFormValues = z.infer<ReturnType<typeof createRegisterSchema>>;
@@ -150,6 +162,23 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         inputClassName="!h-10"
                         label={t('label-password')}
                         required
+                    />
+
+                    {/* Terms and Conditions Checkbox */}
+                    <Link href="/terms-and-conditions" target="_blank">
+                    <FormCheckbox
+                        control={control}
+                        name="agreeToTerms"
+                        label={t('label-terms-agreement')}
+                        className="mt-4 text-white"
+                    />
+                    </Link>
+                    {/* Age Confirmation Checkbox */}
+                    <FormCheckbox
+                        control={control}
+                        name="confirmAge"
+                        label={t('label-age-confirmation')}
+                        className="mt-2 text-white"
                     />
                 </div>
 

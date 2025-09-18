@@ -152,7 +152,7 @@ const GameBoard = ({ children, className, roundRecord, globalBetAmount, winningM
     const currentConfig = betConfigs[selectedBetType];
 
     return (
-        <div className={cn("flex flex-col justify-center items-center gap-1 md:gap-4 sm:px-4 sm:py4 px-2 py-2", className)}>
+        <div className={cn("flex flex-col justify-center items-center gap-1 md:gap-3 sm:px-4 sm:py4 px-2 py-2 md:py-0", className)}>
             {/* Header */}
             {children}
 

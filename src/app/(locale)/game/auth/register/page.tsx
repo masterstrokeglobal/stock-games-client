@@ -91,7 +91,9 @@ const RegisterPage = () => {
             name: "",
             password: "",
             referenceCode: referenceCode ?? "",
-            username: ""
+            username: "",
+            agreeToTerms: false,
+            confirmAge: false
         }} />
     }
 

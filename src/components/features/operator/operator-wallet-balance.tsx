@@ -15,6 +15,7 @@ type Props = {
 };
 
 interface WalletBalance {
+    id: number;
     currentBalance: number;
     currency: string;
     lastUpdated: string;
@@ -25,6 +26,8 @@ interface WalletBalance {
         status: string;
         createdAt: string;
         description?: string;
+        depositorOperatorWallet?: any;
+        creditorOperatorWallet?: any;
     }>;
     summary: {
         totalCredits: number;
@@ -68,6 +71,7 @@ const OperatorWalletBalance = ({ operatorId, className }: Props) => {
     const recentTransactions: any[] = raw?.recentTransactions ?? walletContainer?.recentTransactions ?? [];
 
     const wallet: WalletBalance = {
+        id: walletContainer?.id ?? walletContainer?.operatorWallet?.id, 
         currentBalance: normalizeNumber(
             walletContainer?.currentBalance ?? walletContainer?.balance ?? walletContainer?.operatorWallet?.balance
         ),
@@ -180,7 +184,7 @@ const OperatorWalletBalance = ({ operatorId, className }: Props) => {
                     <CardContent>
                         <div className="space-y-3">
                             {wallet.recentTransactions.map((transaction) => {
-                                const isCredit = ['operator_deposit', 'wallet_recharge', 'transfer_in', 'company_recharge'].includes(transaction.type);
+                                const isDebit = transaction.creditorOperatorWallet?.id === wallet.id;
                                 
                                 return (
                                     <div key={transaction.id} className="flex items-center justify-between p-3 border rounded-lg">
@@ -202,9 +206,9 @@ const OperatorWalletBalance = ({ operatorId, className }: Props) => {
                                         <div className="text-right">
                                             <div className={cn(
                                                 "font-medium",
-                                                isCredit ? "text-green-600" : "text-red-600"
+                                                isDebit ? "text-green-600" : "text-red-600"
                                             )}>
-                                                {isCredit ? "+" : "-"}₹{Math.abs(transaction.amount).toFixed(2)}
+                                                {isDebit ? "+" : "-"}₹{Math.abs(transaction.amount).toFixed(2)}
                                             </div>
                                             <Badge 
                                                 variant={
