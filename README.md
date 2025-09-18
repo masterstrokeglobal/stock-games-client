@@ -17,12 +17,12 @@ pnpm dev
 >>>>>>> 197f127e9d86d196c2e29878f4a0c875f59bd035
  
 ```bash    
-pnpm dev       
+pnpm dev
 ``` 
-First, run a development server: 
+First, run a development server:
                
  
-```bash  
+```bash   
 pnpm dev    
    ..
 First, run a development server:          
