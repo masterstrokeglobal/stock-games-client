@@ -65,7 +65,7 @@ const ResultDialog: React.FC<ResultDialogProps> = ({
 
           <DialogDescription className="text-center flex flex-col justify-between items-center text-xs lg:text-base xl:text-2xl leading-normal overflow-y-auto ">
             <Image
-              src={`/images/slot-machine/${isMobile ? "lady" : "loss-img"}.png`}
+              src={`/images/slot-machine/${isWin ? "lady" : "loss-img"}.png`}
               alt="Win"
               width={isMobile ? 100 : 150}
               height={isMobile ? 100 : 150}
