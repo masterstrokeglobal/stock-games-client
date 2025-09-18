@@ -78,11 +78,11 @@ const manageOperatorMenuItems: MenuItem[] = [
 const getOperatorMenuItems = (operatorRole: OperatorRole): MenuItem[] => {
     const menuItems = [...baseOperatorMenuItems];
     
-    // Only agents get the "Create User" option
+    // Agents get Users (view/create). Masters and above get both Users and Operators.
     if (operatorRole === OperatorRole.AGENT) {
         menuItems.push(...agentOnlyMenuItems);
-    }
-    else{
+    } else {
+        menuItems.push(...agentOnlyMenuItems);
         menuItems.push(...manageOperatorMenuItems);
     }
     

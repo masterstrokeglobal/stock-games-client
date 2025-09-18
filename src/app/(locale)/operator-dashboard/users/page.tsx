@@ -1,12 +1,14 @@
 "use client";
 import operatorUserColumns from "@/columns/operator-user-columns";
 import DataTable from "@/components/ui/data-table-server";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthStore } from "@/context/auth-context";
-import Operator from "@/models/operator";
+import Operator, { OperatorRole } from "@/models/operator";
 import { useGetOperatorUsers } from "@/react-query/operator-queries";
 import { Search } from "lucide-react";
 import React, { useMemo, useState } from "react";
+import Link from "next/link";
 
 const UserTable = () => {
     const [page, setPage] = useState(1);
@@ -51,6 +53,11 @@ const UserTable = () => {
                             className="pl-10"
                         />
                     </div>
+                    {(operator.role === OperatorRole.AGENT || operator.role === OperatorRole.MASTER || operator.role === OperatorRole.DUPER_MASTER || operator.role === OperatorRole.SUPER_DUPER_MASTER) && (
+                        <Link href="/operator-dashboard/create-user">
+                            <Button size="sm" variant="secondary">Create User</Button>
+                        </Link>
+                    )}
                 </div>
             </header>
 

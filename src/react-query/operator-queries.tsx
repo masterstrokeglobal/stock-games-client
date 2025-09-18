@@ -57,50 +57,86 @@ export const useDepositOperatorWallet = () => {
     });
 };
 
-// Create user (by operator agent) - Direct signup API call using fetch
+// Deposit to a user's wallet by operator (Agent/Master and above)
+export const useAgentDepositToUser = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: operatorAPI.agentDepositToUser,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "operator-users" || query.queryKey[0] === "user-wallet" || query.queryKey[0] === "operator-wallet-transactions",
+            });
+            toast.success("Recharge successful");
+        },
+        onError: (error: any) => {
+            const message = error?.response?.data?.message ?? "Error processing recharge";
+            toast.error(message);
+        },
+    });
+};
+
+export const useMasterDepositToUser = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: operatorAPI.masterDepositToUser,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "operator-users" || query.queryKey[0] === "user-wallet" || query.queryKey[0] === "operator-wallet-transactions",
+            });
+            toast.success("Recharge successful");
+        },
+        onError: (error: any) => {
+            const message = error?.response?.data?.message ?? "Error processing recharge";
+            toast.error(message);
+        },
+    });
+};
+
+// Redeem (withdraw) from a user's wallet by operator
+export const useRedeemFromUser = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: operatorAPI.redeemFromUser,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "operator-users" || query.queryKey[0] === "user-wallet" || query.queryKey[0] === "operator-wallet-transactions",
+            });
+            toast.success("Withdrawal successful");
+        },
+        onError: (error: any) => {
+            const message = error?.response?.data?.message ?? "Error processing withdrawal";
+            toast.error(message);
+        },
+    });
+};
+
+// Create user (by operator) - uses backend /operator/create-user and operator auth for hierarchy
 export const useCreateUser = () => {
     const queryClient = useQueryClient();
 
-    // Get current operator for company info
-    const { data: currentOperator } = useGetCurrentOperator();
-
-    const createUser = async (formData: any) => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json' 
-            },
-            credentials: 'include', // Include cookies for authentication
-            body: JSON.stringify({
+    return useMutation({
+        mutationFn: async (formData: any) => {
+            const payload = {
                 firstname: formData.firstname,
                 lastname: formData.lastname,
                 username: formData.username,
                 password: formData.password,
-                company: currentOperator?.company?.id
-            })
-        });
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Error creating user');
-        }
-        
-        return response.json();
-    };
-
-    return useMutation({
-        mutationFn: createUser,
-        onSuccess: (newUser) => {
+            };
+            const response = await operatorAPI.createUser(payload);
+            return response.data;
+        },
+        onSuccess: () => {
             queryClient.invalidateQueries({
-                predicate: (query) => {
-                    return query.queryKey[0] === "users";
-                },
+                predicate: (query) => query.queryKey[0] === "operator-users" || query.queryKey[0] === "users",
             });
             toast.success("User created successfully");
-            console.log('User created successfully:', newUser);
         },
         onError: (error: any) => {
-            toast.error(error.message ?? "Error creating user");
+            const message = error?.response?.data?.message || "Error creating user";
+            toast.error(message);
             console.error('Error creating user:', error);
         },
     });

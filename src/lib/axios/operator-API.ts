@@ -44,6 +44,12 @@ export const operatorAPI = {
     agentDepositToUser: async (payload: any) => {
         return api.post("/operator/agent-deposit-to-user", payload);
     },
+    masterDepositToUser: async (payload: { userId: string | number, amount: number }) => {
+        return api.post("/operator/master-deposit-to-user", payload);
+    },
+    redeemFromUser: async (payload: { userId: string | number, amount: number }) => {
+        return api.post("/operator/redeem-from-user", payload);
+    },
     updateBettingStatus: async (payload: any) => {
         return api.patch(`/operator/update-betting-status/${payload.id}`, payload);
     },
