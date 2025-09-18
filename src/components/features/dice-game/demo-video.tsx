@@ -20,11 +20,11 @@ const DemoVideoDialog: React.FC<DemoVideoDialogProps> = ({
     const videoUrl = useMemo(() => {
         switch (lang) {
             case 'en':
-                return '/images/how-to-play/videos/dice-en.mp4';
+                return 'https://res.cloudinary.com/dt8iv1hds/video/upload/v1758179622/dice-en_urzdcv.mp4';
             case 'hi':
-                return '/images/how-to-play/videos/dice-hi.mp4';
+                return 'https://res.cloudinary.com/dt8iv1hds/video/upload/v1758179626/dice-hi_mqhdrt.mp4';
             default:
-                return '/images/how-to-play/videos/dice-en.mp4';
+                return 'https://res.cloudinary.com/dt8iv1hds/video/upload/v1758179622/dice-en_urzdcv.mp4';
         }
     }, [lang]);
 
@@ -54,7 +54,7 @@ const DemoVideoDialog: React.FC<DemoVideoDialogProps> = ({
                         </button>
                     </div>
                     <div className="py-4 flex-1 relative px-4 overflow-hidden border-x-[1.5rem] border-b-[1.5rem] border-[#140538] flex flex-col">
-                        <Image src="/images/dice-game/table-bg.png" alt="dice-1" fill />
+                        <Image src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758191724/table-bg_tpribt.png" alt="dice-1" fill />
                         <div className="absolute top-0 left-0 w-full h-full backdrop-blur-sm bg-[#520B8E] bg-opacity-30" />
                         <div className="relative z-10 text-white  flex flex-col items-center">
                             {/* Video Section */}

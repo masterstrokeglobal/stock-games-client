@@ -20,7 +20,7 @@ const InfoDialog = ({ children }: { children: React.ReactNode }) => {
       >
         <div
           style={{
-            backgroundImage: "url('/images/slot-machine/dialog-bg.png')",
+            backgroundImage: "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179644/dialog-bg_bylyqs.png')",
             backgroundSize: "100% 100%",
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
@@ -28,7 +28,7 @@ const InfoDialog = ({ children }: { children: React.ReactNode }) => {
           className="md:max-h-[70vh] min-h-[400px] md:min-h-[500px] w-full h-full relative flex flex-col items-center justify-center md:justify-between p-[10%] pt-[15%] font-wendy-one text-[#FFFFFFB2]"
         >
           <button onClick={() => setIsOpen(false)} className="absolute -top-3 right-0">
-            <Image src="/images/slot-machine/cancel-btn.png" alt="cancel" width={40} height={40} />
+            <Image src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179642/cancel-btn_ebj094.png" alt="cancel" width={40} height={40} />
           </button>
           <DialogHeader className="p-1 relative w-full flex justify-center items-center">
             <DialogTitle className="text-lg lg:text-2xl xl:text-4xl font-semibold">

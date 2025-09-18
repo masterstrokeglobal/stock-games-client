@@ -18,11 +18,11 @@ const HowToPlayDialog: React.FC<HowToPlayDialogProps> = ({
     const videoUrl = useMemo(() => {
         switch (language) {
             case "en":
-                return "/images/how-to-play/videos/coin-toss-en.mp4";
+                return "https://res.cloudinary.com/dt8iv1hds/video/upload/v1758179626/coin-toss-en_sqhbsy.mp4";
             case "hi":
-                return "/images/how-to-play/videos/coin-toss-hi.mp4";
+                return "https://res.cloudinary.com/dt8iv1hds/video/upload/v1758179619/coin-toss-hi_negib0.mp4";
             default:
-                return "/images/how-to-play/videos/coin-toss-en.mp4";
+                return "https://res.cloudinary.com/dt8iv1hds/video/upload/v1758179626/coin-toss-en_sqhbsy.mp4";
         }
     }, [language]);
 

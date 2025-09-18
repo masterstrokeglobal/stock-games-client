@@ -31,7 +31,7 @@ const Pagination = ({
         className="disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <Image
-          src="/images/slot-machine/prev-btn.png"
+          src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179648/prev-btn_v7qbol.png"
           width={70}
           height={70}
           alt="prev"
@@ -49,7 +49,7 @@ const Pagination = ({
         className="disabled:opacity-50 disabled:cursor-not-allowed"
       >
         <Image
-          src="/images/slot-machine/next-btn.png"
+          src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179646/next-btn_lunfcy.png"
           width={70}
           height={70}
           alt="next"
@@ -96,8 +96,10 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
       >
         <div
           style={{
-            backgroundImage: `url('/images/slot-machine/${
-              isMobile ? "dialog-mb.png" : "dialog-history.png"
+            backgroundImage: `url('${
+              isMobile
+                ? "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179644/dialog-mb_gdbbq4.png"
+                : "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179646/dialog-history_fqsgmn.png"
             }')`,
             backgroundSize: "100% 100%",
             backgroundPosition: "center center",
@@ -110,7 +112,7 @@ const BettingHistory = ({ children }: { children: React.ReactNode }) => {
             className="absolute -top-5 right-2"
           >
             <Image
-              src="/images/slot-machine/cancel-btn.png"
+              src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179642/cancel-btn_ebj094.png"
               alt="cancel"
               width={40}
               height={40}

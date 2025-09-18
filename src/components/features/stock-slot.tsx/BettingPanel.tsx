@@ -107,7 +107,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
           <div className="col-span-5 flex items-center justify-center h-full overflow-hidden relative">
             <div
               style={{
-                backgroundImage: "url('/images/slot-machine/quick-bet-bg.png')",
+                backgroundImage: "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179648/quick-bet-bg_bbr8c7.png')",
                 backgroundSize: "100% 100%",
                 backgroundPosition: "center center",
                 backgroundRepeat: "no-repeat",
@@ -117,7 +117,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
             <div
               style={{
                 backgroundImage:
-                  "url('/images/slot-machine/quick-bet-border.png')",
+                  "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179648/quick-bet-border_qdvx9r.png')",
                 backgroundSize: "100% 100%",
                 backgroundPosition: "center center",
                 backgroundRepeat: "no-repeat",
@@ -137,7 +137,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
                 <div
                   style={{
                     backgroundImage:
-                      "url('/images/slot-machine/separator.png')",
+                      "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179649/separator_acdrmg.png')",
                     backgroundSize: "100% 100%",
                     backgroundPosition: "center center",
                     backgroundRepeat: "no-repeat",
@@ -192,7 +192,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
                 className="w-full h-full"
                 style={{
                   // backgroundImage: getBackgroundStyle("/images/slot-machine/add-btn.png").backgroundImage,
-                  backgroundImage: "url('/images/slot-machine/add-btn.png')",
+                  backgroundImage: "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179641/add-btn_twfean.png')",
                   backgroundSize: "contain",
                   backgroundPosition: "center",
                   backgroundRepeat: "no-repeat",
@@ -229,7 +229,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
                 className="w-full h-full "
                 style={{
                   // backgroundImage: getBackgroundStyle("/images/slot-machine/sub-btn.png").backgroundImage,
-                  backgroundImage: "url('/images/slot-machine/sub-btn.png')",
+                  backgroundImage: "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179650/sub-btn_gcaclt.png')",
                   backgroundSize: "contain",
                   backgroundPosition: "center",
                   backgroundRepeat: "no-repeat",
@@ -246,7 +246,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
             <div
               style={{
                 // ...getBackgroundStyle("/images/slot-machine/green-btn.png"),
-                backgroundImage: "url('/images/slot-machine/total-btn.png')",
+                backgroundImage: "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179651/total-btn_mhbdee.png')",
                 backgroundSize: "100% 100%",
                 backgroundPosition: "center center",
                 backgroundRepeat: "no-repeat",
@@ -268,7 +268,7 @@ const BettingPanel: React.FC<BettingPanelProps> = ({
               ${!canPlaceBet ? "opacity-50" : "hover:brightness-110"}`}
               >
                 <Image
-                  src="/images/slot-machine/bet-btn.png"
+                  src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179642/bet-btn_gnypmm.png"
                   alt="refresh-btn"
                   fill
                   className="w-full h-full object-contain"

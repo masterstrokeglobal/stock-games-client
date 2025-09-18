@@ -11,7 +11,13 @@ import Image from "next/image";
 import useWindowSize from "@/hooks/use-window-size";
 import Link from "next/link";
 
-const QuitDialog = ({ children, setParentDialogOpen }: { children: React.ReactNode, setParentDialogOpen: (open: boolean) => void }) => {
+const QuitDialog = ({
+  children,
+  setParentDialogOpen,
+}: {
+  children: React.ReactNode;
+  setParentDialogOpen: (open: boolean) => void;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const { isMobile } = useWindowSize();
   return (
@@ -23,8 +29,10 @@ const QuitDialog = ({ children, setParentDialogOpen }: { children: React.ReactNo
       >
         <div
           style={{
-            backgroundImage: `url('/images/slot-machine/${
-              isMobile ? "dialog-mb.png" : "dialog-bg.png"
+            backgroundImage: `url('${
+              isMobile
+                ? "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179644/dialog-mb_yvhboh.png"
+                : "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179644/dialog-bg_bylyqs.png"
             }')`,
             backgroundSize: "100% 100%",
             backgroundPosition: "center center",
@@ -37,7 +45,7 @@ const QuitDialog = ({ children, setParentDialogOpen }: { children: React.ReactNo
             className="absolute -top-3 right-0"
           >
             <Image
-              src="/images/slot-machine/cancel-btn.png"
+              src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179642/cancel-btn_ebj094.png"
               alt="cancel"
               width={40}
               height={40}
@@ -62,14 +70,14 @@ const QuitDialog = ({ children, setParentDialogOpen }: { children: React.ReactNo
               <Link href="/game/platform" className="w-full">
                 <div
                   style={{
-                    backgroundImage: `url('/images/slot-machine/btn-bg.png')`,
+                    backgroundImage: `url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179642/btn-bg_dp0aeb.png')`,
                     backgroundSize: "100% 100%",
                     backgroundPosition: "center center",
                     backgroundRepeat: "no-repeat",
                   }}
                   className="text-center px-5 py-2 flex gap-4 justify-center items-center uppercase text-xl lg:text-2xl quit-text-3"
                 >
-                    <p className="slot-gradient-text">yes</p>
+                  <p className="slot-gradient-text">yes</p>
                 </div>
               </Link>
               <button
@@ -78,7 +86,7 @@ const QuitDialog = ({ children, setParentDialogOpen }: { children: React.ReactNo
                   setParentDialogOpen(false);
                 }}
                 style={{
-                  backgroundImage: `url('/images/slot-machine/btn-bg.png')`,
+                  backgroundImage: `url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179642/btn-bg_dp0aeb.png')`,
                   backgroundSize: "100% 100%",
                   backgroundPosition: "center center",
                   backgroundRepeat: "no-repeat",

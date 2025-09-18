@@ -185,7 +185,7 @@ export const Dice3D: React.FC<Dice3DProps> = ({ className = '', roundRecord, rou
           </div>
           <div className='relative flex-1 h-full max-w-sm'>
             <h2 className='text-white text-center sm:hidden  uppercase  z-10 text-xs font-semibold tracking-wider absolute top-0 left-1/2 -translate-x-1/2'>Dice Game</h2>
-            <img src={isTossing?"/images/dice-game/gennie-toss.gif":"/images/dice-game/gennie-rest.gif"}  className={cn('absolute xsm:-bottom-2 z-10 xsm:h-52 h-40  xsm:left-[30%] left-1/4 -bottom-2')} />
+            <img src={isTossing?"https://res.cloudinary.com/dt8iv1hds/image/upload/v1758191703/gennie-toss_fmr6t1.gif":"https://res.cloudinary.com/dt8iv1hds/image/upload/v1758191699/gennie-rest_hntavb.gif"}  className={cn('absolute xsm:-bottom-2 z-10 xsm:h-52 h-40  xsm:left-[30%] left-1/4 -bottom-2')} />
             <div
               style={{
                 border: '1px solid rgba(68, 103, 204, 1)',

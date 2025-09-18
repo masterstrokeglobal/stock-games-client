@@ -19,11 +19,11 @@ const HowToPlayDialog: React.FC<HowToPlayDialogProps> = ({
     const videoUrl = useMemo(() => {
         switch (locale) {
             case "en":
-                return "/images/how-to-play/videos/wheel-of-fortune-en.mp4";
+                return "https://res.cloudinary.com/dt8iv1hds/video/upload/v1758179637/wheel-of-fortune-en_svzo6s.mp4";
             case "hi":
                 return "https://res.cloudinary.com/dmdd1tg0i/video/upload/v1756466448/wheel-of-fortune-hi_rmjh9e.mp4";
             default:
-                return "/images/how-to-play/videos/wheel-of-fortune-en.mp4";
+                return "https://res.cloudinary.com/dt8iv1hds/video/upload/v1758179637/wheel-of-fortune-en_svzo6s.mp4";
         }
     }, [locale]);
 

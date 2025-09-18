@@ -39,6 +39,11 @@ export default function FavoriteGameCarousel({
         (favorite) => favorite.game?.providerCompany === providerCompany
       )
     : favorites;
+
+  if (filteredFavorites.length === 0) {
+    return null;
+  }
+
   return (
     <Carousel
       opts={{
