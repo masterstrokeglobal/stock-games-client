@@ -23,7 +23,7 @@ export default function FavoriteGameCarousel({
   title?: string;
 }) {
   const { data: favorites = [], isLoading } = useGetAllFavoriteGames();
-  const { width } = useWindowSize();
+  const { isMobile, isTablet, isDesktop, isLargeDesktop } = useWindowSize();
 
   const getStockGame = (round: RoundRecordGameType) => {
     return stockGames.find((game) => game.type === round);
@@ -33,7 +33,6 @@ export default function FavoriteGameCarousel({
     return null;
   }
 
-  const isLargeDesktop = width >= 1280;
   const filteredFavorites = providerCompany
     ? favorites.filter(
         (favorite) => favorite.game?.providerCompany === providerCompany
@@ -49,7 +48,8 @@ export default function FavoriteGameCarousel({
       opts={{
         loop: false,
         startIndex: 0,
-        slidesToScroll: isLargeDesktop ? 5 : 2,
+        align: "start",
+        slidesToScroll: isLargeDesktop ? 5 : isDesktop ? 4 : isTablet ? 3 : isMobile ? 2 : 1,
       }}
       className="w-full pt-0.5"
     >
@@ -67,7 +67,7 @@ export default function FavoriteGameCarousel({
           {filteredFavorites.map((game, index) => (
             <CarouselItem
               key={index}
-              className="xs:basis-1/3 basis-1/2 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4"
+              className=" basis-1/2 xs:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6"
             >
               {game.gameType ? (
                 <StockGameCard game={getStockGame(game.gameType)!} />

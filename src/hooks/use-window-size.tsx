@@ -13,6 +13,7 @@ interface WindowSize {
     isDesktop: boolean;
     isXsm: boolean;
     isMd: boolean;
+    isLargeDesktop: boolean;
     device: DeviceType;
 }
 
@@ -22,6 +23,7 @@ export const BREAKPOINTS = {
     sm: 640,   // Mobile
     md: 768,   // Tablet
     lg: 1024,  // Desktop
+    xl: 1280,  // Large Desktop
 } as const;
 
 export const useWindowSize = (): WindowSize => {
@@ -34,6 +36,7 @@ export const useWindowSize = (): WindowSize => {
         isDesktop: false,
         isXsm: false,
         isMd: false,
+        isLargeDesktop: false,
         device: 'mobile'
     });
 
@@ -48,6 +51,7 @@ export const useWindowSize = (): WindowSize => {
             const isMobileSmall = width < BREAKPOINTS.md;
             const isTablet = width >= BREAKPOINTS.sm && width < BREAKPOINTS.lg;
             const isDesktop = width >= BREAKPOINTS.lg;
+            const isLargeDesktop = width >= BREAKPOINTS.xl;
             const isMd = width <= BREAKPOINTS.md;
             const isXsm = width <= BREAKPOINTS.xsm;
             let device: DeviceType = 'mobile';
@@ -63,6 +67,7 @@ export const useWindowSize = (): WindowSize => {
                 isMobile,
                 isTablet,
                 isDesktop,
+                isLargeDesktop,
                 device
             });
         }
