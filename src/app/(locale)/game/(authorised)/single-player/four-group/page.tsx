@@ -43,7 +43,7 @@ export default function Home() {
                         <div className="relative h-full w-full md:min-h-[700px]  sm:min-h-[600px] min-h-[400px]  bg-contain bg-no-repeat bg-center">
                             <div className="absolute bottom-0 w-full h-fit ">
                                 <div className='absolute left-1/2 -translate-x-1/2 bottom-[calc(100%-2vw)] md:h-[60%] h-3/4 z-10 flex max-w-sm items-end justify-center'>
-                                    <img src="/images/four-group/lady.gif" alt="dice-bg" className='w-auto md:h-[80%] sm:h-48 xs:h-40 h-36 mt-20' />
+                                    <img src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758190883/lady_sochgr.gif" alt="dice-bg" className='w-auto md:h-[80%] sm:h-48 xs:h-40 h-36 mt-20' />
                                 </div>
                                 {roundRecord && <StockCardStack className="absolute p-2 left-1/2 -translate-x-1/2 md:bottom-[calc(30%+1rem)] bottom-[calc(20%+1rem)]" roundRecord={roundRecord} marketItems={marketItems} />}
                                 <img src="/images/four-group/table.png" alt="four-group-table" className=" w-full sm:mx-auto   h-full  relative z-10  md:max-w-5xl sm:max-w-2xl max-w-xl" />

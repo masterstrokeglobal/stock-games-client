@@ -102,7 +102,7 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
                             {winnerMarketItems.map((winnerMarketItem) => (
                                 <tr className="border-b last:border-none rounded-lg text-game-secondary border-[#DADCE00D] overflow-hidden" key={winnerMarketItem.horse}>
                                     <td className="p-2 ">
-                                        <img src="/crown.png" alt="Rank 1" className="w-8 h-8" />
+                                        <img src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758192518/crown_tbtaeu.png" alt="Rank 1" className="w-8 h-8" />
                                     </td>
                                     <td className="p-2">
                                         {winnerMarketItem.name}
@@ -129,13 +129,13 @@ const LeaderBoard = ({ roundRecord, className }: Props) => {
 
                                         {(index === 0 && !isGameOver) ? (
                                             <img
-                                                src="/images/dice-game/winner.png"
+                                                src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758191732/winner_ubx7gt.png"
                                                 alt="Rank 1"
                                                 className="h-8 w-auto mx-auto"
                                             />
                                         ) : winnerNumbers.includes(marketItem.horse!) ? (
                                             <img
-                                                src="/images/dice-game/winner.svg"
+                                                src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758191732/winner_ubx7gt.png"
                                                 alt="Rank 1"
                                                 className="h-8 w-auto mx-auto"
                                             />

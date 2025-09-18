@@ -29,7 +29,7 @@ export default function Last10WinnersCardSpinner() {
 
   return (
     <div className={styles.banner}>
-      <img src="/images/four-group/fight2.gif" alt="card-spinner" className='w-full h-full object-contain relative z-10' />
+      <img src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758190893/fight2_ilhvre.gif" alt="card-spinner" className='w-full h-full object-contain relative z-10' />
       <div
         className={`${styles.slider} ${styles.spinning}`}
         style={{ '--quantity': rounds.length } as React.CSSProperties}

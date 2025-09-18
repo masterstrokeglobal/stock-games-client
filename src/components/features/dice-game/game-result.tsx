@@ -60,7 +60,7 @@ const DiceGameResultDialog = ({
           }}
         >
           <div className="flex gap-4 md:pl-40">
-            <img className="h-[120%] md:block hidden w-auto bottom-0 -left-1/2 translate-x-1/4 -scale-x-100 absolute" src={isWin ? "/images/dice-game/result-win.png" : "/images/dice-game/result-lost.png"} />
+            <img className="h-[120%] md:block hidden w-auto bottom-0 -left-1/2 translate-x-1/4 -scale-x-100 absolute" src={isWin ? "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758191722/result-win_oerbs6.png" : "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758191718/result-lost_clnsii.png"} />
             {/* Close Button */}
             <DialogClose asChild>
               <Button

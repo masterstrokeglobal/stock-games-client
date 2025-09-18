@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import useWindowSize from "@/hooks/use-window-size";
 
@@ -301,10 +301,10 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
     function updateNumberHeight() {
       if (imgRef.current && imgRef.current.complete) {
         // Get the actual visible height of the slot area (2/3 of the image height)
-        const slotAreaHeight = imgRef.current.clientHeight * (2/3);
+        const slotAreaHeight = imgRef.current.clientHeight * (2 / 3);
         // We want to show 3 numbers in the visible area
         const calculatedHeight = slotAreaHeight / 3;
-        
+
         if (calculatedHeight > 0) {
           setNumberHeight(calculatedHeight);
           console.log("Updated numberHeight:", calculatedHeight);
@@ -314,41 +314,67 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
 
     // Run immediately if image is already loaded
     updateNumberHeight();
-    
+
     // Also listen for image load event
     const imageElement = imgRef.current;
     if (imageElement) {
-      imageElement.addEventListener('load', updateNumberHeight);
+      imageElement.addEventListener("load", updateNumberHeight);
     }
-    
+
     // Create ResizeObserver to detect size changes
     const resizeObserver = new ResizeObserver(() => {
       updateNumberHeight();
     });
-    
+
     if (imageElement) {
       resizeObserver.observe(imageElement);
     }
-    
+
     return () => {
       if (imageElement) {
-        imageElement.removeEventListener('load', updateNumberHeight);
+        imageElement.removeEventListener("load", updateNumberHeight);
         resizeObserver.unobserve(imageElement);
       }
       resizeObserver.disconnect();
     };
   }, []);
 
+  const numberImages = useCallback((number: number) => {
+    switch (number) {
+      case 0:
+        return "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179646/number-0_ga9sbv.png";
+      case 1:
+        return "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179646/number-1_rk6jbd.png";
+
+      case 2:
+        return "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179647/number-2_takjst.png";
+      case 3:
+        return "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179648/number-3_kmpgol.png";
+      case 4:
+        return "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179647/number-4_zoa3gp.png";
+
+      case 5:
+        return "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179647/number-5_bm9rcy.png";
+      case 6:
+        return "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179647/number-6_awsutk.png";
+      case 7:
+        return "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179647/number-7_y05peu.png";
+      case 8:
+        return "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179648/number-8_ru6f1u.png";
+      case 9:
+        return "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179648/number-9_nbzti8.png";
+    }
+  }, []);
+
   return (
     <>
-      
-        {/* Explicit height container */}
-        <img
-          ref={imgRef}
-          src="/images/slot-machine/game-board.png"
-          alt="game board"
-          className="h-full w-auto max-h-[50vh] object-contain z-20" // h-full forces it to container height
-        />
+      {/* Explicit height container */}
+      <img
+        ref={imgRef}
+        src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179644/game-board_ayrvlz.png"
+        alt="game board"
+        className="h-full w-auto max-h-[50vh] object-contain z-20" // h-full forces it to container height
+      />
       <div
         style={{
           width: imgRef.current?.clientWidth,
@@ -358,7 +384,7 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
       >
         <img
           className="absolute top-0 left-0 -translate-y-[80%] h-auto"
-          src="/images/slot-machine/lady.png"
+          src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179645/lady_ufh5ck.png"
           alt="game board"
           width={isMobile ? 95 : (imgRef.current?.clientWidth || 150) / 4}
         />
@@ -397,8 +423,8 @@ const StockSlot2DWheel: React.FC<StockSlot2DWheelProps> = ({
                         style={{ height: numberHeight }}
                         src={
                           EXCLUDED_NUMBERS.includes(number)
-                            ? `/images/slot-machine/loss.png`
-                            : `/images/slot-machine/${"number"}-${number}.png`
+                            ? `https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179645/loss_en4ghe.png`
+                            : numberImages(number)
                         }
                         alt={`${number}`}
                         className="w-auto object-contain"

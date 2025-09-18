@@ -42,7 +42,7 @@ export const StockListMobile: React.FC<StockListProps> = ({
             <div
               key={stock.code || index}
               style={{
-                backgroundImage: "url('/images/slot-machine/stock-list.png')",
+                backgroundImage: "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179649/stock-list_n70yra.png')",
                 backgroundSize: "contain",
                 backgroundPosition: "center center",
                 backgroundRepeat: "no-repeat",
@@ -100,7 +100,7 @@ export const StockListDesktop: React.FC<StockListProps> = ({
           <div
             key={stock.code || index}
             style={{
-              backgroundImage: "url('/images/slot-machine/stock-list.png')",
+              backgroundImage: "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179649/stock-list_n70yra.png')",
               backgroundSize: "contain",
               backgroundPosition: "center center",
               backgroundRepeat: "no-repeat",
@@ -144,7 +144,7 @@ export const StockListDesktop: React.FC<StockListProps> = ({
         <div
           key={`placeholder-${index}`}
           style={{
-            backgroundImage: "url('/images/slot-machine/stock-list.png')",
+            backgroundImage: "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179649/stock-list_n70yra.png')",
             backgroundSize: "100% 100%",
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",

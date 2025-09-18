@@ -31,16 +31,18 @@ const ResultDialog: React.FC<ResultDialogProps> = ({
   }, [resultData]);
 
   return (
-    <Dialog defaultOpen={open}> 
+    <Dialog defaultOpen={open}>
       <DialogContent
         showButton={false}
         className=" bg-transparent border-none w-full max-h-none max-w-2xl focus:outline-none p-0"
       >
         <div
           style={{
-            backgroundImage: `url('/images/slot-machine/${
-              isMobile ? "result-bg-mb" : "result-bg"
-            }.png')`,
+            backgroundImage: `url('${
+              isMobile
+                ? "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179649/result-bg-mb_ehmf6c.png"
+                : "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179649/result-bg_r2yb8v.png"
+            }')`,
             backgroundSize: "contain",
             backgroundPosition: "center center",
             backgroundRepeat: "no-repeat",
@@ -54,7 +56,7 @@ const ResultDialog: React.FC<ResultDialogProps> = ({
             <DialogClose asChild>
               <button className="absolute top-0 right-8">
                 <Image
-                  src="/images/slot-machine/cancel-btn.png"
+                  src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179642/cancel-btn_ebj094.png"
                   alt="cancel"
                   width={isMobile ? 30 : 40}
                   height={isMobile ? 30 : 40}
@@ -65,7 +67,11 @@ const ResultDialog: React.FC<ResultDialogProps> = ({
 
           <DialogDescription className="text-center flex flex-col justify-between items-center text-xs lg:text-base xl:text-2xl leading-normal overflow-y-auto ">
             <Image
-              src={`/images/slot-machine/${isWin ? "lady" : "loss-img"}.png`}
+              src={`${
+                isWin
+                  ? "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179645/lady_ufh5ck.png"
+                  : "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179645/loss-img_h1glol.png"
+              }`}
               alt="Win"
               width={isMobile ? 100 : 150}
               height={isMobile ? 100 : 150}
@@ -75,7 +81,11 @@ const ResultDialog: React.FC<ResultDialogProps> = ({
                 isWin ? "from-white to-[#0CC915]" : "from-white to-[#FF3E3E]"
               } bg-clip-text text-transparent slot-text-shadow mt-1`}
             >
-              {isWin ? <p>You won {resultData?.amountWon?.toFixed(2)}{" "} INR</p> : <p>You lost {resultData?.totalPlaced?.toFixed(2)}{" "}INR</p>}
+              {isWin ? (
+                <p>You won {resultData?.amountWon?.toFixed(2)} INR</p>
+              ) : (
+                <p>You lost {resultData?.totalPlaced?.toFixed(2)} INR</p>
+              )}
             </div>
             <p className="text-lg uppercase lg:text-2xl slot-gradient-text my-4">
               next round in{placeTimeLeft.formatted} <br />
@@ -85,7 +95,7 @@ const ResultDialog: React.FC<ResultDialogProps> = ({
               <button
                 className="w-full py-2 text-white text-2xl lg:text-[40px] lg:max-w-[200px] max-w-[120px] leading-normal"
                 style={{
-                  backgroundImage: `url('/images/slot-machine/btn-bg.png')`,
+                  backgroundImage: `url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179642/btn-bg_dp0aeb.png')`,
                   backgroundSize: "100% 100%",
                   backgroundPosition: "center center",
                   backgroundRepeat: "no-repeat",

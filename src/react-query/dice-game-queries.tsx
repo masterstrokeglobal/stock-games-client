@@ -63,7 +63,7 @@ export const BetSuccessToast = ({ className, onClose, betAmount, betNumber }: Pr
                         style={{ textShadow: '1px 1px 0px #4467CC, -1px -1px 0px #4467CC, 1px -1px 0px #4467CC, -1px 1px 0px #4467CC' }} className="text-base opacity-90 text-white">{betNumber} for ₹ {betAmount}</p>
                 </div>
                 <div className="flex-shrink-0">
-                    <img src="/images/dice-game/toast-lady.png" alt="lady" className="h-32 absolute bottom-1/4 right-0" />
+                    <img src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758191729/toast-lady_crfk7v.png" alt="lady" className="h-32 absolute bottom-1/4 right-0" />
                 </div>
             </div>
         </div>
@@ -89,7 +89,7 @@ export const BetErrorToast = ({ className, message = " Please try Again", onClos
                     <h3 className="text-lg font-bold  text-white ">{message}</h3>
                 </div>
                 <div className="flex-shrink-0">
-                    <img src="/images/dice-game/toast-error.png" alt="lady" className="h-32 absolute bottom-1/4 right-0" />
+                    <img src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758191726/toast-error_mqohup.png" alt="lady" className="h-32 absolute bottom-1/4 right-0" />
                 </div>
             </div>
         </div>
