@@ -542,6 +542,8 @@
         "description-phone": "अपना फ़ोन नंबर दर्ज करें",
         "label-reference-code": "संदर्भ कोड",
         "label-password": "पासवर्ड",
+        "label-terms-agreement": "मैं अपनी सेवा की शर्तों से सहमत हूं",
+        "label-age-confirmation": "मैं सुनिश्चित करता हूं कि मैं 18 वर्ष से अधिक हूं",
         "terms-message": "जारी रखने से आप हमारी सेवा की शर्तों से सहमत होते हैं",
         "button-register": "रजिस्टर करें",
         "button-registering": "रजिस्टर हो रहा है...",

@@ -59,7 +59,7 @@ const PaymentMethodDialog = ({ onBack }: PaymentMethodDialogProps) => {
                     </Button>
                 )}
                 <h3 className="text-platform-text text-lg font-semibold">
-                    Withdrawal Methods
+                    Withdrawal Details
                 </h3>
             </div>
 

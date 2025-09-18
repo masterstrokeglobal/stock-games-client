@@ -37,9 +37,6 @@ class Operator {
     password?: string;
     role!: OperatorRole;
     percentageShare!: number;
-    dmMaxBalance!: number;
-    masterMaxBalance!: number;
-    agentMaxBalance!: number;
     parentOperator?: Operator;
     children?: Operator[];
     company?: Company;
@@ -58,9 +55,6 @@ class Operator {
         this.password = params.password;
         this.role = params.role ?? OperatorRole.SUPER_DUPER_MASTER;
         this.percentageShare = params.percentageShare ?? 0;
-        this.dmMaxBalance = params.dmMaxBalance ?? 0;
-        this.masterMaxBalance = params.masterMaxBalance ?? 0;
-        this.agentMaxBalance = params.agentMaxBalance ?? 0;
         this.bettingStatus = params.bettingStatus ?? true;
         this.transferStatus = params.transferStatus ?? true;
         this.status = params.status ?? OperatorStatus.ACTIVE;
@@ -110,18 +104,6 @@ class Operator {
         return !!this.parentOperator;
     }
 
-    getMaxBalanceForRole(role: OperatorRole): number {
-        switch (role) {
-            case OperatorRole.DUPER_MASTER:
-                return this.dmMaxBalance;
-            case OperatorRole.MASTER:
-                return this.masterMaxBalance;
-            case OperatorRole.AGENT:
-                return this.agentMaxBalance;
-            default:
-                return 0;
-        }
-    }
 
     canManageOperator(targetOperator: Operator): boolean {
         // Super duper master can manage everyone

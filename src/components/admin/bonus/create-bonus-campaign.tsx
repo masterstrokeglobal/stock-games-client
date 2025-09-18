@@ -36,14 +36,11 @@ const CreateBonusCampaign: React.FC = () => {
     const { data: providers } = useGetAvailableProviders();
 
     const triggerEvents = [
+        { value: 'SIGNUP', label: 'Signup' },
+        { value: 'FIRST_LOGIN', label: 'First Login' },
+        { value: 'REFERRAL_BONUS', label: 'Referral Bonus' },
         { value: 'FIRST_DEPOSIT', label: 'First Deposit' },
         { value: 'EVERY_DEPOSIT', label: 'Every Deposit' },
-        // { value: 'LOSS_BASED', label: 'Loss Based' },
-        // { value: 'WAGER_BASED', label: 'Wager Based' },
-        // { value: 'LOGIN_BASED', label: 'Login Based' },
-        // { value: 'GAME_SPECIFIC', label: 'Game Specific' },
-        // { value: 'TIME_LIMITED', label: 'Time Limited' },
-        // { value: 'CUSTOM_EVENT', label: 'Custom Event' }
     ];
 
     const bonusTypes = [

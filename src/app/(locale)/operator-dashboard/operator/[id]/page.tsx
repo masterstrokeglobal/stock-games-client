@@ -19,9 +19,6 @@ const UpdateOperatorPage = () => {
             email: operator.email,
             role: operator.role,
             percentageShare: operator.percentageShare,
-            dmMaxBalance: operator.dmMaxBalance,
-            masterMaxBalance: operator.masterMaxBalance,
-            agentMaxBalance: operator.agentMaxBalance,
         };
     }, [operator]);
 

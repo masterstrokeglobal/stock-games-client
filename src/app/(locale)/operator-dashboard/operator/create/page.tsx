@@ -7,13 +7,9 @@ import { useRouter } from "next/navigation";
 const defaultValues: Omit<OperatorFormValues, "role"> = {
     name: "",
     email: "",
-    maxBalance: 0,
     percentageShare: 0,
     password: "",
     confirmPassword: "",
-    dmMaxBalance: 0,
-    masterMaxBalance: 0,
-    agentMaxBalance: 0,
 }
 const CreateOperatorPage = () => {
     const router = useRouter();

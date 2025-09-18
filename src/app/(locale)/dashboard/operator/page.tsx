@@ -17,7 +17,6 @@ type Operator = {
     percentage: number;
     companyId: number;
     balance: number;
-    maxBalance: number;
     bettingStatus: boolean;
     transferStatus: boolean;
     status: string;
@@ -145,9 +144,7 @@ const OperatorRow = ({ operator, level = 0, isLast = false }: { operator: Operat
                                 ₹{operator.balance?.toLocaleString() || 0}
                             </div>
 
-                            <div className={`col-span-1 text-center font-medium ${textSizeClass} hidden lg:block`}>
-                                ₹{operator.maxBalance?.toLocaleString() || 0}
-                            </div>
+                            {/* Removed Max Balance column */}
 
                             <div className="col-span-1">
                                 <Badge className={`border ${textSizeClass} ${statusColors[operator.status as keyof typeof statusColors] || "bg-gray-100 text-gray-800 border-gray-200"}`}>
@@ -257,7 +254,7 @@ const OperatorTable = () => {
                         <div className="col-span-2 hidden sm:block">EMAIL</div>
                         <div className="col-span-2 text-center">ROLE & %</div>
                         <div className="col-span-1 text-center hidden md:block">BALANCE</div>
-                        <div className="col-span-1 text-center hidden lg:block">MAX BALANCE</div>
+                        {/* Removed Max Balance header */}
                         <div className="col-span-1">STATUS</div>
                         <div className="col-span-2 text-center">ACTIONS</div>
                     </div>

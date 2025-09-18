@@ -64,7 +64,7 @@ const SevenUpDown = () => {
                         <GameBoard className='flex-1' roundRecord={roundRecord} amount={betAmount} marketItems={stocks} roundRecordWithWinningId={roundRecordWithWinningId} />
                         <BettingArea betAmount={betAmount} setBetAmount={setBetAmount} roundRecord={roundRecord} />
                     </div>
-                    <div className='md:col-span-4 pt-4 relative z-10 md:max-h-[calc(100svh-130px)] md:grid md:grid-rows-2 flex flex-col gap-4'>
+                    <div className='md:col-span-4 pt-1 md:pt-4 relative z-10 md:max-h-[calc(100svh-130px)] md:grid md:grid-rows-2 flex flex-col gap-4'>
                         <AllBets roundRecord={roundRecord} />
                         <LastRounds />
                     </div>

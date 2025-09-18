@@ -85,10 +85,10 @@ const DiceGame = () => {
             <div className="col-span-3 border-r py-5 px-3 border-[#4467CC80] h-full grid gap-4 grid-rows-1 ">
                 <LastRoundWinner roundRecord={roundRecord} className="border-[#4467CC80] grid-rows-1 h-auto  border" />
             </div>
-            <div className="flex flex-col pt-5 px-3 col-span-6 overflow-y-auto  w-full relative h-full   rounded-none mx-auto  text-white overflow-hidden">
+            <div className="flex flex-col p-3 col-span-6 gap-3 overflow-y-auto  w-full relative h-full rounded-none mx-auto  text-white overflow-hidden">
                 <MaintainceScreen />
                 <Dice3D key={roundRecord.id} stocks={stocks} className='min-h-[300px] xxl:min-h-[400px]' roundRecord={roundRecord} roundRecordWithWinningId={roundRecordWithWinningId} />
-                <div className="flex flex-col justify-around flex-1">
+                <div className="flex flex-col justify-between flex-1 gap-4">
                     <BettingGrid roundRecord={roundRecord} globalBetAmount={betAmount} winningMarketId={roundRecordWithWinningId?.winningId || null} winningSum={winningSum}>
                         <DiceGameTimeDisplay className="w-full max-w-lg" roundRecord={roundRecord} />
                     </BettingGrid>

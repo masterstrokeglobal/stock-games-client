@@ -15,6 +15,7 @@ type Props = {
 };
 
 interface WalletBalance {
+    id: number;
     currentBalance: number;
     currency: string;
     lastUpdated: string;
@@ -25,6 +26,8 @@ interface WalletBalance {
         status: string;
         createdAt: string;
         description?: string;
+        depositorOperatorWallet?: any;
+        creditorOperatorWallet?: any;
     }>;
     summary: {
         totalCredits: number;
@@ -53,7 +56,35 @@ const OperatorWalletBalance = ({ operatorId, className }: Props) => {
         );
     }
 
-    const wallet = walletData as WalletBalance;
+    // Normalize API response to expected shape
+    const normalizeNumber = (value: any): number => {
+        if (typeof value === "number") return value;
+        if (typeof value === "string") {
+            const parsed = parseFloat(value);
+            return isNaN(parsed) ? 0 : parsed;
+        }
+        return 0;
+    };
+
+    const raw: any = (walletData as any)?.data?.data || (walletData as any)?.data || walletData || {};
+    const walletContainer: any = raw?.wallet ?? raw; // API may return { wallet: { balance } }
+    const recentTransactions: any[] = raw?.recentTransactions ?? walletContainer?.recentTransactions ?? [];
+
+    const wallet: WalletBalance = {
+        id: walletContainer?.id ?? walletContainer?.operatorWallet?.id, 
+        currentBalance: normalizeNumber(
+            walletContainer?.currentBalance ?? walletContainer?.balance ?? walletContainer?.operatorWallet?.balance
+        ),
+        currency: walletContainer?.currency ?? "INR",
+        lastUpdated: walletContainer?.lastUpdated ?? walletContainer?.updatedAt ?? recentTransactions?.[0]?.updatedAt ?? new Date().toISOString(),
+        recentTransactions,
+        summary: {
+            totalCredits: normalizeNumber(raw?.summary?.totalCredits ?? raw?.totalCredits),
+            totalDebits: normalizeNumber(raw?.summary?.totalDebits ?? raw?.totalDebits),
+            netChange: normalizeNumber(raw?.summary?.netChange ?? raw?.netChange),
+            transactionCount: raw?.summary?.transactionCount ?? raw?.transactionCount ?? recentTransactions.length ?? 0,
+        },
+    };
 
     return (
         <div className={cn("space-y-6", className)}>
@@ -81,7 +112,7 @@ const OperatorWalletBalance = ({ operatorId, className }: Props) => {
                 </CardHeader>
                 <CardContent className="relative">
                     <div className="text-3xl font-bold text-gray-900">
-                        ₹{wallet?.currentBalance?.toFixed(2) || "0.00"}
+                        ₹{Number(wallet?.currentBalance || 0).toFixed(2)}
                     </div>
                     <div className="text-sm text-gray-600 mt-1">
                         Available Balance
@@ -98,7 +129,7 @@ const OperatorWalletBalance = ({ operatorId, className }: Props) => {
                             <span className="text-sm font-medium">Total Credits</span>
                         </div>
                         <div className="text-xl font-bold text-green-600">
-                            ₹{wallet?.summary?.totalCredits?.toFixed(2) || "0.00"}
+                            ₹{Number(wallet?.summary?.totalCredits || 0).toFixed(2)}
                         </div>
                     </CardContent>
                 </Card>
@@ -110,7 +141,7 @@ const OperatorWalletBalance = ({ operatorId, className }: Props) => {
                             <span className="text-sm font-medium">Total Debits</span>
                         </div>
                         <div className="text-xl font-bold text-red-600">
-                            ₹{wallet?.summary?.totalDebits?.toFixed(2) || "0.00"}
+                            ₹{Number(wallet?.summary?.totalDebits || 0).toFixed(2)}
                         </div>
                     </CardContent>
                 </Card>
@@ -125,7 +156,7 @@ const OperatorWalletBalance = ({ operatorId, className }: Props) => {
                             "text-xl font-bold",
                             (wallet?.summary?.netChange || 0) >= 0 ? "text-green-600" : "text-red-600"
                         )}>
-                            {(wallet?.summary?.netChange || 0) >= 0 ? "+" : ""}₹{wallet?.summary?.netChange?.toFixed(2) || "0.00"}
+                            {(wallet?.summary?.netChange || 0) >= 0 ? "+" : ""}₹{Number(wallet?.summary?.netChange || 0).toFixed(2)}
                         </div>
                     </CardContent>
                 </Card>
@@ -153,7 +184,7 @@ const OperatorWalletBalance = ({ operatorId, className }: Props) => {
                     <CardContent>
                         <div className="space-y-3">
                             {wallet.recentTransactions.map((transaction) => {
-                                const isCredit = ['operator_deposit', 'wallet_recharge', 'transfer_in', 'company_recharge'].includes(transaction.type);
+                                const isDebit = transaction.creditorOperatorWallet?.id === wallet.id;
                                 
                                 return (
                                     <div key={transaction.id} className="flex items-center justify-between p-3 border rounded-lg">
@@ -175,9 +206,9 @@ const OperatorWalletBalance = ({ operatorId, className }: Props) => {
                                         <div className="text-right">
                                             <div className={cn(
                                                 "font-medium",
-                                                isCredit ? "text-green-600" : "text-red-600"
+                                                isDebit ? "text-green-600" : "text-red-600"
                                             )}>
-                                                {isCredit ? "+" : "-"}₹{Math.abs(transaction.amount).toFixed(2)}
+                                                {isDebit ? "+" : "-"}₹{Math.abs(transaction.amount).toFixed(2)}
                                             </div>
                                             <Badge 
                                                 variant={

@@ -23,7 +23,7 @@ import { ScrollArea, ScrollBar } from "./scroll-area";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  data?: TData[];
   showOptions?: boolean;
   hideFilterButton?: boolean;
   hideColumnsInMobile?: boolean;
@@ -60,7 +60,7 @@ export default function DataTable<TData, TValue>({
   }, [pagination]);
 
   const table = useReactTable({
-    data,
+    data: (data as TData[]) ?? [],
     columns,
     manualPagination: true,
     enableGlobalFilter: true,
@@ -99,8 +99,8 @@ export default function DataTable<TData, TValue>({
             )}
             <TableBody className="px-4">
               {!loading &&
-                (table?.getRowModel().rows?.length ? (
-                  table?.getRowModel().rows.map((row) => (
+                (table?.getRowModel()?.rows?.length ? (
+                  table?.getRowModel()?.rows.map((row) => (
                     <TableRow
                       className={cn("h-14", rowClassName)}
                       key={row.id}

@@ -394,6 +394,8 @@
     "label-email-phone": "E-posta veya Telefon",
     "label-reference-code": "Referans Kodu",
     "label-password": "Şifre",
+    "label-terms-agreement": "Hizmet şartlarımızı kabul ediyorsunuz",
+    "label-age-confirmation": "Hizmet şartlarımızı kabul ediyorsunuz",
     "terms-message": "Devam ederek hizmet şartlarımızı kabul ediyorsunuz",
     "button-register": "Kaydol",
     "button-registering": "Kaydolunuyor...",

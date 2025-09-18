@@ -6,11 +6,12 @@ import OperatorInfoCard from "@/components/features/operator/operator-info-card"
 import { COMPANYID } from "@/lib/utils";
 import { useCompanyWalletByCompanyId } from "@/react-query/company-queries";
 import { useDepositOperatorWallet, useGetOperatorById } from "@/react-query/operator-queries";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useMemo } from "react";
+import { toast } from "sonner";
 
 export default function DepositPage() {
-    const router = useRouter();
+    // const router = useRouter();
     const depositMutation = useDepositOperatorWallet();
     const params = useParams<{ id: string }>();
     const operatorId = parseInt(params.id);
@@ -32,9 +33,11 @@ export default function DepositPage() {
                 operatorId: operatorId,
                 amount: data.amount
             });
-            router.push("/operator-dashboard");
+            toast.success("Deposit successful");
+            // router.refresh(); // uncomment if you want to refresh data without leaving the page
         } catch (error) {
             console.error("Failed to deposit:", error);
+            toast.error("Failed to deposit. Please try again.");
         }
     };
 

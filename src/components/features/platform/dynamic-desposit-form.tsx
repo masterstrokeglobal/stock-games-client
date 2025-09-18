@@ -317,7 +317,7 @@ const UPIDepositForm = () => {
                     <div className="space-y-2">
                         <div>
                             <span className="text-platform-text text-base font-medium">
-                                Add Withdrawal Method
+                                Add Withdrawal Account
                             </span>
                         </div>
                         <Controller
@@ -341,7 +341,7 @@ const UPIDepositForm = () => {
                                                     setShowPaymentMethodDialog(true);
                                                 }}
                                             >
-                                                Add New Method
+                                                Add New Account
                                             </Button>
                                         </>
                                     ) : (
