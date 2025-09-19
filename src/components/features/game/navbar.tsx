@@ -10,8 +10,7 @@ import GameTimings from "./game-timings";
 import UserMenuNavbar from "./user-menu-navbar";
 import ThemeSwitcher from "@/context/theme-swithcer";
 import { useTranslations } from "next-intl";
-import { Heart } from "lucide-react";
-import { usePathname } from "next/navigation";
+// import { usePathname } from "next/navigation";
 
 type Props = {
   className?: string;
@@ -19,7 +18,7 @@ type Props = {
 const Navbar = ({ className }: Props) => {
   const t = useTranslations("platform.navbar");
   const { isLoggedIn } = useAuthStore();
-  const pathname = usePathname();
+  // const pathname = usePathname();
 
   return (
     <nav

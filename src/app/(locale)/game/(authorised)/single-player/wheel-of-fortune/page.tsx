@@ -131,7 +131,7 @@ const WheelOfFortune = () => {
             setWheelHeight={setWheelHeight}
             wheelRef={wheelRef}
           />
-          <div className=" z-10 flex-1 gap-4 md:flex hidden flex-col col-span-1 w-full ">
+          <div className=" z-10 flex-1 gap-2 md:flex hidden flex-col col-span-1 w-full ">
             <div className="flex items-center gap-2 w-full justify-between">
               <header className="flex justify-end items-center w-full gap-4">
                 <Viewers />
@@ -147,7 +147,7 @@ const WheelOfFortune = () => {
                 </GameSettingsPopover>
               </header>
             </div>
-            <div className="flex flex-col gap-4 h-[500px]">
+            <div className="flex flex-col gap-2 h-[500px]">
               <CurrentBets roundRecord={roundRecord} className="flex-1" />
               <LastRoundsTable className="flex-1" />
             </div>

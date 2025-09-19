@@ -9,6 +9,7 @@ import { useRef, useState, useCallback, useEffect, useMemo } from "react";
 import { WheelColor } from "@/models/wheel-of-fortune-placement";
 import { getStockName } from "@/components/common/StockName";
 import { gsap } from "gsap";
+import { useWindowSize } from "@/hooks/use-window-size";
 
 interface WheelProps {
   isSpinning: boolean;
@@ -28,6 +29,7 @@ export const Wheel: React.FC<WheelProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [wheelState, setWheelState] = useState<'idle' | 'spinning' | 'stopped'>('idle');
   const spinTweenRef = useRef<any>(null);
+  const { isMobileSmall } = useWindowSize();
 
   const stocks: MarketItem[] = useMemo(() => {
     const originalMarkets = roundRecord?.market || [];
@@ -170,7 +172,7 @@ export const Wheel: React.FC<WheelProps> = ({
         {/* Render wheel segments */}
         <div
           ref={wheelRef}
-          className="absolute h-[80%] w-[80%] rounded-full flex items-center justify-center"
+          className="absolute h-[80%] w-[80%] rounded-full flex items-center justify-center z-20 border"
         >
           {stocks.map((stock, index) => {
             const assignedColor =
@@ -193,17 +195,14 @@ export const Wheel: React.FC<WheelProps> = ({
                       segmentAngle * index - segmentAngle / 2
                     }deg)`,
                     backgroundColor: colorConfig.actualColor,
-                    boxShadow: `
-                      inset 0 0px -20px -20px ${colorConfig.shadow},   /* top inner shadow */
-                      inset 0 -0px -20px -20px ${colorConfig.shadow}  /* bottom inner shadow */
-                    `,
+                    boxShadow: `inset 7px 0px 18px 5px rgba(0, 0, 0, 0),inset -7px 0px 18px 5px rgba(0, 0, 0, 0), inset 0px 7px 18px 0px ${colorConfig.shadowColor2}, inset 0px 10px 10px 2.5px rgba(0, 0, 0, 0.5)`,
                     clipPath: "polygon(0 0, 50% 100%, 100% 0)",
                     transformOrigin: "center bottom",
                   }}
-                  className="absolute top-0 flex justify-center items-center overflow-hidden"
+                  className="absolute top-0 flex justify-center overflow-hidden z-10 md:rounded-[8px]"
                 >
-                  <p className="stock-name absolute text-white text-xs font-medium tracking-wider -rotate-90 top-[30%] z-10 outline-none whitespace-nowrap">
-                  {getStockName(stock.name ?? "", stock.codeName ?? "")}
+                  <p className="stock-name absolute text-white text-xs font-medium tracking-wider -rotate-90 bottom-[50%] z-10 outline-none whitespace-nowrap w-full truncate md:overflow-visible">
+                    {getStockName(stock.name ?? "", stock.codeName ?? "")}
                   </p>
                 </div>
                 <div
@@ -221,7 +220,7 @@ export const Wheel: React.FC<WheelProps> = ({
                     style={{
                       transformOrigin: "center bottom",
                     }}
-                    className="top-0 bg-black rotate-[43deg] h-full w-[2px]"
+                    className="top-0 bg-yellow-500 rotate-[43deg] h-full w-[2px]"
                   ></div>
                 </div>
               </>
@@ -229,27 +228,36 @@ export const Wheel: React.FC<WheelProps> = ({
           })}
         </div>
 
-        {/* Wheel Border with decorative dots */}
-        <div className="absolute h-[85%] w-[85%] rounded-full flex items-center justify-center border-[10px] border-yellow-500">
-          {Array.from({ length: 8 }, (_, index) => {
-            const angle = (index * 360) / 8;
-            const radian = (angle * Math.PI) / 180;
-            const radius = 50;
-            const x = Math.cos(radian) * radius;
-            const y = Math.sin(radian) * radius;
+        <div className="absolute h-[85%] w-[85%] z-30 rounded-full flex items-center justify-center border-[5px] md:border-[10px] border-transparent ">
+          {/* Wheel Border with decorative dots */}
+          <div className="h-full absolute w-full rounded-full flex items-center justify-center">
+            {Array.from({ length: 8 }, (_, index) => {
+              const angle = (index * 360) / 8;
+              const radian = (angle * Math.PI) / 180;
+              // Assuming container is square, radius to center of 10px border
+              const radius = isMobileSmall ? `calc(50% + 2.5px)` : `calc(50% + 5px)`;
+              const x = Math.cos(radian);
+              const y = Math.sin(radian);
 
-            return (
-              <div
-                key={index}
-                className="absolute w-4 h-4 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"
-                style={{
-                  left: `calc(50% + ${x}%)`,
-                  top: `calc(50% + ${y}%)`,
-                }}
-              />
-            );
-          })}
+              return (
+                <div
+                  key={index}
+                  className="absolute md:w-2 md:h-2 w-1 h-1 bg-white rounded-full transform -translate-x-1/2 -translate-y-1/2"
+                  style={{
+                    left: `calc(50% + ${x} * ${radius})`,
+                    top: `calc(50% + ${y} * ${radius})`,
+                    boxShadow: "0 0 5px 2.5px red",
+                  }}
+                />
+              );
+            })}
+          </div>
+          <div className="h-full w-full rounded-full border-2 border-yellow-700 absolute ">
+            <div className="h-full w-full rounded-full border border-yellow-400 absolute"></div>
+          </div>
         </div>
+
+        <div className="absolute h-[85%] w-[85%] z-10 rounded-full flex items-center justify-center  bg-gradient-to-b from-yellow-400 to-yellow-600 p-[12.5px]"></div>
       </div>
 
       {/* Center Button */}
