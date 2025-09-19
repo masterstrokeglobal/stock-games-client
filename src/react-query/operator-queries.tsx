@@ -1,4 +1,5 @@
 import { operatorAPI, OperatorIndividualReportFilter } from "@/lib/axios/operator-API";
+import { userAPI } from "@/lib/axios/user-API";
 import Operator from "@/models/operator";
 import { Transaction } from "@/models/transaction";
 import User from "@/models/user";
@@ -113,19 +114,23 @@ export const useRedeemFromUser = () => {
     });
 };
 
-// Create user (by operator) - uses backend /operator/create-user and operator auth for hierarchy
+// Create user (by operator) - uses standard /user endpoint like platform
 export const useCreateUser = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async (formData: any) => {
-            const payload = {
+            const user = new User({
                 firstname: formData.firstname,
                 lastname: formData.lastname,
                 username: formData.username,
                 password: formData.password,
-            };
-            const response = await operatorAPI.createUser(payload);
+                externalUser: false,
+                depositBonusPercentage: 0,
+                placementNotAllowed: [],
+                demoUser: false,
+            });
+            const response = await userAPI.createUser(user);
             return response.data;
         },
         onSuccess: () => {
