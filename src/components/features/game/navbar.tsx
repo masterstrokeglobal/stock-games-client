@@ -10,8 +10,7 @@ import GameTimings from "./game-timings";
 import UserMenuNavbar from "./user-menu-navbar";
 import ThemeSwitcher from "@/context/theme-swithcer";
 import { useTranslations } from "next-intl";
-import { Heart } from "lucide-react";
-import { usePathname } from "next/navigation";
+// import { usePathname } from "next/navigation";
 
 type Props = {
   className?: string;
@@ -19,7 +18,7 @@ type Props = {
 const Navbar = ({ className }: Props) => {
   const t = useTranslations("platform.navbar");
   const { isLoggedIn } = useAuthStore();
-  const pathname = usePathname();
+  // const pathname = usePathname();
 
   return (
     <nav
@@ -37,9 +36,11 @@ const Navbar = ({ className }: Props) => {
         {isLoggedIn && <GameTimings />}
       </div>
       <div className="flex items-center space-x-4 ml-auto justify-end">
-        <Link href="/game/platform/favourites">
-          <Heart size={24} className={cn(pathname === "/game/platform/favourites" ? "text-white" : "text-white")} />
-        </Link>
+        {isLoggedIn && (
+          <Link href="/game/platform/favourites" className="text-xl">
+            💖
+          </Link>
+        )}
         <ThemeSwitcher className="md:flex hidden" />
         <MuteButton className="md:flex hidden border rounded-full platform-gradient header-inner-shadow  size-10  justify-center p-1" />
         <LocaleSwitcher className="md:block hidden " selectClassName="h-10" />

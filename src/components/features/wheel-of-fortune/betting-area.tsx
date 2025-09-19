@@ -72,7 +72,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
             </Button>
           ))}
         </div>
-        <div className="flex justify-center relative lg:mb-4">
+        <div className="flex justify-center relative">
           <Button
             disabled={betAmount <= (userDetails?.company?.minPlacement ?? 0)}
             onClick={handleDecreaseBetAmount}

@@ -34,7 +34,8 @@ export const StockPriceDisplay: React.FC<{
   const isGameStillActive = currentTime < gameEndTime;
   const hasNoWinner = winningMarketId == null;
 
-  const isSpinning = isBettingClosed && isGameStillActive && hasNoWinner && isPlaceOver;
+  const isSpinning =
+    isBettingClosed && isGameStillActive && hasNoWinner && isPlaceOver;
 
   return (
     <div
@@ -69,7 +70,7 @@ export const StockPriceDisplay: React.FC<{
           <h1 className="md:text-3xl xl:text-4xl fortune-glow font-konkhmer-sleokchher tracking-widest  sm:text-2xl text-xl font-bold  text-white flex-1 text-center">
             WHEEL OF FORTUNE
           </h1>
-          <GameTimer roundRecord={roundRecord} />
+         {isMobile && <GameTimer roundRecord={roundRecord} />}
         </div>
       </div>
       <div
@@ -86,6 +87,11 @@ export const StockPriceDisplay: React.FC<{
           wheelRef={wheelRef}
         />
       </div>
+      {!isMobile && (
+        <div className="w-full h-full flex items-end mb-2">
+          <GameTimer roundRecord={roundRecord} />
+        </div>
+      )}
     </div>
   );
 };
