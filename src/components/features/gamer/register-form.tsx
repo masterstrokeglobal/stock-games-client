@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AuthTabs from "./auth-tabs";
 import GoogleLoginButton from "./google-login-button";
-import Link from "next/link";
+// import Link from "next/link";
 
 // Zod schema for validating the registration form fields
 export const createRegisterSchema = (t: any, isPhoneAllowed: boolean = false, userVerfication: boolean = false) => z.object({
@@ -165,14 +165,14 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                     />
 
                     {/* Terms and Conditions Checkbox */}
-                    <Link href="/terms-and-conditions" target="_blank">
+                    {/* <Link href="/terms-and-conditions" target="_blank"> */}
                     <FormCheckbox
                         control={control}
                         name="agreeToTerms"
                         label={t('label-terms-agreement')}
                         className="mt-4 text-white"
                     />
-                    </Link>
+                    {/* </Link> */}
                     {/* Age Confirmation Checkbox */}
                     <FormCheckbox
                         control={control}
