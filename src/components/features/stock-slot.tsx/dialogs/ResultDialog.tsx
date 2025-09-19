@@ -10,19 +10,21 @@ import { useStockGameRoundResult } from "@/react-query/slot-game-queries";
 import React, { useMemo } from "react";
 import Image from "next/image";
 import useWindowSize from "@/hooks/use-window-size";
+import { Loader2 } from "lucide-react";
 
 interface ResultDialogProps {
   open: boolean;
   roundRecordId: number;
-  placeTimeLeft: any;
 }
 
 const ResultDialog: React.FC<ResultDialogProps> = ({
   open,
   roundRecordId,
-  placeTimeLeft,
 }) => {
-  const { data: resultData } = useStockGameRoundResult(roundRecordId, open);
+  const { data: resultData, isLoading } = useStockGameRoundResult(
+    roundRecordId,
+    open
+  );
   const { isMobile } = useWindowSize();
 
   const isWin = useMemo(() => {
@@ -65,45 +67,52 @@ const ResultDialog: React.FC<ResultDialogProps> = ({
             </DialogClose>
           </DialogHeader>
 
-          <DialogDescription className="text-center flex flex-col justify-between items-center text-xs lg:text-base xl:text-2xl leading-normal overflow-y-auto ">
-            <Image
-              src={`${
-                isWin
-                  ? "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179645/lady_ufh5ck.png"
-                  : "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179645/loss-img_h1glol.png"
-              }`}
-              alt="Win"
-              width={isMobile ? 100 : 150}
-              height={isMobile ? 100 : 150}
-            />
-            <div
-              className={`uppercase text-xl lg:text-3xl bg-gradient-to-b ${
-                isWin ? "from-white to-[#0CC915]" : "from-white to-[#FF3E3E]"
-              } bg-clip-text text-transparent slot-text-shadow mt-1`}
-            >
-              {isWin ? (
-                <p>You won {resultData?.amountWon?.toFixed(2)} INR</p>
-              ) : (
-                <p>You lost {resultData?.totalPlaced?.toFixed(2)} INR</p>
-              )}
-            </div>
-            <p className="text-lg uppercase lg:text-2xl slot-gradient-text my-4">
-              next round in{placeTimeLeft.formatted} <br />
-              seconds
-            </p>
-            <DialogClose asChild>
-              <button
-                className="w-full py-2 text-white text-2xl lg:text-[40px] lg:max-w-[200px] max-w-[120px] leading-normal"
-                style={{
-                  backgroundImage: `url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179642/btn-bg_dp0aeb.png')`,
-                  backgroundSize: "100% 100%",
-                  backgroundPosition: "center center",
-                  backgroundRepeat: "no-repeat",
-                }}
-              >
-                OK
-              </button>
-            </DialogClose>
+          <DialogDescription className="text-center flex flex-col justify-between items-center gap-4 md:gap-6 lg:gap-10 text-xs lg:text-base xl:text-2xl leading-normal overflow-y-auto ">
+            {isLoading ? (
+              <div className="flex flex-col items-center justify-center p-8 space-y-4">
+                <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+                <p className="text-gray-600">Loading results...</p>
+              </div>
+            ) : (
+              <>
+                <Image
+                  src={`${
+                    isWin
+                      ? "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179645/lady_ufh5ck.png"
+                      : "https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179645/loss-img_h1glol.png"
+                  }`}
+                  alt="Win"
+                  width={isMobile ? 100 : 150}
+                  height={isMobile ? 100 : 150}
+                />
+                <div
+                  className={`uppercase text-xl lg:text-3xl bg-gradient-to-b ${
+                    isWin
+                      ? "from-white to-[#0CC915]"
+                      : "from-white to-[#FF3E3E]"
+                  } bg-clip-text text-transparent slot-text-shadow mt-1`}
+                >
+                  {isWin ? (
+                    <p>You won {resultData?.amountWon?.toFixed(2)} INR</p>
+                  ) : (
+                    <p>You lost {resultData?.totalPlaced?.toFixed(2)} INR</p>
+                  )}
+                </div>
+                <DialogClose asChild>
+                  <button
+                    className="w-full py-2 text-white text-2xl lg:text-[40px] lg:max-w-[200px] max-w-[120px] leading-normal"
+                    style={{
+                      backgroundImage: `url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179642/btn-bg_dp0aeb.png')`,
+                      backgroundSize: "100% 100%",
+                      backgroundPosition: "center center",
+                      backgroundRepeat: "no-repeat",
+                    }}
+                  >
+                    OK
+                  </button>
+                </DialogClose>
+              </>
+            )}
           </DialogDescription>
         </div>
       </DialogContent>
