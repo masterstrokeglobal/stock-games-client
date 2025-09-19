@@ -44,10 +44,10 @@ const LastRoundsTable: React.FC<{ className?: string; tableClassName?: string }>
         <div className="w-full">
           {/* Table Header */}
           <div className="flex w-full text-white font-semibold text-xs md:text-base">
-            <div className="flex-1 px-3 py-2 whitespace-nowrap">Round ID</div>
-            <div className="flex-1 px-3 py-2 whitespace-nowrap">Date</div>
-            <div className="flex-1 px-3 py-2 whitespace-nowrap md:block hidden">Time</div>
-            <div className="flex-1 px-3 py-2 whitespace-nowrap">Winner</div>
+            <div className="flex-1 px-3 py-2 truncate">Round ID</div>
+            <div className="flex-1 px-3 py-2  truncate">Date</div>
+            <div className="flex-1 px-3 py-2  md:block hidden">Time</div>
+            <div className="flex-1 px-3 py-2 truncate">Winner</div>
           </div>
           {/* Table Body */}
           <ScrollArea className="h-[150px]" scrollThumbClassName="bg-[#366D51]">
@@ -73,16 +73,16 @@ const LastRoundsTable: React.FC<{ className?: string; tableClassName?: string }>
                      
                     )}
                   >
-                    <div className="flex-1 px-3 py-2 text-white font-medium">
+                    <div className="flex-1 px-3 py-2 text-white font-medium truncate">
                       {round.id}
                     </div>
-                    <div className="flex-1 px-3 py-2 text-white">
+                    <div className="flex-1 px-3 py-2 text-white truncate">
                       {dayjs(round.createdAt).format("DD/MM/YYYY")}
                     </div>
-                    <div className="flex-1 px-3 py-2 text-white md:block hidden">
+                    <div className="flex-1 px-3 py-2 text-white md:block hidden truncate">
                       {dayjs(round.createdAt).format("hh:mm A")}
                     </div>
-                    <div className="flex-1 px-3 py-2">
+                    <div className="flex-1 px-3 py-2 truncate">
                       {winnerConfig ? (
                         <span                          
                         >

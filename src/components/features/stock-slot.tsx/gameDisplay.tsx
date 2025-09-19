@@ -32,7 +32,7 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
   imgRef,
   // getBackgroundStyle,
 }) => {
-  const { isGameOver, placeTimeLeft } = useGameState(roundRecord);
+  const { isGameOver } = useGameState(roundRecord);
   const { data: myPlacementData } = useGetMySlotGamePlacement(roundRecord.id);
   const { showResults, previousRoundId } = useShowResults(
     roundRecord,
@@ -72,7 +72,6 @@ const GameDisplay: React.FC<GameDisplayProps> = ({
           key={String(showResults)}
           open={showResults}
           roundRecordId={previousRoundId}
-          placeTimeLeft={placeTimeLeft}
         />
       )}
     </>

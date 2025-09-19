@@ -122,7 +122,7 @@ const WheelOfFortune = () => {
         className="absolute left-0 top-0 w-full h-[calc(100svh-100px)] object-cover"
       />
       <div className="absolute bottom-0 left-0 h-[60vh] w-full bg-gradient-to-t from-[#000000] via-[#000000] via-[60%]  to-transparent" />
-      <div className="min-h-screen pt-20  px-4 max-w-[1560px] w-full mx-auto  text-white ">
+      <div className="min-h-screen pt-[72px]  px-4 max-w-[1560px] w-full mx-auto  text-white ">
         <div className="md:grid md:grid-cols-3  gap-4">
           <StockPriceDisplay
             className="md:col-span-2"
@@ -131,7 +131,7 @@ const WheelOfFortune = () => {
             setWheelHeight={setWheelHeight}
             wheelRef={wheelRef}
           />
-          <div className=" z-10 flex-1 gap-4 md:flex hidden flex-col col-span-1 w-full ">
+          <div className=" z-10 flex-1 gap-2 md:flex hidden flex-col col-span-1 w-full ">
             <div className="flex items-center gap-2 w-full justify-between">
               <header className="flex justify-end items-center w-full gap-4">
                 <Viewers />
@@ -147,7 +147,7 @@ const WheelOfFortune = () => {
                 </GameSettingsPopover>
               </header>
             </div>
-            <div className="flex flex-col gap-4 h-[500px]">
+            <div className="flex flex-col gap-2 h-full flex-1">
               <CurrentBets roundRecord={roundRecord} className="flex-1" />
               <LastRoundsTable className="flex-1" />
             </div>

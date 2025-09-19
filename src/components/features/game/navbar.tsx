@@ -37,9 +37,11 @@ const Navbar = ({ className }: Props) => {
         {isLoggedIn && <GameTimings />}
       </div>
       <div className="flex items-center space-x-4 ml-auto justify-end">
-        <Link href="/game/platform/favourites">
-          <Heart size={24} className={cn(pathname === "/game/platform/favourites" ? "text-white" : "text-white")} />
-        </Link>
+        {isLoggedIn && (
+          <Link href="/game/platform/favourites" className="text-xl">
+            💖
+          </Link>
+        )}
         <ThemeSwitcher className="md:flex hidden" />
         <MuteButton className="md:flex hidden border rounded-full platform-gradient header-inner-shadow  size-10  justify-center p-1" />
         <LocaleSwitcher className="md:block hidden " selectClassName="h-10" />
