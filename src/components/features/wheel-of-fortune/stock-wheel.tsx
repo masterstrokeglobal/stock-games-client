@@ -14,6 +14,7 @@ interface WheelOfFortuneProps {
   onSpinComplete?: () => void;
   setWheelHeight: (height: number) => void;
   wheelRef: React.RefObject<HTMLDivElement>;
+  roundRecordWithWinningId?: RoundRecord | null;
 }
 const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
   roundRecord,
@@ -24,6 +25,7 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
   onSpinComplete,
   setWheelHeight,
   wheelRef,
+  roundRecordWithWinningId,
 }) => {
   const [showResult, setShowResult] = useState(false);
   const [displayWinner, setDisplayWinner] = useState(false);
@@ -95,6 +97,7 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
           roundRecord={roundRecord}
           winningMarketId={winningMarketId}
           onSpinComplete={onSpinComplete}
+          roundRecordWithWinningId={roundRecordWithWinningId}
         />
       </div>
 

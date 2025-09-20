@@ -2,7 +2,6 @@
 import CategoryCarousel from "@/components/features/casino-games/category-carousel";
 import { CasinoProvidersCarousel } from "@/components/features/casino-games/game-providers";
 import GapGameCarousel from "@/components/features/casino-games/gap-game-carousel";
-import FavoriteGameCarousel from "@/components/features/favorite-games/favorite-game-carousel";
 import AdMarquee from "@/components/features/platform/ad-marquee";
 import CtaSection from "@/components/features/platform/cta-section";
 import WalletDialog from "@/components/features/platform/wallet-dialog";
@@ -12,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
 import useCasinoAllowed from "@/hooks/use-is-casino-allowed";
 import { isTawkEnabled, TAWK_PROPERTY_ID, TAWK_WIDGET_ID } from "@/lib/utils";
-import { GameTypeEnum, ProviderCompany } from "@/models/casino-games";
+import { GameTypeEnum } from "@/models/casino-games";
 import User from "@/models/user";
 import TawkMessengerReact from "@tawk.to/tawk-messenger-react";
 import { useTranslations } from "next-intl";
@@ -47,10 +46,7 @@ const PlatformPage = () => {
 
             <div className="sm:space-y-4">
                 {isLoggedIn && <ActiveTierCard className="my-1 md:my-2" />}
-
                 <StockGameCarousel />
-                {isLoggedIn && <FavoriteGameCarousel title="Favorite MAC88" providerCompany={ProviderCompany.GAP} />}
-                {isLoggedIn && <FavoriteGameCarousel title="Favorite Qtech" providerCompany={ProviderCompany.QTECH} />}
                 {isCasinoAllowed && (
                     <>
                         <GapGameCarousel title="Mac88 Games" />

@@ -15,12 +15,14 @@ export const StockPriceDisplay: React.FC<{
   winningMarketId: number[] | null;
   setWheelHeight: (height: number) => void;
   wheelRef: React.RefObject<HTMLDivElement>;
+  roundRecordWithWinningId?: RoundRecord | null;
 }> = ({
   roundRecord,
   winningMarketId,
   className,
   setWheelHeight,
   wheelRef,
+  roundRecordWithWinningId,
 }) => {
   const isPlaceOver = usePlacementOver(roundRecord);
   const { isMobile } = useWindowSize();
@@ -85,6 +87,7 @@ export const StockPriceDisplay: React.FC<{
           isSpinning={isSpinning}
           setWheelHeight={setWheelHeight}
           wheelRef={wheelRef}
+          roundRecordWithWinningId={roundRecordWithWinningId}
         />
       </div>
       {!isMobile && (

@@ -61,6 +61,7 @@ const WheelOfFortune = () => {
           setWheelHeight={setWheelHeight}
           wheelRef={wheelRef}
           className="w-full"
+          roundRecordWithWinningId={roundRecordWithWinningId}
         />
         <div
           style={{
@@ -130,6 +131,7 @@ const WheelOfFortune = () => {
             winningMarketId={winningMarketId}
             setWheelHeight={setWheelHeight}
             wheelRef={wheelRef}
+            roundRecordWithWinningId={roundRecordWithWinningId}
           />
           <div className=" z-10 flex-1 gap-2 md:flex hidden flex-col col-span-1 w-full ">
             <div className="flex items-center gap-2 w-full justify-between">

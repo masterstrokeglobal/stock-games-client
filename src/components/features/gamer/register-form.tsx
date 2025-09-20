@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+
 import FormInput from "@/components/ui/form/form-input";
 import FormPassword from "@/components/ui/form/form-password";
 import FormPhoneNumber from "@/components/ui/form/form-phone-input";
@@ -100,19 +100,18 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
     const { control, handleSubmit } = form;
 
     return (
-        <div className="w-full max-w-sm">
+        <div className="w-full max-w-sm h-full">
             <AuthTabs />
 
-            <FormProvider methods={form} onSubmit={handleSubmit(onSubmit)}>
-                <div className="grid grid-cols-1 gap-2">
+            <FormProvider className="" methods={form} onSubmit={handleSubmit(onSubmit)}>
+                <div className="grid grid-cols-1 gap-6">
                     {/* Name Field */}
                     <FormInput
                         control={control}
                         game
-                        className="text-white"
-                        inputClassName="!h-10"
+                        inputClassName="!text-[#747487] !bg-white !py-3"
                         name="name"
-                        label={t('label-full-name')}
+                        placeholder={t('label-full-name')}
                         required
                     />
                     {/* Username Field */}
@@ -120,8 +119,8 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         control={control}
                         game
                         name="username"
-                        inputClassName="!h-10"
-                        label={t('label-username')}
+                        inputClassName="!text-[#747487] !bg-white !py-3"
+                        placeholder={t('label-username')}
                         required
                     />
 
@@ -131,16 +130,16 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                                 control={control}
                                 name="email"
                                 game
-                                inputClassName="!h-10"
-                                label={t('label-phone')}
+                                inputClassName="!text-[#747487] !bg-white !py-3"
+                                placeholder={t('label-phone')}
                             />
                         ) : (
                             <FormInput
                                 control={control}
                                 game
                                 name="email"
-                                inputClassName="!h-10"
-                                label={t('label-email')}
+                                inputClassName="!text-[#747487] !bg-white !py-3"
+                                placeholder={t('label-email')}
                             />
                         )
                     }
@@ -150,8 +149,8 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         control={control}
                         game
                         name="referenceCode"
-                        inputClassName="!h-10"
-                        label={t('label-reference-code')}
+                        inputClassName="!text-[#747487] !bg-white !py-3"
+                        placeholder={t('label-reference-code')}
                     />
                     {/* Password Field */}
                     <FormPassword
@@ -159,8 +158,8 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         game
                         name="password"
                         type="password"
-                        inputClassName="!h-10"
-                        label={t('label-password')}
+                        inputClassName="!text-[#747487] !bg-white !py-3"
+                        placeholder={t('label-password')}
                         required
                     />
 
@@ -170,29 +169,21 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         control={control}
                         name="agreeToTerms"
                         label={t('label-terms-agreement')}
-                        className="mt-4 text-white"
+                        className="mt-4 text-[#747487] !border-black"
                     />
                     {/* </Link> */}
-                    {/* Age Confirmation Checkbox */}
-                    <FormCheckbox
-                        control={control}
-                        name="confirmAge"
-                        label={t('label-age-confirmation')}
-                        className="mt-2 text-white"
-                    />
                 </div>
 
-                <Button
+                <button
                     type="submit"
-                    variant="game"
-                    className="w-full mt-4"
+                    className="w-full mt-4 rounded-xl py-3 text-white border-none shadow-none bg-gradient-to-r from-[#142E93] to-[#070F47]"
                     disabled={isLoading}
                 >
                     {isLoading ? t('button-registering') : t('button-register')}
-                </Button>
+                </button>
             </FormProvider>
 
-            <div className="flex items-center my-2 justify-center gap-2 text-white text-sm">
+            <div className="flex items-center my-2 justify-center gap-2 text-[#747487] text-sm rounded-xl">
                 <Separator className="my-3 flex-1 bg-white/20" />
                 <span>{t('or')}</span>
                 <Separator className="my-3 flex-1 bg-white/20" />

@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -11,31 +10,31 @@ const AuthTabs = () => {
     
     return (
         <div className="w-full mb-6">
-            <div className=" w-full grid grid-cols-2 rounded-full bg-gray-800/50 p-1 border border-gray-700">
+            <div className=" w-full grid grid-cols-2 rounded-xl ">
                 <Link href="/game/auth/login" >
-                    <Button 
+                    <button 
                         className={cn(
-                            "w-full rounded-full text-sm font-medium transition-all",
+                            "w-full rounded-xl py-3 rounded-r-none text-sm font-medium transition-all border-2 border-transparent shadow-none",
                             isLogin ? 
-                                "bg-gradient-to-b from-[var(--bet-button-start)] via-[var(--bet-button-mid)] to-[var(--bet-button-end)] border border-[var(--bet-button-border)] text-white" : 
-                                "text-gray-300 hover:text-white bg-transparent"
+                                "bg-gradient-to-r from-[#142E93]  to-[#070F47] text-white" : 
+                                "text-[#040029] bg-transparent bg-white border-[#142E93]"
                         )}
                     >
                         {t("sign-in")}
-                    </Button>
+                    </button>
                 </Link>
                 <Link href="/game/auth/register">
-                    <Button 
+                    <button 
                         value="register" 
                         className={cn(
-                            "w-full rounded-full text-sm font-medium transition-all",
+                            "w-full rounded-xl py-3 rounded-l-none text-sm font-medium transition-all border-2 border-transparent shadow-none",
                             !isLogin ? 
-                                "bg-gradient-to-b from-[var(--bet-button-start)] via-[var(--bet-button-mid)] to-[var(--bet-button-end)] border border-[var(--bet-button-border)] text-white" : 
-                                "text-gray-300 hover:text-white bg-transparent"
+                                "bg-gradient-to-r from-[#142E93]  to-[#070F47] text-white" : 
+                                "text-[#040029] bg-transparent bg-white border-[#070F47] "
                         )}
                     >
                         {t("sign-up")}
-                    </Button>
+                    </button>
                 </Link>
             </div>
         </div>
