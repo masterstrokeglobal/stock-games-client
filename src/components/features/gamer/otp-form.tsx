@@ -35,10 +35,10 @@ const OTPForm = ({ defaultValues, onSubmit, isLoading, resendOTP }: Props) => {
     return (
         <div className="w-full max-w-sm">
             <header className="mb-10 text-center space-y-2">
-                <h1 className="text-3xl font-semibold text-white">
+                <h1 className="text-3xl font-semibold text-[#747487]">
                     {t('title')}
                 </h1>
-                <p className="text-[#F9F9F9B2]">
+                <p className="text-[#747487]">
                     {t('description')}
                 </p>
             </header>
@@ -58,7 +58,7 @@ const OTPForm = ({ defaultValues, onSubmit, isLoading, resendOTP }: Props) => {
                             {[0, 1, 2, 3].map((index) => (
                                 <InputOTPSlot
                                     key={index}
-                                    className="md:w-16 md:h-16 w-12 h-12 rounded-lg bg-input-background !text-input-field border-[#EFF8FF17] text-2xl focus:border-[#55B0FF] focus:ring-[#55B0FF] focus:ring-opacity-50"
+                                    className="md:w-16 md:h-16 w-12 h-12 rounded-lg border !text-input-field !border-black text-2xl focus:border-[#55B0FF] focus:ring-[#55B0FF] shadow-none focus:ring-opacity-50"
                                     index={index}
                                 />
                             ))}
@@ -76,7 +76,7 @@ const OTPForm = ({ defaultValues, onSubmit, isLoading, resendOTP }: Props) => {
                         type="submit"
                         size="lg"
                         variant="game"
-                        className="w-full mt-8"
+                        className="w-full mt-8 !rounded-xl"
                         disabled={isLoading}
                     >
                         {isLoading ? t('buttons.verifying') : t('buttons.verify')}
@@ -88,7 +88,7 @@ const OTPForm = ({ defaultValues, onSubmit, isLoading, resendOTP }: Props) => {
                 variant="ghost" 
                 onClick={resendOTP} 
                 disabled={isLoading}
-                className="w-full mt-8 text-white hover:bg-white/10 hover:text-white"
+                className="w-full mt-8 text-[#747487] hover:bg-white/10 hover:text-[#747487]"
             >
                 {t('buttons.resend')}
             </Button>

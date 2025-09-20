@@ -45,10 +45,10 @@ const ResetPasswordForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
     return (
         <div className="w-full max-w-sm">
             <div className="space-y-2 md:text-center mb-10">
-                <h1 className="text-3xl font-semibold text-white">
+                <h1 className="text-3xl font-semibold text-[#747487]">
                     {t('title')}
                 </h1>
-                <p className="text-sm text-[#F9F9F9B2]">
+                <p className="text-sm text-[#747487]">
                     {t('description')}
                 </p>
             </div>

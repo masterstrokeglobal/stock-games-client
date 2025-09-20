@@ -28,7 +28,7 @@ const buttonVariants = cva(
         "platform-outline": "border dark:border-platform-border border-primary-game dark:text-white text-[#142553] !rounded-none",
         "platform-gradient": "bg-[linear-gradient(90deg,#040029_0%,#4467CC_50%,#040029_100%)] text-white justify-start border border-[#]",
         "platform-gradient-secondary": "w-full text-platform-text bg-gradient-to-r dark:from-[#3B4BFF] dark:to-[#262BB5] from-[#64B6FD] to-[#466CCF] rounded-md font-semibold text-lg py-3 border-2 dark:border-platform-border border-primary-game hover:from-[#4B5BFF] hover:to-[#3B3BC5] transition-all",
-        game: "bg-gradient-to-b from-[var(--bet-button-start)] via-[var(--bet-button-mid)] to-[var(--bet-button-end)] border border-[var(--bet-button-border)] text-white h-14"
+        game: "bg-gradient-to-r from-[#142E93] to-[#070F47] text-white h-16"
       },
       size: {
         default: "h-9 px-4 py-2",

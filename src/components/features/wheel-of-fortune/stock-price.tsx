@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import GameSettingsPopover from "./game-menu";
 import StockWheel from "./stock-wheel";
 import { useWindowSize } from "@/hooks/use-window-size";
+import { RankedMarketItem } from "@/hooks/use-leadboard";
 
 export const StockPriceDisplay: React.FC<{
   roundRecord: RoundRecord;
@@ -15,12 +16,16 @@ export const StockPriceDisplay: React.FC<{
   winningMarketId: number[] | null;
   setWheelHeight: (height: number) => void;
   wheelRef: React.RefObject<HTMLDivElement>;
+  roundRecordWithWinningId?: RoundRecord | null;
+  leaderboardStocks?: RankedMarketItem[];
 }> = ({
   roundRecord,
   winningMarketId,
   className,
   setWheelHeight,
   wheelRef,
+  roundRecordWithWinningId,
+  leaderboardStocks,
 }) => {
   const isPlaceOver = usePlacementOver(roundRecord);
   const { isMobile } = useWindowSize();
@@ -85,6 +90,8 @@ export const StockPriceDisplay: React.FC<{
           isSpinning={isSpinning}
           setWheelHeight={setWheelHeight}
           wheelRef={wheelRef}
+          roundRecordWithWinningId={roundRecordWithWinningId}
+          leaderboardStocks={leaderboardStocks}
         />
       </div>
       {!isMobile && (

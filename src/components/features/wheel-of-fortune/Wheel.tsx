@@ -10,12 +10,15 @@ import { WheelColor } from "@/models/wheel-of-fortune-placement";
 import { getStockName } from "@/components/common/StockName";
 import { gsap } from "gsap";
 import { useWindowSize } from "@/hooks/use-window-size";
+import { RankedMarketItem } from "@/hooks/use-leadboard";
 
 interface WheelProps {
   isSpinning: boolean;
   roundRecord?: RoundRecord;
   winningMarketId: number[] | null;
   onSpinComplete?: () => void;
+  roundRecordWithWinningId?: RoundRecord | null;
+  leaderboardStocks?: RankedMarketItem[];
 }
 
 export const Wheel: React.FC<WheelProps> = ({
@@ -23,6 +26,8 @@ export const Wheel: React.FC<WheelProps> = ({
   roundRecord,
   winningMarketId,
   onSpinComplete,
+  roundRecordWithWinningId,
+  leaderboardStocks = [],
 }) => {
   const wheelRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,8 +54,34 @@ export const Wheel: React.FC<WheelProps> = ({
     return reorderedStocks;
   }, [roundRecord]);
 
+  // Create market items with performance data similar to game-board.tsx
+  const marketItemsStocks = useMemo(() => {
+    const marketItems = roundRecord?.market || [];
+    return marketItems
+      .map((item) => {
+        const stock = roundRecordWithWinningId?.finalPricesPresent
+          ? roundRecordWithWinningId.sortedMarketItems?.find(
+              (stock) => stock.id === item.id
+            )
+          : leaderboardStocks.find((stock) => stock.id === item.id);
+        return stock;
+      })
+      .filter((stock): stock is RankedMarketItem => stock !== undefined);
+  }, [roundRecord, leaderboardStocks, roundRecordWithWinningId]);
+
+  // Calculate the top performing stock (highest change_percent)
+  const topPerformingStock = useMemo(() => {
+    if (marketItemsStocks.length === 0) return null;
+    return marketItemsStocks.sort(
+      (a, b) =>
+        (b?.change_percent == undefined ? -100 : parseFloat(b?.change_percent)) -
+        (a?.change_percent == undefined ? -100 : parseFloat(a?.change_percent))
+    )[0];
+  }, [marketItemsStocks]);
+
   const calculateTargetRotation = useCallback((winningId: number): number => {
     const marketIndex = stocks.findIndex((market) => market.id === winningId);
+    // const marketIndex = 20
     if (marketIndex === -1) return 0;
 
     const totalMarkets = stocks.length;
@@ -183,6 +214,17 @@ export const Wheel: React.FC<WheelProps> = ({
             const colorConfig =
               WHEEL_COLOR_CONFIG[assignedColor || WheelColor.COLOR1];
             const segmentAngle = 360 / stocks.length;
+            
+            // Calculate isWinner based on winningMarketId or top performing stock
+            const isWinner = (() => {
+              // If we have a winning market ID, check if current stock matches
+              if (winningMarketId && winningMarketId.length > 0) {
+                return stock.id === winningMarketId[0];
+              }
+              
+              // Otherwise, check if this is the top performing stock
+              return isSpinning && topPerformingStock && stock.id === topPerformingStock.id;
+            })()
 
             return (
               <>
@@ -199,10 +241,11 @@ export const Wheel: React.FC<WheelProps> = ({
                     clipPath: "polygon(0 0, 50% 100%, 100% 0)",
                     transformOrigin: "center bottom",
                   }}
-                  className="absolute top-0 flex justify-center overflow-hidden z-10 md:rounded-[8px]"
+                  className={`absolute top-0 flex justify-center overflow-hidden z-10 md:rounded-[8px] transition-all duration-300
+                    ${isWinner ? "animate-pulse" : ""}`}
                 >
                   <p className="stock-name absolute text-white text-xs font-medium tracking-wider -rotate-90 bottom-[50%] z-10 outline-none whitespace-nowrap w-full truncate md:overflow-visible">
-                    {getStockName(stock.name ?? "", stock.codeName ?? "")}
+                  {getStockName(stock.name ?? "", stock.codeName ?? "")}
                   </p>
                 </div>
                 <div

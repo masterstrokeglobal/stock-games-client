@@ -66,11 +66,11 @@ const ForgotPasswordEmailForm: React.FC<Props> = ({
 
     return (
         <div className="w-full max-w-sm">
-            <h1 className="text-3xl text-center mb-10 font-semibold text-white">
+            <h1 className="text-3xl text-center mb-10 font-semibold text-[#747487]">
                 {t('title')}
             </h1>
 
-            <p className="text-center text-white/70 mb-6">
+            <p className="text-center text-[#747487] mb-6">
                 {t('description')}
             </p>
 
@@ -83,6 +83,8 @@ const ForgotPasswordEmailForm: React.FC<Props> = ({
                     control={control}
                     game
                     name="email"
+                    placeholder={company?.otpIntegration ? t('email-phone.label') : t('email.label')}
+                    inputClassName="!text-[#747487] !bg-white !border-[#747487] !border"
                     label={company?.otpIntegration ? t('email-phone.label') : t('email.label')}
                 />
 
@@ -90,7 +92,7 @@ const ForgotPasswordEmailForm: React.FC<Props> = ({
                     type="submit"
                     size="lg"
                     variant="game"
-                    className="w-full mt-6"
+                    className="w-full mt-6 rounded-xl py-3 text-white border-none shadow-none bg-gradient-to-r from-[#142E93] to-[#070F47]"
                     disabled={isLoading}
                 >
                     {isLoading ? t('button.sending') : t('button.sendCode')}

@@ -4,6 +4,7 @@ import { RoundRecord, WHEEL_COLOR_CONFIG } from "@/models/round-record";
 import React, { useEffect, useMemo, useState } from "react";
 // import { WheelCanvas } from "./wheel-canvas";
 import { Wheel } from "./Wheel";
+import { RankedMarketItem } from "@/hooks/use-leadboard";
 
 interface WheelOfFortuneProps {
   className?: string;
@@ -14,6 +15,8 @@ interface WheelOfFortuneProps {
   onSpinComplete?: () => void;
   setWheelHeight: (height: number) => void;
   wheelRef: React.RefObject<HTMLDivElement>;
+  roundRecordWithWinningId?: RoundRecord | null;
+  leaderboardStocks?: RankedMarketItem[];
 }
 const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
   roundRecord,
@@ -24,6 +27,8 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
   onSpinComplete,
   setWheelHeight,
   wheelRef,
+  roundRecordWithWinningId,
+  leaderboardStocks,
 }) => {
   const [showResult, setShowResult] = useState(false);
   const [displayWinner, setDisplayWinner] = useState(false);
@@ -95,6 +100,8 @@ const WheelOfFortune: React.FC<WheelOfFortuneProps> = ({
           roundRecord={roundRecord}
           winningMarketId={winningMarketId}
           onSpinComplete={onSpinComplete}
+          roundRecordWithWinningId={roundRecordWithWinningId}
+          leaderboardStocks={leaderboardStocks}
         />
       </div>
 

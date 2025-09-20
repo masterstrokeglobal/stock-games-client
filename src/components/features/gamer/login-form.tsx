@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import FormInput from "@/components/ui/form/form-input";
 import FormPassword from "@/components/ui/form/form-password";
 import FormProvider from "@/components/ui/form/form-provider";
@@ -70,6 +69,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
             control={control}
             game
             name="username"
+            inputClassName="!text-[#747487] !bg-white"
             label={t("labels.username-email")}
             required
           />
@@ -79,13 +79,14 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
               control={control}
               game
               name="password"
+              inputClassName="!text-[#747487] !bg-white"
               type="password"
               label={t("labels.password")}
               required
             />
             <Link
               href="/game/auth/forgot-password"
-              className="text-white text-xs text-end block"
+              className="text-[#747487] text-xs text-end block"
             >
               {t("links.forgot-password")}
             </Link>
@@ -93,40 +94,37 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
 
           {/* CAPTCHA - Improved Version */}
           {isCaptchaLoading ? (
-            <p className="text-white text-sm">{t("common.loading")}</p>
+            <p className="text-[#747487] text-sm">{t("common.loading")}</p>
           ) : captchaSvg ? (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <p className="text-white text-sm font-medium">{t("labels.captcha")}</p>
-
+                <p className="text-[#747487] text-sm font-medium">{t("labels.captcha")}</p>
               </div>
               <div className="flex flex-row gap-3">
                 <div
-                  className="border border-secondary-game rounded bg-gray-900 [&>svg]:w-full [&>svg]:h-full h-10  w-full mx-auto sm:mx-0"
+                  className="border border-secondary-game rounded-xl bg-white border-[#747487] [&>svg]:w-full [&>svg]:h-full h-10  w-full mx-auto sm:mx-0"
                   dangerouslySetInnerHTML={{ __html: captchaSvg }}
                 />
-                <span className="text-white text-sm font-medium flex items-center justify-center">
+                <span className="text-[#747487] text-sm font-medium flex items-center justify-center">
                   =
                 </span>
                 <FormInput
                   control={control}
                   name="answer"
-                  className="text-white flex-grow"
-                  inputClassName="h-10"
+                  className="text-[#747487] flex-grow font-semibold"
+                  inputClassName="h-10 text-[#747487] bg-white rounded-xl"
                   required
                   placeholder={t("labels.captcha")}
                 />
 
-                <Button
+                <button
                   type="button"
                   title={t("refresh-captcha")}
-                  variant="secondary"
-                  size="icon"
-                  className="text-sm hover:bg-gray-700"
+                  className="text-sm bg-white text-[#747487]"
                   onClick={handleRefreshCaptcha}
                 >
                   <RefreshCcwIcon className="w-4 h-4" />
-                </Button>
+                </button>
               </div>
               {captchaError && (
                 <p className="text-red-500 text-xs">{captchaError}</p>
@@ -135,20 +133,19 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
           ) : null}
         </div>
 
-        <Button
+        <button
           type="submit"
-          variant="game"
-          className="w-full mt-6"
+          className="w-full mt-6 rounded-xl py-3 text-white border-none shadow-none bg-gradient-to-r from-[#142E93] to-[#070F47]"
           disabled={isLoading}
         >
           {isLoading ? t("buttons.signing-in") : t("buttons.sign-in")}
-        </Button>
+        </button>
       </FormProvider>
 
-      <div className="flex items-center my-2 justify-center gap-2 text-white text-sm">
-        <Separator className="my-3 flex-1 bg-white/20" />
-        <span>{t("common.or")}</span>
-        <Separator className="my-3 flex-1 bg-white/20" />
+      <div className="flex items-center my-2 justify-center gap-2 text-[#747487] uppercase text-sm">
+        <Separator className="my-3 flex-1 bg-black" />
+        <span className="text-[#040029]">{t("common.or")}</span>
+        <Separator className="my-3 flex-1 bg-black" />
       </div>
 
       <div className="flex gap-2 md:flex-row flex-col">
