@@ -32,5 +32,15 @@ export const companyApiDetailsAPI = {
     // Delete a company api details by ID
     deleteCompanyApiDetailsById: async (id: number) => {
         return api.delete(`/company-api-details/${id}`);
-    }
+    },
+
+    // Superadmin: update allowed games for a company
+    updateAllowedGames: async (companyId: string, payload: { allowedGames: string[] | ["all"] }) => {
+        return api.put(`/superadmin/company-api-details/${companyId}/allowed-games`, payload);
+    },
+
+    // Superadmin: update game thumbnails map for a company
+    updateGameThumbnails: async (companyId: string, payload: { gameThumbnails: Record<string, string> }) => {
+        return api.put(`/superadmin/company-api-details/${companyId}/game-thumbnails`, payload);
+    },
 };

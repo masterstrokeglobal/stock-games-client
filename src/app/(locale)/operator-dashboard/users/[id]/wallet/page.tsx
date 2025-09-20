@@ -8,6 +8,14 @@ import { useParams, useRouter } from "next/navigation";
 import { useGetUserWallet } from "@/react-query/user-queries";
 import { RefreshCw, Wallet } from "lucide-react";
 import { useMemo } from "react";
+import FormProvider from "@/components/ui/form/form-provider";
+import FormInput from "@/components/ui/form/form-input";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAgentDepositToUser, useGetCurrentOperator, useMasterDepositToUser, useRedeemFromUser } from "@/react-query/operator-queries";
+import { OperatorRole } from "@/models/operator";
+import { toast } from "sonner";
 
 const OperatorUserWalletPage = () => {
   const params = useParams<{ id: string }>();
@@ -15,6 +23,10 @@ const OperatorUserWalletPage = () => {
   const userId = params.id?.toString();
 
   const { data, isLoading, refetch, isRefetching } = useGetUserWallet(userId);
+  const { data: currentOperator } = useGetCurrentOperator();
+  const { mutateAsync: agentDepositToUser, isPending: isAgentRechargePending } = useAgentDepositToUser();
+  const { mutateAsync: masterDepositToUser, isPending: isMasterRechargePending } = useMasterDepositToUser();
+  const { mutateAsync: redeemFromUser, isPending: isWithdrawPending } = useRedeemFromUser();
 
   const wallet = useMemo(() => {
     // API returns axios response; unwrap common shapes
@@ -67,11 +79,100 @@ const OperatorUserWalletPage = () => {
             </div>
           </CardContent>
         </Card>
+
+        {(currentOperator?.role === OperatorRole.MASTER || currentOperator?.role === OperatorRole.DUPER_MASTER || currentOperator?.role === OperatorRole.SUPER_DUPER_MASTER) && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Recharge User</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <RechargeForm
+                onSubmit={async (amount) => {
+                  try {
+                    if (currentOperator?.role === OperatorRole.AGENT) {
+                      await agentDepositToUser({ userId, amount });
+                    } else {
+                      await masterDepositToUser({ userId, amount });
+                    }
+                    toast.success("Recharge successful");
+                    refetch();
+                  } catch (e: any) {
+                    toast.error(e?.response?.data?.message || "Recharge failed");
+                  }
+                }}
+                isLoading={isAgentRechargePending || isMasterRechargePending}
+              />
+            </CardContent>
+          </Card>
+        )}
+
+        {(currentOperator?.role === OperatorRole.MASTER || currentOperator?.role === OperatorRole.DUPER_MASTER || currentOperator?.role === OperatorRole.SUPER_DUPER_MASTER) && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Withdraw for User</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <WithdrawForm
+                onSubmit={async (amount) => {
+                  try {
+                    await redeemFromUser({ userId, amount });
+                    toast.success("Withdrawal successful");
+                    refetch();
+                  } catch (e: any) {
+                    toast.error(e?.response?.data?.message || "Withdrawal failed");
+                  }
+                }}
+                isLoading={isWithdrawPending}
+              />
+            </CardContent>
+          </Card>
+        )}
       </main>
     </section>
   );
 };
 
 export default OperatorUserWalletPage;
+
+// Recharge form
+const rechargeSchema = z.object({ amount: z.coerce.number().positive("Enter a valid amount") });
+const RechargeForm = ({ onSubmit, isLoading }: { onSubmit: (amount: number) => Promise<void> | void, isLoading?: boolean }) => {
+  const form = useForm<{ amount: number }>({ resolver: zodResolver(rechargeSchema), defaultValues: { amount: 0 } });
+  const { control, handleSubmit, reset } = form;
+
+  const submit = async (values: { amount: number }) => {
+    await onSubmit(values.amount);
+    reset({ amount: 0 });
+  };
+
+  return (
+    <FormProvider methods={form} onSubmit={handleSubmit(submit)} className="space-y-4">
+      <FormInput control={control} name="amount" label="Amount" type="number" placeholder="Enter amount" />
+      <div className="flex justify-end">
+        <Button type="submit" disabled={isLoading}>{isLoading ? "Processing..." : "Recharge"}</Button>
+      </div>
+    </FormProvider>
+  );
+};
+
+const withdrawSchema = z.object({ amount: z.coerce.number().positive("Enter a valid amount") });
+const WithdrawForm = ({ onSubmit, isLoading }: { onSubmit: (amount: number) => Promise<void> | void, isLoading?: boolean }) => {
+  const form = useForm<{ amount: number }>({ resolver: zodResolver(withdrawSchema), defaultValues: { amount: 0 } });
+  const { control, handleSubmit, reset } = form;
+
+  const submit = async (values: { amount: number }) => {
+    await onSubmit(values.amount);
+    reset({ amount: 0 });
+  };
+
+  return (
+    <FormProvider methods={form} onSubmit={handleSubmit(submit)} className="space-y-4">
+      <FormInput control={control} name="amount" label="Amount" type="number" placeholder="Enter amount" />
+      <div className="flex justify-end">
+        <Button type="submit" disabled={isLoading}>{isLoading ? "Processing..." : "Withdraw"}</Button>
+      </div>
+    </FormProvider>
+  );
+};
 
 

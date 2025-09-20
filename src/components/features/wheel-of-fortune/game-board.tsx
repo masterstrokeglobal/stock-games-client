@@ -1,5 +1,5 @@
 import { getStockName } from "@/components/common/StockName";
-import { RankedMarketItem, useLeaderboard } from "@/hooks/use-leadboard";
+import { RankedMarketItem } from "@/hooks/use-leadboard";
 import { cn, INR } from "@/lib/utils";
 import { RoundRecord, WHEEL_COLOR_CONFIG } from "@/models/round-record";
 import { WheelColor } from "@/models/wheel-of-fortune-placement";
@@ -19,6 +19,7 @@ type Props = {
   className?: string;
   children?: React.ReactNode;
   roundRecordWithWinningId: RoundRecord | null;
+  leaderboardStocks?: RankedMarketItem[];
 };
 
 export const colorConfig: {
@@ -71,8 +72,8 @@ export default function WheelOfFortuneGameBoard({
   className,
   children,
   roundRecordWithWinningId,
+  leaderboardStocks = [],
 }: Props) {
-  const { stocks } = useLeaderboard(roundRecord);
   const { mutate: createWheelPlacement, isPending } =
     useCreateWheelOfFortunePlacement();
   const { data: placements } = useGetMyCurrentRoundWheelOfFortunePlacement(
@@ -89,11 +90,11 @@ export default function WheelOfFortuneGameBoard({
           ? roundRecordWithWinningId.sortedMarketItems?.find(
               (stock) => stock.id === item.id
             )
-          : stocks.find((stock) => stock.id === item.id);
+          : leaderboardStocks.find((stock) => stock.id === item.id);
         return stock;
       })
       .filter((stock): stock is RankedMarketItem => stock !== undefined);
-  }, [roundRecord, stocks, roundRecordWithWinningId]);
+  }, [roundRecord, leaderboardStocks, roundRecordWithWinningId]);
 
   const handleColorClick = (color: WheelColor) => {
     if (isPending) return;

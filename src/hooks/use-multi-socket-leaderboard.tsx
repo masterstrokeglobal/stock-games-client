@@ -49,6 +49,11 @@ export const parseCOMEXMessage = (data: any): { [key: string]: number } => {
         }
 
         const fullSymbol = contractData[0];
+        
+        // Ignore GCEG26 symbols
+        if (fullSymbol.startsWith("GCEG26")) {
+            continue;
+        }
         const symbolMatch = fullSymbol.match(
             /^([A-Z]{2,4})([FGHJKMNQUVXZ])([0-9]{2})$/
         );

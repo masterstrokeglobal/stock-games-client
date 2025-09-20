@@ -16,6 +16,7 @@ import { useWindowSize } from "@/hooks/use-window-size";
 import { useCurrentGame, useGameState } from "@/hooks/use-current-game";
 import { useMarketSelector } from "@/hooks/use-market-selector";
 import useWinningId from "@/hooks/use-winning-id";
+import { useLeaderboard } from "@/hooks/use-leadboard";
 import { RoundRecordGameType } from "@/models/round-record";
 import { MenuIcon } from "lucide-react";
 import { useState, useRef } from "react";
@@ -34,6 +35,9 @@ const WheelOfFortune = () => {
 
   const roundRecordWithWinningId = useWinningId(roundRecord,0);
   const winningMarketId = roundRecordWithWinningId?.winningId || null;
+  
+  // Get leaderboard data once at the parent level
+  const { stocks: leaderboardStocks } = useLeaderboard(roundRecord);
   if (!marketSelected)
     return <MarketSelector title="Wheel of Fortune Market" />;
 
@@ -62,6 +66,7 @@ const WheelOfFortune = () => {
           wheelRef={wheelRef}
           className="w-full"
           roundRecordWithWinningId={roundRecordWithWinningId}
+          leaderboardStocks={leaderboardStocks}
         />
         <div
           style={{
@@ -87,6 +92,7 @@ const WheelOfFortune = () => {
                 roundRecord={roundRecord}
                 amount={betAmount}
                 roundRecordWithWinningId={roundRecordWithWinningId}
+                leaderboardStocks={leaderboardStocks}
               />
             </>
           ) : (
@@ -96,6 +102,7 @@ const WheelOfFortune = () => {
                 roundRecord={roundRecord}
                 amount={betAmount}
                 roundRecordWithWinningId={roundRecordWithWinningId}
+                leaderboardStocks={leaderboardStocks}
               />
               <BettingArea
                 className="w-full"
@@ -132,6 +139,7 @@ const WheelOfFortune = () => {
             setWheelHeight={setWheelHeight}
             wheelRef={wheelRef}
             roundRecordWithWinningId={roundRecordWithWinningId}
+            leaderboardStocks={leaderboardStocks}
           />
           <div className=" z-10 flex-1 gap-2 md:flex hidden flex-col col-span-1 w-full ">
             <div className="flex items-center gap-2 w-full justify-between">
@@ -161,6 +169,7 @@ const WheelOfFortune = () => {
               roundRecord={roundRecord}
               amount={betAmount}
               roundRecordWithWinningId={roundRecordWithWinningId}
+              leaderboardStocks={leaderboardStocks}
             />
             <BettingArea
               className="w-60"

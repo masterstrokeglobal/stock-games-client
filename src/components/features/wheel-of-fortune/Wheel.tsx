@@ -10,7 +10,7 @@ import { WheelColor } from "@/models/wheel-of-fortune-placement";
 import { getStockName } from "@/components/common/StockName";
 import { gsap } from "gsap";
 import { useWindowSize } from "@/hooks/use-window-size";
-import { RankedMarketItem, useLeaderboard } from "@/hooks/use-leadboard";
+import { RankedMarketItem } from "@/hooks/use-leadboard";
 
 interface WheelProps {
   isSpinning: boolean;
@@ -18,6 +18,7 @@ interface WheelProps {
   winningMarketId: number[] | null;
   onSpinComplete?: () => void;
   roundRecordWithWinningId?: RoundRecord | null;
+  leaderboardStocks?: RankedMarketItem[];
 }
 
 export const Wheel: React.FC<WheelProps> = ({
@@ -26,6 +27,7 @@ export const Wheel: React.FC<WheelProps> = ({
   winningMarketId,
   onSpinComplete,
   roundRecordWithWinningId,
+  leaderboardStocks = [],
 }) => {
   const wheelRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,9 +35,6 @@ export const Wheel: React.FC<WheelProps> = ({
   const [wheelState, setWheelState] = useState<'idle' | 'spinning' | 'stopped'>('idle');
   const spinTweenRef = useRef<any>(null);
   const { isMobileSmall } = useWindowSize();
-  
-  // Get stocks with performance data
-  const { stocks: leaderboardStocks } = useLeaderboard(roundRecord || null);
 
   const stocks: MarketItem[] = useMemo(() => {
     const originalMarkets = roundRecord?.market || [];

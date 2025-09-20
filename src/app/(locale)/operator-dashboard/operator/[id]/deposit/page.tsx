@@ -3,6 +3,7 @@
 import DepositOperatorForm, { DepositOperatorFormValues } from "@/components/features/operator/deposit-form";
 import OperatorInfoCard from "@/components/features/operator/operator-info-card";
 import { useDepositOperatorWallet, useGetCurrentOperator, useGetOperatorById } from "@/react-query/operator-queries";
+import { OperatorRole } from "@/models/operator";
 // import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
@@ -23,9 +24,10 @@ export default function DepositPage() {
             });
             toast.success("Deposit successful");
             // router.refresh(); // uncomment if you want to refresh data without leaving the page
-        } catch (error) {
+        } catch (error: any) {
             console.error("Failed to deposit:", error);
-            toast.error("Failed to deposit. Please try again.");
+            const message = error?.response?.data?.message || "Failed to deposit. Please try again.";
+            toast.error(message);
         }
     };
 
@@ -39,6 +41,18 @@ export default function DepositPage() {
                         <div className="h-32 bg-gray-200 rounded mb-6"></div>
                         <div className="h-64 bg-gray-200 rounded"></div>
                     </div>
+                </div>
+            </div>
+        );
+    }
+
+    // UI guard: Agents cannot access deposit capability
+    if (currentOperator && currentOperator.role === OperatorRole.AGENT) {
+        return (
+            <div className="container mx-auto py-8">
+                <div className="max-w-2xl mx-auto">
+                    <h1 className="text-2xl font-semibold">Unauthorized</h1>
+                    <p className="text-gray-600 mt-2">Only Master and above can deposit to an operator wallet.</p>
                 </div>
             </div>
         );

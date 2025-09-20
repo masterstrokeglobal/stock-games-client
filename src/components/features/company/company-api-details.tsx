@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -112,7 +112,7 @@ const CompanyApiDetailsManager = ({ companyId }: Props) => {
             apiKey: apiDetails.apiKey,
             baseUrl: apiDetails.baseUrl,
             allowedIps: apiDetails.allowedIps,
-            allowedGames: apiDetails.allowedGames.map(game => ({ value: game })),
+            allowedGames: apiDetails.allowedGames.map((game: any) => ({ value: game })),
         };
     };
 
@@ -266,7 +266,7 @@ const CompanyApiDetailsManager = ({ companyId }: Props) => {
                                 <div>
                                     <label className="text-sm font-medium text-muted-foreground">Allowed IPs</label>
                                     <div className="flex flex-wrap gap-2 mt-1">
-                                        {apiDetails.allowedIps.map((ip, index) => (
+                                        {apiDetails.allowedIps.map((ip: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, index: Key | null | undefined) => (
                                             <span key={index} className="px-2 py-1 bg-secondary text-secondary-foreground rounded text-xs">
                                                 {ip}
                                             </span>
@@ -276,7 +276,7 @@ const CompanyApiDetailsManager = ({ companyId }: Props) => {
                                 <div>
                                     <label className="text-sm font-medium text-muted-foreground">Allowed Games</label>
                                     <div className="flex flex-wrap gap-2 mt-1">
-                                        {apiDetails.allowedGames.map((game, index) => (
+                                        {apiDetails.allowedGames.map((game: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, index: Key | null | undefined) => (
                                             <span key={index} className="px-2 py-1 bg-primary/10 text-primary rounded text-xs">
                                                 {game}
                                             </span>

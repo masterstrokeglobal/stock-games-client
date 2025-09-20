@@ -1,4 +1,5 @@
 import { operatorAPI, OperatorIndividualReportFilter } from "@/lib/axios/operator-API";
+import { userAPI } from "@/lib/axios/user-API";
 import Operator from "@/models/operator";
 import { Transaction } from "@/models/transaction";
 import User from "@/models/user";
@@ -57,50 +58,90 @@ export const useDepositOperatorWallet = () => {
     });
 };
 
-// Create user (by operator agent) - Direct signup API call using fetch
+// Deposit to a user's wallet by operator (Agent/Master and above)
+export const useAgentDepositToUser = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: operatorAPI.agentDepositToUser,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "operator-users" || query.queryKey[0] === "user-wallet" || query.queryKey[0] === "operator-wallet-transactions",
+            });
+            toast.success("Recharge successful");
+        },
+        onError: (error: any) => {
+            const message = error?.response?.data?.message ?? "Error processing recharge";
+            toast.error(message);
+        },
+    });
+};
+
+export const useMasterDepositToUser = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: operatorAPI.masterDepositToUser,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "operator-users" || query.queryKey[0] === "user-wallet" || query.queryKey[0] === "operator-wallet-transactions",
+            });
+            toast.success("Recharge successful");
+        },
+        onError: (error: any) => {
+            const message = error?.response?.data?.message ?? "Error processing recharge";
+            toast.error(message);
+        },
+    });
+};
+
+// Redeem (withdraw) from a user's wallet by operator
+export const useRedeemFromUser = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: operatorAPI.redeemFromUser,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => query.queryKey[0] === "operator-users" || query.queryKey[0] === "user-wallet" || query.queryKey[0] === "operator-wallet-transactions",
+            });
+            toast.success("Withdrawal successful");
+        },
+        onError: (error: any) => {
+            const message = error?.response?.data?.message ?? "Error processing withdrawal";
+            toast.error(message);
+        },
+    });
+};
+
+// Create user (by operator) - uses standard /user endpoint like platform
 export const useCreateUser = () => {
     const queryClient = useQueryClient();
 
-    // Get current operator for company info
-    const { data: currentOperator } = useGetCurrentOperator();
-
-    const createUser = async (formData: any) => {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json' 
-            },
-            credentials: 'include', // Include cookies for authentication
-            body: JSON.stringify({
+    return useMutation({
+        mutationFn: async (formData: any) => {
+            const user = new User({
                 firstname: formData.firstname,
                 lastname: formData.lastname,
                 username: formData.username,
                 password: formData.password,
-                company: currentOperator?.company?.id
-            })
-        });
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Error creating user');
-        }
-        
-        return response.json();
-    };
-
-    return useMutation({
-        mutationFn: createUser,
-        onSuccess: (newUser) => {
+                externalUser: false,
+                depositBonusPercentage: 0,
+                placementNotAllowed: [],
+                demoUser: false,
+            });
+            const response = await userAPI.createUser(user);
+            return response.data;
+        },
+        onSuccess: () => {
             queryClient.invalidateQueries({
-                predicate: (query) => {
-                    return query.queryKey[0] === "users";
-                },
+                predicate: (query) => query.queryKey[0] === "operator-users" || query.queryKey[0] === "users",
             });
             toast.success("User created successfully");
-            console.log('User created successfully:', newUser);
         },
         onError: (error: any) => {
-            toast.error(error.message ?? "Error creating user");
+            const message = error?.response?.data?.message || "Error creating user";
+            toast.error(message);
             console.error('Error creating user:', error);
         },
     });
@@ -341,6 +382,29 @@ export const useGetCompanyProfitDistribution = (filter: { startDate?: Date, endD
         queryKey: ["company-profit-distribution", filter],
         queryFn: async () => {
             const response = await operatorAPI.getCompanyProfitDistribution(filter);
+            return response.data;
+        },
+        enabled: options?.enabled ?? true,
+    });
+};
+
+// Pool P/L hooks
+export const useGetUserPoolPL = (filter: { userId: number, startDate?: Date, endDate?: Date }) => {
+    return useQuery({
+        queryKey: ["user-pool-pl", filter],
+        queryFn: async () => {
+            const response = await operatorAPI.getUserPoolPL(filter);
+            return response.data;
+        },
+        enabled: !!filter.userId,
+    });
+};
+
+export const useGetOperatorHierarchyPoolPL = (filter: { companyId: number, startDate?: Date, endDate?: Date, operatorId?: number, includeBreakdown?: boolean }, options?: { enabled?: boolean }) => {
+    return useQuery({
+        queryKey: ["operator-hierarchy-pool-pl", filter],
+        queryFn: async () => {
+            const response = await operatorAPI.getOperatorHierarchyPoolPL(filter);
             return response.data;
         },
         enabled: options?.enabled ?? true,

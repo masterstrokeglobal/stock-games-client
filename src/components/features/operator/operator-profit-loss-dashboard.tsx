@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useGetOperatorProfitLossStats } from "@/react-query/operator-queries";
+import { useGetCurrentOperator, useGetOperatorHierarchyPoolPL, useGetOperatorProfitLossStats } from "@/react-query/operator-queries";
 import { TrendingUp, TrendingDown, Minus, Wallet, Users, ArrowRight, RefreshCw } from "lucide-react";
 import { cn, INR } from "@/lib/utils";
 import LoadingScreen from "@/components/common/loading-screen";
@@ -30,15 +30,32 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
         endDate: dateRange?.to
     });
 
+    // Pool P/L (Deposits - Withdrawals)
+    const { data: currentOperator } = useGetCurrentOperator();
+    const companyId = currentOperator?.company?.id;
+    const { data: poolPL } = useGetOperatorHierarchyPoolPL(
+        companyId
+            ? {
+                companyId,
+                operatorId,
+                includeBreakdown: false,
+                startDate: dateRange?.from,
+                endDate: dateRange?.to,
+            }
+            : ({ companyId: 0 } as any),
+        { enabled: !!companyId }
+    );
+
     const performanceStatus: PerformanceStatus = useMemo(() => {
         if (!plStats?.profitLossStats) return 'no-business';
         
-        const netPL = plStats.profitLossStats.directNetProfitLoss;
+        // Prefer pool-based net when available
+        const netPL = poolPL?.totals?.netPoolPL ?? plStats.profitLossStats.directNetProfitLoss;
         if (netPL > 0) return 'profit';
         if (netPL < 0) return 'loss';
-        if (netPL === 0 && plStats.profitLossStats.directTotalPlaced > 0) return 'break-even';
+        if (netPL === 0 && (poolPL?.totals?.totalDeposits ?? plStats.profitLossStats.directTotalCreditRequests) > 0) return 'break-even';
         return 'no-business';
-    }, [plStats]);
+    }, [plStats, poolPL]);
 
     const getPerformanceColor = (status: PerformanceStatus) => {
         switch (status) {
@@ -103,34 +120,35 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
                 </div>
             </div>
 
-            {/* Performance Overview */}
-            <Card className={cn("border-2", getPerformanceColor(performanceStatus))}>
-                <CardContent className="p-6">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                            {getPerformanceIcon(performanceStatus)}
-                            <div>
-                                <h3 className="text-lg font-semibold capitalize">
-                                    {performanceStatus.replace('-', ' ')} Performance
-                                </h3>
-                                <p className="text-sm opacity-80">
-                                    {performanceStatus === 'profit' && "Your business is generating profit"}
-                                    {performanceStatus === 'loss' && "Your business is showing losses"}
-                                    {performanceStatus === 'break-even' && "Your business is breaking even"}
-                                    {performanceStatus === 'no-business' && "No business activity in this period"}
-                                </p>
+            {/* Performance Overview (hidden when no business) */}
+            {performanceStatus !== 'no-business' && (
+                <Card className={cn("border-2", getPerformanceColor(performanceStatus))}>
+                    <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-3">
+                                {getPerformanceIcon(performanceStatus)}
+                                <div>
+                                    <h3 className="text-lg font-semibold capitalize">
+                                        {performanceStatus.replace('-', ' ')} Performance
+                                    </h3>
+                                    <p className="text-sm opacity-80">
+                                        {performanceStatus === 'profit' && "Your business is generating profit"}
+                                        {performanceStatus === 'loss' && "Your business is showing losses"}
+                                        {performanceStatus === 'break-even' && "Your business is breaking even"}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="text-right">
+                                <div className="text-2xl font-bold">
+                                    {(poolPL?.totals?.netPoolPL ?? stats.profitLossStats.directNetProfitLoss) >= 0 ? '+' : ''}
+                                    {INR(poolPL?.totals?.netPoolPL ?? stats.profitLossStats.directNetProfitLoss)}
+                                </div>
+                                <div className="text-sm opacity-80">Net P&L</div>
                             </div>
                         </div>
-                        <div className="text-right">
-                            <div className="text-2xl font-bold">
-                                {stats.profitLossStats.directNetProfitLoss >= 0 ? '+' : ''}
-                                {INR(stats.profitLossStats.directNetProfitLoss)}
-                            </div>
-                            <div className="text-sm opacity-80">Net P&L</div>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+            )}
 
             {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -138,10 +156,10 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
                     <CardContent className="p-4">
                         <div className="flex items-center space-x-2 mb-2">
                             <TrendingUp className="h-4 w-4 text-blue-600" />
-                            <span className="text-sm font-medium">Total Placed</span>
+                            <span className="text-sm font-medium">Total Deposits</span>
                         </div>
                         <div className="text-xl font-bold">
-                            {INR(stats.profitLossStats.directTotalPlaced)}
+                            {INR(poolPL?.totals?.totalDeposits ?? stats.profitLossStats.directTotalCreditRequests)}
                         </div>
                         <div className="text-xs text-gray-500">Direct users</div>
                     </CardContent>
@@ -151,10 +169,10 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
                     <CardContent className="p-4">
                         <div className="flex items-center space-x-2 mb-2">
                             <TrendingDown className="h-4 w-4 text-red-600" />
-                            <span className="text-sm font-medium">Total Payout</span>
+                            <span className="text-sm font-medium">Total Withdrawals</span>
                         </div>
-                        <div className="text-xl font-bold text-red-600">
-                            {INR(stats.profitLossStats.directTotalGrossPayout)}
+                            <div className="text-xl font-bold text-red-600">
+                            {INR(poolPL?.totals?.totalWithdrawals ?? stats.profitLossStats.directTotalDebitRequests)}
                         </div>
                         <div className="text-xs text-gray-500">To users</div>
                     </CardContent>
@@ -205,7 +223,7 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
                                 <div className="text-sm text-gray-600">From your users</div>
                             </div>
                             <div className="text-lg font-bold text-blue-600">
-                                {INR(stats.profitLossStats.directNetProfitLoss)}
+                                {INR(poolPL?.totals?.netPoolPL ?? stats.profitLossStats.directNetProfitLoss)}
                             </div>
                         </div>
 
@@ -293,37 +311,39 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
                 </Card>
             )}
 
-            {/* Allocation Summary */}
-            <Card>
-                <CardHeader>
-                    <CardTitle>Allocation Summary</CardTitle>
-                    <CardDescription>
-                        Showing data for {dayjs(dateRange?.from).format('DD MMM YYYY')} - {dayjs(dateRange?.to).format('DD MMM YYYY')}
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="text-center p-4 bg-blue-50 rounded-lg">
-                            <div className="text-2xl font-bold text-blue-600">
-                                {stats.operator.allocatedPercentage}%
+            {/* Allocation Summary (hidden when no business) */}
+            {performanceStatus !== 'no-business' && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Allocation Summary</CardTitle>
+                        <CardDescription>
+                            Showing data for {dayjs(dateRange?.from).format('DD MMM YYYY')} - {dayjs(dateRange?.to).format('DD MMM YYYY')}
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="text-center p-4 bg-blue-50 rounded-lg">
+                                <div className="text-2xl font-bold text-blue-600">
+                                    {stats.operator.allocatedPercentage}%
+                                </div>
+                                <div className="text-sm text-gray-600">Your Allocation</div>
                             </div>
-                            <div className="text-sm text-gray-600">Your Allocation</div>
-                        </div>
-                        <div className="text-center p-4 bg-orange-50 rounded-lg">
-                            <div className="text-2xl font-bold text-orange-600">
-                                {stats.sharingValidation.totalAllocatedToChildren}%
+                            <div className="text-center p-4 bg-orange-50 rounded-lg">
+                                <div className="text-2xl font-bold text-orange-600">
+                                    {stats.sharingValidation.totalAllocatedToChildren}%
+                                </div>
+                                <div className="text-sm text-gray-600">Given to Children</div>
                             </div>
-                            <div className="text-sm text-gray-600">Given to Children</div>
-                        </div>
-                        <div className="text-center p-4 bg-green-50 rounded-lg">
-                            <div className="text-2xl font-bold text-green-600">
-                                {stats.sharingValidation.remainingPercentage}%
+                            <div className="text-center p-4 bg-green-50 rounded-lg">
+                                <div className="text-2xl font-bold text-green-600">
+                                    {stats.sharingValidation.remainingPercentage}%
+                                </div>
+                                <div className="text-sm text-gray-600">Available to Allocate</div>
                             </div>
-                            <div className="text-sm text-gray-600">Available to Allocate</div>
                         </div>
-                    </div>
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+            )}
         </div>
     );
 };
