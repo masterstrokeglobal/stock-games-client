@@ -4,6 +4,7 @@ export enum AdminRole {
     SUPER_ADMIN = "super_admin",
     COMPANY_ADMIN = "company_admin",
     AGENT = "agent",
+    DUPER_MASTER = "duper_master",
     AFFILIATE = "master_affiliate",
     SUB_AFFILIATE = "sub_affiliate",
     OPERATOR = "operator",

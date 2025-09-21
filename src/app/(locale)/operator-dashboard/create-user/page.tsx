@@ -3,15 +3,17 @@
 import AgentUserForm, { AgentUserFormValues } from "@/components/features/agent/agent-user-form";
 import { useCreateUser } from "@/react-query/operator-queries";
 import { useRouter } from "next/navigation";
+import RoleProtection from "@/components/common/role-protection";
+import { OperatorRole } from "@/models/operator";
 
-export default function CreateUserPage() {
+function CreateUserForm() {
     const router = useRouter();
     const createUserMutation = useCreateUser();
 
     const handleSubmit = async (data: AgentUserFormValues) => {
         try {
             await createUserMutation.mutateAsync(data);
-            router.push("/operator-dashboard");
+            router.push("/operator-dashboard/users");
         } catch (error) {
             // Error is already handled by the mutation's onError callback
             console.error("Failed to create user:", error);
@@ -36,5 +38,16 @@ export default function CreateUserPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function CreateUserPage() {
+    return (
+        <RoleProtection 
+            allowedRoles={[OperatorRole.AGENT, OperatorRole.MASTER]} 
+            redirectTo="/operator-dashboard"
+        >
+            <CreateUserForm />
+        </RoleProtection>
     );
 }

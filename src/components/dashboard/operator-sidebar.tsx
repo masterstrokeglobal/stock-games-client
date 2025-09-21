@@ -78,11 +78,13 @@ const manageOperatorMenuItems: MenuItem[] = [
 const getOperatorMenuItems = (operatorRole: OperatorRole): MenuItem[] => {
     const menuItems = [...baseOperatorMenuItems];
     
-    // Agents get Users (view/create). Masters and above get both Users and Operators.
-    if (operatorRole === OperatorRole.AGENT) {
+    // Only MASTER and AGENT roles get Users (view/create)
+    if (operatorRole === OperatorRole.AGENT || operatorRole === OperatorRole.MASTER) {
         menuItems.push(...agentOnlyMenuItems);
-    } else {
-        menuItems.push(...agentOnlyMenuItems);
+    }
+    
+    // Higher roles get Operators management
+    if (operatorRole === OperatorRole.DUPER_MASTER || operatorRole === OperatorRole.SUPER_DUPER_MASTER) {
         menuItems.push(...manageOperatorMenuItems);
     }
     
