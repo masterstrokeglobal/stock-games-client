@@ -28,22 +28,52 @@ const operatorTransactionColumns: ColumnDef<Transaction>[] = [
     {
         header: "Type",
         accessorKey: "type",
-        cell: ({ row }) => (
-            <Badge className="text-nowrap" variant={row.original.type === TransactionType.DEPOSIT ? "success" : "outline"}>
-                {row.original.type.split("_").join(" ")}
-            </Badge>
-        ),
+        cell: ({ row }) => {
+            const transaction = row.original;
+            let displayType = transaction.type.split("_").join(" ");
+            let variant: "success" | "outline" | "destructive" = "outline";
+            
+            // Color coding for different transaction types
+            if (transaction.type === "withdrawal") {
+                variant = "success"; // Green for withdrawals (money to master wallet)
+                displayType = "Internal Withdrawal";
+            } else if (transaction.type === "deposit") {
+                variant = "outline"; // Default for deposits
+                displayType = "Internal Deposit";
+            } else if (transaction.type === "operator_deposit") {
+                variant = "outline"; // Default for operator deposits
+                displayType = "Operator Transfer";
+            }
+            
+            return (
+                <Badge className="text-nowrap" variant={variant}>
+                    {displayType}
+                </Badge>
+            );
+        },
     },
     {
         header: "Amount",
         accessorKey: "amount",
         cell: ({ row }) => {
-            if (row.original.type === TransactionType.POINTS_EARNED || row.original.type === TransactionType.POINTS_REDEEMED) {
+            const transaction = row.original;
+            
+            if (transaction.type === TransactionType.POINTS_EARNED || transaction.type === TransactionType.POINTS_REDEEMED) {
                 return <div className="text-nowrap">
-                    {row.original.amount} Points
+                    {transaction.amount} Points
                 </div>
             }
-            return <div className="text-nowrap">Rs. {row.original.amount.toFixed(2)}</div>
+            
+            // Color coding for amounts
+            const isWithdrawal = transaction.type === "withdrawal";
+            const amountClass = isWithdrawal ? "text-green-600 font-semibold" : "text-gray-900";
+            const prefix = isWithdrawal ? "+₹" : "₹";
+            
+            return (
+                <div className={`text-nowrap ${amountClass}`}>
+                    {prefix}{transaction.amount.toFixed(2)}
+                </div>
+            );
         }
     },
     {
@@ -62,15 +92,37 @@ const operatorTransactionColumns: ColumnDef<Transaction>[] = [
     },
    //depositer 
     {
-        header: "Depositer",
-        accessorKey: "user",
-        cell: ({ row }) => <div>{row.original.depositorOperatorWallet?.operator?.name || 'N/A'}</div>,   
+        header: "From",
+        accessorKey: "depositorOperatorWallet",
+        cell: ({ row }) => {
+            const transaction = row.original;
+            const depositor = transaction.depositorOperatorWallet?.operator;
+            if (!depositor) return <div className="text-gray-500">N/A</div>;
+            
+            return (
+                <div className="text-sm">
+                    <div className="font-medium">{depositor.name}</div>
+                    <div className="text-gray-500 text-xs">{depositor.email}</div>
+                </div>
+            );
+        },   
     },
     //withdrawer
     {
-        header: "Creditor",
-        accessorKey: "user",
-        cell: ({ row }) => <div>{row.original.creditorOperatorWallet?.operator?.name || 'N/A'}</div>,
+        header: "To",
+        accessorKey: "creditorOperatorWallet",
+        cell: ({ row }) => {
+            const transaction = row.original;
+            const creditor = transaction.creditorOperatorWallet?.operator;
+            if (!creditor) return <div className="text-gray-500">N/A</div>;
+            
+            return (
+                <div className="text-sm">
+                    <div className="font-medium">{creditor.name}</div>
+                    <div className="text-gray-500 text-xs">{creditor.email}</div>
+                </div>
+            );
+        },
     },
     {
         header: "Bonus Percentage",
@@ -81,7 +133,10 @@ const operatorTransactionColumns: ColumnDef<Transaction>[] = [
         header: "Created On",
         accessorKey: "createdAt",
         cell: ({ row }) => (
-            <span className="text-sm whitespace-nowrap">{dayjs(row.original.createdAt).format("DD-MM-YYYY")}</span>
+            <div className="text-sm whitespace-nowrap">
+                <div>{dayjs(row.original.createdAt).format("DD-MM-YYYY")}</div>
+                <div className="text-gray-500 text-xs">{dayjs(row.original.createdAt).format("HH:mm:ss")}</div>
+            </div>
         ),
     },
     {
