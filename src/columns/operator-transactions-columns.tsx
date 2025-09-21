@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Transaction, TransactionStatus, TransactionType } from "@/models/transaction";
 import { useGetCurrentOperator, useSettleTransaction } from "@/react-query/operator-queries";
+import { useAuthStore } from "@/context/auth-context";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { CheckCircle } from "lucide-react";
@@ -57,6 +58,8 @@ const operatorTransactionColumns: ColumnDef<Transaction>[] = [
         accessorKey: "amount",
         cell: ({ row }) => {
             const transaction = row.original;
+            const { userDetails } = useAuthStore();
+            const currentUserEmail = userDetails?.email;
             
             if (transaction.type === TransactionType.POINTS_EARNED || transaction.type === TransactionType.POINTS_REDEEMED) {
                 return <div className="text-nowrap">
@@ -64,10 +67,10 @@ const operatorTransactionColumns: ColumnDef<Transaction>[] = [
                 </div>
             }
             
-            // Color coding for amounts
-            const isWithdrawal = transaction.type === "withdrawal";
-            const amountClass = isWithdrawal ? "text-green-600 font-semibold" : "text-gray-900";
-            const prefix = isWithdrawal ? "+₹" : "₹";
+            // Color coding for amounts - check if current user is receiving money
+            const isReceivingMoney = transaction.creditorOperatorWallet?.operator?.email === currentUserEmail;
+            const amountClass = isReceivingMoney ? "text-green-600 font-semibold" : "text-gray-900";
+            const prefix = isReceivingMoney ? "+₹" : "₹";
             
             return (
                 <div className={`text-nowrap ${amountClass}`}>
