@@ -40,7 +40,7 @@ const operatorTransactionColumns: ColumnDef<Transaction>[] = [
             } else if (transaction.type === "deposit") {
                 variant = "outline"; // Default for deposits
                 displayType = "Internal Deposit";
-            } else if (transaction.type === "operator_deposit") {
+            } else if (transaction.type === "operator_deposit" as any) {
                 variant = "outline"; // Default for operator deposits
                 displayType = "Operator Transfer";
             }
