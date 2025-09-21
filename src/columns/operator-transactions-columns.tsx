@@ -71,7 +71,7 @@ const operatorTransactionColumns: ColumnDef<Transaction>[] = [
             
             return (
                 <div className={`text-nowrap ${amountClass}`}>
-                    {prefix}{transaction.amount.toFixed(2)}
+                    {prefix}{Math.abs(transaction.amount).toFixed(2)}
                 </div>
             );
         }
