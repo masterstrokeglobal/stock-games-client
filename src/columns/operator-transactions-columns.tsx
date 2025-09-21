@@ -4,13 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Transaction, TransactionStatus, TransactionType } from "@/models/transaction";
 import { useGetCurrentOperator, useSettleTransaction } from "@/react-query/operator-queries";
-import { useAuthStore } from "@/context/auth-context";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { CheckCircle } from "lucide-react";
 import React from "react";
 
-const operatorTransactionColumns: ColumnDef<Transaction>[] = [
+const createOperatorTransactionColumns = (currentUserEmail?: string): ColumnDef<Transaction>[] => [
     {
         header: "ID",
         accessorKey: "id",
@@ -58,8 +57,6 @@ const operatorTransactionColumns: ColumnDef<Transaction>[] = [
         accessorKey: "amount",
         cell: ({ row }) => {
             const transaction = row.original;
-            const { userDetails } = useAuthStore();
-            const currentUserEmail = userDetails?.email;
             
             if (transaction.type === TransactionType.POINTS_EARNED || transaction.type === TransactionType.POINTS_REDEEMED) {
                 return <div className="text-nowrap">
@@ -149,7 +146,7 @@ const operatorTransactionColumns: ColumnDef<Transaction>[] = [
     }
 ];
 
-export default operatorTransactionColumns;
+export default createOperatorTransactionColumns;
 const SettleColumn = ({ transaction }: { transaction: Transaction }) => {
     const { data: userDetails } = useGetCurrentOperator();
     const { mutate: settleTransaction, isPending } = useSettleTransaction();

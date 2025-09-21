@@ -1,6 +1,7 @@
 "use client";
 
-import operatorTransactionColumns from "@/columns/operator-transactions-columns";
+import createOperatorTransactionColumns from "@/columns/operator-transactions-columns";
+import { useAuthStore } from "@/context/auth-context";
 import DataTable from "@/components/ui/data-table-server";
 import { Input } from "@/components/ui/input";
 import {
@@ -30,10 +31,13 @@ const OperatorTransactionTable = ({ operatorId, className }: Props) => {
     const [search, setSearch] = useState("");
     const [type, setType] = useState<string | "">("");
     const [status, setStatus] = useState<string | "">("");
-
+    const { userDetails } = useAuthStore();
 
     // Use the operator ID from props or get from user details
     const currentOperatorId = operatorId;
+    
+    // Create columns with current user email
+    const columns = createOperatorTransactionColumns(userDetails?.email);
 
     const { data, isSuccess, isLoading } = useGetHierarchicalTransactions({
         operatorId: currentOperatorId,
@@ -138,7 +142,7 @@ const OperatorTransactionTable = ({ operatorId, className }: Props) => {
                 <DataTable
                     page={page}
                     loading={isLoading}
-                    columns={operatorTransactionColumns}
+                    columns={columns}
                     data={data?.data}
                     totalPage={totalPages}
                     changePage={changePage}
