@@ -40,6 +40,7 @@ function FormCheckbox<
               {...props}
               checked={field.value}
               onCheckedChange={field.onChange}
+              className={cn(className, "")}
             />
           </FormControl>
           <div className=" flex items-start leading-none">

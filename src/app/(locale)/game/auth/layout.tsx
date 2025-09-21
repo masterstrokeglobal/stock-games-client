@@ -3,10 +3,10 @@
 import LocaleSwitcher from "@/components/common/LocaleSwitcher";
 import Logo from "@/components/common/logo";
 import { Button } from "@/components/ui/button";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { PropsWithChildren } from "react";
+import Image from "next/image";
 
 const AuthLayout: React.FC = ({ children }: PropsWithChildren) => {
     const router = useRouter();
@@ -27,24 +27,24 @@ const AuthLayout: React.FC = ({ children }: PropsWithChildren) => {
             </nav>
 
             {/* Main Content Container */}
-            <section className="bg-primary-game shadow-2xl shadow-game-secondary px-6 md:rounded-2xl  max-w-6xl w-full md:shadow-lg md:border border-primary-game  flex flex-col md:flex-row h-full md:h-[80svh]">
+            <section className="bg-white shadow-game-secondary p-6 md:p-4 md:rounded-[50px] max-w-6xl w-full md:border border-primary-game flex flex-col md:flex-row h-full md:h-[80svh]">
                 {/* Left side - Image (hidden on very small screens, visible from sm breakpoint up) */}
                 <div className="hidden sm:block md:w-1/2  relative">
                     <div className="absolute inset-0 rounded-xl  md:relative h-full">
                         <img
-                            src="/images/auth-image.png"
+                            src="/images/auth-img.png"
                             alt="Authentication image"
-                            className="w-full h-full object-cover object-top  relative md:rounded-l-xl"
+                            className="h-full object-cover object-top  relative md:rounded-l-xl"
                         />
                     </div>
                 </div>
 
-                <ScrollArea className="w-full md:w-1/2  items-center justify-center ">
-                    <div className="w-full flex flex-col py-14 items-center justify-center h-full">
+                <div className="w-full md:w-1/2 flex flex-col gap-6 items-center justify-around h-full">
+                     <Image src="/images/logo.png" alt="Authentication image" width={100} height={100} />
+                    <div className="w-full flex flex-col items-center justify-center h-full overflow-y-auto">
                         {children}
                     </div>
-                    <ScrollBar orientation="vertical" />
-                </ScrollArea>
+                </div>
             </section>
         </div>
     );

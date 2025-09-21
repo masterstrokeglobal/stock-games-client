@@ -46,7 +46,7 @@ function FormPassword<
 } & React.InputHTMLAttributes<HTMLInputElement>) {
   // Game input styles (matches /features/platform/filters.tsx and FormInput)
   const gameInputClass =
-    "w-full bg-primary-game border border-platform-border ring-0 focus:bg-primary-game/80 focus:border-platform-border text-white placeholder:text-gray-200 dark:placeholder:text-gray-400 h-12 rounded-none";
+    "w-full bg-primary-game border border-platform-border ring-0 focus:bg-primary-game/80 focus:border-platform-border text-white placeholder:text-gray-200 dark:placeholder:text-gray-400 h-12 rounded-xl";
 
   const [inputType, setInputType] = useState<"password" | "text">("password");
 

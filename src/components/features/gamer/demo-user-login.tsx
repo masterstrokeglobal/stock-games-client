@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+
 import { cn } from "@/lib/utils";
 import { useDemoLogin } from "@/react-query/game-user-queries";
 import { useTranslations } from "next-intl";
@@ -22,7 +22,7 @@ const DemoUserLogin = ({ className }: DemoUserLoginProps) => {
         });
     }
     return (
-        <Button variant="game" className={cn("w-full", className)} size="lg" onClick={handleDemoLogin}>{t("demoLogin")}</Button>
+        <button className={cn("w-full rounded-xl py-2 flex justify-center items-center text-white border-none shadow-none bg-gradient-to-r from-[#142E93] to-[#070F47]", className)} onClick={handleDemoLogin}>{t("demoLogin")}</button>
     );
 };
 
