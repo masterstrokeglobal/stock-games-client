@@ -3,13 +3,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Transaction, TransactionStatus, TransactionType } from "@/models/transaction";
-import { useGetCurrentOperator, useSettleTransaction } from "@/react-query/operator-queries";
+import { useSettleTransaction } from "@/react-query/operator-queries";
+import { useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import { CheckCircle } from "lucide-react";
 import React from "react";
 
-const createOperatorTransactionColumns = (currentUserEmail?: string): ColumnDef<Transaction>[] => [
+const createOperatorTransactionColumns = (currentUserEmail?: string, currentOperator?: any): ColumnDef<Transaction>[] => [
     {
         header: "ID",
         accessorKey: "id",
@@ -142,26 +143,39 @@ const createOperatorTransactionColumns = (currentUserEmail?: string): ColumnDef<
     {
         header: "Settle",
         accessorKey: "settle",
-        cell: ({ row }) => <SettleColumn transaction={row.original} />,
+        cell: ({ row }) => <SettleColumn transaction={row.original} currentOperator={currentOperator} />,
     }
 ];
 
 export default createOperatorTransactionColumns;
-const SettleColumn = ({ transaction }: { transaction: Transaction }) => {
-    const { data: userDetails } = useGetCurrentOperator();
+const SettleColumn = ({ transaction, currentOperator }: { transaction: Transaction; currentOperator?: any }) => {
+    const queryClient = useQueryClient();
     const { mutate: settleTransaction, isPending } = useSettleTransaction();
     const [showAcceptDialog, setShowAcceptDialog] = React.useState(false);
     const [showRejectDialog, setShowRejectDialog] = React.useState(false);
 
     // Only show approve/reject buttons for Masters and above (not for Agents) and if transaction is pending
-    if (userDetails?.isAgent || transaction.status !== TransactionStatus.PENDING) {
+    if (currentOperator?.isAgent || transaction.status !== TransactionStatus.PENDING) {
         return <div className="text-sm text-gray-500 text-center">N/A</div>;
     }
 
     const handleSettle = (status: TransactionStatus) => {
-        settleTransaction({ transactionId: transaction.id, status });
-        setShowAcceptDialog(false);
-        setShowRejectDialog(false);
+        settleTransaction({ 
+            transactionId: transaction.id, 
+            status 
+        }, {
+            onSuccess: () => {
+                // Invalidate all transaction-related queries to refresh the data
+                queryClient.invalidateQueries({
+                    predicate: (query) => 
+                        query.queryKey[0] === "hierarchical-transactions" ||
+                        query.queryKey[0] === "operator-transactions" ||
+                        query.queryKey[0] === "operator-wallet-transactions"
+                });
+                setShowAcceptDialog(false);
+                setShowRejectDialog(false);
+            }
+        });
     };
 
     return (

@@ -2,6 +2,7 @@
 
 import createOperatorTransactionColumns from "@/columns/operator-transactions-columns";
 import { useAuthStore } from "@/context/auth-context";
+import { useGetCurrentOperator } from "@/react-query/operator-queries";
 import DataTable from "@/components/ui/data-table-server";
 import { Input } from "@/components/ui/input";
 import {
@@ -32,12 +33,13 @@ const OperatorTransactionTable = ({ operatorId, className }: Props) => {
     const [type, setType] = useState<string | "">("");
     const [status, setStatus] = useState<string | "">("");
     const { userDetails } = useAuthStore();
+    const { data: currentOperator } = useGetCurrentOperator();
 
     // Use the operator ID from props or get from user details
     const currentOperatorId = operatorId;
     
-    // Create columns with current user email
-    const columns = createOperatorTransactionColumns(userDetails?.email);
+    // Create columns with current user email and operator data
+    const columns = createOperatorTransactionColumns(userDetails?.email, currentOperator);
 
     const { data, isSuccess, isLoading } = useGetHierarchicalTransactions({
         operatorId: currentOperatorId,
