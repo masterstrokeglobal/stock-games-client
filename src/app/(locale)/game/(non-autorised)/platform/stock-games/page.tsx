@@ -4,6 +4,9 @@ import StockGameCard from "@/components/common/stock-game-card";
 import { Input } from "@/components/ui/input";
 import { stockGames } from "@/lib/utils";
 import { useGetMyCompany } from "@/react-query/company-queries";
+import { useGetCasinoGames } from "@/react-query/casino-games-queries";
+import Link from "next/link";
+import { Card } from "@/components/ui/card";
 import { Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -12,6 +15,13 @@ export default function GamingAppInterface() {
     const t = useTranslations("platform.stock-games");
     const [searchTerm, setSearchTerm] = useState("");
     const { data: company } = useGetMyCompany();
+    const { data: setGameData } = useGetCasinoGames({
+        providerName: "stockgames",
+        subProviderName: "stockgames",
+        providerCompany: "stockgames",
+        limit: 1,
+    });
+    const setGame = setGameData?.games?.[0];
 
     const filteredGames = stockGames.filter(game =>
         !company?.gameRestrictions.includes(game.type)
@@ -45,6 +55,18 @@ export default function GamingAppInterface() {
                         </div>
                     ) : (
                         <div className="grid xs:grid-cols-2 grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 md:gap-6 gap-2">
+                            {setGame && (
+                                <Link href={`/game/casino/${setGame.id}`} className="w-full">
+                                    <Card className={`overflow-hidden rounded-none relative shadow-lg border border-[#4467CC] dark:border-none`} style={{ aspectRatio: '170/240' }}>
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img
+                                            src={setGame.imageUrl || "/placeholder.svg?height=400&width=300"}
+                                            alt={setGame.name}
+                                            className="w-full h-full object-top"
+                                        />
+                                    </Card>
+                                </Link>
+                            )}
                             {filteredGames.map((game) => (
                                <StockGameCard key={game.name} game={game} />
                             ))}
