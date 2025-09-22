@@ -83,8 +83,8 @@ const getOperatorMenuItems = (operatorRole: OperatorRole): MenuItem[] => {
         menuItems.push(...agentOnlyMenuItems);
     }
     
-    // Higher roles get Operators management
-    if (operatorRole === OperatorRole.DUPER_MASTER || operatorRole === OperatorRole.SUPER_DUPER_MASTER) {
+    // Higher roles (including MASTER) get Operators management
+    if (operatorRole === OperatorRole.MASTER || operatorRole === OperatorRole.DUPER_MASTER || operatorRole === OperatorRole.SUPER_DUPER_MASTER) {
         menuItems.push(...manageOperatorMenuItems);
     }
     

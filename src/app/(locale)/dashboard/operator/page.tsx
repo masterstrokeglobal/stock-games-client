@@ -212,10 +212,11 @@ const OperatorTable = () => {
     const { data, isFetching } = useGetAllOperators({
         page,
         search,
+        limit: 10,
     });
 
     const totalPages = useMemo(() => {
-        return Math.ceil(data?.data?.count / 10) || 1;
+        return Math.max(1, Math.ceil((data?.count ?? data?.data?.count ?? 0) / 10));
     }, [data]);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -266,11 +267,13 @@ const OperatorTable = () => {
                         <div className="p-8 text-center text-gray-500">
                             Loading operators...
                         </div>
-                    ) : data?.data?.length > 0 ? (
+                    ) : (data?.data?.length ?? 0) > 0 ? (
                         <div className="p-2">
-                            {data.data.map((operator: Operator) => (
-                                <OperatorRow key={operator.id} operator={operator} />
-                            ))}
+                            {(data.data as any[])
+                                .filter((op: any) => op.role === 'super_duper_master' || op.parentId == null)
+                                .map((operator: Operator) => (
+                                    <OperatorRow key={operator.id} operator={operator} />
+                                ))}
                         </div>
                     ) : (
                         <div className="p-8 text-center text-gray-500">
@@ -279,30 +282,28 @@ const OperatorTable = () => {
                     )}
                 </div>
 
-                {/* Pagination */}
-                {totalPages > 1 && (
-                    <div className="flex justify-center mt-4 space-x-2">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => changePage(page - 1)}
-                            disabled={page <= 1}
-                        >
-                            Previous
-                        </Button>
-                        <span className="flex items-center px-3 text-sm">
-                            Page {page} of {totalPages}
-                        </span>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => changePage(page + 1)}
-                            disabled={page >= totalPages}
-                        >
-                            Next
-                        </Button>
-                    </div>
-                )}
+                {/* Pagination (always visible) */}
+                <div className="flex justify-center mt-4 space-x-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => changePage(page - 1)}
+                        disabled={page <= 1}
+                    >
+                        Previous
+                    </Button>
+                    <span className="flex items-center px-3 text-sm">
+                        Page {page} of {totalPages}
+                    </span>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => changePage(page + 1)}
+                        disabled={page >= totalPages}
+                    >
+                        Next
+                    </Button>
+                </div>
             </main>
         </section>
     );
