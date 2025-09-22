@@ -32,7 +32,6 @@ export const Wheel: React.FC<WheelProps> = ({
   const wheelRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [wheelState, setWheelState] = useState<'idle' | 'spinning' | 'stopped'>('idle');
   const spinTweenRef = useRef<any>(null);
   const { isMobileSmall } = useWindowSize();
 
@@ -81,8 +80,8 @@ export const Wheel: React.FC<WheelProps> = ({
 
   const calculateTargetRotation = useCallback((winningId: number): number => {
     const marketIndex = stocks.findIndex((market) => market.id === winningId);
-    // const marketIndex = 20
-    if (marketIndex === -1) return 0;
+    // const marketIndex = 3;
+    // if (marketIndex === -1) return 0;
 
     const totalMarkets = stocks.length;
     const segmentAngle = 360 / totalMarkets;
@@ -92,7 +91,7 @@ export const Wheel: React.FC<WheelProps> = ({
     
     // Calculate target angle to position winning segment at top
     const targetAngle = 360 - segmentCenter;
-    
+    console.log("stop at marketIndex", marketIndex, "targetAngle", targetAngle);
     
     return targetAngle;
   }, [stocks]);
@@ -101,12 +100,13 @@ export const Wheel: React.FC<WheelProps> = ({
     if (!wheelRef.current) return;
     
     console.log("Starting GSAP spin");
-    setWheelState('spinning');
     
     // Kill any existing animation
     if (spinTweenRef.current) {
       spinTweenRef.current.kill();
     }
+
+    wheelRef.current.style.transform = "rotateZ(0deg)";
     
     // Start infinite spinning
     spinTweenRef.current = gsap.to(wheelRef.current, {
@@ -121,7 +121,6 @@ export const Wheel: React.FC<WheelProps> = ({
     if (!wheelRef.current) return;
     
     console.log("Stopping wheel at rotation:", targetRotation);
-    setWheelState('stopped');
     
     // Kill the spinning animation
     if (spinTweenRef.current) {
@@ -134,7 +133,7 @@ export const Wheel: React.FC<WheelProps> = ({
       rotation: targetRotation
     });
     
-    console.log("Applied GSAP rotation:", targetRotation);
+    console.log("wheel actual stop at", wheelRef.current.style.transform);
     
     // Call completion callback
     if (onSpinComplete) {
@@ -152,31 +151,30 @@ export const Wheel: React.FC<WheelProps> = ({
       const isBettingClosed = currentTime >= placementEndTime;
       const isGameStillActive = currentTime < gameEndTime;
 
-      if (isSpinning && isBettingClosed && isGameStillActive && !winningMarketId && wheelState === 'idle') {
+      if (isSpinning && isBettingClosed && isGameStillActive && !winningMarketId ) {
         startSpinning();
       }
-    } else if (isSpinning && !winningMarketId && wheelState === 'idle') {
+    } else if (isSpinning && !winningMarketId ) {
       startSpinning();
     }
 
     // Handle stopping when winning ID is available
-    if (winningMarketId && winningMarketId.length > 0 && wheelState === 'spinning') {
+    if (winningMarketId && winningMarketId.length > 0 ) {
       const targetRotation = calculateTargetRotation(winningMarketId[0]);
       stopWheel(targetRotation);
     }
 
     // Handle case where spinning stops without winner
-    if (!isSpinning && wheelState === 'spinning') {
+    if (!isSpinning) {
       if (spinTweenRef.current) {
         spinTweenRef.current.kill();
         spinTweenRef.current = null;
       }
-      setWheelState('idle');
       if (onSpinComplete) {
         onSpinComplete();
       }
     }
-  }, [isSpinning, winningMarketId, wheelState, roundRecord, calculateTargetRotation, stopWheel, startSpinning, onSpinComplete]);
+  }, [isSpinning, winningMarketId, roundRecord, calculateTargetRotation, stopWheel, startSpinning, onSpinComplete]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -249,6 +247,7 @@ export const Wheel: React.FC<WheelProps> = ({
                   </p>
                 </div>
                 <div
+                  key={`${stock.id}-shadow`}
                   style={{
                     height: "50%",
                     width: `${segmentAngle * 0.9}%`,

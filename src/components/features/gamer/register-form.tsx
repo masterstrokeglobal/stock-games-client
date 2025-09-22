@@ -100,7 +100,7 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
     const { control, handleSubmit } = form;
 
     return (
-        <div className="w-full max-w-sm h-full">
+        <div className="w-full max-w-sm h-full py-4 flex-shrink-0">
             <AuthTabs />
 
             <FormProvider className="" methods={form} onSubmit={handleSubmit(onSubmit)}>
@@ -169,7 +169,7 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         control={control}
                         name="agreeToTerms"
                         label={t('label-terms-agreement')}
-                        className="mt-4 text-[#747487] !border-black"
+                        className=" text-[#747487] !border-black"
                     />
                     {/* </Link> */}
                 </div>
