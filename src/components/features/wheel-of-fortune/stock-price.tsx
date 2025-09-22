@@ -95,7 +95,7 @@ export const StockPriceDisplay: React.FC<{
         />
       </div>
       {!isMobile && (
-        <div className="w-full h-full flex items-end mb-2">
+        <div className="w-full h-full flex items-end justify-center mb-2">
           <GameTimer roundRecord={roundRecord} />
         </div>
       )}

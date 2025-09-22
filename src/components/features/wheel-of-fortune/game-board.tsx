@@ -269,7 +269,7 @@ const ColorCard = ({
             "flex-1 rounded-b-lg flex flex-col items-center justify-start relative w-full"
           )}
         >
-          <ul className="gap-1 w-full py-2 lg:py-4">
+          <ul className="gap-1 w-full py-2 ">
             {roundRecord.getMarketsByColor(color).map((market, index) => {
               const stock = marketItemsStocks.find((s) => s.id === market.id);
               const isTopStock = stock?.id === topStock?.id;

@@ -39,9 +39,9 @@ const AuthLayout: React.FC = ({ children }: PropsWithChildren) => {
                     </div>
                 </div>
 
-                <div className="w-full md:w-1/2 flex flex-col gap-6 items-center justify-around h-full">
+                <div className="w-full md:w-1/2 flex flex-col gap-4 items-center justify-around h-full">
                      <Image src="/images/logo.png" alt="Authentication image" width={100} height={100} />
-                    <div className="w-full flex flex-col items-center justify-center h-full overflow-y-auto">
+                    <div className="w-full h-full overflow-y-auto flex felx-col justify-center">
                         {children}
                     </div>
                 </div>
