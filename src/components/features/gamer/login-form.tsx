@@ -70,7 +70,8 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
             game
             name="username"
             inputClassName="!text-[#747487] !bg-white"
-            label={t("labels.username-email")}
+            className="!text-[#747487] !bg-white"
+            placeholder={t("labels.username-email")}
             required
           />
 
@@ -81,7 +82,8 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
               name="password"
               inputClassName="!text-[#747487] !bg-white"
               type="password"
-              label={t("labels.password")}
+              className="!text-[#747487] !bg-white"
+              placeholder={t("labels.password")}
               required
             />
             <Link
@@ -111,7 +113,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                 <FormInput
                   control={control}
                   name="answer"
-                  className="text-[#747487] flex-grow font-semibold"
+                  className=""
                   inputClassName="h-10 text-[#747487] bg-white rounded-xl"
                   required
                   placeholder={t("labels.captcha")}

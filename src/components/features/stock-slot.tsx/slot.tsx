@@ -41,7 +41,7 @@ const StockSlot: React.FC<GameScreenProps> = ({
   const statusText = isPlaceOver ? "Betting Closed" : "Betting Open";
 
   return (
-    <div className="flex flex-col items-center justify-between h-screen p-2 lg:p-5 pb-0 lg:pb-0 font-blood-melt text-white relative">
+    <div className="flex flex-col items-center justify-between h-screen p-2 lg:p-5 pb-0 lg:pb-0 font-blood-melt text-white relative overflow-y-auto">
       {/* //? menu button */}
       <div className="flex justify-center items-center absolute top-2 right-2 lg:right-5 lg:top-5 z-30">
         <MenuDialog>

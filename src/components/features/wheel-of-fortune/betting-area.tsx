@@ -102,7 +102,7 @@ export const BettingArea: React.FC<BettingAreaProps> = ({
             borderColor: "#5DA69A",
             boxShadow: "0px 0px 5.7px 0px rgba(93, 166, 154, 1)",
           }}
-          className="flex py-2 lg:py-4 rounded-lg text-lg justify-center text-white  relative z-[11] items-center w-full lg:flex-col bg-[#324241] border-2 border-[#5DA69A]  gap-4"
+          className="flex py-2 rounded-lg text-lg justify-center text-white  relative z-[11] items-center w-full lg:flex-col bg-[#324241] border-2 border-[#5DA69A]"
         >
           <span className="text-lg uppercase font-bold tracking-wider">
             Total Bet
