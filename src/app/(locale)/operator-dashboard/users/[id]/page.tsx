@@ -29,7 +29,7 @@ const OperatorViewUserPage = () => {
     if (isLoading) return <LoadingScreen className="h-[60vh]">Loading user...</LoadingScreen>;
 
     return (
-        <RoleProtection allowedRoles={[OperatorRole.OPERATOR, OperatorRole.AGENT, OperatorRole.MASTER, OperatorRole.DUPER_MASTER, OperatorRole.SUPER_DUPER_MASTER]} redirectTo="/operator-dashboard">
+        <RoleProtection allowedRoles={[OperatorRole.AGENT, OperatorRole.MASTER, OperatorRole.DUPER_MASTER, OperatorRole.SUPER_DUPER_MASTER]} redirectTo="/operator-dashboard">
             <section className="container-main min-h-[60vh]">
                 <header className="flex flex-col md:flex-row gap-4 flex-wrap md:items-center justify-between">
                     <h2 className="text-xl font-semibold">User Details</h2>
