@@ -9,6 +9,7 @@ import { useGetOperatorUsers } from "@/react-query/operator-queries";
 import { Search } from "lucide-react";
 import React, { useMemo, useState } from "react";
 import Link from "next/link";
+import RoleProtection from "@/components/common/role-protection";
 
 const UserTable = () => {
     const [page, setPage] = useState(1);
@@ -75,4 +76,13 @@ const UserTable = () => {
     );
 };
 
-export default UserTable;
+export default function UsersPage() {
+    return (
+        <RoleProtection 
+            allowedRoles={[OperatorRole.AGENT, OperatorRole.MASTER]} 
+            redirectTo="/operator-dashboard"
+        >
+            <UserTable />
+        </RoleProtection>
+    );
+}

@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { ArrowUpDown, Building, ChevronsRightLeftIcon, Clock, CoinsIcon, Contact2, DollarSign, GamepadIcon, GiftIcon, Home, ImageUpIcon, LucideIcon, MedalIcon, PieChart, Repeat1, ShipWheelIcon, UserCog2, Users } from 'lucide-react';
+import { ArrowUpDown, BarChart3, Building, ChevronsRightLeftIcon, Clock, CoinsIcon, Contact2, DollarSign, GamepadIcon, GiftIcon, Home, ImageUpIcon, LucideIcon, MedalIcon, PieChart, Repeat1, ShipWheelIcon, UserCog2, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -39,6 +39,11 @@ const adminMenuItems: MenuItem[] = [
         name: "External Games",
         icon: GamepadIcon,
         link: "/dashboard/external-games"
+    },
+    {
+        name: "External User Transactions",
+        icon: BarChart3,
+        link: "/dashboard/external-user-analytics"
     },
     {
         name: 'Company',
