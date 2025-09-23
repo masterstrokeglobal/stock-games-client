@@ -158,7 +158,7 @@ const OperatorRow = ({ operator, level = 0, isLast = false }: { operator: Operat
                                         <Pencil className="w-4 h-4" />
                                     </Button>
                                 </Link>
-                                {operator.role === OperatorRole.AGENT && <Link href={`/dashboard/operator/${operator.id}/users`}>
+                                {(operator.role === OperatorRole.AGENT || operator.role === OperatorRole.MASTER) && <Link href={`/dashboard/operator/${operator.id}/users`}>
                                     <Button size="sm" variant="ghost" aria-label="View Users" className="h-9 w-9 p-0">
                                         <Users className="w-4 h-4" />
                                     </Button>
