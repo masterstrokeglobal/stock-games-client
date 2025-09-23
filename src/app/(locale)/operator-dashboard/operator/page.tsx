@@ -167,10 +167,13 @@ const OperatorTable = () => {
         companyId: currentOperator?.company?.id,
     });
 
-    const rootOperators = useMemo(() => {
-        const list = (data?.data ?? data) as any[] | undefined;
-        if (!Array.isArray(list)) return [];
-        return list.filter((op: any) => (op.role === 'super_duper_master'));
+    const { listAll, rootOperators } = useMemo(() => {
+        const list = ((data as any)?.data ?? data) as any[] | undefined;
+        if (!Array.isArray(list)) return { listAll: [], rootOperators: [] };
+        const hasSDM = list.some((op: any) => op.role === 'super_duper_master');
+        const hasRoot = list.some((op: any) => op.parentId == null);
+        const roots = hasSDM ? list.filter((op: any) => op.role === 'super_duper_master') : (hasRoot ? list.filter((op: any) => op.parentId == null) : list);
+        return { listAll: list, rootOperators: roots };
     }, [data]);
 
     const totalPages = useMemo(() => {
@@ -227,7 +230,7 @@ const OperatorTable = () => {
                 <div className="border-x border-b rounded-b-lg">
                     {isFetching ? (
                         <div className="p-8 text-center text-gray-500">Loading operators...</div>
-                    ) : (rootOperators?.length ?? 0) > 0 ? (
+                    ) : (listAll?.length ?? 0) > 0 ? (
                         <div className="p-2">
                             {rootOperators.map((operator: Operator) => (
                                 <OperatorRow key={operator.id} operator={operator} />
