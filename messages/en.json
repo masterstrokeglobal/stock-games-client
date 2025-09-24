@@ -327,11 +327,12 @@
         "confirm-deposit": "Confirm Deposit",
         "validation": {
             "transaction-id-required": "Transaction ID is required",
-            "transaction-id-max": "Transaction ID cannot exceed 50 characters",
+            "transaction-id-max": "Transaction ID cannot exceed 20 characters",
             "confirmation-image-url-invalid": "Invalid confirmation image URL",
             "confirmation-image-url-required": "Confirmation image URL is required",
             "amount-required": "Amount is required",
-            "amount-invalid": "Please enter a valid amount"
+            "amount-invalid": "Please enter a valid amount",
+            "amount-required-500": "Amount must be at least 500"
         }
     },
     "deposit-form": {

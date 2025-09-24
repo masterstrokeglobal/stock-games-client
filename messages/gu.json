@@ -199,7 +199,8 @@
             "transaction-id-required": "ટ્રાન્ઝેક્શન આઇડી જરૂરી છે",
             "transaction-id-max": "ટ્રાન્ઝેક્શન આઇડી 50 અક્ષરોથી વધારે નહીં હોવી જોઈએ",
             "amount-required": "રકમ જરૂરી છે",
-            "amount-invalid": "કૃપા કરી માન્ય રકમ દાખલ કરો"
+            "amount-invalid": "કૃપા કરી માન્ય રકમ દાખલ કરો",
+            "amount-required-500": "રકમ ઓછામાં ઓછા 500 હોવી જોઈએ"
         }
     },
     "deposit-form": {

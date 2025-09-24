@@ -65,11 +65,6 @@ export const createRegisterSchema = (t: any, isPhoneAllowed: boolean = false, us
     agreeToTerms: z.boolean().refine((value) => value === true, {
         message: t('validation.terms-required'),
     }),
-
-    // Age confirmation (required)
-    confirmAge: z.boolean().refine((value) => value === true, {
-        message: t('validation.age-required'),
-    }),
 });
 
 export type RegisterFormValues = z.infer<ReturnType<typeof createRegisterSchema>>;
@@ -160,6 +155,7 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         type="password"
                         inputClassName="!text-[#747487] !bg-white !py-3"
                         placeholder={t('label-password')}
+                        icon="!text-[#747487]"
                         required
                     />
 
