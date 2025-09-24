@@ -100,7 +100,7 @@ function MobileHistoryCard({ item }: { item: JackpotHistory }) {
                         className={`font-bold font-space-grotesk text-[9px] ${item.isWinner ? "text-green-400" : "text-white"}`}
                     >
                         {item.isWinner
-                            ? (item.amount + (item.netProfitLoss ?? 0)).toFixed(2)
+                            ? ((item.netProfitLoss ?? 0)).toFixed(2)
                             : "0"}
                     </span>
                 </div>
@@ -189,7 +189,7 @@ const JackpotBettingHistory = () => {
                                             <div>{item.amount}</div>
                                             <div>
                                                 {item.isWinner
-                                                    ? (item.amount + (item.netProfitLoss ?? 0)).toFixed(2)
+                                                    ? ((item.netProfitLoss ?? 0)).toFixed(2)
                                                     : "0.00"}
                                             </div>
                                         </div>
