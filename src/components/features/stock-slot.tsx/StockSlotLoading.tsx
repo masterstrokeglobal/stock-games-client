@@ -7,12 +7,14 @@ const StockSlotLoading = ({
 }: {
   percentageLoaded: number;
 }) => {
-  const {isMobile} = useWindowSize()
+  const { isMobile } = useWindowSize();
   return (
     <>
       <div
         style={{
-          backgroundImage: "url('/images/slot-machine/stock-slot-bg.png')",
+          backgroundImage: isMobile
+            ? "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179649/slot-bg-mb_yvhboh.png')"
+            : "url('https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179650/stock-slot-bg_onyypz.png')",
           backgroundSize: "100% 100%",
           backgroundPosition: "center center",
           backgroundRepeat: "no-repeat",
@@ -21,10 +23,10 @@ const StockSlotLoading = ({
       >
         <div className="flex flex-col items-center justify-center w-full">
           <Image
-            src="/images/slot-machine/heading.png"
+            src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758179643/heading_bet8pj.png"
             alt="stock-slot-bg"
-            width={ isMobile ? 233 : 388}
-            height={ isMobile ? 50 : 85}
+            width={isMobile ? 233 : 388}
+            height={isMobile ? 50 : 85}
           />
           <div className="md:w-1/2 max-w-sm mt-4">
             <div className="w-full h-3 bg-transparent rounded-full overflow-hidden border-2 border-blue-400">

@@ -67,8 +67,8 @@ const StockSlot: React.FC<GameScreenProps> = ({
           />
         </div>
 
-        <div className="w-full h-full justify-center items-start pt-12 lg:pt-0 flex flex-1 gap-5">
-          <div className="justify-center items-center flex flex-col">
+        <div className="w-full h-full justify-center items-start pt-6 md:pt-0 flex flex-1 gap-5">
+          <div className="justify-center items-center flex flex-col gap-4 md:gap-0">
             {/* //? status text and timer */}
             <div className=" w-full flex items-center justify-center flex-shrink-0">
               <div className="flex items-center justify-center gap-2">
