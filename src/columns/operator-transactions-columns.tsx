@@ -91,36 +91,108 @@ const createOperatorTransactionColumns = (currentUserEmail?: string, currentOper
             </Badge>
         ),
     },
-   //depositer 
+    // From (intelligent mapping)
     {
         header: "From",
-        accessorKey: "depositorOperatorWallet",
+        accessorKey: "fromDisplay",
         cell: ({ row }) => {
-            const transaction = row.original;
-            const depositor = transaction.depositorOperatorWallet?.operator;
-            if (!depositor) return <div className="text-gray-500">N/A</div>;
-            
+            const t = row.original;
+            const type = String(t.type).toLowerCase();
+            const user = t.wallet?.user;
+            const depositorOp = t.depositorOperatorWallet?.operator;
+            // const creditorOp = t.creditorOperatorWallet?.operator;
+
+            let name: string | undefined;
+            let email: string | undefined;
+            let roleText: string | undefined;
+
+            const prettyRole = (role?: string) => role ? role.split("_").map(r => r[0]?.toUpperCase() + r.slice(1)).join(" ") : undefined;
+
+            if (type === "deposit") {
+                // Agent/Company -> User
+                name = depositorOp?.name || "Company Wallet";
+                email = depositorOp?.email;
+                roleText = depositorOp ? prettyRole(depositorOp.role) : "Company";
+            } else if (type === "withdrawal") {
+                // User -> Agent/Company
+                name = user?.username || "User";
+                email = user?.email || undefined;
+                roleText = "User";
+            } else if (type === "winning" || type === "points_earned") {
+                // Platform -> User
+                name = "Platform";
+                roleText = "Platform";
+            } else if (type === "placement") {
+                // User -> Platform
+                name = user?.username || "User";
+                email = user?.email || undefined;
+                roleText = "User";
+            } else {
+                // Fallbacks
+                name = depositorOp?.name || user?.username || undefined;
+                email = depositorOp?.email || user?.email || undefined;
+                roleText = depositorOp ? prettyRole(depositorOp.role) : (user ? "User" : undefined);
+            }
+
+            if (!name) return <div className="text-gray-500">N/A</div>;
+
             return (
                 <div className="text-sm">
-                    <div className="font-medium">{depositor.name}</div>
-                    <div className="text-gray-500 text-xs">{depositor.email}</div>
+                    <div className="font-medium">{name}{roleText ? ` (${roleText})` : ""}</div>
+                    {email && <div className="text-gray-500 text-xs">{email}</div>}
                 </div>
             );
-        },   
+        },
     },
-    //withdrawer
+    // To (intelligent mapping)
     {
         header: "To",
-        accessorKey: "creditorOperatorWallet",
+        accessorKey: "toDisplay",
         cell: ({ row }) => {
-            const transaction = row.original;
-            const creditor = transaction.creditorOperatorWallet?.operator;
-            if (!creditor) return <div className="text-gray-500">N/A</div>;
-            
+            const t = row.original;
+            const type = String(t.type).toLowerCase();
+            const user = t.wallet?.user;
+            // const depositorOp = t.depositorOperatorWallet?.operator;
+            const creditorOp = t.creditorOperatorWallet?.operator;
+
+            let name: string | undefined;
+            let email: string | undefined;
+            let roleText: string | undefined;
+
+            const prettyRole = (role?: string) => role ? role.split("_").map(r => r[0]?.toUpperCase() + r.slice(1)).join(" ") : undefined;
+
+            if (type === "deposit") {
+                // Agent/Company -> User
+                name = user?.username || creditorOp?.name || "User";
+                email = user?.email || creditorOp?.email || undefined;
+                roleText = user ? "User" : (creditorOp ? prettyRole(creditorOp.role) : undefined);
+            } else if (type === "withdrawal") {
+                // User -> Agent/Company
+                name = creditorOp?.name || "Company Wallet";
+                email = creditorOp?.email || undefined;
+                roleText = creditorOp ? prettyRole(creditorOp.role) : "Company";
+            } else if (type === "winning" || type === "points_earned") {
+                // Platform -> User
+                name = user?.username || "User";
+                email = user?.email || undefined;
+                roleText = "User";
+            } else if (type === "placement") {
+                // User -> Platform
+                name = "Platform";
+                roleText = "Platform";
+            } else {
+                // Fallbacks
+                name = creditorOp?.name || user?.username || undefined;
+                email = creditorOp?.email || user?.email || undefined;
+                roleText = creditorOp ? prettyRole(creditorOp.role) : (user ? "User" : undefined);
+            }
+
+            if (!name) return <div className="text-gray-500">N/A</div>;
+
             return (
                 <div className="text-sm">
-                    <div className="font-medium">{creditor.name}</div>
-                    <div className="text-gray-500 text-xs">{creditor.email}</div>
+                    <div className="font-medium">{name}{roleText ? ` (${roleText})` : ""}</div>
+                    {email && <div className="text-gray-500 text-xs">{email}</div>}
                 </div>
             );
         },
@@ -154,8 +226,24 @@ const SettleColumn = ({ transaction, currentOperator }: { transaction: Transacti
     const [showAcceptDialog, setShowAcceptDialog] = React.useState(false);
     const [showRejectDialog, setShowRejectDialog] = React.useState(false);
 
-    // Only show approve/reject buttons for Masters and above (not for Agents) and if transaction is pending
-    if (currentOperator?.isAgent || transaction.status !== TransactionStatus.PENDING) {
+    // Show approve/reject only for AGENT role and when transaction is pending.
+    // Agents are allowed if they are the receiver (creditor) or sender (depositor) of the transaction.
+    const isPendingTx = transaction.status === TransactionStatus.PENDING;
+    const currentOperatorId = currentOperator?.id;
+    const isAgent = currentOperator?.isAgent;
+    const isReceiver = transaction?.creditorOperatorWallet?.operator?.id === currentOperatorId;
+    const isSender = transaction?.depositorOperatorWallet?.operator?.id === currentOperatorId;
+
+    // Hide entirely for non-agents (view-only for masters and above)
+    if (!isAgent) {
+        return <div className="text-sm text-gray-500 text-center">N/A</div>;
+    }
+
+    if (!isPendingTx) {
+        return <div className="text-sm text-gray-500 text-center">N/A</div>;
+    }
+
+    if (!(isReceiver || isSender)) {
         return <div className="text-sm text-gray-500 text-center">N/A</div>;
     }
 

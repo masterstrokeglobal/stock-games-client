@@ -13,7 +13,7 @@ import FormInput from "@/components/ui/form/form-input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAgentDepositToUser, useGetCurrentOperator, useMasterDepositToUser, useRedeemFromUser } from "@/react-query/operator-queries";
+import { useAgentDepositToUser, useGetCurrentOperator, useRedeemFromUser } from "@/react-query/operator-queries";
 import { OperatorRole } from "@/models/operator";
 import { toast } from "sonner";
 
@@ -25,7 +25,7 @@ const OperatorUserWalletPage = () => {
   const { data, isLoading, refetch, isRefetching } = useGetUserWallet(userId);
   const { data: currentOperator } = useGetCurrentOperator();
   const { mutateAsync: agentDepositToUser, isPending: isAgentRechargePending } = useAgentDepositToUser();
-  const { mutateAsync: masterDepositToUser, isPending: isMasterRechargePending } = useMasterDepositToUser();
+  // const { mutateAsync: masterDepositToUser, isPending: isMasterRechargePending } = useMasterDepositToUser();
   const { mutateAsync: redeemFromUser, isPending: isWithdrawPending } = useRedeemFromUser();
 
   const wallet = useMemo(() => {
@@ -80,7 +80,7 @@ const OperatorUserWalletPage = () => {
           </CardContent>
         </Card>
 
-        {(currentOperator?.role === OperatorRole.MASTER || currentOperator?.role === OperatorRole.DUPER_MASTER || currentOperator?.role === OperatorRole.SUPER_DUPER_MASTER) && (
+        {currentOperator?.role === OperatorRole.AGENT && (
           <Card>
             <CardHeader>
               <CardTitle>Recharge User</CardTitle>
@@ -89,24 +89,20 @@ const OperatorUserWalletPage = () => {
               <RechargeForm
                 onSubmit={async (amount) => {
                   try {
-                    if (currentOperator?.role === OperatorRole.AGENT) {
-                      await agentDepositToUser({ userId, amount });
-                    } else {
-                      await masterDepositToUser({ userId, amount });
-                    }
+                    await agentDepositToUser({ userId, amount });
                     toast.success("Recharge successful");
                     refetch();
                   } catch (e: any) {
                     toast.error(e?.response?.data?.message || "Recharge failed");
                   }
                 }}
-                isLoading={isAgentRechargePending || isMasterRechargePending}
+                isLoading={isAgentRechargePending}
               />
             </CardContent>
           </Card>
         )}
 
-        {(currentOperator?.role === OperatorRole.MASTER || currentOperator?.role === OperatorRole.DUPER_MASTER || currentOperator?.role === OperatorRole.SUPER_DUPER_MASTER) && (
+        {currentOperator?.role === OperatorRole.AGENT && (
           <Card>
             <CardHeader>
               <CardTitle>Withdraw for User</CardTitle>

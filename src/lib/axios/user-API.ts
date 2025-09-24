@@ -33,7 +33,9 @@ export const userAPI = {
             },
         });
     },
-    createUser: async (data: User) => {
+    createUser: async (data: any) => {
+        // Backend expects company/companyId as before; we continue to include companyId here
+        // and allow arbitrary fields like optional operatorId to pass through.
         return api.post("/user", { ...data, companyId: COMPANYID });
     },
     updateUser: async (data: User) => {
