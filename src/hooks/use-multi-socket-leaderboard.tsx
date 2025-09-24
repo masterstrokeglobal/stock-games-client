@@ -258,6 +258,14 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
 
                 if (symbolMatch) {
                     const baseSymbol = symbolMatch[1];
+                    // Extract month text (e.g., from 05DEC25 -> DEC, 03OCT25 -> OCT)
+                    const dateAndMonthPart = symbolMatch[2];
+                    const monthText = dateAndMonthPart.replace(/^\d{1,2}/, '').slice(0, 3);
+
+                    // Ignore OCT contracts for GOLD and SILVER variants (GOLD, GOLDM, SILVER, SILVERM)
+                    if (monthText === 'OCT' && (/^GOLDM?$/.test(baseSymbol) || /^SILVERM?$/.test(baseSymbol))) {
+                        continue;
+                    }
                     const price = parseFloat(chunk[3]);
 
                     if (!isNaN(price)) {
