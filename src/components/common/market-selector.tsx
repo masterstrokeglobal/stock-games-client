@@ -21,6 +21,7 @@ type MarketSelectorProps = {
     variant?: 'aviator' | 'all';
     showNavbar?: boolean;
     roundRecordType?: RoundRecordGameType;
+    onMarketSelect?: (market: SchedulerType) => void;
 }
 
 // Helper to format seconds as HH:MM:SS
@@ -36,7 +37,8 @@ const MarketSelector = ({
     title = "STOCK SLOT MARKET",
     className,
     roundRecordType = RoundRecordGameType.DERBY,
-    showNavbar = true
+    showNavbar = true,
+    onMarketSelect
 }: MarketSelectorProps) => {
     const isNSEAvailable = useNSEAvailable();
     const isExternalUser = useIsExternalUser();
@@ -53,19 +55,26 @@ const MarketSelector = ({
     const { userDetails } = useAuthStore();
 
     const currentUser = userDetails as User;
+    console.log("CURRENT USER : ", currentUser)
+
     const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
     const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO) && !(roundRecordType == RoundRecordGameType.HEAD_TAIL || roundRecordType == RoundRecordGameType.STOCK_JACKPOT);
     const isUSAMarketAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.USA_MARKET);
-    const isCOMEXAllowed =  !currentUser.isNotAllowedToPlaceOrder(SchedulerType.COMEX) && (roundRecordType === RoundRecordGameType.HEAD_TAIL || roundRecordType === RoundRecordGameType.STOCK_JACKPOT);
-  
+    const isCOMEXAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.COMEX) && (roundRecordType === RoundRecordGameType.HEAD_TAIL || roundRecordType === RoundRecordGameType.STOCK_JACKPOT);
 
     const handleMarketSelection = (market: SchedulerType) => {
-        setGameType(market);
-        setMarketSelected(true);
+        // Only call onMarketSelect if provided, otherwise use default behavior
+        if (onMarketSelect) {
+            onMarketSelect(market);
+        } else {
+            // Original behavior only if no onMarketSelect provided
+            setGameType(market);
+            setMarketSelected(true);
+        }
     }
 
     const isMCXAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.MCX) && (roundRecordType === RoundRecordGameType.HEAD_TAIL || roundRecordType === RoundRecordGameType.STOCK_JACKPOT);
-  
+
 
     // Use the market schedule hook
     const marketStatuses = useMarketSchedule();
@@ -113,7 +122,7 @@ const MarketSelector = ({
             title: "MCX",
             subtitle: "MCX Stock Market (Start: 7:30 PM IST, End: 11:30 PM IST)",
             available: isMCXAvailable && schedulerStatus[SchedulerType.MCX],
-            allowed: isMCXAllowed ,
+            allowed: isMCXAllowed,
         },
         {
             id: SchedulerType.COMEX,
@@ -135,7 +144,7 @@ const MarketSelector = ({
         <section
             className={cn("min-h-screen pt-20 dark:bg-[url('/images/platform/market-selector-bg.png')] bg-[url('/images/platform/market-selector-bg-light.png')] w-full bg-cover bg-center flex flex-col items-center justify-center p-4", className)}>
             {/* Header */}
-            { showNavbar ? isExternalUser ? <ExternalUserNavbar /> : <Navbar /> : null}
+            {showNavbar ? isExternalUser ? <ExternalUserNavbar /> : <Navbar /> : null}
             <div className="dark:bg-[#04002968] bg-[#e6f6ff8b] backdrop-blur-[2px] w-full h-full absolute top-0 left-0" />
             <div className="mx-auto max-w-3xl w-full">
                 <header className="text-center sm:mb-8 xs:mb-4 relative z-10 mt-10">

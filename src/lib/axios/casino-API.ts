@@ -15,3 +15,9 @@ export const casinoAPI = {
     }
 };
 
+export const stocksAPI = {
+    launch: (id: string, market: string) => {
+        console.log("TESTING STOCK API : ", { id, market })
+        return api.get(`/game/join-game/${id}`, { params: { market } })
+    }
+}
