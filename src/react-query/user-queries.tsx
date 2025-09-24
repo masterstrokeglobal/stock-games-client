@@ -262,3 +262,6 @@ export const useGetUserBettingHistory = (filter: {
         enabled: !!filter.userId,
     });
 }
+
+
+// new query here for game history
