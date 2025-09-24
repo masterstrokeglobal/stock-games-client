@@ -72,6 +72,12 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
             demouser: false
         },
         // {
+        //     href: "/game/platform/game-history",
+        //     icon: "/images/platform/user-menu/game-history.png",
+        //     label: t('game-history'),
+        //     demouser: true
+        // },
+        // {
         //     href: "/game/platform/betting-history",
         //     icon: "/images/platform/user-menu/betting-history.png",
         //     label: t('betting-history'),
@@ -140,6 +146,7 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
             label: t('rules'),
             demouser: true
         },
+
         // {
         //     href: "/game/faq",
         //     icon: HelpCircleIcon,

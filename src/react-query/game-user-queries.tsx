@@ -265,3 +265,22 @@ export const useGetUserGameHistoryByRoundId = (roundId: string) => {
     },
   });
 };      
+
+export type UserBetsResponse = {
+  casino: { items: any[]; totalCount: number };
+  stock: { items: any[]; totalCount: number };
+};
+
+export const useGetUserBets = (params: { page: number; limit: number; startDate?: string; endDate?: string }) => {
+  return useQuery<UserBetsResponse>({
+    queryKey: ["userBets", params.page, params.limit, params.startDate, params.endDate],
+    queryFn: async () => {
+      const response = await gameUserAPI.getUserBets(params);
+      return response.data as UserBetsResponse;
+    },
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    staleTime: 0,
+    gcTime: 0, // No caching to prevent stale data (renamed from cacheTime in newer React Query)
+  });
+};
