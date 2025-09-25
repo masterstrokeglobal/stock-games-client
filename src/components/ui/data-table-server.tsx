@@ -116,6 +116,7 @@ export default function DataTable<TData, TValue>({
                           </TableCell>
                         </ErrorBoundary>
                       ))}
+                      
                     </TableRow>
                   ))
                 ) : (

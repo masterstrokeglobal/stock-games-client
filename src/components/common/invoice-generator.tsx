@@ -22,7 +22,12 @@ export async function handleSingleDownload({
     const { default: html2pdf } = await import("html2pdf.js");
 
     const container = document.createElement("div");
-    container.style.display = "none";
+    // Keep element renderable for html2canvas: do NOT use display:none or visibility:hidden
+    // Position it far off-screen so it doesn't affect layout/visibility
+    container.style.position = "fixed";
+    container.style.left = "-10000px";
+    container.style.top = "0";
+    container.style.zIndex = "-1";
     document.body.appendChild(container);
 
     // Render the appropriate component based on the invoice type
@@ -41,11 +46,16 @@ export async function handleSingleDownload({
     const root = createRoot(container);
     root.render(element);
 
-    const invoiceElement = container.firstChild;
+    // Wait a tick to allow React to commit the render
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
+
+    const invoiceElement = container.firstChild as HTMLElement | null;
     const filename = `${type}_invoice.pdf`;
 
     if(!invoiceElement) {
       toast.error("Invoice element not found");
+      try { root.unmount(); } catch {}
+      try { document.body.removeChild(container); } catch {}
       return;
     }
 
@@ -58,7 +68,7 @@ export async function handleSingleDownload({
 
     // Generate and download PDF
     html2pdf()
-      .from(invoiceElement as HTMLElement)
+      .from(invoiceElement)
       .set(options)
       .save()
       .then(() => {
@@ -69,6 +79,8 @@ export async function handleSingleDownload({
       .catch((error) => {
         console.error("PDF Generation Error:", error);
         toast.error("Error generating PDF. Please try again.");
+        try { root.unmount(); } catch {}
+        try { document.body.removeChild(container); } catch {}
       });
   } catch (error) {
     toast.error("Something went wrong");
