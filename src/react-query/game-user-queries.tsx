@@ -228,9 +228,9 @@ export const useCaptcha = () => {
   return useQuery({
     queryKey: ["captcha"],
     queryFn: () => gameUserAPI.getCaptcha(),
-    staleTime: 10 * 60 * 1000, // 10 minutes, matching session maxAge
+    staleTime: 0, // Always consider data stale to force fresh captcha on page load
     refetchOnWindowFocus: false, // Prevent refetch on focus
-    refetchOnMount: false, // Prevent refetch on mount unless needed
+    refetchOnMount: true, // Refresh captcha on component mount
   });
 };
 
