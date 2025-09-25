@@ -89,7 +89,7 @@ const GameHistoryPage = () => {
     <div className="p-4 space-y-4">
       <h1 className="text-xl font-semibold">Game History</h1>
 
-      <div className="flex flex-wrap items-end gap-3">
+      <div className="flex flex-wrap justify-between gap-3 items-center">
         <div className="flex gap-2 border rounded-md p-1 bg-white/5">
           <button className={`px-3 py-1 rounded ${activeTab==='all' ? 'bg-blue-600 text-white' : ''}`} onClick={() => {setActiveTab('all'); setPage(1);}}>All</button>
           <button className={`px-3 py-1 rounded ${activeTab==='stock' ? 'bg-blue-600 text-white' : ''}`} onClick={() => {setActiveTab('stock'); setPage(1);}}>Stock</button>
@@ -105,6 +105,7 @@ const GameHistoryPage = () => {
               setStartDate(from);
               setEndDate(to);
             }}
+            triggerClassName='bg-transparent h-10 hover:bg-blue-600 border-white'
             initialDateRange={
               startDate || endDate
                 ? {
@@ -118,9 +119,9 @@ const GameHistoryPage = () => {
       </div>
 
       <div className="overflow-auto w-full">
-        <table className="min-w-full text-sm">
+        <table className="min-w-full text-sm text-platform-text">
           <thead>
-            <tr className="text-left border-b">
+            <tr className="text-left border-b ">
               <th className="py-2 pr-4">ID</th>
               <th className="py-2 pr-4">Date</th>
               <th className="py-2 pr-4">Time</th>
