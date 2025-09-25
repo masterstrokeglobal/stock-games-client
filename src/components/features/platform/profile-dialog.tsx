@@ -73,7 +73,7 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
         },
         // {
         //     href: "/game/platform/game-history",
-        //     icon: "/images/platform/user-menu/game-history.png",
+        //     icon: "/images/platform/user-menu/history.png",
         //     label: t('game-history'),
         //     demouser: true
         // },
