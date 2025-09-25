@@ -89,7 +89,7 @@ export default function DateRangePickerAlt({
             id="date"
             variant="outline"
             className={cn(
-              "justify-start text-left font-normal",
+              "justify-start text-left font-normal text-platform-text",
               "w-[280px] sm:w-[320px] pl-3 gap-2",
               !appliedDate && "text-muted-foreground",
               triggerClassName

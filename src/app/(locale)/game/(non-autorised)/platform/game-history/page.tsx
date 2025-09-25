@@ -44,8 +44,8 @@ const GameHistoryPage = () => {
     const stockItems = typedData?.stock?.items?.map((s: any, idx: number) => ({
       id: s.roundId ?? idx,
       date: s.createdAt,
-      dateStr: s.createdAt ? dayjs(s.createdAt).format('YYYY-MM-DD') : '-',
-      timeStr: s.createdAt ? dayjs(s.createdAt).format('HH:mm:ss') : '-',
+      dateStr: s.createdAt ? dayjs(s.createdAt).format('DD-MM-YYYY') : '-',
+      timeStr: s.createdAt ? dayjs(s.createdAt).format('HH:mm A') : '-',
       game: GAME_NAME_MAP[(s.gameType as string) ?? ''] ?? s.gameName ?? s.gameType ?? 'Stock',
       amount: s.amount ?? 0,
       payout: s.payout ?? 0,
@@ -57,8 +57,8 @@ const GameHistoryPage = () => {
     const casinoItems = typedData?.casino?.items?.map((c: any) => ({
       id: c.id,
       date: c.createdAt,
-      dateStr: c.createdAt ? dayjs(c.createdAt).format('YYYY-MM-DD') : '-',
-      timeStr: c.createdAt ? dayjs(c.createdAt).format('HH:mm:ss') : '-',
+      dateStr: c.createdAt ? dayjs(c.createdAt).format('DD-MM-YYYY') : '-',
+      timeStr: c.createdAt ? dayjs(c.createdAt).format('HH:mm A') : '-',
       game: c.gameName ?? c.provider ?? 'Casino',
       amount: c.amount ?? 0,
       payout: c.payout ?? 0,
@@ -87,17 +87,18 @@ const GameHistoryPage = () => {
 
   return (
     <div className="p-4 space-y-4">
-      <h1 className="text-xl font-semibold">Game History</h1>
+      <h1 className="text-xl font-semibold text-platform-text">Game History</h1>
 
       <div className="flex flex-wrap justify-between gap-3 items-center">
         <div className="flex gap-2 border rounded-md p-1 bg-white/5">
-          <button className={`px-3 py-1 rounded ${activeTab==='all' ? 'bg-blue-600 text-white' : ''}`} onClick={() => {setActiveTab('all'); setPage(1);}}>All</button>
-          <button className={`px-3 py-1 rounded ${activeTab==='stock' ? 'bg-blue-600 text-white' : ''}`} onClick={() => {setActiveTab('stock'); setPage(1);}}>Stock</button>
-          <button className={`px-3 py-1 rounded ${activeTab==='casino' ? 'bg-blue-600 text-white' : ''}`} onClick={() => {setActiveTab('casino'); setPage(1);}}>Casino</button>
+          <button className={`px-3 py-1 rounded text-platform-text ${activeTab==='all' ? 'bg-background-secondary ' : ''}`} onClick={() => {setActiveTab('all'); setPage(1);}}>All</button>
+          <button className={`px-3 py-1 rounded text-platform-text ${activeTab==='stock' ? 'bg-background-secondary ' : ''}`} onClick={() => {setActiveTab('stock'); setPage(1);}}>Stock</button>
+          <button className={`px-3 py-1 rounded text-platform-text ${activeTab==='casino' ? 'bg-background-secondary ' : ''}`} onClick={() => {setActiveTab('casino'); setPage(1);}}>Casino</button>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           <DateRangePickerAlt
+            key={`dr-${startDate ?? ''}-${endDate ?? ''}`}
             onDateChange={(range: DateRange | undefined) => {
               setPage(1);
               const from = range?.from ? dayjs(range.from).format('YYYY-MM-DD') : undefined;
@@ -105,7 +106,7 @@ const GameHistoryPage = () => {
               setStartDate(from);
               setEndDate(to);
             }}
-            triggerClassName='bg-transparent h-10 hover:bg-blue-600 border-white'
+            triggerClassName='bg-transparent h-10 hover:bg-background-secondary border-borderColor'
             initialDateRange={
               startDate || endDate
                 ? {
@@ -115,6 +116,18 @@ const GameHistoryPage = () => {
                 : undefined
             }
           />
+          {(startDate || endDate) && (
+            <button
+              className="px-3 py-2 rounded border border-platform-border text-platform-text hover:bg-background-primary hover:text-white h-10"
+              onClick={() => {
+                setStartDate(undefined);
+                setEndDate(undefined);
+                setPage(1);
+              }}
+            >
+              Clear
+            </button>
+          )}
         </div>
       </div>
 
@@ -127,7 +140,6 @@ const GameHistoryPage = () => {
               <th className="py-2 pr-4">Time</th>
               <th className="py-2 pr-4">Game</th>
               <th className="py-2 pr-4">Amount</th>
-              <th className="py-2 pr-4">W/L</th>
               <th className="py-2 pr-4">Net P/L</th>
             </tr>
           </thead>
@@ -144,8 +156,7 @@ const GameHistoryPage = () => {
                   <td className="py-2 pr-4">{r.timeStr}</td>
                   <td className="py-2 pr-4">{r.game}</td>
                   <td className="py-2 pr-4">{INR(r.amount ?? 0)}</td>
-                  <td className={`py-2 pr-4 ${r.wL==='W' ? 'text-green-600' : 'text-red-600'}`}>{r.wL}</td>
-                  <td className={`py-2 pr-4 ${r.net >= 0 ? 'text-green-600' : 'text-red-600'}`}>{INR(r.net)}</td>
+                   <td className={`py-2 pr-4 ${r.net >= 0 ? 'text-green-600' : 'text-red-600'}`}>{INR(r.net)}</td>
                 </tr>
               ))
             )}
@@ -153,7 +164,7 @@ const GameHistoryPage = () => {
         </table>
       </div>
 
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-end text-platform-text border-platform-border">
         <Pagination page={page} totalPage={totalPages} changePage={setPage} />
       </div>
     </div>
