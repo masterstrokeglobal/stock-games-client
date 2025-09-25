@@ -49,9 +49,9 @@ export const parseCOMEXMessage = (data: any): { [key: string]: number } => {
         }
 
         const fullSymbol = contractData[0];
-        
-        // Ignore symbols containing GCE26 (case insensitive)
-        if (fullSymbol.toLowerCase().includes("gce26")  || fullSymbol.toLowerCase().includes("sie26") ) {
+
+        // Ignore only the specific gold contract GCEG26
+        if (fullSymbol.toUpperCase() === 'GCEG26') {
             continue;
         }
         const symbolMatch = fullSymbol.match(
@@ -254,6 +254,24 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
             const chunk = innerData.slice(i, i + 10);
             if (chunk.length >= 3 && chunk[0] !== "") {
                 const fullSymbol = chunk[0];
+
+                // For specific games, ignore selected MCX contracts
+                const isCoinToss = roundRecord?.roundRecordGameType === RoundRecordGameType.HEAD_TAIL;
+                const isGuessGame = roundRecord?.roundRecordGameType === RoundRecordGameType.GUESS_FIRST_FOUR
+                    || roundRecord?.roundRecordGameType === RoundRecordGameType.GUESS_LAST_FOUR
+                    || roundRecord?.roundRecordGameType === RoundRecordGameType.GUESS_FIRST_EIGHT
+                    || roundRecord?.roundRecordGameType === RoundRecordGameType.GUESS_LAST_EIGHT;
+                const isStockJackpot = roundRecord?.roundRecordGameType === RoundRecordGameType.STOCK_JACKPOT;
+                const shouldIgnoreForGame = (isCoinToss || isGuessGame || isStockJackpot);
+                if (shouldIgnoreForGame) {
+                    const ignoredSymbols = new Set<string>([
+                        'GOLD03OCT25FUT',
+                        'SILVER05SEP25FUT'
+                    ]);
+                    if (ignoredSymbols.has(fullSymbol.toUpperCase())) {
+                        continue;
+                    }
+                }
                 const symbolMatch = fullSymbol.match(/^([A-Z]+M?)([0-9]{1,2}[A-Z]{3}(?:[0-9]{2})?)FUT$/);
 
                 if (symbolMatch) {
