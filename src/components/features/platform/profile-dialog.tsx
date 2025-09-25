@@ -71,12 +71,12 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
             label: t('transaction-history'),
             demouser: false
         },
-        // {
-        //     href: "/game/platform/game-history",
-        //     icon: "/images/platform/user-menu/history.png",
-        //     label: t('game-history'),
-        //     demouser: true
-        // },
+        {
+            href: "/game/platform/game-history",
+            icon: "/images/platform/user-menu/betting-history.png",
+            label: t('game-history'),
+            demouser: false
+        },
         // {
         //     href: "/game/platform/betting-history",
         //     icon: "/images/platform/user-menu/betting-history.png",
