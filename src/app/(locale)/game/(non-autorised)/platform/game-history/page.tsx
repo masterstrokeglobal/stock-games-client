@@ -29,7 +29,7 @@ const GameHistoryPage = () => {
     queryClient.invalidateQueries({ queryKey: ["userBets"] });
   }, [page, queryClient]);
 
-  const rows = useMemo(() => {
+  const { rows, groupedByDate } = useMemo(() => {
     const GAME_NAME_MAP: Record<string, string> = {
       [RoundRecordGameType.DERBY]: 'Stock Roulette',
       [RoundRecordGameType.STOCK_SLOTS]: 'Stock Slot',
@@ -137,14 +137,42 @@ const GameHistoryPage = () => {
       source: 'casino' as const,
     })) ?? [];
 
-    // For the 'all' tab, we'll show the items as is without filtering/merging to preserve backend pagination
+    // Combine and sort all items
+    let allItems: any[] = [];
     if (activeTab === 'all') {
-      return [...stockItems, ...casinoItems].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      allItems = [...stockItems, ...casinoItems].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     } else if (activeTab === 'stock') {
-      return stockItems;
+      allItems = stockItems;
     } else {
-      return casinoItems;
+      allItems = casinoItems;
     }
+
+    // Group by date for mobile view
+    const grouped = allItems.reduce((acc: Record<string, any[]>, item) => {
+      const dateKey = item.dateStr;
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(item);
+      return acc;
+    }, {});
+
+    // Sort dates in descending order and sort items within each date
+    const sortedGrouped = Object.keys(grouped)
+      .sort((a, b) => {
+        const dateA = dayjs(a, 'DD-MM-YYYY');
+        const dateB = dayjs(b, 'DD-MM-YYYY');
+        return dateB.valueOf() - dateA.valueOf();
+      })
+      .reduce((acc: Record<string, any[]>, date) => {
+        acc[date] = grouped[date].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        return acc;
+      }, {});
+
+    return {
+      rows: allItems,
+      groupedByDate: sortedGrouped
+    };
   }, [typedData, activeTab]);
 
   const totalCount = useMemo(() => {
@@ -156,11 +184,11 @@ const GameHistoryPage = () => {
   const totalPages = Math.max(1, Math.ceil((totalCount || 0) / limit));
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="space-y-4 p-2">
       <h1 className="text-xl font-semibold text-platform-text">Game History</h1>
 
       <div className="flex flex-wrap justify-between gap-3 items-center">
-        <div className="flex gap-2 border rounded-md p-1 bg-white/5">
+        <div className="flex gap-2 border rounded-md p-1 bg-white/5 text-xs md:text-sm">
           <button className={`px-3 py-1 rounded text-platform-text ${activeTab==='all' ? 'bg-background-secondary ' : ''}`} onClick={() => {setActiveTab('all'); setPage(1);}}>All</button>
           <button className={`px-3 py-1 rounded text-platform-text ${activeTab==='stock' ? 'bg-background-secondary ' : ''}`} onClick={() => {setActiveTab('stock'); setPage(1);}}>Stock</button>
           <button className={`px-3 py-1 rounded text-platform-text ${activeTab==='casino' ? 'bg-background-secondary ' : ''}`} onClick={() => {setActiveTab('casino'); setPage(1);}}>Casino</button>
@@ -176,7 +204,7 @@ const GameHistoryPage = () => {
               setStartDate(from);
               setEndDate(to);
             }}
-            triggerClassName='bg-transparent h-10 hover:bg-background-secondary border-borderColor'
+            triggerClassName='bg-transparent h-10 hover:bg-background-secondary border-borderColor text-xs md:text-sm'
             initialDateRange={
               startDate || endDate
                 ? {
@@ -201,10 +229,11 @@ const GameHistoryPage = () => {
         </div>
       </div>
 
-      <div className="overflow-auto w-full">
+      {/* Desktop Table View */}
+      <div className="hidden md:block overflow-auto w-full">
         <table className="min-w-full text-sm text-platform-text">
           <thead>
-            <tr className="text-left border-b ">
+            <tr className="text-left border-b">
               <th className="py-2 pr-4">ID</th>
               <th className="py-2 pr-4">Date</th>
               <th className="py-2 pr-4">Time</th>
@@ -215,9 +244,9 @@ const GameHistoryPage = () => {
           </thead>
           <tbody>
             {isLoading ? (
-              <tr><td colSpan={7} className="py-6 text-center">Loading...</td></tr>
+              <tr><td colSpan={6} className="py-6 text-center">Loading...</td></tr>
             ) : rows.length === 0 ? (
-              <tr><td colSpan={7} className="py-6 text-center">No records</td></tr>
+              <tr><td colSpan={6} className="py-6 text-center">No records</td></tr>
             ) : (
               rows.map((r) => (
                 <tr key={`${r.source}-${r.id}`} className="border-b">
@@ -226,12 +255,49 @@ const GameHistoryPage = () => {
                   <td className="py-2 pr-4">{r.timeStr}</td>
                   <td className="py-2 pr-4">{r.game}</td>
                   <td className="py-2 pr-4">{INR(r.amount ?? 0)}</td>
-                   <td className={`py-2 pr-4 ${r.net >= 0 ? 'text-green-600' : 'text-red-600'}`}>{INR(r.net)}</td>
+                  <td className={`py-2 pr-4 ${r.net >= 0 ? 'text-green-600' : 'text-red-600'}`}>{INR(r.net)}</td>
                 </tr>
               ))
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Date-wise View */}
+      <div className="md:hidden space-y-4">
+        {isLoading ? (
+          <div className="py-6 text-center text-platform-text">Loading...</div>
+        ) : Object.keys(groupedByDate).length === 0 ? (
+          <div className="py-6 text-center text-platform-text">No records</div>
+        ) : (
+          Object.entries(groupedByDate).map(([date, items]) => (
+            <div key={date} className="border rounded-lg overflow-hidden bg-white/5">
+              <div className="bg-background-secondary px-4 py-2 font-medium text-sm text-platform-text border-b">
+                {date}
+              </div>
+              <div className="space-y-0">
+                {items.map((r) => (
+                  <div key={`${r.source}-${r.id}`} className="px-4 py-3 border-b last:border-b-0">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="font-medium text-platform-text text-sm">{r.game}</div>
+                        <div className="text-xs text-platform-text/70">
+                          {r.timeStr} • ID: {r.id}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-sm text-platform-text">{INR(r.amount ?? 0)}</div>
+                        <div className={`text-sm font-medium ${r.net >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                          {INR(r.net)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       <div className="flex items-center justify-end text-platform-text border-platform-border">
