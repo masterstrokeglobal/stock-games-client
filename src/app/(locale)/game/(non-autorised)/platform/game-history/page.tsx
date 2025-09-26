@@ -6,6 +6,7 @@ import Pagination from '@/components/ui/pagination';
 import dayjs from 'dayjs';
 import { INR } from '@/lib/utils';
 import { RoundRecordGameType } from '@/models/round-record';
+import { TransactionType } from '@/models/transaction';
 import DateRangePickerAlt from '@/components/ui/date-range-picker-alt';
 import { DateRange } from 'react-day-picker';
 import { useQueryClient } from '@tanstack/react-query';
@@ -14,7 +15,7 @@ type TabType = "all" | "stock" | "casino";
 
 const GameHistoryPage = () => {
   const [page, setPage] = useState(1);
-  const [limit] = useState(10);
+  const [limit] = useState(30);
   const [startDate, setStartDate] = useState<string | undefined>(undefined);
   const [endDate, setEndDate] = useState<string | undefined>(undefined);
   const [activeTab, setActiveTab] = useState<TabType>("all");
@@ -41,18 +42,87 @@ const GameHistoryPage = () => {
       [RoundRecordGameType.RED_BLACK]: 'Red Black',
     };
 
-    const stockItems = typedData?.stock?.items?.map((s: any, idx: number) => ({
-      id: s.roundId ?? idx,
-      date: s.createdAt,
-      dateStr: s.createdAt ? dayjs(s.createdAt).format('DD-MM-YYYY') : '-',
-      timeStr: s.createdAt ? dayjs(s.createdAt).format('HH:MM') : '-',
-      game: GAME_NAME_MAP[(s.gameType as string) ?? ''] ?? s.gameName ?? s.gameType ?? 'Stock',
-      amount: s.amount ?? 0,
-      payout: s.payout ?? 0,
-      wL: (s.payout ?? 0) > 0 ? 'W' : 'L',
-      net: (s.payout ?? 0) - (s.amount ?? 0),
-      source: 'stock' as const,
-    })) ?? [];
+    // Process stock items: merge placement and winning transactions with same roundId
+    const rawStockItems = typedData?.stock?.items ?? [];
+    const roundsMap = new Map<string, { placement?: any, winning?: any }>();
+    
+    // Group transactions by roundId and type
+    rawStockItems.forEach((s: any) => {
+      const roundId = s.roundId;
+      if (!roundId) return; // Skip items without roundId
+      
+      if (!roundsMap.has(roundId)) {
+        roundsMap.set(roundId, {});
+      }
+      
+      const roundData = roundsMap.get(roundId)!;
+      if (s.type === TransactionType.PLACEMENT) {
+        roundData.placement = s;
+      } else if (s.type === TransactionType.WINNING) {
+        roundData.winning = s;
+      }
+    });
+
+    // Create final stock items array
+    const stockItems: any[] = [];
+    
+    rawStockItems.forEach((s: any, idx: number) => {
+      const roundId = s.roundId;
+      
+      if (!roundId) {
+        // Keep items without roundId as-is
+        stockItems.push({
+          id: s.roundId ?? idx,
+          date: s.createdAt,
+          dateStr: s.createdAt ? dayjs(s.createdAt).format('DD-MM-YYYY') : '-',
+          timeStr: s.createdAt ? dayjs(s.createdAt).format('HH:MM') : '-',
+          game: GAME_NAME_MAP[(s.gameType as string) ?? ''] ?? s.gameName ?? s.gameType ?? 'Stock',
+          amount: s.amount ?? 0,
+          payout: s.payout ?? 0,
+          wL: (s.payout ?? 0) > 0 ? 'W' : 'L',
+          net: (s.payout ?? 0) - (s.amount ?? 0),
+          source: 'stock' as const,
+        });
+        return;
+      }
+
+      const roundData = roundsMap.get(roundId)!;
+      const hasPlacement = !!roundData.placement;
+      const hasWinning = !!roundData.winning;
+      
+      if (hasPlacement && hasWinning) {
+        // Both placement and winning exist - only show winning with placement amount
+        if (s.type === TransactionType.WINNING) {
+          stockItems.push({
+            id: s.roundId ?? idx,
+            date: s.createdAt,
+            dateStr: s.createdAt ? dayjs(s.createdAt).format('DD-MM-YYYY') : '-',
+            timeStr: s.createdAt ? dayjs(s.createdAt).format('HH:MM') : '-',
+            game: GAME_NAME_MAP[(s.gameType as string) ?? ''] ?? s.gameName ?? s.gameType ?? 'Stock',
+            amount: roundData.placement.amount ?? 0, // Use placement amount
+            payout: s.payout ?? 0,
+            wL: (s.payout ?? 0) > 0 ? 'W' : 'L',
+            net: (s.payout ?? 0) - (roundData.placement.amount ?? 0),
+            source: 'stock' as const,
+          });
+        }
+        // Skip placement transactions when both exist
+      } else {
+        // Only one type exists - keep it as-is
+        stockItems.push({
+          id: s.roundId ?? idx,
+          date: s.createdAt,
+          dateStr: s.createdAt ? dayjs(s.createdAt).format('DD-MM-YYYY') : '-',
+          timeStr: s.createdAt ? dayjs(s.createdAt).format('HH:MM') : '-',
+          game: GAME_NAME_MAP[(s.gameType as string) ?? ''] ?? s.gameName ?? s.gameType ?? 'Stock',
+          amount: s.amount ?? 0,
+          payout: s.payout ?? 0,
+          wL: (s.payout ?? 0) > 0 ? 'W' : 'L',
+          net: (s.payout ?? 0) - (s.amount ?? 0),
+          source: 'stock' as const,
+        });
+      }
+    });
 
     const casinoItems = typedData?.casino?.items?.map((c: any) => ({
       id: c.id,
