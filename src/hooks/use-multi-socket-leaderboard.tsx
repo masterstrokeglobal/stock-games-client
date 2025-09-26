@@ -49,6 +49,11 @@ export const parseCOMEXMessage = (data: any): { [key: string]: number } => {
         }
 
         const fullSymbol = contractData[0];
+        
+        // Ignore symbols containing GCE26 (case insensitive)
+        if (fullSymbol.toLowerCase().includes("gce26")  || fullSymbol.toLowerCase().includes("sie26") ) {
+            continue;
+        }
 
         const symbolMatch = fullSymbol.match(
             /^([A-Z]{2,4})([FGHJKMNQUVXZ])([0-9]{2})$/
