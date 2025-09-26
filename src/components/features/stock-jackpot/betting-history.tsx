@@ -7,6 +7,7 @@ import { StockJackpotPlacementType } from "@/models/stock-slot-jackpot";
 import { useGetUserGameHistory } from "@/react-query/game-user-queries";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useMemo, useState } from "react";
+import dayjs from "dayjs";
 
 // Type for a single history record based on the provided sample
 type JackpotHistory = {
@@ -22,26 +23,9 @@ type JackpotHistory = {
     netProfitLoss: number;
 };
 
-function formatDateTime(dateString: string) {
-    const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    const hours = date.getHours();
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    const ampm = hours >= 12 ? "PM" : "AM";
-    const hour12 = hours % 12 === 0 ? 12 : hours % 12;
-    const weekday = date.toLocaleDateString(undefined, { weekday: "long" });
-    return {
-        date: `${day}/${month}/${year}`,
-        time: `${hour12}:${minutes} ${ampm}`,
-        weekday,
-    };
-}
 
 // Mobile card view for a single bet history item
 function MobileHistoryCard({ item }: { item: JackpotHistory }) {
-    const { date, weekday } = formatDateTime(item.createdAt);
     return (
         <div
             className="rounded-xl p-0 overflow-hidden mb-4"
@@ -60,8 +44,8 @@ function MobileHistoryCard({ item }: { item: JackpotHistory }) {
                     borderBottom: "1px solid #50D8F2"
                 }}
             >
-                <span className="font-audiowale text-white text-[11px]">{date}</span>
-                <span className="font-audiowale text-white text-[11px]">{weekday}</span>
+                <span className="font-audiowale text-white text-[11px]">{dayjs(item.createdAt).format("DD/MM/YYYY")}</span>
+                <span className="font-audiowale text-white text-[11px]">{dayjs(item.createdAt).format("dddd")}</span>
             </div>
             {/* Body */}
             <div className="px-4 py-3 grid grid-cols-2  space-x-2">
@@ -152,15 +136,14 @@ const JackpotBettingHistory = () => {
                                 <div className="text-center py-8 text-white/60">No betting history found.</div>
                             ) : (
                                 history.map((item, i) => {
-                                    const { date, time } = formatDateTime(item.createdAt);
                                   
                                     return (
                                         <div
                                             key={item.id}
                                             className={`grid grid-cols-6 font-space-grotesk text-[#C2F2FF] gap-4 text-sm py-2 px-3 rounded-full ${i % 2 === 1 ? 'bg-[#05657D38]' : ''}`}
                                         >
-                                            <div>{date}</div>
-                                            <div>{time}</div>
+                                            <div>{dayjs(item.createdAt).format("DD/MM/YYYY")}</div>
+                                            <div>{dayjs(item.createdAt).format("HH:MM")}</div>
                                             <div
                                                 className="rounded-md px-2 py-1 w-fit "
                                                 style={

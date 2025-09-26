@@ -73,7 +73,7 @@ const LastRounds = ({
                                             {dayjs(round.createdAt).format("DD/MM/YYYY")}
                                         </div>
                                             <div className="py-2 xl:px-4 px-1 text-white  text-sm flex-1 xl:min-w-[100px]">
-                                            {dayjs(round.createdAt).format("HH:mm A")}
+                                            {dayjs(round.createdAt).format("HH:MM")}
                                         </div>
                                         <div className="py-2 xl:px-4 px-1 flex-1 xl:min-w-[120px]">
                                             <div className="flex items-center gap-2">
@@ -102,7 +102,7 @@ const LastRounds = ({
                                                 {dayjs(round.createdAt).format("DD/MM/YYYY")}
                                             </div>
                                             <div className="text-[#BED5FF] font-semibold text-sm">
-                                                {dayjs(round.createdAt).format("dddd")}
+                                                {dayjs(round.createdAt).format("HH:MM")}
                                             </div>
                                         </div>
                                         <div className=" gap-1  text-xs bg-[#2958AF] px-2 py-2 ">
