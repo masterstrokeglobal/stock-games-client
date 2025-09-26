@@ -11,7 +11,7 @@ import { OperatorRole } from "@/models/operator";
 import { useMemo } from "react";
 import { useGetBelowOperators, useGetCurrentOperator } from "@/react-query/operator-queries";
 
-export const createAgentUserInputSchema = z.object({
+const baseUserSchema = z.object({
     firstname: z.string().min(2, "First name is required").max(50),
     lastname: z.string().min(2, "Last name is required").max(50),
     username: z.string().min(3, "Username must be at least 3 characters").max(30),
@@ -19,7 +19,7 @@ export const createAgentUserInputSchema = z.object({
     operatorId: z.string().optional(),
 });
 
-export type AgentUserFormValues = z.infer<typeof createAgentUserInputSchema>;
+export type AgentUserFormValues = z.infer<typeof baseUserSchema>;
 
 type Props = {
     onSubmit: (data: AgentUserFormValues) => void;
@@ -51,12 +51,20 @@ const AgentUserForm = ({
     const agentOptions = useMemo(() => {
         const list = belowOperators?.data ?? [];
         return list
-            .filter((op: any) => op.role === OperatorRole.AGENT)
+            .filter((op: any) => String(op.role).toLowerCase() === String(OperatorRole.AGENT))
             .map((op: any) => ({ value: String(op.id), label: op.name ?? `Agent #${op.id}` }));
     }, [belowOperators]);
 
+    const schema = useMemo(() => {
+        return isAgent
+            ? baseUserSchema
+            : baseUserSchema.extend({
+                operatorId: z.string({ required_error: "Agent is required" }).min(1, "Agent is required"),
+            });
+    }, [isAgent]);
+
     const form = useForm<AgentUserFormValues>({
-        resolver: zodResolver(createAgentUserInputSchema),
+        resolver: zodResolver(schema),
         defaultValues,
     });
 

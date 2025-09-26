@@ -25,9 +25,8 @@ export const operatorAPI = {
         });
     },
     getBelowOperators: async (filter?: { operatorId: number, page: number, limit: number }) => {
-        return api.get(`/operator/hierarchy/${filter?.operatorId}`, {
-            params: filter
-        });
+        // Send no query params; company and auth context come from session
+        return api.get(`/operator/hierarchy/${filter?.operatorId}`);
     },
 
     depositOperatorWallet: async (payload: any) => {

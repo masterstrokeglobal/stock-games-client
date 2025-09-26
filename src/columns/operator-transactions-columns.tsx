@@ -30,22 +30,29 @@ const createOperatorTransactionColumns = (currentUserEmail?: string, currentOper
         header: "Type",
         accessorKey: "type",
         cell: ({ row }) => {
-            const transaction = row.original;
-            let displayType = transaction.type.split("_").join(" ");
+            const t = row.original as Transaction;
+            const isUserDeposit = t.type === TransactionType.DEPOSIT && !!t.wallet;
+            const isUserWithdrawal = t.type === TransactionType.WITHDRAWAL && !!t.wallet;
+            const isInternal = !t.wallet;
+
+            let displayType: string = t.type;
             let variant: "success" | "outline" | "destructive" = "outline";
-            
-            // Color coding for different transaction types
-            if (transaction.type === "withdrawal") {
-                variant = "success"; // Green for withdrawals (money to master wallet)
-                displayType = "Internal Withdrawal";
-            } else if (transaction.type === "deposit") {
-                variant = "outline"; // Default for deposits
-                displayType = "Internal Deposit";
-            } else if (transaction.type === "operator_deposit" as any) {
-                variant = "outline"; // Default for operator deposits
+
+            if (isUserDeposit) {
+                displayType = "Deposit";
+            } else if (isUserWithdrawal) {
+                displayType = "Withdrawal";
+                variant = "success";
+            } else if (isInternal && t.type === TransactionType.DEPOSIT) {
                 displayType = "Operator Transfer";
+            } else if (isInternal && t.type === TransactionType.WITHDRAWAL) {
+                displayType = "Operator Transfer";
+            } else if ((t as any).type === "operator_deposit") {
+                displayType = "Operator Transfer";
+            } else {
+                displayType = (t.type as string).split("_").join(" ");
             }
-            
+
             return (
                 <Badge className="text-nowrap" variant={variant}>
                     {displayType}

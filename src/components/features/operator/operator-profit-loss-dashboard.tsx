@@ -120,35 +120,7 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
                 </div>
             </div>
 
-            {/* Performance Overview (hidden when no business) */}
-            {performanceStatus !== 'no-business' && (
-                <Card className={cn("border-2", getPerformanceColor(performanceStatus))}>
-                    <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                                {getPerformanceIcon(performanceStatus)}
-                                <div>
-                                    <h3 className="text-lg font-semibold capitalize">
-                                        {performanceStatus.replace('-', ' ')} Performance
-                                    </h3>
-                                    <p className="text-sm opacity-80">
-                                        {performanceStatus === 'profit' && "Your business is generating profit"}
-                                        {performanceStatus === 'loss' && "Your business is showing losses"}
-                                        {performanceStatus === 'break-even' && "Your business is breaking even"}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="text-right">
-                                <div className="text-2xl font-bold">
-                                    {(poolPL?.totals?.netPoolPL ?? stats.profitLossStats.directNetProfitLoss) >= 0 ? '+' : ''}
-                                    {INR(poolPL?.totals?.netPoolPL ?? stats.profitLossStats.directNetProfitLoss)}
-                                </div>
-                                <div className="text-sm opacity-80">Net P&L</div>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
+            {/* Performance Overview removed as per request */}
 
             {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
