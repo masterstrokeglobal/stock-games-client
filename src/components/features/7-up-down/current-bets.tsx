@@ -34,7 +34,7 @@ const NoBets = () => {
   return (
     <div className="text-white space-y-2 text-center flex flex-col items-center justify-start ">
       <Image
-        src="/images/dice-game/no-bets.png"
+        src="https://res.cloudinary.com/dt8iv1hds/image/upload/v1758191715/no-bets_iz6wxc.png"
         alt="No Bets"
         className="w-auto xl:h-20 h-16 aspect-square "
         width={100}
@@ -74,7 +74,7 @@ const BetsList = ({
               >
                 <div className="flex-1 text-left">{index + 1}</div>
                 <div className="flex-1 text-left">
-                  {dayjs(placement.createdAt).format("hh:mm A")}
+                  {dayjs(placement.createdAt).format("HH:MM")}
                 </div>
                 <div className="flex-1 text-left flex items-center gap-2">
                   <SevenUpDownChip

@@ -73,7 +73,7 @@ const LastRoundWinner = ({ roundRecord, className }: Props) => {
                                         </td>
                                         <td className="p-2">
                                             <span className="text-game-secondary text-sm">
-                                                {dayjs(round.createdAt).format("DD/MM/YYYY HH:mm A")}
+                                                {dayjs(round.createdAt).format("DD/MM/YYYY HH:MM")}
                                             </span>
                                         </td>
                                         <td className="p-2 text-center">

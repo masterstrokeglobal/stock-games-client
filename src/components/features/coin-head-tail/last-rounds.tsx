@@ -83,7 +83,7 @@ const LastRounds = ({
                                                 {dayjs(row.createdAt).format("DD/MM/YYYY")}
                                             </div>
                                             <div className=" px-2 py-1 flex-1 whitespace-nowrap text-left truncate">
-                                                {dayjs(row.createdAt).format("hh:mm A")}
+                                                {dayjs(row.createdAt).format("HH:MM")}
                                             </div>
                                             <div className=" px-2 py-1 flex-1 whitespace-nowrap text-left truncate">
                                                     {row.winningSide}
