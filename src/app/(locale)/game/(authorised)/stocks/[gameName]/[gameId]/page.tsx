@@ -10,7 +10,7 @@ import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-export default function stockGame() {
+export default function StockGame() {
     const { gameId } = useParams();
     const router = useRouter();
     const searchParams = useSearchParams();
