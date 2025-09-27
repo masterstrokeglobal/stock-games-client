@@ -154,4 +154,16 @@ export const operatorAPI = {
             }
         });
     },
+
+    // Settlement APIs
+    getSettlements: async (filter?: { startDate?: Date, endDate?: Date, agentId?: number, aggregate?: boolean }) => {
+        return api.get("/operator/settlements", {
+            params: {
+                start: filter?.startDate?.toISOString().split('T')[0],
+                end: filter?.endDate?.toISOString().split('T')[0],
+                agentId: filter?.agentId,
+                aggregate: filter?.aggregate
+            }
+        });
+    },
 };

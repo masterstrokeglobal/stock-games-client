@@ -442,3 +442,15 @@ export const useValidateOperatorPercentage = () => {
         },
     });
 };
+
+// Get settlements data
+export const useGetSettlements = (filter?: { startDate?: Date, endDate?: Date, agentId?: number, aggregate?: boolean }) => {
+    return useQuery({
+        queryKey: ["settlements", filter],
+        queryFn: async () => {
+            const response = await operatorAPI.getSettlements(filter);
+            return response.data;
+        },
+        enabled: true,
+    });
+};
