@@ -13,11 +13,11 @@ import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { DateRange } from "react-day-picker";
 
 type Props = {
-    operatorId: number;
+    operatorId?: number;
     className?: string;
 };
 
-const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
+const OperatorProfitLossDashboard = ({ className }: Props) => {
     const [dateRange, setDateRange] = useState<DateRange | undefined>({
         from: dayjs().subtract(7, 'day').toDate(),
         to: new Date()

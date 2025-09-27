@@ -31,10 +31,20 @@ class User {
     monthlyWithdrawLimit?: number;
     createdAt?: Date;
     notes?: string;
+    lastLoginAt?: Date;
+    lastLoginIp?: string;
     demoUser: boolean;
     updatedAt?: Date;
     deletedAt?: Date;
     balance?: number;
+    wallet?: {
+        id?: number;
+        mainBalance?: number;
+        bonusBalance?: number;
+        createdAt?: Date;
+        updatedAt?: Date;
+        deletedAt?: Date | null;
+    };
     constructor(params: Partial<User> = {}) {
         this.id = params.id;
         this.firstname = params.firstname;
@@ -56,6 +66,7 @@ class User {
         this.dailyWithdrawLimit = params.dailyWithdrawLimit;
         this.monthlyWithdrawLimit = params.monthlyWithdrawLimit;
         this.cryptoAddress = params.cryptoAddress;
+        this.wallet = params.wallet;
         if (params.company) {
             this.company = new Company(params.company);
         }
@@ -65,6 +76,8 @@ class User {
         this.createdAt = params.createdAt;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;
+        this.lastLoginAt = params.lastLoginAt;
+        this.lastLoginIp = params.lastLoginIp;
     }
 
     isNotAllowedToPlaceOrder(type: SchedulerType) {

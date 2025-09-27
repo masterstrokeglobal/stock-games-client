@@ -44,7 +44,7 @@ const OperatorTransactionTable = ({ operatorId, className }: Props) => {
     // Create columns with current user email and operator data
     const columns = createOperatorTransactionColumns(userDetails?.email, currentOperator);
 
-    const { data, isSuccess, isLoading } = useGetHierarchicalTransactions({
+    const { data, isLoading } = useGetHierarchicalTransactions({
         operatorId: currentOperatorId,
         page: page,
         search,

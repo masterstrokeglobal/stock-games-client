@@ -571,6 +571,7 @@
             "email-invalid": "Please enter a valid email address",
             "username-max": "Username cannot exceed 100 characters",
             "username-required": "Username is required",
+            "username-lowercase": "Username must be in lowercase only",
             "password-min": "Password must be at least 6 characters long",
             "password-max": "Password cannot exceed 20 characters",
             "password-required": "Password is required"

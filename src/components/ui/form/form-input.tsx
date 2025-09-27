@@ -28,6 +28,7 @@ function FormInput<
   children,
   label,
   className,
+  transform,
   ...props
 }: {
   label?: string;
@@ -39,6 +40,7 @@ function FormInput<
   Icon?: React.ReactNode;
   name: TName;
   description?: string;
+  transform?: (value: string) => string;
 } & React.InputHTMLAttributes<HTMLInputElement>) {
   // Game input styles (matches /features/platform/filters.tsx)
   const gameInputClass =
@@ -48,7 +50,14 @@ function FormInput<
     <FormField
       control={control}
       name={name}
-      render={({ field }) => (
+      render={({ field }) => {
+        // Apply transform function if provided
+        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+          const value = e.target.value;
+          field.onChange(transform ? transform(value) : value);
+        };
+        
+        return (
         <FormItem className={cn(className, game ? "space-y-1" : "")}>
           {label && (
             <FormLabel className={cn(game ? "text-platform-text mb-0" : "")}>
@@ -64,6 +73,7 @@ function FormInput<
                 )}
                 {...props}
                 {...field}
+                onChange={handleChange}
               />
               {children}
             </div>
@@ -71,7 +81,7 @@ function FormInput<
           {description && <FormDescription>{description}</FormDescription>}
           <FormMessage />
         </FormItem>
-      )}
+      )}}
     />
   );
 }
