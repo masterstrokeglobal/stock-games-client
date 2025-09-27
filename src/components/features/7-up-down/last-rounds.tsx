@@ -5,7 +5,9 @@ import { cn } from "@/lib/utils";
 import { RoundRecordGameType } from "@/models/round-record";
 import { useGetAllGameHistory } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { useMemo } from "react";
+dayjs.extend(utc);
 
 type History = {
     id: number;
@@ -70,10 +72,10 @@ const LastRounds = ({
                                         className="flex bg-[#517ED466] font-normal text-sm px-2 font-poppins rounded-full mb-2 items-center"
                                     >
                                         <div className="py-2 xl:px-4 px-1 text-white text-sm flex-1 xl:min-w-[120px]">
-                                            {dayjs(round.createdAt).format("DD/MM/YYYY")}
+                                            {dayjs.utc(round.createdAt).local().format("DD/MM/YYYY")}
                                         </div>
                                             <div className="py-2 xl:px-4 px-1 text-white  text-sm flex-1 xl:min-w-[100px]">
-                                            {dayjs(round.createdAt).format("HH:MM")}
+                                            {dayjs.utc(round.createdAt).local().format("hh:mm A")}
                                         </div>
                                         <div className="py-2 xl:px-4 px-1 flex-1 xl:min-w-[120px]">
                                             <div className="flex items-center gap-2">
@@ -99,10 +101,10 @@ const LastRounds = ({
                                     >
                                         <div className="flex  items-center justify-between  px-2 py-1 bg-[#1A2867] border-b border-[#517ED4] ">
                                             <div className="text-[#8BB4FF] font-semibold text-sm tracking-wider">
-                                                {dayjs(round.createdAt).format("DD/MM/YYYY")}
+                                                {dayjs(round.createdAt).local().format("DD/MM/YYYY")}
                                             </div>
                                             <div className="text-[#BED5FF] font-semibold text-sm">
-                                                {dayjs(round.createdAt).format("HH:MM")}
+                                                {dayjs(round.createdAt).local().format("HH:mm")}
                                             </div>
                                         </div>
                                         <div className=" gap-1  text-xs bg-[#2958AF] px-2 py-2 ">

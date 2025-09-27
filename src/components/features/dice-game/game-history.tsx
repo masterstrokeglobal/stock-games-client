@@ -13,7 +13,8 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useGameType } from "@/hooks/use-game-type";
 import { useGetAllGameHistory } from "@/react-query/round-record-queries";
-
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 // Mobile-specific component for game history
 const MobileGameHistory = ({ rounds }: { rounds: any[] }) => {
     return (
@@ -155,7 +156,7 @@ const GameHistoryDialog = ({ children }: GameHistoryDialogProps) => {
                                                         </td>
                                                         <td className="p-2">
                                                             <span className="text-game-secondary text-sm">
-                                                                {dayjs(round.createdAt).format("DD/MM/YYYY HH:MM")}
+                                                                {dayjs.utc(round.createdAt).local().format("DD/MM/YYYY hh:mm A")}
                                                             </span>
                                                         </td>
                                                         <td className="p-2 text-right">

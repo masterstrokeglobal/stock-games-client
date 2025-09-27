@@ -12,15 +12,15 @@ import {
   Viewers,
 } from "@/components/features/wheel-of-fortune/stock-price";
 import { Button } from "@/components/ui/button";
-import { useWindowSize } from "@/hooks/use-window-size";
 import { useCurrentGame, useGameState } from "@/hooks/use-current-game";
-import { useMarketSelector } from "@/hooks/use-market-selector";
-import useWinningId from "@/hooks/use-winning-id";
 import { useLeaderboard } from "@/hooks/use-leadboard";
+import { useMarketSelector } from "@/hooks/use-market-selector";
+import { useWindowSize } from "@/hooks/use-window-size";
+import useWinningId from "@/hooks/use-winning-id";
+import { cn } from "@/lib/utils";
 import { RoundRecordGameType } from "@/models/round-record";
 import { MenuIcon } from "lucide-react";
-import { useState, useRef } from "react";
-import { cn } from "@/lib/utils";
+import { useRef, useState } from "react";
 
 const WheelOfFortune = () => {
   const [wheelHeight, setWheelHeight] = useState(0);

@@ -12,6 +12,8 @@ import { useGetUserGameHistory } from '@/react-query/game-user-queries';
 import dayjs from "dayjs";
 import { ChevronLeft, ChevronRight, RefreshCw, X } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 // Mobile-specific component for bet history
 const MobileBettingHistory = ({ history }: { history: History[] }) => {
@@ -186,12 +188,9 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                 )}
                                 <div className="max-h-[60svh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#5C8983] scrollbar-track-transparent">
                                     {history?.map((row, idx) => (
-                                        <div
-                                            key={idx}
-                                            className="text-white flex"
-                                        >
-                                            <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D] rounded-l-full" : ""}`)}>{dayjs(row.createdAt).format("DD/MM/YYYY")}</div>
-                                            <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D]" : ""}`)}>{dayjs(row.createdAt).format("HH:MM")}</div>
+                                        <div key={idx} className="text-white flex">
+                                            <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D] rounded-l-full" : ""}`)}>{dayjs.utc(row.createdAt).local().format("DD/MM/YYYY")}</div>
+                                            <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D]" : ""}`)}>{dayjs.utc(row.createdAt).local().format("hh:mm A")}</div>
                                             <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D]" : ""}`)}>
                                                 <span
                                                     className="px-3 py-1 rounded-full font-semibold"

@@ -7,6 +7,8 @@ import { RoundRecord, RoundRecordGameType } from "@/models/round-record";
 import { useGetAllGameHistory } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
 import { useEffect, useRef } from "react";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 // Enhanced interface for ranked market items
 type Props = {
@@ -73,7 +75,7 @@ const LastRoundWinner = ({ roundRecord, className }: Props) => {
                                         </td>
                                         <td className="p-2">
                                             <span className="text-game-secondary text-sm">
-                                                {dayjs(round.createdAt).format("DD/MM/YYYY HH:MM")}
+                                                {dayjs.utc(round.createdAt).local().format("DD/MM/YYYY hh:mm A")}
                                             </span>
                                         </td>
                                         <td className="p-2 text-center">

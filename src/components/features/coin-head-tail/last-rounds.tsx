@@ -5,6 +5,8 @@ import { useGetAllGameHistory } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
 import { useGameType } from "@/hooks/use-game-type";
 import { useMemo, memo } from "react";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 // Table row background based on winner
 const HEAD_BG =
@@ -80,10 +82,10 @@ const LastRounds = ({
                                                 {row.id}
                                             </div>
                                             <div className=" px-2 py-1 flex-1 whitespace-nowrap text-left truncate">
-                                                {dayjs(row.createdAt).format("DD/MM/YYYY")}
+                                                {dayjs.utc(row.createdAt).local().format("DD/MM/YYYY")}
                                             </div>
                                             <div className=" px-2 py-1 flex-1 whitespace-nowrap text-left truncate">
-                                                {dayjs(row.createdAt).format("HH:MM")}
+                                                {dayjs.utc(row.createdAt).local().format("hh:mm A")}
                                             </div>
                                             <div className=" px-2 py-1 flex-1 whitespace-nowrap text-left truncate">
                                                     {row.winningSide}

@@ -12,6 +12,8 @@ import dayjs from "dayjs";
 import { ChevronLeft, ChevronRight, Loader2, X } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { COIN_SIDE_CONFIG } from './betting-history';
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 // Mobile card component for game history
 const MobileGameHistoryCard: React.FC<{
@@ -160,8 +162,8 @@ const GameHistoryDialog = ({ children }: GameHistoryDialogProps) => {
                                                     key={idx}
                                                     className={cn(
                                                         "text-white flex items-center font-phudu font-light border-b border-[#0B5AB6]")}>
-                                                    <div className="px-4 py-3 flex-[1.2] flex items-center">{dayjs(row.createdAt).format("DD/MM/YYYY")}</div>
-                                                    <div className="px-4 py-3 flex-[1.2] flex items-center">{dayjs(row.createdAt).format("HH:MM")}</div>
+                                                    <div className="px-4 py-3 flex-[1.2] flex items-center">{dayjs.utc(row.createdAt).local().format("DD/MM/YYYY")}</div>
+                                                    <div className="px-4 py-3 flex-[1.2] flex items-center">{dayjs.utc(row.createdAt).local().format("hh:mm A")}</div>
                                                     <div className="px-4 py-3 flex-[1.2] flex items-center">
                                                         <span
                                                             className="px-3 py-0.5 rounded-full font-semibold"
