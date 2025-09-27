@@ -30,6 +30,8 @@ type SearchFilters = {
   orderBy?: string;
   type?: string;
   limit?: number;
+  startDate?: string;
+  endDate?: string;
 } & KeyValue
 
 

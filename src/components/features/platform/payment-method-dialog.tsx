@@ -255,7 +255,7 @@ const AddPaymentMethodForm = ({ onBack }: AddPaymentMethodFormProps) => {
                                 placeholder="Enter account holder name"
                                 game
                                 className="relative"
-                                inputClassName="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
+                                inputClassName="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all px-2 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
                             />
 
                             <FormInput
@@ -265,7 +265,7 @@ const AddPaymentMethodForm = ({ onBack }: AddPaymentMethodFormProps) => {
                                 placeholder="Enter account number (9-18 digits)"
                                 game
                                 className="relative"
-                                inputClassName="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
+                                inputClassName="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all px-2 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
                             />
 
                             <FormInput
@@ -275,7 +275,7 @@ const AddPaymentMethodForm = ({ onBack }: AddPaymentMethodFormProps) => {
                                 placeholder="Enter IFSC code (11 characters)"
                                 game
                                 className="relative"
-                                inputClassName="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
+                                inputClassName="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all px-2 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
                             />
 
                             <FormInput
@@ -285,7 +285,7 @@ const AddPaymentMethodForm = ({ onBack }: AddPaymentMethodFormProps) => {
                                 placeholder="Enter bank name"
                                 game
                                 className="relative"
-                                inputClassName="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all p-0 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
+                                inputClassName="w-full bg-transparent font-normal border-none rounded-none text-platform-text text-base focus:outline-none placeholder:text-platform-text transition-all px-2 h-auto focus-visible:ring-0 focus-visible:ring-offset-0"
                             />
 
                             <Button

@@ -38,7 +38,7 @@ const baseOperatorMenuItems: MenuItem[] = [
         name: 'Wallet',
         icon: Wallet,
         subItems: [
-            { name: 'Wallet Dashboard', link: '/operator-dashboard/wallet' },
+            // { name: 'Wallet Dashboard', link: '/operator-dashboard/wallet' },
             { name: 'Transaction History', link: '/operator-dashboard/wallet/transactions' },
         ],
     },

@@ -327,11 +327,12 @@
         "confirm-deposit": "Confirm Deposit",
         "validation": {
             "transaction-id-required": "Transaction ID is required",
-            "transaction-id-max": "Transaction ID cannot exceed 50 characters",
+            "transaction-id-max": "Transaction ID cannot exceed 20 characters",
             "confirmation-image-url-invalid": "Invalid confirmation image URL",
             "confirmation-image-url-required": "Confirmation image URL is required",
             "amount-required": "Amount is required",
-            "amount-invalid": "Please enter a valid amount"
+            "amount-invalid": "Please enter a valid amount",
+            "amount-required-500": "Amount must be at least 500"
         }
     },
     "deposit-form": {
@@ -570,6 +571,7 @@
             "email-invalid": "Please enter a valid email address",
             "username-max": "Username cannot exceed 100 characters",
             "username-required": "Username is required",
+            "username-lowercase": "Username must be in lowercase only",
             "password-min": "Password must be at least 6 characters long",
             "password-max": "Password cannot exceed 20 characters",
             "password-required": "Password is required"

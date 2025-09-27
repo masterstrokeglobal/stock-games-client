@@ -19,6 +19,9 @@ import { TransactionStatus, TransactionType } from "@/models/transaction";
 import { useGetHierarchicalTransactions } from "@/react-query/operator-queries";
 import { Search } from "lucide-react";
 import React, { useMemo, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { handleSingleDownload } from "@/components/common/invoice-generator";
+import { toast } from "sonner";
 
 type Props = {
     operatorId: number;
@@ -41,7 +44,7 @@ const OperatorTransactionTable = ({ operatorId, className }: Props) => {
     // Create columns with current user email and operator data
     const columns = createOperatorTransactionColumns(userDetails?.email, currentOperator);
 
-    const { data, isSuccess, isLoading } = useGetHierarchicalTransactions({
+    const { data, isLoading } = useGetHierarchicalTransactions({
         operatorId: currentOperatorId,
         page: page,
         search,
@@ -50,10 +53,23 @@ const OperatorTransactionTable = ({ operatorId, className }: Props) => {
         limit: limit,
     });
 
-    // Calculate total pages based on data count
+    // Filter to show only deposit and withdrawal transactions
+    const filteredRows = useMemo(() => {
+        const rows = data?.data || [];
+        return rows.filter((t: any) => {
+            const isUserDeposit = t.type === TransactionType.DEPOSIT
+                && !!t.wallet
+                && (!!t.paymentMethod || !!t.pgId);
+            const isUserWithdrawal = t.type === TransactionType.WITHDRAWAL
+                && !!t.wallet;
+            return isUserDeposit || isUserWithdrawal;
+        });
+    }, [data]);
+
+    // Calculate total pages based on filtered rows
     const totalPages = useMemo(() => {
-        return Math.ceil(data?.count / limit) || 1;
-    }, [data, isSuccess, limit]);
+        return Math.ceil((filteredRows.length || 0) / limit) || 1;
+    }, [filteredRows, limit]);
 
     // Handle search input change
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,6 +80,85 @@ const OperatorTransactionTable = ({ operatorId, className }: Props) => {
     // Change page when pagination controls are used
     const changePage = (newPage: number) => {
         setPage(newPage);
+    };
+
+    const handleDownloadPdf = () => {
+        handleSingleDownload({
+            type: "userTransactionReport",
+            data: data?.data,
+        });
+    };
+
+    const handleDownloadExcel = () => {
+        try {
+            const rows = Array.isArray(data?.data) ? data?.data : [];
+            if (!rows.length) {
+                toast.error("No data to export");
+                return;
+            }
+
+            const headers = [
+                "ID",
+                "Transaction ID",
+                "User",
+                "Type",
+                "Amount",
+                "Status",
+                "From (Name)",
+                "From (Email)",
+                "To (Name)",
+                "To (Email)",
+                "Bonus %",
+                "Created Date",
+                "Created Time",
+            ];
+
+            const escapeCsv = (val: any) => {
+                const str = val ?? "";
+                const s = String(str);
+                if (s.includes(",") || s.includes("\n") || s.includes('"')) {
+                    return '"' + s.replace(/"/g, '""') + '"';
+                }
+                return s;
+            };
+
+            const body = rows.map((item: any) => {
+                const depositor = item?.depositorOperatorWallet?.operator;
+                const creditor = item?.creditorOperatorWallet?.operator;
+                const isPoints = item?.type === "points_earned" || item?.type === "points_redeemed";
+                const amount = isPoints ? `${item?.amount ?? 0} Points` : `${Math.abs(Number(item?.amount ?? 0)).toFixed(2)}`;
+                const createdDate = item?.createdAt ? new Date(item.createdAt) : undefined;
+                return [
+                    item?.id ?? "",
+                    item?.pgId || "",
+                    item?.user?.username || "",
+                    String(item?.type || "").split("_").join(" "),
+                    amount,
+                    String(item?.status || "").split("_").join(" "),
+                    depositor?.name || "",
+                    depositor?.email || "",
+                    creditor?.name || "",
+                    creditor?.email || "",
+                    item?.bonusPercentage ?? "",
+                    createdDate ? createdDate.toLocaleDateString() : "",
+                    createdDate ? createdDate.toLocaleTimeString() : "",
+                ].map(escapeCsv).join(",");
+            });
+
+            const csv = [headers.join(","), ...body].join("\n");
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `user-transactions.csv`;
+            link.click();
+            URL.revokeObjectURL(url);
+            link.remove();
+            toast.success("CSV downloaded");
+        } catch (err) {
+            console.error(err);
+            toast.error("Failed to export CSV");
+        }
     };
 
     return (
@@ -138,6 +233,14 @@ const OperatorTransactionTable = ({ operatorId, className }: Props) => {
                             <SelectItem value="100">100</SelectItem>
                         </SelectContent>
                     </Select>
+
+                    <Button onClick={handleDownloadPdf}>
+                        Download Pdf
+                    </Button>
+
+                    <Button onClick={handleDownloadExcel}>
+                        Download Excel
+                    </Button>
                 </div>
             </header>
             <main className="mt-4">
@@ -145,7 +248,7 @@ const OperatorTransactionTable = ({ operatorId, className }: Props) => {
                     page={page}
                     loading={isLoading}
                     columns={columns}
-                    data={data?.data}
+                    data={filteredRows}
                     totalPage={totalPages}
                     changePage={changePage}
                 />

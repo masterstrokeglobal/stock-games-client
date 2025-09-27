@@ -4,6 +4,8 @@ import { useLastRoundWinner } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef } from "react";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 const LastWinners = ({ className }: PropsWithClassName) => {
     const sectionRef = useRef<HTMLDivElement | null>(null);
@@ -64,11 +66,11 @@ const LastRoundWinner = () => {
                         {rounds.map((round, index) => (
                             <tr key={index} className="flex">
                                 <td className="p-2 text-sm flex-1">
-                                    {dayjs(round.startTime).format("hh:mm A")} ({round.roundNumber})
+                                    {dayjs.utc(round.startTime).local().format("HH:mm")} ({round.roundNumber})
                                 </td>
                                 <td className="p-2 text-sm flex-1 px-2">
                                     <span className={cn("w-16 mx-auto font-semibold flex items-center justify-center", round.winningColor === "red" ? "justify-start text-red-500" : "justify-end  text-white", round.winningNumber === 0 ? "justify-center text-yellow-600" : "")}>
-                                        &nbsp; {round.winningNumber} &nbsp;
+                                        &nbsp; {round?.winningNumber} &nbsp;
                                     </span>
                                 </td>
                             </tr>

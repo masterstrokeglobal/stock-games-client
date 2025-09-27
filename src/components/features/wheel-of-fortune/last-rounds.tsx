@@ -6,6 +6,8 @@ import { useGameType } from "@/hooks/use-game-type";
 import dayjs from "dayjs";
 import { WheelColor } from "@/models/wheel-of-fortune-placement";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 /**
  * LastRoundsTable
@@ -77,10 +79,10 @@ const LastRoundsTable: React.FC<{ className?: string; tableClassName?: string }>
                       {round.id}
                     </div>
                     <div className="flex-1 px-3 py-2 text-white truncate">
-                      {dayjs(round.createdAt).format("DD/MM/YYYY")}
+                      {dayjs.utc(round.createdAt).local().format("DD/MM/YYYY")}
                     </div>
                     <div className="flex-1 px-3 py-2 text-white md:block hidden truncate">
-                      {dayjs(round.createdAt).format("hh:mm A")}
+                      {dayjs.utc(round.createdAt).local().format("hh:mm A")}
                     </div>
                     <div className="flex-1 px-3 py-2 truncate">
                       {winnerConfig ? (

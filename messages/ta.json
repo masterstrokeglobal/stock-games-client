@@ -198,7 +198,8 @@
             "transaction-id-required": "பரிவர்த்தனை ஐடி தேவை",
             "transaction-id-max": "பரிவர்த்தனை ஐடி 50 எழுத்துகளுக்கு மேல் இருக்கக்கூடாது",
             "amount-required": "தொகை தேவை",
-            "amount-invalid": "சரியான தொகையை உள்ளிடவும்"
+            "amount-invalid": "சரியான தொகையை உள்ளிடவும்",
+            "amount-required-500": "தொகை குறைந்தது 500 ஆக இருக்க வேண்டும்"
         }
     },
     "deposit-form": {

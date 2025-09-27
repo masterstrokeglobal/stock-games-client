@@ -50,10 +50,11 @@ export const parseCOMEXMessage = (data: any): { [key: string]: number } => {
 
         const fullSymbol = contractData[0];
         
-        // Ignore GCEG26 symbols
-        if (fullSymbol.startsWith("GCEG26")) {
+        // Ignore symbols containing GCE26 (case insensitive)
+        if (fullSymbol.toLowerCase().includes("gce26")  || fullSymbol.toLowerCase().includes("sie26") ) {
             continue;
         }
+
         const symbolMatch = fullSymbol.match(
             /^([A-Z]{2,4})([FGHJKMNQUVXZ])([0-9]{2})$/
         );
@@ -254,10 +255,36 @@ export const useLeaderboard = (roundRecord: RoundRecord | null) => {
             const chunk = innerData.slice(i, i + 10);
             if (chunk.length >= 3 && chunk[0] !== "") {
                 const fullSymbol = chunk[0];
+
+                // For specific games, ignore selected MCX contracts
+                const isCoinToss = roundRecord?.roundRecordGameType === RoundRecordGameType.HEAD_TAIL;
+                const isGuessGame = roundRecord?.roundRecordGameType === RoundRecordGameType.GUESS_FIRST_FOUR
+                    || roundRecord?.roundRecordGameType === RoundRecordGameType.GUESS_LAST_FOUR
+                    || roundRecord?.roundRecordGameType === RoundRecordGameType.GUESS_FIRST_EIGHT
+                    || roundRecord?.roundRecordGameType === RoundRecordGameType.GUESS_LAST_EIGHT;
+                const isStockJackpot = roundRecord?.roundRecordGameType === RoundRecordGameType.STOCK_JACKPOT;
+                const shouldIgnoreForGame = (isCoinToss || isGuessGame || isStockJackpot);
+                if (shouldIgnoreForGame) {
+                    const ignoredSymbols = new Set<string>([
+                        'GOLD03OCT25FUT',
+                        'SILVER05SEP25FUT'
+                    ]);
+                    if (ignoredSymbols.has(fullSymbol.toUpperCase())) {
+                        continue;
+                    }
+                }
                 const symbolMatch = fullSymbol.match(/^([A-Z]+M?)([0-9]{1,2}[A-Z]{3}(?:[0-9]{2})?)FUT$/);
 
                 if (symbolMatch) {
                     const baseSymbol = symbolMatch[1];
+                    // Extract month text (e.g., from 05DEC25 -> DEC, 03OCT25 -> OCT)
+                    const dateAndMonthPart = symbolMatch[2];
+                    const monthText = dateAndMonthPart.replace(/^\d{1,2}/, '').slice(0, 3);
+
+                    // Ignore OCT contracts for GOLD and SILVER variants (GOLD, GOLDM, SILVER, SILVERM)
+                    if (monthText === 'OCT' && (/^GOLDM?$/.test(baseSymbol) || /^SILVERM?$/.test(baseSymbol))) {
+                        continue;
+                    }
                     const price = parseFloat(chunk[3]);
 
                     if (!isNaN(price)) {

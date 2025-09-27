@@ -1,79 +1,40 @@
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useGetCurrentOperator, useGetOperatorHierarchyPoolPL, useGetOperatorProfitLossStats } from "@/react-query/operator-queries";
-import { TrendingUp, TrendingDown, Minus, Wallet, Users, ArrowRight, RefreshCw } from "lucide-react";
-import { cn, INR } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { useGetCurrentOperator, useGetSettlements } from "@/react-query/operator-queries";
+import { RefreshCw, Download } from "lucide-react";
+import { cn } from "@/lib/utils";
 import LoadingScreen from "@/components/common/loading-screen";
-import { OperatorPLStats, PerformanceStatus } from "@/types/profit-loss";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import dayjs from "dayjs";
 import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { DateRange } from "react-day-picker";
 
 type Props = {
-    operatorId: number;
+    operatorId?: number;
     className?: string;
 };
 
-const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
+const OperatorProfitLossDashboard = ({ className }: Props) => {
     const [dateRange, setDateRange] = useState<DateRange | undefined>({
-        from: dayjs().subtract(30, 'day').toDate(),
+        from: dayjs().subtract(7, 'day').toDate(),
         to: new Date()
     });
+    const [agentId, setAgentId] = useState<string>("");
+    const [aggregate, setAggregate] = useState<boolean>(true);
 
-    const { data: plStats, isLoading, error, refetch, isRefetching } = useGetOperatorProfitLossStats({
-        operatorId,
-        startDate: dateRange?.from,
-        endDate: dateRange?.to
-    });
-
-    // Pool P/L (Deposits - Withdrawals)
     const { data: currentOperator } = useGetCurrentOperator();
-    const companyId = currentOperator?.company?.id;
-    const { data: poolPL } = useGetOperatorHierarchyPoolPL(
-        companyId
-            ? {
-                companyId,
-                operatorId,
-                includeBreakdown: false,
-                startDate: dateRange?.from,
-                endDate: dateRange?.to,
-            }
-            : ({ companyId: 0 } as any),
-        { enabled: !!companyId }
-    );
+    const isAdmin = currentOperator?.role?.toLowerCase() === 'company_admin';
 
-    const performanceStatus: PerformanceStatus = useMemo(() => {
-        if (!plStats?.profitLossStats) return 'no-business';
-        
-        // Prefer pool-based net when available
-        const netPL = poolPL?.totals?.netPoolPL ?? plStats.profitLossStats.directNetProfitLoss;
-        if (netPL > 0) return 'profit';
-        if (netPL < 0) return 'loss';
-        if (netPL === 0 && (poolPL?.totals?.totalDeposits ?? plStats.profitLossStats.directTotalCreditRequests) > 0) return 'break-even';
-        return 'no-business';
-    }, [plStats, poolPL]);
-
-    const getPerformanceColor = (status: PerformanceStatus) => {
-        switch (status) {
-            case 'profit': return 'text-green-600 bg-green-50 border-green-200';
-            case 'loss': return 'text-red-600 bg-red-50 border-red-200';
-            case 'break-even': return 'text-blue-600 bg-blue-50 border-blue-200';
-            default: return 'text-gray-600 bg-gray-50 border-gray-200';
-        }
-    };
-
-    const getPerformanceIcon = (status: PerformanceStatus) => {
-        switch (status) {
-            case 'profit': return <TrendingUp className="h-5 w-5" />;
-            case 'loss': return <TrendingDown className="h-5 w-5" />;
-            case 'break-even': return <Minus className="h-5 w-5" />;
-            default: return <Minus className="h-5 w-5" />;
-        }
-    };
+    // Get settlements data
+    const { data: settlementsData, isLoading, error, refetch } = useGetSettlements({
+        startDate: dateRange?.from,
+        endDate: dateRange?.to,
+        agentId: agentId ? parseInt(agentId) : undefined,
+        aggregate
+    });
 
     if (isLoading) {
         return <LoadingScreen className="h-64" />;
@@ -82,7 +43,7 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
     if (error) {
         return (
             <div className={cn("p-6 text-center", className)}>
-                <div className="text-red-500 mb-4">Error loading profit & loss data</div>
+                <div className="text-red-500 mb-4">Error loading settlement data</div>
                 <Button onClick={() => refetch()} variant="outline">
                     <RefreshCw className="mr-2 h-4 w-4" />
                     Retry
@@ -91,259 +52,174 @@ const OperatorProfitLossDashboard = ({ operatorId, className }: Props) => {
         );
     }
 
-    const stats = plStats as OperatorPLStats;
-
     return (
         <div className={cn("space-y-6", className)}>
-            {/* Header with Date Range */}
+            {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h2 className="text-2xl font-bold">Profit & Loss Dashboard</h2>
-                    <p className="text-gray-600 mt-1">
-                        {stats.operator.name} ({stats.operator.role.replace('_', ' ')})
-                    </p>
+                    <h1 className="text-2xl font-bold">Settlement Report</h1>
+                    <p className="text-gray-600">View settlement data for your operator hierarchy</p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                     <DatePickerWithRange
                         initialDateRange={dateRange}
                         onDateChange={setDateRange}
-                        className="w-auto"
+                        className="w-fit"
                     />
-                    <Button 
-                        variant="ghost" 
-                        size="sm"
+                    <Button
                         onClick={() => refetch()}
-                        disabled={isRefetching}
+                        variant="outline"
+                        className="flex items-center gap-2"
                     >
-                        <RefreshCw className={cn("h-4 w-4", isRefetching && "animate-spin")} />
+                        <RefreshCw className="h-4 w-4" />
+                        Refresh
                     </Button>
                 </div>
             </div>
 
-            {/* Performance Overview (hidden when no business) */}
-            {performanceStatus !== 'no-business' && (
-                <Card className={cn("border-2", getPerformanceColor(performanceStatus))}>
-                    <CardContent className="p-6">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                                {getPerformanceIcon(performanceStatus)}
-                                <div>
-                                    <h3 className="text-lg font-semibold capitalize">
-                                        {performanceStatus.replace('-', ' ')} Performance
-                                    </h3>
-                                    <p className="text-sm opacity-80">
-                                        {performanceStatus === 'profit' && "Your business is generating profit"}
-                                        {performanceStatus === 'loss' && "Your business is showing losses"}
-                                        {performanceStatus === 'break-even' && "Your business is breaking even"}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="text-right">
-                                <div className="text-2xl font-bold">
-                                    {(poolPL?.totals?.netPoolPL ?? stats.profitLossStats.directNetProfitLoss) >= 0 ? '+' : ''}
-                                    {INR(poolPL?.totals?.netPoolPL ?? stats.profitLossStats.directNetProfitLoss)}
-                                </div>
-                                <div className="text-sm opacity-80">Net P&L</div>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
-
-            {/* Key Metrics */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card>
-                    <CardContent className="p-4">
-                        <div className="flex items-center space-x-2 mb-2">
-                            <TrendingUp className="h-4 w-4 text-blue-600" />
-                            <span className="text-sm font-medium">Total Deposits</span>
-                        </div>
-                        <div className="text-xl font-bold">
-                            {INR(poolPL?.totals?.totalDeposits ?? stats.profitLossStats.directTotalCreditRequests)}
-                        </div>
-                        <div className="text-xs text-gray-500">Direct users</div>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardContent className="p-4">
-                        <div className="flex items-center space-x-2 mb-2">
-                            <TrendingDown className="h-4 w-4 text-red-600" />
-                            <span className="text-sm font-medium">Total Withdrawals</span>
-                        </div>
-                            <div className="text-xl font-bold text-red-600">
-                            {INR(poolPL?.totals?.totalWithdrawals ?? stats.profitLossStats.directTotalDebitRequests)}
-                        </div>
-                        <div className="text-xs text-gray-500">To users</div>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardContent className="p-4">
-                        <div className="flex items-center space-x-2 mb-2">
-                            <Wallet className="h-4 w-4 text-green-600" />
-                            <span className="text-sm font-medium">You Keep</span>
-                        </div>
-                        <div className="text-xl font-bold text-green-600">
-                            {INR(stats.profitLossStats.operatorKeeps)}
-                        </div>
-                        <div className="text-xs text-gray-500">After sharing</div>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardContent className="p-4">
-                        <div className="flex items-center space-x-2 mb-2">
-                            <Wallet className="h-4 w-4 text-gray-600" />
-                            <span className="text-sm font-medium">Wallet Balance</span>
-                        </div>
-                        <div className="text-xl font-bold">
-                            {INR(stats.profitLossStats.currentWalletBalance)}
-                        </div>
-                        <div className="text-xs text-gray-500">Current</div>
-                    </CardContent>
-                </Card>
-            </div>
-
-            {/* Money Flow Diagram */}
+            {/* Filters */}
             <Card>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <ArrowRight className="h-5 w-5" />
-                        Money Flow
-                    </CardTitle>
-                    <CardDescription>How your profit flows through the system</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="space-y-4">
-                        {/* Direct Business */}
-                        <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border">
-                            <div>
-                                <div className="font-medium">Direct Business</div>
-                                <div className="text-sm text-gray-600">From your users</div>
-                            </div>
-                            <div className="text-lg font-bold text-blue-600">
-                                {INR(poolPL?.totals?.netPoolPL ?? stats.profitLossStats.directNetProfitLoss)}
-                            </div>
+                <CardContent className="p-4">
+                    <div className="flex flex-col md:flex-row gap-4 items-end">
+                        <div className="flex-1">
+                            <label className="text-sm font-medium text-gray-700 mb-2 block">Agent Filter</label>
+                            <Input
+                                placeholder="Agent ID (optional)"
+                                value={agentId}
+                                onChange={(e) => setAgentId(e.target.value)}
+                            />
                         </div>
-
-                        {/* From Parent */}
-                        {stats.profitLossStats.operatorReceivesFromParent > 0 && (
-                            <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg border">
-                                <div>
-                                    <div className="font-medium">Receives from Parent</div>
-                                    <div className="text-sm text-gray-600">
-                                        {stats.operator.allocatedPercentage}% allocation
-                                    </div>
-                                </div>
-                                <div className="text-lg font-bold text-green-600">
-                                    +{INR(stats.profitLossStats.operatorReceivesFromParent)}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Total Available */}
-                        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-dashed">
-                            <div>
-                                <div className="font-medium">Total Available</div>
-                                <div className="text-sm text-gray-600">For distribution</div>
-                            </div>
-                            <div className="text-lg font-bold">
-                                {INR(stats.profitLossStats.totalOperatorAmount)}
-                            </div>
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                id="aggregate"
+                                checked={aggregate}
+                                onChange={(e) => setAggregate(e.target.checked)}
+                                className="rounded"
+                            />
+                            <label htmlFor="aggregate" className="text-sm font-medium text-gray-700">
+                                Show Summary
+                            </label>
                         </div>
-
-                        {/* Final Amount */}
-                        <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
-                            <div>
-                                <div className="font-medium">You Keep</div>
-                                <div className="text-sm text-gray-600">After child allocations</div>
-                            </div>
-                            <div className="text-lg font-bold text-green-600">
-                                {INR(stats.profitLossStats.operatorKeeps)}
-                            </div>
-                        </div>
+                        <Button
+                            onClick={() => {
+                                // TODO: Implement export functionality
+                                console.log('Export settlements');
+                            }}
+                            variant="outline"
+                            className="flex items-center gap-2"
+                        >
+                            <Download className="h-4 w-4" />
+                            Export
+                        </Button>
                     </div>
                 </CardContent>
             </Card>
 
-            {/* Child Allocations */}
-            {stats.childShares && stats.childShares.length > 0 && (
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <Users className="h-5 w-5" />
-                            Child Allocations
-                        </CardTitle>
-                        <CardDescription>
-                            {stats.sharingValidation.totalAllocatedToChildren}% allocated to children
-                            {stats.sharingValidation.canAllocateMore && (
-                                <span className="text-green-600 ml-2">
-                                    ({stats.sharingValidation.remainingPercentage}% remaining)
-                                </span>
-                            )}
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-3">
-                            {stats.childShares.map((child) => (
-                                <div key={child.operatorId} className="flex items-center justify-between p-3 border rounded-lg">
-                                    <div className="flex items-center space-x-3">
-                                        <div>
-                                            <div className="font-medium">{child.operatorName}</div>
-                                            <div className="text-sm text-gray-500 capitalize">
-                                                {child.role.replace('_', ' ')}
+            {/* Settlement Table */}
+            <Card>
+                <CardHeader>
+                    <CardTitle>Settlement Data</CardTitle>
+                    <CardDescription>
+                        Showing data for {dayjs(dateRange?.from).format('DD MMM YYYY')} - {dayjs(dateRange?.to).format('DD MMM YYYY')}
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    {settlementsData ? (
+                        <div className="space-y-4">
+                            {/* Summary Card (if aggregate is enabled) */}
+                            {aggregate && settlementsData.summary && (
+                                <Card className="bg-blue-50 border-blue-200">
+                                    <CardContent className="p-4">
+                                        <h4 className="font-semibold text-blue-900 mb-2">Summary</h4>
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                            <div>
+                                                <span className="text-gray-600">Total Recharge:</span>
+                                                <div className="font-semibold text-green-600">
+                                                    ₹{settlementsData.summary.totalRecharge?.toLocaleString() || 0}
+                                                </div>
                                             </div>
+                                            <div>
+                                                <span className="text-gray-600">Total Redeem:</span>
+                                                <div className="font-semibold text-red-600">
+                                                    ₹{settlementsData.summary.totalRedeem?.toLocaleString() || 0}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <span className="text-gray-600">Net:</span>
+                                                <div className={`font-semibold ${(settlementsData.summary.net || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                                    ₹{settlementsData.summary.net?.toLocaleString() || 0}
+                                                </div>
+                                            </div>
+                                            {isAdmin && (
+                                                <div>
+                                                    <span className="text-gray-600">Company Share:</span>
+                                                    <div className="font-semibold text-blue-600">
+                                                        ₹{settlementsData.summary.companyShare?.toLocaleString() || 0}
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
-                                    </div>
-                                    <div className="text-right">
-                                        <div className="font-medium">
-                                            {INR(child.shareAmount)}
-                                        </div>
-                                        <Badge variant="outline" className="text-xs">
-                                            {child.allocatedPercentage}%
-                                        </Badge>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
+                                    </CardContent>
+                                </Card>
+                            )}
 
-            {/* Allocation Summary (hidden when no business) */}
-            {performanceStatus !== 'no-business' && (
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Allocation Summary</CardTitle>
-                        <CardDescription>
-                            Showing data for {dayjs(dateRange?.from).format('DD MMM YYYY')} - {dayjs(dateRange?.to).format('DD MMM YYYY')}
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div className="text-center p-4 bg-blue-50 rounded-lg">
-                                <div className="text-2xl font-bold text-blue-600">
-                                    {stats.operator.allocatedPercentage}%
-                                </div>
-                                <div className="text-sm text-gray-600">Your Allocation</div>
+                            {/* Settlement Table */}
+                            <div className="overflow-x-auto">
+                                <table className="w-full border-collapse border border-gray-300">
+                                    <thead>
+                                        <tr className="bg-gray-50">
+                                            <th className="border border-gray-300 px-4 py-2 text-left">Agent</th>
+                                            <th className="border border-gray-300 px-4 py-2 text-right">Total Recharge</th>
+                                            <th className="border border-gray-300 px-4 py-2 text-right">Total Redeem</th>
+                                            <th className="border border-gray-300 px-4 py-2 text-right">Net</th>
+                                            {isAdmin && (
+                                                <th className="border border-gray-300 px-4 py-2 text-right">Company Share</th>
+                                            )}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {settlementsData.data?.map((settlement: any, index: number) => (
+                                            <tr key={index} className="hover:bg-gray-50">
+                                                <td className="border border-gray-300 px-4 py-2">
+                                                    <div>
+                                                        <div className="font-medium">{settlement.agentName || `Agent #${settlement.agentId}`}</div>
+                                                        <div className="text-sm text-gray-500">ID: {settlement.agentId}</div>
+                                                    </div>
+                                                </td>
+                                                <td className="border border-gray-300 px-4 py-2 text-right text-green-600">
+                                                    ₹{settlement.totalRecharge?.toLocaleString() || 0}
+                                                </td>
+                                                <td className="border border-gray-300 px-4 py-2 text-right text-red-600">
+                                                    ₹{settlement.totalRedeem?.toLocaleString() || 0}
+                                                </td>
+                                                <td className={`border border-gray-300 px-4 py-2 text-right font-semibold ${(settlement.net || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                                    ₹{settlement.net?.toLocaleString() || 0}
+                                                </td>
+                                                {isAdmin && (
+                                                    <td className="border border-gray-300 px-4 py-2 text-right text-blue-600">
+                                                        ₹{settlement.companyShare?.toLocaleString() || 0}
+                                                    </td>
+                                                )}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
-                            <div className="text-center p-4 bg-orange-50 rounded-lg">
-                                <div className="text-2xl font-bold text-orange-600">
-                                    {stats.sharingValidation.totalAllocatedToChildren}%
+
+                            {(!settlementsData.data || settlementsData.data.length === 0) && (
+                                <div className="text-center py-8 text-gray-500">
+                                    <p>No settlement data found for the selected period.</p>
                                 </div>
-                                <div className="text-sm text-gray-600">Given to Children</div>
-                            </div>
-                            <div className="text-center p-4 bg-green-50 rounded-lg">
-                                <div className="text-2xl font-bold text-green-600">
-                                    {stats.sharingValidation.remainingPercentage}%
-                                </div>
-                                <div className="text-sm text-gray-600">Available to Allocate</div>
-                            </div>
+                            )}
                         </div>
-                    </CardContent>
-                </Card>
-            )}
+                    ) : (
+                        <div className="text-center py-8 text-gray-500">
+                            <p>Loading settlement data...</p>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
         </div>
     );
 };

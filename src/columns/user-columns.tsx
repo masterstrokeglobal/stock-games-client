@@ -9,7 +9,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Badge } from "@/components/ui/badge";
+// import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
 import Admin, { AdminRole } from "@/models/admin";
@@ -64,11 +64,6 @@ const userColumns: ColumnDef<User>[] = [
     cell: ({ row }) => <div className="w-48 truncate">{row.original.name}</div>,
   },
   {
-    header: "EMAIL",
-    accessorKey: "email",
-    cell: ({ row }) => <div className="text-[#6B7280] w-48 truncate">{row.original.email ?? "N/A"}</div>,
-  },
-  {
     header: "USERNAME",
     accessorKey: "username",
     cell: ({ row }) => <div className="w-48 truncate">{row.original.username}</div>,
@@ -78,32 +73,55 @@ const userColumns: ColumnDef<User>[] = [
     accessorKey: "phone",
     cell: ({ row }) => <div className="text-[#6B7280]">{row.original.phone || 'N/A'}</div>,
   },
-  {
-    header: "Bonus Percentage",
-    accessorKey: "bonusPercentage",
-    cell: ({ row }) => <span>{row.original.depositBonusPercentage}</span>,
-  },
-  {
-    header: "Placement Not Allowed",
-    accessorKey: "placementAllowed",
-    cell: ({ row }) => (
-      <div className="flex space-x-2">
-        {row.original.placementNotAllowed.map((type) => (
-          <Badge key={type} variant="default">{type}</Badge>
-        ))}
-        {row.original.placementNotAllowed.length === 0 && <span className="text-[#6B7280]">No Restriction</span>}
-      </div>
-    ),
-  },
+  // {
+  //   header: "Bonus Percentage",
+  //   accessorKey: "bonusPercentage",
+  //   cell: ({ row }) => <span>{row.original.depositBonusPercentage}</span>,
+  // },
+  // {
+  //   header: "Placement Not Allowed",
+  //   accessorKey: "placementAllowed",
+  //   cell: ({ row }) => (
+  //     <div className="flex space-x-2">
+  //       {row.original.placementNotAllowed.map((type) => (
+  //         <Badge key={type} variant="default">{type}</Badge>
+  //       ))}
+  //       {row.original.placementNotAllowed.length === 0 && <span className="text-[#6B7280]">No Restriction</span>}
+  //     </div>
+  //   ),
+  // },
   {
     header: "CREATED ON",
     accessorKey: "createdAt",
     cell: ({ row }) => (
       <span className="text-[#6B7280]">
-        {dayjs(row.original.createdAt).format("DD-MM-YYYY")}
+        {dayjs(row.original.createdAt).format("DD-MM-YYYY")}{" "}
+        {dayjs(row.original.createdAt).format("HH:MM")}
+        
       </span>
     ),
   },
+  {
+    header: "Last Login",
+    accessorKey: "lastLoginAt",
+    cell: ({ row }) => (
+      <span className="text-[#6B7280]">
+        {dayjs(row.original.lastLoginAt).format("DD-MM-YYYY")}{" "}
+        {dayjs(row.original.lastLoginAt).format("HH:MM")}
+        
+      </span>
+    ),
+  },
+  {
+    header: "Last Login Ip",
+    accessorKey: "lastLoginIp",
+    cell: ({ row }) => (
+      <span className="text-[#6B7280]">
+        {row.original.lastLoginIp || 'N/A'}
+      </span>
+    ),
+  },
+  
   {
     header: "",
     accessorKey: "actions",

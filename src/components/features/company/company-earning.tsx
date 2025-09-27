@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useGetCompanyProfitLoss } from "@/react-query/payment-queries";
@@ -10,7 +11,7 @@ import {
     IndianRupee,
     TrendingUp
 } from "lucide-react";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 type Props = {
     companyId: string;
@@ -51,10 +52,50 @@ const CompanyEarningsCard = ({ companyId }: Props) => {
         };
     }, [data]);
 
+    const handleDownloadReport = useCallback(() => {
+        // Get the current date for filename
+        const currentDate = new Date().toISOString().split('T')[0];
+        
+        // Prepare CSV data
+        const csvData = [
+            ['Metric', 'Value (₹)'],
+            ['Total Deposits', totalDeposits.toFixed(2)],
+            ['Total Bonus', totalBonus.toFixed(2)],
+            ['Total Stock Bets', totalStockBets.toFixed(2)],
+            ['Total Stock Winnings', totalStockWinnings.toFixed(2)],
+            ['Total Casino Bets', totalCasinoBets.toFixed(2)],
+            ['Total Casino Winnings', totalCasinoWinnings.toFixed(2)],
+            ['Total Bets (Stock + Casino)', totalBets.toFixed(2)],
+            ['Total Winnings (Stock + Casino)', totalWinnings.toFixed(2)],
+            ['Total Withdrawals', totalWithdrawals.toFixed(2)],
+            ['Gross Revenue', (data?.data?.result?.totalProfitAndLoss?.grossRevenue || 0).toFixed(2)],
+            ['Gross Profit', grossProfit.toFixed(2)],
+            ['Net Profit/Loss', (data?.data?.result?.totalProfitAndLoss?.netProfitOrLoss || 0).toFixed(2)],
+            ['Net Pool P/L (Deposits - Withdrawals)', netPoolPL.toFixed(2)]
+        ];
+
+        // Convert to CSV string
+        const csvContent = csvData.map(row => row.join(',')).join('\n');
+        
+        // Create and download the file
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `company-profit-loss-report-${currentDate}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }, [totalDeposits, totalBonus, totalStockBets, totalStockWinnings, totalCasinoBets, totalCasinoWinnings, totalBets, totalWinnings, totalWithdrawals, grossProfit, netPoolPL, data]);
+
     return (
         <Card className="border shadow-none bg-white">
-            <CardHeader>
+            <CardHeader className="flex flex-row justify-between items-center">
                 <CardTitle className="text-xl font-semibold mb-4">Company Financial Overview</CardTitle>
+                <Button onClick={() => handleDownloadReport()}>
+                    Download Report
+                </Button>
             </CardHeader>
             <CardContent>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">

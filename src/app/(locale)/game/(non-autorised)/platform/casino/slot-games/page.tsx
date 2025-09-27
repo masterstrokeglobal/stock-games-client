@@ -12,7 +12,8 @@ export default function SlotGamesPage() {
     const [filter, setFilter] = useState<Filter>({
         search: "",
         category: "all",
-        provider: "all"
+        provider: "all",
+        type: "slots"
     });
 
     const { isLoading, isCasinoAllowed } = useCasinoAllowed();
@@ -25,7 +26,7 @@ export default function SlotGamesPage() {
                 {/* Search Bar */}
                 <GameFilters filter={filter} setFilter={setFilter} />
                 <header className="container mx-auto  py-2">
-                        <h1 className="text-2xl font-bold capitalize text-platform-text">{t("title")}</h1>
+                        <h1 className="text-2xl font-bold capitalize text-platform-text">{t("slots")}</h1>
                 </header>
 
                 {/* Content: Either search results or category carousels */}

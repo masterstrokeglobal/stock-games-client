@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useFinancialReport } from "@/react-query/company-queries";
 import dayjs from "dayjs";
 import { useState } from "react";
@@ -13,7 +14,7 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis
+  YAxis,
 } from "recharts";
 
 interface DateRange {
@@ -78,55 +79,61 @@ const COLORS = {
   bets: "#FFBB28",
   ggr: "#FF5733",
   casino: "#00C49F",
-  stock: "#00C49F"
+  stock: "#00C49F",
 };
 
 const formatRupees = (amount: number) => {
-  return `₹${amount.toLocaleString('en-IN')}`;
+  return `₹${amount.toLocaleString("en-IN")}`;
 };
 
 const ReportsPage = () => {
   const [dateRange, setDateRange] = useState<DateRange>({
-    startDate: dayjs().startOf('month').format('YYYY-MM-DD'),
-    endDate: dayjs().endOf('month').format('YYYY-MM-DD'),
-    selectedMonth: dayjs().format('YYYY-MM')
+    startDate: dayjs().startOf("month").format("YYYY-MM-DD"),
+    endDate: dayjs().endOf("month").format("YYYY-MM-DD"),
+    selectedMonth: dayjs().format("YYYY-MM"),
   });
 
   const { data, isLoading, error } = useFinancialReport(dateRange);
   const financialData: FinancialReportData | undefined = data;
 
   const handleDateChange = (field: keyof DateRange, value: string) => {
-    if (field === 'selectedMonth') {
-      const startDate = dayjs(value).startOf('month').format('YYYY-MM-DD');
-      const endDate = dayjs(value).endOf('month').format('YYYY-MM-DD');
-      setDateRange(prev => ({
+    if (field === "selectedMonth") {
+      const startDate = dayjs(value).startOf("month").format("YYYY-MM-DD");
+      const endDate = dayjs(value).endOf("month").format("YYYY-MM-DD");
+      setDateRange((prev) => ({
         ...prev,
         startDate,
         endDate,
-        selectedMonth: value
+        selectedMonth: value,
       }));
     } else {
-      setDateRange(prev => ({
+      setDateRange((prev) => ({
         ...prev,
-        [field]: value
+        [field]: value,
       }));
     }
   };
 
-  if (isLoading) return <div className="flex items-center justify-center h-screen">Loading financial data...</div>;
-  if (error) return <div className="text-red-500">Error loading financial data</div>;
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        Loading financial data...
+      </div>
+    );
+  if (error)
+    return <div className="text-red-500">Error loading financial data</div>;
   if (!financialData) return <div>No data available</div>;
 
   const { topReport, financialReport } = financialData;
 
   // Filter daily data for selected month
-  const selectedMonthData = financialReport.dailyData.filter(day =>
-    dayjs(day.date).format('YYYY-MM') === dateRange.selectedMonth
+  const selectedMonthData = financialReport.dailyData.filter(
+    (day) => dayjs(day.date).format("YYYY-MM") === dateRange.selectedMonth
   );
 
   // Format daily data for charts
-  const dailyDataFormatted = selectedMonthData.map(item => ({
-    name: dayjs(item.date).format('DD/MM'),
+  const dailyDataFormatted = selectedMonthData.map((item) => ({
+    name: dayjs(item.date).format("DD/MM"),
     signUps: item.signUps,
     deposits: item.totalDepositAmount,
     withdrawals: item.totalWithdrawalAmount,
@@ -134,8 +141,50 @@ const ReportsPage = () => {
     net: item.net,
     ftd: item.ftdCount,
     casino: item.totalCasinoBetsAmount,
-    stock: item.totalStockBetsAmount
+    stock: item.totalStockBetsAmount,
   }));
+
+  const handleDownloadReport = () => {
+    // Build CSV for selected month dailyData
+    const month = dateRange.selectedMonth;
+    const rows = financialReport.dailyData
+      .filter((d) => dayjs(d.date).format("YYYY-MM") === month)
+      .map((d) => [
+        d.date,
+        d.signUps.toString(),
+        d.ftdCount.toString(),
+        d.totalDepositAmount.toFixed(2),
+        d.totalWithdrawalAmount.toFixed(2),
+        d.totalStockBetsAmount.toFixed(2),
+        d.totalCasinoBetsAmount.toFixed(2),
+        d.totalBetsAmount.toFixed(2),
+        d.net.toFixed(2),
+      ]);
+
+    const header = [
+      "Date",
+      "Sign Ups",
+      "FTD Count",
+      "Total Deposit Amount (₹)",
+      "Total Withdrawal Amount (₹)",
+      "Total Stock Bets Amount (₹)",
+      "Total Casino Bets Amount (₹)",
+      "Total Bets Amount (₹)",
+      "Net (₹)",
+    ];
+
+    const csvContent = [header, ...rows].map((row) => row.join(",")).join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `daily-report-${month}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="p-4 bg-gray-50 min-h-screen">
@@ -143,34 +192,45 @@ const ReportsPage = () => {
         <h1 className="text-2xl font-bold mb-4">Financial Dashboard</h1>
 
         {/* Date Filter */}
-        <div className="flex flex-wrap gap-4 mb-6 p-4 bg-white rounded-lg shadow">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Select Month</label>
-            <input
-              type="month"
-              value={dateRange.selectedMonth}
-              onChange={(e) => handleDateChange('selectedMonth', e.target.value)}
-              className="border rounded p-2"
-            />
+        <div className="flex flex-wrap gap-4 mb-6 p-4 bg-white rounded-lg shadow justify-between items-center">
+          <div className="flex flex-wrap gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Select Month
+              </label>
+              <input
+                type="month"
+                value={dateRange.selectedMonth}
+                onChange={(e) =>
+                  handleDateChange("selectedMonth", e.target.value)
+                }
+                className="border rounded p-2"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Start Date
+              </label>
+              <input
+                type="date"
+                value={dateRange.startDate}
+                onChange={(e) => handleDateChange("startDate", e.target.value)}
+                className="border rounded p-2"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                End Date
+              </label>
+              <input
+                type="date"
+                value={dateRange.endDate}
+                onChange={(e) => handleDateChange("endDate", e.target.value)}
+                className="border rounded p-2"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
-            <input
-              type="date"
-              value={dateRange.startDate}
-              onChange={(e) => handleDateChange('startDate', e.target.value)}
-              className="border rounded p-2"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
-            <input
-              type="date"
-              value={dateRange.endDate}
-              onChange={(e) => handleDateChange('endDate', e.target.value)}
-              className="border rounded p-2"
-            />
-          </div>
+          <Button onClick={handleDownloadReport}>Download Report</Button>
         </div>
       </div>
 
@@ -178,32 +238,48 @@ const ReportsPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-gray-500 text-sm">Total Deposits</h2>
-          <p className="text-2xl font-bold">{formatRupees(financialReport.totalDepositAmount)}</p>
-          <p className="text-sm text-gray-600">From {financialReport.totalDepositor} users</p>
+          <p className="text-2xl font-bold">
+            {formatRupees(financialReport.totalDepositAmount)}
+          </p>
+          <p className="text-sm text-gray-600">
+            From {financialReport.totalDepositor} users
+          </p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-gray-500 text-sm">Total Withdrawals</h2>
-          <p className="text-2xl font-bold">{formatRupees(financialReport.totalWithdrawalAmount)}</p>
-          <p className="text-sm text-gray-600">From {financialReport.totalWithdrawers} users</p>
+          <p className="text-2xl font-bold">
+            {formatRupees(financialReport.totalWithdrawalAmount)}
+          </p>
+          <p className="text-sm text-gray-600">
+            From {financialReport.totalWithdrawers} users
+          </p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-gray-500 text-sm">Net Revenue</h2>
-          <p className="text-2xl font-bold">{formatRupees(financialReport.net)}</p>
+          <p className="text-2xl font-bold">
+            {formatRupees(financialReport.net)}
+          </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-gray-500 text-sm">Total Bets</h2>
-          <p className="text-2xl font-bold">{formatRupees(financialReport.totalBets)}</p>
+          <p className="text-2xl font-bold">
+            {formatRupees(financialReport.totalBets)}
+          </p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-gray-500 text-sm">Total Casino Bets</h2>
-          <p className="text-2xl font-bold">{formatRupees(financialReport.totalCasinoBets)}</p>
+          <p className="text-2xl font-bold">
+            {formatRupees(financialReport.totalCasinoBets)}
+          </p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-gray-500 text-sm">Total Stock Bets</h2>
-          <p className="text-2xl font-bold">{formatRupees(financialReport.totalStockBets)}</p>
+          <p className="text-2xl font-bold">
+            {formatRupees(financialReport.totalStockBets)}
+          </p>
         </div>
       </div>
 
@@ -216,24 +292,30 @@ const ReportsPage = () => {
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-gray-500 text-sm">FTD Users</h2>
           <p className="text-2xl font-bold">{financialReport.ftdUsers}</p>
-          <p className="text-sm text-gray-600">Total: {formatRupees(financialReport.ftdAmount)}</p>
+          <p className="text-sm text-gray-600">
+            Total: {formatRupees(financialReport.ftdAmount)}
+          </p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-gray-500 text-sm">Refilled Users</h2>
           <p className="text-2xl font-bold">{financialReport.refilledUsers}</p>
-          <p className="text-sm text-gray-600">Total: {formatRupees(financialReport.refilledAmount)}</p>
+          <p className="text-sm text-gray-600">
+            Total: {formatRupees(financialReport.refilledAmount)}
+          </p>
         </div>
         <div className="bg-white p-4 rounded-lg shadow">
           <h2 className="text-gray-500 text-sm">Bonus Amount</h2>
-          <p className="text-2xl font-bold">{formatRupees(financialReport.totalBonusAmount)}</p>
+          <p className="text-2xl font-bold">
+            {formatRupees(financialReport.totalBonusAmount)}
+          </p>
         </div>
       </div>
 
-
-
       {/* Daily Charts Section */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Daily Performance Metrics</h2>
+        <h2 className="text-xl font-semibold mb-4">
+          Daily Performance Metrics
+        </h2>
 
         {/* Daily Sign Ups Chart */}
         <div className="bg-white p-4 rounded-lg shadow mb-6">
@@ -261,7 +343,9 @@ const ReportsPage = () => {
 
         {/* Daily FTD Chart */}
         <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <h3 className="text-lg font-semibold mb-4">Daily First Time Deposits</h3>
+          <h3 className="text-lg font-semibold mb-4">
+            Daily First Time Deposits
+          </h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={dailyDataFormatted}>
@@ -309,7 +393,9 @@ const ReportsPage = () => {
 
         {/* Daily Total Withdrawal Chart */}
         <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <h3 className="text-lg font-semibold mb-4">Daily Total Withdrawals</h3>
+          <h3 className="text-lg font-semibold mb-4">
+            Daily Total Withdrawals
+          </h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={dailyDataFormatted}>
@@ -333,7 +419,9 @@ const ReportsPage = () => {
 
         {/* Daily Net (D-W) Chart */}
         <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <h3 className="text-lg font-semibold mb-4">Daily Net (Deposits - Withdrawals)</h3>
+          <h3 className="text-lg font-semibold mb-4">
+            Daily Net (Deposits - Withdrawals)
+          </h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={dailyDataFormatted}>
@@ -403,7 +491,6 @@ const ReportsPage = () => {
           </div>
         </div>
 
-
         {/* Daily Stock Bets Chart */}
         <div className="bg-white p-4 rounded-lg shadow mb-6">
           <h3 className="text-lg font-semibold mb-4">Daily Stock Bets</h3>
@@ -422,12 +509,11 @@ const ReportsPage = () => {
                   stroke={COLORS.stock}
                   fill={COLORS.stock}
                   fillOpacity={0.3}
-                />  
+                />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
-
       </div>
 
       {/* Daily Activity Chart */}
@@ -451,7 +537,7 @@ const ReportsPage = () => {
 
       {/* Top Users Tables */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Top  Users</h2>
+        <h2 className="text-xl font-semibold mb-4">Top Users</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Top Depositors */}
           <div className="bg-white p-4 rounded-lg shadow">
@@ -460,8 +546,12 @@ const ReportsPage = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      User
+                    </th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Amount
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -469,16 +559,29 @@ const ReportsPage = () => {
                     topReport.topDepositors.map((user) => (
                       <tr key={user.userId}>
                         <td className="px-4 py-2 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">{user.firstName} {user.lastName}</div>
-                          <div className="text-sm text-gray-500">{user.email}</div>
-                          <div className="text-sm text-gray-500">{user.phone}</div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {user.firstName} {user.lastName}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {user.email}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {user.phone}
+                          </div>
                         </td>
-                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatRupees(user.totalAmount)}</td>
+                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
+                          {formatRupees(user.totalAmount)}
+                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={2} className="px-4 py-2 text-center text-sm text-gray-500">No data available</td>
+                      <td
+                        colSpan={2}
+                        className="px-4 py-2 text-center text-sm text-gray-500"
+                      >
+                        No data available
+                      </td>
                     </tr>
                   )}
                 </tbody>
@@ -493,8 +596,12 @@ const ReportsPage = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      User
+                    </th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Amount
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -502,16 +609,29 @@ const ReportsPage = () => {
                     topReport.topWithdrawers.map((user) => (
                       <tr key={user.userId}>
                         <td className="px-4 py-2 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">{user.firstName} {user.lastName}</div>
-                          <div className="text-sm text-gray-500">{user.email}</div>
-                          <div className="text-sm text-gray-500">{user.phone}</div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {user.firstName} {user.lastName}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {user.email}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {user.phone}
+                          </div>
                         </td>
-                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatRupees(user.totalAmount)}</td>
+                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
+                          {formatRupees(user.totalAmount)}
+                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={2} className="px-4 py-2 text-center text-sm text-gray-500">No data available</td>
+                      <td
+                        colSpan={2}
+                        className="px-4 py-2 text-center text-sm text-gray-500"
+                      >
+                        No data available
+                      </td>
                     </tr>
                   )}
                 </tbody>
@@ -526,8 +646,12 @@ const ReportsPage = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      User
+                    </th>
+                    <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Amount
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
@@ -535,16 +659,29 @@ const ReportsPage = () => {
                     topReport.topBetters.map((user) => (
                       <tr key={user.userId}>
                         <td className="px-4 py-2 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">{user.firstName} {user.lastName}</div>
-                          <div className="text-sm text-gray-500">{user.email}</div>
-                          <div className="text-sm text-gray-500">{user.phone}</div>
+                          <div className="text-sm font-medium text-gray-900">
+                            {user.firstName} {user.lastName}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {user.email}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {user.phone}
+                          </div>
                         </td>
-                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">{formatRupees(user.totalAmount)}</td>
+                        <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
+                          {formatRupees(user.totalAmount)}
+                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={2} className="px-4 py-2 text-center text-sm text-gray-500">No data available</td>
+                      <td
+                        colSpan={2}
+                        className="px-4 py-2 text-center text-sm text-gray-500"
+                      >
+                        No data available
+                      </td>
                     </tr>
                   )}
                 </tbody>

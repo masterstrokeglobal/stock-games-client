@@ -26,7 +26,7 @@ const OperatorWalletTransactionTable = ({ operatorId, className }: Props) => {
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState(10);
     const [search, setSearch] = useState("");
-    const [type, setType] = useState<string | "">("");
+    // const [type, setType] = useState<string | "">("");
     const [status, setStatus] = useState<string | "">("");
 
     const { data, isSuccess, isLoading } = useGetOperatorWalletTransactions({
@@ -69,9 +69,9 @@ const OperatorWalletTransactionTable = ({ operatorId, className }: Props) => {
         }
         
         // Filter by type
-        if (type && type !== "all") {
-            filtered = filtered.filter((transaction: any) => transaction.type === type);
-        }
+        // if (type && type !== "all") {
+        //     filtered = filtered.filter((transaction: any) => transaction.type === type);
+        // }
         
         // Filter by status
         if (status && status !== "all") {
@@ -79,7 +79,7 @@ const OperatorWalletTransactionTable = ({ operatorId, className }: Props) => {
         }
         
         return filtered;
-    }, [data?.data, search, type, status]);
+    }, [data?.data, search, status]);
 
     return (
         <section className={cn("container-main min-h-[60vh] my-12", className)}>
@@ -99,7 +99,7 @@ const OperatorWalletTransactionTable = ({ operatorId, className }: Props) => {
                     </div>
 
                     {/* Type Filter */}
-                    <Select value={type} onValueChange={(val) => {
+                    {/* <Select value={type} onValueChange={(val) => {
                         setType(val);
                         setPage(1);
                     }}>
@@ -117,7 +117,7 @@ const OperatorWalletTransactionTable = ({ operatorId, className }: Props) => {
                                 <SelectItem value="company_recharge">Company Recharge</SelectItem>
                             </SelectGroup>
                         </SelectContent>
-                    </Select>
+                    </Select> */}
 
                     {/* Status Filter */}
                     <Select value={status} onValueChange={(val) => {

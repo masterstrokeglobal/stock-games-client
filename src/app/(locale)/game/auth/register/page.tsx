@@ -93,7 +93,6 @@ const RegisterPage = () => {
             referenceCode: referenceCode ?? "",
             username: "",
             agreeToTerms: false,
-            confirmAge: false
         }} />
     }
 

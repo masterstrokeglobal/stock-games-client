@@ -51,8 +51,13 @@ export const createRegisterSchema = (t: any, isPhoneAllowed: boolean = false, us
     // Optional reference code
     referenceCode: z.string().optional(),
 
-    // Username
-    username: z.string().max(100, { message: t('validation.username-max') }).nonempty({ message: t('validation.username-required') }),
+    // Username - must be lowercase
+    username: z.string()
+        .max(100, { message: t('validation.username-max') })
+        .nonempty({ message: t('validation.username-required') })
+        .refine((value) => value === value.toLowerCase(), {
+            message: t('validation.username-lowercase'),
+        }),
 
     // Password
     password: z
@@ -64,11 +69,6 @@ export const createRegisterSchema = (t: any, isPhoneAllowed: boolean = false, us
     // Terms and conditions agreement (required)
     agreeToTerms: z.boolean().refine((value) => value === true, {
         message: t('validation.terms-required'),
-    }),
-
-    // Age confirmation (required)
-    confirmAge: z.boolean().refine((value) => value === true, {
-        message: t('validation.age-required'),
     }),
 });
 
@@ -114,7 +114,7 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         placeholder={t('label-full-name')}
                         required
                     />
-                    {/* Username Field */}
+                    {/* Username Field - automatically converts to lowercase */}
                     <FormInput
                         control={control}
                         game
@@ -122,6 +122,7 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         inputClassName="!text-[#747487] !bg-white !py-3"
                         placeholder={t('label-username')}
                         required
+                        transform={(value) => value.toLowerCase()}
                     />
 
                     {isUserVerificationRequired && <>{
@@ -160,6 +161,7 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         type="password"
                         inputClassName="!text-[#747487] !bg-white !py-3"
                         placeholder={t('label-password')}
+                        icon="!text-[#747487]"
                         required
                     />
 

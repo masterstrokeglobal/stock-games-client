@@ -52,6 +52,12 @@ const UserMenu = () => {
             label: t('transaction-history')
         },
         {
+            href: "/game/platform/game-history",
+            icon: "/images/platform/user-menu/betting-history.png",
+            label: t('game-history'),
+            demouser: false
+        },
+        {
             href: "/game/wallet/menu",
             icon: "/images/platform/user-menu/wallet.png",
             parent:WalletDialog,

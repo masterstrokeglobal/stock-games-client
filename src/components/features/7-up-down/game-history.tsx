@@ -1,12 +1,13 @@
+import SevenUpDownChip from "@/components/features/7-up-down/chip";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useGameType } from "@/hooks/use-game-type";
 import { cn } from "@/lib/utils";
 import { RoundRecordGameType } from "@/models/round-record";
 import { useGetAllGameHistory } from "@/react-query/round-record-queries";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { useMemo, useState } from "react";
-import SevenUpDownChip from "@/components/features/7-up-down/chip";
-
+dayjs.extend(utc);
 type History = {
   id: number;
   roundId: number;
@@ -131,10 +132,10 @@ const GameHistoryTable = ({ className }: { className?: string }) => {
                 className="flex bg-[#517ED466] font-normal font-poppins rounded-full mb-2 items-center"
               >
                 <div className="py-2 px-4 text-white text-sm flex-1 min-w-[120px]">
-                  {dayjs(bet.createdAt).format("DD/MM/YYYY")}
+                  {dayjs.utc(bet.createdAt).local().format("DD/MM/YYYY")}
                 </div>
                 <div className="py-2 px-4 text-white text-sm flex-1 min-w-[100px]">
-                  {dayjs(bet.createdAt).format("HH:mm A")}
+                  {dayjs.utc(bet.createdAt).local().format("hh:mm A")}
                 </div>
            
                 <div className="py-2 px-4 flex-1 min-w-[120px]">

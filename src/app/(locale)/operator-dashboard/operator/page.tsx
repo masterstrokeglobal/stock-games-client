@@ -6,7 +6,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { Input } from "@/components/ui/input";
 import { OperatorRole } from "@/models/operator";
 import { useGetAllOperators, useGetBelowOperators, useGetCurrentOperator } from "@/react-query/operator-queries";
-import { ChevronDown, ChevronRight, Pencil, Search, Wallet, Plus } from "lucide-react";
+import { ChevronDown, ChevronRight, Pencil, Search, Wallet, Plus, Users } from "lucide-react";
 import Link from "next/link";
 import React, { useMemo, useState } from "react";
 
@@ -122,7 +122,11 @@ const OperatorRow = ({ operator, level = 0, isLast = false }: { operator: Operat
                                         <Pencil className="w-4 h-4" />
                                     </Button>
                                 </Link>
-                                {/* Removed Users management link for operators */}
+                                <Link href={`/operator-dashboard/operator/${operator.id}/users`}>
+                                    <Button size="sm" variant="ghost" aria-label="View Users" className="h-9 w-9 p-0">
+                                        <Users className="w-4 h-4" />
+                                    </Button>
+                                </Link>
                                 <Link href={`/operator-dashboard/operator/${operator.id}/deposit`}>
                                     <Button size="sm" variant="ghost" aria-label="View Wallet" className="h-9 w-9 p-0">
                                         <Wallet className="w-4 h-4" />

@@ -11,6 +11,8 @@ import { useGetUserGameHistory } from '@/react-query/game-user-queries';
 import dayjs from "dayjs";
 import { ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 
 // --- Coin Head/Tail Config ---
 export const COIN_SIDE_CONFIG = {
@@ -58,7 +60,7 @@ const MobileBettingHistory = ({ history }: { history: CoinHeadTailHistory[] }) =
                             {dayjs(row.createdAt).format("DD/MM/YYYY")}
                         </div>
                         <div className="text-white text-sm opacity-80">
-                            {dayjs(row.createdAt).format("hh:mm A")}
+                            {dayjs(row.createdAt).format("HH:MM")}
                         </div>
                     </div>
                     <div className="flex flex-col gap-2 pb-2 text-sm px-4">
@@ -214,8 +216,8 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                                 className={cn(
                                                     "text-white flex items-center border-b border-[#0B5AB6]")}
                                             >
-                                                <div className="px-4 py-3 flex-[1.2] flex items-center">{dayjs(row.createdAt).format("DD/MM/YYYY")}</div>
-                                                <div className="px-4 py-3 flex-[1.2] flex items-center">{dayjs(row.createdAt).format("hh:mm A")}</div>
+                                                <div className="px-4 py-3 flex-[1.2] flex items-center">{dayjs.utc(row.createdAt).local().format("DD/MM/YYYY")}</div>
+                                                <div className="px-4 py-3 flex-[1.2] flex items-center">{dayjs.utc(row.createdAt).local().format("hh:mm A")}</div>
                                                 <div className="px-4 py-3 flex-[1.2] flex items-center">
                                                     <span
                                                         className="px-3 py-0.5 rounded-full font-semibold"

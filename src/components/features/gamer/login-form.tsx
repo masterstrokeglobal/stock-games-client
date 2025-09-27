@@ -17,7 +17,8 @@ import GoogleLoginButton from "./google-login-button";
 
 export const createLoginSchema = (t: any) =>
   z.object({
-    username: z.string(),
+    username: z.string()
+      .transform(value => value.toLowerCase()),
     password: z
       .string()
       .min(6, t("validation.password-min"))
@@ -34,9 +35,10 @@ type Props = {
   onSubmit: (data: LoginFormValues) => void;
   onForgotPassword: () => void;
   isLoading?: boolean;
+  onCaptchaRefresh?: (refreshFn: () => void) => void;
 };
 
-const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
+const LoginForm = ({ defaultValues, onSubmit, isLoading, onCaptchaRefresh }: Props) => {
   const t = useTranslations("auth");
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(createLoginSchema(t)),
@@ -57,6 +59,16 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
   const captchaError = error ? t("errors.captcha-fetch-failed") : "";
   const handleRefreshCaptcha = () => refetch();
 
+  // Expose captcha refresh function to parent component
+  const refreshCaptcha = () => refetch();
+
+  // Expose captcha refresh function to parent component
+  useEffect(() => {
+    if (onCaptchaRefresh) {
+      onCaptchaRefresh(refreshCaptcha);
+    }
+  }, [onCaptchaRefresh, refreshCaptcha]);
+
   return (
     <div className="w-full max-w-sm">
       <AuthTabs />
@@ -73,6 +85,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
             className="!text-[#747487] !bg-white"
             placeholder={t("labels.username-email")}
             required
+            transform={(value) => value.toLowerCase()}
           />
 
           <div className="space-y-1">
@@ -84,6 +97,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
               type="password"
               className="!text-[#747487] !bg-white"
               placeholder={t("labels.password")}
+              icon="!text-[#747487]"
               required
             />
             <Link
@@ -104,7 +118,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
               </div>
               <div className="flex flex-row gap-3">
                 <div
-                  className="border border-secondary-game rounded-xl bg-white border-[#747487] [&>svg]:w-full [&>svg]:h-full h-10  w-full mx-auto sm:mx-0"
+                  className="border border-secondary-game rounded-xl bg-gray-700 border-[#747487] [&>svg]:w-full [&>svg]:h-full h-10  w-full mx-auto sm:mx-0"
                   dangerouslySetInnerHTML={{ __html: captchaSvg }}
                 />
                 <span className="text-[#747487] text-sm font-medium flex items-center justify-center">
@@ -114,7 +128,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                   control={control}
                   name="answer"
                   className=""
-                  inputClassName="h-10 text-[#747487] bg-white rounded-xl"
+                  inputClassName="h-10 text-[#747487] rounded-xl"
                   required
                   placeholder={t("labels.captcha")}
                 />

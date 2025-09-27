@@ -127,4 +127,9 @@ export const gameUserAPI = {
   getUserGameHistoryByRoundId: async (roundId: string) => {
     return api.get(`/user/game-history/${roundId}`);
   }
+  ,
+  // Bets history: unified casino + stock bets with pagination and date filters
+  getUserBets: async (params: { page: number; limit: number; startDate?: string; endDate?: string }) => {
+    return api.get(`/user/bets`, { params });
+  }
 };

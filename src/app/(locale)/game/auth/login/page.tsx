@@ -5,17 +5,25 @@ import OTPForm from "@/components/features/gamer/otp-form";
 import { StepperProvider, useStepper } from "@/context/stepper-context";
 import { useGameUserLogin } from "@/react-query/game-user-queries";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useRef } from "react";
 
 const LoginPage = () => {
     const { currentStep, nextStep } = useStepper();
     const searchParams = useSearchParams();
     const { mutate, isPending } = useGameUserLogin();
     const router = useRouter();
+    const captchaRefreshRef = useRef<(() => void) | null>(null);
 
     const loginUser = (data: LoginFormValues) => {
         mutate(data, {
             onSuccess: () => {
                 router.push(searchParams.get("redirect") || "/game/platform");
+            },
+            onError: () => {
+                // Refresh captcha on login error
+                if (captchaRefreshRef.current) {
+                    captchaRefreshRef.current();
+                }
             }
         });
     }
@@ -26,11 +34,16 @@ const LoginPage = () => {
         nextStep();
     }
 
+    const handleCaptchaRefresh = (refreshFn: () => void) => {
+        captchaRefreshRef.current = refreshFn;
+    }
+
     if (currentStep === 1) {
         return <LoginForm
             isLoading={isPending}
             onSubmit={loginUser}
             onForgotPassword={onForgotPassword}
+            onCaptchaRefresh={handleCaptchaRefresh}
         />
     }
 

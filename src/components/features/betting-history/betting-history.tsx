@@ -19,10 +19,11 @@ type Filter = {
     timeTo: string;
 };
 
-const LIMIT = 10;
+const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 
 const BettingHistory = ({ userId }: Props) => {
     const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState<number>(10);
     const [roundRecordGameType, setRoundRecordGameType] = useState<RoundRecordGameType>(RoundRecordGameType.DERBY);
     const [filter, setFilter] = useState<Filter>({
         timeFrom: dayjs().startOf("day").toISOString(),
@@ -31,13 +32,13 @@ const BettingHistory = ({ userId }: Props) => {
 
     const { data, isLoading } = useGetUserBettingHistory({
         page: page,
-        limit: LIMIT,
+        limit: limit,
         userId: userId,
         startDate: new Date(filter.timeFrom),
         endDate: new Date(filter.timeTo),
         roundRecordGameType: roundRecordGameType,
     });
-    const totalPages = Math.ceil(data?.count / LIMIT) || 1;
+    const totalPages = Math.ceil((data?.count ?? 0) / limit) || 1;
 
     // Change page when pagination controls are used
     const changePage = (newPage: number) => {
@@ -90,6 +91,17 @@ const BettingHistory = ({ userId }: Props) => {
                             <SelectItem value={RoundRecordGameType.STOCK_SLOTS}>Stock Slots</SelectItem>
                             <SelectItem value={RoundRecordGameType.STOCK_JACKPOT}>Stock Jackpot</SelectItem>
                             <SelectItem value={RoundRecordGameType.SEVEN_UP_DOWN}>Seven Up Down</SelectItem>
+                        </SelectContent>
+                    </Select>
+
+                    <Select value={String(limit)} onValueChange={(value) => { setLimit(Number(value)); setPage(1); }}>
+                        <SelectTrigger className="w-[120px]">
+                            <SelectValue placeholder="Page size" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {PAGE_SIZE_OPTIONS.map((size) => (
+                                <SelectItem key={size} value={String(size)}>{size}</SelectItem>
+                            ))}
                         </SelectContent>
                     </Select>
                 </div>

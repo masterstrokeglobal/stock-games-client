@@ -153,6 +153,7 @@ const WithdrawMethodOption: React.FC<WithdrawMethodOptionProps> = ({
 const depositSchema = (t: any, askWithdrawlOption?: boolean, hasActiveWithdrawDetails?: boolean) => z.object({
     pgId: z
         .string()
+        .max(20, t('validation.transaction-id-max'))
         .optional(),
     confirmationImageUrl: z
         .string()
@@ -164,7 +165,7 @@ const depositSchema = (t: any, askWithdrawlOption?: boolean, hasActiveWithdrawDe
         .coerce.number({
             message: t('validation.amount-invalid')
         })
-        .min(100, t('validation.amount-required-100')),
+        .min(500, t('validation.amount-required-500')),
     withdrawlDetailsId: (askWithdrawlOption && !hasActiveWithdrawDetails)
         ? z.string().min(1, 'deposit method is required')
         : z.string().optional(),
@@ -227,7 +228,7 @@ const UPIDepositForm = () => {
                 if (responseLink) {
                     window.open(responseLink, '_blank');
                 }
-                form.reset({ amount: 100, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" });
+                form.reset({ amount: 500, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" });
             },
             onError: () => {
                 toast.error('Error creating deposit request');
@@ -237,7 +238,7 @@ const UPIDepositForm = () => {
 
     const form = useForm<DepositFormValues>({
         resolver: zodResolver(depositSchema(t, company?.askWithdrawlOption, activeWithdrawDetails.length > 0)),
-        defaultValues: { amount: 100, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" },
+        defaultValues: { amount: 500, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" },
     });
 
     if (isLoading || isLoadingWithdrawDetails) {
@@ -312,6 +313,7 @@ const UPIDepositForm = () => {
                     placeholder="Enter the transaction ID"
                     error={form.formState.errors.pgId?.message}
                     required={false}
+                    maxLength={20}
                 />
                 {company?.askWithdrawlOption && (
                     <div className="space-y-2">
@@ -471,7 +473,7 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
                 if (responseLink) {
                     window.open(responseLink, '_blank');
                 }
-                form.reset({ amount: 100, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" });
+                form.reset({ amount: 500, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" });
             },
             onError: () => {
                 toast.error('Error creating deposit request');
@@ -481,7 +483,7 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
 
     const form = useForm<DepositFormValues>({
         resolver: zodResolver(depositSchema(t, company?.askWithdrawlOption, activeWithdrawDetails.length > 0)),
-        defaultValues: { amount: 100, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" },
+        defaultValues: { amount: 500, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" },
     });
 
     const copyToClipboard = async (text: string) => {
@@ -606,6 +608,7 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
                     placeholder="Enter the transaction ID from your bank transfer"
                     error={form.formState.errors.pgId?.message}
                     required={false}
+                    maxLength={20}
                 />
 
                 {/* Withdrawal Methods Selection */}
