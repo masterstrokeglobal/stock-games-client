@@ -2,10 +2,10 @@
 
 import LoadingScreen from "@/components/common/loading-screen";
 import OperatorWalletTransactionTable from "@/components/features/operator/operator-wallet-transaction-table";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { useGetCurrentOperator } from "@/react-query/operator-queries";
-import { ArrowLeft, Wallet } from "lucide-react";
-import Link from "next/link";
+// import { ArrowLeft, Wallet } from "lucide-react";
+// import Link from "next/link";
 
 const OperatorWalletTransactionsPage = () => {
     const { data: operator, isLoading } = useGetCurrentOperator();
@@ -26,8 +26,8 @@ const OperatorWalletTransactionsPage = () => {
     }
 
     return (
-        <div className="container-main max-w-6xl mx-auto p-6">
-            <header className="mb-6">
+        <div className="container-main">
+            {/* <header className="mb-6">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <Link href="/operator-dashboard/wallet">
@@ -50,7 +50,7 @@ const OperatorWalletTransactionsPage = () => {
                         </Link>
                     </div>
                 </div>
-            </header>
+            </header> */}
 
             <main>
                 <OperatorWalletTransactionTable operatorId={operator.id} />

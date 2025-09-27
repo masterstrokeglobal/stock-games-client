@@ -1,5 +1,8 @@
 import { operatorAPI, OperatorIndividualReportFilter } from "@/lib/axios/operator-API";
 import { userAPI } from "@/lib/axios/user-API";
+import { OperatorRole } from "@/models/operator";
+// duplicate import removed
+import { useAuthStore } from "@/context/auth-context";
 import Operator from "@/models/operator";
 import { Transaction } from "@/models/transaction";
 import User from "@/models/user";
@@ -117,10 +120,11 @@ export const useRedeemFromUser = () => {
 // Create user (by operator) - uses standard /user endpoint like platform
 export const useCreateUser = () => {
     const queryClient = useQueryClient();
+    const { userDetails } = useAuthStore();
 
     return useMutation({
         mutationFn: async (formData: any) => {
-            const user = new User({
+            const baseUser = new User({
                 firstname: formData.firstname,
                 lastname: formData.lastname,
                 username: formData.username,
@@ -130,7 +134,21 @@ export const useCreateUser = () => {
                 placementNotAllowed: [],
                 demoUser: false,
             });
-            const response = await userAPI.createUser(user);
+
+            // Determine if current operator is agent vs higher role
+            const currentRole = (userDetails as any)?.role as string | undefined;
+            const isAgent = currentRole === OperatorRole.AGENT;
+
+            // Include operatorId only for non-agent roles when provided
+            const payload: any = {
+                ...baseUser,
+            };
+
+            if (!isAgent && formData.operatorId) {
+                payload.operatorId = Number(formData.operatorId);
+            }
+
+            const response = await userAPI.createUser(payload);
             return response.data;
         },
         onSuccess: () => {
@@ -140,7 +158,11 @@ export const useCreateUser = () => {
             toast.success("User created successfully");
         },
         onError: (error: any) => {
-            const message = error?.response?.data?.message || "Error creating user";
+            const status = error?.response?.status;
+            const backendMsg = error?.response?.data?.message;
+            const message = (status === 401 || status === 403)
+                ? "Selected operator is not in your downline"
+                : (backendMsg || "Error creating user");
             toast.error(message);
             console.error('Error creating user:', error);
         },
@@ -299,7 +321,7 @@ export const useGetOperatorTransactions = (filter:any) => {
 };
 
 // Get hierarchical user transactions (Master sees Agent's user transactions)
-export const useGetHierarchicalTransactions = (filter: { operatorId: number, page: number, limit: number, search?: string, type?: string, status?: string }) => {
+export const useGetHierarchicalTransactions = (filter: { operatorId: number, page: number, limit: number, search?: string, type?: string, status?: string, startDate?: Date | null, endDate?: Date | null }) => {
     return useQuery({
         queryKey: ["hierarchical-transactions", filter],
         queryFn: async () => {
@@ -420,5 +442,17 @@ export const useValidateOperatorPercentage = () => {
         onError: (error: any) => {
             console.error("Percentage validation error:", error.response?.data?.message);
         },
+    });
+};
+
+// Get settlements data
+export const useGetSettlements = (filter?: { startDate?: Date, endDate?: Date, agentId?: number, aggregate?: boolean }) => {
+    return useQuery({
+        queryKey: ["settlements", filter],
+        queryFn: async () => {
+            const response = await operatorAPI.getSettlements(filter);
+            return response.data;
+        },
+        enabled: true,
     });
 };

@@ -33,7 +33,12 @@ const ViewUserPage = () => {
 
     const userDetails = useMemo(() => {
         if (isSuccess) {
-            return new User(data?.data); // Assuming userDetails is the correct data path
+            const userData = new User(data?.data); // Create User instance
+            // Add wallet data directly to the user object
+            if (data?.data?.wallet) {
+                userData.wallet = data.data.wallet;
+            }
+            return userData;
         }
         return null;
     }, [data, isSuccess]);

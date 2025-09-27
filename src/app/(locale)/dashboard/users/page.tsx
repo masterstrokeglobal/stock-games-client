@@ -1,6 +1,6 @@
 "use client";
 import React, { useMemo, useState } from "react";
-import { Search } from "lucide-react";
+import {  Search } from "lucide-react";
 import {
     Select,
     SelectContent,
@@ -21,6 +21,9 @@ import { useSearchParams } from "next/navigation";
 import CompanyCard from "@/components/features/company/company-card";
 import { useGetCompanyById } from "@/react-query/company-queries";
 import Company from "@/models/company";
+import { DatePickerWithRangeApply } from "@/components/ui/date-range-picker-with-apply";
+import dayjs from "dayjs";
+import { DateRange } from "react-day-picker";
 
 const UserTable = () => {
     const searchParams = useSearchParams();
@@ -30,6 +33,12 @@ const UserTable = () => {
     const { data: CompanyData, isSuccess: companySuccess } = useGetCompanyById(companyId ?? undefined);
     const [orderByField, setOrderByField] = useState("createdAt");
     const [orderBy, setOrderBy] = useState("DESC");
+    
+    // Date range state for applied filters
+    const [appliedDateRange, setAppliedDateRange] = useState<DateRange | undefined>({
+        from: undefined,
+        to: undefined
+    });
 
     const company = useMemo(() => {
         if (companySuccess && CompanyData) {
@@ -41,12 +50,18 @@ const UserTable = () => {
     const { userDetails } = useAuthStore();
     const admin = userDetails as Admin;
 
+    // Prepare date parameters for API - only use dates when they've been applied
+    const startDate = appliedDateRange?.from ? dayjs(appliedDateRange.from).format("YYYY-MM-DD") : undefined;
+    const endDate = appliedDateRange?.to ? dayjs(appliedDateRange.to).format("YYYY-MM-DD") : undefined;
+
     const { data, isSuccess, isFetching } = useGetAllUsers({
         page,
         search,
         orderByField,
         companyId: admin.isSuperAdmin ? companyId?.toString() : COMPANYID.toString(),
         orderBy,
+        startDate,
+        endDate,
     });
 
     const users = useMemo(() => {
@@ -93,6 +108,12 @@ const UserTable = () => {
                             className="pl-10"
                         />
                     </div>
+                    
+                    <DatePickerWithRangeApply 
+                        onApply={setAppliedDateRange}
+                        initialDateRange={appliedDateRange}
+                        className="w-auto"
+                    />
 
                     <div className="flex gap-2">
                         <Select

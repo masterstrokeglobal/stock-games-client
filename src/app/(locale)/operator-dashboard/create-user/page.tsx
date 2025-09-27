@@ -44,7 +44,7 @@ function CreateUserForm() {
 export default function CreateUserPage() {
     return (
         <RoleProtection 
-            allowedRoles={[OperatorRole.AGENT, OperatorRole.MASTER]} 
+            allowedRoles={[OperatorRole.AGENT, OperatorRole.MASTER, OperatorRole.DUPER_MASTER, OperatorRole.SUPER_DUPER_MASTER]} 
             redirectTo="/operator-dashboard"
         >
             <CreateUserForm />

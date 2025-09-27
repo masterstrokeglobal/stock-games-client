@@ -17,7 +17,8 @@ import GoogleLoginButton from "./google-login-button";
 
 export const createLoginSchema = (t: any) =>
   z.object({
-    username: z.string(),
+    username: z.string()
+      .transform(value => value.toLowerCase()),
     password: z
       .string()
       .min(6, t("validation.password-min"))
@@ -84,6 +85,7 @@ const LoginForm = ({ defaultValues, onSubmit, isLoading, onCaptchaRefresh }: Pro
             className="!text-[#747487] !bg-white"
             placeholder={t("labels.username-email")}
             required
+            transform={(value) => value.toLowerCase()}
           />
 
           <div className="space-y-1">

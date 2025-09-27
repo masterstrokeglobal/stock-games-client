@@ -25,9 +25,8 @@ export const operatorAPI = {
         });
     },
     getBelowOperators: async (filter?: { operatorId: number, page: number, limit: number }) => {
-        return api.get(`/operator/hierarchy/${filter?.operatorId}`, {
-            params: filter
-        });
+        // Send no query params; company and auth context come from session
+        return api.get(`/operator/hierarchy/${filter?.operatorId}`);
     },
 
     depositOperatorWallet: async (payload: any) => {
@@ -152,6 +151,18 @@ export const operatorAPI = {
                 includeBreakdown: filter.includeBreakdown ?? false,
                 startDate: filter.startDate?.toISOString(),
                 endDate: filter.endDate?.toISOString(),
+            }
+        });
+    },
+
+    // Settlement APIs
+    getSettlements: async (filter?: { startDate?: Date, endDate?: Date, agentId?: number, aggregate?: boolean }) => {
+        return api.get("/operator/settlements", {
+            params: {
+                start: filter?.startDate?.toISOString().split('T')[0],
+                end: filter?.endDate?.toISOString().split('T')[0],
+                agentId: filter?.agentId,
+                aggregate: filter?.aggregate
             }
         });
     },

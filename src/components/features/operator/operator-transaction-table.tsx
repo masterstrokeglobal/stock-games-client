@@ -44,7 +44,7 @@ const OperatorTransactionTable = ({ operatorId, className }: Props) => {
     // Create columns with current user email and operator data
     const columns = createOperatorTransactionColumns(userDetails?.email, currentOperator);
 
-    const { data, isSuccess, isLoading } = useGetHierarchicalTransactions({
+    const { data, isLoading } = useGetHierarchicalTransactions({
         operatorId: currentOperatorId,
         page: page,
         search,
@@ -53,10 +53,23 @@ const OperatorTransactionTable = ({ operatorId, className }: Props) => {
         limit: limit,
     });
 
-    // Calculate total pages based on data count
+    // Filter to show only deposit and withdrawal transactions
+    const filteredRows = useMemo(() => {
+        const rows = data?.data || [];
+        return rows.filter((t: any) => {
+            const isUserDeposit = t.type === TransactionType.DEPOSIT
+                && !!t.wallet
+                && (!!t.paymentMethod || !!t.pgId);
+            const isUserWithdrawal = t.type === TransactionType.WITHDRAWAL
+                && !!t.wallet;
+            return isUserDeposit || isUserWithdrawal;
+        });
+    }, [data]);
+
+    // Calculate total pages based on filtered rows
     const totalPages = useMemo(() => {
-        return Math.ceil(data?.count / limit) || 1;
-    }, [data, isSuccess, limit]);
+        return Math.ceil((filteredRows.length || 0) / limit) || 1;
+    }, [filteredRows, limit]);
 
     // Handle search input change
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -235,7 +248,7 @@ const OperatorTransactionTable = ({ operatorId, className }: Props) => {
                     page={page}
                     loading={isLoading}
                     columns={columns}
-                    data={data?.data}
+                    data={filteredRows}
                     totalPage={totalPages}
                     changePage={changePage}
                 />
