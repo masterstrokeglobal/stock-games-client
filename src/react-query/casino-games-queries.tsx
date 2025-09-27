@@ -1,6 +1,7 @@
-import { casinoAPI } from "@/lib/axios/casino-API";
+import { casinoAPI, stocksAPI } from "@/lib/axios/casino-API";
 import CasinoGames from "@/models/casino-games";
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { SchedulerType } from "@/models/market-item";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useGetCasinoGames = (filter: any) => {
@@ -28,9 +29,9 @@ export const useInfiniteGetCasinoGames = (filter: any) => {
             return response.data;
         },
         getNextPageParam: (lastPage: any, pages: any) => {
-            return lastPage.count > pages.length * limit ? pages.length + 1 : undefined;      
+            return lastPage.count > pages.length * limit ? pages.length + 1 : undefined;
         },
-        initialPageParam: 1, 
+        initialPageParam: 1,
         getPreviousPageParam: (firstPage: any, allPages: any) => {
             return firstPage.count > allPages.length * limit ? allPages.length - 1 : undefined;
         }
@@ -44,6 +45,22 @@ export const useGameLogin = (id: string) => {
             const response = await casinoAPI.login(id);
             return response.data;
         }
+    });
+};
+
+export const useLaunchStocksGame = (
+    id: string,
+    market: SchedulerType | null,
+    options?: Partial<UseQueryOptions<{ redirectUrl: string }, Error>>
+) => {
+    return useQuery({
+        queryKey: ["stocks-game", id, market],
+        queryFn: async () => {
+            const response = await stocksAPI.launch(id, market?.toString() || '');
+            return response.data;
+        },
+        enabled: !!id && !!market && options?.enabled !== false,
+        ...options
     });
 };
 
