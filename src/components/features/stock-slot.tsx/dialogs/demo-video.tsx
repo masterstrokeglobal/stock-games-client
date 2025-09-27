@@ -20,7 +20,7 @@ const DemoVideo = ({ children }: { children: React.ReactNode }) => {
       case "en":
         return "https://res.cloudinary.com/dt8iv1hds/video/upload/v1758185321/WhatsApp_Video_2025-09-18_at_11.39.46_AM_uiiu7b.mp4";
       case "hi":
-        return "/images/how-to-play/videos/slot-hi.mp4";
+        return "https://res.cloudinary.com/dt8iv1hds/video/upload/v1758872495/WhatsApp_Video_2025-09-26_at_1.05.12_PM_f6jncu.mp4";
       default:
         return "https://res.cloudinary.com/dt8iv1hds/video/upload/v1758185321/WhatsApp_Video_2025-09-18_at_11.39.46_AM_uiiu7b.mp4";
     }

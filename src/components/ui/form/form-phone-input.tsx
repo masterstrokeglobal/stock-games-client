@@ -44,10 +44,10 @@ function FormPhoneNumber<
           <PhoneInput
             value={field.value}
             onChange={field.onChange}
-            className={cn(inputClassName, game ? "text-white" : '')}
+            className={cn(inputClassName, game ? "text-white !bg-white" : '')}
             placeholder={placeholder}
             disabled={disabled}
-            defaultCountry="AU"
+            defaultCountry="IN"
           />
           <FormMessage />
         </FormItem>

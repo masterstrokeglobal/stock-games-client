@@ -320,7 +320,8 @@
             "transaction-id-required": "लेनदेन आईडी आवश्यक है",
             "transaction-id-max": "लेनदेन आईडी 50 वर्णों से अधिक नहीं होनी चाहिए",
             "amount-required": "राशि आवश्यक है",
-            "amount-invalid": "कृपया एक वैध राशि दर्ज करें"
+            "amount-invalid": "कृपया एक वैध राशि दर्ज करें",
+            "amount-required-500": "राशि कम से कम 500 होनी चाहिए"
         }
     },
     "deposit-form": {

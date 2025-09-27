@@ -189,7 +189,8 @@
       "transaction-id-required": "İşlem ID'si gereklidir",
       "transaction-id-max": "İşlem ID'si 50 karakteri geçemez",
       "amount-required": "Tutar gereklidir",
-      "amount-invalid": "Lütfen geçerli bir tutar girin"
+      "amount-invalid": "Lütfen geçerli bir tutar girin",
+      "amount-required-500": "Tutar en az 500 olmalıdır"
     }
   },
   "deposit-form": {

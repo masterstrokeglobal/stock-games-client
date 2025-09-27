@@ -64,11 +64,11 @@ const LastRoundWinner = () => {
                         {rounds.map((round, index) => (
                             <tr key={index} className="flex">
                                 <td className="p-2 text-sm flex-1">
-                                    {dayjs(round.startTime).format("hh:mm A")} ({round.roundNumber})
+                                    {dayjs(round.startTime).format("HH:MM")} ({round.roundNumber})
                                 </td>
                                 <td className="p-2 text-sm flex-1 px-2">
                                     <span className={cn("w-16 mx-auto font-semibold flex items-center justify-center", round.winningColor === "red" ? "justify-start text-red-500" : "justify-end  text-white", round.winningNumber === 0 ? "justify-center text-yellow-600" : "")}>
-                                        &nbsp; {round.winningNumber} &nbsp;
+                                        &nbsp; {round?.winningNumber} &nbsp;
                                     </span>
                                 </td>
                             </tr>

@@ -187,7 +187,8 @@
             "transaction-id-required": "Требуется ID транзакции",
             "transaction-id-max": "ID транзакции не должен превышать 50 символов",
             "amount-required": "Требуется указать сумму",
-            "amount-invalid": "Пожалуйста, введите корректную сумму"
+            "amount-invalid": "Пожалуйста, введите корректную сумму",
+            "amount-required-500": "Сумма должна быть не менее 500"
         }
     },
     "validation": {

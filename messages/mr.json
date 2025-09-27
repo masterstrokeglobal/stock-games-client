@@ -199,7 +199,8 @@
             "transaction-id-required": "व्यवहार आयडी आवश्यक आहे",
             "transaction-id-max": "व्यवहार आयडी 50 अक्षरांपेक्षा जास्त नसावी",
             "amount-required": "रक्कम आवश्यक आहे",
-            "amount-invalid": "कृपया वैध रक्कम टाका"
+            "amount-invalid": "कृपया वैध रक्कम टाका",
+            "amount-required-500": "रक्कम किमान 500 असावी"
         }
     },
     "deposit-form": {

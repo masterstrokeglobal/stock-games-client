@@ -191,7 +191,8 @@
             "transaction-id-required": "ID transakcije je obavezan",
             "transaction-id-max": "ID transakcije ne sme biti duži od 50 karaktera",
             "amount-required": "Iznos je obavezan",
-            "amount-invalid": "Molimo unesite važeći iznos"
+            "amount-invalid": "Molimo unesite važeći iznos",
+            "amount-required-500": "Iznos mora biti najmanje 500"
         }
     },
     "deposit-form": {

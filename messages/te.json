@@ -198,7 +198,8 @@
             "transaction-id-required": "లావాదేవీ ID అవసరం",
             "transaction-id-max": "లావాదేవీ ID 50 అక్షరాల కంటే ఎక్కువ ఉండకూడదు",
             "amount-required": "మొత్తం అవసరం",
-            "amount-invalid": "చెల్లుబాటు అయ్యే మొత్తాన్ని నమోదు చేయండి"
+            "amount-invalid": "చెల్లుబాటు అయ్యే మొత్తాన్ని నమోదు చేయండి",
+            "amount-required-500": "మొత్తం కనీసం 500 ఉండాలి"
         }
     },
     "deposit-form": {

@@ -32,6 +32,7 @@ function FormPassword<
   children,
   label,
   className,
+  icon,
   ...props
 }: {
   label?: string;
@@ -43,6 +44,7 @@ function FormPassword<
   Icon?: React.ReactNode;
   name: TName;
   description?: string;
+  icon?: string;
 } & React.InputHTMLAttributes<HTMLInputElement>) {
   // Game input styles (matches /features/platform/filters.tsx and FormInput)
   const gameInputClass =
@@ -88,9 +90,9 @@ function FormPassword<
                 )}
               >
                 {inputType === "password" ? (
-                  <EyeOff size={20} className="text-current" />
+                  <EyeOff size={20} className={cn( "text-current",icon)} />
                 ) : (
-                  <Eye size={20} className="text-current" />
+                  <Eye size={20} className={cn( "text-current",icon)} />
                 )}
               </Button>
               {children}

@@ -228,9 +228,9 @@ export const useCaptcha = () => {
   return useQuery({
     queryKey: ["captcha"],
     queryFn: () => gameUserAPI.getCaptcha(),
-    staleTime: 10 * 60 * 1000, // 10 minutes, matching session maxAge
+    staleTime: 0, // Always consider data stale to force fresh captcha on page load
     refetchOnWindowFocus: false, // Prevent refetch on focus
-    refetchOnMount: false, // Prevent refetch on mount unless needed
+    refetchOnMount: true, // Refresh captcha on component mount
   });
 };
 
@@ -265,3 +265,22 @@ export const useGetUserGameHistoryByRoundId = (roundId: string) => {
     },
   });
 };      
+
+export type UserBetsResponse = {
+  casino: { items: any[]; totalCount: number };
+  stock: { items: any[]; totalCount: number };
+};
+
+export const useGetUserBets = (params: { page: number; limit: number; startDate?: string; endDate?: string }) => {
+  return useQuery<UserBetsResponse>({
+    queryKey: ["userBets", params.page, params.limit, params.startDate, params.endDate],
+    queryFn: async () => {
+      const response = await gameUserAPI.getUserBets(params);
+      return response.data as UserBetsResponse;
+    },
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    staleTime: 0,
+    gcTime: 0, // No caching to prevent stale data (renamed from cacheTime in newer React Query)
+  });
+};

@@ -130,7 +130,7 @@ const GameHistoryDialog = ({ children }: GameHistoryDialogProps) => {
                                                 className="text-white flex"
                                             >
                                                 <div className={cn("px-4 py-3 flex-1", `${idx % 2 === 0 ? "bg-[#28533D] rounded-l-full flex items-center " : ""}`)}>{dayjs(row.createdAt).format("DD/MM/YYYY")}</div>
-                                                <div className={cn("px-4 py-3 flex-1", `${idx % 2 === 0 ? "bg-[#28533D] flex items-center " : ""}`)}>{dayjs(row.createdAt).format("HH:mm A")}</div>
+                                                <div className={cn("px-4 py-3 flex-1", `${idx % 2 === 0 ? "bg-[#28533D] flex items-center " : ""}`)}>{dayjs(row.createdAt).format("HH:MM")}</div>
                                                 <div className={cn("px-4 py-3 flex-1", `${idx % 2 === 0 ? "bg-[#28533D] rounded-r-full flex items-center" : ""}`)}>
                                                     <span
                                                         className="px-3 py-1 rounded-full font-semibold"

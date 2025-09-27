@@ -331,6 +331,8 @@ export const useGetHierarchicalTransactions = (filter: { operatorId: number, pag
                 count: response.data.count || 0
             }
         },
+        refetchInterval: 1000 * 5,
+        staleTime : 0,
         enabled: !!filter.operatorId,
     });
 };

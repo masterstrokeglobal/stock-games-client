@@ -191,7 +191,8 @@
             "transaction-id-required": "رقم المعاملة مطلوب",
             "transaction-id-max": "يجب ألا يتجاوز رقم المعاملة 50 حرفًا",
             "amount-required": "المبلغ مطلوب",
-            "amount-invalid": "الرجاء إدخال مبلغ صحيح"
+            "amount-invalid": "الرجاء إدخال مبلغ صحيح",
+            "amount-required-500": "يجب أن يكون المبلغ على الأقل 500"
         }
     },
     "deposit-form": {

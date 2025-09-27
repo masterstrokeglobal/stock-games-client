@@ -198,7 +198,8 @@
             "transaction-id-required": "ವಹಿವಾಟು ID ಅಗತ್ಯವಿದೆ",
             "transaction-id-max": "ವಹಿವಾಟು ID 50 ಅಕ್ಷರಗಳಿಗಿಂತ ಹೆಚ್ಚಿರಬಾರದು",
             "amount-required": "ಮೊತ್ತ ಅಗತ್ಯವಿದೆ",
-            "amount-invalid": "ಮಾನ್ಯವಾದ ಮೊತ್ತವನ್ನು ನಮೂದಿಸಿ"
+            "amount-invalid": "ಮಾನ್ಯವಾದ ಮೊತ್ತವನ್ನು ನಮೂದಿಸಿ",
+            "amount-required-500": "ಮೊತ್ತ ಕನಿಷ್ಠ 500 ಆಗಿರಬೇಕು"
         }
     },
     "deposit-form": {
