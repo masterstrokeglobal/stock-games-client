@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/context/auth-context";
 import { useTheme } from "@/context/theme-context";
-import useCOMEXAvailable from "@/hooks/use-comex-available";
-import useMCXAvailable from "@/hooks/use-mcx-available";
+// import useCOMEXAvailable from "@/hooks/use-comex-available";
+// import useMCXAvailable from "@/hooks/use-mcx-available";
 import useNSEAvailable from "@/hooks/use-nse-available";
 import useSchedularCheck from "@/hooks/use-schedular-check";
 import useMarketSchedule from "@/hooks/use-schedular-timings";
@@ -37,8 +37,8 @@ const GameMarketSelector = ({
     const isNSEAvailable = useNSEAvailable();
     const isExternalUser = useIsExternalUser();
     const isUSAMarketAvailable = useUSAMarketAvailable();
-    const isCOMEXAvailable = useCOMEXAvailable();
-    const isMCXAvailable = useMCXAvailable();
+    // const isCOMEXAvailable = useCOMEXAvailable();
+    // const isMCXAvailable = useMCXAvailable();
     const theme = useTheme();
     const isDarkMode = theme === "dark";
 
