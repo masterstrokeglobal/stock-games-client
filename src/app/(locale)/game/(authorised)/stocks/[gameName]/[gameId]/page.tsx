@@ -76,7 +76,7 @@ export default function stockGame() {
     return (
         <div className="flex flex-col min-h-screen bg-primary-game text-white">
             <Navbar />
-            <main className="container mx-auto pt-14">
+            <main className=" pt-14 h-full w-full">
                 <iframe src={game?.redirectUrl} className="w-full min-h-[calc(100vh-3.5rem)]" />
             </main>
         </div>
