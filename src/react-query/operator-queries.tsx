@@ -321,7 +321,7 @@ export const useGetOperatorTransactions = (filter:any) => {
 };
 
 // Get hierarchical user transactions (Master sees Agent's user transactions)
-export const useGetHierarchicalTransactions = (filter: { operatorId: number, page: number, limit: number, search?: string, type?: string, status?: string }) => {
+export const useGetHierarchicalTransactions = (filter: { operatorId: number, page: number, limit: number, search?: string, type?: string, status?: string, startDate?: Date | null, endDate?: Date | null }) => {
     return useQuery({
         queryKey: ["hierarchical-transactions", filter],
         queryFn: async () => {
