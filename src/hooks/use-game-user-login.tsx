@@ -6,50 +6,50 @@ import {
 } from "@/react-query/game-user-queries";
 import { useEffect } from "react";
 import { H } from "@highlight-run/next/client";
-// import { toast } from "sonner";
+import { toast } from "sonner";
 
 const useGameUserLogin = () => {
   const { setUser, setLoadig, userDetails } = useAuthStore();
-  const {
-    isSuccess: isSessionSuccess,
-    isError: isSessionError,
-    data: sessionData,
-  } = useGameUserSessionVerify();
-  const { data, isSuccess, isError} = useGameUserProfile();
+  const { data, isSuccess, isError } = useGameUserProfile();
 
-//   const verifySession = () => {
-//     const sessionId = sessionStorage.getItem("sessionId");
+  const verifySession = () => {
+    const sessionId = sessionStorage.getItem("sessionId");
 
-//     if (!sessionId || sessionId === "null" || sessionId === "undefined") {
-//       setUser(null);
-//       setLoadig(false);
-//       return;
-//     }
+    if (!sessionId || sessionId === "null" || sessionId === "undefined") {
+      setUser(null);
+      return;
+    }
 
-//     // If session verification is successful, update the sessionId
-//     if (isSessionSuccess) {
-//       sessionStorage.setItem("sessionId", sessionData?.data?.sessionId);
-//     }
+    const {
+      isSuccess: isSessionSuccess,
+      isError: isSessionError,
+      data: sessionData,
+    } = useGameUserSessionVerify();
 
-//     // If session verification failed, clear user and show error
-//     if (isSessionError) {
-//       setUser(null);
-//       setLoadig(false);
-//       sessionStorage.removeItem("sessionId");
-//       toast.error("Session expired");
-//       return;
-//     }
-//   };
+    // If session verification is successful, update the sessionId
+    if (isSessionSuccess) {
+      sessionStorage.setItem("sessionId", sessionData?.data?.sessionId);
+    }
+
+    // If session verification failed, clear user and show error
+    if (isSessionError) {
+      setUser(null);
+      sessionStorage.removeItem("sessionId");
+      toast.error("Session expired");
+      return;
+    }
+  };
 
   useEffect(() => {
-    // const sessionId = sessionStorage.getItem("sessionId");
+    const sessionId = sessionStorage.getItem("sessionId");
 
-    // if (sessionId === null || sessionId === undefined || sessionId === "") {
-    //   console.log("loki sessionId is null, undefined, or empty");
-    //   verifySession();
-    // } else
+    if (sessionId === null || sessionId === undefined || sessionId === "") {
+      console.log("loki sessionId is null, undefined, or empty");
+      verifySession();
+    }
+
     if (!userDetails) {
-    //   console.log("loki userDetails is null");
+      console.log("loki userDetails is null");
       if (isSuccess) {
         const user = new User(data?.data);
         if (user?.username) {
@@ -66,17 +66,7 @@ const useGameUserLogin = () => {
       setUser(null);
       setLoadig(false);
     }
-  }, [
-    data,
-    isSuccess,
-    isError,
-    userDetails,
-    isSessionSuccess,
-    sessionData,
-    isSessionError,
-    setLoadig,
-    setUser,
-  ]);
+  }, [data, isSuccess, isError, userDetails, setLoadig, setUser]);
 };
 
 export default useGameUserLogin;
