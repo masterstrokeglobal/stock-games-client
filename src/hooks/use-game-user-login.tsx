@@ -1,35 +1,82 @@
 import { useAuthStore } from "@/context/auth-context";
 import User from "@/models/user";
-import { useGameUserProfile } from "@/react-query/game-user-queries";
+import {
+  useGameUserProfile,
+  useGameUserSessionVerify,
+} from "@/react-query/game-user-queries";
 import { useEffect } from "react";
-import { H } from '@highlight-run/next/client';
+import { H } from "@highlight-run/next/client";
+// import { toast } from "sonner";
 
 const useGameUserLogin = () => {
-    const { setUser, setLoadig } = useAuthStore();
-    const { data, isSuccess, isError, error } = useGameUserProfile();
+  const { setUser, setLoadig, userDetails } = useAuthStore();
+  const {
+    isSuccess: isSessionSuccess,
+    isError: isSessionError,
+    data: sessionData,
+  } = useGameUserSessionVerify();
+  const { data, isSuccess, isError} = useGameUserProfile();
 
-    useEffect(() => {
-        if (isSuccess) {
-            const user = new User(data?.data);
+//   const verifySession = () => {
+//     const sessionId = sessionStorage.getItem("sessionId");
 
-            if (user?.username) {
-                H.identify(user.username, {
-                    "name": user.name,
-                    "companyId": user.company?.id ?? "",
-                    "companyName": user.company?.name ?? "N/A",
-                });
-            }
-            setUser(user);
+//     if (!sessionId || sessionId === "null" || sessionId === "undefined") {
+//       setUser(null);
+//       setLoadig(false);
+//       return;
+//     }
+
+//     // If session verification is successful, update the sessionId
+//     if (isSessionSuccess) {
+//       sessionStorage.setItem("sessionId", sessionData?.data?.sessionId);
+//     }
+
+//     // If session verification failed, clear user and show error
+//     if (isSessionError) {
+//       setUser(null);
+//       setLoadig(false);
+//       sessionStorage.removeItem("sessionId");
+//       toast.error("Session expired");
+//       return;
+//     }
+//   };
+
+  useEffect(() => {
+    // const sessionId = sessionStorage.getItem("sessionId");
+
+    // if (sessionId === null || sessionId === undefined || sessionId === "") {
+    //   console.log("loki sessionId is null, undefined, or empty");
+    //   verifySession();
+    // } else
+    if (!userDetails) {
+    //   console.log("loki userDetails is null");
+      if (isSuccess) {
+        const user = new User(data?.data);
+        if (user?.username) {
+          H.identify(user.username, {
+            name: user.name,
+            companyId: user.company?.id ?? "",
+            companyName: user.company?.name ?? "N/A",
+          });
         }
-        if (isError) {
-            console.log("error", error);
-            setUser(null);
-            setLoadig(false);
-        }
-
-
-    }, [data, isSuccess, isError]);
-
-}
+        setUser(user);
+      }
+    }
+    if (isError) {
+      setUser(null);
+      setLoadig(false);
+    }
+  }, [
+    data,
+    isSuccess,
+    isError,
+    userDetails,
+    isSessionSuccess,
+    sessionData,
+    isSessionError,
+    setLoadig,
+    setUser,
+  ]);
+};
 
 export default useGameUserLogin;

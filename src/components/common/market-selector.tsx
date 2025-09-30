@@ -55,7 +55,7 @@ const MarketSelector = ({
     const { userDetails } = useAuthStore();
 
     const currentUser = userDetails as User;
-    console.log("CURRENT USER : ", currentUser)
+    // console.log("CURRENT USER : ", currentUser)
 
     const isNSEAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.NSE);
     const isCryptoAllowed = !currentUser.isNotAllowedToPlaceOrder(SchedulerType.CRYPTO) && !(roundRecordType == RoundRecordGameType.HEAD_TAIL || roundRecordType == RoundRecordGameType.STOCK_JACKPOT);

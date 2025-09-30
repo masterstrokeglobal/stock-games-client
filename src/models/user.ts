@@ -45,6 +45,7 @@ class User {
         updatedAt?: Date;
         deletedAt?: Date | null;
     };
+    sessionId?: string;
     constructor(params: Partial<User> = {}) {
         this.id = params.id;
         this.firstname = params.firstname;
@@ -52,6 +53,7 @@ class User {
         this.username = params.username;
         this.email = params.email;
         this.phone = params.phone;
+        this.sessionId = params.sessionId;
         this.externalUser = params.externalUser??false;
         this.notes = params.notes;
         this.password = params.password;

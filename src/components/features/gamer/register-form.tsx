@@ -51,13 +51,10 @@ export const createRegisterSchema = (t: any, isPhoneAllowed: boolean = false, us
     // Optional reference code
     referenceCode: z.string().optional(),
 
-    // Username - must be lowercase
+    // Username
     username: z.string()
         .max(100, { message: t('validation.username-max') })
-        .nonempty({ message: t('validation.username-required') })
-        .refine((value) => value === value.toLowerCase(), {
-            message: t('validation.username-lowercase'),
-        }),
+        .nonempty({ message: t('validation.username-required') }),
 
     // Password
     password: z
@@ -114,7 +111,7 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         placeholder={t('label-full-name')}
                         required
                     />
-                    {/* Username Field - automatically converts to lowercase */}
+                    {/* Username Field */}
                     <FormInput
                         control={control}
                         game
@@ -122,7 +119,6 @@ const RegisterForm = ({ defaultValues, onSubmit, isLoading }: Props) => {
                         inputClassName="!text-[#747487] !bg-white !py-3"
                         placeholder={t('label-username')}
                         required
-                        transform={(value) => value.toLowerCase()}
                     />
 
                     {isUserVerificationRequired && <>{

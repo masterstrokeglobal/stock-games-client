@@ -28,6 +28,10 @@ export const gameUserAPI = {
     return api.post("/user", { ...payload, company: COMPANYID });
   },
 
+  sessionVerify: async () => {
+    return api.get("/auth/session-verify");
+  },
+
   getCaptcha: async () => {
     return api.get("/auth/captcha");
   },
