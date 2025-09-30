@@ -1,7 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import { COMPANYID } from '../utils';
 
-
 const api: AxiosInstance = axios.create({
     baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
     headers: {
@@ -10,9 +9,24 @@ const api: AxiosInstance = axios.create({
     params: {
         companyId: COMPANYID,
     },
-
     withCredentials: true,
 });
 
+// Add request interceptor to dynamically set sessionId in Authorization header
+api.interceptors.request.use(
+    (config) => {
+        // Only set Authorization header if we're in a browser environment
+        if (typeof window !== 'undefined') {
+            const sessionId = sessionStorage.getItem('sessionId');
+            if (sessionId && sessionId !== 'null' && sessionId !== 'undefined') {
+                config.headers.Authorization = `Bearer ${sessionId}`;
+            }
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
 
 export default api;

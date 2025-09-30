@@ -14,6 +14,18 @@ export const useGameUserProfile = () => {
   });
 };
 
+export const useGameUserSessionVerify = () => {
+  return useQuery({
+    retry: 1,
+    queryKey: ["gameUser", "sessionVerify"],
+    queryFn: () => gameUserAPI.sessionVerify(),
+    enabled: typeof window !== 'undefined' && 
+             !!sessionStorage.getItem('sessionId') && 
+             sessionStorage.getItem('sessionId') !== 'null' && 
+             sessionStorage.getItem('sessionId') !== 'undefined',
+  });
+};
+
 // Create a new user
 export const useGameUserRegister = () => {
   const queryClient = useQueryClient();
@@ -45,6 +57,10 @@ export const useGameUserLogin = () => {
     onSuccess: (data) => {
       const user = new User(data.data);
       setUser(user);
+      if (user.sessionId) {
+        console.log("loki login sessionId set:", user.sessionId);
+        sessionStorage.setItem('sessionId', user.sessionId);
+      }
       queryClient.invalidateQueries({
         predicate: (query) => query.queryKey[0] === "gameUser",
       });
