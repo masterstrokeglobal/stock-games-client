@@ -94,5 +94,11 @@ export const userAPI = {
             totalPage: number;
         };
     },
+
+    resetUserPassword: async (data: { userId: string; password: string }) => {
+        return api.patch(`/user/reset-password/${data.userId}`, { password: data.password }, {
+            params: { companyId: COMPANYID }
+        });
+    },
 };
 

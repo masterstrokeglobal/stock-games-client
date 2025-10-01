@@ -263,5 +263,23 @@ export const useGetUserBettingHistory = (filter: {
     });
 }
 
+export const useResetUserPassword = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: userAPI.resetUserPassword,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                predicate: (query) => {
+                    return query.queryKey[0] === "users";
+                },
+            });
+            toast.success("Password reset successfully");
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error resetting password");
+        },
+    });
+}
 
 // new query here for game history
