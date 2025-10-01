@@ -14,15 +14,13 @@ export const useGameUserProfile = () => {
   });
 };
 
-export const useGameUserSessionVerify = () => {
+export const useGameUserSessionVerify = (enabled: boolean = true) => {
   return useQuery({
     retry: 1,
     queryKey: ["gameUser", "sessionVerify"],
     queryFn: () => gameUserAPI.sessionVerify(),
-    enabled: typeof window !== 'undefined' && 
-             !!sessionStorage.getItem('sessionId') && 
-             sessionStorage.getItem('sessionId') !== 'null' && 
-             sessionStorage.getItem('sessionId') !== 'undefined',
+    enabled,
+    // enabled: typeof window !== 'undefined' 
   });
 };
 

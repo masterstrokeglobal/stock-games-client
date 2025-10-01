@@ -11,45 +11,32 @@ import { toast } from "sonner";
 const useGameUserLogin = () => {
   const { setUser, setLoadig, userDetails } = useAuthStore();
   const { data, isSuccess, isError } = useGameUserProfile();
-
-  const verifySession = () => {
-    const sessionId = sessionStorage.getItem("sessionId");
-
-    if (!sessionId || sessionId === "null" || sessionId === "undefined") {
-      setUser(null);
-      return;
-    }
-
-    const {
-      isSuccess: isSessionSuccess,
-      isError: isSessionError,
-      data: sessionData,
-    } = useGameUserSessionVerify();
-
-    // If session verification is successful, update the sessionId
-    if (isSessionSuccess) {
-      sessionStorage.setItem("sessionId", sessionData?.data?.sessionId);
-    }
-
-    // If session verification failed, clear user and show error
-    if (isSessionError) {
-      setUser(null);
-      sessionStorage.removeItem("sessionId");
-      toast.error("Session expired");
-      return;
-    }
-  };
+  const shouldVerify = typeof window !== "undefined" && (
+    sessionStorage.getItem("sessionId") === null ||
+    sessionStorage.getItem("sessionId") === undefined ||
+    sessionStorage.getItem("sessionId") === ""
+  );
+  const {
+    isSuccess: isSessionSuccess,
+    isError: isSessionError,
+    data: sessionData,
+  } = useGameUserSessionVerify(shouldVerify);
 
   useEffect(() => {
     const sessionId = sessionStorage.getItem("sessionId");
 
     if (sessionId === null || sessionId === undefined || sessionId === "") {
-      console.log("loki sessionId is null, undefined, or empty");
-      verifySession();
+      if (isSessionSuccess) {
+        sessionStorage.setItem("sessionId", sessionData?.data?.sessionId);
+      }
+      if (isSessionError) {
+        setUser(null);
+        sessionStorage.removeItem("sessionId");
+        toast.error("Session expired");
+      }
     }
 
     if (!userDetails) {
-      console.log("loki userDetails is null");
       if (isSuccess) {
         const user = new User(data?.data);
         if (user?.username) {
@@ -66,7 +53,7 @@ const useGameUserLogin = () => {
       setUser(null);
       setLoadig(false);
     }
-  }, [data, isSuccess, isError, userDetails, setLoadig, setUser]);
+  }, [data, isSuccess, isError, userDetails, setLoadig, setUser, isSessionSuccess, isSessionError, sessionData]);
 };
 
 export default useGameUserLogin;
