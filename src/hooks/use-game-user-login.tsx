@@ -9,13 +9,14 @@ import { H } from "@highlight-run/next/client";
 import { toast } from "sonner";
 
 const useGameUserLogin = () => {
-  const { setUser, setLoadig, userDetails } = useAuthStore();
+  const { setUser, setLoadig, userDetails, setIsProfileLoaded, isProfileLoaded } = useAuthStore();
   const { data, isSuccess, isError } = useGameUserProfile();
-  const shouldVerify = typeof window !== "undefined" && (
-    sessionStorage.getItem("sessionId") === null ||
-    sessionStorage.getItem("sessionId") === undefined ||
-    sessionStorage.getItem("sessionId") === ""
-  );
+
+  const shouldVerify =
+    typeof window !== "undefined" &&
+    (sessionStorage.getItem("sessionId") === null ||
+      sessionStorage.getItem("sessionId") === undefined ||
+      sessionStorage.getItem("sessionId") === "");
   const {
     isSuccess: isSessionSuccess,
     isError: isSessionError,
@@ -35,8 +36,11 @@ const useGameUserLogin = () => {
         toast.error("Session expired");
       }
     }
+  }, [isSessionSuccess, isSessionError, sessionData]);
 
-    if (!userDetails) {
+  useEffect(() => {
+    console.log("isProfileLoaded", isProfileLoaded);
+    if (!isProfileLoaded) {
       if (isSuccess) {
         const user = new User(data?.data);
         if (user?.username) {
@@ -47,13 +51,15 @@ const useGameUserLogin = () => {
           });
         }
         setUser(user);
+        console.log("isProfileLoaded set to true");
+        setIsProfileLoaded(true);
       }
     }
     if (isError) {
       setUser(null);
       setLoadig(false);
     }
-  }, [data, isSuccess, isError, userDetails, setLoadig, setUser, isSessionSuccess, isSessionError, sessionData]);
+  }, [data, isSuccess, isError, userDetails, isProfileLoaded]);
 };
 
 export default useGameUserLogin;
