@@ -34,7 +34,7 @@ const ViewCompanyPage = () => {
             <main className="mt-4 space-y-8">
                 <CompanyWalletCard companyId={companyId} />
                 {companyDetails && <CompanyCard company={companyDetails} />}
-                {<CompanyEarningsCard companyId={companyId} />}
+                <CompanyEarningsCard />
             </main>
         </section>
         

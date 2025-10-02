@@ -34,7 +34,7 @@ const ViewCompanyPage = () => {
                 {companyDetails && <CompanyCard company={companyDetails} showBonusPercentage={companyDetails.depositBonusPercentageEnabled} />}
                 {companyDetails && <CompanyPlacementManagement company={companyDetails} />}
                 {companyDetails && <CompanyApiDetailsManager companyId={id.toString()} />}
-                <CompanyEarningsCard companyId={id.toString()} />
+                <CompanyEarningsCard />
             </main>
         </section>
     );

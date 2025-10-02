@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 export interface OperatorWalletTransaction {
     id: number;
     amount: number;
-    type: 'operator_deposit' | 'transfer_out' | 'transfer_in' | 'company_recharge' | 'wallet_recharge';
+    type: 'operator_deposit' | 'transfer_out' | 'transfer_in' | 'company_recharge' | 'wallet_recharge' | 'deposit';
     status: 'pending' | 'completed' | 'failed';
     description?: string;
     depositorOperatorWallet?: {
@@ -29,10 +29,24 @@ export interface OperatorWalletTransaction {
         id: number;
         balance: number;
     };
+    wallet?: {
+        id: number;
+        user?: {
+            id: number;
+            firstname: string;
+            lastname: string;
+            username: string;
+            email?: string;
+        };
+    };
     createdAt: string;
     updatedAt: string;
     pgId?: string;
     confirmationImageUrl?: string;
+    // New fields from backend
+    counterpartyType?: string;
+    counterpartyId?: number;
+    counterpartyName?: string;
 }
 
 const operatorWalletTransactionColumns: ColumnDef<OperatorWalletTransaction>[] = [
@@ -59,7 +73,8 @@ const operatorWalletTransactionColumns: ColumnDef<OperatorWalletTransaction>[] =
                 wallet_recharge: "success",
                 transfer_in: "success",
                 transfer_out: "destructive", 
-                company_recharge: "default"
+                company_recharge: "default",
+                deposit: "success"
             } as const;
             
             const typeDisplayMap = {
@@ -67,7 +82,8 @@ const operatorWalletTransactionColumns: ColumnDef<OperatorWalletTransaction>[] =
                 wallet_recharge: "Wallet Recharge",
                 transfer_in: "Transfer In",
                 transfer_out: "Transfer Out",
-                company_recharge: "Company Recharge"
+                company_recharge: "Company Recharge",
+                deposit: "User Deposit"
             };
             
             return (
@@ -96,7 +112,17 @@ const operatorWalletTransactionColumns: ColumnDef<OperatorWalletTransaction>[] =
         header: "From",
         accessorKey: "fromOperator",
         cell: ({ row }) => {
-            const { depositorOperatorWallet, companyWallet, type } = row.original;
+            const { depositorOperatorWallet, companyWallet, type, counterpartyType, counterpartyName } = row.original;
+            
+            // Use new counterparty fields first
+            if (counterpartyType === 'operator' && counterpartyName) {
+                return (
+                    <div className="text-sm">
+                        <span className="font-medium">{counterpartyName}</span>
+                        <div className="text-xs text-gray-500">Operator</div>
+                    </div>
+                );
+            }
             
             if (type === 'company_recharge' || companyWallet) {
                 return (
@@ -123,7 +149,17 @@ const operatorWalletTransactionColumns: ColumnDef<OperatorWalletTransaction>[] =
         header: "To",
         accessorKey: "toOperator",
         cell: ({ row }) => {
-            const { creditorOperatorWallet, type } = row.original;
+            const { creditorOperatorWallet, type, counterpartyType, counterpartyName } = row.original;
+            
+            // Use new counterparty fields first
+            if (counterpartyType === 'user' && counterpartyName) {
+                return (
+                    <div className="text-sm">
+                        <span className="font-medium">{counterpartyName}</span>
+                        <div className="text-xs text-gray-500">User</div>
+                    </div>
+                );
+            }
             
             if (type === 'wallet_recharge') {
                 return (

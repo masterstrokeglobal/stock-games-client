@@ -24,7 +24,7 @@ const createOperatorTransactionColumns = (currentUserEmail?: string, currentOper
     {
         header: "User",
         accessorKey: "user",
-        cell: ({ row }) => <div>{row.original.user?.username || 'N/A'}</div>,
+        cell: ({ row }) => <div>{row.original.counterpartyName || row.original.userName || row.original.user?.username || 'N/A'}</div>,
     },
     {
         header: "Type",
@@ -115,14 +115,24 @@ const createOperatorTransactionColumns = (currentUserEmail?: string, currentOper
 
             const prettyRole = (role?: string) => role ? role.split("_").map(r => r[0]?.toUpperCase() + r.slice(1)).join(" ") : undefined;
 
-            if (type === "deposit") {
+            // Use the new counterparty fields first, then fallback to existing logic
+            if (t.counterpartyName && t.counterpartyType === "user") {
+                name = t.counterpartyName;
+                roleText = "User";
+            } else if (t.counterpartyName && t.counterpartyType === "operator") {
+                name = t.counterpartyName;
+                roleText = "Operator";
+            } else if (t.counterpartyName && t.counterpartyType === "company") {
+                name = "Company";
+                roleText = "Company";
+            } else if (type === "deposit") {
                 // Agent/Company -> User
                 name = depositorOp?.name || "Company Wallet";
                 email = depositorOp?.email;
                 roleText = depositorOp ? prettyRole(depositorOp.role) : "Company";
             } else if (type === "withdrawal") {
                 // User -> Agent/Company
-                name = user?.username || "User";
+                name = t.userName || user?.username || "User";
                 email = user?.email || undefined;
                 roleText = "User";
             } else if (type === "winning" || type === "points_earned") {
@@ -131,12 +141,12 @@ const createOperatorTransactionColumns = (currentUserEmail?: string, currentOper
                 roleText = "Platform";
             } else if (type === "placement") {
                 // User -> Platform
-                name = user?.username || "User";
+                name = t.userName || user?.username || "User";
                 email = user?.email || undefined;
                 roleText = "User";
             } else {
                 // Fallbacks
-                name = depositorOp?.name || user?.username || undefined;
+                name = depositorOp?.name || t.userName || user?.username || undefined;
                 email = depositorOp?.email || user?.email || undefined;
                 roleText = depositorOp ? prettyRole(depositorOp.role) : (user ? "User" : undefined);
             }
@@ -168,9 +178,19 @@ const createOperatorTransactionColumns = (currentUserEmail?: string, currentOper
 
             const prettyRole = (role?: string) => role ? role.split("_").map(r => r[0]?.toUpperCase() + r.slice(1)).join(" ") : undefined;
 
-            if (type === "deposit") {
+            // Use the new counterparty fields first, then fallback to existing logic
+            if (t.counterpartyName && t.counterpartyType === "user") {
+                name = t.counterpartyName;
+                roleText = "User";
+            } else if (t.counterpartyName && t.counterpartyType === "operator") {
+                name = t.counterpartyName;
+                roleText = "Operator";
+            } else if (t.counterpartyName && t.counterpartyType === "company") {
+                name = "Company";
+                roleText = "Company";
+            } else if (type === "deposit") {
                 // Agent/Company -> User
-                name = user?.username || creditorOp?.name || "User";
+                name = t.userName || user?.username || creditorOp?.name || "User";
                 email = user?.email || creditorOp?.email || undefined;
                 roleText = user ? "User" : (creditorOp ? prettyRole(creditorOp.role) : undefined);
             } else if (type === "withdrawal") {
@@ -180,7 +200,7 @@ const createOperatorTransactionColumns = (currentUserEmail?: string, currentOper
                 roleText = creditorOp ? prettyRole(creditorOp.role) : "Company";
             } else if (type === "winning" || type === "points_earned") {
                 // Platform -> User
-                name = user?.username || "User";
+                name = t.userName || user?.username || "User";
                 email = user?.email || undefined;
                 roleText = "User";
             } else if (type === "placement") {
@@ -189,7 +209,7 @@ const createOperatorTransactionColumns = (currentUserEmail?: string, currentOper
                 roleText = "Platform";
             } else {
                 // Fallbacks
-                name = creditorOp?.name || user?.username || undefined;
+                name = creditorOp?.name || t.userName || user?.username || undefined;
                 email = creditorOp?.email || user?.email || undefined;
                 roleText = creditorOp ? prettyRole(creditorOp.role) : (user ? "User" : undefined);
             }

@@ -47,18 +47,6 @@ const transactionColumns: ColumnDef<Transaction>[] = [
             return <div className="text-nowrap">Rs. {row.original.amount.toFixed(2)}</div>
         }
     },
-    //depositer
-    {
-        header: "Depositer",
-        accessorKey: "user",
-        cell: ({ row }) => <div>{row.original.user?.username || 'N/A'}</div>,
-    },  
-    //withdrawer
-    {
-        header: "Withdrawer",
-        accessorKey: "user",
-        cell: ({ row }) => <div>{row.original.user?.username || 'N/A'}</div>,
-    },
     {
         header: "Image URL",
         accessorKey: "imageUrl",

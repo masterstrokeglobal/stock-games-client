@@ -22,7 +22,9 @@ const agentWalletTransactionColumns: ColumnDef<Transaction>[] = [
         accessorKey: "agent",
         cell: ({ row }) => {
             if (row.original.type === TransactionType.DEPOSIT || row.original.type === TransactionType.WITHDRAWAL) {
-                return <Link href={`/dashboard/users/${row.original.user?.id}`}>{row.original.user?.firstname || 'N/A'}</Link>;
+                return <Link href={`/dashboard/users/${row.original.counterpartyId || row.original.userId || row.original.user?.id}`}>
+                    {row.original.counterpartyName || row.original.userName || row.original.user?.firstname || 'N/A'}
+                </Link>;
             }
             return <Link href={`/dashboard/agents/${row.original.agent?.id}`}>{row.original.agent?.firstname || 'N/A'}</Link>;
         }

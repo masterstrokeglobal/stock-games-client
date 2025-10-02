@@ -1,13 +1,14 @@
 "use client";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useGetCurrentOperator, useGetSettlements } from "@/react-query/operator-queries";
-import { RefreshCw, Download } from "lucide-react";
+import { RefreshCw, ChevronDown, ChevronRight, Building, TrendingUp, Users, PieChart } from "lucide-react";
+import { INR } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import LoadingScreen from "@/components/common/loading-screen";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import dayjs from "dayjs";
 import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { DateRange } from "react-day-picker";
@@ -22,19 +23,35 @@ const OperatorProfitLossDashboard = ({ className }: Props) => {
         from: dayjs().subtract(7, 'day').toDate(),
         to: new Date()
     });
-    const [agentId, setAgentId] = useState<string>("");
-    const [aggregate, setAggregate] = useState<boolean>(true);
+    
+    // State for managing dropdown expansions - will be initialized dynamically
+    const [expandedLevels, setExpandedLevels] = useState<Set<string>>(new Set());
+    
+    // Function to toggle expansion of hierarchy levels
+    const toggleExpansion = (level: string) => {
+        setExpandedLevels(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(level)) {
+                newSet.delete(level);
+            } else {
+                newSet.add(level);
+            }
+            return newSet;
+        });
+    };
 
     const { data: currentOperator } = useGetCurrentOperator();
     const isAdmin = currentOperator?.role?.toLowerCase() === 'company_admin';
 
-    // Get settlements data
-    const { data: settlementsData, isLoading, error, refetch } = useGetSettlements({
+    // Memoize filter parameters to prevent infinite re-renders
+    const filterParams = useMemo(() => ({
         startDate: dateRange?.from,
         endDate: dateRange?.to,
-        agentId: agentId ? parseInt(agentId) : undefined,
-        aggregate
-    });
+        aggregate: true
+    }), [dateRange?.from, dateRange?.to]);
+
+    // Get settlements data
+    const { data: settlementsData, isLoading, error, refetch, isRefetching } = useGetSettlements(filterParams);
 
     if (isLoading) {
         return <LoadingScreen className="h-64" />;
@@ -52,174 +69,523 @@ const OperatorProfitLossDashboard = ({ className }: Props) => {
         );
     }
 
+    // Map settlements API response to admin-style format
+    const data = settlementsData ? {
+        operatorUsersTotals: {
+            totalPlaced: settlementsData.summary?.totalPlacement || 0,
+            totalPayout: settlementsData.summary?.totalWinning || 0,
+            totalProfit: settlementsData.summary?.net || 0,
+            distributableProfit: settlementsData.summary?.net || 0,
+            excludesCompanyDirectUsers: true,
+            netUserWinning: Math.max((settlementsData.summary?.totalWinning || 0) - (settlementsData.summary?.totalPlacement || 0), 0),
+        },
+        adminDistribution: {
+            totalDistributedToOperators: (settlementsData.summary?.distribution?.agent || 0) + 
+                                       (settlementsData.summary?.distribution?.master || 0) + 
+                                       (settlementsData.summary?.distribution?.duper_master || 0) + 
+                                       (settlementsData.summary?.distribution?.super_duper_master || 0),
+            adminKeeps: settlementsData.summary?.distribution?.company || 0,
+            adminRetentionPercentage: settlementsData.summary?.net && settlementsData.summary?.net > 0 
+                ? ((settlementsData.summary?.distribution?.company || 0) / Math.abs(settlementsData.summary?.net) * 100).toFixed(2)
+                : "0.00",
+        },
+        operatorShares: settlementsData.settlements?.flatMap((settlement: any) => {
+            const distributions = settlement.distribution || {};
+            const hierarchy = [];
+            
+            // Only create hierarchy levels that exist in the distribution data
+            const roleHierarchy = ['super_duper_master', 'duper_master', 'master', 'agent'];
+            
+            for (const role of roleHierarchy) {
+                if (distributions[role] !== undefined) {
+                    hierarchy.push({
+                        operatorId: settlement.agentId || 0,
+                        operatorName: settlement.chainId || `Agent #${settlement.agentId}`,
+                        role: role,
+                        allocatedPercentage: 0,
+                        directProfit: role === 'super_duper_master' ? (settlement.net || 0) : 0,
+                        receivesFromParent: 0,
+                        totalOperatorAmount: distributions[role] || 0,
+                        distributesToChildren: 0,
+                        operatorKeeps: distributions[role] || 0,
+                    });
+                }
+            }
+            
+            return hierarchy;
+        }) || [],
+        profitFlow: {
+            description: "Profit Distribution Overview",
+            isProfit: (settlementsData.summary?.net || 0) > 0,
+            totalOperators: settlementsData.settlements?.length || 0,
+            note: "Operator hierarchy profit distribution",
+        }
+    } : {
+        operatorUsersTotals: {
+            totalPlaced: 0,
+            totalPayout: 0,
+            totalProfit: 0,
+            distributableProfit: 0,
+            excludesCompanyDirectUsers: true,
+            netUserWinning: 0,
+        },
+        adminDistribution: {
+            totalDistributedToOperators: 0,
+            adminKeeps: 0,
+            adminRetentionPercentage: "0.00",
+        },
+        operatorShares: [],
+        profitFlow: {
+            description: "No data available",
+            isProfit: false,
+            totalOperators: 0,
+            note: "No settlement data found",
+        }
+    };
+
     return (
         <div className={cn("space-y-6", className)}>
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold">Settlement Report</h1>
-                    <p className="text-gray-600">View settlement data for your operator hierarchy</p>
+                    <h2 className="text-2xl font-bold flex items-center gap-2">
+                        <Users className="h-6 w-6" />
+                        {isAdmin ? "Operator Profit Distribution" : "Settlement Report"}
+                    </h2>
+                    <p className="text-gray-600 mt-1">
+                        {isAdmin ? "View profit distribution for your operator hierarchy" : "View settlement data for your operator hierarchy"}
+                    </p>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
                     <DatePickerWithRange
                         initialDateRange={dateRange}
                         onDateChange={setDateRange}
-                        className="w-fit"
+                        className="w-auto"
                     />
                     <Button
+                        variant="ghost" 
+                        size="sm"
                         onClick={() => refetch()}
-                        variant="outline"
-                        className="flex items-center gap-2"
+                        disabled={isRefetching}
                     >
-                        <RefreshCw className="h-4 w-4" />
-                        Refresh
+                        <RefreshCw className={cn("h-4 w-4", isRefetching && "animate-spin")} />
                     </Button>
                 </div>
             </div>
 
-            {/* Filters */}
-            <Card>
+            {/* Show admin-specific sections only for admins */}
+            {isAdmin && (
+                <>
+                    {/* Status Alert */}
+                    <Card className={cn(
+                        "border-2",
+                        data.profitFlow.isProfit ? "border-green-200 bg-green-50" : "border-red-200 bg-red-50"
+                    )}>
                 <CardContent className="p-4">
-                    <div className="flex flex-col md:flex-row gap-4 items-end">
-                        <div className="flex-1">
-                            <label className="text-sm font-medium text-gray-700 mb-2 block">Agent Filter</label>
-                            <Input
-                                placeholder="Agent ID (optional)"
-                                value={agentId}
-                                onChange={(e) => setAgentId(e.target.value)}
-                            />
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center space-x-3">
+                                    {data.profitFlow.isProfit ? (
+                                        <TrendingUp className="h-5 w-5 text-green-600" />
+                                    ) : (
+                                        <TrendingUp className="h-5 w-5 text-red-600 rotate-180" />
+                                    )}
+                                    <div>
+                                        <h3 className="font-semibold">{data.profitFlow.description}</h3>
+                                        <p className="text-sm opacity-80">{data.profitFlow.note}</p>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                id="aggregate"
-                                checked={aggregate}
-                                onChange={(e) => setAggregate(e.target.checked)}
-                                className="rounded"
-                            />
-                            <label htmlFor="aggregate" className="text-sm font-medium text-gray-700">
-                                Show Summary
-                            </label>
                         </div>
-                        <Button
-                            onClick={() => {
-                                // TODO: Implement export functionality
-                                console.log('Export settlements');
-                            }}
-                            variant="outline"
-                            className="flex items-center gap-2"
-                        >
-                            <Download className="h-4 w-4" />
-                            Export
-                        </Button>
+                                <Badge variant={data.profitFlow.isProfit ? "success" : "destructive"}>
+                                    {data.profitFlow.totalOperators} Operators
+                                </Badge>
                     </div>
                 </CardContent>
             </Card>
 
-            {/* Settlement Table */}
+                    {/* Company Overview */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <Card>
+                            <CardContent className="p-4">
+                                <div className="flex items-center space-x-2 mb-2">
+                                    <TrendingUp className="h-4 w-4 text-blue-600" />
+                                    <span className="text-sm font-medium">Total Placed</span>
+                                </div>
+                                <div className="text-xl font-bold">
+                                    {INR(data.operatorUsersTotals.totalPlaced)}
+                                </div>
+                                <div className="text-xs text-gray-500">Operator users only</div>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardContent className="p-4">
+                                <div className="flex items-center space-x-2 mb-2">
+                                    <TrendingUp className={`h-4 w-4 ${
+                                        data.operatorUsersTotals.netUserWinning > 0 ? 'text-green-600' : 'text-red-600 rotate-180'
+                                    }`} />
+                                    <span className="text-sm font-medium">Net User Winning</span>
+                                </div>
+                                <div className={`text-xl font-bold ${
+                                    data.operatorUsersTotals.netUserWinning > 0 ? 'text-green-600' : 'text-red-600'
+                                }`}>
+                                    {INR(data.operatorUsersTotals.netUserWinning)}
+                                </div>
+                                <div className="text-xs text-gray-500">Net payout to operator users</div>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardContent className="p-4">
+                                <div className="flex items-center space-x-2 mb-2">
+                                    <PieChart className={`h-4 w-4 ${data.operatorUsersTotals.totalProfit < 0 ? 'text-red-600' : 'text-green-600'}`} />
+                                    <span className="text-sm font-medium">Company Profit</span>
+                                </div>
+                                <div className={`text-xl font-bold ${
+                                    data.operatorUsersTotals.totalProfit < 0 ? 'text-red-600' : 'text-green-600'
+                                }`}>
+                                    {INR(data.operatorUsersTotals.totalProfit)}
+                                </div>
+                                <div className="text-xs text-gray-500">Available for sharing</div>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardContent className="p-4">
+                                <div className="flex items-center space-x-2 mb-2">
+                                    <Building className={`h-4 w-4 ${data.adminDistribution.adminKeeps < 0 ? 'text-red-600' : 'text-purple-600'}`} />
+                                    <span className="text-sm font-medium">Admin Keeps</span>
+                                </div>
+                                <div className={`text-xl font-bold ${
+                                    data.adminDistribution.adminKeeps < 0 ? 'text-red-600' : 'text-purple-600'
+                                }`}>
+                                    {INR(data.adminDistribution.adminKeeps)}
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                    {data.adminDistribution.adminRetentionPercentage}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    {/* Distribution Breakdown */}
             <Card>
                 <CardHeader>
-                    <CardTitle>Settlement Data</CardTitle>
+                            <CardTitle className="flex items-center gap-2">
+                                <PieChart className="h-5 w-5" />
+                                Profit Distribution Breakdown
+                            </CardTitle>
                     <CardDescription>
-                        Showing data for {dayjs(dateRange?.from).format('DD MMM YYYY')} - {dayjs(dateRange?.to).format('DD MMM YYYY')}
+                                How the {INR(data.operatorUsersTotals.distributableProfit)} profit is distributed
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    {settlementsData ? (
                         <div className="space-y-4">
-                            {/* Summary Card (if aggregate is enabled) */}
-                            {aggregate && settlementsData.summary && (
-                                <Card className="bg-blue-50 border-blue-200">
-                                    <CardContent className="p-4">
-                                        <h4 className="font-semibold text-blue-900 mb-2">Summary</h4>
-                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                {/* Admin Distribution */}
+                                <div className="flex items-center justify-between p-4 bg-purple-50 rounded-lg border">
+                                    <div className="flex items-center space-x-3">
+                                        <Building className="h-6 w-6 text-purple-600" />
                                             <div>
-                                                <span className="text-gray-600">Total Recharge:</span>
-                                                <div className="font-semibold text-green-600">
-                                                    ₹{settlementsData.summary.totalRecharge?.toLocaleString() || 0}
+                                            <div className="font-medium">Company Admin</div>
+                                            <div className="text-sm text-gray-600">Retention</div>
                                                 </div>
                                             </div>
-                                            <div>
-                                                <span className="text-gray-600">Total Redeem:</span>
-                                                <div className="font-semibold text-red-600">
-                                                    ₹{settlementsData.summary.totalRedeem?.toLocaleString() || 0}
+                                    <div className="text-right">
+                                        <div className="text-lg font-bold text-purple-600">
+                                            {INR(data.adminDistribution.adminKeeps)}
+                                                </div>
+                                        <Badge variant="outline">
+                                            {data.adminDistribution.adminRetentionPercentage}
+                                        </Badge>
                                                 </div>
                                             </div>
-                                            <div>
-                                                <span className="text-gray-600">Net:</span>
-                                                <div className={`font-semibold ${(settlementsData.summary.net || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                                    ₹{settlementsData.summary.net?.toLocaleString() || 0}
-                                                </div>
-                                            </div>
-                                            {isAdmin && (
+
+                                {/* Operator Distribution */}
+                                <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border">
+                                    <div className="flex items-center space-x-3">
+                                        <Users className="h-6 w-6 text-blue-600" />
                                                 <div>
-                                                    <span className="text-gray-600">Company Share:</span>
-                                                    <div className="font-semibold text-blue-600">
-                                                        ₹{settlementsData.summary.companyShare?.toLocaleString() || 0}
+                                            <div className="font-medium">Distributed to Operators</div>
+                                            <div className="text-sm text-gray-600">{data.profitFlow.totalOperators} operators</div>
                                                     </div>
                                                 </div>
-                                            )}
+                                    <div className="text-right">
+                                        <div className="text-lg font-bold text-blue-600">
+                                            {INR(data.adminDistribution.totalDistributedToOperators)}
+                                        </div>
+                                        <Badge variant="outline">
+                                            {(100 - parseFloat(data.adminDistribution.adminRetentionPercentage)).toFixed(2)}%
+                                        </Badge>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </>
+            )}
+
+            {/* Operator Summary (shown for all users) */}
+            {!isAdmin && settlementsData && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <TrendingUp className="h-5 w-5" />
+                            Settlement Summary
+                        </CardTitle>
+                        <CardDescription>
+                            Showing data for {dayjs(dateRange?.from).format('DD MMM YYYY')} - {dayjs(dateRange?.to).format('DD MMM YYYY')}
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <Card>
+                                <CardContent className="p-4">
+                                    <div className="flex items-center space-x-2 mb-2">
+                                        <TrendingUp className="h-4 w-4 text-blue-600" />
+                                        <span className="text-sm font-medium">Total Placed</span>
+                                    </div>
+                                    <div className="text-xl font-bold text-blue-600">
+                                        ₹{settlementsData.summary?.totalPlacement?.toLocaleString() || 0}
+                                    </div>
+                                    <div className="text-xs text-gray-500">Total amount placed</div>
+                                </CardContent>
+                            </Card>
+                            
+                            <Card>
+                                <CardContent className="p-4">
+                                    <div className="flex items-center space-x-2 mb-2">
+                                        <TrendingUp className="h-4 w-4 text-green-600" />
+                                        <span className="text-sm font-medium">Net Wins</span>
+                                    </div>
+                                    <div className="text-xl font-bold text-green-600">
+                                        ₹{settlementsData.summary?.totalWinning?.toLocaleString() || 0}
+                                    </div>
+                                    <div className="text-xs text-gray-500">Total winnings</div>
+                                </CardContent>
+                            </Card>
+                            
+                            <Card>
+                                <CardContent className="p-4">
+                                    <div className="flex items-center space-x-2 mb-2">
+                                        <PieChart className={`h-4 w-4 ${(settlementsData.summary?.net || 0) < 0 ? 'text-red-600' : 'text-green-600'}`} />
+                                        <span className="text-sm font-medium">Profit</span>
+                                    </div>
+                                    <div className={`text-xl font-bold ${
+                                        (settlementsData.summary?.net || 0) < 0 ? 'text-red-600' : 'text-green-600'
+                                    }`}>
+                                        ₹{settlementsData.summary?.net?.toLocaleString() || 0}
+                                    </div>
+                                    <div className="text-xs text-gray-500">Net profit/loss</div>
+                                </CardContent>
+                            </Card>
                                         </div>
                                     </CardContent>
                                 </Card>
                             )}
 
-                            {/* Settlement Table */}
-                            <div className="overflow-x-auto">
-                                <table className="w-full border-collapse border border-gray-300">
-                                    <thead>
-                                        <tr className="bg-gray-50">
-                                            <th className="border border-gray-300 px-4 py-2 text-left">Agent</th>
-                                            <th className="border border-gray-300 px-4 py-2 text-right">Total Recharge</th>
-                                            <th className="border border-gray-300 px-4 py-2 text-right">Total Redeem</th>
-                                            <th className="border border-gray-300 px-4 py-2 text-right">Net</th>
-                                            {isAdmin && (
-                                                <th className="border border-gray-300 px-4 py-2 text-right">Company Share</th>
-                                            )}
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {settlementsData.data?.map((settlement: any, index: number) => (
-                                            <tr key={index} className="hover:bg-gray-50">
-                                                <td className="border border-gray-300 px-4 py-2">
-                                                    <div>
-                                                        <div className="font-medium">{settlement.agentName || `Agent #${settlement.agentId}`}</div>
-                                                        <div className="text-sm text-gray-500">ID: {settlement.agentId}</div>
-                                                    </div>
-                                                </td>
-                                                <td className="border border-gray-300 px-4 py-2 text-right text-green-600">
-                                                    ₹{settlement.totalRecharge?.toLocaleString() || 0}
-                                                </td>
-                                                <td className="border border-gray-300 px-4 py-2 text-right text-red-600">
-                                                    ₹{settlement.totalRedeem?.toLocaleString() || 0}
-                                                </td>
-                                                <td className={`border border-gray-300 px-4 py-2 text-right font-semibold ${(settlement.net || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                                    ₹{settlement.net?.toLocaleString() || 0}
-                                                </td>
-                                                {isAdmin && (
-                                                    <td className="border border-gray-300 px-4 py-2 text-right text-blue-600">
-                                                        ₹{settlement.companyShare?.toLocaleString() || 0}
-                                                    </td>
-                                                )}
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
+            {/* Hierarchy Distribution */}
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <Users className="h-5 w-5" />
+                        {isAdmin ? "Operator Hierarchy Distribution" : "Settlement Distribution"}
+                    </CardTitle>
+                    <CardDescription>
+                        {isAdmin 
+                            ? "Profit distribution from top-level (Super Duper Master) to bottom-level (Agent)"
+                            : "Settlement amounts for each role in your hierarchy"
+                        }
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="space-y-2">
+                        {(() => {
+                            const roleLabels = {
+                                super_duper_master: "Super Duper Master",
+                                duper_master: "Duper Master", 
+                                master: "Master",
+                                agent: "Agent"
+                            };
 
-                            {(!settlementsData.data || settlementsData.data.length === 0) && (
-                                <div className="text-center py-8 text-gray-500">
-                                    <p>No settlement data found for the selected period.</p>
+                            const fmt = (n: number) => `${n < 0 ? "-" : ""}₹${Math.abs(n).toFixed(2)}`;
+
+                            // Group operators by role for hierarchical display
+                            const groupedByRole = data.operatorShares.reduce((acc: Record<string, typeof data.operatorShares>, operator: any) => {
+                                if (!acc[operator.role]) {
+                                    acc[operator.role] = [];
+                                }
+                                acc[operator.role].push(operator);
+                                return acc;
+                            }, {} as Record<string, typeof data.operatorShares>);
+
+                            // Initialize expanded state with first available role if not already set
+                            const rolesInData = Object.keys(groupedByRole);
+                            const roleHierarchy = ['super_duper_master', 'duper_master', 'master', 'agent'];
+                            const firstAvailableRole = roleHierarchy.find(r => rolesInData.includes(r));
+                            
+                            if (firstAvailableRole && expandedLevels.size === 0) {
+                                setExpandedLevels(new Set([firstAvailableRole]));
+                            }
+
+                            // Helper function to get next level in hierarchy
+                            const getNextLevel = (currentRole: string): string | null => {
+                                const availableRoles = Object.keys(groupedByRole);
+                                const roleHierarchy = ['super_duper_master', 'duper_master', 'master', 'agent'];
+                                
+                                // Only consider roles that exist in the data
+                                const existingRoles = roleHierarchy.filter(r => availableRoles.includes(r));
+                                const currentIndex = existingRoles.indexOf(currentRole);
+                                
+                                // Return next role if it exists
+                                return currentIndex >= 0 && currentIndex < existingRoles.length - 1 
+                                    ? existingRoles[currentIndex + 1] 
+                                    : null;
+                            };
+
+                            // Get color based on role
+                            const getRoleColor = (role: string) => {
+                                switch (role) {
+                                    case 'super_duper_master': return 'border-purple-200 bg-purple-50 hover:bg-purple-100';
+                                    case 'duper_master': return 'border-blue-200 bg-blue-50 hover:bg-blue-100';
+                                    case 'master': return 'border-green-200 bg-green-50 hover:bg-green-100';
+                                    case 'agent': return 'border-orange-200 bg-orange-50 hover:bg-orange-100';
+                                    default: return 'border-gray-200 bg-gray-50 hover:bg-gray-100';
+                                }
+                            };
+
+                            // Helper function to check if a level should be visible based on parent expansion
+                            const shouldShowLevel = (role: string) => {
+                                const availableRoles = Object.keys(groupedByRole);
+                                const roleHierarchy = ['super_duper_master', 'duper_master', 'master', 'agent'];
+                                
+                                // Only consider roles that exist in the data
+                                const existingRoles = roleHierarchy.filter(r => availableRoles.includes(r));
+                                const currentIndex = existingRoles.indexOf(role);
+                                
+                                // First level is always visible
+                                if (currentIndex === 0) return true;
+                                
+                                // Check if all parent levels are expanded
+                                for (let i = 0; i < currentIndex; i++) {
+                                    const parentRole = existingRoles[i];
+                                    if (!expandedLevels.has(parentRole)) {
+                                        return false;
+                                    }
+                                }
+                                return true;
+                            };
+
+                            // Render hierarchy levels
+                            const renderHierarchyLevel = (role: string) => {
+                                const operators = groupedByRole[role] || [];
+                                const isExpanded = expandedLevels.has(role);
+                                const nextLevel = getNextLevel(role);
+                                const hasChildren = role !== 'agent' && nextLevel;
+                                
+                                // Only render if this level should be visible
+                                if (!shouldShowLevel(role)) return null;
+                                
+                                // Get amount from operators or use 0 if no operators exist for this role
+                                const amount = operators.length > 0 
+                                    ? operators[0].operatorKeeps 
+                                    : 0;
+                                
+                                // Use operator name if available, otherwise use a default
+                                const operatorName = operators.length > 0 
+                                    ? operators[0].operatorName 
+                                    : 'N/A';
+
+                                // Get indentation based on role hierarchy
+                                const getIndentation = (role: string) => {
+                                    switch (role) {
+                                        case 'super_duper_master': return 'ml-0';
+                                        case 'duper_master': return 'ml-4';
+                                        case 'master': return 'ml-8';
+                                        case 'agent': return 'ml-12';
+                                        default: return 'ml-0';
+                                    }
+                                };
+
+                                return (
+                                    <div key={role} className="space-y-1">
+                                        {/* Current Level Header */}
+                                        <div 
+                                            className={`flex items-center justify-between p-3 rounded border-l-4 cursor-pointer transition-colors ${getRoleColor(role)}`}
+                                            onClick={() => hasChildren && toggleExpansion(role)}
+                                        >
+                                            <div className={`flex items-center space-x-2 ${getIndentation(role)}`}>
+                                                {hasChildren && (
+                                                    <div className="flex items-center justify-center w-5 h-5">
+                                                        {isExpanded ? (
+                                                            <ChevronDown className="w-4 h-4 text-gray-600" />
+                                                        ) : (
+                                                            <ChevronRight className="w-4 h-4 text-gray-600" />
+                                                        )}
+                                                    </div>
+                                                )}
+                                                {role !== 'super_duper_master' && (
+                                                    <div className="w-2 h-2 rounded-full bg-gray-400"></div>
+                                                )}
+                                                <span className="font-medium">
+                                                    {roleLabels[role as keyof typeof roleLabels]} - {operatorName}
+                                                </span>
+                                            </div>
+                                            <span className={`font-mono text-lg font-bold ${
+                                                amount < 0 ? 'text-red-600' : 'text-green-600'
+                                            }`}>
+                                                {fmt(amount)}
+                                            </span>
+                                        </div>
+                            </div>
+                                );
+                            };
+
+                            // Only render hierarchy levels that exist in the data
+                            const rolesToRender = Object.keys(groupedByRole);
+                            return (
+                                <div className="space-y-1">
+                                    {rolesToRender.map(role => renderHierarchyLevel(role))}
                                 </div>
-                            )}
+                            );
+                        })()}
                         </div>
-                    ) : (
-                        <div className="text-center py-8 text-gray-500">
-                            <p>Loading settlement data...</p>
-                        </div>
-                    )}
                 </CardContent>
             </Card>
+
+            {/* Summary - Admin only */}
+            {isAdmin && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <TrendingUp className="h-5 w-5" />
+                            Summary
+                        </CardTitle>
+                        <CardDescription>Overall profit distribution summary</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="text-center p-4 bg-blue-50 rounded-lg">
+                                <div className="text-2xl font-bold text-blue-600">
+                                    {data.profitFlow.totalOperators}
+                                </div>
+                                <div className="text-sm text-gray-600">Active Operators</div>
+                            </div>
+                            <div className="text-center p-4 bg-green-50 rounded-lg">
+                                <div className={`text-2xl font-bold ${
+                                    data.operatorUsersTotals.totalProfit < 0 ? 'text-red-600' : 'text-green-600'
+                                }`}>
+                                    {INR(data.operatorUsersTotals.totalProfit)}
+                                </div>
+                                <div className="text-sm text-gray-600">Total Profit Generated</div>
+                            </div>
+                            <div className="text-center p-4 bg-purple-50 rounded-lg">
+                                <div className="text-2xl font-bold text-purple-600">
+                                    {data.adminDistribution.adminRetentionPercentage}
+                                </div>
+                                <div className="text-sm text-gray-600">Admin Retention Rate</div>
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
         </div>
     );
 };

@@ -96,6 +96,11 @@ export class Transaction {
     deletedAt?: Date;
     wallet: any;
     user?: User;
+    userId?: number; // New field from backend
+    userName?: string; // New field from backend
+    counterpartyType?: string; // New field from backend
+    counterpartyId?: number; // New field from backend
+    counterpartyName?: string; // New field from backend
 
 
     constructor(data: Partial<Transaction | any>) {
@@ -106,6 +111,13 @@ export class Transaction {
         this.companyQR = data?.companyQR ? new CompanyQR(data.companyQR) : undefined;
         this.creditorOperatorWallet = data?.creditorOperatorWallet ? new OperatorWallet(data.creditorOperatorWallet) : undefined;
         this.depositorOperatorWallet = data?.depositorOperatorWallet ? new OperatorWallet(data.depositorOperatorWallet) : undefined;
+        
+        // Ensure new fields are properly assigned
+        this.userId = data?.userId;
+        this.userName = data?.userName;
+        this.counterpartyType = data?.counterpartyType;
+        this.counterpartyId = data?.counterpartyId;
+        this.counterpartyName = data?.counterpartyName;
     }
 
 

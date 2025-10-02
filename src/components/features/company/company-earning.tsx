@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { useGetCompanyProfitLoss } from "@/react-query/payment-queries";
+import { useGetSettlements } from "@/react-query/operator-queries";
 import {
     ArrowDownCircle,
     ArrowUpCircle,
@@ -13,12 +13,16 @@ import {
 } from "lucide-react";
 import { useCallback, useMemo } from "react";
 
-type Props = {
-    companyId: string;
-};
+const CompanyEarningsCard = () => {
+    // Memoize date parameters to prevent infinite re-renders
+    const filterParams = useMemo(() => ({
+        startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1), // Start of current month
+        endDate: new Date(), // Current date
+        aggregate: true
+    }), []); // Empty dependency array since we want static dates
 
-const CompanyEarningsCard = ({ companyId }: Props) => {
-    const { data } = useGetCompanyProfitLoss(companyId);
+    // Use settlements API with aggregate=true to get company-level data
+    const { data } = useGetSettlements(filterParams);
 
     // Use useMemo to memoize data extraction for better performance
     const {
@@ -34,21 +38,28 @@ const CompanyEarningsCard = ({ companyId }: Props) => {
         totalCasinoWinnings,
         netPoolPL,
     } = useMemo(() => {
-        const result = data?.data?.result?.totalProfitAndLoss || {};
+        // Map settlements API response to expected format
+        // The settlements API returns: { summary: { totalRecharge, totalRedeem, net, companyShare }, data: [...] }
+        const summary = data?.summary || {};
+        
+        // Map settlements terminology to company earnings terminology:
+        // totalPlacement = totalDeposits (money placed/bet by users)
+        // totalWinning = totalWinnings (money won by users)
+        // net = gross profit (placement - winning)
         return {
-            totalDeposits: result.totalDeposits || 0,
-            totalBonus: result.totalBonus || 0,
-            totalBets: result.totalBets || 0,
-            totalWinnings: result.totalWinnings || 0,
-            totalWithdrawals: result.totalWithdrawals || 0,
-            grossRevenue: result.grossRevenue || 0,
-            grossProfit: result.grossProfit || 0,
-            netProfitOrLoss: result.netProfitOrLoss || 0,
-            totalStockBets: result.totalStockBets || 0,
-            totalStockWinnings: result.totalStockWinnings || 0,
-            totalCasinoBets: result.totalCasinoBets || 0,
-            totalCasinoWinnings: result.totalCasinoWinnings || 0,
-            netPoolPL: (result.totalDeposits || 0) - (result.totalWithdrawals || 0),
+            totalDeposits: summary.totalPlacement || 0,
+            totalBonus: 0, // Not available in settlements API
+            totalBets: summary.totalPlacement || 0, // Using placement as total bets
+            totalWinnings: summary.totalWinning || 0,
+            totalWithdrawals: summary.totalWinning || 0, // Using winnings as proxy for withdrawals
+            grossRevenue: summary.totalPlacement || 0,
+            grossProfit: summary.net || 0,
+            netProfitOrLoss: summary.net || 0,
+            totalStockBets: summary.totalPlacement || 0, // Using placement as proxy
+            totalStockWinnings: summary.totalWinning || 0,
+            totalCasinoBets: 0, // Not separated in settlements API
+            totalCasinoWinnings: 0, // Not separated in settlements API
+            netPoolPL: summary.net || 0, // Net profit/loss
         };
     }, [data]);
 
@@ -68,9 +79,9 @@ const CompanyEarningsCard = ({ companyId }: Props) => {
             ['Total Bets (Stock + Casino)', totalBets.toFixed(2)],
             ['Total Winnings (Stock + Casino)', totalWinnings.toFixed(2)],
             ['Total Withdrawals', totalWithdrawals.toFixed(2)],
-            ['Gross Revenue', (data?.data?.result?.totalProfitAndLoss?.grossRevenue || 0).toFixed(2)],
+            ['Gross Revenue', (data?.summary?.totalPlacement || 0).toFixed(2)],
             ['Gross Profit', grossProfit.toFixed(2)],
-            ['Net Profit/Loss', (data?.data?.result?.totalProfitAndLoss?.netProfitOrLoss || 0).toFixed(2)],
+            ['Net Profit/Loss', (data?.summary?.net || 0).toFixed(2)],
             ['Net Pool P/L (Deposits - Withdrawals)', netPoolPL.toFixed(2)]
         ];
 
