@@ -14,15 +14,13 @@ export const useGameUserProfile = () => {
   });
 };
 
-export const useGameUserSessionVerify = () => {
+export const useGameUserSessionVerify = (enabled: boolean = true) => {
   return useQuery({
     retry: 1,
     queryKey: ["gameUser", "sessionVerify"],
     queryFn: () => gameUserAPI.sessionVerify(),
-    enabled: typeof window !== 'undefined' && 
-             !!sessionStorage.getItem('sessionId') && 
-             sessionStorage.getItem('sessionId') !== 'null' && 
-             sessionStorage.getItem('sessionId') !== 'undefined',
+    enabled,
+    // enabled: typeof window !== 'undefined'
   });
 };
 
@@ -55,12 +53,10 @@ export const useGameUserLogin = () => {
   return useMutation({
     mutationFn: (payload: any) => gameUserAPI.login(payload),
     onSuccess: (data) => {
+      sessionStorage.setItem("sessionId", data.data.sessionId);
+      console.log("sessionId set in useGameUserLogin", data);
       const user = new User(data.data);
       setUser(user);
-      if (user.sessionId) {
-        console.log("loki login sessionId set:", user.sessionId);
-        sessionStorage.setItem('sessionId', user.sessionId);
-      }
       queryClient.invalidateQueries({
         predicate: (query) => query.queryKey[0] === "gameUser",
       });
@@ -173,8 +169,10 @@ export const useGameUserDeleteById = () => {
 export const useGoogleLogin = () => {
   return useMutation({
     mutationFn: gameUserAPI.googleLogin,
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Google login initiated");
+      console.log("sessionId set in useGoogleLogin", data);
+      sessionStorage.setItem("sessionId", data.data.sessionId);
     },
     onError: (error: any) => {
       toast.error(
@@ -204,6 +202,9 @@ export const useGoogleCreateLogin = () => {
   return useMutation({
     mutationFn: gameUserAPI.googleCreateLogin,
     onSuccess: (data) => {
+      console.log("sessionId set in useGoogleLogin", data);
+
+      sessionStorage.setItem("sessionId", data.data.sessionId);
       const user = new User(data.data);
       setUser(user);
       queryClient.invalidateQueries({
@@ -225,6 +226,7 @@ export const useDemoLogin = () => {
   return useMutation({
     mutationFn: gameUserAPI.demoLogin,
     onSuccess: (data) => {
+      sessionStorage.setItem("sessionId", data.data.sessionId);
       const user = new User(data.data);
       setUser(user);
       queryClient.invalidateQueries({
@@ -233,9 +235,7 @@ export const useDemoLogin = () => {
       toast.success("Demo login successful");
     },
     onError: (error: any) => {
-      toast.error(
-        error.response?.data.message ?? "Error logging in with Demo"
-      );
+      toast.error(error.response?.data.message ?? "Error logging in with Demo");
     },
   });
 };
@@ -261,12 +261,23 @@ export const useGetUserTier = () => {
   });
 };
 
-
-export const useGetUserGameHistory = ({ page, roundRecordGameType, startDate }: { page: number, roundRecordGameType: RoundRecordGameType, startDate?: string }) => {
+export const useGetUserGameHistory = ({
+  page,
+  roundRecordGameType,
+  startDate,
+}: {
+  page: number;
+  roundRecordGameType: RoundRecordGameType;
+  startDate?: string;
+}) => {
   return useQuery({
     queryKey: ["userGameHistory", page, roundRecordGameType, startDate],
     queryFn: async () => {
-      const response = await gameUserAPI.getUserGameHistory({ page, roundRecordGameType, startDate } );
+      const response = await gameUserAPI.getUserGameHistory({
+        page,
+        roundRecordGameType,
+        startDate,
+      });
       return response.data;
     },
   });
@@ -280,16 +291,27 @@ export const useGetUserGameHistoryByRoundId = (roundId: string) => {
       return response.data;
     },
   });
-};      
+};
 
 export type UserBetsResponse = {
   casino: { items: any[]; totalCount: number };
   stock: { items: any[]; totalCount: number };
 };
 
-export const useGetUserBets = (params: { page: number; limit: number; startDate?: string; endDate?: string }) => {
+export const useGetUserBets = (params: {
+  page: number;
+  limit: number;
+  startDate?: string;
+  endDate?: string;
+}) => {
   return useQuery<UserBetsResponse>({
-    queryKey: ["userBets", params.page, params.limit, params.startDate, params.endDate],
+    queryKey: [
+      "userBets",
+      params.page,
+      params.limit,
+      params.startDate,
+      params.endDate,
+    ],
     queryFn: async () => {
       const response = await gameUserAPI.getUserBets(params);
       return response.data as UserBetsResponse;

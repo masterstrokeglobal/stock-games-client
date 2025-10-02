@@ -12,14 +12,14 @@ const api: AxiosInstance = axios.create({
     withCredentials: true,
 });
 
-// Add request interceptor to dynamically set sessionId in Authorization header
+// Add request interceptor to dynamically set sessionId in custom header
 api.interceptors.request.use(
     (config) => {
-        // Only set Authorization header if we're in a browser environment
+        // Only set custom session header if we're in a browser environment
         if (typeof window !== 'undefined') {
             const sessionId = sessionStorage.getItem('sessionId');
             if (sessionId && sessionId !== 'null' && sessionId !== 'undefined') {
-                config.headers.Authorization = `Bearer ${sessionId}`;
+                config.headers['X-Session-ID'] = sessionId;
             }
         }
         return config;

@@ -13,6 +13,8 @@ interface UserContextType {
   loading: boolean;
   setUser: (details: Admin | User | null) => void;
   isLoggedIn: boolean;
+  isProfileLoaded: boolean;
+  setIsProfileLoaded: (loaded: boolean) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -33,6 +35,7 @@ export const useIsExternalUser = () => {
 export const UserProvider = ({ children }: PropsWithChildren) => {
   const [userDetails, setUser] = useState<Admin | User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isProfileLoaded, setIsProfileLoaded] = useState<boolean>(false);
 
   const updateUser = (details: Admin | User | null) => {
     setIsLoading(false);
@@ -45,6 +48,8 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     setUser: updateUser,
     loading: isLoading,
     isLoggedIn: userDetails !== null,
+    isProfileLoaded,
+    setIsProfileLoaded,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
