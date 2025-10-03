@@ -203,9 +203,11 @@ const UPIDepositForm = () => {
         setSelectedBankTransferMethod("");
         toast.success("Deposit request submitted successfully!");
       },
-      onError: (error) => {
+      onError: (error: any) => {
         console.log("Error creating deposit request:", error);
-        toast.error("Failed to submit deposit request");
+        const backendMsg = error?.response?.data?.message;
+        const message = backendMsg || error?.message || "Failed to submit deposit request";
+        toast.error(message);
       },
     });
   };

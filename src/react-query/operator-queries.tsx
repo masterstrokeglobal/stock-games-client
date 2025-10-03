@@ -446,7 +446,7 @@ export const useValidateOperatorPercentage = () => {
 };
 
 // Get settlements data
-export const useGetSettlements = (filter?: { startDate?: Date, endDate?: Date, agentId?: number, aggregate?: boolean }) => {
+export const useGetSettlements = (filter?: { startDate?: Date, endDate?: Date, agentId?: number, aggregate?: boolean, groupBy?: 'agent' | 'master' | 'duper_master' | 'super_duper_master', includeEmpty?: boolean, hierarchical?: boolean }) => {
     return useQuery({
         queryKey: ["settlements", filter],
         queryFn: async () => {

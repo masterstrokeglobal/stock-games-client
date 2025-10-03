@@ -156,13 +156,16 @@ export const operatorAPI = {
     },
 
     // Settlement APIs
-    getSettlements: async (filter?: { startDate?: Date, endDate?: Date, agentId?: number, aggregate?: boolean }) => {
+    getSettlements: async (filter?: { startDate?: Date, endDate?: Date, agentId?: number, aggregate?: boolean, groupBy?: 'agent' | 'master' | 'duper_master' | 'super_duper_master', includeEmpty?: boolean, hierarchical?: boolean }) => {
         return api.get("/operator/settlements", {
             params: {
                 start: filter?.startDate?.toISOString().split('T')[0],
                 end: filter?.endDate?.toISOString().split('T')[0],
                 agentId: filter?.agentId,
-                aggregate: filter?.aggregate
+                aggregate: filter?.aggregate,
+                groupBy: filter?.groupBy,
+                includeEmpty: filter?.includeEmpty,
+                hierarchical: filter?.hierarchical
             }
         });
     },

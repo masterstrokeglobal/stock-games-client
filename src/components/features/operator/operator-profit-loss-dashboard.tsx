@@ -8,7 +8,7 @@ import { RefreshCw, ChevronDown, ChevronRight, Building, TrendingUp, Users, PieC
 import { INR } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import LoadingScreen from "@/components/common/loading-screen";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import dayjs from "dayjs";
 import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { DateRange } from "react-day-picker";
@@ -44,14 +44,52 @@ const OperatorProfitLossDashboard = ({ className }: Props) => {
     const isAdmin = currentOperator?.role?.toLowerCase() === 'company_admin';
 
     // Memoize filter parameters to prevent infinite re-renders
-    const filterParams = useMemo(() => ({
+    const filterParams = useMemo(() => {
+        // Group by the logged-in operator's own role to combine children under them
+        const role = (currentOperator?.role as string | undefined) || '';
+        const validRoles = ['super_duper_master','duper_master','master','agent'] as const;
+        const isValidRole = (validRoles as readonly string[]).includes(role);
+        const groupBy = isValidRole ? (role as typeof validRoles[number]) : (isAdmin ? 'super_duper_master' : undefined);
+        return {
         startDate: dateRange?.from,
         endDate: dateRange?.to,
-        aggregate: true
-    }), [dateRange?.from, dateRange?.to]);
+            aggregate: true,
+            groupBy,
+            includeEmpty: true,
+        };
+    }, [dateRange?.from, dateRange?.to, currentOperator?.role, isAdmin]);
 
     // Get settlements data
-    const { data: settlementsData, isLoading, error, refetch, isRefetching } = useGetSettlements(filterParams);
+    const { data: settlementsData, isLoading, error, refetch, isRefetching } = useGetSettlements({ ...filterParams, hierarchical: true });
+
+    // Auto-expand all nodes so the full hierarchy is visible by default
+    useEffect(() => {
+        const settlements = settlementsData?.settlements as any[] | undefined;
+        if (!settlements || !settlements.length) return;
+
+        const initial = new Set<string>();
+        settlements.forEach((s: any) => {
+            // Handle shape: direct duperMaster root
+            const dmId = s.duperMaster?.id ?? s.duperMaster;
+            if (dmId !== undefined && dmId !== null) initial.add(`duper_master-${dmId}`);
+            (s.masters || []).forEach((m: any) => {
+                const mId = m.master?.id ?? m.master;
+                if (mId !== undefined && mId !== null) initial.add(`master-${mId}`);
+            });
+
+            // Handle shape: superDuperMaster with duperMasters[]
+            (s.duperMasters || []).forEach((dm: any) => {
+                const dmId2 = dm.duperMaster?.id ?? dm.duperMaster;
+                if (dmId2 !== undefined && dmId2 !== null) initial.add(`duper_master-${dmId2}`);
+                (dm.masters || []).forEach((m: any) => {
+                    const mId2 = m.master?.id ?? m.master;
+                    if (mId2 !== undefined && mId2 !== null) initial.add(`master-${mId2}`);
+                });
+            });
+        });
+
+        setExpandedLevels(initial);
+    }, [settlementsData]);
 
     if (isLoading) {
         return <LoadingScreen className="h-64" />;
@@ -407,40 +445,6 @@ const OperatorProfitLossDashboard = ({ className }: Props) => {
 
                             const fmt = (n: number) => `${n < 0 ? "-" : ""}₹${Math.abs(n).toFixed(2)}`;
 
-                            // Group operators by role for hierarchical display
-                            const groupedByRole = data.operatorShares.reduce((acc: Record<string, typeof data.operatorShares>, operator: any) => {
-                                if (!acc[operator.role]) {
-                                    acc[operator.role] = [];
-                                }
-                                acc[operator.role].push(operator);
-                                return acc;
-                            }, {} as Record<string, typeof data.operatorShares>);
-
-                            // Initialize expanded state with first available role if not already set
-                            const rolesInData = Object.keys(groupedByRole);
-                            const roleHierarchy = ['super_duper_master', 'duper_master', 'master', 'agent'];
-                            const firstAvailableRole = roleHierarchy.find(r => rolesInData.includes(r));
-                            
-                            if (firstAvailableRole && expandedLevels.size === 0) {
-                                setExpandedLevels(new Set([firstAvailableRole]));
-                            }
-
-                            // Helper function to get next level in hierarchy
-                            const getNextLevel = (currentRole: string): string | null => {
-                                const availableRoles = Object.keys(groupedByRole);
-                                const roleHierarchy = ['super_duper_master', 'duper_master', 'master', 'agent'];
-                                
-                                // Only consider roles that exist in the data
-                                const existingRoles = roleHierarchy.filter(r => availableRoles.includes(r));
-                                const currentIndex = existingRoles.indexOf(currentRole);
-                                
-                                // Return next role if it exists
-                                return currentIndex >= 0 && currentIndex < existingRoles.length - 1 
-                                    ? existingRoles[currentIndex + 1] 
-                                    : null;
-                            };
-
-                            // Get color based on role
                             const getRoleColor = (role: string) => {
                                 switch (role) {
                                     case 'super_duper_master': return 'border-purple-200 bg-purple-50 hover:bg-purple-100';
@@ -451,68 +455,201 @@ const OperatorProfitLossDashboard = ({ className }: Props) => {
                                 }
                             };
 
-                            // Helper function to check if a level should be visible based on parent expansion
-                            const shouldShowLevel = (role: string) => {
-                                const availableRoles = Object.keys(groupedByRole);
-                                const roleHierarchy = ['super_duper_master', 'duper_master', 'master', 'agent'];
-                                
-                                // Only consider roles that exist in the data
-                                const existingRoles = roleHierarchy.filter(r => availableRoles.includes(r));
-                                const currentIndex = existingRoles.indexOf(role);
-                                
-                                // First level is always visible
-                                if (currentIndex === 0) return true;
-                                
-                                // Check if all parent levels are expanded
-                                for (let i = 0; i < currentIndex; i++) {
-                                    const parentRole = existingRoles[i];
-                                    if (!expandedLevels.has(parentRole)) {
-                                        return false;
-                                    }
-                                }
-                                return true;
-                            };
+                            const settlements = settlementsData?.settlements || [];
+                            if (!settlements.length) {
+                                return <div className="text-sm text-gray-500">No settlement chains available</div>;
+                            }
 
-                            // Render hierarchy levels
-                            const renderHierarchyLevel = (role: string) => {
-                                const operators = groupedByRole[role] || [];
-                                const isExpanded = expandedLevels.has(role);
-                                const nextLevel = getNextLevel(role);
-                                const hasChildren = role !== 'agent' && nextLevel;
-                                
-                                // Only render if this level should be visible
-                                if (!shouldShowLevel(role)) return null;
-                                
-                                // Get amount from operators or use 0 if no operators exist for this role
-                                const amount = operators.length > 0 
-                                    ? operators[0].operatorKeeps 
-                                    : 0;
-                                
-                                // Use operator name if available, otherwise use a default
-                                const operatorName = operators.length > 0 
-                                    ? operators[0].operatorName 
-                                    : 'N/A';
-
-                                // Get indentation based on role hierarchy
-                                const getIndentation = (role: string) => {
-                                    switch (role) {
-                                        case 'super_duper_master': return 'ml-0';
-                                        case 'duper_master': return 'ml-4';
-                                        case 'master': return 'ml-8';
-                                        case 'agent': return 'ml-12';
-                                        default: return 'ml-0';
-                                    }
+                            const renderHierarchical = (s: any) => {
+                                const getDisplayName = (entity: any, roleLabel: string) => {
+                                    if (!entity) return `${roleLabel} (unknown)`;
+                                    if (typeof entity === 'string') return entity;
+                                    const name = entity?.name;
+                                    const id = entity?.id;
+                                    if (name && String(name).trim().length > 0) return name;
+                                    if (id !== undefined && id !== null) return `${roleLabel} #${id}`;
+                                    return `${roleLabel} (unknown)`;
                                 };
+                                // Handle duper master → masters → agents structure
+                                if (s?.duperMaster && Array.isArray(s?.masters)) {
+                                    const topKey = `duper_master-${s.duperMaster.id}`;
+                                    const headerAmount = (s.distribution?.duper_master ?? s.net ?? 0) as number;
+                                    const isTopExpanded = expandedLevels.has(topKey);
+                                    return (
+                                        <div key={topKey} className="space-y-1">
+                                            <div
+                                                className={`flex items-center justify-between p-3 rounded border-l-4 cursor-pointer transition-colors ${getRoleColor('duper_master')}`}
+                                                onClick={() => toggleExpansion(topKey)}
+                                            >
+                                                <div className="flex items-center space-x-2">
+                                                    <div className="flex items-center justify-center w-5 h-5">
+                                                        {isTopExpanded ? (
+                                                            <ChevronDown className="w-4 h-4 text-gray-600" />
+                                                        ) : (
+                                                            <ChevronRight className="w-4 h-4 text-gray-600" />
+                                                        )}
+                                                    </div>
+                                                    <span className="font-medium">Duper Master - {getDisplayName(s.duperMaster, 'Duper Master')}</span>
+                                                </div>
+                                                <span className={`font-mono text-lg font-bold ${headerAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                                                    {fmt(headerAmount)}
+                                                </span>
+                                            </div>
 
+                                            {isTopExpanded && (
+                                                <div className="ml-4 space-y-1">
+                                                    {s.masters.map((m: any) => {
+                                                        const mKey = `master-${m.master?.id ?? m.master}`;
+                                                        const mAmount = (m.distribution?.master ?? m.net ?? 0) as number;
+                                                        const isMasterExpanded = expandedLevels.has(mKey);
+                                                        return (
+                                                            <div key={mKey} className="space-y-1">
+                                                                <div
+                                                                    className={`flex items-center justify-between p-2 rounded border-l-4 cursor-pointer ${getRoleColor('master')}`}
+                                                                    onClick={() => toggleExpansion(mKey)}
+                                                                >
+                                                                    <div className="flex items-center space-x-2">
+                                                                        <div className="flex items-center justify-center w-5 h-5">
+                                                                            {isMasterExpanded ? (
+                                                                                <ChevronDown className="w-4 h-4 text-gray-600" />
+                                                                            ) : (
+                                                                                <ChevronRight className="w-4 h-4 text-gray-600" />
+                                                                            )}
+                                                                        </div>
+                                                                        <span className="text-sm">Master - {getDisplayName(m.master, 'Master')}</span>
+                                                                    </div>
+                                                                    <span className={`font-mono text-sm ${mAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>{fmt(mAmount)}</span>
+                                                                </div>
+
+                                                                {isMasterExpanded && Array.isArray(m.agents) && (
+                                                                    <div className="ml-4 space-y-1">
+                                                                        {m.agents.map((a: any) => {
+                                                                            const aAmount = (a.distribution?.agent ?? a.net ?? 0) as number;
+                                                                            return (
+                                                                                <div key={`agent-${a.agent?.id ?? a.agent}`} className={`flex items-center justify-between p-2 rounded border-l-4 ${getRoleColor('agent')}`}>
+                                                                                    <span className="text-sm">Agent - {getDisplayName(a.agent, 'Agent')}</span>
+                                                                                    <span className={`font-mono text-sm ${aAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>{fmt(aAmount)}</span>
+                                                                                </div>
+                                                                            );
+                                                                        })}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                }
+
+                                // Handle super duper master → duperMasters → masters → agents (choose matching DM or render all)
+                                if (s?.superDuperMaster && Array.isArray(s?.duperMasters)) {
+                                    const currentIdRaw = (currentOperator as any)?.id;
+                                    const currentId = currentIdRaw !== undefined && currentIdRaw !== null ? Number(currentIdRaw) : undefined;
+                                    const duperMasters: any[] = s.duperMasters;
+                                    let list = duperMasters;
+                                    if (currentId !== undefined) {
+                                        list = duperMasters.filter((dm) => {
+                                            const dmIdRaw = dm.duperMaster?.id ?? dm.duperMaster;
+                                            const dmId = dmIdRaw !== undefined && dmIdRaw !== null ? Number(dmIdRaw) : undefined;
+                                            return dmId === currentId;
+                                        });
+                                    }
+                                    // If filtering resulted in empty (type mismatch or missing), show all
+                                    if (!list.length) list = duperMasters;
+
+                                    return (
+                                        <div key={`sdm-${s.superDuperMaster.id}`} className="space-y-2">
+                                            {list.map((dm) => {
+                                                const topKey = `duper_master-${dm.duperMaster?.id ?? dm.duperMaster}`;
+                                                const headerAmount = (dm.distribution?.duper_master ?? dm.net ?? 0) as number;
+                                                const isTopExpanded = expandedLevels.has(topKey);
+                                                return (
+                                                    <div key={topKey} className="space-y-1">
+                                                        <div
+                                                            className={`flex items-center justify-between p-3 rounded border-l-4 cursor-pointer transition-colors ${getRoleColor('duper_master')}`}
+                                                            onClick={() => toggleExpansion(topKey)}
+                                                        >
+                                                            <div className="flex items-center space-x-2">
+                                                                <div className="flex items-center justify-center w-5 h-5">
+                                                                    {isTopExpanded ? (
+                                                                        <ChevronDown className="w-4 h-4 text-gray-600" />
+                                                                    ) : (
+                                                                        <ChevronRight className="w-4 h-4 text-gray-600" />
+                                                                    )}
+                                                                </div>
+                                                                <span className="font-medium">Duper Master - {getDisplayName(dm.duperMaster, 'Duper Master')}</span>
+                                                            </div>
+                                                            <span className={`font-mono text-lg font-bold ${headerAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                                                                {fmt(headerAmount)}
+                                                            </span>
+                                                        </div>
+
+                                                        {isTopExpanded && (
+                                                            <div className="ml-4 space-y-1">
+                                                                {(dm.masters || []).map((m: any) => {
+                                                                    const mKey = `master-${m.master?.id ?? m.master}`;
+                                                                    const mAmount = (m.distribution?.master ?? m.net ?? 0) as number;
+                                                                    const isMasterExpanded = expandedLevels.has(mKey);
+                                                                    return (
+                                                                        <div key={mKey} className="space-y-1">
+                                                                            <div
+                                                                                className={`flex items-center justify-between p-2 rounded border-l-4 cursor-pointer ${getRoleColor('master')}`}
+                                                                                onClick={() => toggleExpansion(mKey)}
+                                                                            >
+                                                                                <div className="flex items-center space-x-2">
+                                                                                    <div className="flex items-center justify-center w-5 h-5">
+                                                                                        {isMasterExpanded ? (
+                                                                                            <ChevronDown className="w-4 h-4 text-gray-600" />
+                                                                                        ) : (
+                                                                                            <ChevronRight className="w-4 h-4 text-gray-600" />
+                                                                                        )}
+                                                                                    </div>
+                                                                                    <span className="text-sm">Master - {getDisplayName(m.master, 'Master')}</span>
+                                                                                </div>
+                                                                                <span className={`font-mono text-sm ${mAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>{fmt(mAmount)}</span>
+                                                                            </div>
+
+                                                                            {isMasterExpanded && Array.isArray(m.agents) && (
+                                                                                <div className="ml-4 space-y-1">
+                                                                                    {m.agents.map((a: any) => {
+                                                                                        const aAmount = (a.distribution?.agent ?? a.net ?? 0) as number;
+                                                                                        return (
+                                                                                            <div key={`agent-${a.agent?.id ?? a.agent}`} className={`flex items-center justify-between p-2 rounded border-l-4 ${getRoleColor('agent')}`}>
+                                                                                                <span className="text-sm">Agent - {getDisplayName(a.agent, 'Agent')}</span>
+                                                                                                <span className={`font-mono text-sm ${aAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>{fmt(aAmount)}</span>
+                                                                                            </div>
+                                                                                        );
+                                                                                    })}
+                                                                                </div>
+                                                                            )}
+                                                                        </div>
+                                                                    );
+                                                                })}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    );
+                                }
+
+                                // Fallback to flat role-based rendering
+                                const chainKey = s.chainId || `Agent #${s.agentId}`;
+                                const dist = s.distribution || {};
+                                const hierarchy: Array<'super_duper_master' | 'duper_master' | 'master' | 'agent'> = ['super_duper_master','duper_master','master','agent'];
+                                const topRole = hierarchy.find((r) => dist[r] !== undefined) || 'agent';
+                                const headerAmount = dist[topRole] ?? 0;
+                                const isExpanded = expandedLevels.has(chainKey);
                                 return (
-                                    <div key={role} className="space-y-1">
-                                        {/* Current Level Header */}
+                                    <div key={chainKey} className="space-y-1">
                                         <div 
-                                            className={`flex items-center justify-between p-3 rounded border-l-4 cursor-pointer transition-colors ${getRoleColor(role)}`}
-                                            onClick={() => hasChildren && toggleExpansion(role)}
+                                            className={`flex items-center justify-between p-3 rounded border-l-4 cursor-pointer transition-colors ${getRoleColor(topRole)}`}
+                                            onClick={() => toggleExpansion(chainKey)}
                                         >
-                                            <div className={`flex items-center space-x-2 ${getIndentation(role)}`}>
-                                                {hasChildren && (
+                                            <div className="flex items-center space-x-2">
                                                     <div className="flex items-center justify-center w-5 h-5">
                                                         {isExpanded ? (
                                                             <ChevronDown className="w-4 h-4 text-gray-600" />
@@ -520,29 +657,34 @@ const OperatorProfitLossDashboard = ({ className }: Props) => {
                                                             <ChevronRight className="w-4 h-4 text-gray-600" />
                                                         )}
                                                     </div>
-                                                )}
-                                                {role !== 'super_duper_master' && (
-                                                    <div className="w-2 h-2 rounded-full bg-gray-400"></div>
-                                                )}
                                                 <span className="font-medium">
-                                                    {roleLabels[role as keyof typeof roleLabels]} - {operatorName}
+                                                    {roleLabels[topRole]} - {chainKey}
                                                 </span>
                                             </div>
-                                            <span className={`font-mono text-lg font-bold ${
-                                                amount < 0 ? 'text-red-600' : 'text-green-600'
-                                            }`}>
-                                                {fmt(amount)}
+                                            <span className={`font-mono text-lg font-bold ${headerAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                                                {fmt(headerAmount)}
                                             </span>
                                         </div>
+
+                                        {isExpanded && (
+                                            <div className="ml-4 space-y-1">
+                                                {hierarchy.slice(hierarchy.indexOf(topRole) + 1).filter((role) => dist[role] !== undefined).map((role) => (
+                                                    <div key={`${chainKey}-${role}`} className={`flex items-center justify-between p-2 rounded border-l-4 ${getRoleColor(role)}`}>
+                                                        <span className="text-sm">{roleLabels[role]}</span>
+                                                        <span className={`font-mono text-sm ${(dist[role] || 0) < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                                                            {fmt(dist[role] || 0)}
+                                                        </span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
                             </div>
                                 );
                             };
 
-                            // Only render hierarchy levels that exist in the data
-                            const rolesToRender = Object.keys(groupedByRole);
                             return (
-                                <div className="space-y-1">
-                                    {rolesToRender.map(role => renderHierarchyLevel(role))}
+                                <div className="space-y-2">
+                                    {settlements.map((s: any) => renderHierarchical(s))}
                                 </div>
                             );
                         })()}
