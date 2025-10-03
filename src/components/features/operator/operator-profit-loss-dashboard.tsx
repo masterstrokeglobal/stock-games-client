@@ -403,15 +403,27 @@ const OperatorProfitLossDashboard = ({ className }: Props) => {
                             <Card>
                                 <CardContent className="p-4">
                                     <div className="flex items-center space-x-2 mb-2">
-                                        <PieChart className={`h-4 w-4 ${(settlementsData.summary?.net || 0) < 0 ? 'text-red-600' : 'text-green-600'}`} />
+                                        <PieChart className={`h-4 w-4 ${
+                                            isAdmin 
+                                                ? (settlementsData.summary?.net || 0) < 0 ? 'text-red-600' : 'text-green-600'
+                                                : (settlementsData.summary?.distribution?.[currentOperator?.role || 'agent'] || 0) < 0 ? 'text-red-600' : 'text-green-600'
+                                        }`} />
                                         <span className="text-sm font-medium">Profit</span>
                                     </div>
                                     <div className={`text-xl font-bold ${
-                                        (settlementsData.summary?.net || 0) < 0 ? 'text-red-600' : 'text-green-600'
+                                        isAdmin 
+                                            ? (settlementsData.summary?.net || 0) < 0 ? 'text-red-600' : 'text-green-600'
+                                            : (settlementsData.summary?.distribution?.[currentOperator?.role || 'agent'] || 0) < 0 ? 'text-red-600' : 'text-green-600'
                                     }`}>
-                                        ₹{settlementsData.summary?.net?.toLocaleString() || 0}
+                                        ₹{
+                                            isAdmin 
+                                                ? settlementsData.summary?.net?.toLocaleString() || 0
+                                                : settlementsData.summary?.distribution?.[currentOperator?.role || 'agent']?.toLocaleString() || 0
+                                        }
                                     </div>
-                                    <div className="text-xs text-gray-500">Net profit/loss</div>
+                                    <div className="text-xs text-gray-500">
+                                        {isAdmin ? 'Net profit/loss' : 'Your earnings'}
+                                    </div>
                                 </CardContent>
                             </Card>
                                         </div>
@@ -719,6 +731,118 @@ const OperatorProfitLossDashboard = ({ className }: Props) => {
                                                         </div>
                                                     );
                                                 })}
+                                            </div>
+                                        );
+                                    }
+                                    
+                                    // For super_duper_master role: show super duper master and full hierarchy below
+                                    if (currentRole === 'super_duper_master' && currentId !== undefined && !isAdmin) {
+                                        const sdmIdRaw = s.superDuperMaster?.id ?? s.superDuperMaster;
+                                        const sdmId = sdmIdRaw !== undefined && sdmIdRaw !== null ? Number(sdmIdRaw) : undefined;
+                                        
+                                        // Only show if this is their super duper master chain
+                                        if (sdmId !== currentId) {
+                                            return null;
+                                        }
+                                        
+                                        const topKey = `super_duper_master-${sdmId}`;
+                                        const headerAmount = (s.distribution?.super_duper_master ?? s.net ?? 0) as number;
+                                        const isTopExpanded = expandedLevels.has(topKey);
+                                        
+                                        return (
+                                            <div key={topKey} className="space-y-1">
+                                                <div
+                                                    className={`flex items-center justify-between p-3 rounded border-l-4 cursor-pointer transition-colors ${getRoleColor('super_duper_master')}`}
+                                                    onClick={() => toggleExpansion(topKey)}
+                                                >
+                                                    <div className="flex items-center space-x-2">
+                                                        <div className="flex items-center justify-center w-5 h-5">
+                                                            {isTopExpanded ? (
+                                                                <ChevronDown className="w-4 h-4 text-gray-600" />
+                                                            ) : (
+                                                                <ChevronRight className="w-4 h-4 text-gray-600" />
+                                                            )}
+                                                        </div>
+                                                        <span className="font-medium">Super Duper Master - {getDisplayName(s.superDuperMaster, 'Super Duper Master')}</span>
+                                                    </div>
+                                                    <span className={`font-mono text-lg font-bold ${headerAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                                                        {fmt(headerAmount)}
+                                                    </span>
+                                                </div>
+
+                                                {isTopExpanded && (
+                                                    <div className="ml-4 space-y-1">
+                                                        {s.duperMasters.map((dm: any) => {
+                                                            const dmKey = `duper_master-${dm.duperMaster?.id ?? dm.duperMaster}`;
+                                                            const dmAmount = (dm.distribution?.duper_master ?? dm.net ?? 0) as number;
+                                                            const isDmExpanded = expandedLevels.has(dmKey);
+                                                            return (
+                                                                <div key={dmKey} className="space-y-1">
+                                                                    <div
+                                                                        className={`flex items-center justify-between p-2 rounded border-l-4 cursor-pointer ${getRoleColor('duper_master')}`}
+                                                                        onClick={() => toggleExpansion(dmKey)}
+                                                                    >
+                                                                        <div className="flex items-center space-x-2">
+                                                                            <div className="flex items-center justify-center w-5 h-5">
+                                                                                {isDmExpanded ? (
+                                                                                    <ChevronDown className="w-4 h-4 text-gray-600" />
+                                                                                ) : (
+                                                                                    <ChevronRight className="w-4 h-4 text-gray-600" />
+                                                                                )}
+                                                                            </div>
+                                                                            <span className="text-sm">Duper Master - {getDisplayName(dm.duperMaster, 'Duper Master')}</span>
+                                                                        </div>
+                                                                        <span className={`font-mono text-sm ${dmAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>{fmt(dmAmount)}</span>
+                                                                    </div>
+
+                                                                    {isDmExpanded && (
+                                                                        <div className="ml-4 space-y-1">
+                                                                            {(dm.masters || []).map((m: any) => {
+                                                                                const mKey = `master-${m.master?.id ?? m.master}`;
+                                                                                const mAmount = (m.distribution?.master ?? m.net ?? 0) as number;
+                                                                                const isMasterExpanded = expandedLevels.has(mKey);
+                                                                                return (
+                                                                                    <div key={mKey} className="space-y-1">
+                                                                                        <div
+                                                                                            className={`flex items-center justify-between p-2 rounded border-l-4 cursor-pointer ${getRoleColor('master')}`}
+                                                                                            onClick={() => toggleExpansion(mKey)}
+                                                                                        >
+                                                                                            <div className="flex items-center space-x-2">
+                                                                                                <div className="flex items-center justify-center w-5 h-5">
+                                                                                                    {isMasterExpanded ? (
+                                                                                                        <ChevronDown className="w-4 h-4 text-gray-600" />
+                                                                                                    ) : (
+                                                                                                        <ChevronRight className="w-4 h-4 text-gray-600" />
+                                                                                                    )}
+                                                                                                </div>
+                                                                                                <span className="text-sm">Master - {getDisplayName(m.master, 'Master')}</span>
+                                                                                            </div>
+                                                                                            <span className={`font-mono text-sm ${mAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>{fmt(mAmount)}</span>
+                                                                                        </div>
+
+                                                                                        {isMasterExpanded && Array.isArray(m.agents) && (
+                                                                                            <div className="ml-4 space-y-1">
+                                                                                                {m.agents.map((a: any) => {
+                                                                                                    const aAmount = (a.distribution?.agent ?? a.net ?? 0) as number;
+                                                                                                    return (
+                                                                                                        <div key={`agent-${a.agent?.id ?? a.agent}`} className={`flex items-center justify-between p-2 rounded border-l-4 ${getRoleColor('agent')}`}>
+                                                                                                            <span className="text-sm">Agent - {getDisplayName(a.agent, 'Agent')}</span>
+                                                                                                            <span className={`font-mono text-sm ${aAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>{fmt(aAmount)}</span>
+                                                                                                        </div>
+                                                                                                    );
+                                                                                                })}
+                                                                                            </div>
+                                                                                        )}
+                                                                                    </div>
+                                                                                );
+                                                                            })}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                )}
                                             </div>
                                         );
                                     }
