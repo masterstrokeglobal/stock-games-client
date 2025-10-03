@@ -472,6 +472,92 @@ const OperatorProfitLossDashboard = ({ className }: Props) => {
                                 };
                                 // Handle duper master → masters → agents structure
                                 if (s?.duperMaster && Array.isArray(s?.masters)) {
+                                    const currentIdRaw = (currentOperator as any)?.id;
+                                    const currentId = currentIdRaw !== undefined && currentIdRaw !== null ? Number(currentIdRaw) : undefined;
+                                    const currentRole = (currentOperator?.role as string | undefined) || '';
+                                    
+                                    // For master role: show only master and agents
+                                    if (currentRole === 'master' && currentId !== undefined) {
+                                        const masterNodes = s.masters.filter((m: any) => {
+                                            const mId = m.master?.id ?? m.master;
+                                            return Number(mId) === currentId;
+                                        });
+                                        
+                                        return (
+                                            <div className="space-y-2">
+                                                {masterNodes.map((m: any) => {
+                                                    const mKey = `master-${m.master?.id ?? m.master}`;
+                                                    const mAmount = (m.distribution?.master ?? m.net ?? 0) as number;
+                                                    const isMasterExpanded = expandedLevels.has(mKey);
+                                                    return (
+                                                        <div key={mKey} className="space-y-1">
+                                                            <div
+                                                                className={`flex items-center justify-between p-3 rounded border-l-4 cursor-pointer transition-colors ${getRoleColor('master')}`}
+                                                                onClick={() => toggleExpansion(mKey)}
+                                                            >
+                                                                <div className="flex items-center space-x-2">
+                                                                    <div className="flex items-center justify-center w-5 h-5">
+                                                                        {isMasterExpanded ? (
+                                                                            <ChevronDown className="w-4 h-4 text-gray-600" />
+                                                                        ) : (
+                                                                            <ChevronRight className="w-4 h-4 text-gray-600" />
+                                                                        )}
+                                                                    </div>
+                                                                    <span className="font-medium">Master - {getDisplayName(m.master, 'Master')}</span>
+                                                                </div>
+                                                                <span className={`font-mono text-lg font-bold ${mAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                                                                    {fmt(mAmount)}
+                                                                </span>
+                                                            </div>
+
+                                                            {isMasterExpanded && Array.isArray(m.agents) && (
+                                                                <div className="ml-4 space-y-1">
+                                                                    {m.agents.map((a: any) => {
+                                                                        const aAmount = (a.distribution?.agent ?? a.net ?? 0) as number;
+                                                                        return (
+                                                                            <div key={`agent-${a.agent?.id ?? a.agent}`} className={`flex items-center justify-between p-2 rounded border-l-4 ${getRoleColor('agent')}`}>
+                                                                                <span className="text-sm">Agent - {getDisplayName(a.agent, 'Agent')}</span>
+                                                                                <span className={`font-mono text-sm ${aAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>{fmt(aAmount)}</span>
+                                                                            </div>
+                                                                        );
+                                                                    })}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        );
+                                    }
+                                    
+                                    // For agent role: show only agent
+                                    if (currentRole === 'agent' && currentId !== undefined) {
+                                        const agentNodes: any[] = [];
+                                        s.masters.forEach((m: any) => {
+                                            (m.agents || []).forEach((a: any) => {
+                                                const aId = a.agent?.id ?? a.agent;
+                                                if (Number(aId) === currentId) {
+                                                    agentNodes.push(a);
+                                                }
+                                            });
+                                        });
+                                        
+                                        return (
+                                            <div className="space-y-2">
+                                                {agentNodes.map((a: any) => {
+                                                    const aAmount = (a.distribution?.agent ?? a.net ?? 0) as number;
+                                                    return (
+                                                        <div key={`agent-${a.agent?.id ?? a.agent}`} className={`flex items-center justify-between p-3 rounded border-l-4 ${getRoleColor('agent')}`}>
+                                                            <span className="font-medium">Agent - {getDisplayName(a.agent, 'Agent')}</span>
+                                                            <span className={`font-mono text-lg font-bold ${aAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>{fmt(aAmount)}</span>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        );
+                                    }
+                                    
+                                    // For duper_master: show duper master and below
                                     const topKey = `duper_master-${s.duperMaster.id}`;
                                     const headerAmount = (s.distribution?.duper_master ?? s.net ?? 0) as number;
                                     const isTopExpanded = expandedLevels.has(topKey);
@@ -543,25 +629,116 @@ const OperatorProfitLossDashboard = ({ className }: Props) => {
                                     );
                                 }
 
-                                // Handle super duper master → duperMasters → masters → agents (choose matching DM or render all)
+                                // Handle super duper master → duperMasters → masters → agents
                                 if (s?.superDuperMaster && Array.isArray(s?.duperMasters)) {
                                     const currentIdRaw = (currentOperator as any)?.id;
                                     const currentId = currentIdRaw !== undefined && currentIdRaw !== null ? Number(currentIdRaw) : undefined;
-                                    const duperMasters: any[] = s.duperMasters;
-                                    let list = duperMasters;
-                                    if (currentId !== undefined) {
-                                        list = duperMasters.filter((dm) => {
+                                    const currentRole = (currentOperator?.role as string | undefined) || '';
+                                    
+                                    // For master role: render only master and agents (skip duper master)
+                                    if (currentRole === 'master' && currentId !== undefined) {
+                                        const masterNodes: any[] = [];
+                                        s.duperMasters.forEach((dm: any) => {
+                                            (dm.masters || []).forEach((m: any) => {
+                                                const mId = m.master?.id ?? m.master;
+                                                if (Number(mId) === currentId) {
+                                                    masterNodes.push(m);
+                                                }
+                                            });
+                                        });
+                                        
+                                        return (
+                                            <div className="space-y-2">
+                                                {masterNodes.map((m: any) => {
+                                                    const mKey = `master-${m.master?.id ?? m.master}`;
+                                                    const mAmount = (m.distribution?.master ?? m.net ?? 0) as number;
+                                                    const isMasterExpanded = expandedLevels.has(mKey);
+                                                    return (
+                                                        <div key={mKey} className="space-y-1">
+                                                            <div
+                                                                className={`flex items-center justify-between p-3 rounded border-l-4 cursor-pointer transition-colors ${getRoleColor('master')}`}
+                                                                onClick={() => toggleExpansion(mKey)}
+                                                            >
+                                                                <div className="flex items-center space-x-2">
+                                                                    <div className="flex items-center justify-center w-5 h-5">
+                                                                        {isMasterExpanded ? (
+                                                                            <ChevronDown className="w-4 h-4 text-gray-600" />
+                                                                        ) : (
+                                                                            <ChevronRight className="w-4 h-4 text-gray-600" />
+                                                                        )}
+                                                                    </div>
+                                                                    <span className="font-medium">Master - {getDisplayName(m.master, 'Master')}</span>
+                                                                </div>
+                                                                <span className={`font-mono text-lg font-bold ${mAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>
+                                                                    {fmt(mAmount)}
+                                                                </span>
+                                                            </div>
+
+                                                            {isMasterExpanded && Array.isArray(m.agents) && (
+                                                                <div className="ml-4 space-y-1">
+                                                                    {m.agents.map((a: any) => {
+                                                                        const aAmount = (a.distribution?.agent ?? a.net ?? 0) as number;
+                                                                        return (
+                                                                            <div key={`agent-${a.agent?.id ?? a.agent}`} className={`flex items-center justify-between p-2 rounded border-l-4 ${getRoleColor('agent')}`}>
+                                                                                <span className="text-sm">Agent - {getDisplayName(a.agent, 'Agent')}</span>
+                                                                                <span className={`font-mono text-sm ${aAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>{fmt(aAmount)}</span>
+                                                                            </div>
+                                                                        );
+                                                                    })}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        );
+                                    }
+                                    
+                                    // For agent role: render only agent
+                                    if (currentRole === 'agent' && currentId !== undefined) {
+                                        const agentNodes: any[] = [];
+                                        s.duperMasters.forEach((dm: any) => {
+                                            (dm.masters || []).forEach((m: any) => {
+                                                (m.agents || []).forEach((a: any) => {
+                                                    const aId = a.agent?.id ?? a.agent;
+                                                    if (Number(aId) === currentId) {
+                                                        agentNodes.push(a);
+                                                    }
+                                                });
+                                            });
+                                        });
+                                        
+                                        return (
+                                            <div className="space-y-2">
+                                                {agentNodes.map((a: any) => {
+                                                    const aAmount = (a.distribution?.agent ?? a.net ?? 0) as number;
+                                                    return (
+                                                        <div key={`agent-${a.agent?.id ?? a.agent}`} className={`flex items-center justify-between p-3 rounded border-l-4 ${getRoleColor('agent')}`}>
+                                                            <span className="font-medium">Agent - {getDisplayName(a.agent, 'Agent')}</span>
+                                                            <span className={`font-mono text-lg font-bold ${aAmount < 0 ? 'text-red-600' : 'text-green-600'}`}>{fmt(aAmount)}</span>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        );
+                                    }
+                                    
+                                    // For duper_master role or admin: show duper master and below
+                                    let duperMasters: any[] = s.duperMasters;
+                                    
+                                    if (currentRole === 'duper_master' && currentId !== undefined && !isAdmin) {
+                                        duperMasters = duperMasters.filter((dm) => {
                                             const dmIdRaw = dm.duperMaster?.id ?? dm.duperMaster;
                                             const dmId = dmIdRaw !== undefined && dmIdRaw !== null ? Number(dmIdRaw) : undefined;
                                             return dmId === currentId;
                                         });
                                     }
-                                    // If filtering resulted in empty (type mismatch or missing), show all
-                                    if (!list.length) list = duperMasters;
+                                    
+                                    if (duperMasters.length === 0) duperMasters = s.duperMasters;
 
                                     return (
                                         <div key={`sdm-${s.superDuperMaster.id}`} className="space-y-2">
-                                            {list.map((dm) => {
+                                            {duperMasters.map((dm: any) => {
                                                 const topKey = `duper_master-${dm.duperMaster?.id ?? dm.duperMaster}`;
                                                 const headerAmount = (dm.distribution?.duper_master ?? dm.net ?? 0) as number;
                                                 const isTopExpanded = expandedLevels.has(topKey);
