@@ -35,10 +35,17 @@ export default function GameCard({ game, className, imageClassName }: GameCardPr
       addFavorite.mutate({ gameId: game.id });
     }
   };
-  // Properly encode the image URL to handle special characters like +
-  const encodedImageUrl = game.imageUrl 
-    ? game.imageUrl.replace(/\+/g, '%2B')
-    : "/placeholder.svg?height=400&width=300";
+  // Use local image for Mines game, otherwise encode the URL to handle special characters like +
+  const getImageUrl = () => {
+    if (game.name === "Mines") {
+      return "/images/mines/mines.png";
+    }
+    return game.imageUrl 
+      ? game.imageUrl.replace(/\+/g, '%2B')
+      : "/placeholder.svg?height=400&width=300";
+  };
+
+  const encodedImageUrl = getImageUrl();
 
   return (
     // tab active add border and shadow 
