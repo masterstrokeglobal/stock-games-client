@@ -162,7 +162,12 @@ export default function ExternalGamesSettings({ companyId, className }: Props) {
                                 </div>
                                 <div className="aspect-[3/2] relative bg-muted rounded overflow-hidden">
                                     {gameThumbnails[id] ? (
-                                        <Image src={gameThumbnails[id]} alt={`${id} thumbnail`} fill className="object-cover" />
+                                        <Image 
+                                            src={gameThumbnails[id].replace(/\+/g, '%2B')} 
+                                            alt={`${id} thumbnail`} 
+                                            fill 
+                                            className="object-cover" 
+                                        />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-sm text-muted-foreground">No image</div>
                                     )}

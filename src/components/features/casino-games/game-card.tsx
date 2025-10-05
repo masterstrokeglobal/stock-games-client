@@ -35,13 +35,18 @@ export default function GameCard({ game, className, imageClassName }: GameCardPr
       addFavorite.mutate({ gameId: game.id });
     }
   };
+  // Properly encode the image URL to handle special characters like +
+  const encodedImageUrl = game.imageUrl 
+    ? game.imageUrl.replace(/\+/g, '%2B')
+    : "/placeholder.svg?height=400&width=300";
+
   return (
     // tab active add border and shadow 
     <Link href={`/game/casino/${game.id}`} >
       <Card className={cn("relative overflow-hidden aspect-square border border-[#4467CC] rounded-none group pb-1 cursor-pointer transition-transform duration-300 hover:scale-105", className)}>
 
         <img
-          src={game.imageUrl || "/placeholder.svg?height=400&width=300"}
+          src={encodedImageUrl}
           alt={game.name}
           className={cn("w-full h-full object-cover  absolute z-0", imageClassName)}
         />

@@ -75,7 +75,12 @@ export default function ExternalGamesPage() {
                         <CardContent>
                             <div className="aspect-[3/2] relative rounded overflow-hidden bg-muted">
                                 {game.thumbnail ? (
-                                    <Image src={game.thumbnail} alt={game.name} fill className="object-cover" />
+                                    <Image 
+                                        src={game.thumbnail.replace(/\+/g, '%2B')} 
+                                        alt={game.name} 
+                                        fill 
+                                        className="object-cover" 
+                                    />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-sm text-muted-foreground">No thumbnail</div>
                                 )}
