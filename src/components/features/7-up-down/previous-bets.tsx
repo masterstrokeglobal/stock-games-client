@@ -84,7 +84,7 @@ const BetsList = ({
               key={bet.id ?? index}
               className="flex items-center bg-[#355DAE] font-poppins rounded-xl px-4 py-2 font-light gap-4 tracking-wider text-white text-sm"
             >
-              <div className="flex-1 text-left font-light">{dayjs(bet.createdAt).format("HH:MM")}</div>
+              <div className="flex-1 text-left font-light">{dayjs(bet.createdAt).format("HH:mm")}</div>
               <div className="flex-1 text-left flex items-center gap-2">
                 <SevenUpDownChip side={bet.selectedSide} />
               </div>

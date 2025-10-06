@@ -31,7 +31,7 @@ const MobileGameHistory = ({ rounds }: { rounds: any[] }) => {
                         <div className="font-semibold text-white text-base">
                             Round #{round.id}
                         </div>
-                        <div className="text-xs text-[#A3A8D6]">{dayjs(round.createdAt).format("DD/MM/YYYY HH:MM")}</div>
+                        <div className="text-xs text-[#A3A8D6]">{dayjs(round.createdAt).format("DD/MM/YYYY HH:mm")}</div>
                     </div>
                     <div className="flex flex-col gap-2 pb-2 text-sm px-4 pt-2">
                         <div className="flex justify-between">
@@ -156,7 +156,7 @@ const GameHistoryDialog = ({ children }: GameHistoryDialogProps) => {
                                                         </td>
                                                         <td className="p-2">
                                                             <span className="text-game-secondary text-sm">
-                                                                {dayjs.utc(round.createdAt).local().format("DD/MM/YYYY hh:mm A")}
+                                                                {dayjs.utc(round.createdAt).local().format("DD/MM/YYYY HH:mm")}
                                                             </span>
                                                         </td>
                                                         <td className="p-2 text-right">

@@ -143,7 +143,7 @@ const JackpotBettingHistory = () => {
                                             className={`grid grid-cols-6 font-space-grotesk text-[#C2F2FF] gap-4 text-sm py-2 px-3 rounded-full ${i % 2 === 1 ? 'bg-[#05657D38]' : ''}`}
                                         >
                                             <div>{dayjs(item.createdAt).format("DD/MM/YYYY")}</div>
-                                            <div>{dayjs(item.createdAt).format("HH:MM")}</div>
+                                            <div>{dayjs(item.createdAt).format("HH:mm")}</div>
                                             <div
                                                 className="rounded-md px-2 py-1 w-fit "
                                                 style={

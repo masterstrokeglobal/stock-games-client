@@ -89,7 +89,7 @@ const BetsTable = ({ placements, listClassName }: { placements: CoinHeadTailHist
                             }}
                         >
                             <div className="flex-1 text-white text-left">
-                                {dayjs(placement.createdAt).format("HH:MM")}
+                                {dayjs(placement.createdAt).format("HH:mm")}
                             </div>
                             <div className="flex-1 text-left">
                                 {placement.selectedSide}
