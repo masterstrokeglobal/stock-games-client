@@ -96,7 +96,7 @@ const userColumns: ColumnDef<User>[] = [
     cell: ({ row }) => (
       <span className="text-[#6B7280]">
         {dayjs(row.original.createdAt).format("DD-MM-YYYY")}{" "}
-        {dayjs(row.original.createdAt).format("HH:MM")}
+        {dayjs(row.original.createdAt).format("HH:mm")}
         
       </span>
     ),
@@ -107,7 +107,7 @@ const userColumns: ColumnDef<User>[] = [
     cell: ({ row }) => (
       <span className="text-[#6B7280]">
         {dayjs(row.original.lastLoginAt).format("DD-MM-YYYY")}{" "}
-        {dayjs(row.original.lastLoginAt).format("HH:MM")}
+        {dayjs(row.original.lastLoginAt).format("HH:mm")}
         
       </span>
     ),
