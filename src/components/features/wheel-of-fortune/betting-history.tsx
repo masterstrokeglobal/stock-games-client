@@ -32,7 +32,7 @@ const MobileBettingHistory = ({ history }: { history: History[] }) => {
                             {dayjs(row.createdAt).format("DD/MM/YYYY")}
                         </div>
                         <div className="text-white text-sm opacity-80">
-                            {dayjs(row.createdAt).format("dddd")}
+                            {dayjs(row.createdAt).format("HH:mm")}
                         </div>
                     </div>
                     <div className="flex flex-col gap-2 pb-2 text-sm px-4">
@@ -189,8 +189,8 @@ const BettingHistoryDialog = ({ children }: BettingHistoryDialogProps) => {
                                 <div className="max-h-[60svh] overflow-y-auto scrollbar-thin scrollbar-thumb-[#5C8983] scrollbar-track-transparent">
                                     {history?.map((row, idx) => (
                                         <div key={idx} className="text-white flex">
-                                            <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D] rounded-l-full" : ""}`)}>{dayjs.utc(row.createdAt).local().format("DD/MM/YYYY")}</div>
-                                            <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D]" : ""}`)}>{dayjs.utc(row.createdAt).local().format("hh:mm A")}</div>
+                                            <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D] rounded-l-full" : ""}`)}>{dayjs(row.createdAt).format("DD/MM/YYYY")}</div>
+                                            <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D]" : ""}`)}>{dayjs(row.createdAt).format("HH:mm")}</div>
                                             <div className={cn("px-4 py-3 flex-1 flex items-center", `${idx % 2 === 0 ? "bg-[#28533D]" : ""}`)}>
                                                 <span
                                                     className="px-3 py-1 rounded-full font-semibold"

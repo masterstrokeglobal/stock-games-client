@@ -358,15 +358,6 @@ const AdminProfitDistribution = ({ className }: Props) => {
 
                             const fmt = (n: number) => `${n < 0 ? "-" : ""}₹${Math.abs(n).toFixed(2)}`;
 
-                            // Group operators by role for hierarchical display
-                            const groupedByRole = data.operatorShares.reduce((acc, operator) => {
-                                if (!acc[operator.role]) {
-                                    acc[operator.role] = [];
-                                }
-                                acc[operator.role].push(operator);
-                                return acc;
-                            }, {} as Record<string, typeof data.operatorShares>);
-
                             // Helper function to get next level in hierarchy
                             const getNextLevel = (currentRole: string): string | null => {
                                 switch (currentRole) {
@@ -405,28 +396,21 @@ const AdminProfitDistribution = ({ className }: Props) => {
                                 return true;
                             };
 
-                            // Render hierarchy levels
-                            const renderHierarchyLevel = (role: string) => {
-                                const operators = groupedByRole[role] || [];
+                            // Render hierarchy levels for a given settlement (chain)
+                            const renderHierarchyLevel = (role: string, settlement: any) => {
                                 const isExpanded = expandedLevels.has(role);
                                 const nextLevel = getNextLevel(role);
                                 const hasChildren = role !== 'agent' && nextLevel;
-                                
-                                // Only render if this level should be visible
-                                if (!shouldShowLevel(role)) return null;
-                                
-                                // Get amount from summary distribution if no operators exist for this role
-                                const amount = operators.length > 0 
-                                    ? operators[0].operatorKeeps 
-                                    : settlementsData?.summary?.distribution?.[role] || 0;
-                                
-                                
-                                // Use operator name if available, otherwise use a default
-                                const operatorName = operators.length > 0 
-                                    ? operators[0].operatorName 
-                                    : settlementsData?.settlements?.[0]?.chainId || 'N/A';
 
-                                // Get indentation based on role hierarchy
+                                if (!shouldShowLevel(role)) return null;
+
+                                const distributions = settlement?.distribution || {};
+                                const amount = role === 'super_duper_master'
+                                    ? (distributions.super_duper_master || 0)
+                                    : (distributions[role as keyof typeof distributions] || 0);
+
+                                const operatorName = settlement?.chainId || 'N/A';
+
                                 const getIndentation = (role: string) => {
                                     switch (role) {
                                         case 'super_duper_master': return 'ml-0';
@@ -437,9 +421,8 @@ const AdminProfitDistribution = ({ className }: Props) => {
                                     }
                                 };
 
-                            return (
-                                    <div key={role} className="space-y-1">
-                                        {/* Current Level Header */}
+                                return (
+                                    <div key={`${operatorName}-${role}`} className="space-y-1">
                                         <div 
                                             className={`flex items-center justify-between p-3 rounded border-l-4 cursor-pointer transition-colors ${getRoleColor(role)}`}
                                             onClick={() => hasChildren && toggleExpansion(role)}
@@ -467,16 +450,24 @@ const AdminProfitDistribution = ({ className }: Props) => {
                                                 {fmt(amount)}
                                             </span>
                                         </div>
-
-                                            </div>
-                                        );
+                                    </div>
+                                );
                             };
 
-                            // Always render all hierarchy levels regardless of whether they have operators
                             const allRoles = ['super_duper_master', 'duper_master', 'master', 'agent'];
+                            const settlementsList = settlementsData?.settlements || [];
+
                             return (
-                                <div className="space-y-1">
-                                    {allRoles.map(role => renderHierarchyLevel(role))}
+                                <div className="space-y-3">
+                                    {settlementsList.map((settlement: any) => (
+                                        <div key={settlement?.chainId} className="space-y-1">
+                                            {/* Chain Header */}
+                                            <div className="px-2 py-1 text-sm font-semibold text-gray-700">
+                                                {settlement?.chainId || 'N/A'}
+                                            </div>
+                                            {allRoles.map(role => renderHierarchyLevel(role, settlement))}
+                                        </div>
+                                    ))}
                                 </div>
                             );
                         })()}

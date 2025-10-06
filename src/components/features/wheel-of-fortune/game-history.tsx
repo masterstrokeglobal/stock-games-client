@@ -18,7 +18,7 @@ dayjs.extend(utc);
 const MobileGameHistoryCard: React.FC<{
     row: { createdAt: string; winningColor: WheelColor };
 }> = ({ row }) => {
-    const date = dayjs(row.createdAt);
+
     return (
         <div
             className="rounded-lg border border-[#5C8983] shadow-xl bg-[#223C38] mb-4 overflow-hidden"
@@ -28,10 +28,10 @@ const MobileGameHistoryCard: React.FC<{
         >
             <div className="flex justify-between items-center px-4 py-2 bg-[#26302F]">
                 <span className="text-sm text-white font-medium tracking-wide">
-                    {date.format("DD/MM/YYYY")}
+                    {dayjs(row.createdAt).format("DD/MM/YYYY")}
                 </span>
                 <span className="text-sm text-white font-medium">
-                    {date.format("dddd")}
+                    {dayjs(row.createdAt).format("HH:mm")}
                 </span>
             </div>
             <div className="px-4 py-2 bg-[#28533D] flex items-center  justify-between rounded-b-lg">

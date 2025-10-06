@@ -29,7 +29,7 @@ const MobileGameHistoryCard: React.FC<{
                     {date.format("DD/MM/YYYY")}
                 </div>
                 <div className="text-white text-sm opacity-80">
-                    {date.format("HH:MM")}
+                    {date.format("HH:mm")}
                 </div>
             </div>
             <div className="flex flex-col gap-2 pb-2 text-sm px-4">

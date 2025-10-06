@@ -45,7 +45,7 @@ function MobileHistoryCard({ item }: { item: JackpotHistory }) {
                 }}
             >
                 <span className="font-audiowale text-white text-[11px]">{dayjs(item.createdAt).format("DD/MM/YYYY")}</span>
-                <span className="font-audiowale text-white text-[11px]">{dayjs(item.createdAt).format("dddd")}</span>
+                <span className="font-audiowale text-white text-[11px]">{dayjs(item.createdAt).format("HH:mm")}</span>
             </div>
             {/* Body */}
             <div className="px-4 py-3 grid grid-cols-2  space-x-2">

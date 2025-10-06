@@ -79,10 +79,10 @@ const LastRoundsTable: React.FC<{ className?: string; tableClassName?: string }>
                       {round.id}
                     </div>
                     <div className="flex-1 px-3 py-2 text-white truncate">
-                      {dayjs.utc(round.createdAt).local().format("DD/MM/YYYY")}
+                      {dayjs(round.createdAt).format("DD/MM/YYYY")}
                     </div>
                     <div className="flex-1 px-3 py-2 text-white md:block hidden truncate">
-                      {dayjs.utc(round.createdAt).local().format("hh:mm A")}
+                      {dayjs(round.createdAt).format("HH:mm")}
                     </div>
                     <div className="flex-1 px-3 py-2 truncate">
                       {winnerConfig ? (

@@ -85,7 +85,7 @@ const LastRounds = ({
                                                 {dayjs.utc(row.createdAt).local().format("DD/MM/YYYY")}
                                             </div>
                                             <div className=" px-2 py-1 flex-1 whitespace-nowrap text-left truncate">
-                                                {dayjs.utc(row.createdAt).local().format("hh:mm A")}
+                                                {dayjs.utc(row.createdAt).local().format("HH:mm")}
                                             </div>
                                             <div className=" px-2 py-1 flex-1 whitespace-nowrap text-left truncate">
                                                     {row.winningSide}
