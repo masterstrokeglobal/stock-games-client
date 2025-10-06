@@ -87,7 +87,7 @@ const BetsList = ({
                             >
                                 <div className="flex-1 text-left">{index + 1}</div>
                                 <div className="flex-1 text-left">
-                                    {dayjs(placement.createdAt).format("HH:MM")}
+                                    {dayjs(placement.createdAt).format("HH:mm")}
                                 </div>
                                 <div className="flex-1 text-left uppercase">
                                     {isHead ? "HEAD" : "TAIL"}

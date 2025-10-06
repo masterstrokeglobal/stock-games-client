@@ -64,7 +64,7 @@ const BetsTable = ({ placements, tableClassName }: { placements: HeadTailPlaceme
                                     </td>
                                     <td className="p-2 w-1/4">
                                         <div className="text-game-secondary w-full text-start">
-                                            {dayjs(placement.createdAt).format("DD MMM YYYY HH:MM")}
+                                            {dayjs(placement.createdAt).format("DD MMM YYYY HH:mm")}
                                         </div>
                                     </td>
                                     <td className="p-2 w-1/4">
