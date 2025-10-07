@@ -18,12 +18,21 @@ const DepositFormPage = () => {
     const onSubmit = async (data: DepositFormValues) => {
         data.amount = parseInt(data.amount.toString());
         mutate(data, {
-            onSuccess: (data) => {
-                const responseLink = data.data?.response;
-                if (responseLink) {
-                    window.open(responseLink, '_blank');
-                    router.push('/game/platform/user-menu');
+            onSuccess: (response) => {
+                const transaction = response.data?.transaction;
+                const paymentLinkResponse = response.data?.response;
+                
+                // Check if payment_link exists in the response
+                if (paymentLinkResponse?.payment_link || paymentLinkResponse) {
+                    const paymentLink = paymentLinkResponse?.payment_link || paymentLinkResponse;
+                    // Redirect to payment status page with transaction ID and payment link
+                    const params = new URLSearchParams({
+                        transactionId: transaction?.id?.toString() || '',
+                        paymentLink: paymentLink
+                    });
+                    router.push(`/game/wallet/payment-status?${params.toString()}`);
                 } else {
+                    // Fallback to existing manual flow (for non-21 companies)
                     router.push('/game/platform/user-menu');
                 }
             },

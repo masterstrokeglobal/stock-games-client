@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import FormProvider from "@/components/ui/form/form-provider";
-import { CompanyQRType } from "@/models/company-qr";
+import CompanyQR, { CompanyQRType } from "@/models/company-qr";
 import WithdrawDetailsRecord from "@/models/withdrawl-details";
 import { useGetActiveCompanyQR } from '@/react-query/company-qr-queries';
 import { useCreateDepositRequest } from "@/react-query/payment-queries";
@@ -186,9 +186,16 @@ const UPIDepositForm = () => {
     const t = useTranslations('deposit');
     const tWithdraw = useTranslations('withdraw');
     const { mutate, isPending } = useCreateDepositRequest();
-    const { data: companyQR, isFetching: isLoading, refetch } = useGetActiveCompanyQR({ type: CompanyQRType.UPI });
-    const { data: withdrawDetailsData, isLoading: isLoadingWithdrawDetails, refetch: refetchWithdrawDetails } = useGetAllWithdrawDetails({});
     const { data: company } = useGetMyCompany();
+    
+    // Skip QR fetching for external payment gateway companies (company 21 or externalPayIn = true)
+    const isExternalPayment = company?.externalPayIn === true || company?.id === 21;
+    const { data: companyQR, isFetching: isLoading, refetch } = useGetActiveCompanyQR(
+        { type: CompanyQRType.UPI }, 
+        { enabled: !isExternalPayment }
+    ) as { data: InstanceType<typeof CompanyQR> | null | undefined, isFetching: boolean, refetch: any };
+    
+    const { data: withdrawDetailsData, isLoading: isLoadingWithdrawDetails, refetch: refetchWithdrawDetails } = useGetAllWithdrawDetails({});
     const [showPaymentMethodDialog, setShowPaymentMethodDialog] = useState(false);
     // Store form values before opening payment method dialog
     const [formValuesBeforeDialog, setFormValuesBeforeDialog] = useState<DepositFormValues | null>(null);
@@ -209,7 +216,7 @@ const UPIDepositForm = () => {
         const payload: any = {
             amount: data.amount,
             pgId: data.pgId,
-            companyQrId: companyQR?.id,
+            companyQrId: companyQR?.id || undefined,
             paymentMethod: PaymentMethod.UPI,
         }
         
@@ -223,10 +230,22 @@ const UPIDepositForm = () => {
             payload.withdrawlDetailsId = data.withdrawlDetailsId;
         }
         mutate(payload, {
-            onSuccess: (data) => {
-                const responseLink = data.data?.response;
-                if (responseLink) {
-                    window.open(responseLink, '_blank');
+            onSuccess: (response) => {
+                const transaction = response.data?.transaction;
+                const paymentLinkResponse = response.data?.response;
+                
+                // Check if payment_link exists in the response
+                if (paymentLinkResponse?.payment_link || (typeof paymentLinkResponse === 'string' && paymentLinkResponse.startsWith('http'))) {
+                    const paymentLink = paymentLinkResponse?.payment_link || paymentLinkResponse;
+                    // Store transaction ID in sessionStorage for status tracking
+                    sessionStorage.setItem('pending_deposit_transaction_id', transaction?.id?.toString() || '');
+                    sessionStorage.setItem('pending_deposit_payment_link', paymentLink);
+                    // Open payment link in new tab
+                    window.open(paymentLink, '_blank');
+                    toast.success('Payment gateway opened. Complete payment in the new tab.');
+                } else {
+                    // Fallback to existing manual flow
+                    toast.success('Deposit request submitted successfully');
                 }
                 form.reset({ amount: 500, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" });
             },
@@ -259,7 +278,8 @@ const UPIDepositForm = () => {
         }
     };
 
-    if (companyQR == null && !isLoading) {
+    // For external payment gateway companies, skip QR validation
+    if (!isExternalPayment && companyQR == null && !isLoading) {
         return (
             <div className="border space-y-4 p-4 text-center">
                 <h2 className="text-platform-text font-semibold">No Payment Method Available</h2>
@@ -431,9 +451,16 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
     const t = useTranslations('deposit');
     const tWithdraw = useTranslations('withdraw');
     const { mutate, isPending } = useCreateDepositRequest();
-    const { data: companyQR, isFetching: isLoading, refetch } = useGetActiveCompanyQR({ type: CompanyQRType.BANK });
-    const { data: withdrawDetailsData, isLoading: isLoadingWithdrawDetails, refetch: refetchWithdrawDetails } = useGetAllWithdrawDetails({});
     const { data: company } = useGetMyCompany();
+    
+    // Skip QR fetching for external payment gateway companies (company 21 or externalPayIn = true)
+    const isExternalPayment = company?.externalPayIn === true || company?.id === 21;
+    const { data: companyQR, isFetching: isLoading, refetch } = useGetActiveCompanyQR(
+        { type: CompanyQRType.BANK }, 
+        { enabled: !isExternalPayment }
+    ) as { data: InstanceType<typeof CompanyQR> | null | undefined, isFetching: boolean, refetch: any };
+    
+    const { data: withdrawDetailsData, isLoading: isLoadingWithdrawDetails, refetch: refetchWithdrawDetails } = useGetAllWithdrawDetails({});
     const [showPaymentMethodDialog, setShowPaymentMethodDialog] = useState(false);
     // Store form values before opening payment method dialog
     const [formValuesBeforeDialog, setFormValuesBeforeDialog] = useState<DepositFormValues | null>(null);
@@ -452,7 +479,7 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
     const onSubmit = async (data: DepositFormValues) => {
         data.amount = parseInt(data.amount.toString());
         const payload: any = {
-            companyQrId: companyQR?.id,
+            companyQrId: companyQR?.id || undefined,
             pgId: data.pgId,
             amount: data.amount ?? 0,
             paymentMethod,
@@ -468,10 +495,22 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
             payload.withdrawlDetailsId = data.withdrawlDetailsId;
         }
         mutate(payload, {
-            onSuccess: (data) => {
-                const responseLink = data.data?.response;
-                if (responseLink) {
-                    window.open(responseLink, '_blank');
+            onSuccess: (response) => {
+                const transaction = response.data?.transaction;
+                const paymentLinkResponse = response.data?.response;
+                
+                // Check if payment_link exists in the response
+                if (paymentLinkResponse?.payment_link || (typeof paymentLinkResponse === 'string' && paymentLinkResponse.startsWith('http'))) {
+                    const paymentLink = paymentLinkResponse?.payment_link || paymentLinkResponse;
+                    // Store transaction ID in sessionStorage for status tracking
+                    sessionStorage.setItem('pending_deposit_transaction_id', transaction?.id?.toString() || '');
+                    sessionStorage.setItem('pending_deposit_payment_link', paymentLink);
+                    // Open payment link in new tab
+                    window.open(paymentLink, '_blank');
+                    toast.success('Payment gateway opened. Complete payment in the new tab.');
+                } else {
+                    // Fallback to existing manual flow
+                    toast.success('Deposit request submitted successfully');
                 }
                 form.reset({ amount: 500, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" });
             },
@@ -504,7 +543,8 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
         );
     }
 
-    if (companyQR == null && !isLoading) {
+    // For external payment gateway companies, skip QR validation
+    if (!isExternalPayment && companyQR == null && !isLoading) {
         return (
             <div className="border space-y-4 p-4 text-center">
                 <h2 className="text-platform-text font-semibold">No Payment Method Available</h2>

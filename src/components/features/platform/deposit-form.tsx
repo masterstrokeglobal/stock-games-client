@@ -197,11 +197,27 @@ const UPIDepositForm = () => {
     };
 
     mutate(depositData, {
-      onSuccess: () => {
+      onSuccess: (response) => {
+        const transaction = response.data?.transaction;
+        const paymentLinkResponse = response.data?.response;
+        
+        // Check if payment_link exists in the response
+        if (paymentLinkResponse?.payment_link || (typeof paymentLinkResponse === 'string' && paymentLinkResponse.startsWith('http'))) {
+          const paymentLink = paymentLinkResponse?.payment_link || paymentLinkResponse;
+          // Store transaction ID in sessionStorage for status tracking
+          sessionStorage.setItem('pending_deposit_transaction_id', transaction?.id?.toString() || '');
+          sessionStorage.setItem('pending_deposit_payment_link', paymentLink);
+          // Open payment link in new tab
+          window.open(paymentLink, '_blank');
+          toast.success('Payment gateway opened. Complete payment in the new tab.');
+        } else {
+          // Fallback to existing manual flow
+          toast.success("Deposit request submitted successfully!");
+        }
+        
         form.reset({ amount: 0, pgId: "", confirmationImageUrl: "" });
         setSelectedPaymentMethod("");
         setSelectedBankTransferMethod("");
-        toast.success("Deposit request submitted successfully!");
       },
       onError: (error: any) => {
         console.log("Error creating deposit request:", error);
