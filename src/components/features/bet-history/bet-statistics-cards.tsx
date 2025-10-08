@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BetStatistics } from "@/models/bet-history";
 import { 
     TrendingUp, 
-    TrendingDown, 
     DollarSign, 
     Trophy, 
     XCircle,

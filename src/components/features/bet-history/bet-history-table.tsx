@@ -18,7 +18,6 @@ import { BetHistory } from "@/models/bet-history";
 import { useAuthStore } from "@/context/auth-context";
 import Admin from "@/models/admin";
 import CompanySelect from "@/components/features/transaction/company-select";
-import dayjs from "dayjs";
 import { cn } from "@/lib/utils";
 
 const GAME_TYPES = [
@@ -109,16 +108,6 @@ const BetHistoryTable = ({ userId, className }: BetHistoryTableProps) => {
         }
         return 1;
     }, [data, isSuccess, filters.limit]);
-
-    const totalCount = useMemo(() => {
-        if (isSuccess && data?.data?.pagination?.total) {
-            return data.data.pagination.total;
-        }
-        if (isSuccess && data?.data?.count) {
-            return data.data.count;
-        }
-        return 0;
-    }, [data, isSuccess]);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);

@@ -1,4 +1,5 @@
 import { TransactionStatus } from "@/models/transaction";
+import { MarketProfitLossFilters } from "@/types/market-category-profit-loss";
 import api from "./instance";
 
 export type GetCompanyProfitLossFilters = {
@@ -87,5 +88,26 @@ export const paymentAPI = {
   // Confirm a withdrawal by transaction ID (only accessible by users with COMPANY_ADMIN role)
   confirmWithdrawal: (transactionId: string) => {
     return api.patch(`/payment/confirm-withdrawal/${transactionId}`);
+  },
+
+  // Get Market Category Profit Loss (NSE, Crypto, MCX, COMEX, USA_MARKET)
+  getMarketCategoryProfitLoss: async (filters: MarketProfitLossFilters) => {
+    return api.get("/payment/market-category-profit-loss", {
+      params: filters,
+    });
+  },
+
+  // Get Individual Market Profit Loss (detailed per stock)
+  getMarketProfitLoss: async (filters: MarketProfitLossFilters & { page?: number; limit?: number }) => {
+    return api.get("/payment/market-profit-loss", {
+      params: filters,
+    });
+  },
+
+  // Get Simplified Market Profit Loss (Stock Slots only - fast)
+  getMarketProfitLossSimplified: async (filters: MarketProfitLossFilters) => {
+    return api.get("/payment/market-profit-loss/simplified", {
+      params: filters,
+    });
   },
 };
