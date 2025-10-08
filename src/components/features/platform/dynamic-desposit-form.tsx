@@ -150,7 +150,7 @@ const WithdrawMethodOption: React.FC<WithdrawMethodOptionProps> = ({
 };
 
 // Form Schema
-const depositSchema = (t: any, askWithdrawlOption?: boolean, hasActiveWithdrawDetails?: boolean) => z.object({
+const depositSchema = (t: any, askWithdrawlOption?: boolean, hasActiveWithdrawDetails?: boolean, minAmount: number = 500) => z.object({
     pgId: z
         .string()
         .max(20, t('validation.transaction-id-max'))
@@ -165,7 +165,7 @@ const depositSchema = (t: any, askWithdrawlOption?: boolean, hasActiveWithdrawDe
         .coerce.number({
             message: t('validation.amount-invalid')
         })
-        .min(500, t('validation.amount-required-500')),
+        .min(minAmount, minAmount === 1 ? 'Amount must be at least ₹1' : t('validation.amount-required-500')),
     withdrawlDetailsId: (askWithdrawlOption && !hasActiveWithdrawDetails)
         ? z.string().min(1, 'deposit method is required')
         : z.string().optional(),
@@ -247,7 +247,7 @@ const UPIDepositForm = () => {
                     // Fallback to existing manual flow
                     toast.success('Deposit request submitted successfully');
                 }
-                form.reset({ amount: 500, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" });
+                form.reset({ amount: isExternalPayment ? 1 : 500, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" });
             },
             onError: () => {
                 toast.error('Error creating deposit request');
@@ -256,8 +256,13 @@ const UPIDepositForm = () => {
     }
 
     const form = useForm<DepositFormValues>({
-        resolver: zodResolver(depositSchema(t, company?.askWithdrawlOption, activeWithdrawDetails.length > 0)),
-        defaultValues: { amount: 500, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" },
+        resolver: zodResolver(depositSchema(t, company?.askWithdrawlOption, activeWithdrawDetails.length > 0, isExternalPayment ? 1 : 500)),
+        defaultValues: { 
+            amount: isExternalPayment ? 1 : 500, 
+            pgId: "", 
+            confirmationImageUrl: "", 
+            withdrawlDetailsId: "" 
+        },
     });
 
     if (isLoading || isLoadingWithdrawDetails) {
@@ -512,7 +517,7 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
                     // Fallback to existing manual flow
                     toast.success('Deposit request submitted successfully');
                 }
-                form.reset({ amount: 500, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" });
+                form.reset({ amount: isExternalPayment ? 1 : 500, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" });
             },
             onError: () => {
                 toast.error('Error creating deposit request');
@@ -521,8 +526,13 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
     }
 
     const form = useForm<DepositFormValues>({
-        resolver: zodResolver(depositSchema(t, company?.askWithdrawlOption, activeWithdrawDetails.length > 0)),
-        defaultValues: { amount: 500, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" },
+        resolver: zodResolver(depositSchema(t, company?.askWithdrawlOption, activeWithdrawDetails.length > 0, isExternalPayment ? 1 : 500)),
+        defaultValues: { 
+            amount: isExternalPayment ? 1 : 500, 
+            pgId: "", 
+            confirmationImageUrl: "", 
+            withdrawlDetailsId: "" 
+        },
     });
 
     const copyToClipboard = async (text: string) => {
