@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { ArrowUpDown, BarChart3, Building, ChevronsRightLeftIcon, Clock, CoinsIcon, Contact2, DollarSign, GamepadIcon, GiftIcon, Home, ImageUpIcon, LucideIcon, MedalIcon, PieChart, Repeat1, ShipWheelIcon, UserCog2, Users } from 'lucide-react';
+import { ArrowUpDown, BarChart3, Building, ChevronsRightLeftIcon, Clock, CoinsIcon, Contact2, DollarSign, GamepadIcon, GiftIcon, History, Home, ImageUpIcon, LucideIcon, MedalIcon, PieChart, Repeat1, ShipWheelIcon, UserCog2, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -72,6 +72,11 @@ const adminMenuItems: MenuItem[] = [
         name: "Transactions",
         icon: DollarSign,
         link: '/dashboard/transactions'
+    },
+    {
+        name: "Bet History",
+        icon: History,
+        link: '/dashboard/bet-history'
     },
     {
         name: "Round Records",
@@ -172,6 +177,11 @@ const companyMenuItems: MenuItem[] = [
         name: 'Transactions',
         icon: DollarSign,
         link: '/dashboard/transactions',
+    },
+    {
+        name: "Bet History",
+        icon: History,
+        link: '/dashboard/bet-history'
     },
     {
         name: "Contact Queries",
