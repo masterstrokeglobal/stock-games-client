@@ -12,6 +12,7 @@ export type Filter = {
     category?: string;
     platform?: string;
     provider?: string;
+    subProvider?: string;
     type?: string;
     popular?: boolean;
     providerOfWeek?: boolean;

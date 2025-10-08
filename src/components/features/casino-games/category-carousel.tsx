@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import useWindowSize from "@/hooks/use-window-size"
 import type { GameCategory } from "@/models/casino-games"
-import { GameTypeEnum } from "@/models/casino-games"
+import { GameTypeEnum, ProviderEnum, ProviderCompany } from "@/models/casino-games"
 import { useGetCasinoGames } from "@/react-query/casino-games-queries"
 import { useTranslations } from "next-intl"
 import Link from "next/link"
@@ -21,10 +21,13 @@ interface CategoryCarouselProps {
     liveGame?: boolean,
     title: string,
     type?: GameTypeEnum,
-    direction?: "forward" | "backward"
+    direction?: "forward" | "backward",
+    provider?: ProviderEnum,
+    providerCompany?: ProviderCompany,
+    subProvider?: ProviderEnum
 }
 
-export default function CategoryCarousel({ categoryId, title, popular,providerOfWeek,stockGameChoice, new: isNew, slot, liveGame, type }: CategoryCarouselProps) {
+export default function CategoryCarousel({ categoryId, title, popular,providerOfWeek,stockGameChoice, new: isNew, slot, liveGame, type, provider, providerCompany, subProvider }: CategoryCarouselProps) {
     const t = useTranslations("platform.casino-games");
     const { isMobile } = useWindowSize();
     const { data, isLoading } = useGetCasinoGames({
@@ -36,10 +39,19 @@ export default function CategoryCarousel({ categoryId, title, popular,providerOf
         new: isNew,
         slot,
         type,
-        liveGame
+        liveGame,
+        providerName: provider,
+        providerCompany: providerCompany,
+        subProvider: subProvider
     })
 
     const link = useMemo(() => {
+        if (subProvider) {
+            return `/game/platform/casino?subProvider=${subProvider}`
+        }
+        if (provider) {
+            return `/game/platform/casino?provider=${provider}`
+        }
         if (type) {
             return `/game/platform/casino?type=${type}`
         }
@@ -61,7 +73,7 @@ export default function CategoryCarousel({ categoryId, title, popular,providerOf
             return `/game/platform/casino?providerOfWeek=true`
         }
         return `/game/platform/casino`
-    }, [type, categoryId, popular, isNew])
+    }, [type, categoryId, popular, isNew, provider, subProvider])
     
     if (isLoading) {
         return (

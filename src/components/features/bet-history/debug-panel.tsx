@@ -80,3 +80,4 @@ const DebugPanel = ({ data, filters, totalPages, totalCount }: DebugPanelProps) 
 export default DebugPanel;
 
 
+

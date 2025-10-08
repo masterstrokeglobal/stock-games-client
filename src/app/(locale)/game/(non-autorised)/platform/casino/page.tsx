@@ -20,6 +20,7 @@ export default function GamingAppInterface() {
             search: searchParams.get("search") || "",
             category: searchParams.get("category") || "all",
             provider: searchParams.get("provider") || "all",
+            subProvider: searchParams.get("subProvider") || undefined,
             type: searchParams.get("type") || undefined,
             popular: searchParams.get("popular") === "true" ? true : undefined,
             new: searchParams.get("new") === "true" ? true : undefined,
@@ -36,6 +37,7 @@ export default function GamingAppInterface() {
         if (newFilter.search) params.set("search", newFilter.search);
         if (newFilter.category && newFilter.category !== "all") params.set("category", newFilter.category);
         if (newFilter.provider && newFilter.provider !== "all") params.set("provider", newFilter.provider);
+        if (newFilter.subProvider) params.set("subProvider", newFilter.subProvider);
         if (newFilter.type) params.set("type", newFilter.type);
         if (newFilter.popular) params.set("popular", "true");
         if (newFilter.new) params.set("new", "true");
@@ -50,6 +52,7 @@ export default function GamingAppInterface() {
     !!filter.search ||
     (filter.category && filter.category !== "all") ||
     (filter.provider && filter.provider !== "all") ||
+    !!filter.subProvider ||
     !!filter.type ||
     !!filter.popular ||
     !!filter.new || !!filter.providerOfWeek || !!filter.stockGameChoice;
