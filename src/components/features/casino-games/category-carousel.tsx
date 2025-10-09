@@ -18,6 +18,9 @@ interface CategoryCarouselProps {
     slot?: boolean,
     stockGameChoice?:boolean,
     providerOfWeek?:boolean,
+    evolutionChoice?: boolean,
+    ezugiChoice?: boolean,
+    jiliChoice?: boolean,
     liveGame?: boolean,
     title: string,
     type?: GameTypeEnum,
@@ -27,7 +30,7 @@ interface CategoryCarouselProps {
     subProvider?: ProviderEnum
 }
 
-export default function CategoryCarousel({ categoryId, title, popular,providerOfWeek,stockGameChoice, new: isNew, slot, liveGame, type, provider, providerCompany, subProvider }: CategoryCarouselProps) {
+export default function CategoryCarousel({ categoryId, title, popular,providerOfWeek,stockGameChoice, evolutionChoice, ezugiChoice, jiliChoice, new: isNew, slot, liveGame, type, provider, providerCompany, subProvider }: CategoryCarouselProps) {
     const t = useTranslations("platform.casino-games");
     const { isMobile } = useWindowSize();
     const { data, isLoading } = useGetCasinoGames({
@@ -35,14 +38,16 @@ export default function CategoryCarousel({ categoryId, title, popular,providerOf
         popular,
         stockGameChoice,
          providerOfWeek,
+        evolutionChoice,
+        ezugiChoice,
+        jiliChoice,
         excludeCategory: categoryId,
         new: isNew,
         slot,
         type,
         liveGame,
-        providerName: provider,
-        providerCompany: providerCompany,
-        subProvider: subProvider
+        provider: provider,
+        providerCompany: providerCompany
     })
 
     const link = useMemo(() => {

@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/context/auth-context";
 import useCasinoAllowed from "@/hooks/use-is-casino-allowed";
 import { isTawkEnabled, TAWK_PROPERTY_ID, TAWK_WIDGET_ID } from "@/lib/utils";
-import { GameTypeEnum, ProviderEnum, ProviderCompany } from "@/models/casino-games";
+import { GameTypeEnum } from "@/models/casino-games";
 import User from "@/models/user";
 import TawkMessengerReact from "@tawk.to/tawk-messenger-react";
 import { useTranslations } from "next-intl";
@@ -50,10 +50,10 @@ const PlatformPage = () => {
                     <>
                         <CasinoProvidersCarousel title={tPlatform("game-providers")} />
                         <CategoryCarousel title={tPlatform("new-released")} new={true} direction="backward" />
+                        <CategoryCarousel title={"Evolution Gaming"} evolutionChoice={true} direction="forward" />
+                        <CategoryCarousel title={"Ezugi"} ezugiChoice={true} direction="backward" />
+                        <CategoryCarousel title={"JILI Games"} jiliChoice={true} direction="forward" />
                         <CategoryCarousel title={tPlatform("hot-games")} popular={true} direction="forward" />
-                        <CategoryCarousel title={"Evolution Gaming"} subProvider={ProviderEnum.Evolution_Gaming} providerCompany={ProviderCompany.QTECH} direction="forward" />
-                        <CategoryCarousel title={"Ezugi"} subProvider={ProviderEnum.Ezugi} providerCompany={ProviderCompany.QTECH} direction="backward" />
-                        <CategoryCarousel title={"JILI Games"} subProvider={ProviderEnum.JILI} providerCompany={ProviderCompany.QTECH} direction="forward" />
                         <CategoryCarousel title={"Stock Game Choices"} stockGameChoice />
                         <CategoryCarousel title={"Provider of the Week"} providerOfWeek />
                         <CategoryCarousel title={tPlatform("crash-games")} type={GameTypeEnum.CRASH_GAME} direction="backward" />
