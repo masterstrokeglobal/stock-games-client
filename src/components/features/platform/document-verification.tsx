@@ -1,12 +1,26 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Loader2, Upload, CheckCircle, Camera, FileImage } from 'lucide-react';
-import { toast } from 'sonner';
-import { useAadhaarBackOCR, useAadhaarFrontOCR, usePassportOCR, useFaceMatch, useVerificationStatus, useStartOverVerification, useContinueVerification } from '@/react-query/ocr-queries';
+import React, { useState, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Loader2, Upload, CheckCircle, Camera, FileImage } from "lucide-react";
+import { toast } from "sonner";
+import {
+  useAadhaarBackOCR,
+  useAadhaarFrontOCR,
+  usePassportOCR,
+  useFaceMatch,
+  useVerificationStatus,
+  useStartOverVerification,
+  useContinueVerification,
+} from "@/react-query/ocr-queries";
 
 interface VerificationStep {
   id: string;
@@ -20,22 +34,30 @@ interface DocumentVerificationProps {
   onComplete?: (verificationData: any) => void;
 }
 
-export default function DocumentVerification({ onComplete }: DocumentVerificationProps) {
+export default function DocumentVerification({
+  onComplete,
+}: DocumentVerificationProps) {
   // Status query & actions
-  const { data: statusData, isLoading: statusLoading, refetch: refetchStatus } = useVerificationStatus();
+  const {
+    data: statusData,
+    isLoading: statusLoading,
+    refetch: refetchStatus,
+  } = useVerificationStatus();
   const startOverMut = useStartOverVerification();
   const continueMut = useContinueVerification();
   const [currentStep, setCurrentStep] = useState(0);
-  const [documentType, setDocumentType] = useState<'aadhaar' | 'passport' | null>(null);
+  const [documentType, setDocumentType] = useState<
+    "aadhaar" | "passport" | null
+  >(null);
   const [steps, setSteps] = useState<VerificationStep[]>([]);
   const [frontImage, setFrontImage] = useState<string | null>(null);
   const [backImage, setBackImage] = useState<string | null>(null);
   const [selfieImage, setSelfieImage] = useState<string | null>(null);
   const [frontData, setFrontData] = useState<any>(null);
   const [backData, setBackData] = useState<any>(null);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   // OCR mutations (TanStack React Query)
   const aadhaarFrontMut = useAadhaarFrontOCR();
   const aadhaarBackMut = useAadhaarBackOCR();
@@ -43,61 +65,65 @@ export default function DocumentVerification({ onComplete }: DocumentVerificatio
   const faceMatchMut = useFaceMatch();
 
   // Get loading state from TanStack mutations
-  const isLoading = aadhaarFrontMut.isPending || aadhaarBackMut.isPending || passportMut.isPending || faceMatchMut.isPending;
+  const isLoading =
+    aadhaarFrontMut.isPending ||
+    aadhaarBackMut.isPending ||
+    passportMut.isPending ||
+    faceMatchMut.isPending;
 
-  const initializeSteps = (type: 'aadhaar' | 'passport') => {
-    if (type === 'aadhaar') {
+  const initializeSteps = (type: "aadhaar" | "passport") => {
+    if (type === "aadhaar") {
       setSteps([
         {
-          id: 'front',
-          title: 'Aadhaar Front Side',
-          description: 'Upload the front side of your Aadhaar card',
+          id: "front",
+          title: "Aadhaar Front Side",
+          description: "Upload the front side of your Aadhaar card",
           completed: false,
         },
         {
-          id: 'back',
-          title: 'Aadhaar Back Side',
-          description: 'Upload the back side of your Aadhaar card',
+          id: "back",
+          title: "Aadhaar Back Side",
+          description: "Upload the back side of your Aadhaar card",
           completed: false,
         },
         {
-          id: 'selfie',
-          title: 'Selfie (Face Liveness)',
-          description: 'Upload a live selfie for liveness & face match',
+          id: "selfie",
+          title: "Selfie (Face Liveness)",
+          description: "Upload a live selfie for liveness & face match",
           completed: false,
         },
         {
-          id: 'complete',
-          title: 'Verification Complete',
-          description: 'Your Aadhaar card has been verified',
+          id: "complete",
+          title: "Verification Complete",
+          description: "Your Aadhaar card has been verified",
           completed: false,
         },
       ]);
     } else {
       setSteps([
         {
-          id: 'front',
-          title: 'Passport Document',
-          description: 'Upload your passport document',
+          id: "front",
+          title: "Passport Document",
+          description: "Upload your passport document",
           completed: false,
         },
         {
-          id: 'selfie',
-          title: 'Selfie (Face Liveness)',
-          description: 'Upload a live selfie for liveness & face match',
+          id: "selfie",
+          title: "Selfie (Face Liveness)",
+          description: "Upload a live selfie for liveness & face match",
           completed: false,
         },
         {
-          id: 'complete',
-          title: 'Verification Complete',
-          description: 'Your passport has been verified',
+          id: "complete",
+          title: "Verification Complete",
+          description: "Your passport has been verified",
           completed: false,
         },
       ]);
     }
   };
 
-  const handleDocumentTypeSelect = (type: 'aadhaar' | 'passport') => {
+  const handleDocumentTypeSelect = (type: "aadhaar" | "passport") => {
     setDocumentType(type);
     initializeSteps(type);
     setCurrentStep(0);
@@ -117,7 +143,7 @@ export default function DocumentVerification({ onComplete }: DocumentVerificatio
       const result = e.target?.result as string;
       if (currentStep === 0) {
         setFrontImage(result);
-      } else if (currentStep === 1 && documentType === 'aadhaar') {
+      } else if (currentStep === 1 && documentType === "aadhaar") {
         setBackImage(result);
       } else {
         setSelfieImage(result);
@@ -126,48 +152,58 @@ export default function DocumentVerification({ onComplete }: DocumentVerificatio
     reader.readAsDataURL(file);
   };
 
-  const processImage = async (imageData: string, step: 'front' | 'back' | 'selfie') => {
+  const processImage = async (
+    imageData: string,
+    step: "front" | "back" | "selfie"
+  ) => {
     try {
       let response: any;
-      if (step === 'selfie') {
+      if (step === "selfie") {
         // Now backend will fetch target from saved verification; send only selfie as source
         const source = imageData;
         response = await faceMatchMut.mutateAsync({ source });
-      } else if (documentType === 'aadhaar') {
-        response = step === 'front'
-          ? await aadhaarFrontMut.mutateAsync(imageData)
-          : await aadhaarBackMut.mutateAsync(imageData);
+      } else if (documentType === "aadhaar") {
+        response =
+          step === "front"
+            ? await aadhaarFrontMut.mutateAsync(imageData)
+            : await aadhaarBackMut.mutateAsync(imageData);
       } else {
         response = await passportMut.mutateAsync(imageData);
       }
 
       if (response.success) {
-        if (step === 'front') {
+        if (step === "front") {
           setFrontData(response.data);
         } else {
-          if (step === 'back') setBackData(response.data);
+          if (step === "back") setBackData(response.data);
         }
 
         // Update step as completed
-        setSteps(prev => prev.map((s, index) => 
-          index === currentStep ? { ...s, completed: true, data: response.data } : s
-        ));
+        setSteps((prev) =>
+          prev.map((s, index) =>
+            index === currentStep
+              ? { ...s, completed: true, data: response.data }
+              : s
+          )
+        );
 
         // Move to next step
         if (currentStep < steps.length - 1) {
           setCurrentStep(currentStep + 1);
         }
       } else {
-        throw new Error(response.error || 'Processing failed');
+        throw new Error(response.error || "Processing failed");
       }
     } catch (error: any) {
       // Error handling is now managed by TanStack React Query
-      console.error('Processing failed:', error);
+      console.error("Processing failed:", error);
     }
   };
 
   const completeVerification = async () => {
-    setSteps(prev => prev.map(s => s.id === 'complete' ? { ...s, completed: true } : s));
+    setSteps((prev) =>
+      prev.map((s) => (s.id === "complete" ? { ...s, completed: true } : s))
+    );
     if (onComplete) onComplete({ frontData, backData, faceMatched: true });
   };
 
@@ -183,143 +219,116 @@ export default function DocumentVerification({ onComplete }: DocumentVerificatio
 
   const getCurrentStepData = () => {
     if (currentStep === 0) return frontImage;
-    if (currentStep === 1 && documentType === 'aadhaar') return backImage;
-    const selfieIndex = documentType === 'aadhaar' ? 2 : 1;
+    if (currentStep === 1 && documentType === "aadhaar") return backImage;
+    const selfieIndex = documentType === "aadhaar" ? 2 : 1;
     if (currentStep === selfieIndex) return selfieImage;
     return null;
   };
 
-  const canProceedToNext = () => {
-    if (currentStep === 0) return frontImage && frontData;
-    if (currentStep === 1 && documentType === 'aadhaar') return backImage && backData;
-    const selfieIndex = documentType === 'aadhaar' ? 2 : 1;
-    if (currentStep === selfieIndex) return !!selfieImage;
-    return false;
-  };
-
-  // Gate: if user not verified, show CTA; if processing, offer continue/start over; else show selector/flow
-  if (!documentType) {
-    // If status loading, simple skeleton
-    if (statusLoading) {
-      return (
-        <div className="max-w-2xl mx-auto p-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-center">Document Verification</CardTitle>
-              <CardDescription className="text-center">Loading status...</CardDescription>
-            </CardHeader>
-            <CardContent />
-          </Card>
-        </div>
-      );
-    }
-
-    const status = statusData?.data?.status as 'pending' | 'processing' | 'completed' | undefined;
-    const type = statusData?.data?.type as 'aadhaar' | 'passport' | null | undefined;
-    const currentStepFromServer = statusData?.data?.currentStep as number | undefined;
-
-    if (status === 'completed') {
-      return (
-        <div className="max-w-2xl mx-auto p-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-center">KYC Completed</CardTitle>
-              <CardDescription className="text-center">Your documents are verified.</CardDescription>
-            </CardHeader>
-          </Card>
-        </div>
-      );
-    }
-
-    if (status === 'processing' && type) {
-      return (
-        <div className="max-w-2xl mx-auto p-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-center">Resume your KYC</CardTitle>
-              <CardDescription className="text-center">You have an in-progress verification.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-center space-x-3">
-                <Button
-                  onClick={async () => {
-                    try {
-                      const res = await continueMut.mutateAsync();
-                      const nextStep = res?.data?.nextStep ?? currentStepFromServer ?? 0;
-                      handleDocumentTypeSelect(type);
-                      setCurrentStep(nextStep);
-                    } catch {}
-                  }}
-                  disabled={continueMut.isPending}
-                >
-                  {continueMut.isPending ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Continue...
-                    </>
-                  ) : (
-                    'Continue where you left off'
-                  )}
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={async () => {
-                    try {
-                      await startOverMut.mutateAsync();
-                      await refetchStatus();
-                    } catch {}
-                  }}
-                  disabled={startOverMut.isPending}
-                >
-                  {startOverMut.isPending ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Resetting...
-                    </>
-                  ) : (
-                    'Start Over'
-                  )}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      );
-    }
-
-    // status pending or no prior verification -> show KYC CTA and then type selector
+  // If status loading, simple skeleton
+  if (statusLoading) {
     return (
       <div className="max-w-2xl mx-auto p-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl font-bold text-center">Document Verification</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center">
+              Document Verification
+            </CardTitle>
             <CardDescription className="text-center">
-              Please complete your KYC
+              Loading status...
+            </CardDescription>
+          </CardHeader>
+          <CardContent />
+        </Card>
+      </div>
+    );
+  }
+
+  const status = statusData?.data?.status as
+    | "pending"
+    | "processing"
+    | "completed"
+    | undefined;
+  const type = statusData?.data?.type as
+    | "aadhaar"
+    | "passport"
+    | null
+    | undefined;
+  const currentStepFromServer = statusData?.data?.currentStep as
+    | number
+    | undefined;
+
+  if (status === "completed") {
+    return (
+      <div className="max-w-2xl mx-auto p-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-center">
+              KYC Completed
+            </CardTitle>
+            <CardDescription className="text-center">
+              Your documents are verified.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
+
+  if (status === "processing" && type) {
+    return (
+      <div className="max-w-2xl mx-auto p-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-center">
+              Resume your KYC
+            </CardTitle>
+            <CardDescription className="text-center">
+              You have an in-progress verification.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-center">
-              <Button onClick={() => { /* expand selector below; no-op */ }}>Complete your KYC</Button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex items-center justify-center space-x-3">
               <Button
-                onClick={() => handleDocumentTypeSelect('aadhaar')}
-                variant="outline"
-                className="h-32 flex flex-col items-center justify-center space-y-2"
+                onClick={async () => {
+                  try {
+                    console.log("loki clicked continue");
+                    const res = await continueMut.mutateAsync();
+                    const nextStep = currentStepFromServer ?? 0;
+                    console.log("loki nextStep", nextStep);
+                    handleDocumentTypeSelect(type);
+                    setCurrentStep(nextStep);
+                  } catch {}
+                }}
+                disabled={continueMut.isPending}
               >
-                <FileImage className="h-8 w-8" />
-                <span className="font-semibold">Aadhaar Card</span>
-                <span className="text-sm text-muted-foreground">Front & Back sides required</span>
+                {continueMut.isPending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Continue...
+                  </>
+                ) : (
+                  "Continue where you left off"
+                )}
               </Button>
-              
               <Button
-                onClick={() => handleDocumentTypeSelect('passport')}
                 variant="outline"
-                className="h-32 flex flex-col items-center justify-center space-y-2"
+                onClick={async () => {
+                  try {
+                    await startOverMut.mutateAsync();
+                    await refetchStatus();
+                  } catch {}
+                }}
+                disabled={startOverMut.isPending}
               >
-                <FileImage className="h-8 w-8" />
-                <span className="font-semibold">Passport</span>
-                <span className="text-sm text-muted-foreground">Single document required</span>
+                {startOverMut.isPending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Resetting...
+                  </>
+                ) : (
+                  "Start Over"
+                )}
               </Button>
             </div>
           </CardContent>
@@ -333,7 +342,9 @@ export default function DocumentVerification({ onComplete }: DocumentVerificatio
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
-            {documentType === 'aadhaar' ? 'Aadhaar Card Verification' : 'Passport Verification'}
+            {documentType === "aadhaar"
+              ? "Aadhaar Card Verification"
+              : "Passport Verification"}
           </CardTitle>
           <CardDescription className="text-center">
             Follow the steps to complete your document verification
@@ -343,14 +354,19 @@ export default function DocumentVerification({ onComplete }: DocumentVerificatio
           {/* Progress Steps */}
           <div className="flex justify-between items-center">
             {steps.map((step, index) => (
-              <div key={step.id} className="flex flex-col items-center space-y-2">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  step.completed 
-                    ? 'bg-green-500 text-white' 
-                    : index === currentStep 
-                    ? 'bg-blue-500 text-white' 
-                    : 'bg-gray-200 text-gray-600'
-                }`}>
+              <div
+                key={step.id}
+                className="flex flex-col items-center space-y-2"
+              >
+                <div
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    step.completed
+                      ? "bg-green-500 text-white"
+                      : index === currentStep
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-600"
+                  }`}
+                >
                   {step.completed ? (
                     <CheckCircle className="h-4 w-4" />
                   ) : (
@@ -359,7 +375,9 @@ export default function DocumentVerification({ onComplete }: DocumentVerificatio
                 </div>
                 <div className="text-center">
                   <p className="text-sm font-medium">{step.title}</p>
-                  <p className="text-xs text-muted-foreground">{step.description}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {step.description}
+                  </p>
                 </div>
               </div>
             ))}
@@ -374,13 +392,14 @@ export default function DocumentVerification({ onComplete }: DocumentVerificatio
               {steps[currentStep]?.description}
             </p>
 
-
             {/* Image Upload Section */}
             <div className="space-y-4">
               {!getCurrentStepData() ? (
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
                   <Upload className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                  <p className="text-lg font-medium mb-2">Upload your document</p>
+                  <p className="text-lg font-medium mb-2">
+                    Upload your document
+                  </p>
                   <p className="text-sm text-muted-foreground mb-4">
                     Click to select an image or drag and drop
                   </p>
@@ -412,7 +431,7 @@ export default function DocumentVerification({ onComplete }: DocumentVerificatio
                 <div className="space-y-4">
                   <div className="relative">
                     <img
-                      src={getCurrentStepData() || ''}
+                      src={getCurrentStepData() || ""}
                       alt={`${steps[currentStep]?.title} preview`}
                       className="w-full max-w-md mx-auto rounded-lg border"
                     />
@@ -421,14 +440,19 @@ export default function DocumentVerification({ onComplete }: DocumentVerificatio
                       Uploaded
                     </Badge>
                   </div>
-                  
+
                   <div className="flex space-x-2">
                     <Button
                       onClick={() => {
-                        const selfieIndex = documentType === 'aadhaar' ? 2 : 1;
-                        const stepKey = currentStep === 0 ? 'front' : (currentStep === selfieIndex ? 'selfie' : 'back');
+                        const selfieIndex = documentType === "aadhaar" ? 2 : 1;
+                        const stepKey =
+                          currentStep === 0
+                            ? "front"
+                            : currentStep === selfieIndex
+                            ? "selfie"
+                            : "back";
                         processImage(getCurrentStepData()!, stepKey as any);
-                        if (stepKey === 'selfie') {
+                        if (stepKey === "selfie") {
                           // After successful face match, mark complete
                           setTimeout(() => completeVerification(), 0);
                         }
@@ -442,10 +466,10 @@ export default function DocumentVerification({ onComplete }: DocumentVerificatio
                           Processing...
                         </>
                       ) : (
-                        'Process Document'
+                        "Process Document"
                       )}
                     </Button>
-                    
+
                     <Button
                       variant="outline"
                       onClick={() => {
@@ -473,15 +497,6 @@ export default function DocumentVerification({ onComplete }: DocumentVerificatio
               >
                 Start Over
               </Button>
-              
-              {canProceedToNext() && currentStep < steps.length - 1 && (
-                <Button
-                  onClick={() => setCurrentStep(currentStep + 1)}
-                  disabled={isLoading}
-                >
-                  Next Step
-                </Button>
-              )}
             </div>
           </div>
         </CardContent>
