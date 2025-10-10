@@ -2,7 +2,11 @@
     "rewrites": [
         {
             "source": "/api/(.*)",
+<<<<<<< HEAD
             "destination": "https://api.stockderby.org/api/$1"
+=======
+            "destination": "https://apidevdok.stockderby.org/api/$1"
+>>>>>>> pay
         }
     ]
 }
