@@ -59,7 +59,7 @@ const Sidebar = ({ className, sidebarOpen, toggleSidebar }: SidebarProps) => {
     
     const casinoItems = [
         { icon: MaximizeIcon, label: t("casino-games"), href: "/game/platform/casino" },
-        { icon: IconCricket as any, label: t("gap-games"), href: "/game/platform/gap" },
+        // { icon: IconCricket as any, label: t("gap-games"), href: "/game/platform/gap" },
         { icon: GridIcon, label: t("slot-games"), href: `/game/platform/casino/slot-games` },
         { icon: VideoIcon, label: t("live-games"), href: `/game/platform/casino/live-games` },
     ];

@@ -77,12 +77,12 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
             label: t('game-history'),
             demouser: false
         },
-        // {
-        //     href: "/game/platform/betting-history",
-        //     icon: "/images/platform/user-menu/betting-history.png",
-        //     label: t('betting-history'),
-        //     demouser: false
-        // },
+        {
+            href: "/game/platform/verification",
+            icon: "/images/platform/user-menu/verification.png",
+            label: t('verification'),
+            demouser: true
+        },
         {
             href: "/game/platform/wallet/menu",
             Parent: (item: { icon: string, label: string }) => (
