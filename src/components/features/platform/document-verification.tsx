@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Upload, CheckCircle, Camera, FileImage } from "lucide-react";
+import { Loader2, Upload, CheckCircle, Camera} from "lucide-react";
 import { toast } from "sonner";
 import {
   useAadhaarBackOCR,
@@ -43,7 +43,7 @@ export default function DocumentVerification({
     isLoading: statusLoading,
     refetch: refetchStatus,
   } = useVerificationStatus();
-  const startOverMut = useStartOverVerification();
+const startOverMut = useStartOverVerification();
   const continueMut = useContinueVerification();
   const [currentStep, setCurrentStep] = useState(0);
   const [documentType, setDocumentType] = useState<
@@ -293,7 +293,7 @@ export default function DocumentVerification({
                 onClick={async () => {
                   try {
                     console.log("loki clicked continue");
-                    const res = await continueMut.mutateAsync();
+                    // const res = await continueMut.mutateAsync();
                     const nextStep = currentStepFromServer ?? 0;
                     console.log("loki nextStep", nextStep);
                     handleDocumentTypeSelect(type);

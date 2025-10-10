@@ -25,7 +25,7 @@ import {
 } from '../../common/sidebar-icons'
 import ContactDialog from "./contact-dialog"
 import WalletDialog from "./wallet-dialog"
-import { IconCricket } from "@tabler/icons-react"
+// import { IconCricket } from "@tabler/icons-react"
 
 // Helper for sidebar icon component
 const SidebarIconComponent = ({ Icon, className }: { Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>; className?: string }) => (

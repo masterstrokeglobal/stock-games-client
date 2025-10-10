@@ -93,6 +93,7 @@ const DocumentFlow: React.FC<DocumentFlowProps> = ({ type, startAtStep = 0, onCo
       }
     } catch (error) {
       // toasts handled by hooks
+      console.error('loki document flow error', error);
     }
   };
 
@@ -104,13 +105,6 @@ const DocumentFlow: React.FC<DocumentFlowProps> = ({ type, startAtStep = 0, onCo
     return null;
   };
 
-  const canProceedToNext = () => {
-    if (currentStep === 0) return frontImage && frontData;
-    if (currentStep === 1 && type === 'aadhaar') return backImage && backData;
-    const selfieIndex = type === 'aadhaar' ? 2 : 1;
-    if (currentStep === selfieIndex) return !!selfieImage;
-    return false;
-  };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -173,11 +167,6 @@ const DocumentFlow: React.FC<DocumentFlowProps> = ({ type, startAtStep = 0, onCo
               )}
             </div>
 
-            <div className="flex justify-end pt-4">
-              {canProceedToNext() && currentStep < steps.length - 1 && (
-                <Button onClick={() => setCurrentStep(currentStep + 1)} disabled={isLoading}>Next Step</Button>
-              )}
-            </div>
           </div>
         </CardContent>
       </Card>

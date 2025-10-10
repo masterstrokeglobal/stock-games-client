@@ -28,6 +28,7 @@ class OCRService {
       return {
         success: false,
         error: error.response?.data?.message || error.message || 'Front side processing failed',
+        message: error.response?.data?.message || error.message || 'Front side processing failed',
       };
     }
   }
@@ -42,6 +43,7 @@ class OCRService {
       return {
         success: false,
         error: error.response?.data?.message || error.message || 'Back side processing failed',
+        message: error.response?.data?.message || error.message || 'Back side processing failed',
       };
     }
   }
@@ -51,11 +53,12 @@ class OCRService {
       const response = await axios.post(`${this.baseURL}/api/ocr/passport`, {
         imageData,
       });
-      return response.data;
+        return response.data;
     } catch (error: any) {
       return {
         success: false,
         error: error.response?.data?.message || error.message || 'Passport processing failed',
+        message: error.response?.data?.message || error.message || 'Passport processing failed',
       };
     }
   }
@@ -72,6 +75,7 @@ class OCRService {
       return {
         success: false,
         error: error.response?.data?.message || error.message || 'Verification completion failed',
+        message: error.response?.data?.message || error.message || 'Verification completion failed',
       };
     }
   }
