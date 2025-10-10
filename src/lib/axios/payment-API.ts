@@ -27,6 +27,11 @@ export const paymentAPI = {
     return api.post("/payment/deposit", data);
   },
 
+  // Create a BloomXPE external payment request
+  createBloomXPEPayment: async (data: any) => {
+    return api.post("/external-payment/payment/initiate", data);
+  },
+
   createCompanyDepositRequest: async (data: any) => {
     return api.post(`/payment/company-chips-deposit/`, data);
   },

@@ -33,7 +33,7 @@ export const PendingPaymentBanner = () => {
     transactionId,
     enabled: isVisible && !!transactionId,
     pollingInterval: 5000,
-    onCompleted: (txn) => {
+    onCompleted: () => {
       toast.success('Payment completed successfully!');
       // Clear sessionStorage
       sessionStorage.removeItem('pending_deposit_transaction_id');
@@ -43,7 +43,7 @@ export const PendingPaymentBanner = () => {
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
       setIsVisible(false);
     },
-    onFailed: (txn) => {
+    onFailed: () => {
       toast.error('Payment failed. Please try again.');
       // Clear sessionStorage
       sessionStorage.removeItem('pending_deposit_transaction_id');

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -31,14 +31,14 @@ export const PaymentStatus = ({
     transactionId,
     enabled: true,
     pollingInterval: 5000, // Poll every 5 seconds
-    onCompleted: (txn) => {
+    onCompleted: () => {
       toast.success('Payment completed successfully!');
       // Invalidate wallet and transactions to refresh balance
       queryClient.invalidateQueries({ queryKey: ['user', 'wallet'] });
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
       onSuccess?.();
     },
-    onFailed: (txn) => {
+    onFailed: () => {
       toast.error('Payment failed. Please try again.');
     },
   });
