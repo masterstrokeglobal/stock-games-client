@@ -76,6 +76,28 @@ const casinoGamesColumns: ColumnDef<CasinoGames>[] = [
         }
     },
     {
+        header: "Evolution Choice",
+        accessorKey: "evolutionChoice",
+        cell: ({ row }) => {
+            return <EvolutionChoiceColumn row={row.original} />
+        }
+    },
+    {
+        header: "Ezugi Choice",
+        accessorKey: "ezugiChoice",
+        cell: ({ row }) => {
+            return <EzugiChoiceColumn row={row.original} />
+        }
+    },
+    {
+        header: "JILI Choice",
+        accessorKey: "jiliChoice",
+        cell: ({ row }) => {
+            return <JiliChoiceColumn row={row.original} />
+        }
+    },
+    {
+
         header: "Game Type",
         accessorKey: "type",
         cell: ({ row }) => {
@@ -150,6 +172,30 @@ const ProviderOfTheWeekColumn = ({ row }: { row: CasinoGames }) => {
     return <Switch
         checked={row.providerOfWeek}
         onCheckedChange={() => updateGame({ id: row.id, providerOfWeek: !row.providerOfWeek })}
+    />
+}
+
+const EvolutionChoiceColumn = ({ row }: { row: CasinoGames }) => {
+    const { mutate: updateGame } = useUpdateGame();
+    return <Switch
+        checked={row.evolutionChoice || false}
+        onCheckedChange={() => updateGame({ id: row.id, evolutionChoice: !(row.evolutionChoice || false) })}
+    />
+}
+
+const EzugiChoiceColumn = ({ row }: { row: CasinoGames }) => {
+    const { mutate: updateGame } = useUpdateGame();
+    return <Switch
+        checked={row.ezugiChoice || false}
+        onCheckedChange={() => updateGame({ id: row.id, ezugiChoice: !(row.ezugiChoice || false) })}
+    />
+}
+
+const JiliChoiceColumn = ({ row }: { row: CasinoGames }) => {
+    const { mutate: updateGame } = useUpdateGame();
+    return <Switch
+        checked={row.jiliChoice || false}
+        onCheckedChange={() => updateGame({ id: row.id, jiliChoice: !(row.jiliChoice || false) })}
     />
 }
 

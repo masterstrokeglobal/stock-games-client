@@ -234,6 +234,9 @@ class CasinoGames {
     new!: boolean;
     providerOfWeek!: boolean;
     stockGameChoice!: boolean;
+    evolutionChoice!: boolean;
+    ezugiChoice!: boolean;
+    jiliChoice!: boolean;
     code!: string;
     gameId!: string;
     createdAt!: Date;
@@ -256,6 +259,9 @@ class CasinoGames {
         this.new = params.new;
         this.providerOfWeek = params.providerOfWeek;
         this.stockGameChoice = params.stockGameChoice;
+        this.evolutionChoice = params.evolutionChoice || false;
+        this.ezugiChoice = params.ezugiChoice || false;
+        this.jiliChoice = params.jiliChoice || false;
         this.createdAt = params.createdAt;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;

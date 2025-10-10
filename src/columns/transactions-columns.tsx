@@ -2,7 +2,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Transaction, TransactionStatus, TransactionType } from "@/models/transaction";
+import { Transaction, TransactionStatus, TransactionType, PaymentMethod } from "@/models/transaction";
 import { useConfirmWithdrawal, useUpdateTransactionById } from "@/react-query/transactions-queries";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
@@ -131,11 +131,13 @@ const StatusChangeColumn = ({ transaction }: { transaction: Transaction }) => {
     };
 
     // Only show Accept/Reject for DEPOSIT and WITHDRAWAL and only if status is PENDING
+    // Don't show accept/reject options for BLOOMXPAY payment method
     if (
         !(
             (transaction.type === TransactionType.WITHDRAWAL || transaction.type === TransactionType.DEPOSIT) &&
             transaction.status === TransactionStatus.PENDING
-        )
+        ) ||
+        transaction.paymentMethod === PaymentMethod.BLOOMXPAY
     ) {
         return <div className="text-sm text-gray-500 text-center">N/A</div>;
     }

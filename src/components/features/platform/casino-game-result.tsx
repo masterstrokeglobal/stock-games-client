@@ -23,6 +23,7 @@ export default function CasinoGameResult({ filter, className }: { filter: Filter
         providerOfWeek:filter.providerOfWeek,
         category: filter.category === "all" ? undefined : (filter.category as (typeof GameCategories)[number]["value"]),
         provider: filter.provider === "all" ? undefined : (filter.provider as ProviderEnum),
+        subProvider: filter.subProvider as ProviderEnum | undefined,
         limit: 30,
         popular: filter.popular,
         new: filter.new

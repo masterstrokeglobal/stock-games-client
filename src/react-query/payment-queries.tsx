@@ -10,10 +10,24 @@ export const useCreateDepositRequest = () => {
         mutationFn: paymentAPI.createDepositRequest,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["transactions"] });
-            toast.success("Deposit request created successfully");
         },
         onError: (error: any) => {
             toast.error(error.response?.data?.message ?? "Error creating deposit request");
+        },
+    });
+};
+
+// Create BloomXPE Payment Request
+export const useCreateBloomXPEPayment = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: paymentAPI.createBloomXPEPayment,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["transactions"] });
+        },
+        onError: (error: any) => {
+            toast.error(error.response?.data?.message ?? "Error creating BloomXPE payment");
         },
     });
 };

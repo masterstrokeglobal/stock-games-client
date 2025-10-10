@@ -25,13 +25,14 @@ export const useGetCompanyQRs = (filter?: any) => {
   });
 };
 
-export const useGetActiveCompanyQR = (filter?: any) => {
+export const useGetActiveCompanyQR = (filter?: any, options?: any) => {
   return useQuery({
     queryKey: ["activeCompanyQR", filter],
     queryFn: async () => {
       const response = await companyQRAPI.getActiveCompanyQR(filter);
       return  response.data.data ? new CompanyQR(response.data.data) : null;
     },
+    ...options,
   });
 };
 
