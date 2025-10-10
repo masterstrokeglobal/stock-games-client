@@ -33,6 +33,7 @@ export enum PaymentMethod {
     NEFT = "NEFT",
     RTGS = "RTGS",
     UPI = "UPI",
+    BLOOMXPAY = "BLOOMXPAY",
 
     // Internal/Admin
     AGENT_WALLET = "AGENT_WALLET",
@@ -60,6 +61,7 @@ export const PAYMENT_METHOD_CATEGORIES: Record<PaymentMethod, PaymentMethodCateg
     [PaymentMethod.NEFT]: PaymentMethodCategory.BANK_TRANSFER,
     [PaymentMethod.RTGS]: PaymentMethodCategory.BANK_TRANSFER,
     [PaymentMethod.UPI]: PaymentMethodCategory.BANK_TRANSFER,
+    [PaymentMethod.BLOOMXPAY]: PaymentMethodCategory.BANK_TRANSFER,
 
     // Internal transactions map to OTHER category
     [PaymentMethod.AGENT_WALLET]: PaymentMethodCategory.OTHER,
@@ -82,6 +84,7 @@ export class Transaction {
     confirmationImageUrl?: string;
     amount!: number;
     status!: TransactionStatus;
+    paymentMethod?: PaymentMethod; // Payment method field
     creditorOperatorWallet?: OperatorWallet;
     depositorOperatorWallet ?: OperatorWallet;
     companyQR?: CompanyQR;
