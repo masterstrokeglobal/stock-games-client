@@ -12,7 +12,7 @@ const AuthLayout: React.FC = ({ children }: PropsWithChildren) => {
     const router = useRouter();
 
     return (
-        <div className="min-h-screen overflow-hidden  flex text-game-text justify-center pt-20 items-center h-screen bg-background-secondary">
+        <div className="min-h-screen overflow-hidden  flex text-game-text justify-center pt-20 items-center h-screen bg-background-secondary p-5">
             {/* Navigation Bar */}
             <nav className="items-center  uppercase flex fixed top-0 z-50 justify-center font-semibold text-2xl w-full h-20 bg-primary-game">
                 <Button variant={'ghost'} className="absolute left-4" onClick={() => router.back()}>
