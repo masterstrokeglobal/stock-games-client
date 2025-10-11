@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import betHistoryColumns from "@/columns/bet-history-columns";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ import { useAuthStore } from "@/context/auth-context";
 import Admin from "@/models/admin";
 import CompanySelect from "@/components/features/transaction/company-select";
 import { cn } from "@/lib/utils";
+import { useDebounce } from "@/hooks/use-debounce";
 
 const GAME_TYPES = [
     { label: "All Games", value: "all" },
@@ -44,11 +45,21 @@ const BetHistoryTable = ({ userId, className }: BetHistoryTableProps) => {
     const admin = userDetails as Admin;
 
     const [page, setPage] = useState(1);
+    const [searchInput, setSearchInput] = useState("");
     const [search, setSearch] = useState("");
     const [companyId, setCompanyId] = useState<string>("all");
     const [gameType, setGameType] = useState<string>("all");
     const [startDate, setStartDate] = useState<string>("");
     const [endDate, setEndDate] = useState<string>("");
+
+    // Debounce search input
+    const debouncedSearch = useDebounce(searchInput, 300);
+
+    // Update search when debounced value changes
+    useEffect(() => {
+        setSearch(debouncedSearch);
+        setPage(1);
+    }, [debouncedSearch]);
 
     // Build filters
     const filters = useMemo(() => {
@@ -110,11 +121,28 @@ const BetHistoryTable = ({ userId, className }: BetHistoryTableProps) => {
     }, [data, isSuccess, filters.limit]);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearch(e.target.value);
-        setPage(1);
+        const value = e.target.value;
+        // Only allow numeric characters and empty string
+        if (value === '' || /^\d+$/.test(value)) {
+            setSearchInput(value);
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        // Allow: backspace, delete, tab, escape, enter, home, end, left, right, up, down
+        if ([8, 9, 27, 13, 46, 35, 36, 37, 38, 39, 40].indexOf(e.keyCode) !== -1 ||
+            // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+Z
+            (e.ctrlKey === true && [65, 67, 86, 88, 90].indexOf(e.keyCode) !== -1)) {
+            return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
     };
 
     const handleReset = () => {
+        setSearchInput("");
         setSearch("");
         setCompanyId("all");
         setGameType("all");
@@ -144,8 +172,9 @@ const BetHistoryTable = ({ userId, className }: BetHistoryTableProps) => {
                             <Search size={18} className="absolute top-2.5 left-2.5" />
                             <Input
                                 placeholder="Search by User ID"
-                                value={search}
+                                value={searchInput}
                                 onChange={handleSearch}
+                                onKeyDown={handleKeyDown}
                                 className="pl-10"
                                 type="number"
                             />

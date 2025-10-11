@@ -171,6 +171,7 @@
     },
     "user-menu": {
         "title": "User Menu",
+        "verification": "Verification",
         "profile-image-alt": "Profile Image",
         "coin-image-alt": "Coin Icon",
         "rules": "Rules",
