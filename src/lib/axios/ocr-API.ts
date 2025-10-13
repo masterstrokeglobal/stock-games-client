@@ -9,8 +9,16 @@ export const ocrAPI = {
     const res = await api.post(`/ocr/aadhaar/back`, { imageData });
     return res.data;
   },
-  passport: async (imageData: string) => {
-    const res = await api.post(`/ocr/passport`, { imageData });
+  passport: async (passportImage: string) => {
+    const res = await api.post(`/ocr/passport`, { passport_image: passportImage });
+    return res.data;
+  },
+  panCard: async (panImage: string) => {
+    const res = await api.post(`/ocr/pan-card`, { pan_image: panImage });
+    return res.data;
+  },
+  drivingLicense: async (licenseImage: string) => {
+    const res = await api.post(`/ocr/driving-license`, { license_image: licenseImage });
     return res.data;
   },
   faceMatch: async (payload: { liveness_image: string }) => {

@@ -26,6 +26,9 @@ export default function GamingAppInterface() {
             new: searchParams.get("new") === "true" ? true : undefined,
             providerOfWeek: searchParams.get("providerOfWeek") === "true" ? true : undefined,
             stockGameChoice: searchParams.get("stockGameChoice") === "true" ? true : undefined,
+            evolutionChoice: searchParams.get("evolutionChoice") === "true" ? true : undefined,
+            ezugiChoice: searchParams.get("ezugiChoice") === "true" ? true : undefined,
+            jiliChoice: searchParams.get("jiliChoice") === "true" ? true : undefined,
         }
         // Only recalculate when searchParams changes
     }, [searchParams]);
@@ -41,6 +44,11 @@ export default function GamingAppInterface() {
         if (newFilter.type) params.set("type", newFilter.type);
         if (newFilter.popular) params.set("popular", "true");
         if (newFilter.new) params.set("new", "true");
+        if (newFilter.providerOfWeek) params.set("providerOfWeek", "true");
+        if (newFilter.stockGameChoice) params.set("stockGameChoice", "true");
+        if (newFilter.evolutionChoice) params.set("evolutionChoice", "true");
+        if (newFilter.ezugiChoice) params.set("ezugiChoice", "true");
+        if (newFilter.jiliChoice) params.set("jiliChoice", "true");
         // If all filters are default, clear the query
         router.replace(`?${params.toString()}`, { scroll: false });
     };
@@ -55,7 +63,12 @@ export default function GamingAppInterface() {
     !!filter.subProvider ||
     !!filter.type ||
     !!filter.popular ||
-    !!filter.new || !!filter.providerOfWeek || !!filter.stockGameChoice;
+    !!filter.new || 
+    !!filter.providerOfWeek || 
+    !!filter.stockGameChoice ||
+    !!filter.evolutionChoice ||
+    !!filter.ezugiChoice ||
+    !!filter.jiliChoice;
     
     if (!isCasinoAllowed && !isLoading) notFound();
     return (

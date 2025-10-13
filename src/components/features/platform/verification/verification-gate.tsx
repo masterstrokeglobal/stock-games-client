@@ -7,8 +7,8 @@ import { Loader2 } from 'lucide-react';
 import { useVerificationStatus, useContinueVerification, useStartOverVerification } from '@/react-query/ocr-queries';
 
 export interface VerificationGateProps {
-  onStartNew: (type: 'aadhaar' | 'passport') => void;
-  onContinue: (type: 'aadhaar' | 'passport', nextStep: number) => void;
+  onStartNew: (type: 'aadhaar' | 'passport' | 'driving_license' | 'pan_card') => void;
+  onContinue: (type: 'aadhaar' | 'passport' | 'driving_license' | 'pan_card', nextStep: number) => void;
 }
 
 export const VerificationGate: React.FC<VerificationGateProps> = ({ onStartNew, onContinue }) => {
@@ -31,7 +31,7 @@ export const VerificationGate: React.FC<VerificationGateProps> = ({ onStartNew, 
   }
 
   const status = statusData?.data?.status as 'pending' | 'processing' | 'completed' | undefined;
-  const type = statusData?.data?.type as 'aadhaar' | 'passport' | null | undefined;
+  const type = statusData?.data?.type as 'aadhaar' | 'passport' | 'driving_license' | 'pan_card' | null | undefined;
   const currentStep = statusData?.data?.currentStep as number | undefined;
 
   if (status === 'completed') {
@@ -122,6 +122,22 @@ export const VerificationGate: React.FC<VerificationGateProps> = ({ onStartNew, 
               className="h-32 flex flex-col items-center justify-center space-y-2"
             >
               <span className="font-semibold">Passport</span>
+              <span className="text-sm text-muted-foreground">Single document required</span>
+            </Button>
+            <Button
+              onClick={() => onStartNew('pan_card')}
+              variant="outline"
+              className="h-32 flex flex-col items-center justify-center space-y-2"
+            >
+              <span className="font-semibold">PAN Card</span>
+              <span className="text-sm text-muted-foreground">Single document required</span>
+            </Button>
+            <Button
+              onClick={() => onStartNew('driving_license')}
+              variant="outline"
+              className="h-32 flex flex-col items-center justify-center space-y-2"
+            >
+              <span className="font-semibold">Driving License</span>
               <span className="text-sm text-muted-foreground">Single document required</span>
             </Button>
           </div>

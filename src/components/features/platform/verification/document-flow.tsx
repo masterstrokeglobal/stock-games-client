@@ -17,6 +17,8 @@ import {
   useAadhaarFrontOCR,
   usePassportOCR,
   useFaceMatch,
+  useDrivingLicenseOCR,
+  usePanCardOCR,
 } from "@/react-query/ocr-queries";
 import api from "@/lib/axios/instance";
 
@@ -29,7 +31,7 @@ interface VerificationStep {
 }
 
 export interface DocumentFlowProps {
-  type: "aadhaar" | "passport";
+  type: "aadhaar" | "passport" | "driving_license" | "pan_card";
   startAtStep?: number;
   onComplete?: (verificationData: any) => void;
 }
@@ -41,41 +43,74 @@ const DocumentFlow: React.FC<DocumentFlowProps> = ({
 }) => {
   const [currentStep, setCurrentStep] = useState(startAtStep);
   const [steps, setSteps] = useState<VerificationStep[]>(() => {
-    return type === "aadhaar"
-      ? [
-          {
-            id: "front",
-            title: "Aadhaar Front Side",
-            description: "Upload the front side of your Aadhaar card",
-            completed: false,
-          },
-          {
-            id: "back",
-            title: "Aadhaar Back Side",
-            description: "Upload the back side of your Aadhaar card",
-            completed: false,
-          },
-          {
-            id: "selfie",
-            title: "Selfie (Face Liveness)",
-            description: "Upload a live selfie for liveness & face match",
-            completed: false,
-          },
-        ]
-      : [
-          {
-            id: "front",
-            title: "Passport Document",
-            description: "Upload your passport document",
-            completed: false,
-          },
-          {
-            id: "selfie",
-            title: "Selfie (Face Liveness)",
-            description: "Upload a live selfie for liveness & face match",
-            completed: false,
-          },
-        ];
+    if (type === "aadhaar") {
+      return [
+        {
+          id: "front",
+          title: "Aadhaar Front Side",
+          description: "Upload the front side of your Aadhaar card",
+          completed: false,
+        },
+        {
+          id: "back",
+          title: "Aadhaar Back Side",
+          description: "Upload the back side of your Aadhaar card",
+          completed: false,
+        },
+        {
+          id: "selfie",
+          title: "Selfie (Face Liveness)",
+          description: "Upload a live selfie for liveness & face match",
+          completed: false,
+        },
+      ];
+    } else if (type === "passport") {
+      return [
+        {
+          id: "front",
+          title: "Passport Document",
+          description: "Upload your passport document",
+          completed: false,
+        },
+        {
+          id: "selfie",
+          title: "Selfie (Face Liveness)",
+          description: "Upload a live selfie for liveness & face match",
+          completed: false,
+        },
+      ];
+    } else if (type === "pan_card") {
+      return [
+        {
+          id: "front",
+          title: "PAN Card",
+          description: "Upload your PAN card document",
+          completed: false,
+        },
+        {
+          id: "selfie",
+          title: "Selfie (Face Liveness)",
+          description: "Upload a live selfie for liveness & face match",
+          completed: false,
+        },
+      ];
+    } else {
+      // Driving License
+      return [
+        {
+          id: "front",
+          title: "Driving License",
+          description: "Upload your driving license document",
+          completed: false,
+        },
+        {
+          id: "selfie",
+          title: "Selfie (Face Liveness)",
+          description: "Upload a live selfie for liveness & face match",
+          completed: false,
+        },
+      ];
+    }
   });
 
   const [frontImage, setFrontImage] = useState<string | null>(null);
@@ -115,18 +150,22 @@ const DocumentFlow: React.FC<DocumentFlowProps> = ({
   const aadhaarFrontMut = useAadhaarFrontOCR();
   const aadhaarBackMut = useAadhaarBackOCR();
   const passportMut = usePassportOCR();
+  const drivingLicenseMut = useDrivingLicenseOCR();
+  const panCardMut = usePanCardOCR();
   const faceMatchMut = useFaceMatch();
   const isLoading =
     aadhaarFrontMut.isPending ||
     aadhaarBackMut.isPending ||
     passportMut.isPending ||
+    drivingLicenseMut.isPending ||
+    panCardMut.isPending ||
     faceMatchMut.isPending;
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    if (file.size > 1024 * 1024) {
-      toast.error("File too large. Please upload an image smaller than 1MB");
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("File too large. Please upload an image smaller than 2MB");
       return;
     }
     const reader = new FileReader();
@@ -160,8 +199,42 @@ const DocumentFlow: React.FC<DocumentFlowProps> = ({
           step === "front"
             ? await aadhaarFrontMut.mutateAsync(imageData)
             : await aadhaarBackMut.mutateAsync(imageData);
+      } else if (type === "passport") {
+        console.log('loki processing passport');
+        // For passport, upload to S3 first like selfie
+        try {
+          const fileUrl = await uploadImageToS3(imageData);
+          console.log('loki sending passport image URL:', fileUrl);
+          response = await passportMut.mutateAsync(fileUrl);
+          console.log('loki passport response', response);
+        } catch (uploadError) {
+          console.error('loki passport upload failed:', uploadError);
+          throw new Error('Failed to upload passport image: ' + (uploadError as Error).message);
+        }
+      } else if (type === "pan_card") {
+        console.log('loki processing PAN card');
+        // For PAN card, upload to S3 first like passport
+        try {
+          const fileUrl = await uploadImageToS3(imageData);
+          console.log('loki sending PAN card image URL:', fileUrl);
+          response = await panCardMut.mutateAsync(fileUrl);
+          console.log('loki PAN card response', response);
+        } catch (uploadError) {
+          console.error('loki PAN card upload failed:', uploadError);
+          throw new Error('Failed to upload PAN card image: ' + (uploadError as Error).message);
+        }
       } else {
-        response = await passportMut.mutateAsync(imageData);
+        console.log('loki processing driving license');
+        // For driving license, upload to S3 first like passport
+        try {
+          const fileUrl = await uploadImageToS3(imageData);
+          console.log('loki sending driving license image URL:', fileUrl);
+          response = await drivingLicenseMut.mutateAsync(fileUrl);
+          console.log('loki driving license response', response);
+        } catch (uploadError) {
+          console.error('loki driving license upload failed:', uploadError);
+          throw new Error('Failed to upload driving license image: ' + (uploadError as Error).message);
+        }
       }
 
       if (response.success) {
@@ -207,7 +280,11 @@ const DocumentFlow: React.FC<DocumentFlowProps> = ({
           <CardTitle className="text-2xl font-bold text-center">
             {type === "aadhaar"
               ? "Aadhaar Card Verification"
-              : "Passport Verification"}
+              : type === "passport"
+              ? "Passport Verification"
+              : type === "pan_card"
+              ? "PAN Card Verification"
+              : "Driving License Verification"}
           </CardTitle>
           <CardDescription className="text-center">
             Follow the steps to complete your document verification
