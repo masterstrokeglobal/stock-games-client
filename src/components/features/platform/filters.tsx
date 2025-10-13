@@ -19,6 +19,9 @@ export type Filter = {
     providerOfWeek?: boolean;
     stockGameChoice?:boolean;
     new?: boolean;
+    evolutionChoice?: boolean;
+    ezugiChoice?: boolean;
+    jiliChoice?: boolean;
 }
 
 type Props = {

@@ -46,7 +46,7 @@ export default function StockGameCarousel() {
                                 <Card className={`overflow-hidden rounded-none relative shadow-lg border border-[#4467CC] dark:border-none`} style={{ aspectRatio: '170/240' }}>
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img
-                                        src={`/images/mines/${setGame.name}.png`}
+                                        src={`/images/mines/mines.png`}
                                         alt={setGame.name}
                                         className="w-full h-full object-top"
                                     />

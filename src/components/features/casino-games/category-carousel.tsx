@@ -63,11 +63,18 @@ export default function CategoryCarousel({ categoryId, title, popular,providerOf
         if (categoryId) {
             return `/game/platform/casino?category=${categoryId}`
         }
-
+        if (evolutionChoice) {
+            return `/game/platform/casino?evolutionChoice=true`
+        }
+        if (ezugiChoice) {
+            return `/game/platform/casino?ezugiChoice=true`
+        }
+        if (jiliChoice) {
+            return `/game/platform/casino?jiliChoice=true`
+        }
         if (popular) {
             return `/game/platform/casino?popular=true`
         }
-
         if (isNew) {
             return `/game/platform/casino?new=true`
         }
@@ -78,7 +85,7 @@ export default function CategoryCarousel({ categoryId, title, popular,providerOf
             return `/game/platform/casino?providerOfWeek=true`
         }
         return `/game/platform/casino`
-    }, [type, categoryId, popular, isNew, provider, subProvider])
+    }, [type, categoryId, popular, isNew, provider, subProvider, evolutionChoice, ezugiChoice, jiliChoice])
     
     if (isLoading) {
         return (

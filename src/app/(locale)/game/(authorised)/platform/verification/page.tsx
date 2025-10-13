@@ -19,7 +19,7 @@ const page = () => {
 export default page
 
 const PageContent: React.FC<{ onComplete?: (data: any) => void }> = ({ onComplete }) => {
-  const [flowType, setFlowType] = useState<null | 'aadhaar' | 'passport'>(null);
+  const [flowType, setFlowType] = useState<null | 'aadhaar' | 'passport' | 'driving_license' | 'pan_card'>(null);
   const [startStep, setStartStep] = useState<number>(0);
 
   if (!flowType) {

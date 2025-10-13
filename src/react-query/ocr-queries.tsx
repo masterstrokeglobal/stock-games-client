@@ -38,6 +38,30 @@ export const usePassportOCR = () => {
   });
 };
 
+export const useDrivingLicenseOCR = () => {
+  return useMutation({
+    mutationFn: (imageData: string) => ocrAPI.drivingLicense(imageData),
+    onSuccess: () => {
+      toast.success("Driving License processed successfully");
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || error?.message || "Failed to process Driving License");
+    },
+  });
+};
+
+export const usePanCardOCR = () => {
+  return useMutation({
+    mutationFn: (imageData: string) => ocrAPI.panCard(imageData),
+    onSuccess: () => {
+      toast.success("PAN Card processed successfully");
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || error?.message || "Failed to process PAN Card");
+    },
+  });
+};
+
 export const useFaceMatch = () => {
   return useMutation({
     mutationFn: (payload: FaceMatchPayload) => ocrAPI.faceMatch(payload),
