@@ -72,8 +72,12 @@ const BetHistoryTable = ({ userId, className }: BetHistoryTableProps) => {
             filterObj.userId = userId;
         }
 
-        if (search && !isNaN(Number(search))) {
-            filterObj.userId = Number(search);
+        if (search) {
+            if (!isNaN(Number(search))) {
+                filterObj.userId = Number(search);
+            } else {
+                filterObj.username = search;
+            }
         }
 
         if (companyId && companyId !== "all") {
@@ -122,23 +126,15 @@ const BetHistoryTable = ({ userId, className }: BetHistoryTableProps) => {
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        // Only allow numeric characters and empty string
-        if (value === '' || /^\d+$/.test(value)) {
+        // Allow alphanumeric characters and empty string
+        if (value === '' || /^[a-zA-Z0-9.]+$/.test(value)) {
             setSearchInput(value);
         }
     };
 
+    // No need to restrict keydown events since we're allowing alphanumeric input
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        // Allow: backspace, delete, tab, escape, enter, home, end, left, right, up, down
-        if ([8, 9, 27, 13, 46, 35, 36, 37, 38, 39, 40].indexOf(e.keyCode) !== -1 ||
-            // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+Z
-            (e.ctrlKey === true && [65, 67, 86, 88, 90].indexOf(e.keyCode) !== -1)) {
-            return;
-        }
-        // Ensure that it is a number and stop the keypress
-        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
-            e.preventDefault();
-        }
+        // No restrictions needed for alphanumeric input
     };
 
     const handleReset = () => {
@@ -171,12 +167,11 @@ const BetHistoryTable = ({ userId, className }: BetHistoryTableProps) => {
                         <div className="relative min-w-60 flex-1">
                             <Search size={18} className="absolute top-2.5 left-2.5" />
                             <Input
-                                placeholder="Search by User ID"
+                                placeholder="Search by User ID or Username"
                                 value={searchInput}
                                 onChange={handleSearch}
                                 onKeyDown={handleKeyDown}
                                 className="pl-10"
-                                type="number"
                             />
                         </div>
                     )}
