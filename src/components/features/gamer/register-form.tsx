@@ -21,9 +21,19 @@ import GoogleLoginButton from "./google-login-button";
 // Zod schema for validating the registration form fields
 export const createRegisterSchema = (t: any, isPhoneAllowed: boolean = false, userVerfication: boolean = false) => z.object({
     // Full name with first and last name
-    name: z.string().min(3, { message: t('validation.name-length') }).max(100, { message: t('validation.name-max') }).refine((data) => data.split(" ").length > 1, {
-        message: t('validation.name-full'),
-    }),
+    name: z.string()
+        .min(3, { message: t('validation.name-length') })
+        .max(100, { message: t('validation.name-max') })
+        .refine((data) => data.split(" ").length > 1, {
+            message: t('validation.name-full'),
+        })
+        .refine((data) => {
+            const parts = data.trim().split(/\s+/);
+            const lastname = parts.slice(1).join(" "); // Get everything after first word
+            return lastname.length > 2;
+        }, {
+            message: t('validation.lastname-min-length'),
+        }),
 
     // Email or phone
     email: userVerfication
@@ -43,7 +53,7 @@ export const createRegisterSchema = (t: any, isPhoneAllowed: boolean = false, us
                     return emailPattern.test(value);
                 },
                 {
-                    message: t('validation.email-invalid'),
+                    message: isPhoneAllowed ? t('validation.email-or-phone-invalid') : t('validation.email-invalid'),
                 }
             )
         : z.string().optional(),
