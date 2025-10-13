@@ -13,7 +13,7 @@ export const ocrAPI = {
     const res = await api.post(`/ocr/passport`, { imageData });
     return res.data;
   },
-  faceMatch: async (payload: { source: string }) => {
+  faceMatch: async (payload: { liveness_image: string }) => {
     const res = await api.post(`/ocr/face-match`, payload);
     return res.data;
   },
@@ -31,5 +31,5 @@ export const ocrAPI = {
   },
 };
 
-export type FaceMatchPayload = { source: string };
+export type FaceMatchPayload = { liveness_image: string };
 
