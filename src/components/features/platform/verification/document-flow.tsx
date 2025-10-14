@@ -10,17 +10,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Upload, CheckCircle, Camera } from "lucide-react";
+import { Loader2, Upload, CheckCircle, Camera, XCircle, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
-import {
-  useAadhaarBackOCR,
-  useAadhaarFrontOCR,
-  usePassportOCR,
-  useFaceMatch,
-  useDrivingLicenseOCR,
-  usePanCardOCR,
-} from "@/react-query/ocr-queries";
-import api from "@/lib/axios/instance";
+import { cn } from "@/lib/utils";
+import { useFaceMatch } from "@/react-query/ocr-queries";
+import { LivenessCapture } from "@/components/features/ocr/liveness-capture";
+import imageCompression from 'browser-image-compression';
 
 interface VerificationStep {
   id: string;
@@ -42,236 +37,199 @@ const DocumentFlow: React.FC<DocumentFlowProps> = ({
   onComplete,
 }) => {
   const [currentStep, setCurrentStep] = useState(startAtStep);
-  const [steps, setSteps] = useState<VerificationStep[]>(() => {
-    if (type === "aadhaar") {
-      return [
-        {
-          id: "front",
-          title: "Aadhaar Front Side",
-          description: "Upload the front side of your Aadhaar card",
-          completed: false,
-        },
-        {
-          id: "back",
-          title: "Aadhaar Back Side",
-          description: "Upload the back side of your Aadhaar card",
-          completed: false,
-        },
-        {
-          id: "selfie",
-          title: "Selfie (Face Liveness)",
-          description: "Upload a live selfie for liveness & face match",
-          completed: false,
-        },
-      ];
-    } else if (type === "passport") {
-      return [
-        {
-          id: "front",
-          title: "Passport Document",
-          description: "Upload your passport document",
-          completed: false,
-        },
-        {
-          id: "selfie",
-          title: "Selfie (Face Liveness)",
-          description: "Upload a live selfie for liveness & face match",
-          completed: false,
-        },
-      ];
-    } else if (type === "pan_card") {
-      return [
-        {
-          id: "front",
-          title: "PAN Card",
-          description: "Upload your PAN card document",
-          completed: false,
-        },
-        {
-          id: "selfie",
-          title: "Selfie (Face Liveness)",
-          description: "Upload a live selfie for liveness & face match",
-          completed: false,
-        },
-      ];
-    } else {
-      // Driving License
-      return [
-        {
-          id: "front",
-          title: "Driving License",
-          description: "Upload your driving license document",
-          completed: false,
-        },
-        {
-          id: "selfie",
-          title: "Selfie (Face Liveness)",
-          description: "Upload a live selfie for liveness & face match",
-          completed: false,
-        },
-      ];
-    }
-  });
+  // All document types have same 2-step flow
+  const [steps, setSteps] = useState<VerificationStep[]>([
+    {
+      id: "document",
+      title: getDocumentTitle(),
+      description: "Upload a clear photo of your ID document",
+      completed: false,
+    },
+    {
+      id: "selfie",
+      title: "Live Selfie Capture",
+      description: "Capture a live photo using your camera",
+      completed: false,
+    },
+  ]);
 
-  const [frontImage, setFrontImage] = useState<string | null>(null);
-  const [backImage, setBackImage] = useState<string | null>(null);
+  function getDocumentTitle() {
+    switch (type) {
+      case "aadhaar":
+        return "Aadhaar Card";
+      case "passport":
+        return "Passport";
+      case "pan_card":
+        return "PAN Card";
+      case "driving_license":
+        return "Driving License";
+      default:
+        return "ID Document";
+    }
+  }
+
+  const [documentImage, setDocumentImage] = useState<string | null>(null);
   const [selfieImage, setSelfieImage] = useState<string | null>(null);
-  const [frontData, setFrontData] = useState<any>(null);
-  const [backData, setBackData] = useState<any>(null);
+  const [verificationResult, setVerificationResult] = useState<{
+    matched: boolean;
+    score: number;
+    message: string;
+  } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Upload image to S3 and return URL
-  const uploadImageToS3 = async (imageData: string): Promise<string> => {
+  const faceMatchMut = useFaceMatch();
+  const isLoading = faceMatchMut.isPending;
+
+  // Compress image to ensure it's under 1MB for AccuraScan
+  const compressImage = async (file: File): Promise<string> => {
     try {
-      console.log('loki uploading image to S3...');
-      // Convert base64 to blob
-      const response = await fetch(imageData);
-      const blob = await response.blob();
+      const options = {
+        maxSizeMB: 0.9, // Compress to max 900KB (under 1MB limit)
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+        fileType: 'image/jpeg'
+      };
       
-      // Create FormData
-      const formData = new FormData();
-      formData.append('image', blob, 'selfie.jpg');
+      console.log('Original file size:', (file.size / 1024 / 1024).toFixed(2), 'MB');
       
-      // Upload to company upload endpoint
-      const uploadResponse = await api.post('/company/upload-image', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      const compressedFile = await imageCompression(file, options);
+      
+      console.log('Compressed file size:', (compressedFile.size / 1024 / 1024).toFixed(2), 'MB');
+      
+      // Convert to base64
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target?.result as string);
+        reader.readAsDataURL(compressedFile);
       });
-      
-      console.log('loki upload response:', uploadResponse.data);
-      return uploadResponse.data.fileUrl;
     } catch (error) {
-      console.error('loki upload error:', error);
+      console.error('Compression error:', error);
       throw error;
     }
   };
 
-  const aadhaarFrontMut = useAadhaarFrontOCR();
-  const aadhaarBackMut = useAadhaarBackOCR();
-  const passportMut = usePassportOCR();
-  const drivingLicenseMut = useDrivingLicenseOCR();
-  const panCardMut = usePanCardOCR();
-  const faceMatchMut = useFaceMatch();
-  const isLoading =
-    aadhaarFrontMut.isPending ||
-    aadhaarBackMut.isPending ||
-    passportMut.isPending ||
-    drivingLicenseMut.isPending ||
-    panCardMut.isPending ||
-    faceMatchMut.isPending;
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    if (file.size > 2 * 1024 * 1024) {
-      toast.error("File too large. Please upload an image smaller than 2MB");
+    
+    const loadingToast = toast.loading("Compressing image...");
+    
+    try {
+      const compressedBase64 = await compressImage(file);
+      
+      // Check final size
+      const sizeInMB = (compressedBase64.length * 3 / 4) / 1024 / 1024;
+      console.log('Final base64 size:', sizeInMB.toFixed(2), 'MB');
+      
+      if (sizeInMB > 1) {
+        toast.dismiss(loadingToast);
+        toast.error("Image still too large after compression. Please use a smaller image.");
+        return;
+      }
+      
+      setDocumentImage(compressedBase64);
+      toast.dismiss(loadingToast);
+      toast.success("Image uploaded and compressed successfully");
+    } catch (error) {
+      console.error('Image upload error:', error);
+      toast.dismiss(loadingToast);
+      toast.error("Failed to process image. Please try again.");
+    }
+  };
+
+  const processDocument = () => {
+    // Step 1: Just store document image and move to selfie step
+    if (!documentImage) return;
+    
+    setSteps((prev) =>
+      prev.map((s, index) =>
+        index === 0 ? { ...s, completed: true } : s
+      )
+    );
+    
+    setCurrentStep(1);
+    toast.success("Document uploaded. Now capture your live selfie.");
+  };
+
+  const processFaceMatch = async (selfieBase64: string) => {
+    // Step 2: Send BOTH images to Face Match API
+    if (!documentImage) {
+      toast.error("Please upload your document first");
       return;
     }
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const result = e.target?.result as string;
-      if (currentStep === 0) setFrontImage(result);
-      else if (currentStep === 1 && type === "aadhaar") setBackImage(result);
-      else setSelfieImage(result);
-    };
-    reader.readAsDataURL(file);
-  };
 
-  const processImage = async (
-    imageData: string,
-    step: "front" | "back" | "selfie"
-  ) => {
     try {
-      let response: any;
-      if (step === "selfie") {
-        // Upload image to S3 first, then send URL to face-match API
-        try {
-          const fileUrl = await uploadImageToS3(imageData);
-          console.log('loki sending liveness_image URL:', fileUrl);
-          response = await faceMatchMut.mutateAsync({ liveness_image: fileUrl });
-        } catch (uploadError) {
-          console.error('loki upload failed:', uploadError);
-          throw new Error('Failed to upload image: ' + (uploadError as Error).message);
-        }
-      } else if (type === "aadhaar") {
-        response =
-          step === "front"
-            ? await aadhaarFrontMut.mutateAsync(imageData)
-            : await aadhaarBackMut.mutateAsync(imageData);
-      } else if (type === "passport") {
-        console.log('loki processing passport');
-        // For passport, upload to S3 first like selfie
-        try {
-          const fileUrl = await uploadImageToS3(imageData);
-          console.log('loki sending passport image URL:', fileUrl);
-          response = await passportMut.mutateAsync(fileUrl);
-          console.log('loki passport response', response);
-        } catch (uploadError) {
-          console.error('loki passport upload failed:', uploadError);
-          throw new Error('Failed to upload passport image: ' + (uploadError as Error).message);
-        }
-      } else if (type === "pan_card") {
-        console.log('loki processing PAN card');
-        // For PAN card, upload to S3 first like passport
-        try {
-          const fileUrl = await uploadImageToS3(imageData);
-          console.log('loki sending PAN card image URL:', fileUrl);
-          response = await panCardMut.mutateAsync(fileUrl);
-          console.log('loki PAN card response', response);
-        } catch (uploadError) {
-          console.error('loki PAN card upload failed:', uploadError);
-          throw new Error('Failed to upload PAN card image: ' + (uploadError as Error).message);
-        }
-      } else {
-        console.log('loki processing driving license');
-        // For driving license, upload to S3 first like passport
-        try {
-          const fileUrl = await uploadImageToS3(imageData);
-          console.log('loki sending driving license image URL:', fileUrl);
-          response = await drivingLicenseMut.mutateAsync(fileUrl);
-          console.log('loki driving license response', response);
-        } catch (uploadError) {
-          console.error('loki driving license upload failed:', uploadError);
-          throw new Error('Failed to upload driving license image: ' + (uploadError as Error).message);
-        }
+      console.log('📸 Calling Face Match API...');
+      console.log('Source (selfie):', selfieBase64.substring(0, 50) + '...');
+      console.log('Target (document):', documentImage.substring(0, 50) + '...');
+
+      const response = await faceMatchMut.mutateAsync({
+        liveness_image: selfieBase64,      // Live selfie with EXIF
+        document_image: documentImage       // ID document photo
+      });
+
+      console.log('📥 Face Match Response:', response);
+
+      // Extract score and matched status from response
+      // Response structure: { success, matched, message, data: { score, threshold } }
+      const score = response.data?.score ?? 0;
+      const matched = response.matched ?? false;
+      const message = response.message || 'Face match completed';
+
+      console.log('📊 Extracted values:', { score, matched, message });
+
+      setVerificationResult({
+        matched,
+        score,
+        message
+      });
+
+      setSteps((prev) =>
+        prev.map((s, index) =>
+          index === 1 ? { ...s, completed: true, data: response.data } : s
+        )
+      );
+
+      // Call onComplete if verification passed
+      if (matched) {
+        onComplete?.({
+          documentImage,
+          selfieImage: selfieBase64,
+          faceMatchResult: response.data,
+          verified: true
+        });
       }
-
-      if (response.success) {
-        if (step === "front") setFrontData(response.data);
-        else if (step === "back") setBackData(response.data);
-
-        setSteps((prev) =>
-          prev.map((s, index) =>
-            index === currentStep
-              ? { ...s, completed: true, data: response.data }
-              : s
-          )
-        );
-
-        // Move to next step or complete verification if this is the last step
-        if (currentStep < steps.length - 1) {
-          setCurrentStep(currentStep + 1);
-        } else {
-          // This is the last step (face liveness), complete verification
-          onComplete?.({ frontData, backData, faceMatched: true });
-        }
-      } else {
-        throw new Error(response.error || "Processing failed");
-      }
-    } catch (error) {
-      // toasts handled by hooks
-      console.error("loki document flow error", error);
+    } catch (error: any) {
+      console.error("Face match error:", error);
+      
+      // Extract error details from response
+      const errorData = error?.response?.data;
+      const errorMsg = errorData?.message || error?.message || "Face match verification failed";
+      const errorScore = errorData?.data?.score ?? 0;
+      
+      console.log('❌ Face Match Failed:', { errorMsg, errorScore, errorData });
+      
+      setVerificationResult({
+        matched: false,
+        score: errorScore,
+        message: errorMsg
+      });
     }
   };
 
-  const getCurrentStepData = () => {
-    if (currentStep === 0) return frontImage;
-    if (currentStep === 1 && type === "aadhaar") return backImage;
-    const selfieIndex = type === "aadhaar" ? 2 : 1;
-    if (currentStep === selfieIndex) return selfieImage;
-    return null;
+  const handleReset = () => {
+    setVerificationResult(null);
+    setDocumentImage(null);
+    setSelfieImage(null);
+    setCurrentStep(0);
+    setSteps((prev) => prev.map(s => ({ ...s, completed: false })));
   };
+
+  // const getCurrentStepData = () => {
+  //   if (currentStep === 0) return documentImage;
+  //   if (currentStep === 1) return selfieImage;
+  //   return null;
+  // };
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -291,6 +249,95 @@ const DocumentFlow: React.FC<DocumentFlowProps> = ({
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* Verification Result Display */}
+          {verificationResult && (
+            <Card
+              className={cn(
+                'border-2',
+                verificationResult.matched
+                  ? 'border-green-500 bg-green-50 dark:bg-green-950'
+                  : 'border-red-500 bg-red-50 dark:bg-red-950'
+              )}
+            >
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  {verificationResult.matched ? (
+                    <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
+                  ) : (
+                    <XCircle className="h-8 w-8 text-red-600 dark:text-red-400" />
+                  )}
+                  <div>
+                    <CardTitle
+                      className={cn(
+                        verificationResult.matched
+                          ? 'text-green-700 dark:text-green-300'
+                          : 'text-red-700 dark:text-red-300'
+                      )}
+                    >
+                      {verificationResult.matched ? 'Face Match Verified ✓' : 'Face Match Failed ✗'}
+                    </CardTitle>
+                    <CardDescription
+                      className={cn(
+                        verificationResult.matched
+                          ? 'text-green-600 dark:text-green-400'
+                          : 'text-red-600 dark:text-red-400'
+                      )}
+                    >
+                      {verificationResult.message}
+                    </CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium">Match Score:</span>
+                    <span
+                      className={cn(
+                        'text-2xl font-bold',
+                        verificationResult.matched
+                          ? 'text-green-700 dark:text-green-300'
+                          : 'text-red-700 dark:text-red-300'
+                      )}
+                    >
+                      {verificationResult.score.toFixed(2)}%
+                    </span>
+                  </div>
+
+                  {/* Score bar */}
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
+                    <div
+                      className={cn(
+                        'h-full transition-all duration-500',
+                        verificationResult.matched
+                          ? 'bg-green-500'
+                          : 'bg-red-500'
+                      )}
+                      style={{ width: `${Math.min(verificationResult.score, 100)}%` }}
+                    />
+                  </div>
+
+                  <p className="text-xs text-gray-600 dark:text-gray-400">
+                    Threshold: 55% (Scores above 55% indicate same person)
+                  </p>
+
+                  {/* Try again button */}
+                  <Button
+                    variant="outline"
+                    onClick={handleReset}
+                    className="w-full mt-4"
+                  >
+                    <RotateCcw className="h-4 w-4 mr-2" />
+                    Start New Verification
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Only show steps if no result yet */}
+          {!verificationResult && (
+            <>
           <div className="flex justify-between items-center">
             {steps.map((step, index) => (
               <div
@@ -331,96 +378,117 @@ const DocumentFlow: React.FC<DocumentFlowProps> = ({
             </p>
 
             <div className="space-y-4">
-              {!getCurrentStepData() ? (
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                  <Upload className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                  <p className="text-lg font-medium mb-2">
-                    Upload your document
-                  </p>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Click to select an image or drag and drop
-                  </p>
-                  <Button
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        <Camera className="h-4 w-4 mr-2" />
-                        Choose Image
-                      </>
-                    )}
-                  </Button>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <div className="relative">
-                    <img
-                      src={getCurrentStepData() || ""}
-                      alt={`${steps[currentStep]?.title} preview`}
-                      className="w-full max-w-md mx-auto rounded-lg border"
-                    />
-                    <Badge className="absolute top-2 right-2 bg-green-500">
-                      <CheckCircle className="h-3 w-3 mr-1" />
-                      Uploaded
-                    </Badge>
-                  </div>
-                  <div className="flex space-x-2">
+              {/* Step 0: Document Upload */}
+              {currentStep === 0 && (
+                !documentImage ? (
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                    <Upload className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                    <p className="text-lg font-medium mb-2">
+                      Upload your {getDocumentTitle()}
+                    </p>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Click to select an image or drag and drop
+                    </p>
                     <Button
-                      onClick={() => {
-                        const selfieIndex = type === "aadhaar" ? 2 : 1;
-                        const stepKey =
-                          currentStep === 0
-                            ? "front"
-                            : currentStep === selfieIndex
-                            ? "selfie"
-                            : "back";
-                        processImage(getCurrentStepData()!, stepKey as any);
-                      }}
+                      onClick={() => fileInputRef.current?.click()}
                       disabled={isLoading}
-                      className="flex-1"
                     >
-                      {isLoading ? (
-                        <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Processing...
-                        </>
-                      ) : (
-                        "Process Document"
-                      )}
+                      <Camera className="h-4 w-4 mr-2" />
+                      Choose Image
                     </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        if (currentStep === 0) {
-                          setFrontImage(null);
-                        } else if (currentStep === 1 && type === "aadhaar") {
-                          setBackImage(null);
-                        } else {
-                          setSelfieImage(null);
-                        }
-                        fileInputRef.current?.click();
-                      }}
-                    >
-                      Change Image
-                    </Button>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
                   </div>
-                </div>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="relative">
+                      <img
+                        src={documentImage}
+                        alt="Document preview"
+                        className="w-full max-w-md mx-auto rounded-lg border"
+                      />
+                      <Badge className="absolute top-2 right-2 bg-green-500">
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                        Uploaded
+                      </Badge>
+                    </div>
+                    <div className="flex space-x-2">
+                      <Button
+                        onClick={processDocument}
+                        disabled={isLoading}
+                        className="flex-1"
+                      >
+                        Continue to Selfie Capture
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => setDocumentImage(null)}
+                      >
+                        Change Image
+                      </Button>
+                    </div>
+                  </div>
+                )
+              )}
+
+              {/* Step 1: Selfie Capture with LivenessCapture */}
+              {currentStep === 1 && (
+                !selfieImage ? (
+                  <LivenessCapture
+                    onCapture={(base64Image) => {
+                      console.log('Selfie captured with EXIF metadata');
+                      setSelfieImage(base64Image);
+                    }}
+                    disabled={isLoading}
+                  />
+                ) : (
+                  <div className="space-y-4">
+                    <div className="relative">
+                      <img
+                        src={selfieImage}
+                        alt="Captured selfie"
+                        className="w-full max-w-md mx-auto rounded-lg border"
+                      />
+                      <Badge className="absolute top-2 right-2 bg-green-500">
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                        Captured
+                      </Badge>
+                    </div>
+                    <div className="flex space-x-2">
+                      <Button
+                        onClick={() => processFaceMatch(selfieImage)}
+                        disabled={isLoading}
+                        className="flex-1"
+                      >
+                        {isLoading ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Verifying...
+                          </>
+                        ) : (
+                          "Verify Face Match"
+                        )}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => setSelfieImage(null)}
+                        disabled={isLoading}
+                      >
+                        Retake
+                      </Button>
+                    </div>
+                  </div>
+                )
               )}
             </div>
           </div>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>

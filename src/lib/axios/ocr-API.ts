@@ -80,7 +80,10 @@ export const ocrAPI = {
   },
 };
 
-export type FaceMatchPayload = { liveness_image: string };
+export type FaceMatchPayload = { 
+  liveness_image: string;
+  document_image?: string; // Optional - for standalone mode
+};
 
 export type LivenessVerificationPayload = { liveness_image: string | Blob };
 

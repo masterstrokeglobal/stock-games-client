@@ -217,11 +217,16 @@ export const LivenessCapture: React.FC<LivenessCaptureProps> = ({
       // Now process EXIF metadata in the background
       console.log('Processing EXIF metadata in background...');
       
-      // Convert to blob for processing
+      // Convert to blob for processing with quality 0.9 to reduce size
       canvas.toBlob(
         (blob) => {
           if (blob) {
-            console.log('Photo captured:', { size: blob.size, type: blob.type });
+            const sizeInMB = blob.size / 1024 / 1024;
+            console.log('Photo captured:', { 
+              size: blob.size, 
+              sizeInMB: sizeInMB.toFixed(2) + ' MB',
+              type: blob.type 
+            });
             
             // Convert blob to base64
             const reader = new FileReader();
@@ -231,7 +236,13 @@ export const LivenessCapture: React.FC<LivenessCaptureProps> = ({
               // Add EXIF metadata to the base64 image
               const base64WithExif = addExifMetadata(base64Image);
               
-              console.log('✅ Photo with EXIF metadata ready for AccuraScan');
+              // Check final size
+              const finalSizeInMB = (base64WithExif.length * 3 / 4) / 1024 / 1024;
+              console.log('✅ Photo with EXIF - Size:', finalSizeInMB.toFixed(2), 'MB');
+              
+              if (finalSizeInMB > 1) {
+                console.warn('⚠️ Image size exceeds 1MB! Backend may reject it.');
+              }
               
               // Update with the EXIF-embedded version (this is what will be sent to API)
               setCapturedImage(base64WithExif);
@@ -244,7 +255,7 @@ export const LivenessCapture: React.FC<LivenessCaptureProps> = ({
           }
         },
         'image/jpeg',
-        1.0 // Maximum quality (AccuraScan is very strict)
+        0.92 // Slightly reduce quality to keep under 1MB while maintaining good quality
       );
     } catch (err) {
       console.error('Error capturing photo:', err);

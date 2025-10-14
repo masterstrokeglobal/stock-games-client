@@ -65,12 +65,7 @@ export const usePanCardOCR = () => {
 export const useFaceMatch = () => {
   return useMutation({
     mutationFn: (payload: FaceMatchPayload) => ocrAPI.faceMatch(payload),
-    onSuccess: () => {
-      toast.success("Face matched successfully");
-    },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || error?.message || "Face match failed");
-    },
+    // Don't show automatic toasts - let the component handle display
   });
 };
 
