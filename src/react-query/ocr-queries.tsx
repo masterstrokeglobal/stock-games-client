@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { ocrAPI, FaceMatchPayload } from "@/lib/axios/ocr-API";
+import { ocrAPI, FaceMatchPayload, LivenessVerificationPayload, LivenessVerificationResponse } from "@/lib/axios/ocr-API";
 import { toast } from "sonner";
 
 export const useAadhaarFrontOCR = () => {
@@ -96,4 +96,12 @@ export const useContinueVerification = () => {
   });
 };
 
+export const useVerifyLiveness = () => {
+  return useMutation<LivenessVerificationResponse, any, LivenessVerificationPayload>({
+    mutationFn: (payload: LivenessVerificationPayload) => ocrAPI.verifyLiveness(payload),
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || error?.message || "Liveness verification failed");
+    },
+  });
+};
 

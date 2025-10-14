@@ -7,8 +7,8 @@ import { Loader2 } from 'lucide-react';
 import { useVerificationStatus, useContinueVerification, useStartOverVerification } from '@/react-query/ocr-queries';
 
 export interface VerificationGateProps {
-  onStartNew: (type: 'aadhaar' | 'passport' | 'driving_license' | 'pan_card') => void;
-  onContinue: (type: 'aadhaar' | 'passport' | 'driving_license' | 'pan_card', nextStep: number) => void;
+  onStartNew: (type: 'aadhaar' | 'passport' | 'driving_license' | 'pan_card' | 'liveness') => void;
+  onContinue: (type: 'aadhaar' | 'passport' | 'driving_license' | 'pan_card' | 'liveness', nextStep: number) => void;
 }
 
 export const VerificationGate: React.FC<VerificationGateProps> = ({ onStartNew, onContinue }) => {
@@ -31,7 +31,7 @@ export const VerificationGate: React.FC<VerificationGateProps> = ({ onStartNew, 
   }
 
   const status = statusData?.data?.status as 'pending' | 'processing' | 'completed' | undefined;
-  const type = statusData?.data?.type as 'aadhaar' | 'passport' | 'driving_license' | 'pan_card' | null | undefined;
+  const type = statusData?.data?.type as 'aadhaar' | 'passport' | 'driving_license' | 'pan_card' | 'liveness' | null | undefined;
   const currentStep = statusData?.data?.currentStep as number | undefined;
 
   if (status === 'completed') {
@@ -139,6 +139,14 @@ export const VerificationGate: React.FC<VerificationGateProps> = ({ onStartNew, 
             >
               <span className="font-semibold">Driving License</span>
               <span className="text-sm text-muted-foreground">Single document required</span>
+            </Button>
+            <Button
+              onClick={() => onStartNew('liveness')}
+              variant="outline"
+              className="h-32 flex flex-col items-center justify-center space-y-2 md:col-span-2"
+            >
+              <span className="font-semibold">Liveness Verification Only</span>
+              <span className="text-sm text-muted-foreground">Face liveness check via camera</span>
             </Button>
           </div>
         </CardContent>
