@@ -61,7 +61,7 @@ const Page = () => {
         {!isMobile && <RouletteGameHeader title="Stock Roulette" />}
         {!isActive && !isFetching && <GameMaintenanceMarquee />}
         {!isMobile && roundRecord && (
-          <main className="grid grid-cols-12 mt-4 md:gap-4 gap-2 md:max-h-[1100px] px-4 pb-4">
+          <main className="grid grid-cols-12 md:gap-4 gap-2 md:max-h-[1100px] px-4 pb-4">
             <div className="grid grid-cols-1 col-span-8 lg:col-span-7 gap-4">
               <div className="w-full">
                 <HorseRace roundRecord={roundRecord} />
