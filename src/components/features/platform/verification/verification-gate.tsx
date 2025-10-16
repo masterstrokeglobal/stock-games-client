@@ -157,4 +157,3 @@ export const VerificationGate: React.FC<VerificationGateProps> = ({ onStartNew, 
 
 export default VerificationGate;
 
-

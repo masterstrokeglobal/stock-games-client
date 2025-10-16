@@ -78,12 +78,6 @@ const ProfileDialog = ({ children }: ProfileDialogProps) => {
             demouser: false
         },
         {
-            href: "/game/platform/verification",
-            icon: "/images/platform/user-menu/verification.png",
-            label: t('verification'),
-            demouser: true
-        },
-        {
             href: "/game/platform/wallet/menu",
             Parent: (item: { icon: string, label: string }) => (
                 <Button onClick={() => {
