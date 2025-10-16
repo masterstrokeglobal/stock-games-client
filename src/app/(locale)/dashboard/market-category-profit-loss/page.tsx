@@ -24,11 +24,18 @@ export default function MarketCategoryProfitLossPage() {
 
   const [companyId, setCompanyId] = useState<string>("all");
 
+  // Helper function to adjust end date for API (add 1 day for inclusive filtering)
+  const getAdjustedEndDate = (endDate: string) => {
+    const date = new Date(endDate);
+    date.setDate(date.getDate() + 1);
+    return date.toISOString().split('T')[0];
+  };
+
   // Fetch category overview
   const { data: categoryData, isLoading: categoryLoading } =
     useGetMarketCategoryProfitLoss({
       startDate: dateRange.startDate,
-      endDate: dateRange.endDate,
+      endDate: getAdjustedEndDate(dateRange.endDate),
       companyId: companyId === "all" ? undefined : parseInt(companyId),
     });
 
