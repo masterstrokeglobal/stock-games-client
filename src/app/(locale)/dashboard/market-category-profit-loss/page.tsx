@@ -3,17 +3,11 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import LoadingScreen from "@/components/common/loading-screen";
 import MarketCategoryCard from "@/components/features/market-profit-loss/market-category-card";
-import MarketCategoryDetail from "@/components/features/market-profit-loss/market-category-detail";
 import CompanySelect from "@/components/features/transaction/company-select";
-import {
-  useGetMarketCategoryProfitLoss,
-  useGetMarketProfitLoss,
-} from "@/react-query/market-profit-loss-queries";
-import { MarketCategoryStats } from "@/types/market-category-profit-loss";
-import { ArrowLeft, TrendingUp, TrendingDown, DollarSign, Activity } from "lucide-react";
+import { useGetMarketCategoryProfitLoss } from "@/react-query/market-profit-loss-queries";
+import { TrendingUp, TrendingDown, DollarSign, Activity } from "lucide-react";
 import { useAuthStore } from "@/context/auth-context";
 import Admin from "@/models/admin";
 import dayjs from "dayjs";
@@ -28,39 +22,22 @@ export default function MarketCategoryProfitLossPage() {
     endDate: dayjs().format("YYYY-MM-DD"),
   });
 
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [detailPage, setDetailPage] = useState(1);
   const [companyId, setCompanyId] = useState<string>("all");
+
+  // Helper function to adjust end date for API (add 1 day for inclusive filtering)
+  const getAdjustedEndDate = (endDate: string) => {
+    const date = new Date(endDate);
+    date.setDate(date.getDate() + 1);
+    return date.toISOString().split('T')[0];
+  };
 
   // Fetch category overview
   const { data: categoryData, isLoading: categoryLoading } =
     useGetMarketCategoryProfitLoss({
       startDate: dateRange.startDate,
-      endDate: dateRange.endDate,
+      endDate: getAdjustedEndDate(dateRange.endDate),
       companyId: companyId === "all" ? undefined : parseInt(companyId),
     });
-
-  // Fetch detailed market data when a category is selected
-  const { data: marketData, isLoading: marketLoading } = useGetMarketProfitLoss(
-    {
-      startDate: dateRange.startDate,
-      endDate: dateRange.endDate,
-      marketType: selectedCategory?.toUpperCase() || undefined,
-      companyId: companyId === "all" ? undefined : parseInt(companyId),
-      page: detailPage,
-      limit: 10,
-    }
-  );
-
-  const handleCategoryClick = (category: MarketCategoryStats) => {
-    setSelectedCategory(category.marketType);
-    setDetailPage(1);
-  };
-
-  const handleBackToCategories = () => {
-    setSelectedCategory(null);
-    setDetailPage(1);
-  };
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("en-IN", {
@@ -71,7 +48,7 @@ export default function MarketCategoryProfitLossPage() {
     }).format(value);
   };
 
-  if (categoryLoading && !selectedCategory) {
+  if (categoryLoading) {
     return <LoadingScreen className="h-[60vh]">Loading market categories...</LoadingScreen>;
   }
 
@@ -139,7 +116,7 @@ export default function MarketCategoryProfitLossPage() {
         </div>
 
         {/* Summary Cards */}
-        {summary && !selectedCategory && (
+        {summary && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="pb-3">
@@ -218,59 +195,30 @@ export default function MarketCategoryProfitLossPage() {
           </div>
         )}
 
-        {/* Level 1: Category Overview */}
-        {!selectedCategory && (
-          <div>
-            <h2 className="text-2xl font-semibold mb-4">Market Categories</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {categories.map((category) => (
-                <MarketCategoryCard
-                  key={category.marketType}
-                  category={category}
-                  onClick={() => handleCategoryClick(category)}
-                />
-              ))}
-            </div>
-
-            {categories.length === 0 && (
-              <Card className="p-12 text-center">
-                <p className="text-muted-foreground">
-                  No market category data available for the selected date range.
-                </p>
-              </Card>
-            )}
+        {/* Market Categories */}
+        <div>
+          <h2 className="text-2xl font-semibold mb-4">Market Categories</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {categories.map((category) => (
+              <MarketCategoryCard
+                key={category.marketType}
+                category={category}
+                onClick={() => {
+                  // Card is clickable but no drill-down action
+                  console.log(`Category: ${category.marketTypeName}`);
+                }}
+              />
+            ))}
           </div>
-        )}
 
-        {/* Level 2: Detailed Market Breakdown */}
-        {selectedCategory && (
-          <div className="space-y-4">
-            <Button
-              variant="outline"
-              onClick={handleBackToCategories}
-              className="mb-4"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Categories
-            </Button>
-
-            <div className="flex items-center gap-3 mb-4">
-              <h2 className="text-2xl font-semibold">
-                {categories.find((c) => c.marketType === selectedCategory)
-                  ?.marketTypeName || selectedCategory.toUpperCase()}{" "}
-                Markets
-              </h2>
-            </div>
-
-            <MarketCategoryDetail
-              markets={marketData?.data?.markets || []}
-              totalPages={marketData?.data?.pagination?.totalPages || 1}
-              currentPage={detailPage}
-              isLoading={marketLoading}
-              onPageChange={setDetailPage}
-            />
-          </div>
-        )}
+          {categories.length === 0 && (
+            <Card className="p-12 text-center">
+              <p className="text-muted-foreground">
+                No market category data available for the selected date range.
+              </p>
+            </Card>
+          )}
+        </div>
       </div>
     </div>
   );

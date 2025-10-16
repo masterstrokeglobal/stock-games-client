@@ -52,7 +52,7 @@ export default function MarketCategoryCard({ category, onClick }: MarketCategory
             <div>
               <div className="text-xl font-bold">{category.marketTypeName}</div>
               <div className="text-xs opacity-90 font-normal">
-                {category.combined.marketCount || 0} Markets
+                {category.marketCount || 0} Markets
               </div>
             </div>
           </div>

@@ -21,7 +21,20 @@ const GameHistoryPage = () => {
   const [activeTab, setActiveTab] = useState<TabType>("all");
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useGetUserBets({ page, limit, startDate, endDate });
+  // Helper function to adjust end date for API (add 1 day for inclusive filtering)
+  const getAdjustedEndDate = (endDate: string | undefined) => {
+    if (!endDate) return endDate;
+    const date = new Date(endDate);
+    date.setDate(date.getDate() + 1);
+    return date.toISOString().split('T')[0];
+  };
+
+  const { data, isLoading } = useGetUserBets({ 
+    page, 
+    limit, 
+    startDate, 
+    endDate: getAdjustedEndDate(endDate) // Add 1 day for inclusive filtering
+  });
   const typedData = data as UserBetsResponse | undefined;
 
   // Invalidate queries when page changes to ensure fresh data

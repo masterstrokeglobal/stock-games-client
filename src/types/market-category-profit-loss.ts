@@ -5,6 +5,7 @@ export interface GameStats {
   totalWinnings: number;
   netProfitLoss: number;
   betCount: number;
+  winCount: number;
   winRate: number;
 }
 
@@ -13,9 +14,8 @@ export interface MarketCategoryStats {
   marketTypeName: string;
   stockSlots?: GameStats;
   stockJackpot?: GameStats;
-  combined: GameStats & {
-    marketCount?: number;
-  };
+  combined: GameStats;
+  marketCount: number;
 }
 
 export interface MarketCategorySummary {

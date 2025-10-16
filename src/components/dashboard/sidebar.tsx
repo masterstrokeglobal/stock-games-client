@@ -46,6 +46,11 @@ const adminMenuItems: MenuItem[] = [
         link: "/dashboard/external-user-analytics"
     },
     {
+        name: "Market Category P&L",
+        icon: PieChart,
+        link: "/dashboard/market-category-profit-loss"
+    },
+    {
         name: 'Company',
         icon: Building,
         subItems: [
@@ -131,7 +136,10 @@ const companyMenuItems: MenuItem[] = [
     {
         name: "Reports",
         icon: PieChart,
-        link: "/dashboard/reports"
+        subItems: [
+            { name: "Game Reports", link: "/dashboard/reports" },
+            { name: "Market Category P&L", link: "/dashboard/market-category-profit-loss" },
+        ]
     },
     {
         name: 'Users',
