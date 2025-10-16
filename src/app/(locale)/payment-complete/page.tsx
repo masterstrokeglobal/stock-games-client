@@ -1,4 +1,4 @@
-import Link from "next/link"
+"use client"
 import { Button } from "@/components/ui/button"
 // import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
@@ -55,8 +55,8 @@ export default function Page() {
       </Card> */}
 
       <div className="mx-auto mt-8 flex w-full max-w-sm items-center justify-center gap-3">
-        <Button asChild className="w-full">
-          <Link href="https://stockgames.com">Continue</Link>
+        <Button className="w-full" onClick={() => window.close()}>
+          Continue
         </Button>
       </div>
     </section>
