@@ -50,6 +50,14 @@ const BetHistoryTable = ({ userId, className }: BetHistoryTableProps) => {
     const [startDate, setStartDate] = useState<string>("");
     const [endDate, setEndDate] = useState<string>("");
 
+    // Helper function to adjust end date for API (add 1 day for inclusive filtering)
+    const getAdjustedEndDate = (endDate: string) => {
+        if (!endDate || endDate.trim() === "") return endDate;
+        const date = new Date(endDate);
+        date.setDate(date.getDate() + 1);
+        return date.toISOString().split('T')[0];
+    };
+
     // Build filters
     const filters = useMemo(() => {
         const filterObj: any = {
@@ -79,7 +87,7 @@ const BetHistoryTable = ({ userId, className }: BetHistoryTableProps) => {
         }
 
         if (endDate && endDate.trim() !== "") {
-            filterObj.endDate = endDate;
+            filterObj.endDate = getAdjustedEndDate(endDate); // Add 1 day for inclusive filtering
         }
 
         return filterObj;
