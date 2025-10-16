@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import FormProvider from "@/components/ui/form/form-provider";
-import { CompanyQRType } from "@/models/company-qr";
+import CompanyQR, { CompanyQRType } from "@/models/company-qr";
 import WithdrawDetailsRecord from "@/models/withdrawl-details";
 import { useGetActiveCompanyQR } from '@/react-query/company-qr-queries';
 import { useCreateDepositRequest } from "@/react-query/payment-queries";
@@ -28,16 +28,22 @@ interface DepositMethodsProps {
 }
 
 const DepositMethods = ({ selectedMethod, onMethodChange }: DepositMethodsProps) => {
+    const { data: company } = useGetMyCompany();
+    
     const methods = [
         { id: PaymentMethod.UPI, label: 'UPI', icon: <Smartphone className="w-6 h-6" />, img:'/images/payment-methods/upi.png' },
     ];
+    
+    // Only show BloomXPay for company ID 21
+    if (company?.id === 21) {
+        methods.unshift({ id: PaymentMethod.BLOOMXPAY, label: 'BloomXPay', icon: <Smartphone className="w-6 h-6" />, img:'/images/payment-methods/bloomxpe.svg' });
+    }
 
     const bankMethods = [
         { id: PaymentMethod.RTGS, label: 'RTGS', icon: <BankIcon className="w-6 h-6" />, img:'/images/payment-methods/bank-transfer.png' },
         { id: PaymentMethod.NEFT, label: 'NEFT', icon: <Building2 className="w-6 h-6" />, img:'/images/payment-methods/bank-transfer.png' }
     ]
 
-    const { data: company } = useGetMyCompany();
     const isCryptoPayIn = company?.cryptoPayIn;
 
     if(company?.dynamicQR) {
@@ -150,7 +156,7 @@ const WithdrawMethodOption: React.FC<WithdrawMethodOptionProps> = ({
 };
 
 // Form Schema
-const depositSchema = (t: any, askWithdrawlOption?: boolean, hasActiveWithdrawDetails?: boolean) => z.object({
+const depositSchema = (t: any, askWithdrawlOption?: boolean, hasActiveWithdrawDetails?: boolean, minAmount: number = 500) => z.object({
     pgId: z
         .string()
         .max(20, t('validation.transaction-id-max'))
@@ -165,7 +171,7 @@ const depositSchema = (t: any, askWithdrawlOption?: boolean, hasActiveWithdrawDe
         .coerce.number({
             message: t('validation.amount-invalid')
         })
-        .min(500, t('validation.amount-required-500')),
+        .min(minAmount, minAmount === 1 ? 'Amount must be at least ₹1' : t('validation.amount-required-500')),
     withdrawlDetailsId: (askWithdrawlOption && !hasActiveWithdrawDetails)
         ? z.string().min(1, 'deposit method is required')
         : z.string().optional(),
@@ -179,14 +185,27 @@ const depositSchema = (t: any, askWithdrawlOption?: boolean, hasActiveWithdrawDe
     }
 });
 
+// Simplified form schema for BloomXPay (only amount and withdrawal details)
+const bloomXPaySchema = (t: any, askWithdrawlOption?: boolean, hasActiveWithdrawDetails?: boolean) => z.object({
+    amount: z
+        .coerce.number({
+            message: t('validation.amount-invalid')
+        })
+        .min(500, t('validation.amount-required-500')),
+    withdrawlDetailsId: (askWithdrawlOption && !hasActiveWithdrawDetails)
+        ? z.string().min(1, 'deposit method is required')
+        : z.string().optional(),
+});
+
 type DepositFormValues = z.infer<ReturnType<typeof depositSchema>>;
+type BloomXPayFormValues = z.infer<ReturnType<typeof bloomXPaySchema>>;
 
 // UPI Deposit Form
 const UPIDepositForm = () => {
     const t = useTranslations('deposit');
     const tWithdraw = useTranslations('withdraw');
     const { mutate, isPending } = useCreateDepositRequest();
-    const { data: companyQR, isFetching: isLoading, refetch } = useGetActiveCompanyQR({ type: CompanyQRType.UPI });
+    const { data: companyQR, isFetching: isLoading, refetch } = useGetActiveCompanyQR({ type: CompanyQRType.UPI }) as { data: InstanceType<typeof CompanyQR> | null | undefined, isFetching: boolean, refetch: any };
     const { data: withdrawDetailsData, isLoading: isLoadingWithdrawDetails, refetch: refetchWithdrawDetails } = useGetAllWithdrawDetails({});
     const { data: company } = useGetMyCompany();
     const [showPaymentMethodDialog, setShowPaymentMethodDialog] = useState(false);
@@ -209,7 +228,7 @@ const UPIDepositForm = () => {
         const payload: any = {
             amount: data.amount,
             pgId: data.pgId,
-            companyQrId: companyQR?.id,
+            companyQrId: companyQR?.id || undefined,
             paymentMethod: PaymentMethod.UPI,
         }
         
@@ -223,12 +242,13 @@ const UPIDepositForm = () => {
             payload.withdrawlDetailsId = data.withdrawlDetailsId;
         }
         mutate(payload, {
-            onSuccess: (data) => {
-                const responseLink = data.data?.response;
-                if (responseLink) {
+            onSuccess: (response) => {
+                const responseLink = response.data?.response;
+                if (responseLink && typeof responseLink === 'string' && responseLink.startsWith('http')) {
                     window.open(responseLink, '_blank');
                 }
                 form.reset({ amount: 500, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" });
+                toast.success('Deposit request submitted successfully');
             },
             onError: () => {
                 toast.error('Error creating deposit request');
@@ -273,7 +293,7 @@ const UPIDepositForm = () => {
             <FormProvider methods={form} className="space-y-4" onSubmit={form.handleSubmit(onSubmit, (err) => {
                 console.log(err);
             })}>
-                {companyQR?.qr && (
+                {companyQR && companyQR.qr && (
                     <>
                         <div className="bg-white overflow-hidden rounded-lg w-fit mx-auto max-w-sm p-4">
                             <img src={companyQR.qr} alt="UPI QR Code" className="max-w-full w-full aspect-square h-auto" />
@@ -367,11 +387,230 @@ const UPIDepositForm = () => {
                         )}
                     </div>
                 )}
-                <FormImage
-                    label="Upload Confirmation Image"
-                    name="confirmationImageUrl"
-                    control={form.control}
+
+                <Button
+                    variant="platform-gradient-secondary"
+                    size="lg"
+                    type="submit"
+                    className="py-1 h-9 text-sm md:text-base font-medium"
+                    disabled={form.formState.isSubmitting || isPending}
+                >
+                    {isPending ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Processing...
+                        </>
+                    ) : (
+                        'Deposit Now'
+                    )}
+                </Button>
+            </FormProvider>
+            <Button variant="platform-outline" className="mt-4 w-full !rounded-md border-2" disabled={isLoading} onClick={() => refetch()} >
+                {isLoading ? (
+                    <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Loading...
+                    </>
+                ) : (
+                    <>
+                        <RefreshCcw className="mr-2 h-4 w-4" />
+                        Change QR
+                    </>
+                )}
+            </Button>
+
+            {/* Payment Method Dialog */}
+            {showPaymentMethodDialog && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 h-full w-full">
+                    <div className="bg-white dark:bg-primary-game w-full max-h-[90vh] overflow-hidden h-full">
+                        <PaymentMethodDialog 
+                            onBack={() => {
+                                setShowPaymentMethodDialog(false);
+                                refetchWithdrawDetails();
+                                // Restore form values when returning from payment method dialog
+                                if (formValuesBeforeDialog) {
+                                    form.reset(formValuesBeforeDialog);
+                                    setFormValuesBeforeDialog(null);
+                                }
+                            }} 
+                        />
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+// BloomXPay Deposit Form
+const BloomXPayDepositForm = () => {
+    const t = useTranslations('deposit');
+    const tWithdraw = useTranslations('withdraw');
+    const { mutate, isPending } = useCreateDepositRequest();
+    const { data: company } = useGetMyCompany();
+    
+    // Skip QR fetching for external payment gateway companies (company 21 or externalPayIn = true)
+    const isExternalPayment = company?.externalPayIn === true || company?.id === 21;
+    const { data: companyQR, isFetching: isLoading, refetch } = useGetActiveCompanyQR(
+        { type: CompanyQRType.UPI }, 
+        { enabled: !isExternalPayment }
+    ) as { data: InstanceType<typeof CompanyQR> | null | undefined, isFetching: boolean, refetch: any };
+    
+    const { data: withdrawDetailsData, isLoading: isLoadingWithdrawDetails, refetch: refetchWithdrawDetails } = useGetAllWithdrawDetails({});
+    const [showPaymentMethodDialog, setShowPaymentMethodDialog] = useState(false);
+    // Store form values before opening payment method dialog
+    const [formValuesBeforeDialog, setFormValuesBeforeDialog] = useState<DepositFormValues | null>(null);
+
+    const withdrawDetails = useMemo(() => {
+        if (withdrawDetailsData?.data) {
+            return withdrawDetailsData.data.map((detail: any) => new WithdrawDetailsRecord(detail));
+        }
+        return [];
+    }, [withdrawDetailsData]);
+
+    const activeWithdrawDetails = withdrawDetails.filter(
+        (detail: { deletedAt: any }) => !detail.deletedAt
+    );
+
+    const onSubmit = async (data: BloomXPayFormValues) => {
+        data.amount = parseInt(data.amount.toString());
+        const payload: any = {
+            amount: data.amount,
+            paymentMethod: PaymentMethod.BLOOMXPAY,
+        }
+        
+        // Only include withdrawlDetailsId if it exists and is not empty
+        if (data.withdrawlDetailsId) {
+            payload.withdrawlDetailsId = data.withdrawlDetailsId;
+        }
+        
+        mutate(payload, {
+            onSuccess: (response) => {
+                const transaction = response.data?.transaction;
+                const paymentLinkResponse = response.data?.response;
+                
+                // Check if payment_link exists in the response
+                if (paymentLinkResponse?.payment_link || (typeof paymentLinkResponse === 'string' && paymentLinkResponse.startsWith('http'))) {
+                    const paymentLink = paymentLinkResponse?.payment_link || paymentLinkResponse;
+                    // Store transaction ID in sessionStorage for status tracking
+                    sessionStorage.setItem('pending_deposit_transaction_id', transaction?.id?.toString() || '');
+                    sessionStorage.setItem('pending_deposit_payment_link', paymentLink);
+                    // Open payment link in new tab
+                    window.open(paymentLink, '_blank');
+                    toast.success('Payment gateway opened. Complete payment in the new tab.');
+                } else {
+                    // Fallback to existing manual flow
+                    toast.success('Deposit request submitted successfully');
+                }
+                form.reset({ amount: 500, withdrawlDetailsId: "" });
+            },
+            onError: () => {
+                toast.error('Error creating deposit request');
+            }
+        })
+    }
+
+    const form = useForm<BloomXPayFormValues>({
+        resolver: zodResolver(bloomXPaySchema(t, company?.askWithdrawlOption, activeWithdrawDetails.length > 0)),
+        defaultValues: { 
+            amount: 500, 
+            withdrawlDetailsId: "" 
+        },
+    });
+
+    if (isLoading || isLoadingWithdrawDetails) {
+        return (
+            <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin text-platform-text" />
+            </div>
+        );
+    }
+
+    // const copyToClipboard = async (text: string) => {
+    //     try {
+    //         await navigator.clipboard.writeText(text);
+    //         toast.success("Copied to clipboard");
+    //     } catch (err) {
+    //         console.error(err);
+    //         toast.error("Failed to copy");
+    //     }
+    // };
+
+    // For external payment gateway companies, skip QR validation
+    if (!isExternalPayment && companyQR == null && !isLoading) {
+        return (
+            <div className="border space-y-4 p-4 text-center">
+                <h2 className="text-platform-text font-semibold">No Payment Method Available</h2>
+                <p className="text-platform-text/80 text-sm">Please choose another payment method or contact support for assistance.</p>
+            </div>
+        );
+    }
+
+    return (
+        <div>
+            <FormProvider methods={form} className="space-y-4" onSubmit={form.handleSubmit(onSubmit, (err) => {
+                console.log(err);
+            })}>
+
+                <AmountInput
+                    number
+                    value={form.watch("amount")?.toString() ?? ""}
+                    onChange={(val) => form.setValue("amount", val as unknown as number ?? 0)}
+                    placeholder="Enter the amount to deposit"
+                    error={form.formState.errors.amount?.message}
                 />
+
+                {company?.askWithdrawlOption && (
+                    <div className="space-y-2">
+                        <div>
+                            <span className="text-platform-text text-base font-medium">
+                                Add Withdrawal Account
+                            </span>
+                        </div>
+                        <Controller
+                            control={form.control}
+                            name="withdrawlDetailsId"
+                            render={({ field }) => (
+                                <div className="grid grid-cols-1 gap-3 mt-2">
+                                    {activeWithdrawDetails.length === 0 ? (
+                                        <>
+                                            <p className="text-platform-text text-sm py-4 text-center">
+                                                {tWithdraw('no-methods-found')}
+                                            </p>
+                                            <Button
+                                                variant="platform-outline"
+                                                size="lg"
+                                                className="w-full"
+                                                type="button"
+                                                onClick={() => {
+                                                    // Save current form values before opening dialog
+                                                    setFormValuesBeforeDialog(form.getValues());
+                                                    setShowPaymentMethodDialog(true);
+                                                }}
+                                            >
+                                                Add New Account
+                                            </Button>
+                                        </>
+                                    ) : (
+                                        activeWithdrawDetails.map((detail: WithdrawDetailsRecord) => (
+                                            <WithdrawMethodOption
+                                                key={detail.id}
+                                                detail={detail}
+                                                selected={field.value === detail.id?.toString()}
+                                                onClick={() => field.onChange(detail.id?.toString())}
+                                                t={tWithdraw}
+                                            />
+                                        ))
+                                    )}
+                                </div>
+                            )}
+                        />
+                        {form.formState.errors.withdrawlDetailsId && (
+                            <p className="text-red-500 text-sm mt-1">
+                                {form.formState.errors.withdrawlDetailsId.message}
+                            </p>
+                        )}
+                    </div>
+                )}
 
                 <Button
                     variant="platform-gradient-secondary"
@@ -431,9 +670,16 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
     const t = useTranslations('deposit');
     const tWithdraw = useTranslations('withdraw');
     const { mutate, isPending } = useCreateDepositRequest();
-    const { data: companyQR, isFetching: isLoading, refetch } = useGetActiveCompanyQR({ type: CompanyQRType.BANK });
-    const { data: withdrawDetailsData, isLoading: isLoadingWithdrawDetails, refetch: refetchWithdrawDetails } = useGetAllWithdrawDetails({});
     const { data: company } = useGetMyCompany();
+    
+    // Skip QR fetching for external payment gateway companies (company 21 or externalPayIn = true)
+    const isExternalPayment = company?.externalPayIn === true || company?.id === 21;
+    const { data: companyQR, isFetching: isLoading, refetch } = useGetActiveCompanyQR(
+        { type: CompanyQRType.BANK }, 
+        { enabled: !isExternalPayment }
+    ) as { data: InstanceType<typeof CompanyQR> | null | undefined, isFetching: boolean, refetch: any };
+    
+    const { data: withdrawDetailsData, isLoading: isLoadingWithdrawDetails, refetch: refetchWithdrawDetails } = useGetAllWithdrawDetails({});
     const [showPaymentMethodDialog, setShowPaymentMethodDialog] = useState(false);
     // Store form values before opening payment method dialog
     const [formValuesBeforeDialog, setFormValuesBeforeDialog] = useState<DepositFormValues | null>(null);
@@ -452,7 +698,7 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
     const onSubmit = async (data: DepositFormValues) => {
         data.amount = parseInt(data.amount.toString());
         const payload: any = {
-            companyQrId: companyQR?.id,
+            companyQrId: companyQR?.id || undefined,
             pgId: data.pgId,
             amount: data.amount ?? 0,
             paymentMethod,
@@ -468,10 +714,22 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
             payload.withdrawlDetailsId = data.withdrawlDetailsId;
         }
         mutate(payload, {
-            onSuccess: (data) => {
-                const responseLink = data.data?.response;
-                if (responseLink) {
-                    window.open(responseLink, '_blank');
+            onSuccess: (response) => {
+                const transaction = response.data?.transaction;
+                const paymentLinkResponse = response.data?.response;
+                
+                // Check if payment_link exists in the response
+                if (paymentLinkResponse?.payment_link || (typeof paymentLinkResponse === 'string' && paymentLinkResponse.startsWith('http'))) {
+                    const paymentLink = paymentLinkResponse?.payment_link || paymentLinkResponse;
+                    // Store transaction ID in sessionStorage for status tracking
+                    sessionStorage.setItem('pending_deposit_transaction_id', transaction?.id?.toString() || '');
+                    sessionStorage.setItem('pending_deposit_payment_link', paymentLink);
+                    // Open payment link in new tab
+                    window.open(paymentLink, '_blank');
+                    toast.success('Payment gateway opened. Complete payment in the new tab.');
+                } else {
+                    // Fallback to existing manual flow
+                    toast.success('Deposit request submitted successfully');
                 }
                 form.reset({ amount: 500, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" });
             },
@@ -482,8 +740,13 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
     }
 
     const form = useForm<DepositFormValues>({
-        resolver: zodResolver(depositSchema(t, company?.askWithdrawlOption, activeWithdrawDetails.length > 0)),
-        defaultValues: { amount: 500, pgId: "", confirmationImageUrl: "", withdrawlDetailsId: "" },
+        resolver: zodResolver(depositSchema(t, company?.askWithdrawlOption, activeWithdrawDetails.length > 0, isExternalPayment ? 1 : 500)),
+        defaultValues: { 
+            amount: 500, 
+            pgId: "", 
+            confirmationImageUrl: "", 
+            withdrawlDetailsId: "" 
+        },
     });
 
     const copyToClipboard = async (text: string) => {
@@ -504,7 +767,8 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
         );
     }
 
-    if (companyQR == null && !isLoading) {
+    // For external payment gateway companies, skip QR validation
+    if (!isExternalPayment && companyQR == null && !isLoading) {
         return (
             <div className="border space-y-4 p-4 text-center">
                 <h2 className="text-platform-text font-semibold">No Payment Method Available</h2>
@@ -724,7 +988,10 @@ const BankDepositForm = ({ paymentMethod }: { paymentMethod: PaymentMethod }) =>
 
 // Main Deposit Tab Component
 const DepositTab = () => {
-    const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>(PaymentMethod.UPI);
+    const { data: company } = useGetMyCompany();
+    const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>(
+        company?.id === 21 ? PaymentMethod.BLOOMXPAY : PaymentMethod.UPI
+    );
     return (
         <div className="md:space-y-6 space-y-4">
             <div className="rounded-md bg-yellow-100 dark:bg-yellow-900/40 border border-yellow-300 dark:border-yellow-700 px-4 py-2 text-yellow-800 dark:text-yellow-200 font-medium mb-2">
@@ -739,6 +1006,7 @@ const DepositTab = () => {
                 onMethodChange={setSelectedMethod}
             />
 
+            {selectedMethod === PaymentMethod.BLOOMXPAY && <BloomXPayDepositForm />}
             {selectedMethod === PaymentMethod.UPI && <UPIDepositForm />}
             {selectedMethod === PaymentMethod.NEFT && <BankDepositForm paymentMethod={PaymentMethod.NEFT} />}
             {selectedMethod === PaymentMethod.RTGS && <BankDepositForm paymentMethod={PaymentMethod.RTGS} />}

@@ -20,11 +20,15 @@ export default function GamingAppInterface() {
             search: searchParams.get("search") || "",
             category: searchParams.get("category") || "all",
             provider: searchParams.get("provider") || "all",
+            subProvider: searchParams.get("subProvider") || undefined,
             type: searchParams.get("type") || undefined,
             popular: searchParams.get("popular") === "true" ? true : undefined,
             new: searchParams.get("new") === "true" ? true : undefined,
             providerOfWeek: searchParams.get("providerOfWeek") === "true" ? true : undefined,
             stockGameChoice: searchParams.get("stockGameChoice") === "true" ? true : undefined,
+            evolutionChoice: searchParams.get("evolutionChoice") === "true" ? true : undefined,
+            ezugiChoice: searchParams.get("ezugiChoice") === "true" ? true : undefined,
+            jiliChoice: searchParams.get("jiliChoice") === "true" ? true : undefined,
         }
         // Only recalculate when searchParams changes
     }, [searchParams]);
@@ -36,9 +40,15 @@ export default function GamingAppInterface() {
         if (newFilter.search) params.set("search", newFilter.search);
         if (newFilter.category && newFilter.category !== "all") params.set("category", newFilter.category);
         if (newFilter.provider && newFilter.provider !== "all") params.set("provider", newFilter.provider);
+        if (newFilter.subProvider) params.set("subProvider", newFilter.subProvider);
         if (newFilter.type) params.set("type", newFilter.type);
         if (newFilter.popular) params.set("popular", "true");
         if (newFilter.new) params.set("new", "true");
+        if (newFilter.providerOfWeek) params.set("providerOfWeek", "true");
+        if (newFilter.stockGameChoice) params.set("stockGameChoice", "true");
+        if (newFilter.evolutionChoice) params.set("evolutionChoice", "true");
+        if (newFilter.ezugiChoice) params.set("ezugiChoice", "true");
+        if (newFilter.jiliChoice) params.set("jiliChoice", "true");
         // If all filters are default, clear the query
         router.replace(`?${params.toString()}`, { scroll: false });
     };
@@ -50,9 +60,15 @@ export default function GamingAppInterface() {
     !!filter.search ||
     (filter.category && filter.category !== "all") ||
     (filter.provider && filter.provider !== "all") ||
+    !!filter.subProvider ||
     !!filter.type ||
     !!filter.popular ||
-    !!filter.new || !!filter.providerOfWeek || !!filter.stockGameChoice;
+    !!filter.new || 
+    !!filter.providerOfWeek || 
+    !!filter.stockGameChoice ||
+    !!filter.evolutionChoice ||
+    !!filter.ezugiChoice ||
+    !!filter.jiliChoice;
     
     if (!isCasinoAllowed && !isLoading) notFound();
     return (

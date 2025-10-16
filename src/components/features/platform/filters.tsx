@@ -1,22 +1,27 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { GameCategories, ProviderEnum } from "@/models/casino-games"
 import { Search, SlidersHorizontal, X } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { useDebounce } from "@/hooks/use-debounce"
 
 export type Filter = {
     search: string;
     category?: string;
     platform?: string;
     provider?: string;
+    subProvider?: string;
     type?: string;
     popular?: boolean;
     providerOfWeek?: boolean;
     stockGameChoice?:boolean;
     new?: boolean;
+    evolutionChoice?: boolean;
+    ezugiChoice?: boolean;
+    jiliChoice?: boolean;
 }
 
 type Props = {
@@ -27,6 +32,18 @@ type Props = {
 const GameFilters = ({ filter, setFilter }: Props) => {
     const t = useTranslations("platform.casino-games");
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+    const [searchInput, setSearchInput] = useState(filter.search);
+    const debouncedSearch = useDebounce(searchInput, 300);
+
+    // Update filter when debounced search changes
+    useEffect(() => {
+        setFilter({ ...filter, search: debouncedSearch });
+    }, [debouncedSearch]);
+
+    // Sync local search input with filter prop changes
+    useEffect(() => {
+        setSearchInput(filter.search);
+    }, [filter.search]);
 
     return (
         <div className="relative mb-8 md:mx-auto w-full">
@@ -36,8 +53,8 @@ const GameFilters = ({ filter, setFilter }: Props) => {
                     <Input
                         className="w-full bg-primary-game border border-platform-border ring-0 focus:bg-primary-game/80 focus:border-platform-border text-white placeholder:text-gray-200 dark:placeholder:text-gray-400 h-12 pl-10 pr-12 rounded-none"
                         placeholder={t("search-games")}
-                        value={filter.search}
-                        onChange={(e) => setFilter({ ...filter, search: e.target.value })}
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
                     />
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-200 dark:text-gray-400" size={20} />
                 </div>
@@ -101,8 +118,8 @@ const GameFilters = ({ filter, setFilter }: Props) => {
                     <Input
                         className="w-full bg-primary-game border-platform-border ring-0 focus:bg-primary-game/80 border focus:border-platform-border text-white placeholder:text-gray-200 dark:placeholder:text-gray-400 h-12 pl-10 rounded-none"
                         placeholder={t("search-games")}
-                        value={filter.search}
-                        onChange={(e) => setFilter({ ...filter, search: e.target.value })}
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
                     />
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-200 dark:text-gray-400" size={20} />
                 </div>

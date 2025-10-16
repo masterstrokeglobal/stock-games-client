@@ -1,7 +1,6 @@
 "use client";
 import CategoryCarousel from "@/components/features/casino-games/category-carousel";
 import { CasinoProvidersCarousel } from "@/components/features/casino-games/game-providers";
-import GapGameCarousel from "@/components/features/casino-games/gap-game-carousel";
 import AdMarquee from "@/components/features/platform/ad-marquee";
 import CtaSection from "@/components/features/platform/cta-section";
 import WalletDialog from "@/components/features/platform/wallet-dialog";
@@ -49,9 +48,11 @@ const PlatformPage = () => {
                 <StockGameCarousel />
                 {isCasinoAllowed && (
                     <>
-                        <GapGameCarousel title="Mac88 Games" />
                         <CasinoProvidersCarousel title={tPlatform("game-providers")} />
                         <CategoryCarousel title={tPlatform("new-released")} new={true} direction="backward" />
+                        <CategoryCarousel title={"Evolution Gaming"} evolutionChoice={true} direction="forward" />
+                        <CategoryCarousel title={"Ezugi"} ezugiChoice={true} direction="backward" />
+                        <CategoryCarousel title={"JILI Games"} jiliChoice={true} direction="forward" />
                         <CategoryCarousel title={tPlatform("hot-games")} popular={true} direction="forward" />
                         <CategoryCarousel title={"Stock Game Choices"} stockGameChoice />
                         <CategoryCarousel title={"Provider of the Week"} providerOfWeek />

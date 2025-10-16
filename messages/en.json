@@ -171,6 +171,7 @@
     },
     "user-menu": {
         "title": "User Menu",
+        "verification": "Verification",
         "profile-image-alt": "Profile Image",
         "coin-image-alt": "Coin Icon",
         "rules": "Rules",
@@ -568,7 +569,9 @@
             "name-length": "Name must be at least 3 characters long",
             "name-max": "Name cannot exceed 100 characters",
             "name-full": "Please enter your full name",
+            "lastname-min-length": "Last name should be more than 2 characters",
             "email-invalid": "Please enter a valid email address",
+            "email-or-phone-invalid": "Please enter a valid email address or phone number",
             "username-max": "Username cannot exceed 100 characters",
             "username-required": "Username is required",
             "username-lowercase": "Username must be in lowercase only",

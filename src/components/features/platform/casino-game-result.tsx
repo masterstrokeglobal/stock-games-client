@@ -1,13 +1,13 @@
 "use client"
 
 import GameGrid from "@/components/features/casino-games/game-grid"
-import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { GameCategories, ProviderEnum } from "@/models/casino-games"
 import { useInfiniteGetCasinoGames } from "@/react-query/casino-games-queries"
 import { notFound } from "next/navigation"
 import { Filter } from "./filters"
 import useCasinoAllowed from "@/hooks/use-is-casino-allowed"
+import { useEffect, useRef } from "react"
 
 export default function CasinoGameResult({ filter, className }: { filter: Filter, className?: string }) {
     const {
@@ -19,10 +19,14 @@ export default function CasinoGameResult({ filter, className }: { filter: Filter
     } = useInfiniteGetCasinoGames({
         search: filter.search || undefined,
         type: filter.type || undefined,
-        stockGameChoice:filter.stockGameChoice,
-        providerOfWeek:filter.providerOfWeek,
+        stockGameChoice: filter.stockGameChoice,
+        providerOfWeek: filter.providerOfWeek,
+        evolutionChoice: filter.evolutionChoice,
+        ezugiChoice: filter.ezugiChoice,
+        jiliChoice: filter.jiliChoice,
         category: filter.category === "all" ? undefined : (filter.category as (typeof GameCategories)[number]["value"]),
         provider: filter.provider === "all" ? undefined : (filter.provider as ProviderEnum),
+        subProvider: filter.subProvider as ProviderEnum | undefined,
         limit: 30,
         popular: filter.popular,
         new: filter.new
@@ -34,6 +38,33 @@ export default function CasinoGameResult({ filter, className }: { filter: Filter
     // Calculate shown and total
     const shown = searchResults?.pages.reduce((acc, page) => acc + (page.games?.length || 0), 0) || 0;
     const total = searchResults?.pages[0]?.count || 0;
+
+    // Infinite scroll setup
+    const loadMoreRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const loadMoreElement = loadMoreRef.current;
+        if (!loadMoreElement || !hasNextPage || isFetchingNextPage) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const [entry] = entries;
+                if (entry.isIntersecting) {
+                    fetchNextPage();
+                }
+            },
+            {
+                threshold: 0.5, // Trigger when 50% of the element is visible (center of screen)
+                rootMargin: '0px 0px 100px 0px' // Start loading 100px before the element comes into view
+            }
+        );
+
+        observer.observe(loadMoreElement);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
     return (
         <>
@@ -60,14 +91,14 @@ export default function CasinoGameResult({ filter, className }: { filter: Filter
                 <div className="text-lg text-platform-text  font-medium mb-4">
                     {`Showing ${shown} of ${total}`}
                 </div>
+                
+                {/* Infinite scroll trigger element */}
                 {hasNextPage && (
-                    <Button
-                        onClick={() => fetchNextPage()}
-                        disabled={isFetchingNextPage}
-                        className="border border-primary-game dark:border-platform-border bg-white rounded-none  dark:bg-transparent hover:bg-primary-game text-platform-text dark:hover:bg-platform-border  "
-                    >
-                        {isFetchingNextPage ? "Loading..." : "Show more"}
-                    </Button>
+                    <div ref={loadMoreRef} className="w-full h-4 flex justify-center items-center">
+                        {isFetchingNextPage && (
+                            <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-primary-game"></div>
+                        )}
+                    </div>
                 )}
             </div>
         </>

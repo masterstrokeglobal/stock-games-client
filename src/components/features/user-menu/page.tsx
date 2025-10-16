@@ -16,6 +16,7 @@ import { useMemo } from "react";
 import WalletDialog from '../platform/wallet-dialog';
 import ContactDialog from '../platform/contact-dialog';
 import BonusDialog from '../platform/bonus-dialog';
+import { PendingPaymentBanner } from '../payment/pending-payment-banner';
 
 
 const UserMenu = () => {
@@ -114,6 +115,11 @@ const UserMenu = () => {
                             </span>
                         </div>
                     </div>
+                </div>
+
+                {/* Pending Payment Banner */}
+                <div className="max-w-lg w-full">
+                    <PendingPaymentBanner />
                 </div>
 
                 {/* Progress Section */}
