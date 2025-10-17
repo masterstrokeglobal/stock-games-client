@@ -111,7 +111,7 @@ const BettingHistory = ({ userId }: Props) => {
                 <DataTable
                     page={page}
                     loading={isLoading}
-                    columns={getHistoryColumns(roundRecordGameType === "all" ? RoundRecordGameType.DERBY : roundRecordGameType)}
+                    columns={getHistoryColumns(roundRecordGameType)}
                     data={data?.data}
                     totalPage={totalPages}
                     changePage={changePage}

@@ -8,8 +8,13 @@ import { ColumnDef } from "@tanstack/react-table";
 import stockJackpotColumns from "./stock-jackpot";
 import sevenUpDownColumns from "./seven-up-down-columns";
 import aviatorColumns from "./aviator-columns";
+import allGamesColumns from "./all-games-columns";
 
-export const getHistoryColumns = (gameType: RoundRecordGameType): ColumnDef<any>[] => {
+export const getHistoryColumns = (gameType: RoundRecordGameType | "all"): ColumnDef<any>[] => {
+    if (gameType === "all") {
+        return allGamesColumns;
+    }
+
     switch (gameType) {
         case RoundRecordGameType.DICE:
             return diceGameColumns;
