@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 interface StandardizedBettingHistory {
     roundId: number;
     gameName: string;
+    marketType?: string;
     placementAmount: number;
     winningAmount: number;
     result: string;
@@ -30,6 +31,15 @@ const allGamesColumns: ColumnDef<StandardizedBettingHistory>[] = [
             <Badge variant="outline" className="capitalize">
                 {row.original.gameName.replace(/_/g, " ")}
             </Badge>
+        ),
+    },
+    {
+        accessorKey: "marketType",
+        header: "Market Type",
+        cell: ({ row }) => (
+            <span className="text-sm font-medium">
+                {row.original.marketType || "N/A"}
+            </span>
         ),
     },
     {
