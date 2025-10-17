@@ -24,7 +24,7 @@ const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 const BettingHistory = ({ userId }: Props) => {
     const [page, setPage] = useState(1);
     const [limit, setLimit] = useState<number>(10);
-    const [roundRecordGameType, setRoundRecordGameType] = useState<RoundRecordGameType>(RoundRecordGameType.DERBY);
+    const [roundRecordGameType, setRoundRecordGameType] = useState<RoundRecordGameType | "all">("all");
     const [filter, setFilter] = useState<Filter>({
         timeFrom: dayjs().startOf("day").toISOString(),
         timeTo: dayjs().endOf("day").toISOString(),
@@ -36,7 +36,7 @@ const BettingHistory = ({ userId }: Props) => {
         userId: userId,
         startDate: new Date(filter.timeFrom),
         endDate: new Date(filter.timeTo),
-        roundRecordGameType: roundRecordGameType,
+        roundRecordGameType: roundRecordGameType === "all" ? undefined : roundRecordGameType,
     });
     const totalPages = Math.ceil((data?.count ?? 0) / limit) || 1;
 
@@ -78,11 +78,12 @@ const BettingHistory = ({ userId }: Props) => {
                             });
                         }}
                     />
-                    <Select value={roundRecordGameType} onValueChange={(value) => setRoundRecordGameType(value as RoundRecordGameType)}>
+                    <Select value={roundRecordGameType} onValueChange={(value) => { setRoundRecordGameType(value as RoundRecordGameType | "all"); setPage(1); }}>
                         <SelectTrigger className="w-fit">
                             <SelectValue placeholder="Select Game Type" />
                         </SelectTrigger>
                         <SelectContent>
+                            <SelectItem value="all">All</SelectItem>
                             <SelectItem value={RoundRecordGameType.DERBY}>Derby</SelectItem>
                             <SelectItem value={RoundRecordGameType.AVIATOR}>Aviator</SelectItem>
                             <SelectItem value={RoundRecordGameType.DICE}>Dice</SelectItem>
@@ -110,7 +111,7 @@ const BettingHistory = ({ userId }: Props) => {
                 <DataTable
                     page={page}
                     loading={isLoading}
-                    columns={getHistoryColumns(roundRecordGameType)}
+                    columns={getHistoryColumns(roundRecordGameType === "all" ? RoundRecordGameType.DERBY : roundRecordGameType)}
                     data={data?.data}
                     totalPage={totalPages}
                     changePage={changePage}

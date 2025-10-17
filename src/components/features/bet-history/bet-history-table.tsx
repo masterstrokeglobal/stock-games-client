@@ -143,6 +143,7 @@ const BetHistoryTable = ({ userId, className }: BetHistoryTableProps) => {
     // No need to restrict keydown events since we're allowing alphanumeric input
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         // No restrictions needed for alphanumeric input
+        console.log(e.key);
     };
 
     const handleReset = () => {

@@ -74,6 +74,7 @@ export const userAPI = {
         limit: number;
         startDate?: Date;
         endDate?: Date;
+        roundRecordGameType?: string;
     }) => {
         return api.get(`/admin/user-history/${filter.userId}`, {
             params: filter

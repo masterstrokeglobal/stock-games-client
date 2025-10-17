@@ -247,7 +247,7 @@ export const useGetUserBettingHistory = (filter: {
     limit: number;
     startDate?: Date;
     endDate?: Date;
-    roundRecordGameType: RoundRecordGameType;
+    roundRecordGameType?: RoundRecordGameType;
 }) => {
     return useQuery({
         queryKey: ["users", "betting-history", filter],
