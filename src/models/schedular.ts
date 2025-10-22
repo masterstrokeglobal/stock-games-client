@@ -9,6 +9,7 @@ export class Scheduler {
     endTime?: string;
     type?: SchedulerType;
     createRound?: boolean;
+    isHoliday?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
     deletedAt?: Date;
@@ -22,6 +23,7 @@ export class Scheduler {
         this.endTime = params.endTime;
         this.type = params.type;
         this.createRound = params.createRound;
+        this.isHoliday = params.isHoliday;
         this.createdAt = params.createdAt;
         this.updatedAt = params.updatedAt;
         this.deletedAt = params.deletedAt;
