@@ -42,6 +42,12 @@ const useSchedularCheck = () => {
                 return;
             }
 
+            // Force closed if backend marks holiday
+            if (scheduler.isHoliday === true) {
+                statusMap[scheduler.type] = false;
+                return;
+            }
+
             statusMap[scheduler.type] = scheduler.createRound ?? false;
         });
 
